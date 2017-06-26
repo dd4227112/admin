@@ -22,7 +22,7 @@ class PushEmail implements ShouldQueue
     public function __construct()
     {
         //
-        DB::statement("SELECT public.refresh_union_view('email')");
+      //  DB::statement("SELECT public.join_all_email()");
        
     }
 

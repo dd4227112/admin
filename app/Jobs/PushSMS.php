@@ -21,7 +21,7 @@ class PushSMS implements ShouldQueue
     public function __construct()
     {
         //recreate all_sms view in case schema has been  added
-         DB::select("SELECT public.create_all_sms_view()");
+      //  DB::select("SELECT public.join_all_sms()");
     }
 
     /**
