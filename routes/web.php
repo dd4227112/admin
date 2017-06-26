@@ -10,4 +10,5 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/{type?}','BackgroundController@index');
+Route::get('/que/{type?}','BackgroundController@index');
+Route::get('/{pg?}','WebController@index');
