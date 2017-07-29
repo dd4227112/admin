@@ -11,4 +11,9 @@
 |
 */
 Route::get('/que/{type?}','BackgroundController@index');
-Route::get('/{pg?}','WebController@index');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/{pg?}/{path?}','WebController@index');
+Route::post('/{pg?}/{path?}','WebController@tag');

@@ -18,10 +18,11 @@ class PushSMS implements ShouldQueue
      *
      * @return void
      */
+    private $messages;
     public function __construct()
     {
         //recreate all_sms view in case schema has been  added
-      //  DB::select("SELECT public.join_all_sms()");
+     $this->messages=DB::select('select * from public.all_sms');
     }
 
     /**
@@ -32,9 +33,9 @@ class PushSMS implements ShouldQueue
     public function handle()
     {
    
-    $messages=DB::select('select * from public.all_sms');
-    if(!empty($messages)){
-        foreach ($messages as $sms) {
+    
+    if(!empty($this->messages)){
+        foreach ($this->messages as $sms) {
         define('API_KEY', $sms->api_key);
         define('API_SECRET', $sms->api_secret);
 

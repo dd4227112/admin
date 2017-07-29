@@ -19,11 +19,14 @@ class PushEmail implements ShouldQueue
      *
      * @return void
      */
+    private $emails;
+
     public function __construct()
     {
-        //
+        // Background process has been started with ID [1] 6915
+ 
       //  DB::statement("SELECT public.join_all_email()");
-       
+       $this->emails=DB::select('select * from public.all_email');
     }
 
     /**
@@ -39,18 +42,17 @@ class PushEmail implements ShouldQueue
 
         //loop through schema names and push emails
 
-    $data = DB::select('select * from public.all_email');
-    if (!empty($data)) {
-        foreach ($data as $message) {
+    if (!empty($this->emails)) {
+        foreach ($this->emails as $message) {
         $data = ['content' => $message->body,'link'=>$message->schema_name,'photo'=>$message->photo,'sitename'=>$message->sitename,'name'=>''];
-         $result = Mail::send('email.default', $data, function ($m) use ($message) {
+         Mail::send('email.default', $data, function ($m) use ($message) {
                     $m->from('no-reply@shulesoft.com', $message->sitename);
                     $m->to($message->email)->subject($message->subject);
                 });
-        if ($result == 1) {
-        DB::update('update ' . $message->schema_name. 'email set status=1 WHERE email_id=' . $message->email_id);
+         if(count(Mail::failures()) > 0){
+        DB::update('update ' . $message->schema_name. '.email set status=0 WHERE email_id=' . $message->email_id);
         } else {
-           DB::update('update ' .$message->schema_name. 'sms set status=0 WHERE email_id=' . $message->email_id);
+           DB::update('update ' .$message->schema_name. '.email set status=1 WHERE email_id=' . $message->email_id);
         }
         }
     } 

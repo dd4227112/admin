@@ -411,7 +411,7 @@ img {
                         <td>
                           <div class='contentEditableContainer contentFacebookEditable'>
                             <div class='contentEditable' style='text-align: center;color:#AAAAAA;'>
-                              <a href="https://facebook.com/ShuleSoft"><img src="<?=url('/')?>/images/facebook.png" alt="facebook" width='40' height='40' data-max-width="40" data-customIcon="true" border="0" ></a>
+                              <a href="https://facebook.com/ShuleSoft"><img src="<?=url('/')?>/public/images/facebook.png" alt="facebook" width='40' height='40' data-max-width="40" data-customIcon="true" border="0" ></a>
                             </div>
                           </div>
                         </td>
@@ -419,7 +419,7 @@ img {
                         <td>
                           <div class='contentEditableContainer contentTwitterEditable'>
                             <div class='contentEditable' style='text-align: center;color:#AAAAAA;'>
-                              <a href="https://twitter.com/ShuleSoft"><img src="<?=url('/')?>/images/twitter.png" alt="twitter" width='40' height='40' data-max-width="40" data-customIcon="true" border="0"></a>
+                              <a href="https://twitter.com/ShuleSoft"><img src="<?=url('/')?>/public/images/twitter.png" alt="twitter" width='40' height='40' data-max-width="40" data-customIcon="true" border="0"></a>
                             </div>
                           </div>
                         </td>

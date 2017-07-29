@@ -47,18 +47,30 @@
                 <div class="white-box">
                     <h3 class="box-title m-b-0">Sign In to Admin</h3>
                     <small>Enter your details below</small>
-                  <form class="form-horizontal new-lg-form" id="loginform" action="https://wrappixel.com/ampleadmin/ampleadmin-html/ampleadmin-minimal/index.html">
+                  <form class="form-horizontal new-lg-form" id="loginform" method="POST" action="{{ route('login') }}" >
+                     {{ csrf_field() }}
                     
-                    <div class="form-group  m-t-20">
+                    <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }} m-t-20">
                       <div class="col-xs-12">
                         <label>Email Address</label>
-                        <input class="form-control" type="text" required="" placeholder="Username">
+                        <input class="form-control" type="text" required=""  name="email" value="{{ old('email') }}" >
+                           @if ($errors->has('email'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('email') }}</strong>
+                                    </span>
+                                @endif 
                       </div>
                     </div>
                     <div class="form-group">
                       <div class="col-xs-12">
                         <label>Password</label>
-                        <input class="form-control" type="password" required="" placeholder="Password">
+                        <input class="form-control" type="password" required="" placeholder="Password" name="password">
+
+                                @if ($errors->has('password'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('password') }}</strong>
+                                    </span>
+                                @endif
                       </div>
                     </div>
                     <div class="form-group">
@@ -67,7 +79,7 @@
                           <input id="checkbox-signup" type="checkbox">
                           <label for="checkbox-signup"> Remember me </label>
                         </div>
-                        <a href="javascript:void(0)" id="to-recover" class="text-dark pull-right"><i class="fa fa-lock m-r-5"></i> Forgot pwd?</a> </div>
+                        <a href="{{ route('password.request') }}" id="to-recover" class="text-dark pull-right"><i class="fa fa-lock m-r-5"></i> Forgot pwd?</a> </div>
                     </div>
                     <div class="form-group text-center m-t-20">
                       <div class="col-xs-12">

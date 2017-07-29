@@ -17,8 +17,8 @@ class BackgroundController extends Controller
     {
         //
     return $tag=='sms' ? 
-           $this->dispatch((new \App\Jobs\PushSMS())->onQueue('sms')):
-            $this->dispatch((new \App\Jobs\PushEmail())->onQueue('emails'));
+           $this->dispatch((new \App\Jobs\PushSMS())):
+            $this->dispatch((new \App\Jobs\PushEmail()));
     
     }
 
