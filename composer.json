@@ -24,7 +24,7 @@
         },
         "files":
         [
-           
+            "app/library/karibusms/karibusms.php"
         ]
     },
     "autoload-dev": {
