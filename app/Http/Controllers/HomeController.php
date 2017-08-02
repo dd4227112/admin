@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use DB;
 class HomeController extends Controller
 {
     /**
@@ -23,6 +23,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+
+        $total_users=DB::select('select count(*), usertype from all_users group by usertype');
+        return view('home')->with(array('users'=>$total_users));
     }
 }

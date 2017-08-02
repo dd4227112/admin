@@ -23,7 +23,7 @@ class BackgroundController extends Controller
     }
 
 public function sendSms(){
-            $messages=DB::select('select * from public.all_sms');
+            $messages=DB::select('select * from public.all_sms limit 15');
         if(!empty($messages)){
         foreach ($messages as $sms) {
                 define('API_KEY', $sms->api_key);

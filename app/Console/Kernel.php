@@ -1,10 +1,10 @@
 <?php
 
 namespace App\Console;
-namespace App\library\karibusms;
+
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use karibusms;
+use Illuminate\Support\Facades\Mail;
 use DB;
 
 class Kernel extends ConsoleKernel
@@ -15,11 +15,19 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-       \App\Console\Commands\Inspire::class,
+      // \App\Console\Commands\Inspire::class,
     ];
 
+   // public   $email_log = 'email_'.str_replace('-', '_', date('Y-M-d')) . '.html';
+   // public   $sms_log = 'sms_'.str_replace('-', '_', date('Y-M-d')) . '.html';
+    public   $emails;
 
-public $emails;
+private function testCrone(){
+        $filename =str_replace('-', '_', date('Y-M-d')) . '.html';
+$handle=fopen($filename, 'wr+');
+fwrite($handle, "all is well");
+}
+
     /**
      * Define the application's command schedule.
      *
@@ -33,13 +41,15 @@ public $emails;
         $schedule->call(function () {
            //check if there is any sms then send
             //check if there is any email then send
+        //$this->testCrone();
+    
         $messages=DB::select('select * from public.all_sms');
         if(!empty($messages)){
         foreach ($messages as $sms) {
-                define('API_KEY', $sms->api_key);
-                define('API_SECRET', $sms->api_secret);
 
                     $karibusms = new \karibusms();
+                    $karibusms->API_KEY=$sms->api_key;
+                    $karibusms->API_SECRET=$sms->api_secret;
                     $karibusms->set_name(strtoupper($sms->schema_name));
                     $karibusms->karibuSMSpro = $sms->type;
                     $result = (object) json_decode($karibusms->send_sms($sms->phone_number, $sms->body));
@@ -49,12 +59,14 @@ public $emails;
                     DB::update('update ' . $sms->schema_name . '.sms set status=0 WHERE sms_id=' . $sms->sms_id);
                     }
              }
-            }
-        })->everyMinute();
+            } 
+        })->everyMinute()->skip(function () {
+             return FALSE;
+        });
 
          $schedule->call(function () {
                 //loop through schema names and push emails
-        /*$this->emails=DB::select('select * from public.all_email');
+        $this->emails=DB::select('select * from public.all_email');
             if (!empty($this->emails)) {
                 foreach ($this->emails as $message) {
                 $data = ['content' => $message->body,'link'=>$message->schema_name,'photo'=>$message->photo,'sitename'=>$message->sitename,'name'=>''];
@@ -68,8 +80,8 @@ public $emails;
                    DB::update('update ' .$message->schema_name. '.email set status=1 WHERE email_id=' . $message->email_id);
                 }
              }
-            } */
-        })->everyMinute();
+            } 
+        })->everyMinute(); 
 
 
         $schedule->call(function () {

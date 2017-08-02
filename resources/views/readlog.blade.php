@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
 
-              <?=$data?>
+              <div class="white-box"><?=$data?></div>
    
 @endsection

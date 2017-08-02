@@ -22,7 +22,7 @@ class WebController extends Controller
          }else{
              $page='login';
          }
-         $data= ($pg ==null && in_array($page, array('login')))?'':$this->$pg($sub);
+         $data= ($pg ==null || in_array($page, array('login')))?'':$this->$pg($sub);
        return view(strtolower($page),compact('data','page'));
     }
 
