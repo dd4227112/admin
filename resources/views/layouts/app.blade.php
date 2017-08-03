@@ -316,7 +316,6 @@ var root_url = "<?= url('/'); ?>";
     
     <!-- Custom Theme JavaScript -->
     <script src="<?=$root?>js/custom.min.js"></script>
-    <script src="<?=$root?>js/dashboard1.js"></script>
     
     <script src="<?=$root?>plugins/bower_components/toast-master/js/jquery.toast.js"></script>
     <!--Style Switcher -->

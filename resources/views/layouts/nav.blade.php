@@ -19,18 +19,25 @@
                     </div>
                 <ul class="nav in" id="side-menu">
                     
-                    <li class="active"> <a href="index.html" class="waves-effect active"><i class="mdi mdi-av-timer fa-fw" data-icon="v"></i> <span class="hide-menu"> Dashboard <span class="fa arrow"></span> </span></a>
+                    <li class="active"> <a href="#" class="waves-effect active"><i class="mdi mdi-av-timer fa-fw" data-icon="v"></i> <span class="hide-menu"> Dashboard <span class="fa arrow"></span> </span></a>
                         <ul class="nav nav-second-level collapse in">
                             <li> <a href="<?=url('/home')?>" class="active"><i class=" fa-fw">1</i><span class="hide-menu">Users Summary</span></a> </li>
                             <li> <a href="<?=url('logsummary')?>"><i class=" fa-fw">2</i><span class="hide-menu">Login Summary</span></a> </li>
                             <li> <a href="<?=url('logs')?>"><i class=" fa-fw">3</i><span class="hide-menu">Error Logs</span></a> </li>
                         </ul>
                     </li>
-                    <li> <a href="#" class="waves-effect"><i class="mdi mdi-format-color-fill fa-fw"></i> <span class="hide-menu">UI Elements<span class="fa arrow"></span> <span class="label label-rouded label-info pull-right">20</span> </span></a>
+                    <li> 
+                    <a href="#" class="waves-effect">
+                    <i class="mdi mdi-format-color-fill fa-fw"></i>
+                     <span class="hide-menu">Database<span class="fa arrow"></span> 
+                     <span class="label label-rouded label-info pull-right">20</span>
+                      </span>
+                      </a>
                         <ul class="nav nav-second-level collapse">
-                            <li><a href="panels-wells.html"><i data-icon="" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Panels and Wells</span></a></li>
-                            <li><a href="panel-ui-block.html"><i data-icon="" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Panels With BlockUI</span></a></li>
-                            <li><a href="buttons.html"><i class="ti-layout-menu fa-fw"></i> <span class="hide-menu">Buttons</span></a></li>
+                            <li>
+                            <a href="<?=url('database/compareTable')?>"><i data-icon="" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Compare Tables</span></a></li>
+                            <li><a href="<?=url('database/compareColumn')?>"><i data-icon="" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Compare Columns</span></a></li>
+                            <li><a href="<?=url('database/upgrade')?>"><i class="ti-layout-menu fa-fw"></i> <span class="hide-menu">Create Upgrade</span></a></li>
                             <li><a href="sweatalert.html"><i class="ti-alert fa-fw"></i> <span class="hide-menu">Sweat alert</span></a></li>
                             <li><a href="typography.html"><i data-icon="k" class="linea-icon linea-software fa-fw"></i> <span class="hide-menu">Typography</span></a></li>
                             <li><a href="grid.html"><i data-icon="" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Grid</span></a></li>

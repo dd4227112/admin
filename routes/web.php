@@ -16,5 +16,7 @@ Route::get('/que/{type?}','BackgroundController@index');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::any('/database/upgrade','DatabaseController@upgrade');
+Route::get('/database/{pg?}/{path?}','DatabaseController@index');
 Route::get('/{pg?}/{path?}','WebController@index');
 Route::post('/{pg?}/{path?}','WebController@tag');
