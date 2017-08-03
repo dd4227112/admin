@@ -72,7 +72,7 @@ class DatabaseController extends Controller
 
     public function compareSchemaTables($slave_schema = null) {
     $master_tables = $this->loadTables(self::$master_schema);
-    $db_file =DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES");
+    $db_file =$this->loadSchema();
     ///$db_file = file_get_contents('app/config/development/db.txt');
     $schemas = $slave_schema == null ? $db_file : array($slave_schema);
         $stable= '<h4>Tables/Views that are missing are as follows</h4>';
@@ -98,7 +98,7 @@ foreach ($diff as $table) {
      */
     public function compareTableColumn($slave_schema=null) {
     $master_tables = $this->loadTables(self::$master_schema);
-    $db_file = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES");
+   $db_file =$this->loadSchema();
     $schemas = $slave_schema == null ?  $db_file : array($slave_schema);
  $stable='';
 
@@ -184,7 +184,7 @@ public function upgrade(){
     $db_file = request('sql');
     $skip=request('skip');
     $skip_schema= preg_match('/,/', $skip)? explode(',', $skip): array($skip);
-    $db_schema =DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES");;
+    $db_schema =$this->loadSchema();
     $schemas = $slave_schema == null ?  $db_schema : array($slave_schema);
     $q='';
      foreach ($schemas as $schema_name) {
