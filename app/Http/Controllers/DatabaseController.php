@@ -30,10 +30,15 @@ class DatabaseController extends Controller
     }
 
 
-public function compareColumn($pg=null){
-return DB::select("SELECT distinct table_schema, count(table_name) FROM INFORMATION_SCHEMA.TABLES group by table_schema");
-}
+    public function compareColumn($pg=null){
+        return DB::select("SELECT * FROM crosstab('SELECT distinct table_schema,table_type,count(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''information_schema'',''constant'',''admin'') group by table_schema,table_type','select distinct table_type FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''information_schema'',''constant'',''admin'')')
+           AS ct (table_schema text, views text, tables text)");
+    }
 
+
+    public function loadSchema(){
+        return DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant','admin')");
+    }
 /**
 * @var Default Schema which is stable
 */

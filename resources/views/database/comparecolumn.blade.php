@@ -9,6 +9,7 @@
                                             <th>#</th>
                                             <th>Schema Name</th>
                                             <th>Total Tables</th>
+                                            <th>Total Views</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -19,7 +20,8 @@ $i=1;
                                         <tr>
                                             <td>{{$i}}</td>
                                             <td>{{$schema->table_schema}}</td>
-                                            <td>{{$schema->count}}</td>
+                                            <td>{{$schema->tables}}</td>
+                                            <td>{{$schema->views}}</td>
                                             <td><a href="<?=url('database/compareTableColumn/'.$schema->table_schema)?>" class="btn btn-success btn-rounded">Analyse</a></td>
                                         </tr>
                                         <?php $i++; } ?>
