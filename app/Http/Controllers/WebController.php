@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Auth;
+use DB;
 class WebController extends Controller
 {
     public  $path='C:\xampp\htdocs\shule_live\assets\errors';
@@ -41,6 +42,11 @@ class WebController extends Controller
     public function deleteLog($log_path){
       return  is_file($this->path.'/'.$log_path) ?
          unlink($this->path.'/'.$log_path) : 0;
+    }
+
+    public function logsummary(){
+        DB::statement("select join_all('log')");
+       return DB::select('select count(*) as total_logs,schema_name from all_log group by schema_name');
     }
     /**
      * Show the form for creating a new resource.
