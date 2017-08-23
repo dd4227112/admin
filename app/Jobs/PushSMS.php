@@ -20,12 +20,27 @@ class PushSMS implements ShouldQueue
      * @return void
      */
     private $messages;
-    public function __construct()
+    public function __construct($users=null)
     {
+        if(request('message') !=null){
+            $this->pushToJob($users,request('message'));
+        }
         //recreate all_sms view in case schema has been  added
      $this->messages=DB::select('select * from public.all_sms');
     }
 
+
+    function pushToJob($all_users,$message){
+
+    $sms_record=array();
+    $patterns = array('/#name/','/#username/');
+    foreach ($all_users as $key => $user) {
+        $replacements = array($user->name,$user->username);
+        $sms = preg_replace($patterns, $replacements,$message);
+        array_push($sms_record, array('body'=>$sms,'users_id' =>$user->id,'type' =>0,'phone_number'=>$user->phone));
+    }
+        return  DB::table('public.sms')->insertGetId($sms_record);
+    }
     /**
      * Execute the job.
      *

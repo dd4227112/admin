@@ -3,14 +3,14 @@
 <?php $root =url('/').'/public/' ?>
 <div class="white-box">
                <code id="mycode"><?=$script?> </code>                  
-<form action="<?=url('database/upgrade')?>" method='post' class="form-horizontal form-bordered">
+<form action="<?=url('message/create')?>" method='post' class="form-horizontal form-bordered">
   {{ csrf_field() }}
                                         <div class="form-body">
                  
                                             <div class="form-group">
-                                                <label class="control-label">SQL pane for upgrade script</label>
+                                                <label class="control-label">Write Message to notify users</label>
                                                 <div class="col-md-12">
-                                                    <textarea class="form-control" rows="5" name="sql"><?=request('sql')?></textarea>
+                                                    <textarea class="form-control" rows="5" name="message"><?=request('message')?></textarea>
                                                 </div>
                                             </div>
                                         </div>

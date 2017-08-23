@@ -18,5 +18,7 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::any('/database/upgrade','DatabaseController@upgrade');
 Route::get('/database/{pg?}/{path?}','DatabaseController@index');
+Route::any('/message/create','Message@create');
+
 Route::get('/{pg?}/{path?}','WebController@index');
 Route::post('/{pg?}/{path?}','WebController@tag');

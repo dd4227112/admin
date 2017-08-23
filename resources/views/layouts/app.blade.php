@@ -218,6 +218,7 @@ var root_url = "<?= url('/'); ?>";
                     </li>
                     <!-- /.Megamenu -->
                 </ul>
+               <?php if(Auth::check()==1){ ?>
                 <ul class="nav navbar-top-links navbar-right pull-right">
                     <li>
                         <form role="search" class="app-search hidden-sm hidden-xs m-r-10">
@@ -253,6 +254,7 @@ var root_url = "<?= url('/'); ?>";
                     
                     <!-- /.dropdown -->
                 </ul>
+               <?php } ?>
             </div>
             <!-- /.navbar-header -->
             <!-- /.navbar-top-links -->
