@@ -41,12 +41,14 @@ class Message extends Controller
     $schemas = $slave_schema == null ?  $db_schema : array($slave_schema);
     $q='';
     $sch='';
+
     foreach ($schemas as $key => $value) {
-       $sch="'".$value->table_schema."',";
+       $sch.=in_array($value->table_schema, $skip_schema) ? '': "'".$value->table_schema."',";
     }
     $list_schema=rtrim($sch,',');
     $message=request('message');
-    $all_users=DB::statement("insert into public.sms (body,users_id,type,phone_number) select '{$message}',id,'0',phone from public.all_users WHERE schema_name IN ($list_schema) AND usertype !='Student' AND phone is not NULL ");
+  $sql="insert into public.sms (body,users_id,type,phone_number) select '{$message}',id,'0',phone from public.all_users WHERE schema_name IN ($list_schema) AND usertype !='Student' AND phone is not NULL ";
+    $all_users=DB::statement($sql);
     return redirect('message/create');
     }
 
