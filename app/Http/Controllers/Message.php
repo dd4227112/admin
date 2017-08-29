@@ -46,7 +46,7 @@ class Message extends Controller
     }
     $list_schema=rtrim($sch,',');
     $message=request('message');
-    $all_users=DB::statement("insert into public.sms (body,users_id,type,phone_number) select '{$message}',id,'0',phone from public.all_users WHERE schema_name IN ($list_schema)");
+    $all_users=DB::statement("insert into public.sms (body,users_id,type,phone_number) select '{$message}',id,'0',phone from public.all_users WHERE schema_name IN ($list_schema) AND usertype !='Student' AND phone is not NULL ");
     return redirect('message/create');
     }
 
