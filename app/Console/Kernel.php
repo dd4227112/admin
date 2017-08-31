@@ -22,12 +22,6 @@ class Kernel extends ConsoleKernel
    // public   $sms_log = 'sms_'.str_replace('-', '_', date('Y-M-d')) . '.html';
     public   $emails;
 
-private function testCrone(){
-        $filename =str_replace('-', '_', date('Y-M-d')) . '.html';
-$handle=fopen($filename, 'wr+');
-fwrite($handle, "all is well");
-}
-
     /**
      * Define the application's command schedule.
      *
@@ -60,27 +54,31 @@ fwrite($handle, "all is well");
                     }
              }
             } 
-        })->everyMinute()->skip(function () {
-             return FALSE;
-        });
+        })->everyMinute();
 
          $schedule->call(function () {
                 //loop through schema names and push emails
         $this->emails=DB::select('select * from public.all_email');
             if (!empty($this->emails)) {
                 foreach ($this->emails as $message) {
+                    if(filter_var($message->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $message->email)){
                 $data = ['content' => $message->body,'link'=>$message->schema_name,'photo'=>$message->photo,'sitename'=>$message->sitename,'name'=>''];
                  Mail::send('email.default', $data, function ($m) use ($message) {
                             $m->from('no-reply@shulesoft.com', $message->sitename);
                             $m->to($message->email)->subject($message->subject);
                         });
                  if(count(Mail::failures()) > 0){
-                DB::update('update ' . $message->schema_name. '.email set status=0 WHERE email_id=' . $message->email_id);
-                } else {
+                    DB::update('update ' . $message->schema_name. '.email set status=0 WHERE email_id=' . $message->email_id);
+                     } else {
                    DB::update('update ' .$message->schema_name. '.email set status=1 WHERE email_id=' . $message->email_id);
                 }
+             }else{
+                //skip all emails with ShuleSoft title
+                //skip all invalid emails
+                 DB::update('update ' .$message->schema_name. '.email set status=1 WHERE email_id=' . $message->email_id);
              }
-            } 
+         }
+    } 
         })->everyMinute(); 
 
 
