@@ -17,7 +17,7 @@
                                     </thead>
                                     <tbody>
                                    <?php $i=1;
-                                   $path='C:\xampp\htdocs\shule_live\assets\errors';
+                                   $path='../shulesoft_live/storage'.DIRECTORY_SEPARATOR.'logs'.DIRECTORY_SEPARATOR;
                                    foreach ($data as $key => $value) {
                                     if($value=='.' || $value=='..') continue;
                                     $size=filesize($path.'/'.$value)/1024;

@@ -9,7 +9,7 @@ use Auth;
 use DB;
 class WebController extends Controller
 {
-    public  $path='C:\xampp\htdocs\shule_live\assets\errors';
+    public  $path='storage'.DIRECTORY_SEPARATOR.'logs'.DIRECTORY_SEPARATOR.'';
     /**
      * Display a listing of the resource.
      *
