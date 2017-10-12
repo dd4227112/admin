@@ -23,9 +23,9 @@ $data_types = array_unique($types);
             xAxis: {
             categories: [
                 <?php
-                 arsort($results);
+                 //arsort($results);
                 foreach ($results as $result) {
-                    echo '"'.date('D',strtotime($result->timeline)).'",';
+                    echo '"'.date('D',strtotime($result->timeline)).'-('.date('d M',strtotime($result->timeline)).')",';
         
     }?>
             ],

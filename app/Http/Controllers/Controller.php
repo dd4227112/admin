@@ -17,7 +17,7 @@ class Controller extends BaseController {
     public $data;
 
     public function createBarGraph() {
-        $sql='select count(created_at::date), "user" as dataname,created_at::date as timeline from beta.log group by "user",created_at::date order by created_at::date desc limit 10';
+        $sql='select count(created_at::date), "user"  as dataname,created_at::date as timeline from beta.log where "user" is not null group by "user",created_at::date order by created_at::date desc limit 10 ';
         $this->data['results']=DB::select($sql);
         return view('graph.bargraph', $this->data);
     }
