@@ -24,7 +24,9 @@ class HomeController extends Controller
     public function index()
     {
 
-        $total_users=DB::select('select count(*), usertype from all_users group by usertype');
-        return view('home')->with(array('users'=>$total_users));
+        $this->data['users']=DB::select('select count(*), usertype from all_users group by usertype');
+        
+        $this->data['log_graph']= $this->createBarGraph();
+        return view('home', $this->data);
     }
 }

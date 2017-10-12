@@ -102,6 +102,41 @@
                             <li><a href="pricing.html"><i class="fa-fw">P</i> <span class="hide-menu">Pricing</span></a></li>
                         </ul>
                     </li>
+                   
+                    
+                    <!-- Payment navigations --->
+                     <li>
+                         <a href="inbox.html" class="waves-effect">
+                             <i class="mdi mdi-apps fa-fw"></i> 
+                             <span class="hide-menu">Online Payment<span class="fa arrow"></span></span>
+                         </a>
+                        <ul class="nav nav-second-level collapse">
+                            <li>
+                                <a href="<?=url('api/request')?>">
+                                    <i class="ti-comments-smiley fa-fw"></i>
+                                    <span class="hide-menu">Api Request</span>
+                                </a>
+                            </li>
+                            <li><a href="javascript:void(0)" class="waves-effect"><i class="ti-desktop fa-fw"></i><span class="hide-menu">Inbox</span><span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level collapse">
+                                    <li> <a href="inbox.html"><i class="ti-email fa-fw"></i><span class="hide-menu">Mail box</span></a></li>
+                                    <li> <a href="inbox-detail.html"><i class="ti-layout-media-left-alt fa-fw"></i><span class="hide-menu">Inbox detail</span></a></li>
+                                    <li> <a href="compose.html"><i class="ti-layout-media-center-alt fa-fw"></i><span class="hide-menu">Compose mail</span></a></li>
+                                </ul>
+                            </li>
+                            <li><a href="javascript:void(0)" class="waves-effect"><i class="ti-user fa-fw"></i><span class="hide-menu">Contacts</span><span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level collapse">
+                                    <li> <a href="contact.html"><i class="icon-people fa-fw"></i><span class="hide-menu">Contact1</span></a></li>
+                                    <li> <a href="contact2.html"><i class="icon-user-follow fa-fw"></i><span class="hide-menu">Contact2</span></a></li>
+                                    <li> <a href="contact-detail.html"><i class="icon-user-following fa-fw"></i><span class="hide-menu">Contact Detail</span></a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    
+                    
+                    
                     <li><a href="inbox.html" class="waves-effect"><i class="mdi mdi-apps fa-fw"></i> <span class="hide-menu">Apps<span class="fa arrow"></span></span></a>
                         <ul class="nav nav-second-level collapse">
                             <li><a href="chat.html"><i class="ti-comments-smiley fa-fw"></i><span class="hide-menu">Chat-message</span></a></li>

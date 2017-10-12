@@ -31,6 +31,9 @@
     <link href="<?=$root?>css/style.css" rel="stylesheet">
     <!-- color CSS -->
     <link href="<?=$root?>css/colors/default.css" id="theme" rel="stylesheet">
+     <link href="<?=$root?>plugins/bower_components/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?=$root?>plugins/1.2.2/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css" />
+    <script src="<?=$root?>plugins/bower_components/datatables/jquery.dataTables.min.js"></script>
     <script type="text/javascript">
 $.ajaxSetup({
     headers: {
@@ -322,5 +325,13 @@ var root_url = "<?= url('/'); ?>";
     <script src="<?=$root?>plugins/bower_components/toast-master/js/jquery.toast.js"></script>
     <!--Style Switcher -->
     <script src="<?=$root?>plugins/bower_components/styleswitcher/jQuery.style.switcher.js"></script>
+       <script src="<?=$root?>js/custom.min.js"></script>
+    
+    <!-- start - This is for export functionality only -->
+    <script src="<?=$root?>plugins/1.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="<?=$root?>plugins/1.2.2/js/buttons.flash.min.js"></script>
+    <script src="<?=$root?>plugins/jszip.min.js"></script>
+    <script src="<?=$root?>plugins/1.2.2/js/buttons.html5.min.js"></script>
+    <script src="<?=$root?>plugins/1.2.2/js/buttons.print.min.js"></script>
 </body>
 </html>

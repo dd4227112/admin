@@ -20,5 +20,7 @@ Route::any('/database/upgrade','DatabaseController@upgrade');
 Route::get('/database/{pg?}/{path?}','DatabaseController@index');
 Route::any('/message/create','Message@create');
 
+Route::get('api/request','PaymentController@requests');
+
 Route::get('/{pg?}/{path?}','WebController@index');
 Route::post('/{pg?}/{path?}','WebController@tag');
