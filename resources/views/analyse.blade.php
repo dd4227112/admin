@@ -10,25 +10,12 @@
                                         <tr>
                                             <th>#</th>
                                             <th>School Name</th>
-                                            <th>Total Requests</th>
+                                            <th>Total Logs</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                   <?php $i=1;
                                  
-                                   foreach ($data as $key => $value) {
-                                 
-                                      ?>
-                                        <tr>
-                                            <td><?=$i?></td>
-                                            
-                                            <td><?=ucfirst($value->schema_name)?></td> 
-                                            <td>
-                                            <a href="<?=url('readRequest/').'/'.$value->total_logs?>"><?=$value->total_logs?></a></td>            
-                                            <td><a href="<?=url('analyse/').'/'.$value->schema_name?>" class="btn btn-sm btn-info">Analyse</a></td>
-                                        </tr>
-                                        <?php $i++; } ?>
                                     </tbody>
                                 </table>
                             </div>

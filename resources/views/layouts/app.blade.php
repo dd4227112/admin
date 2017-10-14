@@ -302,6 +302,14 @@ var root_url = "<?= url('/'); ?>";
         }
         //$(document).ready(call_page);
     </script>
+    <script type="text/javascript">
+    $('#example23').DataTable({
+        dom: 'Bfrtip'
+        , buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+    });
+</script>
   
     <!-- Bootstrap Core JavaScript -->
     <script src="<?=$root?>bootstrap/dist/js/bootstrap.min.js"></script>

@@ -144,6 +144,26 @@ class Kernel extends ConsoleKernel {
         }
     }
 
+    public function sendNotice() {
+        $notices = DB::select('select * from ' . set_schema_name() . "notice  WHERE  date-CURRENT_DATE=3 and status=0 ");
+        ///these are notices
+        foreach ($notices as $notice) {
+
+            //$class_ids = (explode(',', preg_replace('/{/', '', preg_replace('/}/', '', $notice->class_id))));
+            $to_roll_ids = implode(',', preg_replace('/{/', '', preg_replace('/}/', '', $notice->to_roll_id)));
+
+            $users = DB::select('select * from admin.all_users where role_id IN (' . $to_roll_ids . ' ) ');
+            if (count($users) > 0) {
+                foreach ($users as $user) {
+                   
+                    $message = 'Event Reminder:'
+                                . 'Date : '.$notice->date.' ' . $user->name . ', ';
+                    $this->send_email($user->email, 'Calender Reminder', $message);
+                }
+            }
+        }
+    }
+
     /**
      * Register the Closure based commands for the application.
      *

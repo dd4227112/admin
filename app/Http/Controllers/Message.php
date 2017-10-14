@@ -1,19 +1,20 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Jobs\PushSMS;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
-class Message extends Controller
-{
+
+class Message extends Controller {
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index() {
         //
     }
 
@@ -22,36 +23,47 @@ class Message extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-    if(request('message') !=''){
-        $script=$this->pushSMS();
-    }else{
-        $script='';
-    }
-    return view('message.create',compact('script'));
-    }
-
-
-    public function pushSMS($slave_schema=null){
-    $skip=request('skip');
-    $database=new DatabaseController();
-    $skip_schema= preg_match('/,/', $skip)? explode(',', $skip): array($skip);
-    $db_schema =$database->loadSchema();
-    $schemas = $slave_schema == null ?  $db_schema : array($slave_schema);
-    $q='';
-    $sch='';
-
-    foreach ($schemas as $key => $value) {
-       $sch.=in_array($value->table_schema, $skip_schema) ? '': "'".$value->table_schema."',";
-    }
-    $list_schema=rtrim($sch,',');
-    $message=request('message');
-  $sql="insert into public.sms (body,users_id,type,phone_number) select '{$message}',id,'0',phone from public.all_users WHERE schema_name IN ($list_schema) AND usertype !='Student' AND phone is not NULL ";
-    $all_users=DB::statement($sql);
-    return redirect('message/create');
+    public function create() {
+        if (request('message') != '') {
+            $script = $this->pushSMS();
+            $message_success = 'Message sent ';
+        } else {
+            $script = '';
+            $message_success = '';
+        }
+        $usertypes = DB::select('select distinct usertype from admin.all_users');
+        return view('message.create', compact('script', 'usertypes', 'message_success'));
     }
 
+    public function pushSMS($slave_schema = null) {
+        $skip = request('skip');
+        $database = new DatabaseController();
+        $skip_schema = preg_match('/,/', $skip) ? explode(',', $skip) : array($skip);
+        $db_schema = $database->loadSchema();
+        $schemas = $slave_schema == null ? $db_schema : array($slave_schema);
+        $q = '';
+        $sch = '';
+
+        foreach ($schemas as $key => $value) {
+            $sch .= in_array($value->table_schema, $skip_schema) ? '' : "'" . $value->table_schema . "',";
+        }
+        $list_schema = rtrim($sch, ',');
+        $message = request('message');
+        if (request('usertype') == '' && strlen(request('userype')) < 3) {
+            $in_array = '';
+        } else {
+            $usr = explode(',', request('usertype'));
+            $usr_type = '';
+            foreach ($usr as $value) {
+                $usr_type .= "'" . $value . "',";
+            }
+            $type = rtrim($usr_type, ',');
+            $in_array = " AND usertype IN (" . $type . ")";
+        }
+        $sql = "insert into public.sms (body,users_id,type,phone_number) select '{$message}',id,'0',phone from admin.all_users WHERE schema_name::text IN ($list_schema) AND usertype !='Student' {$in_array} AND phone is not NULL ";
+        DB::statement($sql);
+        return redirect('message/create');
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -59,8 +71,7 @@ class Message extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         //
     }
 
@@ -70,8 +81,7 @@ class Message extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
+    public function show($id) {
         //
     }
 
@@ -81,8 +91,7 @@ class Message extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
+    public function edit($id) {
         //
     }
 
@@ -93,8 +102,7 @@ class Message extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         //
     }
 
@@ -104,8 +112,8 @@ class Message extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
+    public function destroy($id) {
         //
     }
+
 }

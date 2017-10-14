@@ -22,5 +22,5 @@ Route::any('/message/create','Message@create');
 
 Route::get('api/request','PaymentController@requests');
 
-Route::get('/{pg?}/{path?}','WebController@index');
-Route::post('/{pg?}/{path?}','WebController@tag');
+Route::get('/{pg?}/{path?}/{option?}','WebController@index');
+Route::post('/{pg?}/{path?}/{option?}','WebController@tag');

@@ -2,9 +2,23 @@
 @section('content')
 <?php $root =url('/').'/public/' ?>
 <div class="white-box">
-               <code id="mycode"><?=$script?> </code>                  
+               <code id="mycode"><?=$script?> </code>  
+               <?=isset($message_success) ? '<div class="alert alert-info">'.$message_success.'</div>' :''?>
 <form action="<?=url('message/create')?>" method='post' class="form-horizontal form-bordered">
   {{ csrf_field() }}
+  <div class="form-body">
+                 
+                                            <div class="form-group last">
+                                                <label class="control-label">Select Usertypes</label>
+                                                <div class="col-md-12">
+                                                    <input type="text" value="<?=request('usertype')?>" class="form-control" name="usertype" placeholder="E.g Teacher, Parents. Separate by comma">
+                                                    <span>Available Usertypes: <code><?php foreach ($usertypes as $user) {
+                                                        echo $user->usertype.',';
+    
+                                                        }?></code></span>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="form-body">
                  
                                             <div class="form-group">

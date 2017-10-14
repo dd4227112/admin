@@ -15,6 +15,7 @@ class WebController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    
     public function index($pg=null,$sub=null)
     {
 
@@ -45,8 +46,14 @@ class WebController extends Controller
     }
 
     public function logsummary(){
-        DB::statement("select join_all('log')");
-       return DB::select('select count(*) as total_logs,schema_name from all_log group by schema_name');
+      DB::statement("select admin.join_all('log')");
+       return DB::select('select count(*) as total_logs,"schema_name"::text from admin.all_log group by "schema_name"::text');
+    }
+    
+    public function analyse($schema) {
+        $this->data['request_by_user']=DB::select('select count(*),"schema_name"::text,"user" from admin.all_log where "schema_name"::text=\''.$schema.'\' group by "schema_name"::text,"user"');
+        $this->data['request_group']=DB::select('select count(*),"user_agent" from admin.all_log where "schema_name"::text=\''.$schema.'\' group by "user_agent"');
+  
     }
     /**
      * Show the form for creating a new resource.
