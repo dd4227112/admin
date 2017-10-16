@@ -14,7 +14,7 @@ class DatabaseController extends Controller {
      */
     public function index($page = null, $sub = null) {
         $data = ($page == null || in_array($page, array('login'))) ? '' : $this->$page($sub);
-        $page = $page != 'compareColumn' ? 'comparetable' : 'comparecolumn';
+        $page = $page != 'compareColumn' ? 'comparetable' : 'comparecolumn';       
         return view('database.' . strtolower($page), compact('data', 'page'));
     }
 

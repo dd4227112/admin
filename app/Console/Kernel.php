@@ -31,59 +31,60 @@ class Kernel extends ConsoleKernel {
         // $schedule->command('inspire')
         //          ->hourly();
         $schedule->call(function () {
-            //check if there is any sms then send
-            //check if there is any email then send
-            //$this->testCrone();
+          //check if there is any sms then send
+          //check if there is any email then send
+          //$this->testCrone();
 
-            $messages = DB::select('select * from public.all_sms limit 20');
-            if (!empty($messages)) {
-                foreach ($messages as $sms) {
+          $messages = DB::select('select * from public.all_sms limit 20');
+          if (!empty($messages)) {
+          foreach ($messages as $sms) {
 
-                    $karibusms = new \karibusms();
-                    $karibusms->API_KEY = $sms->api_key;
-                    $karibusms->API_SECRET = $sms->api_secret;
-                    $karibusms->set_name(strtoupper($sms->schema_name));
-                    $karibusms->karibuSMSpro = $sms->type;
-                    $result = (object) json_decode($karibusms->send_sms($sms->phone_number, $sms->body));
-                    if ($result->success == 1) {
-                        DB::update('update ' . $sms->schema_name . '.sms set status=1 WHERE sms_id=' . $sms->sms_id);
-                    } else {
-                        DB::update('update ' . $sms->schema_name . '.sms set status=0 WHERE sms_id=' . $sms->sms_id);
-                    }
-                }
-            }
-        })->everyMinute();
+          $karibusms = new \karibusms();
+          $karibusms->API_KEY = $sms->api_key;
+          $karibusms->API_SECRET = $sms->api_secret;
+          $karibusms->set_name(strtoupper($sms->schema_name));
+          $karibusms->karibuSMSpro = $sms->type;
+          $result = (object) json_decode($karibusms->send_sms($sms->phone_number, $sms->body));
+          if ($result->success == 1) {
+          DB::update('update ' . $sms->schema_name . '.sms set status=1 WHERE sms_id=' . $sms->sms_id);
+          } else {
+          DB::update('update ' . $sms->schema_name . '.sms set status=0 WHERE sms_id=' . $sms->sms_id);
+          }
+          }
+          }
+          })->everyMinute();
 
-        $schedule->call(function () {
-            //loop through schema names and push emails
-            $this->emails = DB::select('select * from public.all_email limit 30');
-            if (!empty($this->emails)) {
-                foreach ($this->emails as $message) {
-                    if (filter_var($message->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $message->email)) {
-                        $data = ['content' => $message->body, 'link' => $message->schema_name, 'photo' => $message->photo, 'sitename' => $message->sitename, 'name' => ''];
-                        Mail::send('email.default', $data, function ($m) use ($message) {
-                            $m->from('no-reply@shulesoft.com', $message->sitename);
-                            $m->to($message->email)->subject($message->subject);
-                        });
-                        if (count(Mail::failures()) > 0) {
-                            DB::update('update ' . $message->schema_name . '.email set status=0 WHERE email_id=' . $message->email_id);
-                        } else {
-                            DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
-                        }
-                    } else {
-                        //skip all emails with ShuleSoft title
-                        //skip all invalid emails
-                        DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
-                    }
-                    $this->updateEmailConfig();
-                }
-            }
-        })->everyMinute();
-
+          $schedule->call(function () {
+          //loop through schema names and push emails
+          $this->emails = DB::select('select * from public.all_email limit 30');
+          if (!empty($this->emails)) {
+          foreach ($this->emails as $message) {
+          if (filter_var($message->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $message->email)) {
+          $data = ['content' => $message->body, 'link' => $message->schema_name, 'photo' => $message->photo, 'sitename' => $message->sitename, 'name' => ''];
+          Mail::send('email.default', $data, function ($m) use ($message) {
+          $m->from('no-reply@shulesoft.com', $message->sitename);
+          $m->to($message->email)->subject($message->subject);
+          });
+          if (count(Mail::failures()) > 0) {
+          DB::update('update ' . $message->schema_name . '.email set status=0 WHERE email_id=' . $message->email_id);
+          } else {
+          DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
+          }
+          } else {
+          //skip all emails with ShuleSoft title
+          //skip all invalid emails
+          DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
+          }
+          $this->updateEmailConfig();
+          }
+          }
+          })->everyMinute();
+         
 
         $schedule->call(function () {
             // remind parents to login in shulesoft and check their child performance
-        })->weekly()->mondays()->at('13:00');
+            $this->sendNotice();
+        })->dailyAt('08:00');
     }
 
     public function updateEmailConfig() {
@@ -145,20 +146,26 @@ class Kernel extends ConsoleKernel {
     }
 
     public function sendNotice() {
-        $notices = DB::select('select * from ' . set_schema_name() . "notice  WHERE  date-CURRENT_DATE=3 and status=0 ");
+        $notices = DB::select('select * from admin.all_notice  WHERE  date-CURRENT_DATE=3 and status=0 ');
         ///these are notices
         foreach ($notices as $notice) {
 
             //$class_ids = (explode(',', preg_replace('/{/', '', preg_replace('/}/', '', $notice->class_id))));
-            $to_roll_ids = implode(',', preg_replace('/{/', '', preg_replace('/}/', '', $notice->to_roll_id)));
+            $to_roll_ids = preg_replace('/{/', '', preg_replace('/}/', '', $notice->to_roll_id));
 
-            $users = DB::select('select * from admin.all_users where role_id IN (' . $to_roll_ids . ' ) ');
+            $users = $to_roll_ids == 0 ? DB::select("select * from admin.all_users where schema_name::text='" . $notice->schema_name . "'") : DB::select('select * from admin.all_users where role_id IN (' . $to_roll_ids . ' ) and schema_name::text=\'' . $notice->schema_name . '\'  ');
             if (count($users) > 0) {
                 foreach ($users as $user) {
-                   
-                    $message = 'Event Reminder:'
-                                . 'Date : '.$notice->date.' ' . $user->name . ', ';
-                    $this->send_email($user->email, 'Calender Reminder', $message);
+
+                    $message = 'Automatic Event Reminder:'
+                            . 'Event Date : ' . $notice->date . ' ,'
+                            . 'Event Name:  ' . $notice->notice . ','
+                            . 'For More information, please login https://' . $notice->schema_name . '.shulesoft.com';
+
+                    if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
+                        DB::statement("insert into " . $notice->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Calender Reminder : " . $notice->title . "','" . $message . "')");
+                    }
+                    DB::statement("insert into " . $notice->schema_name . ".sms (phone_number,body) values ('" . $user->phone . "','" . $message . "')");
                 }
             }
         }
