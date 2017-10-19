@@ -22,12 +22,16 @@
                     <li class="active"> <a href="#" class="waves-effect active"><i class="mdi mdi-av-timer fa-fw" data-icon="v"></i> <span class="hide-menu"> Dashboard <span class="fa arrow"></span> </span></a>
                         <ul class="nav nav-second-level collapse in">
                             <li> <a href="<?=url('/home')?>" class="active"><i class=" fa-fw">1</i><span class="hide-menu">Users Summary</span></a> </li>
-                            <li> <a href="<?=url('logsummary')?>"><i class=" fa-fw">2</i><span class="hide-menu">Login Summary</span></a> </li>
+                            @role('admin') <li> <a href="<?=url('logsummary')?>"><i class=" fa-fw">2</i><span class="hide-menu">Login Summary</span></a> </li>
+
                             <li> <a href="<?=url('logs')?>"><i class=" fa-fw">3</i><span class="hide-menu">Error Logs</span></a> </li>
+                            @endrole
                         </ul>
                     </li>
-                    <li> 
+                    <li>
+                        @role('admin')
                     <a href="#" class="waves-effect">
+
                     <i class="mdi mdi-format-color-fill fa-fw"></i>
                      <span class="hide-menu">Database<span class="fa arrow"></span> 
                      <span class="label label-rouded label-info pull-right">20</span>
@@ -57,6 +61,7 @@
                             <li><a href="bootstrap.html"><i class="ti-rocket fa-fw"></i> <span class="hide-menu">Bootstrap UI</span></a></li>
                         </ul>
                     </li>
+                    @endrole
                     <li> <a href="#" class="waves-effect"><i class="mdi mdi-content-copy fa-fw"></i> <span class="hide-menu">Message(s)<span class="fa arrow"></span><span class="label label-rouded label-warning pull-right">30</span></span></a>
                         <ul class="nav nav-second-level collapse">
                             <li><a href="<?=url('message/create')?>"><i class="ti-layout-width-default fa-fw"></i> <span class="hide-menu">Send Message</span></a></li>
