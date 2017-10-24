@@ -86,7 +86,7 @@ class Message extends Controller {
      */
     public function show($id) {
         //
-        $this->data['messages']=DB::select('select * from admin.all_email');
+        $this->data['messages']=DB::select('select * from all_email');
        return view('message.show', $this->data);
     }
 
