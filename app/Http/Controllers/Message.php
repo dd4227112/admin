@@ -75,6 +75,9 @@ class Message extends Controller {
         //
     }
 
+     public function psms($param) {
+        
+    }
     /**
      * Display the specified resource.
      *
@@ -83,6 +86,8 @@ class Message extends Controller {
      */
     public function show($id) {
         //
+        $this->data['messages']=DB::select('select * from admin.all_email');
+       return view('message.show', $this->data);
     }
 
     /**

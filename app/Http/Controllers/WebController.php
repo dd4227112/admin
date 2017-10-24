@@ -32,6 +32,7 @@ class WebController extends Controller
         return $this->$pg($sub);
     }
 
+   
     public function logs(){
         return scandir($this->path);
     }
@@ -46,7 +47,7 @@ class WebController extends Controller
     }
 
     public function logsummary(){
-      DB::statement("select admin.join_all('log')");
+     // DB::statement("select admin.join_all('log')");
        return DB::select('select count(*) as total_logs,"schema_name"::text from admin.all_log group by "schema_name"::text');
     }
     
