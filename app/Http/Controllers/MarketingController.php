@@ -7,15 +7,24 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
 
-class Message extends Controller {
+class MarketingController extends Controller {
 
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
+    public function index($pg = null) {
         //
+        if (method_exists($this, $pg) && is_callable(array($this, $pg))) {
+          return $this->$pg();
+        }else{
+            die('Page under construction');
+        }
+    }
+
+    function material() {
+        return view('market.material');
     }
 
     /**

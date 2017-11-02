@@ -21,6 +21,10 @@ Route::get('/database/{pg?}/{path?}','DatabaseController@index');
 Route::any('/message/create','Message@create');
 Route::any('/message/show/{op?}','Message@show');
 
+
+Route::any('/market/{op?}','MarketingController@index');
+
+
 Route::get('api/request','PaymentController@requests');
 
 Route::get('/{pg?}/{path?}/{option?}','WebController@index');
