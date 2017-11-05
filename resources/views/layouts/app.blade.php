@@ -34,6 +34,8 @@
      <link href="<?=$root?>plugins/bower_components/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
     <link href="<?=$root?>plugins/1.2.2/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css" />
     <script src="<?=$root?>plugins/bower_components/datatables/jquery.dataTables.min.js"></script>
+        <link type="text/css" rel="stylesheet" href="<?=$root?>plugins/bower_components/jsgrid/dist/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="<?=$root?>plugins/bower_components/jsgrid/dist/jsgrid-theme.min.css" />
     <script type="text/javascript">
 $.ajaxSetup({
     headers: {
@@ -330,10 +332,21 @@ var root_url = "<?= url('/'); ?>";
     <!-- Custom Theme JavaScript -->
     <script src="<?=$root?>js/custom.min.js"></script>
     
+    
+    <script src="<?=$root?>plugins/bower_components/jsgrid/db.js?v=1"></script>
+    <script type="text/javascript" src="<?=$root?>plugins/bower_components/jsgrid/dist/jsgrid.min.js"></script>
+    <script src="<?=$root?>js/jsgrid-init.js?v=2"></script>
+    
+    
+    
     <script src="<?=$root?>plugins/bower_components/toast-master/js/jquery.toast.js"></script>
     <!--Style Switcher -->
     <script src="<?=$root?>plugins/bower_components/styleswitcher/jQuery.style.switcher.js"></script>
        <script src="<?=$root?>js/custom.min.js"></script>
+       <script src="<?=$root?>js/jquery.slimscroll.js"></script>
+    <!--Wave Effects -->
+    @yield('footer')
+  
     
     <!-- start - This is for export functionality only -->
     <script src="<?=$root?>plugins/1.2.2/js/dataTables.buttons.min.js"></script>
@@ -341,5 +354,6 @@ var root_url = "<?= url('/'); ?>";
     <script src="<?=$root?>plugins/jszip.min.js"></script>
     <script src="<?=$root?>plugins/1.2.2/js/buttons.html5.min.js"></script>
     <script src="<?=$root?>plugins/1.2.2/js/buttons.print.min.js"></script>
+    
 </body>
 </html>

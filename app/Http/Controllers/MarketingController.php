@@ -17,8 +17,8 @@ class MarketingController extends Controller {
     public function index($pg = null) {
         //
         if (method_exists($this, $pg) && is_callable(array($this, $pg))) {
-          return $this->$pg();
-        }else{
+            return $this->$pg();
+        } else {
             die('Page under construction');
         }
     }
@@ -27,6 +27,42 @@ class MarketingController extends Controller {
         return view('market.material');
     }
 
+    function legal() {
+        return view('market.legal');
+    }
+
+    function brand() {
+        return view('market.brand');
+    }
+
+    public function allocation() {
+        $this->data['school_types'] = DB::select('select type, COUNT(*) as count, 
+SUM(COUNT(*)) over() as total_schools, 
+(COUNT(*) * 1.0) / SUM(COUNT(*)) over() as percent
+FROM admin.schools
+group by type');
+        $this->data['ownerships'] = DB::select('select ownership, COUNT(*) as count, 
+SUM(COUNT(*)) over() as total_schools, 
+(COUNT(*) * 1.0) / SUM(COUNT(*)) over() as percent
+FROM admin.schools
+group by ownership');
+        // $this->data['schools']=DB::table('schools')->get();
+        $this->data['regions'] = DB::select('select distinct region from admin.schools');
+        if (request('region')) {
+            $this->data['schools'] = DB::select("select * from admin.schools where region='". request('region')."'");
+        } else {
+           $this->data['schools'] = array(); 
+        }
+        return view('market.allocation', $this->data);
+    }
+
+    function getSchools() {
+        return response()->json(DB::table('schools')->get());
+    }
+
+    function objective() {
+         return view('market.objective');
+    }
     /**
      * Show the form for creating a new resource.
      *

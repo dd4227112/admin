@@ -55,30 +55,30 @@
                 deleteConfirm: "Do you really want to delete the client?",
                 controller: db,
                 fields: [{
-                    name: "Name",
+                    name: "region",
                     type: "text",
                     width: 150
                 }, {
-                    name: "Age",
-                    type: "number",
+                    name: "district",
+                    type: "text",
                     width: 70
                 }, {
-                    name: "Address",
+                    name: "ward",
                     type: "text",
                     width: 200
                 }, {
-                    name: "Country",
-                    type: "select",
-                    items: db.countries,
-                    valueField: "Id",
-                    textField: "Name"
+                    name: "type",
+                    type: "text",
+                    width: 200
                 }, {
-                    name: "Married",
-                    type: "checkbox",
-                    title: "Is Married",
-                    sorting: !1
-                }, {
-                    type: "control"
+                    name: "name",
+                    type: "text",
+                    width:220
+                }, 
+                {
+                    name: "ownership",
+                    type: "text",
+                    width:200
                 }]
             })
         }(),
