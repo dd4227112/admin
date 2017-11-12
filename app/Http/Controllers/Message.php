@@ -120,8 +120,11 @@ class Message extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
-        //
+    public function destroy($type, $id = null, $schema = null) {
+        if ($type == 'email' && (int) $id > 0 && strlen($schema) > 3) {
+            DB::statement('delete  from ' . $schema . '.' . $type . ' where email_id=' . $id);
+            return redirect(url('message/show/email'));
+        }
     }
 
 }

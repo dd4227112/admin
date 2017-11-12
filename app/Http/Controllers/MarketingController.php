@@ -9,6 +9,7 @@ use DB;
 
 class MarketingController extends Controller {
 
+    
     /**
      * Display a listing of the resource.
      *

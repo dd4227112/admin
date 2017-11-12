@@ -38,13 +38,5 @@
         </table>
     </div>
 </div>
-
-<script type="text/javascript">
-    $('#example23').DataTable({
-        dom: 'Bfrtip'
-        , buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ]
-    });
-</script>
+@include('layouts.datatable')
 @endsection

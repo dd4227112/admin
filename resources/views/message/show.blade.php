@@ -46,21 +46,24 @@
                         <th>Site Name</th>
                         <th>Site Domain</th>
                         <th>Schema</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
                     $i = 1;
-                    foreach ($messages as $key => $message) {
+                    foreach ($messages as $message) {
                         ?>
                         <tr>
                             <td><?= $i ?></td>
                             <td><?= $message->subject ?></td>
-                            <td><?= $message->body ?></td>
+                            <td><p><?=$message->body ?></p></td>
                             <td><?= $message->email ?></td>
                             <td><?= $message->sitename ?></td>
                             <td><?= $message->sitedomain ?></td>
                             <td><?= $message->schema_name ?></td>
+                             <td><a href="<?=url('message/destroy/email/'. $message->email_id.'/'.$message->schema_name); ?>" class="btn btn-danger">
+                                Delete</a></td>
                         </tr>
                         <?php
                         $i++;
@@ -72,13 +75,5 @@
 
     </div>
 </div>
-
-<script type="text/javascript">
-    $('#example23').DataTable({
-        dom: 'Bfrtip'
-        , buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ]
-    });
-</script>
+@include('layouts.datatable')
 @endsection

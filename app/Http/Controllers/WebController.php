@@ -10,6 +10,7 @@ use DB;
 class WebController extends Controller
 {
     public  $path='storage'.DIRECTORY_SEPARATOR.'logs'.DIRECTORY_SEPARATOR.'';
+    
     /**
      * Display a listing of the resource.
      *

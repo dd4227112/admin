@@ -41,8 +41,8 @@
             <select id="school_region">
                 <option value="">Select Region</option>
                 <?php foreach ($regions as $region) {
-                      ?>
-                <option value="<?=$region->region?>"><?=$region->region?></option>
+                    ?>
+                    <option value="<?= $region->region ?>"><?= $region->region ?></option>
                 <?php } ?>
             </select>
             <table id="example23" class="display nowrap table color-table success-table">
@@ -60,30 +60,26 @@
                 <tbody>
                     <?php
                     $i = 1;
-                    if(count($schools)>0){
-                    foreach ($schools as $key => $value) {
-                        ?>
-                        <tr>
-                            <td><?= $i ?></td>
-                            <td><?= $value->name ?></td>
-                            <td><?= $value->region ?></td>
-                            <td><?= $value->district ?></td>
-                            <td><?= $value->ward ?></td>
-                            <td><?= $value->type ?></td>
-                            <td><?= $value->ownership ?></td>
-                        </tr>
-                        <?php $i++;
-                    }
+                    if (count($schools) > 0) {
+                        foreach ($schools as $key => $value) {
+                            ?>
+                            <tr>
+                                <td><?= $i ?></td>
+                                <td><?= $value->name ?></td>
+                                <td><?= $value->region ?></td>
+                                <td><?= $value->district ?></td>
+                                <td><?= $value->ward ?></td>
+                                <td><?= $value->type ?></td>
+                                <td><?= $value->ownership ?></td>
+                            </tr>
+                            <?php
+                            $i++;
+                        }
                     }
                     ?>
                 </tbody>
         </div>
     </div>
 </div>
-<script type="text/javascript">
-    $('#school_region').change(function(){
-        var id=$(this).val();
-        window.location.href='?region='+id;
-    });
-</script>
+@include('layouts.datatable')
 @endsection

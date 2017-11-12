@@ -167,7 +167,7 @@
                         <li> <a href="<?= url('market/allocation') ?>"><i class="fa-fw">F</i>
                                 <span class="hide-menu">Market Allocations</span></a> </li>
                         <li> <a href="<?= url('market/objective') ?>"><i class="fa-fw">T</i>
-                                <span class="hide-menu">Values & Objectives</span></a> </li>
+                                <span class="hide-menu">How to Market</span></a> </li>
                         <li> <a href="<?= url('market/training') ?>"><i class="fa-fw">S</i>
                                 <span class="hide-menu">How it works</span></a> </li>
                         <li> <a href="<?= url('market/presentation') ?>">

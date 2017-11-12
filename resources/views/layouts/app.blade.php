@@ -304,15 +304,7 @@ var root_url = "<?= url('/'); ?>";
         }
         //$(document).ready(call_page);
     </script>
-    <script type="text/javascript">
-    $('#example23').DataTable({
-        dom: 'Bfrtip'
-        , buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ]
-    });
-</script>
-  
+
     <!-- Bootstrap Core JavaScript -->
     <script src="<?=$root?>bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- Menu Plugin JavaScript -->
@@ -348,12 +340,6 @@ var root_url = "<?= url('/'); ?>";
     @yield('footer')
   
     
-    <!-- start - This is for export functionality only -->
-    <script src="<?=$root?>plugins/1.2.2/js/dataTables.buttons.min.js"></script>
-    <script src="<?=$root?>plugins/1.2.2/js/buttons.flash.min.js"></script>
-    <script src="<?=$root?>plugins/jszip.min.js"></script>
-    <script src="<?=$root?>plugins/1.2.2/js/buttons.html5.min.js"></script>
-    <script src="<?=$root?>plugins/1.2.2/js/buttons.print.min.js"></script>
     
 </body>
 </html>
