@@ -12,8 +12,7 @@
                         <th>#</th>
                         <th>Body</th>
                         <th>phone number</th>
-                        <th>Site Name</th>
-                        <th>Site Domain</th>
+                        <th>Type</th>
                         <th>Schema</th>
                     </tr>
                 </thead>
@@ -26,8 +25,7 @@
                             <td><?= $i ?></td>
                             <td><?= $message->body ?></td>
                             <td><?= $message->phone_number ?></td>
-                            <td><?= $message->sitename ?></td>
-                            <td><?= $message->sitedomain ?></td>
+                            <td><?= $message->type ?></td>
                             <td><?= $message->schema_name ?></td>
                         </tr>
                         <?php $i++;
