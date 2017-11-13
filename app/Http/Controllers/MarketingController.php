@@ -7,17 +7,63 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
 
-class Message extends Controller {
+class MarketingController extends Controller {
 
+    
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
+    public function index($pg = null) {
         //
+        if (method_exists($this, $pg) && is_callable(array($this, $pg))) {
+            return $this->$pg();
+        } else {
+            die('Page under construction');
+        }
     }
 
+    function material() {
+        return view('market.material');
+    }
+
+    function legal() {
+        return view('market.legal');
+    }
+
+    function brand() {
+        return view('market.brand');
+    }
+
+    public function allocation() {
+        $this->data['school_types'] = DB::select('select type, COUNT(*) as count, 
+SUM(COUNT(*)) over() as total_schools, 
+(COUNT(*) * 1.0) / SUM(COUNT(*)) over() as percent
+FROM admin.schools
+group by type');
+        $this->data['ownerships'] = DB::select('select ownership, COUNT(*) as count, 
+SUM(COUNT(*)) over() as total_schools, 
+(COUNT(*) * 1.0) / SUM(COUNT(*)) over() as percent
+FROM admin.schools
+group by ownership');
+        // $this->data['schools']=DB::table('schools')->get();
+        $this->data['regions'] = DB::select('select distinct region from admin.schools');
+        if (request('region')) {
+            $this->data['schools'] = DB::select("select * from admin.schools where region='". request('region')."'");
+        } else {
+           $this->data['schools'] = array(); 
+        }
+        return view('market.allocation', $this->data);
+    }
+
+    function getSchools() {
+        return response()->json(DB::table('schools')->get());
+    }
+
+    function objective() {
+         return view('market.objective');
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -120,11 +166,8 @@ class Message extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($type, $id = null, $schema = null) {
-        if ($type == 'email' && (int) $id > 0 && strlen($schema) > 3) {
-            DB::statement('delete  from ' . $schema . '.' . $type . ' where email_id=' . $id);
-            return redirect(url('message/show/email'));
-        }
+    public function destroy($id) {
+        //
     }
 
 }

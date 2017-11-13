@@ -170,9 +170,9 @@ AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
             DB::statement($sql);
 
             if ($table->column_default != '') {
-                $alter_sql = 'ALTER TABLE ' . $schema . '.' . $master_table . ' ALTER COLUMN  "' . $column_missing . '" SET DEFAULT' . $table->column_default;
+                $alter_sql = 'ALTER TABLE ' . $schema . '.' . $master_table . ' ALTER COLUMN  "' . $column_missing . '" SET DEFAULT ' . $table->column_default;
                 DB::statement($alter_sql);
-            } elseif ($table->is_nullable == 'NO') {
+            } elseif (isset($table->is_nullable) &&  $table->is_nullable== 'NO') {
                 $alter_sql = 'ALTER TABLE ' . $schema . '.' . $master_table . ' ALTER COLUMN  "' . $column_missing . '" SET NOT NULL';
                 DB::statement($alter_sql);
             }

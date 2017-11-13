@@ -19,6 +19,11 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::any('/database/upgrade','DatabaseController@upgrade');
 Route::get('/database/{pg?}/{path?}','DatabaseController@index');
 Route::any('/message/create','Message@create');
+Route::any('/message/show/{op?}','Message@show');
+Route::any('/message/destroy/{op?}/{ops?}/{schema?}','Message@destroy');
+
+Route::any('/market/{op?}','MarketingController@index');
+
 
 Route::get('api/request','PaymentController@requests');
 
