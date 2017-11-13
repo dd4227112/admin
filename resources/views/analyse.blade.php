@@ -60,7 +60,7 @@
                         for ($i = 0; $i <= 5; $i++) {
                             date_sub($date, date_interval_create_from_date_string($i . ' days'));
                             $day = date('l', strtotime(date_format($date, 'Y-m-d')));
-                            $query = \DB::select('select "user", count(*) from beta.log where created_at::date=\'' . date_format($date, 'Y-m-d') . '\' group by "user"');
+                            $query = \DB::select('select "user", count(*) from '.$schema.'.log where created_at::date=\'' . date_format($date, 'Y-m-d') . '\' group by "user"');
                             $user['parent'] = array();
                             $user['teacher'] = array();
                             $user['admin'] = array();
