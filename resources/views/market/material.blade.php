@@ -14,11 +14,11 @@
 <div class="row">
     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
         <div class="panel panel-default">
-            <div class="panel-heading">Customer Acquisation Form</div>
+            <div class="panel-heading">Customer Acquisition Form</div>
             <div class="panel-wrapper collapse in">
                 <div class="panel-body">
                     <p>Use this when you present ShuleSoft in an event where you can find most of your customers. For example Owners meeting,etc.</p>
-                    <a class="btn btn-custom m-t-10 collapseble">Download</a>
+                    <a class="btn btn-custom m-t-10 collapseble" target="_blank" href="{{url('downloadMaterial/acquisition_form')}}">Download</a>
 
                 </div>
                 <div class="panel-footer"> Last Update: <?= date('d M Y') ?></div>
@@ -27,23 +27,25 @@
     </div>
     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
         <div class="panel panel-default">
-            <div class="panel-heading">ShuleSoft Fliers
+            <div class="panel-heading">ShuleSoft Brochure
 
             </div>
             <div class="panel-wrapper collapse in" aria-expanded="true">
                 <div class="panel-body">
                     <p>Fliers are very useful especially when someone needs to remain with something to present to other people, otherwise its not important.</p> 
-                    <a class="btn btn-info m-t-10">Download</a> </div>
+                    <a class="btn btn-info m-t-10" target="_blank" href="{{url('downloadMaterial/shulesoft_brochure')}}">Download</a> </div>
                 <div class="panel-footer"> Last Update: <?= date('d M Y') ?></div>
             </div>
         </div>
     </div>
     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
         <div class="panel panel-default">
+            <div class="panel-heading">ShuleSoft Proposal
+
+            </div>
             <div class="panel-wrapper collapse in">
                 <div class="panel-body">
-                    <h3>ShuleSoft Proposal</h3>
-                    <p>Some customers needs a formal proposal to present to their management. Download this proposal and remember to change school name with a school name you submit a proposal</p><a class="btn btn-success m-t-10">Download</a> </div>
+                    <p>Some customers needs a formal proposal to present to their management. Download this proposal and remember to change school name with a school name you submit a proposal</p><a class="btn btn-success m-t-10" target="_blank" href="{{url('downloadMaterial/shulesoft_proposal')}}">Download</a> </div>
                 <div class="panel-footer"> Last Update: <?= date('d M Y') ?></div>
             </div>
         </div>
@@ -61,7 +63,7 @@
             <div class="panel-wrapper collapse in" aria-expanded="true">
                 <div class="panel-body">
                     <p>When a school needs a company profile, it means, it needs assurance of our services and our validity. This company profile includes company legal and registration certificates </p>
-                    <a class="btn btn-info m-t-10" style="color:white !important;">Download</a>   
+                    <a class="btn btn-info m-t-10" style="color:white !important;" target="_blank" href="{{url('downloadMaterial/company_profile')}}">Download</a>
                 </div>
 
                 <div class="panel-footer"> Last Update: <?= date('d M Y') ?></div>
@@ -77,11 +79,15 @@
             <div class="panel-wrapper collapse in" aria-expanded="true">
                 <div class="panel-body">
                     <p>Customers who needs a formal introduction letter, download this letter and change school name with a school name you submit. This letter is already signed and sealed.</p>
-                    <a class="btn btn-success m-t-10" style="color:white !important;">Download</a>   
+                    <a class="btn btn-success m-t-10" style="color:white !important;" target="_blank" href="{{url('downloadMaterial/introduction_letter')}}">Download</a>
                 </div>
                 <div class="panel-footer"> Last Update: <?= date('d M Y') ?></div>
             </div>
         </div>
     </div>
 </div>
+    <script>
+
+
+    </script>
 @endsection

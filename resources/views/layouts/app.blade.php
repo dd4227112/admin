@@ -302,6 +302,17 @@ var root_url = "<?= url('/'); ?>";
               }
             });
         }
+
+        downloadMaterial=function(type){
+            $.ajax({
+                url:'{{ url("downloadMaterial") }}/'+type,
+                data:'',
+                type:'GET',
+                success:function(data){
+                    console.log(data);
+                }
+            });
+        }
         //$(document).ready(call_page);
     </script>
 

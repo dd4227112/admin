@@ -23,6 +23,7 @@ Route::any('/message/show/{op?}','Message@show');
 Route::any('/message/destroy/{op?}/{ops?}/{schema?}','Message@destroy');
 
 Route::any('/market/{op?}','MarketingController@index');
+Route::get('/downloadMaterial/{type?}','MarketingController@downloadMaterial');
 
 
 Route::get('api/request','PaymentController@requests');
