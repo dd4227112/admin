@@ -108,6 +108,18 @@
                                 <span class="hide-menu">Api Request</span>
                             </a>
                         </li>
+                        <li>
+                            <a href="<?= url('api/invoices') ?>">
+                                <i class="ti-comments-smiley fa-fw"></i>
+                                <span class="hide-menu">Pending Invoices</span>
+                            </a>
+                        </li>
+                         <li>
+                            <a href="<?= url('api/payment') ?>">
+                                <i class="ti-comments-smiley fa-fw"></i>
+                                <span class="hide-menu">Payment Status</span>
+                            </a>
+                        </li>
                         <li><a href="javascript:void(0)" class="waves-effect"><i class="ti-desktop fa-fw"></i><span class="hide-menu">Inbox</span><span class="fa arrow"></span></a>
                             <ul class="nav nav-third-level collapse">
                                 <li> <a href="inbox.html"><i class="ti-email fa-fw"></i><span class="hide-menu">Mail box</span></a></li>

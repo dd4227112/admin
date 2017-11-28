@@ -7,8 +7,8 @@
 <div class="row">
     <div class="col-sm-12">
         <div class="white-box">
-            <h3 class="box-title m-b-0">Basic</h3>
-            <p class="text-muted m-b-30 font-13"> This is the basic wizrd without validation.</p>
+            <h3 class="box-title m-b-0">How to Market ShuleSoft</h3>
+            <p class="text-muted m-b-30 font-13"> For effective marketing, you need to know exactly what problems face these schools and what shulesoft can offer to solve those problems. Each school has specific problem, so its important to do a rough research before you start to market</p>
             <div id="exampleBasic" class="wizard">
                 <ul class="wizard-steps" role="tablist">
                     <li class="active current" role="tab" aria-expanded="true">
@@ -69,8 +69,27 @@
                                         </tr>
                                         <tr>
                                             <th>Exams</th>
-                                            <td><code>.col-xs-</code> </td>
-                                            <td><code>.col-sm-</code> </td>
+                                            <td><div>
+                                                    <p>School Academic master, school secretary or IT People are always involved in preparation of reports. In other schools, all teachers are involved in preparation of reports. Without software, teachers needs to prepare mark sheet and submit to academic master. Academic master will then sum up marks for each student and prepare a consolidated sheet which contains total marks, avarage and ranking, (divisions and points are included in some exams in specific classes)</p>
+                                                    <h3 class="box-title">Problem</h3>
+                                                    <ul class="list-icons">
+                                                        <li><i class="ti-angle-right"></i> The process takes long time to be accomplished </li>
+                                                        <li><i class="ti-angle-right"></i> After creating consolidated sheets, teachers/secretary have to fill information in report cards and sign on each report</li>
+                                                        <li><i class="ti-angle-right"></i> Process is complex and can easily results in errors in calculations</li>
+                                                        <li><i class="ti-angle-right"></i> Difficult to change ranks and positions especially when certain marks appeared to be incorrect</li>
+                                                    </ul>
+                                                </div></td>
+                                            <td><div>
+                                                    <p>ShuleSoft allow school to store all school information in the system. This includes all student records, employee's records, library information, etc . Information are secure stored online in cloud servers (distributed servers). All school information are in centralized one system.</p>
+                                                    <h3 class="box-title">Solution Offered</h3>
+                                                    <ul class="list-icons">
+                                                        <li><i class="ti-angle-right"></i> Any school information can be found very easy and on time</li>
+                                                        <li><i class="ti-angle-right"></i> No costs for buying files and additional papers for keeping records</li>
+                                                        <li><i class="ti-angle-right"></i> Records can be easily viewed, edited, deleted. Only authorized users will be able to manage certain information as specified by school administrator (headmaster, director etc)</li>
+                                                        <li><i class="ti-angle-right"></i> No risk of any information loss either by natural calamities or other conditions </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
 
                                         </tr>
                                         <tr>

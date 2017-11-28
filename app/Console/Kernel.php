@@ -85,6 +85,11 @@ class Kernel extends ConsoleKernel {
             // remind parents to login in shulesoft and check their child performance
             $this->sendNotice();
         })->dailyAt('08:00');
+        
+         $schedule->call(function () {
+            // send Birdthday 
+            $this->sendBirthdayWish();
+        })->dailyAt('10:00');
     }
 
     public function updateEmailConfig() {
@@ -170,7 +175,19 @@ class Kernel extends ConsoleKernel {
             }
         }
     }
+    
+    public function sendBirthdayWish(){
+        
+    }
 
+    
+    public function sendLoginReminder() {
+        
+    }
+    
+    public function sendSchedulatedSms() {
+        
+    }
     /**
      * Register the Closure based commands for the application.
      *

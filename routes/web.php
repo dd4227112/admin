@@ -26,6 +26,8 @@ Route::any('/market/{op?}','MarketingController@index');
 
 
 Route::get('api/request','PaymentController@requests');
+Route::get('api/invoices','PaymentController@invoices');
+Route::get('api/payment/{option?}','PaymentController@payment');
 
 Route::get('/{pg?}/{path?}/{option?}','WebController@index');
 Route::post('/{pg?}/{path?}/{option?}','WebController@tag');
