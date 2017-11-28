@@ -58,7 +58,7 @@ var root_url = "<?= url('/'); ?>";
             <div class="navbar-header">
                 <div class="top-left-part">
                     <!-- Logo -->
-                    <a class="logo" href="index.html">
+                    <a class="logo" href="{{url('home')}}">
                         <!-- Logo icon image, you can use font-icon also --><b>
                         <!--This is dark logo icon--><img src="<?=$root?>images/ShuleSoft-TM.png" alt="home" class="dark-logo"><!--This is light logo icon-->
                      </b>
@@ -300,6 +300,17 @@ var root_url = "<?= url('/'); ?>";
               success:function(data){
                 $('.contents').html(data);
               }
+            });
+        }
+
+        downloadMaterial=function(type){
+            $.ajax({
+                url:'{{ url("downloadMaterial") }}/'+type,
+                data:'',
+                type:'GET',
+                success:function(data){
+                    console.log(data);
+                }
             });
         }
         //$(document).ready(call_page);

@@ -24,6 +24,24 @@ class MarketingController extends Controller {
         }
     }
 
+    function downloadMaterial($type){
+
+       if($type=='shulesoft_brochure'){
+            $headers = array(
+                'Content-Type: image/jpg',
+            );
+            $extension = 'jpg';
+        }else{
+            $headers = array(
+                'Content-Type: application/pdf',
+            );
+            $extension = 'pdf';
+        }
+        return response()->download("resources/materials/$type.$extension","$type.$extension", $headers);
+
+
+    }
+
     function material() {
         return view('market.material');
     }
