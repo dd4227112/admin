@@ -31,6 +31,10 @@ class WebController extends Controller
        return view(strtolower($page),$this->data);
     }
 
+    public function users(){
+        return 'true';
+    }
+
     public function tag($pg=null,$sub=null){
         return $this->$pg($sub);
     }

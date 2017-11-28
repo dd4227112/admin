@@ -44,6 +44,14 @@ $.ajaxSetup({
 });
 var root_url = "<?= url('/'); ?>";
 </script>
+    <style>
+        #valid-msg {
+            color: #00C900;
+        }
+        #error-msg {
+            color: red;
+        }
+    </style>
 </head>
 <body class="fix-header">
 
@@ -290,8 +298,9 @@ var root_url = "<?= url('/'); ?>";
     </div>
 
     <!-- Scripts -->
-    
+
     <script type="text/javascript">
+        var BASE_URL = '{{url('')}}';
         call_page=function(pg){
             $.ajax({
               url:'{{ url("/") }}/'+pg,
@@ -313,9 +322,12 @@ var root_url = "<?= url('/'); ?>";
                 }
             });
         }
+
+
         //$(document).ready(call_page);
     </script>
-
+<script  src="<?= url('public') ?>/intlTelInput/js/intlTelInput.js"></script>
+<script  src="<?= url('public') ?>/js/customTelInput.js"></script>
     <!-- Bootstrap Core JavaScript -->
     <script src="<?=$root?>bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- Menu Plugin JavaScript -->
@@ -327,7 +339,8 @@ var root_url = "<?= url('/'); ?>";
     <!--Counter js -->
     <script src="<?=$root?>plugins/bower_components/waypoints/lib/jquery.waypoints.js"></script>
     <script src="<?=$root?>plugins/bower_components/counterup/jquery.counterup.min.js"></script>
-    
+<!-- Copy to clipboard-->
+<script src="<?=$root?>js/clipboard.min.js"></script>
     
     <!-- Sparkline chart JavaScript -->
     <script src="<?=$root?>plugins/bower_components/jquery-sparkline/jquery.sparkline.min.js"></script>
@@ -347,7 +360,24 @@ var root_url = "<?= url('/'); ?>";
     <script src="<?=$root?>plugins/bower_components/styleswitcher/jQuery.style.switcher.js"></script>
        <script src="<?=$root?>js/custom.min.js"></script>
        <script src="<?=$root?>js/jquery.slimscroll.js"></script>
+
     <!--Wave Effects -->
+
+<script>
+    $(document).ready(function(){
+        $(".phoneNumber").intlTelInput();
+    });
+    $('.phoneNumber').blur(function () {
+        if ($('.phoneNumber').intlTelInput('isValidNumber')) {
+            $("#phone").val($(".phoneNumber").intlTelInput("getNumber"));
+
+        } else {
+            $("#phone").val('');
+
+
+        }
+    });
+</script>
     @yield('footer')
   
     

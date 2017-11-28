@@ -2,7 +2,11 @@
 @section('content')
 <?php $root =url('/').'/public/' ?>
 <div class="white-box">
-               <code id="mycode"><?=$script?> </code>                  
+            <div class="panel">
+                <button  class="mycode btn btn-default" data-clipboard-action="copy" data-clipboard-target="#mycode"> <i class="fa fa-clipboard"></i> </button>
+                <code id="mycode"><?=$script?> </code>
+            </div>
+
 <form action="<?=url('database/upgrade')?>" method='post' class="form-horizontal form-bordered">
   {{ csrf_field() }}
                                         <div class="form-body">
@@ -38,11 +42,11 @@
     var clipboard = new Clipboard('.mycode');
 
     clipboard.on('success', function(e) {
-        alert('copied');
+        console.log('copied');
     });
 
     clipboard.on('error', function(e) {
-      alert('error,try again');
+      console.log('error,try again');
     });
     </script>
 @endsection
