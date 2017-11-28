@@ -31,13 +31,13 @@
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
                                 <strong>First Name:</strong>
-                                {!! Form::text('fname', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
+                                {!! Form::text('firstname', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
                                 <strong>Last Name:</strong>
-                                {!! Form::text('lname', null, array('placeholder' => 'Last Name','class' => 'form-control')) !!}
+                                {!! Form::text('lastname', null, array('placeholder' => 'Last Name','class' => 'form-control')) !!}
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12">
@@ -46,6 +46,13 @@
                                 {!! Form::text('phone', null, array('placeholder' => 'Phone Number','class' => 'form-control phoneNumber','type'=>'tel','id'=>'phone')) !!}
                                 <span id="valid-msg" class="hide">✓ Valid</span>
                                 <span id="error-msg" class="hide">Invalid number</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <strong>Email:</strong>
+                                {!! Form::email('email', null, array('placeholder' => 'Email','class' => 'form-control ','type'=>'email','id'=>'email')) !!}
+
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12">

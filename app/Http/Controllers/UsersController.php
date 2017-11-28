@@ -42,15 +42,18 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
+
+
         $this->validate($request, [
             'firstname' => 'required|max:255',
             'lastname' => 'required|max:255',
-            'phone' => 'required|max:255|unique:users'
+            'phone' => 'required|max:255|unique:users',
+            'email' => 'required|max:255|unique:users'
 
         ]);
 
-        return $user = new User(request()->all());
-
+        $user = new User(request()->all());
+        $user->save();
 
         foreach ($request->input('roles') as $key => $value) {
             $user->attachRole($value);
