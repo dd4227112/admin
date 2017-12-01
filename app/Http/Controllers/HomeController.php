@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
+use Illuminate\Support\Facades\Auth;
 class HomeController extends Controller
 {
     /**
@@ -24,9 +25,13 @@ class HomeController extends Controller
     public function index()
     {
 
+
         $this->data['users']=DB::select('select count(*), usertype from all_users group by usertype');
         
         $this->data['log_graph']= $this->createBarGraph();
         return view('home', $this->data);
+    }
+    public function users(){
+
     }
 }
