@@ -33,10 +33,11 @@
 
                 <li class=""> <a href="#" class="waves-effect"><i class="fa fa-users fa-fw" data-icon="v"></i> <span class="hide-menu"> User Roles <span class="fa arrow"></span> </span></a>
                     <ul class="nav nav-second-level ">
-                        <li> <a href="{{ url('users') }}" class=""><i class=" fa-fw">1</i><span class="hide-menu">Users</span></a> </li>
-                        @role('admin') <li> <a href="{{url('roles')}}"><i class=" fa-fw">2</i><span class="hide-menu">User Types</span></a> </li>
+                        <li> <a href="{{ url('management') }}" class=""><i class=" fa-fw">1</i><span class="hide-menu">School Users</span></a> </li>
+                        <li> <a href="{{ url('users') }}" class=""><i class=" fa-fw">2</i><span class="hide-menu">Management Users</span></a> </li>
+                        @role('admin') <li> <a href="{{url('roles')}}"><i class=" fa-fw">3</i><span class="hide-menu">User Types</span></a> </li>
 
-                        <li> <a href="#"><i class=" fa-fw">3</i><span class="hide-menu">Permissinos</span></a> </li>
+                        <li> <a href="#"><i class=" fa-fw">4</i><span class="hide-menu">Permissinos</span></a> </li>
                         @endrole
                     </ul>
                 </li>

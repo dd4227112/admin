@@ -85,8 +85,13 @@ class Kernel extends ConsoleKernel {
             // remind parents to login in shulesoft and check their child performance
             $this->sendNotice();
         })->dailyAt('08:00');
+
+        $schedule->call(function(){
+            //send login reminder to parents in all schema
+            $this->sendLoginReminder();
+        })->fridays()->at('13:00');
         
-         $schedule->call(function () {
+        $schedule->call(function () {
             // send Birdthday 
             $this->sendBirthdayWish();
         })->dailyAt('10:00');
@@ -175,19 +180,24 @@ class Kernel extends ConsoleKernel {
             }
         }
     }
-    
-    public function sendBirthdayWish(){
+
+    public function sendBirthdayWish() {
         
     }
 
-    
     public function sendLoginReminder() {
-        
+        $schemas = (new \App\Http\Controllers\DatabaseController())->loadSchema();
+        foreach ($schemas as $schema) {
+            $sql = "insert into ".$schema->table_schema.".sms (body,phone_number,status,type,user_id,\"table\")
+select 'Hello '|| p.name|| ', kuingia kwenye programu ya ShuleSoft '||upper(s.sname)||'  na kufuatilia taaluma ya mtoto wako   na taarifa mbali mbali za shule ni rahisi, kama hujawahi, tunakukumbusha unaweza ingia kupitia simu yako au computer yako kwa kuingia sehemu ya internet (Google), na kuandika https://".$schema->table_schema.".shulesoft.com, kisha ingiza nenotumizi (username) ni '||p.username||' na nenosiri la kuanzia ni '||case when p.default_password is null then '123456' else p.default_password end||'. Kumbuka ShuleSoft sasa inapikana kwa kiswahili pia. Kwa maswali, maoni au lolote, usisite kuwasiliana nasi (0655406004) au uongozi wa shule ('||s.phone||'). Siku njema', p.phone, 0,0, p.\"parentID\",'parent' FROM ".$schema->table_schema.".parent p, ".$schema->table_schema.".setting s where p.\"parentID\" NOT IN (SELECT user_id from ".$schema->table_schema.".log where user_id is not null and \"user\"='Parent') and p.status=1";
+            DB::statement($sql);
+        }
     }
-    
+
     public function sendSchedulatedSms() {
         
     }
+
     /**
      * Register the Closure based commands for the application.
      *

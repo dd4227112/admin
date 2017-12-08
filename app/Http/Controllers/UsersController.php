@@ -145,4 +145,11 @@ class UsersController extends Controller
         return redirect()->route('users.index')
             ->with('success', 'User deleted successfully');
     }
+    
+    public function management() {
+        $this->data['users']=DB::select('select count(*), usertype from all_users group by usertype');
+        
+        $this->data['users_'] = DB::table('admin.all_users')->paginate();
+        return view('users.school_users', $this->data);
+    }
 }
