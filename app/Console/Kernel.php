@@ -75,7 +75,7 @@ class Kernel extends ConsoleKernel {
                         //skip all invalid emails
                         DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
                     }
-                    $this->updateEmailConfig();
+                    //$this->updateEmailConfig();
                 }
             }
         })->everyMinute();

@@ -2,107 +2,76 @@
 @section('content')
 
 <div class="row">
-  <?php
-$user=array();
-$total_users=0;
-foreach ($users as $key => $value) {
-	# code...
-	$user[$value->usertype]=$value->count;
-	$total_users +=$value->count;
-}
-?>
-
-
-                  <div class="row">
-                    <div class="col-lg-3 col-sm-6 col-xs-12">
-                    <div class="white-box">
-                                    <h3 class="box-title">Total Accounts</h3>
-                                    <ul class="list-inline m-t-30 p-t-10 two-part">
-                                        <li><i class="icon-people text-info"></i></li>
-                                        <li class="text-right"><span class="counter"><?=$total_users?></span></li>
-                                    </ul>
-
-                                </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6 col-xs-12">
-                      <div class="white-box">
-                                    <h3 class="box-title">Total Parents</h3>
-                                    <ul class="list-inline m-t-30 p-t-10 two-part">
-                                        <li><i class="icon-people text-info"></i></li>
-                                        <li class="text-right"><span class="counter"><?=$user['Parent']?></span></li>
-                                    </ul>
-                                    <div class="pull-right"><?=round($user['Parent']*100/$total_users ,2)?>% <i class="fa fa-level-up text-success"></i></div>
-                                </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6 col-xs-12">
-                      <div class="white-box">
-                                    <h3 class="box-title">Total Students</h3>
-                                    <ul class="list-inline m-t-30 p-t-10 two-part">
-                                        <li><i class="icon-people text-info"></i></li>
-                                        <li class="text-right"><span class="counter"><?=$user['Student']?></span></li>
-                                    </ul>
-                                    <div class="pull-right"><?=round($user['Student']*100/$total_users ,2)?>% <i class="fa fa-level-up text-success"></i></div>
-                                </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6 col-xs-12">
-                    <div class="white-box">
-                                    <h3 class="box-title">Total Teachers</h3>
-                                    <ul class="list-inline m-t-30 p-t-10 two-part">
-                                        <li><i class="icon-people text-info"></i></li>
-                                        <li class="text-right"><span class="counter"><?=$user['Teacher']?></span></li>
-                                    </ul>
-                                    <div class="pull-right"><?=round($user['Teacher']*100/$total_users ,2)?>% <i class="fa fa-level-up text-success"></i></div>
-                                </div>
-           
-                    </div>
-                </div>
 </div>
 <div class="row">
     <div class="col-lg-12">
         <div class="white-box">
             <h3 class="box-title">Schools</h3>
             <!--<div id="basicgrid"></div>-->
-            <select id="school_region">
-                <option value="">Select school name</option>
-                
-            </select>
-            <select id="school_region">
-                <option value="">Select user types</option>
-                
-            </select>
-            <table id="example23" class="display nowrap table color-table success-table">
+
+            <table id="example23" class="table display nowrap table color-table success-table">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>School Name</th>
-                        <th>Region</th>
-                        <th>District</th>
-                        <th>Ward</th>
-                        <th>Type</th>
-                        <th>Ownership</th>
+                        <th>Students</th>
+                        <th>Amount Expected</th>
+                        <th>Parents</th>
+                        <th>Teachers</th>
+                        <th>Non Teaching</th>
+                        <th>Total</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
                     $i = 1;
-                    if (isset($users_q)  && count($users_q) > 0) {
-                        foreach ($schools as $key => $value) {
+
+                    if (isset($users) && count($users) > 0) {
+                        $students = 0;
+                        $parents = 0;
+                        $teachers = 0;
+                        $staff = 0;
+                        $total = 0;
+                        $total_price = 0;
+                        foreach ($users as $key => $value) {
+                            $price = \DB::table($value->schema_name . '.setting')->where('settingID', 1)->value('price_per_student');
+                            $students += $value->student;
+                            $parents += $value->parent;
+                            $teachers += $value->teacher;
+                            $staff += $value->user;
+                            $total += $value->student + $value->parent + $value->teacher + $value->user;
+                            $price_per_school = $price * $value->student;
+                            $total_price += $price_per_school;
                             ?>
                             <tr>
                                 <td><?= $i ?></td>
-                                <td><?= $value->name ?></td>
-                                <td><?= $value->region ?></td>
-                                <td><?= $value->district ?></td>
-                                <td><?= $value->ward ?></td>
-                                <td><?= $value->type ?></td>
-                                <td><?= $value->ownership ?></td>
+                                <td><?= $value->schema_name ?></td>
+                                <td><?= $value->student ?></td>
+                                <td><?= number_format($price_per_school) ?></td>
+                                <td><?= $value->parent ?></td>
+                                <td><?= $value->teacher ?></td>
+                                <td><?= $value->user ?></td>
+                                <td><?= $value->student + $value->parent + $value->teacher + $value->user ?></td>
                             </tr>
                             <?php
                             $i++;
                         }
-                    }
-                    ?>
+                        ?>
+                    <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td><?= $students ?></td>
+                            <td><?= number_format($total_price) ?></td>
+                            <td><?= $parents ?></td>
+                            <td><?= $teachers ?></td>
+                            <td><?= $staff ?></td>
+                            <td><?= $total ?></td>
+                        </tr>
+                    </tfoot>
+                <?php } ?>
                 </tbody>
+            </table>
         </div>
     </div>
 </div>
