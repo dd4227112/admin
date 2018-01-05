@@ -50,7 +50,7 @@
                                 <td><?= $i ?></td>
                                 <td><?= $value->schema_name ?></td>
                                 <td><?= $value->student ?></td>
-                                <td class="text-muted" contenteditable="true" schema='<?=$value->schema_name?>' id="price_per_student"><?= $price ?></td>
+                                <td> <input class="text-muted" type="text" schema='<?=$value->schema_name?>' id="price_per_student" value="<?= $price ?>"/></td>
                                 <td><?= number_format($price_per_school) ?></td>
                                 <td><?= $value->parent ?></td>
                                 <td><?= $value->teacher ?></td>
@@ -85,15 +85,15 @@
 <script src="<?= $root ?>plugins/bower_components/sweetalert/jquery.sweet-alert.custom.js"></script>
 <script type="text/javascript">
      edit_records = function () {
-        $('.text-muted').keyup(function (e) {
-            if (e.keyCode == 13) {
+        $('.text-muted').blur(function (e) {
+            //if (e.keyCode == 13) {
                 var tag = $(this).attr('id');
-                var val = $(this).text();
+                var val = $(this).val();
                 var schema=$(this).attr('schema');
                 $.get('<?= url('profile/update') ?>', {schema:schema, table: 'setting', val: val,tag:tag,user_id: '1'}, function (data) {
                     swal('success',data);
                 });
-            }
+           // }
         });
     };
     $(document).ready(edit_records);
