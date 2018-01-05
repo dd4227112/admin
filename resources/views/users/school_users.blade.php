@@ -50,7 +50,7 @@
                                 <td><?= $i ?></td>
                                 <td><?= $value->schema_name ?></td>
                                 <td><?= $value->student ?></td>
-                                <td><p class="text-muted" contenteditable="" schema='<?=$value->schema_name?>' id="price_per_student"><?= $price ?></p></td>
+                                <td class="text-muted" contenteditable="true" schema='<?=$value->schema_name?>' id="price_per_student"><?= $price ?></td>
                                 <td><?= number_format($price_per_school) ?></td>
                                 <td><?= $value->parent ?></td>
                                 <td><?= $value->teacher ?></td>
