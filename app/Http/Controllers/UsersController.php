@@ -147,7 +147,7 @@ class UsersController extends Controller
     }
     
     public function management() {
-        $sql='SELECT * FROM public.crosstab(\'select "schema_name"::text,"table",count(*) from admin.all_users  group by "schema_name"::text,"table" order by 1,2\', \'select distinct "table"::text from admin.all_users order by 1\') AS final_result("schema_name" text,"parent" text,"setting" text, "student" text, "teacher" text, "user" text)';
+        $sql='SELECT * FROM public.crosstab(\'select "schema_name"::text,"table",count(*) from admin.all_users where status=1  group by "schema_name"::text,"table" order by 1,2\', \'select distinct "table"::text from admin.all_users order by 1\') AS final_result("schema_name" text,"parent" text,"setting" text, "student" text, "teacher" text, "user" text)';
         $this->data['users']=DB::select($sql);
         return view('users.school_users', $this->data);
     }
