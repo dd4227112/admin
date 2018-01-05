@@ -1,5 +1,7 @@
 @extends('layouts.app')
 @section('content')
+<?php $root = url('/') . '/public/' ?>
+<link href="<?= $root ?>plugins/bower_components/sweetalert/sweetalert.css" rel="stylesheet" type="text/css">
 
 <div class="row">
 </div>
@@ -15,7 +17,8 @@
                         <th>#</th>
                         <th>School Name</th>
                         <th>Students</th>
-                        <th>Amount Expected</th>
+                        <th>Cost</th>
+                        <th>Amount </th>
                         <th>Parents</th>
                         <th>Teachers</th>
                         <th>Non Teaching</th>
@@ -47,6 +50,7 @@
                                 <td><?= $i ?></td>
                                 <td><?= $value->schema_name ?></td>
                                 <td><?= $value->student ?></td>
+                                <td><p class="text-muted" contenteditable="" schema='<?=$value->schema_name?>' id="price_per_student"><?= $price ?></p></td>
                                 <td><?= number_format($price_per_school) ?></td>
                                 <td><?= $value->parent ?></td>
                                 <td><?= $value->teacher ?></td>
@@ -62,6 +66,7 @@
                             <td></td>
                             <td></td>
                             <td><?= $students ?></td>
+                             <td></td>
                             <td><?= number_format($total_price) ?></td>
                             <td><?= $parents ?></td>
                             <td><?= $teachers ?></td>
@@ -75,5 +80,23 @@
         </div>
     </div>
 </div>
+<!-- Sweet-Alert  -->
+<script src="<?= $root ?>plugins/bower_components/sweetalert/sweetalert.min.js"></script>
+<script src="<?= $root ?>plugins/bower_components/sweetalert/jquery.sweet-alert.custom.js"></script>
+<script type="text/javascript">
+     edit_records = function () {
+        $('.text-muted').keyup(function (e) {
+            if (e.keyCode == 13) {
+                var tag = $(this).attr('id');
+                var val = $(this).text();
+                var schema=$(this).attr('schema');
+                $.get('<?= url('profile/update') ?>', {schema:schema, table: 'setting', val: val,tag:tag,user_id: '1'}, function (data) {
+                    swal('success',data);
+                });
+            }
+        });
+    };
+    $(document).ready(edit_records);
+</script>
 @include('layouts.datatable')
 @endsection
