@@ -15,6 +15,7 @@
                         <h4 class="text-white"><?= $user->name ?></h4>
                         <h5 class="text-white"><?= $user->email ?> </h5>
                         <h5 class="text-white"><?= $user->phone ?> </h5>
+                        <h5 class="text-white"><?= $table ?> </h5>
                     </div>
                 </div>
             </div>
@@ -25,9 +26,7 @@
                 <div class="col-md-4 col-sm-4 text-center">
                     <p class="text-blue"><i class="fa fa-inbox"></i> Messages</p>
                     <h1><?= count($messages) ?></h1> </div>
-                <div class="col-md-4 col-sm-4 text-center">
-                    <p class="text-danger"><i class="ti-dribbble"></i></p>
-                    <h1>556</h1> </div>
+                
             </div>
         </div>
     </div>
@@ -54,7 +53,7 @@
                         foreach ($logs as $log) {
                             ?>
                             <div class="sl-item">
-                                <div class="sl-left"> <img src="../plugins/images/users/genu.jpg" alt="user" class="img-circle"> </div>
+                                <div class="sl-left"></div>
                                 <div class="sl-right">
                                     <div class="m-l-40">
                                         <a href="#" class="text-info"><?= $user->name ?></a> 
@@ -147,6 +146,43 @@
                                             <td><?= $student->roll ?></td>
                                             <td><?= $student->username ?></td>
                                             <td><span class="label label-danger">admin</span> </td>
+                                        </tr>
+                                        <?php
+                                        $i++;
+                                    }
+                                    ?>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php } ?>
+                         <?php if (isset($parents)) { ?>
+                        <p class="m-t-30">Parent Student </p>
+
+                        <h4 class="font-bold m-t-30">Student List</h4>
+                        <hr/>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Relation</th>
+                                        <th>Username</th>
+                                        <th>Role</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $i = 1;
+                                    foreach ($parents as $parent) {
+                                        ?>
+                                        <tr>
+                                            <td><?= $i ?></td>
+                                            <td><a href="<?=url('profile/'.$schema.'/parent/'.$parent->parentID)?>"><?= $parent->name ?></a></td>
+                                            <td><?= $parent->relation ?></td>
+                                            <td><?= $parent->username ?></
+                                            <td><span class="label label-danger">Parent</span> </td>
                                         </tr>
                                         <?php
                                         $i++;

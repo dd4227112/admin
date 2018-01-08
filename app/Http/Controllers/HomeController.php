@@ -43,7 +43,7 @@ class HomeController extends Controller {
             foreach ($users as $user) {
 
                 $result.= '<a href="'.url('profile/'.$user->schema_name.'/'.$user->table.'/'.$user->id).'">
-                                            <div class="user-img"> <img src="<?= $root ?>plugins/images/users/pawandeep.jpg" alt="user" class="img-circle"> <span class="profile-status online pull-right"></span> </div>
+                                            <div class="user-img"> <img src="plugins/images/users/pawandeep.jpg" alt="user" class="img-circle"> <span class="profile-status online pull-right"></span> </div>
                                             <div class="mail-contnet">
                                                 <h5>'.$user->name.'</h5> <span class="mail-desc">User Type: '.$user->usertype.'</span> <span class="time">School: '.$user->schema_name.'</span> </div>
                                         </a>';

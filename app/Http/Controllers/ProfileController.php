@@ -51,6 +51,9 @@ class ProfileController extends Controller {
         if ($table == 'parent') {
             $this->data['students'] = DB::select('select * from ' . $schema . '.student where "studentID" IN (SELECT student_id FROM ' . $schema . '.student_parents where parent_id=' . $user_id . ') and status=1');
         }
+        if($table=='student'){
+             $this->data['parents'] = DB::select('select * from ' . $schema . '.parent where "parentID" IN (SELECT parent_id FROM ' . $schema . '.student_parents where student_id=' . $user_id . ') and status=1');
+        }
 
         return view('profile.show', $this->data);
     }
