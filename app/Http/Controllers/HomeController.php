@@ -38,7 +38,7 @@ class HomeController extends Controller {
     public function search() {
         $q = request('q');
         $result='';
-        if (strlen($q) > 1) { //prevent empty search which load all results
+        if (strlen($q) > 2) { //prevent empty search which load all results
             $users = DB::select('select * from admin.all_users where lower(name) like \'%' . strtolower($q)  . '%\' ');
             foreach ($users as $user) {
 

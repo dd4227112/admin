@@ -175,7 +175,7 @@ class Kernel extends ConsoleKernel {
                     if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
                         DB::statement("insert into " . $notice->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Calender Reminder : " . $notice->title . "','" . $message . "')");
                     }
-                    DB::statement("insert into " . $notice->schema_name . ".sms (phone_number,body) values ('" . $user->phone . "','" . $message . "')");
+                    DB::statement("insert into " . $notice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
                 }
             }
         }

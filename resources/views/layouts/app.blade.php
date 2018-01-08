@@ -237,25 +237,25 @@ var root_url = "<?= url('/'); ?>";
                                 <form role="search" class="app-search hidden-sm hidden-xs m-r-10">
                                     <input type="text" placeholder="Searchpublic." id="search_box" class="form-control"> <a href="#"><i class="fa fa-search"></i></a> </form>
                             <li class="dropdown" id="search_results">
-                            <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"> 
-                                <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
-                            </a>
-                            <ul class="dropdown-menu mailbox animated bounceInDown">
-                                <li>
-                                    <div class="drop-title">You have <span id="search_counts"></span> results</div>
-                                </li>
-                                <li>
-                                    <div class="message-center" id="search_content">
-                                       
-                                        
-                                    </div>
-                                </li>
-                                <li>
-                                    <a class="text-center" href="javascript:void(0);"> <strong>See all notifications</strong> <i class="fa fa-angle-right"></i> </a>
-                                </li>
-                            </ul>
-                            <!-- /.dropdown-messages -->
-                        </li>
+                                <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"> 
+                                    <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
+                                </a>
+                                <ul class="dropdown-menu mailbox animated bounceInDown">
+                                    <li>
+                                        <div class="drop-title">You have <span id="search_counts"></span> results</div>
+                                    </li>
+                                    <li>
+                                        <div class="message-center" id="search_content">
+
+
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <a class="text-center" href="javascript:void(0);"> <strong>See all notifications</strong> <i class="fa fa-angle-right"></i> </a>
+                                    </li>
+                                </ul>
+                                <!-- /.dropdown-messages -->
+                            </li>
                             </li>
                             <li class="dropdown">
                                 <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#"> <img src="<?= $root ?>plugins/images/users/varun.jpg" alt="user-img" width="36" class="img-circle"><b class="hidden-xs">  {{ Auth::user()->name }}</b><span class="caret"></span> </a>
@@ -277,7 +277,7 @@ var root_url = "<?= url('/'); ?>";
                                     <li role="separator" class="divider"></li>               
                                     <li><a href="{{ route('logout') }}"
                                            onclick="event.preventDefault();
-                                                   document.getElementById('logout-form').submit();"><i class="fa fa-power-off"></i> Logout</a></li>
+                                                       document.getElementById('logout-form').submit();"><i class="fa fa-power-off"></i> Logout</a></li>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         {{ csrf_field() }}
                                     </form>
@@ -345,17 +345,19 @@ var root_url = "<?= url('/'); ?>";
             search_box = function () {
                 $('#search_box').keyup(function () {
                     var val = $(this).val();
-                    $.ajax({
-                        url: '{{ url("search") }}',
-                        data: {q:val},
-                        type: 'POST',
-                        dataType:'JSON',
-                        success: function (data) {
-                            $('#search_content').html(data.result);
-                            $('#search_counts').html(data.total);
-                            $('#search_results').addClass('open');
-                        }
-                    });
+                    if (val != '') {
+                        $.ajax({
+                            url: '{{ url("search") }}',
+                            data: {q: val},
+                            type: 'POST',
+                            dataType: 'JSON',
+                            success: function (data) {
+                                $('#search_content').html(data.result);
+                                $('#search_counts').html(data.total);
+                                $('#search_results').addClass('open');
+                            }
+                        });
+                    }
                 });
             }
             $(document).ready(search_box);
