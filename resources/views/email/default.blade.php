@@ -260,7 +260,7 @@ img {
       <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tbody>
     <tr>
-      <td valign="top" width="60"><img src="https://<?=$link?>.shulesoft.com/uploads/images/<?=$photo?>" alt="Logo" title="Logo" width="60" height="60" data-max-width="100"></td>
+      <td valign="top" width="60"><img src="https://<?=$link?>.shulesoft.com/storage/uploads/images/<?=$photo?>" alt="Logo" title="Logo" width="60" height="60" data-max-width="100"></td>
       <td width="10" valign="top">&nbsp;</td>
       <td valign="middle" style='vertical-align: middle;'>
                           <div class='contentEditableContainer contentTextEditable'>
@@ -411,7 +411,7 @@ img {
                         <td>
                           <div class='contentEditableContainer contentFacebookEditable'>
                             <div class='contentEditable' style='text-align: center;color:#AAAAAA;'>
-                              <a href="https://facebook.com/ShuleSoft"><img src="<?=url('/')?>/public/images/facebook.png" alt="facebook" width='40' height='40' data-max-width="40" data-customIcon="true" border="0" ></a>
+                              <a href="https://facebook.com/ShuleSoft"><img src="http://icons.iconarchive.com/icons/danleech/simple/256/facebook-icon.png" alt="facebook" width='40' height='40' data-max-width="40" data-customIcon="true" border="0" ></a>
                             </div>
                           </div>
                         </td>
@@ -419,11 +419,17 @@ img {
                         <td>
                           <div class='contentEditableContainer contentTwitterEditable'>
                             <div class='contentEditable' style='text-align: center;color:#AAAAAA;'>
-                              <a href="https://twitter.com/ShuleSoft"><img src="<?=url('/')?>/public/images/twitter.png" alt="twitter" width='40' height='40' data-max-width="40" data-customIcon="true" border="0"></a>
+                              <a href="https://twitter.com/ShuleSoft"><img src="http://icons.iconarchive.com/icons/yootheme/social-bookmark/256/social-twitter-button-blue-icon.png" alt="twitter" width='40' height='40' data-max-width="40" data-customIcon="true" border="0"></a>
                             </div>
                           </div>
                         </td>
-                      
+                      <td>
+                          <div class='contentEditableContainer contentTwitterEditable'>
+                            <div class='contentEditable' style='text-align: center;color:#AAAAAA;'>
+                              <a href="https://instagram.com/shulesoft_"><img src="http://icons.iconarchive.com/icons/designbolts/free-instagram/256/Active-Instagram-3-icon.png" alt="Instagram" width='40' height='40' data-max-width="40" data-customIcon="true" border="0"> </a>
+                            </div>
+                          </div>
+                        </td>
                       </tr>
                     </table></td>
       <td valign="top" width="185" class="spechide">&nbsp;</td>

@@ -111,7 +111,7 @@ class ProfileController extends Controller {
             $user->name, $user->username, $pass
         );
         $sms = preg_replace($patterns, $replacements, $content);
-        return DB::table($schema . '.sms')->insertGetId(array('phone_number' => $user->phone, 'body' => $sms, 'user_id' => $user_id, 'table' => $table, 'type' => 1), 'sms_id');
+        return DB::table($schema . '.sms')->insertGetId(array('phone_number' => $user->phone, 'body' => $sms, 'user_id' => $user_id, 'table' => $table, 'type' => 0), 'sms_id');
     }
 
     public function resendMessage() {

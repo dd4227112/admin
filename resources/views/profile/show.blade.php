@@ -49,29 +49,33 @@
             <div class="tab-content">
                 <div class="tab-pane active" id="home">
                     <div class="steamline">
-                        <?php
-                        foreach ($logs as $log) {
-                            ?>
+                       
                             <div class="sl-item">
                                 <div class="sl-left"></div>
                                 <div class="sl-right">
+                                     <?php
+                                     $i=1;
+                        foreach ($logs as $log) {
+                            ?>
                                     <div class="m-l-40">
-                                        <a href="#" class="text-info"><?= $user->name ?></a> 
-                                        <span class="sl-date"><?= timeAgo($log->created_at) ?></span>
+                                        <a href="#" class="text-info"><?= $i ?> : </a> 
+                                        <span class="sl-date"><?= date('d M Y h:i',strtotime($log->created_at)).' , '.timeAgo($log->created_at) ?></span>
                                         <p>Page Visit url: <a href="#"> <?= $log->url ?></a></p>
                                         <div class="m-t-20 row">
                                             <ul>
                                                 <li>
                                                     <b>
-                                                        <span class="label label-success">Platform:</span> <?= $log->platform ?></b>
-                                                    <b> <span class="label label-warning">Platform Name:</span> <?= $log->platform_name ?></b>
-                                                    <b><span class="label label-info">Browser:</span> <?= $log->user_agent ?></b></li>
+                                                     Platform:   <span class="label label-success"><?= $log->platform ?></span> 
+                                    </b>
+                                                    <b>Platform Name: <span class="label label-warning"><?= $log->platform_name ?></span> </b>
+                                                    <b>Browser:<span class="label label-info"><?= $log->user_agent ?></span> </b></li>
                                             </ul>
                                         </div>
                                     </div>
+                                     <?php $i++; } ?>
                                 </div>
                             </div>
-                        <?php } ?>
+                       
 
                     </div>
                 </div>

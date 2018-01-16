@@ -5,15 +5,20 @@
             <div class="user-profile">
                 <div class="dropdown user-pro-body">
                     <div><img src="<?= $root ?>plugins/images/users/varun.jpg" alt="user-img" class="img-circle"></div>
-                    <a href="#" class="dropdown-toggle u-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Steave Gection <span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle u-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> {{ Auth::user()->name() }}<span class="caret"></span></a>
                     <ul class="dropdown-menu animated flipInY">
-                        <li><a href="#"><i class="ti-user"></i> My Profile</a></li>
-                        <li><a href="#"><i class="ti-wallet"></i> My Balance</a></li>
+                        <li><a href="{{url('users/'.Auth::user()->id)}}"><i class="ti-user"></i> My Profile</a></li>
+<!--                        <li><a href="#"><i class="ti-wallet"></i> My Balance</a></li>
                         <li><a href="#"><i class="ti-email"></i> Inbox</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="#"><i class="ti-settings"></i> Account Setting</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="login.html"><i class="fa fa-power-off"></i> Logout</a></li>
+                        <li role="separator" class="divider"></li>-->
+                        <li><a href="{{ route('logout') }}"
+                                           onclick="event.preventDefault();
+                                                       document.getElementById('logout-form').submit();"><i class="fa fa-power-off"></i> Logout</a></li>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        {{ csrf_field() }}
+                                    </form>
                     </ul>
                 </div>
             </div>
@@ -30,16 +35,17 @@
                     </ul>
                 </li>
 
-
+ @role('admin') 
                 <li class=""> <a href="#" class="waves-effect"><i class="fa fa-users fa-fw" data-icon="v"></i> <span class="hide-menu"> User Roles <span class="fa arrow"></span> </span></a>
                     <ul class="nav nav-second-level ">
                         <li> <a href="{{ url('management') }}" class=""><i class=" fa-fw">1</i><span class="hide-menu">School Users</span></a> </li>
                         <li> <a href="{{ url('users') }}" class=""><i class=" fa-fw">2</i><span class="hide-menu">Management Users</span></a> </li>
-                        @role('admin') <li> <a href="{{url('roles')}}"><i class=" fa-fw">3</i><span class="hide-menu">User Types</span></a> </li>
+                       <li> <a href="{{url('roles')}}"><i class=" fa-fw">3</i><span class="hide-menu">User Types</span></a> </li>
                         <li> <a href="#"><i class=" fa-fw">4</i><span class="hide-menu">Permissions</span></a> </li>
-                        @endrole
+                       
                     </ul>
                 </li>
+                 @endrole
                 <li>
                     @role('admin')
                     <a href="#" class="waves-effect">
@@ -74,6 +80,7 @@
                     </ul>
                 </li>
                 @endrole
+                  @role('admin')
                 <li> 
                     <a href="#" class="waves-effect"><i class="mdi mdi-content-copy fa-fw"></i> <span class="hide-menu">Message(s)<span class="fa arrow"></span><span class="label label-rouded label-warning pull-right">30</span></span></a>
                     <ul class="nav nav-second-level collapse">
@@ -170,7 +177,7 @@
                         </li>
                     </ul>
                 </li>
-                
+                @endrole
                 <li> <a href="#" class="waves-effect"><i class="mdi mdi-emoticon fa-fw"></i> <span class="hide-menu">Resources<span class="fa arrow"></span></span></a>
                     <ul class="nav nav-second-level collapse">
                         <li> <a href="<?= url('market/material') ?>"><i class="fa-fw">F</i>

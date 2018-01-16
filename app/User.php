@@ -28,6 +28,9 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function name() {
+        return $this->attributes['firstname'].' '.$this->attributes['lastname'];
+    }
     public function location(){
         return $this->hasMany('App\Model\Location');
     }

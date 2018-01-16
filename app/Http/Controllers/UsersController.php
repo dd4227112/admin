@@ -51,8 +51,7 @@ class UsersController extends Controller
             'email' => 'required|max:255|unique:users'
 
         ]);
-
-        $user = new User(request()->all());
+        $user = new User(array_merge($request->all(),['password'=> bcrypt(request('email'))]));
         $user->save();
 
         foreach ($request->input('roles') as $key => $value) {
