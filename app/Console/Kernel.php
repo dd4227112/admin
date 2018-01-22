@@ -44,7 +44,7 @@ class Kernel extends ConsoleKernel {
                     $karibusms->API_SECRET = $sms->api_secret;
                     $karibusms->set_name(strtoupper($sms->schema_name));
                     $karibusms->karibuSMSpro = $sms->type;
-                    $result = (object) json_decode($karibusms->send_sms($sms->phone_number, $sms->body));
+                    $result = (object) json_decode($karibusms->send_sms($sms->phone_number, strtoupper($sms->schema_name).': '.$sms->body.'. https://'.$sms->schema_name.'.shulesoft.com'));
                     if ($result->success == 1) {
                         DB::update('update ' . $sms->schema_name . '.sms set status=1 WHERE sms_id=' . $sms->sms_id);
                     } else {
@@ -86,15 +86,111 @@ class Kernel extends ConsoleKernel {
             $this->sendNotice();
         })->dailyAt('08:00');
 
-        $schedule->call(function(){
+        $schedule->call(function() {
             //send login reminder to parents in all schema
             $this->sendLoginReminder();
         })->fridays()->at('13:00');
-        
+
         $schedule->call(function () {
             // send Birdthday 
             $this->sendBirthdayWish();
         })->dailyAt('10:00');
+
+        $schedule->call(function () {
+            // sync invoices 
+            $this->syncInvoice();
+        })->everyMinute();
+    }
+
+    function getFeeNames($invoice_id, $schema_name) {
+        $fees = DB::select('select c.name from ' . $schema_name . '.invoice_fee a join ' . $schema_name . '.fee_installment b on b.id=a.fee_installment_id join ' . $schema_name . '.fee c on c.id=b.fee_id where a.invoices_id=' . $invoice_id);
+        $names = array();
+        if (count($fees) > 0) {
+            foreach ($fees as $fee) {
+
+                array_push($names, $fee->name);
+            }
+        }
+        $uq_names = array_unique($names);
+        return implode(',', $uq_names);
+    }
+
+    public function syncInvoice() {
+        $invoices = DB::select('select * from api.invoices');
+        foreach ($invoices as $invoice) {
+            $token = $this->getToken();
+            if (strlen($token) > 4) {
+                $fields = array(
+                    "reference" => $invoice->invoiceNO,
+                    "student_name" => $invoice->student_name,
+                    "student_id" => $invoice->studentID,
+                    "amount" => $invoice->amount,
+                    "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
+                    "code" => "10",
+                    "callback_url" => "http://158.69.112.216:8081/api/init",
+                    "token" => $token
+                );
+                print_r($fields);
+                $curl = $this->curlServer($fields, 'https://api.mpayafrica.co.tz/v2/invoice_submission');
+                print_r($curl);
+                $result = json_decode($curl);
+                if ($result->status == 1) {
+                    //update invoice no
+                    DB::table($invoice->schema_name . '.invoice')
+                            ->where('invoiceNO', $invoice->invoiceNO)->update(['sync' => 1]);
+                }
+            }
+        }
+    }
+
+    public function getToken() {
+        $fields = array(
+            'username' => '109M17SA01DINET',
+            'password' => 'LuHa6bAjKV5g5vyaRaRZJy*x5@%!yBBBTVy'
+        );
+        $request = $this->curlServer($fields, 'https://api.mpayafrica.co.tz/v2/auth');
+        $obj = json_decode($request);
+        if (isset($obj) && is_object($obj) && isset($obj->status) && $obj->status == 1) {
+            return $obj->token;
+        }
+    }
+
+    private function save_api_request($api_key = '', $api_secret = '') {
+        $ip = $_SERVER['REMOTE_ADDR'];
+
+        $host = gethostbyaddr($ip);
+
+        $this->db->insert('pay', array(
+            'key' => $api_key,
+            'secret' => $api_secret,
+            'content' => 'transaction ID=' . $this->input->get_post('transaction_id') . ' method=' . $this->input->get_post('method') . ' branch name=' . $this->input->get_post('branch_name'),
+            'header' => 'REMOTE_ADDR=' . $this->input->get_post('REMOTE_ADDR') . ' REMOTE_PORT=' . $this->input->get_post('REMOTE_PORT'),
+            'remote_ip' => $this->get_remote_ip(),
+            'remote_hostname' => $host
+        ));
+        //Force security measures
+    }
+
+    /**
+     * 
+     * @param type $fields
+     */
+    private function curlServer($fields, $url) {
+        // Open connection
+        $ch = curl_init();
+        // Set the url, number of POST vars, POST data
+
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->HEADER);
+
+        curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+        return $result;
     }
 
     public function updateEmailConfig() {
@@ -188,9 +284,11 @@ class Kernel extends ConsoleKernel {
     public function sendLoginReminder() {
         $schemas = (new \App\Http\Controllers\DatabaseController())->loadSchema();
         foreach ($schemas as $schema) {
-            $sql = "insert into ".$schema->table_schema.".sms (body,phone_number,status,type,user_id,\"table\")
-select 'Hello '|| p.name|| ', kuingia kwenye programu ya ShuleSoft '||upper(s.sname)||'  na kufuatilia taaluma ya mtoto wako   na taarifa mbali mbali za shule ni rahisi, kama hujawahi, tunakukumbusha unaweza ingia kupitia simu yako au computer yako kwa kuingia sehemu ya internet (Google), na kuandika https://".$schema->table_schema.".shulesoft.com, kisha ingiza nenotumizi (username) ni '||p.username||' na nenosiri la kuanzia ni '||case when p.default_password is null then '123456' else p.default_password end||'. Kumbuka ShuleSoft sasa inapikana kwa kiswahili pia. Kwa maswali, maoni au lolote, usisite kuwasiliana nasi (0655406004) au uongozi wa shule ('||s.phone||'). Siku njema', p.phone, 0,0, p.\"parentID\",'parent' FROM ".$schema->table_schema.".parent p, ".$schema->table_schema.".setting s where p.\"parentID\" NOT IN (SELECT user_id from ".$schema->table_schema.".log where user_id is not null and \"user\"='Parent') and p.status=1";
-            DB::statement($sql);
+            if ($schema->table_schema != 'public') {
+                $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")
+select 'Hello '|| p.name|| ', kuingia kwenye programu ya ShuleSoft '||upper(s.sname)||'  na kufuatilia taaluma ya mtoto wako   na taarifa mbali mbali za shule ni rahisi, kama hujawahi, tunakukumbusha unaweza ingia kupitia simu yako au computer yako kwa kuingia sehemu ya internet (Google), na kuandika https://" . $schema->table_schema . ".shulesoft.com, kisha ingiza nenotumizi (username) ni '||p.username||' na nenosiri la kuanzia ni '||case when p.default_password is null then '123456' else p.default_password end||'. Kumbuka ShuleSoft sasa inapikana kwa kiswahili pia. Kwa maswali, maoni au lolote, usisite kuwasiliana nasi (0655406004) au uongozi wa shule ('||s.phone||'). Siku njema', p.phone, 0,0, p.\"parentID\",'parent' FROM " . $schema->table_schema . ".parent p, " . $schema->table_schema . ".setting s where p.\"parentID\" NOT IN (SELECT user_id from " . $schema->table_schema . ".log where user_id is not null and \"user\"='Parent') and p.status=1";
+                DB::statement($sql);
+            }
         }
     }
 
