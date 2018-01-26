@@ -44,7 +44,7 @@ class Kernel extends ConsoleKernel {
                     $karibusms->API_SECRET = $sms->api_secret;
                     $karibusms->set_name(strtoupper($sms->schema_name));
                     $karibusms->karibuSMSpro = $sms->type;
-                    $result = (object) json_decode($karibusms->send_sms($sms->phone_number, strtoupper($sms->schema_name).': '.$sms->body.'. https://'.$sms->schema_name.'.shulesoft.com'));
+                    $result = (object) json_decode($karibusms->send_sms($sms->phone_number, strtoupper($sms->schema_name) . ': ' . $sms->body . '. https://' . $sms->schema_name . '.shulesoft.com'));
                     if ($result->success == 1) {
                         DB::update('update ' . $sms->schema_name . '.sms set status=1 WHERE sms_id=' . $sms->sms_id);
                     } else {
@@ -116,44 +116,49 @@ class Kernel extends ConsoleKernel {
     }
 
     public function syncInvoice() {
-        $invoices = DB::select('select * from admin.api_invoices where sync=0 order by random() limit 50');
-        foreach ($invoices as $invoice) {
-            $token = $this->getToken($invoice->schema_name);
-            if (strlen($token) > 4) {
-                $fields = array(
-                    "reference" => $invoice->invoiceNO,
-                    "student_name" => $invoice->student_name,
-                    "student_id" => $invoice->studentID,
-                    "amount" => $invoice->amount,
-                    "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
-                    "code" => "10",
-                    "callback_url" => "http://158.69.112.216:8081/api/init",
-                    "token" => $token
-                );
-                $curl = $this->curlServer($fields, 'https://api.mpayafrica.co.tz/v2/invoice_submission');
-                $result = json_decode($curl);
-                if ($result->status == 1) {
-                    //update invoice no
-                    DB::table($invoice->schema_name . '.invoices')
-                            ->where('invoiceNO', $invoice->invoiceNO)->update(['sync' => 1]);
+        $invoices = DB::select('select * from admin.api_invoices where sync=0 order by random() limit 10');
+        if (count($invoices) > 0) {
+            foreach ($invoices as $invoice) {
+                $token = $this->getToken($invoice->schema_name);
+                if (strlen($token) > 4) {
+                    $fields = array(
+                        "reference" => $invoice->invoiceNO,
+                        "student_name" => $invoice->student_name,
+                        "student_id" => $invoice->studentID,
+                        "amount" => $invoice->amount,
+                        "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
+                        "code" => "10",
+                        "callback_url" => "http://158.69.112.216:8081/api/init",
+                        "token" => $token
+                    );
+                    $curl = $this->curlServer($fields, 'https://api.mpayafrica.co.tz/v2/invoice_submission');
+                    $result = json_decode($curl);
+                    if (($result->status == 1 && strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
+                        //update invoice no
+                        DB::table($invoice->schema_name . '.invoices')
+                                ->where('invoiceNO', $invoice->invoiceNO)->update(['sync' => 1]);
+                    } else {
+                        DB::table('api.requests')->insert(['content' => $curl]);
+                    }
                 }
             }
         }
     }
-/**
- * 
- * @param type $schema
- * @return type
- * 
-Username: 109M17SA01DINET
-Password : LuHa6bAjKV5g5vyaRaRZJy*x5@%!yBBBTVy  , mother of mercy
- */
+
+    /**
+     * 
+     * @param type $schema
+     * @return type
+     * 
+      Username: 109M17SA01DINET
+      Password : LuHa6bAjKV5g5vyaRaRZJy*x5@%!yBBBTVy  , mother of mercy
+     */
     public function getToken($schema) {
-        $setting=DB::table($schema.'.setting')->first();
+        $setting = DB::table($schema . '.setting')->first();
         $request = $this->curlServer([
-            'username'=>$setting->api_username,
-            'password'=>$setting->api_password
-        ], 'https://api.mpayafrica.co.tz/v2/auth');
+            'username' => $setting->api_username,
+            'password' => $setting->api_password
+                ], 'https://api.mpayafrica.co.tz/v2/auth');
         $obj = json_decode($request);
         if (isset($obj) && is_object($obj) && isset($obj->status) && $obj->status == 1) {
             return $obj->token;
@@ -187,8 +192,8 @@ Password : LuHa6bAjKV5g5vyaRaRZJy*x5@%!yBBBTVy  , mother of mercy
 
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-        'application/x-www-form-urlencoded'
-    ));
+            'application/x-www-form-urlencoded'
+        ));
 
         curl_setopt($ch, CURLOPT_POST, TRUE);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
