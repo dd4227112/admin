@@ -134,7 +134,7 @@ class Kernel extends ConsoleKernel {
                 $result = json_decode($curl);
                 if ($result->status == 1) {
                     //update invoice no
-                    DB::table($invoice->schema_name . '.invoice')
+                    DB::table($invoice->schema_name . '.invoices')
                             ->where('invoiceNO', $invoice->invoiceNO)->update(['sync' => 1]);
                 }
             }
