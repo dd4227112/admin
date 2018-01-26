@@ -186,7 +186,9 @@ Password : LuHa6bAjKV5g5vyaRaRZJy*x5@%!yBBBTVy  , mother of mercy
         // Set the url, number of POST vars, POST data
 
         curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->HEADER);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        'application/x-www-form-urlencoded'
+    ));
 
         curl_setopt($ch, CURLOPT_POST, TRUE);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
