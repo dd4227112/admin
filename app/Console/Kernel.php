@@ -138,7 +138,7 @@ class Kernel extends ConsoleKernel {
                         DB::table($invoice->schema_name . '.invoices')
                                 ->where('invoiceNO', $invoice->invoiceNO)->update(['sync' => 1]);
                     } else {
-                        DB::table('api.requests')->insert(['content' => $curl]);
+                        DB::table('api.requests')->insert(['content' => $curl.', request='. json_decode($fields)]);
                     }
                 }
             }
