@@ -116,9 +116,9 @@ class Kernel extends ConsoleKernel {
     }
 
     public function syncInvoice() {
-        $invoices = DB::select('select * from api.invoices');
+        $invoices = DB::select('select * from admin.api_invoices where sync=0 order by random() limit 50');
         foreach ($invoices as $invoice) {
-            $token = $this->getToken();
+            $token = $this->getToken($invoice->schema_name);
             if (strlen($token) > 4) {
                 $fields = array(
                     "reference" => $invoice->invoiceNO,
@@ -130,9 +130,7 @@ class Kernel extends ConsoleKernel {
                     "callback_url" => "http://158.69.112.216:8081/api/init",
                     "token" => $token
                 );
-                print_r($fields);
                 $curl = $this->curlServer($fields, 'https://api.mpayafrica.co.tz/v2/invoice_submission');
-                print_r($curl);
                 $result = json_decode($curl);
                 if ($result->status == 1) {
                     //update invoice no
@@ -142,13 +140,20 @@ class Kernel extends ConsoleKernel {
             }
         }
     }
-
-    public function getToken() {
-        $fields = array(
-            'username' => '109M17SA01DINET',
-            'password' => 'LuHa6bAjKV5g5vyaRaRZJy*x5@%!yBBBTVy'
-        );
-        $request = $this->curlServer($fields, 'https://api.mpayafrica.co.tz/v2/auth');
+/**
+ * 
+ * @param type $schema
+ * @return type
+ * 
+Username: 109M17SA01DINET
+Password : LuHa6bAjKV5g5vyaRaRZJy*x5@%!yBBBTVy  , mother of mercy
+ */
+    public function getToken($schema) {
+        $setting=DB::table($schema.'.setting')->first();
+        $request = $this->curlServer([
+            'username'=>$setting->api_username,
+            'password'=>$setting->api_password
+        ], 'https://api.mpayafrica.co.tz/v2/auth');
         $obj = json_decode($request);
         if (isset($obj) && is_object($obj) && isset($obj->status) && $obj->status == 1) {
             return $obj->token;
