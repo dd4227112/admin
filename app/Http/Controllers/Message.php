@@ -127,4 +127,19 @@ class Message extends Controller {
         }
     }
 
+    public function shulesoft() {
+        $message_success='';
+        if ($_POST) {
+            $this->validate(request(), [
+                'for'=>'required',
+                'message'=>'required',
+                'release_date'=>'date'
+            ]);
+            DB::table('admin.updates')->insert(request()->except(['_token','_wysihtml5_mode']));
+            $message_success='Update recorded successfully';
+        }
+        $usertypes = DB::select('select distinct usertype from admin.all_users');
+        return view('message.updates', compact('usertypes','message_success'));
+    }
+
 }

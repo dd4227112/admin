@@ -27,6 +27,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::any('/database/upgrade', 'DatabaseController@upgrade');
     Route::get('/database/{pg?}/{path?}', 'DatabaseController@index');
     Route::any('/message/create', 'Message@create');
+    Route::any('/message/shulesoft', 'Message@shulesoft');
     Route::any('/message/show/{op?}', 'Message@show');
     Route::any('/message/destroy/{op?}/{ops?}/{schema?}', 'Message@destroy');
 

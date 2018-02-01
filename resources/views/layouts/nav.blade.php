@@ -87,7 +87,7 @@
                         <li><a href="<?= url('message/create') ?>"><i class="ti-layout-width-default fa-fw"></i> <span class="hide-menu">Send Message</span></a></li>
                         <li><a href="<?= url('message/show/email') ?>"><i class="ti-email fa-fw"></i> <span class="hide-menu">Pending Emails</span></a></li>
                         <li><a href="<?= url('message/show/sms') ?>"><i class="ti-envelope fa-fw"></i> <span class="hide-menu">Pending SMS</span></a></li>
-                 
+                  <li><a href="<?= url('message/shulesoft') ?>"><i class="ti-envelope fa-fw"></i> <span class="hide-menu">ShuleSoft Updates</span></a></li>
                  
                         <li><a href="javascript:void(0)" class="waves-effect"><i class="ti-info-alt fa-fw"></i><span class="hide-menu">Error Pages</span><span class="fa arrow"></span></a>
                             <ul class="nav nav-third-level collapse">
