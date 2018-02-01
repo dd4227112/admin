@@ -12,7 +12,7 @@
             <div class="form-group last">
                 <label class="control-label">Update For:</label>
                 <div class="col-md-12">
-                    <select name="for" class="form-control" multiple>
+                    <select name="for" class="form-control">
                         <?php foreach ($usertypes as $user) { ?>
                             <option value="<?= $user->usertype ?>"><?= $user->usertype ?></option>
                         <?php } ?>
