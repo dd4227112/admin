@@ -46,9 +46,10 @@ class Kernel extends ConsoleKernel {
                     $karibusms->karibuSMSpro = $sms->type;
                     $result = (object) json_decode($karibusms->send_sms($sms->phone_number, strtoupper($sms->schema_name) . ': ' . $sms->body . '. https://' . $sms->schema_name . '.shulesoft.com'));
                     if ($result->success == 1) {
-                        DB::update('update ' . $sms->schema_name . '.sms set status=1 WHERE sms_id=' . $sms->sms_id);
+                        DB::update('update ' . $sms->schema_name . '.sms set status=1,return_code=\''. json_encode($result).'\' WHERE sms_id=' . $sms->sms_id);
                     } else {
-                        DB::update('update ' . $sms->schema_name . '.sms set status=0 WHERE sms_id=' . $sms->sms_id);
+                        //stop retrying
+                        DB::update('update ' . $sms->schema_name . '.sms set status=1, return_code=\''. json_encode($result).'\' WHERE sms_id=' . $sms->sms_id);
                     }
                 }
             }
@@ -138,7 +139,7 @@ class Kernel extends ConsoleKernel {
                         DB::table($invoice->schema_name . '.invoices')
                                 ->where('invoiceNO', $invoice->invoiceNO)->update(['sync' => 1]);
                     } else {
-                        DB::table('api.requests')->insert(['content' => $curl.', request='. json_encode($fields)]);
+                        DB::table('api.requests')->insert(['content' => $curl . ', request=' . json_encode($fields)]);
                     }
                 }
             }
@@ -298,7 +299,7 @@ class Kernel extends ConsoleKernel {
         foreach ($schemas as $schema) {
             if ($schema->table_schema != 'public') {
                 $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")
-select 'Hello '|| p.name|| ', kuingia kwenye programu ya ShuleSoft '||upper(s.sname)||'  na kufuatilia taaluma ya mtoto wako   na taarifa mbali mbali za shule ni rahisi, kama hujawahi, tunakukumbusha unaweza ingia kupitia simu yako au computer yako kwa kuingia sehemu ya internet (Google), na kuandika https://" . $schema->table_schema . ".shulesoft.com, kisha ingiza nenotumizi (username) ni '||p.username||' na nenosiri la kuanzia ni '||case when p.default_password is null then '123456' else p.default_password end||'. Kumbuka ShuleSoft sasa inapikana kwa kiswahili pia. Kwa maswali, maoni au lolote, usisite kuwasiliana nasi (0655406004) au uongozi wa shule ('||s.phone||'). Siku njema', p.phone, 0,0, p.\"parentID\",'parent' FROM " . $schema->table_schema . ".parent p, " . $schema->table_schema . ".setting s where p.\"parentID\" NOT IN (SELECT user_id from " . $schema->table_schema . ".log where user_id is not null and \"user\"='Parent') and p.status=1";
+select 'Hello '|| p.name|| ', kuingia kwenye programu ya ShuleSoft '||upper(s.sname)||'  na kufuatilia taaluma ya mtoto wako   na taarifa mbali mbali za shule ni rahisi, kama hujawahi, tunakukumbusha unaweza ingia kupitia simu yako au computer yako kwa kuingia sehemu ya internet (Google), na kuandika https://" . $schema->table_schema . ".shulesoft.com, kisha ingiza nenotumizi (username) ni '||p.username||' na nenosiri la kuanzia ni '||case when p.default_password is null then '123456' else p.default_password end||'. Kumbuka ShuleSoft sasa inapikana kwa kiswahili pia. Kwa maswali, maoni au lolote, usisite kuwasiliana nasi (0655406004) au uongozi wa shule ('||s.phone||'). Siku njema', p.phone, 0,0, p.\"parentID\",'parent' FROM " . $schema->table_schema . ".parent p, " . $schema->table_schema . ".setting s where p.\"parentID\" NOT IN (SELECT user_id from " . $schema->table_schema . ".log where user_id is not null and \"user\"='Parent') and p.status=1 and p.phone";
                 DB::statement($sql);
             }
         }
