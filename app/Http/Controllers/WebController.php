@@ -55,7 +55,8 @@ class WebController extends Controller {
         // DB::statement("select admin.join_all('log')");
         $this->data['start'] = request()->segment(2);
         $this->data['end'] = request()->segment(3);
-
+        $this->data['schema'] = request()->segment(4);
+        $this->data['user'] = request()->segment(5);
         return DB::select('select count(*) as total_logs,"schema_name"::text from admin.all_log group by "schema_name"::text order by count(*)');
     }
 

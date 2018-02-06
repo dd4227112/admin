@@ -67,7 +67,9 @@
                     $i = 1;
                     $from_date = date('Y-m-d', strtotime($start)) == '1970-01-01' ? date('Y-m-d', time() - 60 * 60 * 24 * 30) : date('Y-m-d', strtotime($start));
                     $end_date = date('Y-m-d', strtotime($end)) == '1970-01-01' ? date('Y-m-d') : date('Y-m-d', strtotime($end));
-                    $logs = \DB::select("select count(*),created_at::date from admin.all_log where created_at::date <= '" . $end_date . "' and created_at::date>= '" . $from_date . "' group by created_at::date order by created_at desc");
+                    $where_schema=$schema=='' ? '' : ' AND "schema_name"::text=\''.$schema."' ";
+                    $where_user=$user=='' ? '' : ' AND lower("user")=\''.strtolower($user)."' ";
+                    $logs = \DB::select("select count(*),created_at::date from admin.all_log where created_at::date <= '" . $end_date . "' and created_at::date>= '" . $from_date . "' ".$where_schema.$where_user." group by created_at::date order by created_at desc");
                     foreach ($logs as $value) {
                         ?>
                         <tr>

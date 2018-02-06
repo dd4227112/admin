@@ -15,10 +15,10 @@ class Kernel extends ConsoleKernel {
      * @var array
      */
     protected $commands = [
-            // \App\Console\Commands\Inspire::class,
+// \App\Console\Commands\Inspire::class,
     ];
-    // public   $email_log = 'email_'.str_replace('-', '_', date('Y-M-d')) . '.html';
-    // public   $sms_log = 'sms_'.str_replace('-', '_', date('Y-M-d')) . '.html';
+// public   $email_log = 'email_'.str_replace('-', '_', date('Y-M-d')) . '.html';
+// public   $sms_log = 'sms_'.str_replace('-', '_', date('Y-M-d')) . '.html';
     public $emails;
 
     /**
@@ -28,12 +28,12 @@ class Kernel extends ConsoleKernel {
      * @return void
      */
     protected function schedule(Schedule $schedule) {
-        // $schedule->command('inspire')
-        //          ->hourly();
+// $schedule->command('inspire')
+//          ->hourly();
         $schedule->call(function () {
-            //check if there is any sms then send
-            //check if there is any email then send
-            //$this->testCrone();
+//check if there is any sms then send
+//check if there is any email then send
+//$this->testCrone();
 
             $messages = DB::select('select * from public.all_sms limit 20');
             if (!empty($messages)) {
@@ -46,17 +46,17 @@ class Kernel extends ConsoleKernel {
                     $karibusms->karibuSMSpro = $sms->type;
                     $result = (object) json_decode($karibusms->send_sms($sms->phone_number, strtoupper($sms->schema_name) . ': ' . $sms->body . '. https://' . $sms->schema_name . '.shulesoft.com'));
                     if ($result->success == 1) {
-                        DB::update('update ' . $sms->schema_name . '.sms set status=1,return_code=\''. json_encode($result).'\' WHERE sms_id=' . $sms->sms_id);
+                        DB::update('update ' . $sms->schema_name . '.sms set status=1,return_code=\'' . json_encode($result) . '\' WHERE sms_id=' . $sms->sms_id);
                     } else {
-                        //stop retrying
-                        DB::update('update ' . $sms->schema_name . '.sms set status=1, return_code=\''. json_encode($result).'\' WHERE sms_id=' . $sms->sms_id);
+//stop retrying
+                        DB::update('update ' . $sms->schema_name . '.sms set status=1, return_code=\'' . json_encode($result) . '\' WHERE sms_id=' . $sms->sms_id);
                     }
                 }
             }
         })->everyMinute();
 
         $schedule->call(function () {
-            //loop through schema names and push emails
+//loop through schema names and push emails
             $this->emails = DB::select('select * from public.all_email limit 30');
             if (!empty($this->emails)) {
                 foreach ($this->emails as $message) {
@@ -72,33 +72,33 @@ class Kernel extends ConsoleKernel {
                             DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
                         }
                     } else {
-                        //skip all emails with ShuleSoft title
-                        //skip all invalid emails
+//skip all emails with ShuleSoft title
+//skip all invalid emails
                         DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
                     }
-                    //$this->updateEmailConfig();
+//$this->updateEmailConfig();
                 }
             }
         })->everyMinute();
 
 
         $schedule->call(function () {
-            // remind parents to login in shulesoft and check their child performance
+// remind parents to login in shulesoft and check their child performance
             $this->sendNotice();
         })->dailyAt('08:00');
 
         $schedule->call(function() {
-            //send login reminder to parents in all schema
+//send login reminder to parents in all schema
             $this->sendLoginReminder();
         })->fridays()->at('13:00');
 
         $schedule->call(function () {
-            // send Birdthday 
+// send Birdthday 
             $this->sendBirthdayWish();
-        })->dailyAt('10:00');
+        })->dailyAt('09:00');
 
         $schedule->call(function () {
-            // sync invoices 
+// sync invoices 
             $this->syncInvoice();
         })->everyMinute();
     }
@@ -135,7 +135,7 @@ class Kernel extends ConsoleKernel {
                     $curl = $this->curlServer($fields, 'https://api.mpayafrica.co.tz/v2/invoice_submission');
                     $result = json_decode($curl);
                     if (($result->status == 1 && strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
-                        //update invoice no
+//update invoice no
                         DB::table($invoice->schema_name . '.invoices')
                                 ->where('invoiceNO', $invoice->invoiceNO)->update(['sync' => 1]);
                     } else {
@@ -179,7 +179,7 @@ class Kernel extends ConsoleKernel {
             'remote_ip' => $this->get_remote_ip(),
             'remote_hostname' => $host
         ));
-        //Force security measures
+//Force security measures
     }
 
     /**
@@ -187,9 +187,9 @@ class Kernel extends ConsoleKernel {
      * @param type $fields
      */
     private function curlServer($fields, $url) {
-        // Open connection
+// Open connection
         $ch = curl_init();
-        // Set the url, number of POST vars, POST data
+// Set the url, number of POST vars, POST data
 
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
@@ -209,8 +209,8 @@ class Kernel extends ConsoleKernel {
     public function updateEmailConfig() {
         $find_sent_items = App\Email_sent::where('email_config_id', env('CONFIG_ID'))->get();
         if (count($find_sent_items) > 0 && count($find_sent_items) < 1000) {
-            //I found sent Items within a range
-            //update add by one
+//I found sent Items within a range
+//update add by one
             $config = App\Email_config::find(env('CONFIG_ID'));
             if (count($config) > 0) {
                 $ob = array(
@@ -245,17 +245,17 @@ class Kernel extends ConsoleKernel {
     protected function updateDotEnv($key, $newValue, $delim = '') {
 
         $path = base_path('.env');
-        // get old value from current env
+// get old value from current env
         $oldValue = env($key);
 
-        // was there any change?
+// was there any change?
         if ($oldValue === $newValue) {
             return;
         }
 
-        // rewrite file content with changed data
+// rewrite file content with changed data
         if (file_exists($path)) {
-            // replace current value with new value 
+// replace current value with new value 
             file_put_contents(
                     $path, str_replace(
                             $key . '=' . $delim . $oldValue . $delim, $key . '=' . $delim . $newValue . $delim, file_get_contents($path)
@@ -266,10 +266,10 @@ class Kernel extends ConsoleKernel {
 
     public function sendNotice() {
         $notices = DB::select('select * from admin.all_notice  WHERE  date-CURRENT_DATE=3 and status=0 ');
-        ///these are notices
+///these are notices
         foreach ($notices as $notice) {
 
-            //$class_ids = (explode(',', preg_replace('/{/', '', preg_replace('/}/', '', $notice->class_id))));
+//$class_ids = (explode(',', preg_replace('/{/', '', preg_replace('/}/', '', $notice->class_id))));
             $to_roll_ids = preg_replace('/{/', '', preg_replace('/}/', '', $notice->to_roll_id));
 
             $users = $to_roll_ids == 0 ? DB::select("select * from admin.all_users where schema_name::text='" . $notice->schema_name . "'") : DB::select('select * from admin.all_users where role_id IN (' . $to_roll_ids . ' ) and schema_name::text=\'' . $notice->schema_name . '\'  ');
@@ -291,15 +291,36 @@ class Kernel extends ConsoleKernel {
     }
 
     public function sendBirthdayWish() {
-        
+        $schemas = (new \App\Http\Controllers\DatabaseController())->loadSchema();
+        foreach ($schemas as $schema) {
+            if ($schema->table_schema != 'public') {
+                //Remind class and section teachers to wish their students
+                $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")"
+                        . "select 'Hello '|| c.name|| ', tunapenda kumtakia '||a.name||' heri ya siku yake ya kuzaliwa katika tarehe ya leo. Mungu ampe afya tele, maisha marefu, baraka na mafanikio.  Kama hajaziliwa tarehe kama ya leo, tuambie tubadili tarehe zake ziwe sahihi. Siku njema',c.phone, 0,0, c.\"parentID\",'parent'  FROM " . $schema->table_schema . "student a join " . $schema->table_schema . "student_parents b on b.student_id=a.\"studentID\" JOIN " . $schema->table_schema . "parent c on c.\"parentID\"=b.parent_id WHERE 
+                    DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) 
+                    AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE)";
+                DB::statement($sql);
+            }
+        }
     }
 
     public function sendLoginReminder() {
         $schemas = (new \App\Http\Controllers\DatabaseController())->loadSchema();
         foreach ($schemas as $schema) {
             if ($schema->table_schema != 'public') {
+//parents
                 $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")
-select 'Hello '|| p.name|| ', kuingia kwenye programu ya ShuleSoft '||upper(s.sname)||'  na kufuatilia taaluma ya mtoto wako   na taarifa mbali mbali za shule ni rahisi, kama hujawahi, tunakukumbusha unaweza ingia kupitia simu yako au computer yako kwa kuingia sehemu ya internet (Google), na kuandika https://" . $schema->table_schema . ".shulesoft.com, kisha ingiza nenotumizi (username) ni '||p.username||' na nenosiri la kuanzia ni '||case when p.default_password is null then '123456' else p.default_password end||'. Kumbuka ShuleSoft sasa inapikana kwa kiswahili pia. Kwa maswali, maoni au lolote, usisite kuwasiliana nasi (0655406004) au uongozi wa shule ('||s.phone||'). Siku njema', p.phone, 0,0, p.\"parentID\",'parent' FROM " . $schema->table_schema . ".parent p, " . $schema->table_schema . ".setting s where p.\"parentID\" NOT IN (SELECT user_id from " . $schema->table_schema . ".log where user_id is not null and \"user\"='Parent') and p.status=1 and p.phone";
+select 'Hello '|| p.name|| ', kuingia kwenye programu ya ShuleSoft '||upper(s.sname)||'  na kufuatilia taaluma ya mtoto wako   na taarifa mbali mbali za shule ni rahisi, kama hujawahi, tunakukumbusha unaweza ingia kupitia simu yako au computer yako kwa kuingia sehemu ya internet (Google), na kuandika https://" . $schema->table_schema . ".shulesoft.com, kisha ingiza nenotumizi (username) ni '||p.username||' na nenosiri la kuanzia ni '||case when p.default_password is null then '123456' else p.default_password end||'. Kumbuka ShuleSoft sasa inapikana kwa kiswahili pia. Kwa maswali, maoni au lolote, usisite kuwasiliana nasi (0655406004) au uongozi wa shule ('||s.phone||'). Siku njema', p.phone, 0,0, p.\"parentID\",'parent' FROM " . $schema->table_schema . ".parent p, " . $schema->table_schema . ".setting s where p.\"parentID\" NOT IN (SELECT user_id from " . $schema->table_schema . ".log where user_id is not null and \"user\"='Parent') and p.status=1";
+                DB::statement($sql);
+
+//teachers
+                $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")
+select 'Hello '|| p.name|| ', je umewahi ingia katika akaunti yako ya ShuleSoft '||upper(s.sname)||'  na kujifunza jinsi inavyoweza kusaidia utendaji kazi wako uwe rahisi na kuboresha taaluma ya Shule ? Kama bado, ni rahis kuanza, kupitia simu yako au computer yako, ingia sehemu ya internet (Google), na kuandika https://" . $schema->table_schema . ".shulesoft.com, kisha ingiza nenotumizi (username) ni '||p.username||' na nenosiri la kuanzia ni '||case when p.default_password is null then 'teacher123' else p.default_password end||'. Kwa maswali, maoni au lolote, usisite kuwasiliana nasi (0655406004) au uongozi wa shule ('||s.phone||'). Siku njema', p.phone, 0,0, p.\"teacherID\",'teacher' FROM " . $schema->table_schema . ".teacher p, " . $schema->table_schema . ".setting s where p.\"teacherID\" NOT IN (SELECT user_id from " . $schema->table_schema . ".log where user_id is not null and \"user\"='Teacher') and p.status=1";
+                DB::statement($sql);
+
+//users
+                $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")
+select 'Hello '|| p.name|| ', je umewahi ingia katika akaunti yako ya ShuleSoft '||upper(s.sname)||'  na kujifunza jinsi inavyoweza kusaidia utendaji kazi wako uwe rahisi na kuboresha taaluma ya Shule ? Kama bado, ni rahis kuanza, kupitia simu yako au computer yako, ingia sehemu ya internet (Google), na kuandika https://" . $schema->table_schema . ".shulesoft.com, kisha ingiza nenotumizi (username) ni '||p.username||' na nenosiri la kuanzia ni '||case when p.default_password is null then 'user123' else p.default_password end||'. Kwa maswali, maoni au lolote, usisite kuwasiliana nasi (0655406004) au uongozi wa shule ('||s.phone||'). Siku njema', p.phone, 0,0, p.\"userID\",'user' FROM " . $schema->table_schema . ".user p, " . $schema->table_schema . ".setting s where p.\"userID\" NOT IN (SELECT user_id from " . $schema->table_schema . ".log where user_id is not null and \"user\" not in('Teacher','Parent','Student') and p.status=1";
                 DB::statement($sql);
             }
         }
