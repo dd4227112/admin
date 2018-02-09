@@ -112,7 +112,7 @@
                                     </tr>
   <tr>
                                         <td><strong>Date of Birth</strong></td>
-                                        <td> <p class="text-muted" contenteditable="" id="username"><?= $user->dob ?></p></td>
+                                        <td> <p class="text-muted" contenteditable="" id="dob"><?= $user->dob ?></p></td>
                                     </tr>
                                     <tr>
                                         <td><strong>Reset Password</strong></td>

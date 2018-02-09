@@ -95,7 +95,7 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
 // send Birdthday 
             $this->sendBirthdayWish();
-        })->dailyAt('09:00');
+        })->dailyAt('05:00');
 
         $schedule->call(function () {
 // sync invoices 
