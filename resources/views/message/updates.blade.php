@@ -12,11 +12,9 @@
             <div class="form-group last">
                 <label class="control-label">Update For:</label>
                 <div class="col-md-12">
-                    <select name="for" class="form-control">
                         <?php foreach ($usertypes as $user) { ?>
-                            <option value="<?= $user->usertype ?>"><?= $user->usertype ?></option>
+                    <input type="checkbox" name="for[]" value="<?= $user->usertype ?>"><?= $user->usertype ?>
                         <?php } ?>
-                    </select>
                     <span></span>
                 </div>
             </div>

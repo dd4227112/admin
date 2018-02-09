@@ -25,7 +25,7 @@
                 $payload = json_decode($request->content);
                 echo json_encode($payload, JSON_PRETTY_PRINT);
                     ?></pre></td>
-                        <td></td>
+                        <td><?=date('d M Y H:i',strtotime($request->created_at))?></td>
                         <td></td>
                     </tr>
 <?php } ?>
