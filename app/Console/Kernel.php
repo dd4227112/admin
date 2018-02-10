@@ -35,7 +35,7 @@ class Kernel extends ConsoleKernel {
 //check if there is any email then send
 //$this->testCrone();
 
-            $messages = DB::select('select * from public.all_sms order by random() limit 40');
+            $messages = DB::select('select * from public.all_sms order by random() limit 25');
             if (!empty($messages)) {
                 foreach ($messages as $sms) {
 
