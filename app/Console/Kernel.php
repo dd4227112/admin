@@ -133,7 +133,11 @@ class Kernel extends ConsoleKernel {
                         "callback_url" => "http://158.69.112.216:8081/api/init",
                         "token" => $token
                     );
-                    $curl = $this->curlServer($fields, 'https://api.mpayafrica.co.tz/v2/invoice_submission');
+                    $live_url_testing='https://wip.mpayafrica.com/v2/invoice_submission';
+                
+                    $live_url='https://api.mpayafrica.co.tz/v2/invoice_submission';
+                    
+                    $curl = $this->curlServer($fields, $live_url_testing);
                     $result = json_decode($curl);
                     if (($result->status == 1 && strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
 //update invoice no
@@ -156,11 +160,19 @@ class Kernel extends ConsoleKernel {
       Password : LuHa6bAjKV5g5vyaRaRZJy*x5@%!yBBBTVy  , mother of mercy
      */
     public function getToken($schema) {
+            $testing_re='https://wip.mpayafrica.com/v2/auth';  
+                    $live_url='https://api.mpayafrica.co.tz/v2/auth';
+                    
+                    // $setting->api_username,
+           // 'password' => $setting->api_password
+                    //test password
+                    $user='107M17S666D381';
+                    $pass='rWh$abB!P5&$MWvj$!DTe29F#vAu2tmct!2';
         $setting = DB::table($schema . '.setting')->first();
         $request = $this->curlServer([
-            'username' => $setting->api_username,
-            'password' => $setting->api_password
-                ], 'https://api.mpayafrica.co.tz/v2/auth');
+            'username' => $user,
+            'password' => $pass
+                ], $testing_re);
         $obj = json_decode($request);
         if (isset($obj) && is_object($obj) && isset($obj->status) && $obj->status == 1) {
             return $obj->token;
