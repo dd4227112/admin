@@ -89,7 +89,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function() {
 //send login reminder to parents in all schema
-            $this->sendLoginReminder();
+           // $this->sendLoginReminder();
         })->fridays()->at('13:00');
 
         $schedule->call(function () {
