@@ -32,6 +32,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::any('/message/destroy/{op?}/{ops?}/{schema?}', 'Message@destroy');
 
     Route::post('/search', 'HomeController@search');
+     Route::get('/search', 'HomeController@searchResult');
     Route::any('/market/{op?}', 'MarketingController@index');
     Route::get('/downloadMaterial/{type?}', 'MarketingController@downloadMaterial');
 });

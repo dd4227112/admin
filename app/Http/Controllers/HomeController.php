@@ -37,22 +37,26 @@ class HomeController extends Controller {
 
     public function search() {
         $q = request('q');
-        $result='';
+        $result = '';
         if (strlen($q) > 2) { //prevent empty search which load all results
-            $users = DB::select('select * from admin.all_users where lower(name) like \'%' . strtolower($q)  . '%\' ');
+            $users = DB::select('select * from admin.all_users where lower(name) like \'%' . strtolower($q) . '%\' or lower(phone) like \'%' . strtolower($q) . '%\' ');
             foreach ($users as $user) {
 
-                $result.= '<a href="'.url('profile/'.$user->schema_name.'/'.$user->table.'/'.$user->id).'">
-                                            <div class="user-img"> <img src="plugins/images/users/pawandeep.jpg" alt="user" class="img-circle"> <span class="profile-status online pull-right"></span> </div>
+                $result .= '<li><a href="' . url('profile/' . $user->schema_name . '/' . $user->table . '/' . $user->id) . '">                <div class="user-img"> <img src="public/plugins/images/users/varun.jpg" alt="user" class="img-circle"> <span class="profile-status online pull-right"></span> </div>
                                             <div class="mail-contnet">
-                                                <h5>'.$user->name.'</h5> <span class="mail-desc">User Type: '.$user->usertype.'</span> <span class="time">School: '.$user->schema_name.'</span> </div>
-                                        </a>';
+                                                <h5>' . $user->name . '</h5> <span class="mail-desc">User Type: ' . $user->usertype . '</span> <span class="time">School: ' . $user->schema_name . '</span> </div>
+                                        </a></li>';
             }
-            echo json_encode(array(
-                'total'=> count($users),
-                'result'=>$result
+            return json_encode(array(
+                'total' => count($users),
+                'result' => $result
             ));
         }
+    }
+
+    public function searchResult() {
+        $this->data['result'] = json_decode($this->search());
+        return view('profile.search_results', $this->data);
     }
 
 }

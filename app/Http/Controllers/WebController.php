@@ -53,10 +53,12 @@ class WebController extends Controller {
 
     public function logsummary() {
         // DB::statement("select admin.join_all('log')");
-        $this->data['start'] = request()->segment(2);
-        $this->data['end'] = request()->segment(3);
-        $this->data['schema'] = request()->segment(4);
-        $this->data['user'] = request()->segment(5);
+        $this->data['start'] = request('start_date');
+        $this->data['end'] = request('end_date');
+        $this->data['schema'] = request('schema');
+        $this->data['user'] = request('usertype');
+        $this->data['schemas']=(new \App\Http\Controllers\DatabaseController())->loadSchema();
+        $this->data['users']=DB::table('admin.all_users')->distinct('usertype')->get(['usertype']);
         return DB::select('select count(*) as total_logs,"schema_name"::text from admin.all_log group by "schema_name"::text order by count(*)');
     }
 
