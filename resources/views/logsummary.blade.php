@@ -8,29 +8,27 @@
                 <div class="form-group col-lg-2">
                     <label for="exampleInputEmail1">Schema</label>
                     <select class="form-control" name="schema">
-                        
+
                         <option value="">All</option>
-                        <?php  foreach ($schemas as $ss) { 
-    
+                        <?php foreach ($schemas as $ss) {
                             ?>
-                        <option value="<?=$ss->table_schema?>"><?=$ss->table_schema?></option>
-                       <?php }?>
+                            <option value="<?= $ss->table_schema ?>"><?= $ss->table_schema ?></option>
+                        <?php } ?>
                     </select> </div>
                 <div class="form-group col-lg-3">
                     <label for="exampleInputEmail1">Start Date</label>
-                    <input type="date" class="form-control" name="start_date"  value="<?= request('start_date')?>" id="exampleInputEmail1" placeholder="Enter email"> </div>
+                    <input type="date" class="form-control" name="start_date"  value="<?= request('start_date') ?>" id="exampleInputEmail1" placeholder="Enter email"> </div>
                 <div class="form-group col-lg-3">
                     <label for="exampleInputPassword1">End Date</label>
-                    <input type="date" class="form-control" name="end_date" value="<?= request('end_date')?>" id="exampleInputPassword1" placeholder="Password"> </div>
+                    <input type="date" class="form-control" name="end_date" value="<?= request('end_date') ?>" id="exampleInputPassword1" placeholder="Password"> </div>
                 <div class="form-group col-lg-2">
                     <label for="exampleInputPassword1">User Type</label>
                     <select class="form-control" name="usertype">
                         <option value="">All</option>
-                        <?php  foreach ($users as $user_info) { 
-    
+                        <?php foreach ($users as $user_info) {
                             ?>
-                        <option value="<?=$user_info->usertype?>"><?=$user_info->usertype?></option>
-                       <?php }?>
+                            <option value="<?= $user_info->usertype ?>"><?= $user_info->usertype ?></option>
+                        <?php } ?>
                     </select> </div>
                 <div class="form-group col-lg-2">
                     <label for="exampleInputPassword1"></label><br/>
@@ -58,7 +56,47 @@
                     yAxis: {
                         allowDecimals: false,
                         title: {
-                            text: 'Average'
+                            text: 'Requests'
+                        }
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    plotOptions: {
+                        series: {
+                            borderWidth: 0,
+                            dataLabels: {
+                                enabled: true,
+                                format: ''
+                            }
+                        }
+                    },
+                    tooltip: {
+                        formatter: function () {
+                            return '<b>' + this.series.name + '</b><br/>' +
+                                    this.point.y + ' ' + this.point.name.toUpperCase();
+                        }
+                    }
+                });
+                
+                 $('#container2').highcharts({
+                    data: {
+                        table: 'datatable2'
+                    },
+                    series: [{
+                            name: '',
+                            colorByPoint: true}
+                    ],
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Number of Users Login'
+                    },
+                    yAxis: {
+                        allowDecimals: false,
+                        title: {
+                            text: 'Users'
                         }
                     },
                     legend: {
@@ -89,10 +127,12 @@
 
 <?php
 $from_date = date('Y-m-d', strtotime($start)) == '1970-01-01' ? date('Y-m-d', time() - 60 * 60 * 24 * 30) : date('Y-m-d', strtotime($start));
-                    $end_date = date('Y-m-d', strtotime($end)) == '1970-01-01' ? date('Y-m-d') : date('Y-m-d', strtotime($end));
-                    $where_schema = $schema == '' ? '' : ' AND "schema_name"::text=\'' . $schema . "' ";
-                    $where_user = $user == '' ? '' : ' AND lower("user")=\'' . strtolower($user) . "' ";
-                    $sql="select count(*),created_at::date from admin.all_log where created_at::date <= '" . $end_date . "' and created_at::date>= '" . $from_date . "' " . $where_schema . $where_user . " group by created_at::date order by created_at desc";
+$end_date = date('Y-m-d', strtotime($end)) == '1970-01-01' ? date('Y-m-d') : date('Y-m-d', strtotime($end));
+$where_schema = $schema == '' ? '' : ' AND "schema_name"::text=\'' . $schema . "' ";
+$where_user = $user == '' ? '' : ' AND lower("user")=\'' . strtolower($user) . "' ";
+$sql = "select count(*),created_at::date from admin.all_log where created_at::date <= '" . $end_date . "' and created_at::date>= '" . $from_date . "' " . $where_schema . $where_user . " group by created_at::date order by created_at desc";
+
+$sql_distinct = "select count(distinct user_id),created_at::date from admin.all_log where created_at::date <= '" . $end_date . "' and created_at::date>= '" . $from_date . "' " . $where_schema . $where_user . " group by created_at::date order by created_at desc";
 ?>
         <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
         <div class="table-responsive"> 
@@ -104,21 +144,52 @@ $from_date = date('Y-m-d', strtotime($start)) == '1970-01-01' ? date('Y-m-d', ti
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-                    $i = 1;
-                    
-                    $logs = \DB::select($sql);
-                    foreach ($logs as $value) {
-                        ?>
+<?php
+$i = 1;
+
+$logs = \DB::select($sql);
+foreach ($logs as $value) {
+    ?>
                         <tr>
                             <td><?= $value->created_at ?></td>
                             <td><?= $value->count ?></td>
 
                         </tr>
-                        <?php
-                        $i++;
-                    }
-                    ?>
+    <?php
+    $i++;
+}
+?>
+                </tbody>
+            </table>
+        </div>
+        
+        
+        <hr/><br/>
+        <div id="container2" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+        <div class="table-responsive"> 
+            <table id="datatable2" style="display:none" >
+                <thead>
+                    <tr>
+                        <th>Count</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+<?php
+$i = 1;
+
+$user_logs = \DB::select($sql_distinct);
+foreach ($user_logs as $log) {
+    ?>
+                        <tr>
+                            <td><?= $log->created_at ?></td>
+                            <td><?= $log->count ?></td>
+
+                        </tr>
+    <?php
+    $i++;
+}
+?>
                 </tbody>
             </table>
         </div>
