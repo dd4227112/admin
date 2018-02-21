@@ -37,7 +37,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/downloadMaterial/{type?}', 'MarketingController@downloadMaterial');
 });
 Route::get('api/request', 'PaymentController@requests');
-Route::get('api/invoices', 'PaymentController@invoices');
+Route::any('api/invoices/create', 'PaymentController@createInvoice');
+Route::get('api/invoices/{option?}/{option2?}', 'PaymentController@invoices');
 Route::get('api/payment/{option?}', 'PaymentController@payment');
 
 Route::get('profile/update/{table?}/{user_id?}', 'ProfileController@updateProfile');

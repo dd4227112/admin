@@ -2,7 +2,10 @@
 @section('content')
 <div class="white-box">
     <h5 class="box-title">Payment Requests</h5>
-
+<?php
+if(request()->segment(3)==0){ ?>
+    <a href="<?= url('api/invoices/create') ?>" class="btn btn-info">Create Testing Invoice</a>
+<?php }?>
     <div class="table-responsive"> 
         <table id="example23" class="display nowrap table color-table success-table" cellspacing="0" width="100%">
             <thead>
