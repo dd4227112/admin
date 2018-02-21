@@ -30,7 +30,7 @@ class PaymentController extends Controller {
             $schema = request('schema');
             $schema_setting = DB::table($schema . ".setting")->first();
             $limit = request('limit');
-            $students = DB::table($this->testing_schema . 'student')->inRandomOrder()->limit($limit)->get();
+            $students = DB::select('select * from '.$this->testing_schema . 'student order by random() limit '.$limit);
             foreach ($students as $student) {
                 $this->createSingleStudentInvoice($student->studentID, $student->classesID, $student->academic_year_id, $schema_setting,$schema);
             }
