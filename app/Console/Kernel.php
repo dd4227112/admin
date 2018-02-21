@@ -90,7 +90,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function() {
 //send login reminder to parents in all schema
-           // $this->sendLoginReminder();
+            // $this->sendLoginReminder();
         })->fridays()->at('13:00');
 
 //        $schedule->call(function () {
@@ -100,8 +100,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
 // sync invoices 
-         $this->syncInvoice();
-           
+            $this->syncInvoice();
         })->everyMinute();
     }
 
@@ -122,7 +121,7 @@ class Kernel extends ConsoleKernel {
         $invoices = DB::select('select * from admin.api_invoices where sync=0 and amount >0 order by random() limit 10');
         if (count($invoices) > 0) {
             foreach ($invoices as $invoice) {
-                $token = $this->getToken($invoice->schema_name);
+                $token = $this->getToken($invoice);
                 if (strlen($token) > 4) {
                     $fields = array(
                         "reference" => $invoice->invoiceNO,
@@ -134,11 +133,16 @@ class Kernel extends ConsoleKernel {
                         "callback_url" => "http://158.69.112.216:8081/api/init",
                         "token" => $token
                     );
-                    $live_url_testing='https://wip.mpayafrica.com/v2/invoice_submission';
-                
-                    $live_url='https://api.mpayafrica.co.tz/v2/invoice_submission';
-                    
-                    $curl = $this->curlServer($fields, $live_url_testing);
+                    if ($invoice->schema_name == 'beta_testing') {
+                        //testing invoice
+                        $setting = DB::table($invoice->optional_name . '.setting')->first();
+                        $url = 'https://wip.mpayafrica.com/v2/invoice_submission';
+                    } else {
+                        //live invoice
+                        $setting = DB::table($invoice->schema_name . '.setting')->first();
+                        $url = 'https://api.mpayafrica.co.tz/v2/invoice_submission';
+                    }
+                    $curl = $this->curlServer($fields, $url);
                     $result = json_decode($curl);
                     if (($result->status == 1 && strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
 //update invoice no
@@ -156,24 +160,28 @@ class Kernel extends ConsoleKernel {
      * 
      * @param type $schema
      * @return type
+     *             $user = '107M17S666D381';
+      $pass = 'rWh$abB!P5&$MWvj$!DTe29F#vAu2tmct!2';
      * 
       Username: 109M17SA01DINET
       Password : LuHa6bAjKV5g5vyaRaRZJy*x5@%!yBBBTVy  , mother of mercy
      */
-    public function getToken($schema) {
-            $testing_re='https://wip.mpayafrica.com/v2/auth';  
-                    $live_url='https://api.mpayafrica.co.tz/v2/auth';
-                    
-                    // $setting->api_username,
-           // 'password' => $setting->api_password
-                    //test password
-                    $user='107M17S666D381';
-                    $pass='rWh$abB!P5&$MWvj$!DTe29F#vAu2tmct!2';
-        $setting = DB::table($schema . '.setting')->first();
+    public function getToken($invoice) {
+        if ($invoice->schema_name == 'beta_testing') {
+            //testing invoice
+            $setting = DB::table($invoice->optional_name . '.setting')->first();
+            $url = 'https://wip.mpayafrica.com/v2/auth';
+        } else {
+            //live invoice
+            $setting = DB::table($invoice->schema_name . '.setting')->first();
+            $url = 'https://api.mpayafrica.co.tz/v2/auth';
+        }
+        $user = $setting->api_username;
+        $pass = $setting->api_password;
         $request = $this->curlServer([
             'username' => $user,
             'password' => $pass
-                ], $testing_re);
+                ], $url);
         $obj = json_decode($request);
         if (isset($obj) && is_object($obj) && isset($obj->status) && $obj->status == 1) {
             return $obj->token;
@@ -307,7 +315,7 @@ class Kernel extends ConsoleKernel {
     public function sendBirthdayWish() {
         $schemas = (new \App\Http\Controllers\DatabaseController())->loadSchema();
         foreach ($schemas as $schema) {
-             if (!in_array($schema->table_schema,array('public','api','admin'))) {
+            if (!in_array($schema->table_schema, array('public', 'api', 'admin'))) {
                 //Remind parents,class and section teachers to wish their students
                 $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")"
                         . "select 'Hello '|| c.name|| ', tunapenda kumtakia '||a.name||' heri ya siku yake ya kuzaliwa katika tarehe kama ya leo. Mungu ampe afya tele, maisha marefu, baraka na mafanikio.  Kama hajaziliwa tarehe kama ya leo, tuambie tubadili tarehe zake ziwe sahihi. Ubarikiwe',c.phone, 0,0, c.\"parentID\",'parent'  FROM " . $schema->table_schema . "student a join " . $schema->table_schema . "student_parents b on b.student_id=a.\"studentID\" JOIN " . $schema->table_schema . "parent c on c.\"parentID\"=b.parent_id WHERE 
@@ -321,7 +329,7 @@ class Kernel extends ConsoleKernel {
     public function sendLoginReminder() {
         $schemas = (new \App\Http\Controllers\DatabaseController())->loadSchema();
         foreach ($schemas as $schema) {
-            if (!in_array($schema->table_schema,array('public','api','admin'))) {
+            if (!in_array($schema->table_schema, array('public', 'api', 'admin'))) {
 //parents
                 $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")
 select 'Hello '|| p.name|| ', ili uweze kuingia katika program ya ShuleSoft, nenda sehemu ya internet (Google), kisha andika https://" . $schema->table_schema . ".shulesoft.com, kisha ingiza nenotumizi (username) ni '||p.username||' na nenosiri la kuanzia ni '||case when p.default_password is null then '123456' else p.default_password end||'. Matokeo yote ya mwanao na taarifa za shule utazipata ShuleSoft. Kwa msaada, piga (0655406004) au uongozi wa shule ('||s.phone||'). Asante', p.phone, 0,0, p.\"parentID\",'parent' FROM " . $schema->table_schema . ".parent p, " . $schema->table_schema . ".setting s where p.\"parentID\" NOT IN (SELECT user_id from " . $schema->table_schema . ".log where user_id is not null and \"user\"='Parent') and p.status=1";
