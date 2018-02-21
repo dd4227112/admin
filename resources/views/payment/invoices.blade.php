@@ -25,7 +25,7 @@ if(request()->segment(3)==0){ ?>
                         <td><?= $invoice->invoiceNO ?></td>
                         <td><?= $invoice->student_name ?></td>
                         <td><?= $invoice->school_name ?></td>
-                        <td><?=date('d M Y',strtotime($invoice->date)) ?></td>
+                        <td><?=date('d M Y',strtotime($invoice->created_at)) ?></td>
                         <td><?= $invoice->amount ?></td>
                     </tr>
                 <?php } ?>
