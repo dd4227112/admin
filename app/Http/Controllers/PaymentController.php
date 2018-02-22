@@ -41,7 +41,7 @@ class PaymentController extends Controller {
     }
 
     public function cancelInvoice() {
-        $invoice = \collect(DB::select('select * from admin.api_invoices where invoiceNO=' . request('invoice') . ' limit 1'))->first();
+        $invoice = \collect(DB::select('select * from admin.api_invoices where "invoiceNO"=' . request('invoice') . ' limit 1'))->first();
         $token = $this->getToken($invoice);
         if (strlen($token) > 4) {
             $fields = array(
