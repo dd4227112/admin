@@ -69,7 +69,25 @@ class PaymentController extends Controller {
             }
         }
     }
+   private function curlServer($fields, $url) {
+// Open connection
+        $ch = curl_init();
+// Set the url, number of POST vars, POST data
 
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'application/x-www-form-urlencoded'
+        ));
+
+        curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+        return $result;
+    }
     public function getToken($invoice) {
         if ($invoice->schema_name == 'beta_testing') {
             //testing invoice
