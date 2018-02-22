@@ -63,10 +63,10 @@ class PaymentController extends Controller {
 //update invoice no
                 DB::table($invoice->schema_name . '.invoices')
                         ->where('invoiceNO', $invoice->invoiceNO)->update(['sync' => 0]);
-                return redirect()->back()->with('success', 'success');
+                return redirect('api/invoices/0')->with('success', 'success');
             } else {
                 DB::table('api.requests')->insert(['content' => $curl . ', request=' . json_encode($fields)]);
-                return redirect()->back()->with('error', 'error');
+                return redirect('api/invoices/0')->with('error', 'error');
             }
         }
     }
