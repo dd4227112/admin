@@ -6,6 +6,19 @@
 if(request()->segment(3)==0){ ?>
     <a href="<?= url('api/invoices/create') ?>" class="btn btn-info">Create Testing Invoice</a>
 <?php }?>
+    @if ($message = Session::get('success'))
+    <div class="alert alert-top alert-success alert-dismissable margin5">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Success:</strong> {{ $message }}
+    </div>
+@endif
+
+@if ($message = Session::get('error'))
+    <div class="alert alert-top alert-danger alert-dismissable margin5">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Error:</strong> {{ $message }}
+    </div>
+@endif
     <div class="table-responsive"> 
         <table id="example23" class="display nowrap table color-table success-table" cellspacing="0" width="100%">
             <thead>

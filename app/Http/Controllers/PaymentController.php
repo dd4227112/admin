@@ -66,6 +66,7 @@ class PaymentController extends Controller {
                 return redirect()->back()->with('success', 'success');
             } else {
                 DB::table('api.requests')->insert(['content' => $curl . ', request=' . json_encode($fields)]);
+                return redirect()->back()->with('error', 'error');
             }
         }
     }
