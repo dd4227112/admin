@@ -38,6 +38,7 @@ Route::group(['middleware' => ['auth']], function() {
 });
 Route::get('api/request', 'PaymentController@requests');
 Route::any('api/invoices/create', 'PaymentController@createInvoice');
+Route::get('api/invoices/cancel', 'PaymentController@cancelInvoice');
 Route::get('api/invoices/{option?}/{option2?}', 'PaymentController@invoices');
 Route::get('api/payment/{option?}', 'PaymentController@payment');
 

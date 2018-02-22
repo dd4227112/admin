@@ -30,14 +30,66 @@ class PaymentController extends Controller {
             $schema = request('schema');
             $schema_setting = DB::table($schema . ".setting")->first();
             $limit = request('limit');
-            $students = DB::select('select * from '.$this->testing_schema . 'student order by random() limit '.$limit);
+            $students = DB::select('select * from ' . $this->testing_schema . 'student order by random() limit ' . $limit);
             foreach ($students as $student) {
-                $this->createSingleStudentInvoice($student->studentID, $student->classesID, $student->academic_year_id, $schema_setting,$schema);
+                $this->createSingleStudentInvoice($student->studentID, $student->classesID, $student->academic_year_id, $schema_setting, $schema);
             }
-            return redirect('api/invoices/0')->with('success','Success');
+            return redirect('api/invoices/0')->with('success', 'Success');
         }
         $this->data['schemas'] = (new \App\Http\Controllers\DatabaseController())->loadSchema();
         return view('payment.create_invoice', $this->data);
+    }
+
+    public function cancelInvoice() {
+        $invoice = \collect(DB::select('select * from admin.api_invoices where invoiceNO=' . request('invoice') . ' limit 1'))->first();
+        $token = $this->getToken($invoice);
+        if (strlen($token) > 4) {
+            $fields = array(
+                "reference" => $invoice->invoiceNO,
+                "token" => $token
+            );
+            if ($invoice->schema_name == 'beta_testing') {
+                //testing invoice
+                $setting = DB::table($invoice->optional_name . '.setting')->first();
+                $url = 'https://wip.mpayafrica.com/v2/invoice_cancel';
+            } else {
+                //live invoice
+                $setting = DB::table($invoice->schema_name . '.setting')->first();
+                $url = 'https://api.mpayafrica.co.tz/v2/invoice_cancel';
+            }
+            $curl = $this->curlServer($fields, $url);
+            $result = json_decode($curl);
+            if ($result->status == 1) {
+//update invoice no
+                DB::table($invoice->schema_name . '.invoices')
+                        ->where('invoiceNO', $invoice->invoiceNO)->update(['sync' => 0]);
+                return redirect()->back()->with('success', 'success');
+            } else {
+                DB::table('api.requests')->insert(['content' => $curl . ', request=' . json_encode($fields)]);
+            }
+        }
+    }
+
+    public function getToken($invoice) {
+        if ($invoice->schema_name == 'beta_testing') {
+            //testing invoice
+            $setting = DB::table($invoice->optional_name . '.setting')->first();
+            $url = 'https://wip.mpayafrica.com/v2/auth';
+        } else {
+            //live invoice
+            $setting = DB::table($invoice->schema_name . '.setting')->first();
+            $url = 'https://api.mpayafrica.co.tz/v2/auth';
+        }
+        $user = $setting->api_username;
+        $pass = $setting->api_password;
+        $request = $this->curlServer([
+            'username' => $user,
+            'password' => $pass
+                ], $url);
+        $obj = json_decode($request);
+        if (isset($obj) && is_object($obj) && isset($obj->status) && $obj->status == 1) {
+            return $obj->token;
+        }
     }
 
     public function createInvoiceNo($schema_setting) {
@@ -52,7 +104,7 @@ class PaymentController extends Controller {
         }
     }
 
-    public function createSingleStudentInvoice($studentID, $classesID, $year_id, $schema_setting,$schema) {
+    public function createSingleStudentInvoice($studentID, $classesID, $year_id, $schema_setting, $schema) {
         $academic_year_id = $year_id;
         $timedate = date("Y-m-d");
 

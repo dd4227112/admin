@@ -15,6 +15,7 @@ if(request()->segment(3)==0){ ?>
                     <th>School Name</th>
                     <th>Created At</th>
                     <th>Amount</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,6 +28,7 @@ if(request()->segment(3)==0){ ?>
                         <td><?= $invoice->school_name ?></td>
                         <td><?=date('d M Y',strtotime($invoice->created_at)) ?></td>
                         <td><?= $invoice->amount ?></td>
+                        <td><a href="<?=url('api/invoices/cancel').'?invoice='.$invoice->invoiceNO?>" class="btn btn-danger">Cancel</a></td>
                     </tr>
                 <?php } ?>
             </tbody>
