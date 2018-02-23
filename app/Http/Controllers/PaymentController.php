@@ -257,7 +257,7 @@ AND "b"."fee_installment_id" =  ' . $fee_installment_id->id . '');
     public function payment($school = null) {
         $this->data['schools'] = DB::select("select distinct table_schema from information_schema.tables where table_schema not in ('admin','pg_catalog','information_schema','api','app')");
         if ($school != null) {
-            $this->data['payments'] = DB::table('admin.all_payment')->join($school . '.invoices', 'admin.all_payment.invoiceID', $school . '.invoices.id')->join($school . '.invoices', 'admin.all_payment.invoiceID', $school . '.invoices.id')->where('schema_name', $school)->get();
+            $this->data['payments'] = DB::table('admin.all_payment')->join($school . '.invoices', 'admin.all_payment.invoiceID', $school . '.invoices.id')->where('schema_name', $school)->get();
             //dd($this->data['payments']);
         } else {
             $this->data['payments'] = array();
