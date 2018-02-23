@@ -101,7 +101,7 @@ class PaymentController extends Controller {
             if ($result->status == 1) {
 //update invoice no
                 DB::table($invoice->schema_name . '.invoices')
-                        ->where('invoiceNO', $invoice->invoiceNO)->update(['sync' => 0]);
+                        ->where('invoiceNO', $invoice->invoiceNO)->update(['sync' => 0,'return_message'=>$curl]);
                 return redirect('api/invoices/0')->with('success', 'success');
             } else {
                 DB::table('api.requests')->insert(['content' => $curl . ', request=' . json_encode($fields)]);
