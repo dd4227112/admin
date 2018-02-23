@@ -35,7 +35,7 @@ class Kernel extends ConsoleKernel {
 //check if there is any email then send
 //$this->testCrone();
 
-            $messages = DB::select('select * from public.all_sms order by random() limit 25');
+            $messages = DB::select('select * from public.all_sms order by random() limit 20');
             if (!empty($messages)) {
                 foreach ($messages as $sms) {
 
@@ -86,7 +86,7 @@ class Kernel extends ConsoleKernel {
 // remind parents to login in shulesoft and check their child performance
             $this->sendNotice();
             $this->sendBirthdayWish();
-        })->dailyAt('10:00');
+        })->dailyAt('08:00');
 
         $schedule->call(function() {
 //send login reminder to parents in all schema
