@@ -15,13 +15,13 @@ class PaymentController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function requests() {
-        $this->data['requests'] = \App\Request::latest()->paginate();
+        $this->data['requests'] = \App\Request::orderBy('created_at','desc')->paginate();
         return view('payment.api_requests', $this->data);
     }
 
     public function invoices() {
         $where = request()->segment(3) == 0 ? '=' : '!=';
-        $this->data['invoices'] = DB::table('api.invoices')->where('schema_name', $where, 'beta_testing')->get();
+        $this->data['invoices'] = DB::table('api.invoices')->where('schema_name', $where, 'beta_testing')->where('amount','>',0)->get();
         return view('payment.invoices', $this->data);
     }
     
