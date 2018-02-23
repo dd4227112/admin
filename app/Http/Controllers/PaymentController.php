@@ -24,6 +24,45 @@ class PaymentController extends Controller {
         $this->data['invoices'] = DB::table('api.invoices')->where('schema_name', $where, 'beta_testing')->get();
         return view('payment.invoices', $this->data);
     }
+    
+     public function syncInvoice() {
+        $invoices = DB::select('select * from admin.api_invoices where sync=0 and amount >0 order by random() limit 10');
+        if (count($invoices) > 0) {
+            foreach ($invoices as $invoice) {
+                $token = $this->getToken($invoice);
+                if (strlen($token) > 4) {
+                    $fields = array(
+                        "reference" => $invoice->invoiceNO,
+                        "student_name" => $invoice->student_name,
+                        "student_id" => $invoice->studentID,
+                        "amount" => $invoice->amount,
+                        "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
+                        "code" => "10",
+                        "callback_url" => "http://158.69.112.216:8081/api/init",
+                        "token" => $token
+                    );
+                    if ($invoice->schema_name == 'beta_testing') {
+                        //testing invoice
+                        $setting = DB::table($invoice->optional_name . '.setting')->first();
+                        $url = 'https://wip.mpayafrica.com/v2/invoice_submission';
+                    } else {
+                        //live invoice
+                        $setting = DB::table($invoice->schema_name . '.setting')->first();
+                        $url = 'https://api.mpayafrica.co.tz/v2/invoice_submission';
+                    }
+                    $curl = $this->curlServer($fields, $url);
+                    $result = json_decode($curl);
+                    if (($result->status == 1 && strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
+//update invoice no
+                        DB::table($invoice->schema_name . '.invoices')
+                                ->where('invoiceNO', $invoice->invoiceNO)->update(['sync' => 1,'return_message'=>$curl]);
+                    } else {
+                        DB::table('api.requests')->insert(['content' => $curl . ', request=' . json_encode($fields)]);
+                    }
+                }
+            }
+        }
+    }
 
     public function createInvoice() {
         if ($_POST) {
