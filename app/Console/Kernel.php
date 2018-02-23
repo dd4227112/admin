@@ -86,7 +86,7 @@ class Kernel extends ConsoleKernel {
 // remind parents to login in shulesoft and check their child performance
             $this->sendNotice();
             $this->sendBirthdayWish();
-        })->dailyAt('07:00');
+        })->dailyAt('10:00');
 
         $schedule->call(function() {
 //send login reminder to parents in all schema
@@ -318,7 +318,7 @@ class Kernel extends ConsoleKernel {
             if (!in_array($schema->table_schema, array('public', 'api', 'admin'))) {
                 //Remind parents,class and section teachers to wish their students
                 $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")"
-                        . "select 'Hello '|| c.name|| ', tunapenda kumtakia '||a.name||' heri ya siku yake ya kuzaliwa katika tarehe kama ya leo. Mungu ampe afya tele, maisha marefu, baraka na mafanikio.  Kama hajaziliwa tarehe kama ya leo, tuambie tubadili tarehe zake ziwe sahihi. Ubarikiwe',c.phone, 0,0, c.\"parentID\",'parent'  FROM " . $schema->table_schema . "student a join " . $schema->table_schema . "student_parents b on b.student_id=a.\"studentID\" JOIN " . $schema->table_schema . "parent c on c.\"parentID\"=b.parent_id WHERE 
+                        . "select 'Hello '|| c.name|| ', tunapenda kumtakia '||a.name||' heri ya siku yake ya kuzaliwa katika tarehe kama ya leo. Mungu ampe afya tele, maisha marefu, baraka na mafanikio.  Kama hajaziliwa tarehe kama ya leo, tuambie tubadili tarehe zake ziwe sahihi. Ubarikiwe',c.phone, 0,0, c.\"parentID\",'parent'  FROM " . $schema->table_schema . ".student a join " . $schema->table_schema . ".student_parents b on b.student_id=a.\"studentID\" JOIN " . $schema->table_schema . ".parent c on c.\"parentID\"=b.parent_id WHERE 
                     DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) 
                     AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE)";
                 DB::statement($sql);
