@@ -147,7 +147,7 @@ class Kernel extends ConsoleKernel {
                     if (($result->status == 1 && strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
 //update invoice no
                         DB::table($invoice->schema_name . '.invoices')
-                                ->where('invoiceNO', $invoice->invoiceNO)->update(['sync' => 1]);
+                                ->where('invoiceNO', $invoice->invoiceNO)->update(['sync' => 1,'return_message'=>$curl]);
                     } else {
                         DB::table('api.requests')->insert(['content' => $curl . ', request=' . json_encode($fields)]);
                     }
