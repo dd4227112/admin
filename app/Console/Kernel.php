@@ -133,21 +133,23 @@ class Kernel extends ConsoleKernel {
                         "callback_url" => "http://158.69.112.216:8081/api/init",
                         "token" => $token
                     );
+                    $push_status=$invoice->status==2 ? 'invoice_update':'invoice_submission';
                     if ($invoice->schema_name == 'beta_testing') {
                         //testing invoice
                         $setting = DB::table($invoice->optional_name . '.setting')->first();
-                        $url = 'https://wip.mpayafrica.com/v2/invoice_submission';
+                        
+                        $url = 'https://wip.mpayafrica.com/v2/'.$push_status;
                     } else {
                         //live invoice
                         $setting = DB::table($invoice->schema_name . '.setting')->first();
-                        $url = 'https://api.mpayafrica.co.tz/v2/invoice_submission';
+                        $url = 'https://api.mpayafrica.co.tz/v2/'.$push_status;
                     }
                     $curl = $this->curlServer($fields, $url);
                     $result = json_decode($curl);
                     if (($result->status == 1 && strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
 //update invoice no
                         DB::table($invoice->schema_name . '.invoices')
-                                ->where('invoiceNO', $invoice->invoiceNO)->update(['sync' => 1,'return_message'=>$curl]);
+                                ->where('invoiceNO', $invoice->invoiceNO)->update(['sync' => 1,'return_message'=>$curl,'push_status'=>$push_status]);
                     } else {
                         DB::table('api.requests')->insert(['content' => $curl . ', request=' . json_encode($fields)]);
                     }
