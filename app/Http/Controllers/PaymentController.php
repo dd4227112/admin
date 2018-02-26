@@ -261,9 +261,9 @@ AND "b"."fee_installment_id" =  ' . $fee_installment_id->id . '');
         if ($school != null) {
             $this->data['setting'] = DB::table($school . '.setting')->first();
             if ($school == 'beta_testing') {
-                $this->data['payments'] = DB::table($school . '.payment')->join($school . '.invoices', $school . '.payment.invoiceID', $school . '.invoices.id')->join($school . '.student', $school . '.invoices.studentID', $school . '.student.studentID')->get();
+                $this->data['payments'] = DB::table($school . '.payment')->join($school . '.invoices', $school . '.payment.invoiceID', $school . '.invoices.id')->join($school . '.student', $school . '.invoices.studentID', $school . '.student.studentID')->join($school.'.receipt',$school.'.receipt.paymentID',$school.'.payment.paymentID')->get();
             } else {
-                $this->data['payments'] = DB::table('admin.all_payment')->join($school . '.invoices', 'admin.all_payment.invoiceID', $school . '.invoices.id')->join($school . '.student', $school . '.invoices.studentID', $school . '.student.studentID')->where('schema_name', $school)->get();
+                $this->data['payments'] = DB::table('admin.all_payment')->join($school . '.invoices', 'admin.all_payment.invoiceID', $school . '.invoices.id')->join($school . '.student', $school . '.invoices.studentID', $school . '.student.studentID')->join($school.'.receipt',$school.'.receipt.paymentID',$school.'.payment.paymentID')->where('schema_name', $school)->get();
             }
         } else {
             $this->data['setting'] = array();

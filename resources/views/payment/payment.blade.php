@@ -47,8 +47,8 @@
                         <td><?= $request->paymenttype ?></td>
                         <td><?= $request->created_at ?></td>
                         <td><?= $request->transaction_id ?></td>
-                        <td><?= $request->transaction_id ?></td>
-                        <td><?= $request->transaction_id ?></td>
+                        <td><?= $request->mobile_transaction_id ?></td>
+                        <td><?= 'No='.$request->number.', code='.$request->code ?></td>
                         <td><?php
                             echo $setting->transaction_fee;
                             $transaction_fee += $setting->transaction_fee;
