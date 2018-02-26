@@ -15,17 +15,17 @@ class PaymentController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function requests() {
-        $this->data['requests'] = \App\Request::orderBy('created_at','desc')->paginate();
+        $this->data['requests'] = \App\Request::orderBy('created_at', 'desc')->paginate();
         return view('payment.api_requests', $this->data);
     }
 
     public function invoices() {
         $where = request()->segment(3) == 0 ? '=' : '!=';
-        $this->data['invoices'] = DB::table('api.invoices')->where('schema_name', $where, 'beta_testing')->where('amount','>',0)->get();
+        $this->data['invoices'] = DB::table('api.invoices')->where('schema_name', $where, 'beta_testing')->where('amount', '>', 0)->get();
         return view('payment.invoices', $this->data);
     }
-    
-     public function syncInvoice() {
+
+    public function syncInvoice() {
         $invoices = DB::select('select * from admin.api_invoices where sync=0 and amount >0 order by random() limit 10');
         if (count($invoices) > 0) {
             foreach ($invoices as $invoice) {
@@ -55,7 +55,7 @@ class PaymentController extends Controller {
                     if (($result->status == 1 && strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
 //update invoice no
                         DB::table($invoice->schema_name . '.invoices')
-                                ->where('invoiceNO', $invoice->invoiceNO)->update(['sync' => 1,'return_message'=>$curl]);
+                                ->where('invoiceNO', $invoice->invoiceNO)->update(['sync' => 1, 'return_message' => $curl]);
                     } else {
                         DB::table('api.requests')->insert(['content' => $curl . ', request=' . json_encode($fields)]);
                     }
@@ -101,7 +101,7 @@ class PaymentController extends Controller {
             if ($result->status == 1) {
 //update invoice no
                 DB::table($invoice->schema_name . '.invoices')
-                        ->where('invoiceNO', $invoice->invoiceNO)->update(['sync' => 0,'return_message'=>$curl]);
+                        ->where('invoiceNO', $invoice->invoiceNO)->update(['sync' => 0, 'return_message' => $curl]);
                 return redirect('api/invoices/0')->with('success', 'success');
             } else {
                 DB::table('api.requests')->insert(['content' => $curl . ', request=' . json_encode($fields)]);
@@ -109,7 +109,8 @@ class PaymentController extends Controller {
             }
         }
     }
-   private function curlServer($fields, $url) {
+
+    private function curlServer($fields, $url) {
 // Open connection
         $ch = curl_init();
 // Set the url, number of POST vars, POST data
@@ -128,6 +129,7 @@ class PaymentController extends Controller {
         curl_close($ch);
         return $result;
     }
+
     public function getToken($invoice) {
         if ($invoice->schema_name == 'beta_testing') {
             //testing invoice
@@ -257,13 +259,14 @@ AND "b"."fee_installment_id" =  ' . $fee_installment_id->id . '');
     public function payment($school = null) {
         $this->data['schools'] = DB::select("select distinct table_schema from information_schema.tables where table_schema not in ('admin','pg_catalog','information_schema','api','app')");
         if ($school != null) {
-            if($school=='beta_testing'){
-               $this->data['payments'] = DB::table('beta_testing.payment')->join($school . '.invoices', 'beta_testing.payment.invoiceID', $school . '.invoices.id')->join('beta_testing.student','beta_testing.invoices.studentID','beta_testing.student.studentID')->get();   
-            }else{
-            $this->data['payments'] = DB::table('admin.all_payment')->join($school . '.invoices', 'admin.all_payment.invoiceID', $school . '.invoices.id')->where('schema_name', $school)->get();
+            $this->data['setting'] = DB::table($school . '.setting')->first();
+            if ($school == 'beta_testing') {
+                $this->data['payments'] = DB::table($school . '.payment')->join($school . '.invoices', $school . '.payment.invoiceID', $school . '.invoices.id')->join($school . '.student', $school . '.invoices.studentID', $school . '.student.studentID')->get();
+            } else {
+                $this->data['payments'] = DB::table('admin.all_payment')->join($school . '.invoices', 'admin.all_payment.invoiceID', $school . '.invoices.id')->join($school . '.student', $school . '.invoices.studentID', $school . '.student.studentID')->where('schema_name', $school)->get();
             }
-            //dd($this->data['payments']);
         } else {
+            $this->data['setting'] = array();
             $this->data['payments'] = array();
         }
         return view('payment.payment', $this->data);

@@ -10,14 +10,17 @@
         <div class="white-box">
             <h3 class="box-title">Schools</h3>
             <!--<div id="basicgrid"></div>-->
-
-            <table id="example23" class="table display nowrap table color-table success-table">
+ <div class="table-responsive"> 
+            <table id="example23" class="table display nowrap table color-table success-table table-bordered">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>School Name</th>
                         <th>Students</th>
                         <th>Cost</th>
+                        <th>Transaction Fee</th>
+                        <th>NMB Comission</th>
+                        <th>ShuleSoft Comission</th>
                         <th>Amount </th>
                         <th>Parents</th>
                         <th>Teachers</th>
@@ -37,7 +40,8 @@
                         $total = 0;
                         $total_price = 0;
                         foreach ($users as $key => $value) {
-                            $price = \DB::table($value->schema_name . '.setting')->where('settingID', 1)->value('price_per_student');
+                            $setting = \DB::table($value->schema_name . '.setting')->first();
+                            $price =$setting->price_per_student;
                             $students += $value->student;
                             $parents += $value->parent;
                             $teachers += $value->teacher;
@@ -51,6 +55,9 @@
                                 <td><?= $value->schema_name ?></td>
                                 <td><?= $value->student ?></td>
                                 <td> <input class="text-muted" type="text" schema='<?=$value->schema_name?>' id="price_per_student" value="<?= $price ?>" onblur="edit_records('price_per_student',this.value,'<?=$value->schema_name?>')"/></td>
+                                           <td> <input class="text-muted" type="text" schema='<?=$value->schema_name?>' id="price_per_student" value="<?= $setting->transaction_fee ?>" onblur="edit_records('transaction_fee',this.value,'<?=$value->schema_name?>')"/></td>
+                                                      <td> <input class="text-muted" type="text" schema='<?=$value->schema_name?>' id="price_per_student" value="<?= $setting->nmb_comission ?>" onblur="edit_records('nmb_comission',this.value,'<?=$value->schema_name?>')"/></td>
+                                                                 <td> <input class="text-muted" type="text" schema='<?=$value->schema_name?>' id="price_per_student" value="<?= $setting->shulesoft_comission ?>" onblur="edit_records('shulesoft_comission',this.value,'<?=$value->schema_name?>')"/></td>
                                 <td><?= number_format($price_per_school) ?></td>
                                 <td><?= $value->parent ?></td>
                                 <td><?= $value->teacher ?></td>
@@ -63,9 +70,10 @@
                         ?>
                     <tfoot>
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td><?= $students ?></td>
+                            <td colspan="2"></td>
+                             <td><?= $students ?></td>
+                            <td colspan="3"></td>
+                           
                              <td></td>
                             <td><?= number_format($total_price) ?></td>
                             <td><?= $parents ?></td>
@@ -77,6 +85,7 @@
                 <?php } ?>
                 </tbody>
             </table>
+ </div>
         </div>
     </div>
 </div>
