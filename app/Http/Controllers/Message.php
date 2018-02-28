@@ -49,19 +49,23 @@ class Message extends Controller {
         }
         $list_schema = rtrim($sch, ',');
         $message = request('message');
-        if (request('usertype') == '' && strlen(request('userype')) < 3) {
-            $in_array = '';
-        } else {
-            $usr = explode(',', request('usertype'));
-            $usr_type = '';
-            foreach ($usr as $value) {
-                $usr_type .= "'" . $value . "',";
+
+        $usr = request('usertype');
+        $usr_type = '';
+        if (count($usr) > 0) {
+            foreach ($usr as $val) {
+                $usr_type .= "'" . $val . "',";
             }
             $type = rtrim($usr_type, ',');
             $in_array = " AND usertype IN (" . $type . ")";
+        }else{
+             $in_array ='';
         }
-        $sql = "insert into public.sms (body,users_id,type,phone_number) select '{$message}',id,'0',phone from admin.all_users WHERE schema_name::text IN ($list_schema) AND usertype !='Student' {$in_array} AND phone is not NULL ";
-        DB::statement($sql);
+        foreach (explode(',', $list_schema) as $value) {
+            $sql = "insert into $value.sms (body,users_id,type,phone_number) select '{$message}',id,'0',phone from admin.all_users WHERE schema_name::text IN ($value) AND usertype !='Student' {$in_array} AND phone is not NULL ";
+            DB::statement($sql);
+        }
+
         return redirect('message/create');
     }
 

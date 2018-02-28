@@ -11,11 +11,11 @@
                                             <div class="form-group last">
                                                 <label class="control-label">Select Usertypes</label>
                                                 <div class="col-md-12">
-                                                    <input type="text" value="<?=request('usertype')?>" class="form-control" name="usertype" placeholder="E.g Teacher, Parents. Separate by comma">
-                                                    <span>Available Usertypes: <code><?php foreach ($usertypes as $user) {
-                                                        echo $user->usertype.',';
+                                                  
+                                                    <span>Available Usertypes: <code><?php foreach ($usertypes as $user) { ?>
+                                                            <input type="checkbox" value="<?=$user->usertype?>"  name="usertype[]" placeholder="E.g Teacher, Parents. Separate by comma"><?=$user->usertype?>
     
-                                                        }?></code></span>
+                                                    <?php    }?></code></span>
                                                 </div>
                                             </div>
                                         </div>
