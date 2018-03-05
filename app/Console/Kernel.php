@@ -86,17 +86,17 @@ class Kernel extends ConsoleKernel {
 // remind parents to login in shulesoft and check their child performance
             $this->sendNotice();
             $this->sendBirthdayWish();
-        })->dailyAt('08:00');
+        })->dailyAt('06:00');
 
         $schedule->call(function() {
 //send login reminder to parents in all schema
             // $this->sendLoginReminder();
         })->fridays()->at('13:00');
 
-//        $schedule->call(function () {
-//// send Birdthday 
-//            $this->sendBirthdayWish();
-//        })->dailyAt('05:00');
+        $schedule->call(function () {
+// send Birdthday 
+            $this->sendReportReminder();
+        })->dailyAt('07:00');
 
         $schedule->call(function () {
 // sync invoices 
@@ -133,23 +133,23 @@ class Kernel extends ConsoleKernel {
                         "callback_url" => "http://158.69.112.216:8081/api/init",
                         "token" => $token
                     );
-                    $push_status=$invoice->status==2 ? 'invoice_update':'invoice_submission';
+                    $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
                     if ($invoice->schema_name == 'beta_testing') {
                         //testing invoice
                         $setting = DB::table($invoice->optional_name . '.setting')->first();
-                        
-                        $url = 'https://wip.mpayafrica.com/v2/'.$push_status;
+
+                        $url = 'https://wip.mpayafrica.com/v2/' . $push_status;
                     } else {
                         //live invoice
                         $setting = DB::table($invoice->schema_name . '.setting')->first();
-                        $url = 'https://api.mpayafrica.co.tz/v2/'.$push_status;
+                        $url = 'https://api.mpayafrica.co.tz/v2/' . $push_status;
                     }
                     $curl = $this->curlServer($fields, $url);
                     $result = json_decode($curl);
                     if (($result->status == 1 && strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
 //update invoice no
                         DB::table($invoice->schema_name . '.invoices')
-                                ->where('invoiceNO', $invoice->invoiceNO)->update(['sync' => 1,'return_message'=>$curl,'push_status'=>$push_status]);
+                                ->where('invoiceNO', $invoice->invoiceNO)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status]);
                     } else {
                         DB::table('api.requests')->insert(['content' => $curl . ', request=' . json_encode($fields)]);
                     }
@@ -323,6 +323,18 @@ class Kernel extends ConsoleKernel {
                         . "select 'Hello '|| c.name|| ', tunapenda kumtakia '||a.name||' heri ya siku yake ya kuzaliwa katika tarehe kama ya leo. Mungu ampe afya tele, maisha marefu, baraka na mafanikio.  Kama hajaziliwa tarehe kama ya leo, tuambie tubadili tarehe zake ziwe sahihi. Ubarikiwe',c.phone, 0,0, c.\"parentID\",'parent'  FROM " . $schema->table_schema . ".student a join " . $schema->table_schema . ".student_parents b on b.student_id=a.\"studentID\" JOIN " . $schema->table_schema . ".parent c on c.\"parentID\"=b.parent_id WHERE 
                     DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) 
                     AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE)";
+                DB::statement($sql);
+            }
+        }
+    }
+
+    public function sendReportReminder() {
+        $schemas = (new \App\Http\Controllers\DatabaseController())->loadSchema();
+        foreach ($schemas as $schema) {
+            if (!in_array($schema->table_schema, array('public', 'api', 'admin', 'kisaraweljs', 'laureatemikocheni', 'laureatembezi', 'lifewaylighschools', 'montessori', 'sullivanprovost', 'ubungomodern', 'whiteangles', 'atlasschools'))) {
+//parents
+                $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")
+select 'Hello '|| p.name|| ', matokeo yote ya '||c.name||'  hupatikana kwenye ShuleSoft. Ili kuyaona, fungua https://" . $schema->table_schema . ".shulesoft.com, kisha nenda upande wa kushoto (sehemu imendikwa Exam Report (au Alama)) Kisha utaona matokeo yote. Kama umesahau neno siri lako ni '||p.username||' na nenosiri la kuanzia ni '||case when p.default_password is null then '123456' else p.default_password end||'.  Asante', p.phone, 0,0, p.\"parentID\",'parent' FROM " . $schema->table_schema . ".parent p join " . $schema->table_schema . ".student_parents sp on sp.parent_id=p.\"parentID\" JOIN " . $schema->table_schema . ".student c on c.\"studentID\"=sp.student_id, " . $schema->table_schema . ".setting s where p.status=1";
                 DB::statement($sql);
             }
         }
