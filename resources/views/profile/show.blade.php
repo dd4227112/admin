@@ -22,7 +22,7 @@
             <div class="user-btm-box">
                 <div class="col-md-4 col-sm-4 text-center">
                     <p class="text-purple"><i class="fa fa-list"></i><br/> Logs</p>
-                    <h1><?= count($logs) ?></h1> </div>
+                    <h1><?= $all_logs ?></h1> </div>
                 <div class="col-md-4 col-sm-4 text-center">
                     <p class="text-blue"><i class="fa fa-inbox"></i> Messages</p>
                     <h1><?= count($messages) ?></h1> </div>
