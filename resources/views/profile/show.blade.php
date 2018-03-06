@@ -74,6 +74,7 @@
                                     </div>
                                      <?php $i++; } ?>
                                 </div>
+                                <?=$logs->links()?>
                             </div>
                        
 
