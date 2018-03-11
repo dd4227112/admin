@@ -236,7 +236,7 @@
                     text: 'User Distribution by School'
                     },
                     subtitle: {
-                    text: 'Source: WorldClimate.com'
+                    text: 'Source: shulesoft.com'
                     },
                     xAxis: {
                     categories: [<?php
@@ -248,7 +248,7 @@
                     },
                     yAxis: {
                     title: {
-                    text: 'Temperature (°C)'
+                    text: 'Schools'
                     }
                     },
                     plotOptions: {
@@ -293,7 +293,7 @@ foreach ($schemas as $ss) {
                     x: - 20 //center
             },
                     subtitle: {
-                    text: 'Source: WorldClimate.com',
+                    text: 'Source: shulesoft.com',
                             x: - 20
                     },
                     xAxis: {
@@ -305,7 +305,7 @@ foreach ($user_logs as $log) {
                     },
                     yAxis: {
                     title: {
-                    text: 'Temperature (°C)'
+                    text: 'Total Users'
                     },
                             plotLines: [{
                             value: 0,
