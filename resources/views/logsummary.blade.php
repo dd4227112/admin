@@ -271,7 +271,7 @@ foreach ($schemas as $ss) {
         $data = $schema_data[$ss->table_schema];
         foreach ($user_logs as $log) {
             foreach ($data as $value) {
-                if ($log->created_at == $value->created_at) {
+                if ($log->created_at == $value->created_at && $ss->table_schema==$value->schema_name) {
                     echo $value->count . ',';
                 }
             }
