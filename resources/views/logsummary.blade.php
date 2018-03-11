@@ -314,7 +314,7 @@ foreach ($user_logs as $log) {
                             }]
                     },
                     tooltip: {
-                    valueSuffix: '°C'
+                    valueSuffix: ''
                     },
                     legend: {
                     layout: 'vertical',
