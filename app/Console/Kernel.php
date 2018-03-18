@@ -86,7 +86,7 @@ class Kernel extends ConsoleKernel {
 // remind parents to login in shulesoft and check their child performance
             $this->sendNotice();
             $this->sendBirthdayWish();
-        })->dailyAt('06:00');
+        })->dailyAt('03:00');
 
         $schedule->call(function() {
 //send login reminder to parents in all schema

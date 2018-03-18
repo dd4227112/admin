@@ -89,6 +89,7 @@
                         <li><a href="<?= url('message/show/email') ?>"><i class="ti-email fa-fw"></i> <span class="hide-menu">Pending Emails</span></a></li>
                         <li><a href="<?= url('message/show/sms') ?>"><i class="ti-envelope fa-fw"></i> <span class="hide-menu">Pending SMS</span></a></li>
                         <li><a href="<?= url('message/shulesoft') ?>"><i class="ti-envelope fa-fw"></i> <span class="hide-menu">ShuleSoft Updates</span></a></li>
+                        <li><a href="<?= url('message/feedback') ?>"><i class="ti-comments-smiley fa-fw"></i> <span class="hide-menu">User Feedbacks</span></a></li>
 
 <!--                        <li><a href="javascript:void(0)" class="waves-effect"><i class="ti-info-alt fa-fw"></i><span class="hide-menu">Error Pages</span><span class="fa arrow"></span></a>
            <ul class="nav nav-third-level collapse">
@@ -173,6 +174,7 @@
                     </ul>
                 </li>-->
                 @endrole
+                 @role('marketing','admin')
                 <li> <a href="#" class="waves-effect"><i class="mdi mdi-emoticon fa-fw"></i> <span class="hide-menu">Resources<span class="fa arrow"></span></span></a>
                     <ul class="nav nav-second-level collapse">
                         <li> <a href="<?= url('market/material') ?>"><i class="fa-fw">F</i>
@@ -187,6 +189,8 @@
 
                     </ul>
                 </li>
+                 @endrole
+                  @role('marketing','admin')
                 <li> <a href="#" class="waves-effect"><i class="mdi mdi-emoticon fa-fw"></i> <span class="hide-menu">Training<span class="fa arrow"></span></span></a>
                     <ul class="nav nav-second-level collapse">
                         <li> <a href="<?= url('market/allocation') ?>"><i class="fa-fw">F</i>
@@ -204,7 +208,158 @@
                     </ul>
                 </li>
                 <li class="devider"></li>
+                  @endrole
+                @role('schools') 
+                <li>
+                    <a href="inbox.html" class="waves-effect">
+                        <i class="mdi mdi-apps fa-fw"></i> 
+                        <span class="hide-menu">Schools<span class="fa arrow"></span></span>
+                    </a>
+                    <ul class="nav nav-second-level collapse">
+                        <li>
+                            <a href="<?= url('api/request') ?>">
+                                <i class="ti-comments-smiley fa-fw"></i>
+                                <span class="hide-menu">Users</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= url('api/payment') ?>">
+                                <i class="ti-comments-smiley fa-fw"></i>
+                                <span class="hide-menu">Exams</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= url('api/payment') ?>">
+                                <i class="ti-comments-smiley fa-fw"></i>
+                                <span class="hide-menu">Books</span>
+                            </a>
+                        </li>
+                        <li><a href="inbox5.html" class="waves-effect"><i class="ti-desktop fa-fw"></i><span class="hide-menu">Attendance</span><span class="fa arrow"></span></a>
+                            <ul class="nav nav-third-level collapse">
+                                <li> <a href="<?= url('api/invoices/1') ?>"><i class="ti-email fa-fw"></i><span class="hide-menu">Student</span></a></li>
+                                <li> <a href="<?= url('api/invoices/0') ?>"><i class="ti-layout-media-left-alt fa-fw"></i><span class="hide-menu">Teachers</span></a></li>
+                                <li> <a href="<?= url('api/invoices/0') ?>"><i class="ti-layout-media-left-alt fa-fw"></i><span class="hide-menu">Staff</span></a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                        <li><a  href="inbjox.html" class="waves-effect"><i class="ti-user fa-fw"></i><span class="hide-menu">Accounts</span><span class="fa arrow"></span></a>
+                             <li class="">
+                                    <a>
+                                        settings                                                    <span class="fa fa-chevron-down"></span>
+                                    </a>
+                                    <ul class="nav nav-second-level collapse">
+                            <li>
+                                            <a href="http://localhost/shule/bankaccount/index"><i class="fa fa-credit-card"></i><span>Bank Account</span></a>                                                    </li>
+                                        <li>
+                                            <a href="http://localhost/shule/fee/index"><i class="fa fa-money"></i><span>Fees Definitions</span></a>                                                    </li>
+                                        <li>
+                                            <a href="http://localhost/shule/expense/financial_category" data-original-title="Chart of accounts" data-toggle="tooltip" data-placement="right"><i class="fa icon-feetype"></i><span>Chart of Accounts</span></a>                                                    </li>
+                                        <li>
+                                            <a href="http://localhost/shule/expense/global_exchange"><i class="fa fa-globe"></i><span>Global Exchange</span></a>                                                    </li>
+                                        <li>
+                                            <a href="http://localhost/shule/fee_detail/reminder_template"><i class="fa fa-bell"></i><span>Reminder Template</span></a>                                                    </li>
+                                        <li>
 
+                                            <a href="http://localhost/shule/invoices/reminder"><i class="fa fa-wrench"></i><span>Print reminder</span></a>
+
+
+                                        </li>
+                                        <li>
+                                            <a href="http://localhost/shule/setting/set_fee_priority"><span>Fee Priority</span></a>                                                    </li>
+                                        <li>
+                                            <a href="http://localhost/shule/fee_detail/due_amount"><span>Due amount</span></a>
+
+                                        </li>
+
+                            </ul>
+                        </li>
+
+                                <li class="">
+                                    <a>
+                                        Fees                                                    <span class="fa fa-chevron-down"></span>
+                                    </a>
+                                    <ul class="nav nav-second-level collapse">
+
+                                        <li>
+                                            <a href="http://localhost/shule/payment_plan/index"><i class="fa icon-feetype"></i><span>Installment</span></a>                                                    </li>
+                                        <li>
+                                            <a href="http://localhost/shule/fee_detail/details"><i class="fa icon-feetype"></i><span>Fee details</span></a>                                                    </li>
+                                        <li>
+                                            <a href="http://localhost/shule/fee_detail/view_fee"><i class="fa icon-feetype"></i><span>Fee Class</span></a>                                                    </li>
+                                        <li><a href="http://localhost/shule/fee_discount/index"><i class="fa icon-invoice"></i><span>Fee Discount</span></a> </li>
+                                        <li>
+                                            <a href="http://localhost/shule/fee/exclude_fee"><i class="fa icon-feetype"></i><span>Unsubscribe student</span></a>                                                    </li>
+                                    </ul>
+                                </li>
+                                <li class="sub_menu">
+                                    <a href="http://localhost/shule/invoices/index"><i class="fa fa-clipboard"></i><span>Invoice</span></a>
+                                </li>
+                                <li class=""><a>Payments <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav nav-second-level collapse">
+                                        <li class="sub_menu">
+                                        </li><li><a href="http://localhost/shule/invoices/payment_history"><i class="fa icon-payment"></i><span>Payments</span></a></li>                                                        
+
+                                        <li><a href="http://localhost/shule/fee_balance/index"><i class="fa icon-promotion"></i><span>Balance</span></a></li>                                                             <li><a href="http://localhost/shule/payment/reconciliation"><i class="fa icon-promotion"></i><span>Reconciliation</span></a></li>                                                </ul>
+
+                                </li><li class=""><a>Transactions <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav nav-second-level collapse">
+                                        <li><a href="http://localhost/shule/revenue/index"><i class="fa icon-account"></i><span>Revenue</span></a></li> <li><a href="http://localhost/shule/expense/index/4"><i class="fa icon-expense"></i><span>Expense</span></a></li>
+                                        <li class="sub_menu"><a href="http://localhost/shule/expense/index/1"><i class="fa fa-clipboard"></i><span>Fixed assests</span></a> </li>
+
+
+                                        <li><a href="http://localhost/shule/expense/index/2"><i class="fa fa-clipboard"></i><span>Liabilities</span></a></li>
+
+                                        <li><a href="http://localhost/shule/expense/index/3"><i class="fa fa-clipboard"></i><span>Capital</span></a></li>
+                                    </ul>
+                                </li>
+
+                                <li class="">
+                                    <a>
+                                        Payroll
+                                        <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav nav-second-level collapse">
+
+                                        <li class="sub_menu"><a href="http://localhost/shule/payroll/taxes"><i class="fa fa-clipboard"></i><span>Tax Status</span></a> </li>
+
+
+                                        <li><a href="http://localhost/shule/payroll/pension"><i class="fa fa-clipboard"></i><span>Pension Funds</span></a></li>
+
+                                        <li><a href="http://localhost/shule/allowance/index"><i class="fa fa-clipboard"></i><span>Allowances</span></a></li>
+                                        <li><a href="http://localhost/shule/deduction/index/3"><i class="fa fa-clipboard"></i><span>Deductions</span></a></li>
+                                        <li><a href="http://localhost/shule/payroll/index"><i class="fa fa-clipboard"></i><span>Salaries</span></a></li>
+                                    </ul>
+                                </li>
+
+                                <li class=""><a>Account reports<span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li>
+                                            <a href="http://localhost/shule/expense/summary"><i class="fa fa-clipboard"></i><span>Summary</span></a>                                                    </li>
+
+
+                                        <li>
+                                            <a href="http://localhost/shule/invoices/wallet"><i class="fa fa-clipboard"></i><span>Wallet</span></a>                                                    </li>
+
+
+                                        <li class="sub_menu">
+                                            <a href="http://localhost/shule/expense/financial_index/1"><i class="fa fa-clipboard"></i><span>Income statement</span></a>                                                    </li>
+                                        <li>
+                                            <a href="http://localhost/shule/expense/financial_index/2"><i class="fa fa-clipboard"></i><span>Balance sheet</span></a>                                                    </li>
+
+                                        <li>
+                                        </li>
+                                    </ul>
+                                </li>
+
+
+                                <!--                                        <li>
+                                                                            </li>-->
+
+                    </ul>
+                </li>
+            </ul>
+            </li>
+            @endrole
             </ul>
         </div><div class="slimScrollBar" style="background: rgba(0, 0, 0, 0.3); width: 6px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 36.7859px;"></div><div class="slimScrollRail" style="width: 6px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px;"></div></div>
 </div>

@@ -58,8 +58,8 @@ class Message extends Controller {
             }
             $type = rtrim($usr_type, ',');
             $in_array = " AND usertype IN (" . $type . ")";
-        }else{
-             $in_array ='';
+        } else {
+            $in_array = '';
         }
         foreach (explode(',', $list_schema) as $value) {
             $sql = "insert into $value.sms (body,users_id,type,phone_number) select '{$message}',id,'0',phone from admin.all_users WHERE schema_name::text IN ($value) AND usertype !='Student' {$in_array} AND phone is not NULL ";
@@ -159,6 +159,11 @@ class Message extends Controller {
         }
         $usertypes = DB::select('select distinct usertype from admin.all_users');
         return view('message.updates', compact('usertypes', 'message_success'));
+    }
+
+    public function feedback() {
+        $feedbacks = DB::table('constant.feedback')->orderBy('id', 'desc')->paginate();
+        return view('message.feedback', compact('feedbacks'));
     }
 
 }
