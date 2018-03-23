@@ -61,6 +61,19 @@ class WebController extends Controller {
         $this->data['users']=DB::table('admin.all_users')->distinct('usertype')->get(['usertype']);
         return DB::select('select count(*) as total_logs,"schema_name"::text from admin.all_log group by "schema_name"::text order by count(*)');
     }
+    
+     function updatePhoneNumber() {
+        $users = \DB::select('select * from admin.all_users');
+        foreach ($users as $user) {
+            $valid = validate_phone_number($user->phone);
+            if (is_array($valid) && count($valid) == 2 && $user->phone !=$valid[1]) {
+                DB::table($user->schema_name.'.'.$user->table)->where($user->table . 'ID', $user->id)->update(['phone'=> $valid[1]]);
+                echo '<b style="color:green">phone updated from '.$user->phone.' to '.$valid[1].'<br/></b>';
+            }else{
+               echo '<b style="color:pink">Not updated  '.$user->phone.' since its a valid<br/></b>'; 
+            }
+        }
+    }
 
     public function analyse($schema) {
         $this->data['request_by_user'] = DB::select('select count(*),"schema_name"::text,"user" from admin.all_log where "schema_name"::text=\'' . $schema . '\' and created_at::date=\'' . date('Y-m-d') . '\' group by "schema_name"::text,"user"');

@@ -375,8 +375,5 @@ select 'Hello '|| p.name|| ', je umewahi ingia katika akaunti yako ya ShuleSoft 
         require base_path('routes/console.php');
     }
 
-    public function send($param) {
-        
-    }
-
+ 
 }
