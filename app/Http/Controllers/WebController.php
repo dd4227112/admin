@@ -72,7 +72,7 @@ class WebController extends Controller {
                     DB::table($user->schema_name . '.' . $user->table)->where($user->table . 'ID', $user->id)->update(['phone' => $valid[1]]);
                     echo '<b style="color:green">phone updated from ' . $user->phone . ' to ' . $valid[1] . '<br/></b>';
                 }else{
-                    echo '<p color="red">Duplicate founded '.$user->schema_name.' for phone  '.$valid[1].' to user '.$user->name.',id='.$user->id.',table'.$user->table.' | With existing users '.$check->name.', id='.$check->id.',table='.$check->table.'<p>';
+                    echo '<p color="red">Duplicate founded '.$user->schema_name.' for phone  '.$valid[1].' to user '.$user->name.',id='.$user->id.' in table'.$user->table.' |== With existing users '.$check->name.', id='.$check->{$user->table.'ID'}.',table='.$user->table.'<p>';
                 }
             } else {
                 echo '<b style="color:pink">Not updated  ' . $user->phone . ' since its a valid<br/></b>';
