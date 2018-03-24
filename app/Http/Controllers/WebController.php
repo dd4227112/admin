@@ -57,20 +57,25 @@ class WebController extends Controller {
         $this->data['end'] = request('end_date');
         $this->data['schema'] = request('schema');
         $this->data['user'] = request('usertype');
-        $this->data['schemas']=(new \App\Http\Controllers\DatabaseController())->loadSchema();
-        $this->data['users']=DB::table('admin.all_users')->distinct('usertype')->get(['usertype']);
+        $this->data['schemas'] = (new \App\Http\Controllers\DatabaseController())->loadSchema();
+        $this->data['users'] = DB::table('admin.all_users')->distinct('usertype')->get(['usertype']);
         return DB::select('select count(*) as total_logs,"schema_name"::text from admin.all_log group by "schema_name"::text order by count(*)');
     }
-    
-     function updatePhoneNumber() {
+
+    function updatePhoneNumber() {
         $users = \DB::select('select * from admin.all_users');
         foreach ($users as $user) {
             $valid = validate_phone_number($user->phone);
-            if (is_array($valid) && count($valid) == 2 && $user->phone !=$valid[1]) {
-                DB::table($user->schema_name.'.'.$user->table)->where($user->table . 'ID', $user->id)->update(['phone'=> $valid[1]]);
-                echo '<b style="color:green">phone updated from '.$user->phone.' to '.$valid[1].'<br/></b>';
-            }else{
-               echo '<b style="color:pink">Not updated  '.$user->phone.' since its a valid<br/></b>'; 
+            if (is_array($valid) && count($valid) == 2 && $user->phone != $valid[1]) {
+                $check = DB::table($user->schema_name . '.' . $user->table)->where('phonr', $valid[1])->first();
+                if (count($check) == 0) {
+                    DB::table($user->schema_name . '.' . $user->table)->where($user->table . 'ID', $user->id)->update(['phone' => $valid[1]]);
+                    echo '<b style="color:green">phone updated from ' . $user->phone . ' to ' . $valid[1] . '<br/></b>';
+                }else{
+                    echo '<p color="red">Duplicate founded '.$user->schema_name.' for phone  '.$valid[1].' to user '.$user->name.',id='.$user->id.',table'.$user->table.' | With existing users '.$check->name.', id='.$check->id.',table='.$check->table.'<p>';
+                }
+            } else {
+                echo '<b style="color:pink">Not updated  ' . $user->phone . ' since its a valid<br/></b>';
             }
         }
     }
