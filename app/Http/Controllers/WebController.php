@@ -67,7 +67,7 @@ class WebController extends Controller {
         foreach ($users as $user) {
             $valid = validate_phone_number($user->phone);
             if (is_array($valid) && count($valid) == 2 && $user->phone != $valid[1]) {
-                $check = DB::table($user->schema_name . '.' . $user->table)->where('phonr', $valid[1])->first();
+                $check = DB::table($user->schema_name . '.' . $user->table)->where('phone', $valid[1])->first();
                 if (count($check) == 0) {
                     DB::table($user->schema_name . '.' . $user->table)->where($user->table . 'ID', $user->id)->update(['phone' => $valid[1]]);
                     echo '<b style="color:green">phone updated from ' . $user->phone . ' to ' . $valid[1] . '<br/></b>';
