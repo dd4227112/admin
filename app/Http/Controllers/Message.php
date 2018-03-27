@@ -146,13 +146,15 @@ class Message extends Controller {
                 if ($schema->table_schema != 'public') {
                     $users = DB::table($schema->table_schema . '.users')->whereIn('usertype', request('for'))->get();
                     foreach ($users as $user) {
-                        DB::table($schema->table_schema . '.email')->insert(array(
-                            'email' => $user->email,
-                            'body' => $user->body,
-                            'subject' => 'ShuleSoft Latest Updates: ' . request('release_date'),
-                            'user_id' => $user->id,
-                            'table' => $user->table
-                        ));
+                        if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
+                            DB::table($schema->table_schema . '.email')->insert(array(
+                                'email' => $user->email,
+                                'body' => $user->body,
+                                'subject' => 'ShuleSoft Latest Updates: ' . request('release_date'),
+                                'user_id' => $user->id,
+                                'table' => $user->table
+                            ));
+                        }
                     }
                 }
             }
