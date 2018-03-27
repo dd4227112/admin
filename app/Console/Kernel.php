@@ -300,10 +300,10 @@ class Kernel extends ConsoleKernel {
             if (count($users) > 0) {
                 foreach ($users as $user) {
 
-                    $message = 'Automatic Event Reminder:'
-                            . 'Event Date : ' . $notice->date . ' ,'
-                            . 'Event Name:  ' . $notice->notice . ','
-                            . 'For More information, please login https://' . $notice->schema_name . '.shulesoft.com';
+                    $message = 'Kalenda ya Shule:'
+                            . 'Siku ya tukio : ' . $notice->date . ' ,'
+                            . 'Jina la Tukio:  ' . $notice->notice . ','
+                            . 'Kwa taarifa zaidi, tembelea akaunti yako ya ShuleSoft. Asante';
 
                     if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
                         DB::statement("insert into " . $notice->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Calender Reminder : " . $notice->title . "','" . $message . "')");

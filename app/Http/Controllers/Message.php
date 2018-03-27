@@ -144,7 +144,7 @@ class Message extends Controller {
             $schemas = (new \App\Http\Controllers\DatabaseController())->loadSchema();
             foreach ($schemas as $schema) {
                 if ($schema->table_schema != 'public') {
-                    $users = DB::table($schema->table_schema . '.users')->whereIn('usertype', request('for'));
+                    $users = DB::table($schema->table_schema . '.users')->whereIn('usertype', request('for'))->get();
                     foreach ($users as $user) {
                         DB::table($schema->table_schema . '.email')->insert(array(
                             'email' => $user->email,
