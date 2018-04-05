@@ -69,7 +69,7 @@ class Message extends Controller {
         );
         $sms = preg_replace($patterns, $replacements, $message);
         foreach (explode(',', $list_schema) as $value) {
-        echo    $sql = "insert into $value.sms (body,users_id,type,phone_number) select '{$sms}',id,'0',phone from admin.all_users WHERE schema_name::text IN ($value) AND usertype !='Student' {$in_array} AND phone is not NULL "; exit;
+           $sql = "insert into $value.sms (body,users_id,type,phone_number) select '{$sms}',id,'0',phone from admin.all_users WHERE schema_name::text IN ($value) AND usertype !='Student' {$in_array} AND phone is not NULL "; 
             DB::statement($sql);
         }
 
