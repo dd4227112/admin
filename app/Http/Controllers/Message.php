@@ -61,8 +61,15 @@ class Message extends Controller {
         } else {
             $in_array = '';
         }
+        $patterns = array(
+            '/#name/i', '/#username/i'
+        );
+        $replacements = array(
+            '||name||', '||username||'
+        );
+        $sms = preg_replace($patterns, $replacements, $message);
         foreach (explode(',', $list_schema) as $value) {
-            $sql = "insert into $value.sms (body,users_id,type,phone_number) select '{$message}',id,'0',phone from admin.all_users WHERE schema_name::text IN ($value) AND usertype !='Student' {$in_array} AND phone is not NULL ";
+        echo    $sql = "insert into $value.sms (body,users_id,type,phone_number) select '{$sms}',id,'0',phone from admin.all_users WHERE schema_name::text IN ($value) AND usertype !='Student' {$in_array} AND phone is not NULL "; exit;
             DB::statement($sql);
         }
 
@@ -149,7 +156,7 @@ class Message extends Controller {
                         if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
                             DB::table($schema->table_schema . '.email')->insert(array(
                                 'email' => $user->email,
-                                'body' =>request('message'),
+                                'body' => request('message'),
                                 'subject' => 'ShuleSoft Latest Updates: ' . request('release_date'),
                                 'user_id' => $user->id,
                                 'table' => $user->table
