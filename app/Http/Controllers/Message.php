@@ -65,11 +65,12 @@ class Message extends Controller {
             '/#name/i', '/#username/i'
         );
         $replacements = array(
-            '||name||', '||username||'
+            "'||name||'", "'||username||'"
         );
         $sms = preg_replace($patterns, $replacements, $message);
-        foreach (explode(',', $list_schema) as $value) {
-           $sql = "insert into $value.sms (body,users_id,type,phone_number) select '{$sms}',id,'0',phone from admin.all_users WHERE schema_name::text IN ($value) AND usertype !='Student' {$in_array} AND phone is not NULL "; 
+        foreach (explode(',', $list_schema) as $schema) {
+            $value= str_replace("'", null, $schema);
+          $sql = "insert into $value.sms (body,users_id,type,phone_number) select '{$sms}',id,'0',phone from admin.all_users WHERE schema_name::text IN ($schema) AND usertype !='Student' {$in_array} AND phone is not NULL "; 
             DB::statement($sql);
         }
 
