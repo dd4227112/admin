@@ -74,7 +74,7 @@ class Kernel extends ConsoleKernel {
                             }
                         } catch (\Exception $e) {
                             // error occur
-                            DB::insert('public.sms')->insert(['body'=>'email error'.$e->getMessage(),'status'=>0,'phone_number'=>'0655406004','type'=>0]);
+                            DB::table('public.sms')->insert(['body'=>'email error'.$e->getMessage(),'status'=>0,'phone_number'=>'0655406004','type'=>0]);
                         }
                     } else {
 //skip all emails with ShuleSoft title
