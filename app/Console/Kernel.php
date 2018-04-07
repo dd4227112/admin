@@ -61,15 +61,20 @@ class Kernel extends ConsoleKernel {
             if (!empty($this->emails)) {
                 foreach ($this->emails as $message) {
                     if (filter_var($message->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $message->email)) {
-                        $data = ['content' => $message->body, 'link' => $message->schema_name, 'photo' => $message->photo, 'sitename' => $message->sitename, 'name' => ''];
-                        Mail::send('email.default', $data, function ($m) use ($message) {
-                            $m->from('no-reply@shulesoft.com', $message->sitename);
-                            $m->to($message->email)->subject($message->subject);
-                        });
-                        if (count(Mail::failures()) > 0) {
-                            DB::update('update ' . $message->schema_name . '.email set status=0 WHERE email_id=' . $message->email_id);
-                        } else {
-                            DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
+                        try {
+                            $data = ['content' => $message->body, 'link' => $message->schema_name, 'photo' => $message->photo, 'sitename' => $message->sitename, 'name' => ''];
+                            Mail::send('email.default', $data, function ($m) use ($message) {
+                                $m->from('no-reply@shulesoft.com', $message->sitename);
+                                $m->to($message->email)->subject($message->subject);
+                            });
+                            if (count(Mail::failures()) > 0) {
+                                DB::update('update ' . $message->schema_name . '.email set status=0 WHERE email_id=' . $message->email_id);
+                            } else {
+                                DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
+                            }
+                        } catch (\Exception $e) {
+                            // error occur
+                            DB::insert('public.sms')->insert(['body'=>'email error'.$e->getMessage(),'status'=>0,'phone_number'=>'0655406004','type'=>0]);
                         }
                     } else {
 //skip all emails with ShuleSoft title
@@ -95,7 +100,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
 // send Birdthday 
-           // $this->sendReportReminder();
+            // $this->sendReportReminder();
         })->dailyAt('07:00');
 
         $schedule->call(function () {
@@ -375,5 +380,4 @@ select 'Hello '|| p.name|| ', je umewahi ingia katika akaunti yako ya ShuleSoft 
         require base_path('routes/console.php');
     }
 
- 
 }
