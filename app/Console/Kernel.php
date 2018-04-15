@@ -35,7 +35,7 @@ class Kernel extends ConsoleKernel {
 //check if there is any email then send
 //$this->testCrone();
 
-            $messages = DB::select('select * from public.all_sms order by random() limit 8');
+            $messages = DB::select('select * from public.all_sms order by priority desc, created_at asc limit 8');
             if (!empty($messages)) {
                 foreach ($messages as $sms) {
 
@@ -46,10 +46,11 @@ class Kernel extends ConsoleKernel {
                     $karibusms->karibuSMSpro = $sms->type;
                     $result = (object) json_decode($karibusms->send_sms($sms->phone_number, strtoupper($sms->schema_name) . ': ' . $sms->body . '. https://' . $sms->schema_name . '.shulesoft.com'));
                     if ($result->success == 1) {
-                        DB::update('update ' . $sms->schema_name . '.sms set status=1,return_code=\'' . json_encode($result) . '\' WHERE sms_id=' . $sms->sms_id);
+                        DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status'=>1,'return_code'=>json_encode($result),'updated_at'=>'now()']);
                     } else {
 //stop retrying
-                        DB::update('update ' . $sms->schema_name . '.sms set status=1, return_code=\'' . json_encode($result) . '\' WHERE sms_id=' . $sms->sms_id);
+                        DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status'=>1,'return_code'=>json_encode($result),'updated_at'=>'now()']);
+                       
                     }
                 }
             }
@@ -75,6 +76,7 @@ class Kernel extends ConsoleKernel {
                         } catch (\Exception $e) {
                             // error occur
                             //DB::table('public.sms')->insert(['body'=>'email error'.$e->getMessage(),'status'=>0,'phone_number'=>'0655406004','type'=>0]);
+                            echo 'something is not write'.$e->getMessage();
                         }
                     } else {
 //skip all emails with ShuleSoft title
