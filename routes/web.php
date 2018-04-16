@@ -22,6 +22,7 @@ Route::group(['middleware' => ['guest']], function() {
 Route::group(['middleware' => ['auth']], function() {
     Route::get('/management', 'UsersController@management');
     Route::resource('users', 'UsersController');
+     Route::resource('invoice', 'InvoiceController');
     Route::resource('roles', 'RolesController');
     Route::get('/home', 'HomeController@index')->name('home');
     Route::any('/database/upgrade', 'DatabaseController@upgrade');
