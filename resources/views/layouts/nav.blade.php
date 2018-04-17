@@ -27,9 +27,9 @@
 
                 <li class="active"> <a href="#" class="waves-effect"><i class="mdi mdi-av-timer fa-fw" data-icon="v"></i> <span class="hide-menu"> Dashboard <span class="fa arrow"></span> </span></a>
                     <ul class="nav nav-second-level">
-                        <li> <a href="<?= url('/home') ?>" class=""><i class=" fa-fw">1</i><span class="hide-menu">Users Summary</span></a> </li>
+                       @role('admin')  <li> <a href="<?= url('/home') ?>" class=""><i class=" fa-fw">1</i><span class="hide-menu">Users Summary</span></a> </li>
 
-                        @role('admin') <li> <a href="<?= url('logsummary') ?>"><i class=" fa-fw">2</i><span class="hide-menu">Login Summary</span></a> </li>
+                        <li> <a href="<?= url('logsummary') ?>"><i class=" fa-fw">2</i><span class="hide-menu">Login Summary</span></a> </li>
 
                         <li> <a href="<?= url('logs') ?>"><i class=" fa-fw">3</i><span class="hide-menu">Error Logs</span></a> </li>
                         @endrole
