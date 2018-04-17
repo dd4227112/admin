@@ -212,9 +212,9 @@
                                 <h3 class="box-title">School Owner : Main interest</h3>
                                 <p>These is what you will focus</p>
                                 <ul class="list-icons">
-                                    <li>Account Module: Explain how system will help him to track revenue and expenses in account module. System generate account reports (income statement, balance sheet, cash flow statements) on fly without a need to request those reports from Accountant. Manager/owner can login in his mobile phone or computer at any time and view account reports with daily transactions. </li>
-                                    <li>Exam Module: Explain how system will help him to track employee performance (teachers evaluation based on exams done), exam class evaluation, subject evaluation etc which will help him to take quick action on where to improve</li>
-                                     <li>Communication Module: Explain how communication will help him to get students in school, to help parents to pay fee on time, to share information easily with parents, to improve customer satisfaction which in turn will add more school reputation.</li>
+                                    <li><i class="ti-angle-right"></i>Account Module: Explain how system will help him to track revenue and expenses in account module. System generate account reports (income statement, balance sheet, cash flow statements) on fly without a need to request those reports from Accountant. Manager/owner can login in his mobile phone or computer at any time and view account reports with daily transactions. </li>
+                                    <li><i class="ti-angle-right"></i>Exam Module: Explain how system will help him to track employee performance (teachers evaluation based on exams done), exam class evaluation, subject evaluation etc which will help him to take quick action on where to improve</li>
+                                     <li><i class="ti-angle-right"></i>Communication Module: Explain how communication will help him to get students in school, to help parents to pay fee on time, to share information easily with parents, to improve customer satisfaction which in turn will add more school reputation.</li>
                       
                                 </ul>
                             </div>
@@ -224,8 +224,8 @@
                                 <p>These is what you will focus</p>
                                 <ul class="list-icons">
                                  
-                                    <li>Exam Module: Explain how system will help him to generate exam reports, ranking, grading, student report cards, digital signature, divisions, class performance, subject performance, graphical reports. <br/> Also explain how system will reduce the time taken to prepare reports for up to one day or few hours after all teachers upload marks in the system</li>
-                                     <li>Communication Module: Explain how communication will help school to improve performance. Since each parent will get exam report in their mobile phone, and parents can login to view reports, parents can easily monitor their child performance which in turn will push their child to study more and hence improve performance.</li>
+                                    <li><i class="ti-angle-right"></i>Exam Module: Explain how system will help him to generate exam reports, ranking, grading, student report cards, digital signature, divisions, class performance, subject performance, graphical reports. <br/> Also explain how system will reduce the time taken to prepare reports for up to one day or few hours after all teachers upload marks in the system</li>
+                                     <li><i class="ti-angle-right"></i>Communication Module: Explain how communication will help school to improve performance. Since each parent will get exam report in their mobile phone, and parents can login to view reports, parents can easily monitor their child performance which in turn will push their child to study more and hence improve performance.</li>
                       
                                 </ul>
                             </div>
@@ -235,14 +235,30 @@
                                 <p>These is what you will focus</p>
                                 <ul class="list-icons">
                                  
-                                  <li>Account Module: Explain how system will help him to create invoices in simple steps, track student balances, automate SMS to remind parents, record revenue and expenses, add  track revenue and expenses in account module. System generate account reports (income statement, balance sheet, cash flow statements) on fly without a need to request those reports from Accountant. Manager/owner can login in his mobile phone or computer at any time and view account reports with daily transactions. </li>
+                                  <li><i class="ti-angle-right"></i>Account Module: Explain how system will help him to create invoices in simple steps, track student balances, automate SMS to remind parents, record revenue and expenses, add  track revenue and expenses in account module. System generate account reports (income statement, balance sheet, cash flow statements) on fly without a need to request those reports from Accountant. Manager/owner can login in his mobile phone or computer at any time and view account reports with daily transactions. </li>
                       
                                 </ul>
                             </div>
                         </div>
                     </div>
                     <div class="wizard-pane" role="tabpanel" aria-expanded="false">
-                        step 3
+                           <div>
+
+                                <h3 class="box-title">Once there is any interest</h3>
+                                <p>These is what you need to focus to close the deal</p>
+                                <ul class="list-icons">
+                                 
+                                  <li><i class="ti-angle-right"></i>Pricing : Make sure you clearly specify your price and show them how that price is very fair. NB; Just say, our price is 10,000 per student per year. Then pause, wait for their reactions. Don't respond or clarify till you see there is a need to do so. Once asked to clarify, these are process to follow<br/>
+                                      <p><b>What are the composition: </b> This price will cover full time support to all users , training, upgrade, maintenance, SMS communication, hosting of your system in cloud servers</p>
+                                      <p><b>Ooh its expensive ???</b> You will get this comment from some people. The main reason for this question is because someone is not fully aware of how system will eliminate costs. For this case, you need to ask this question, "If all these tasks done by ShuleSoft is done by a person, how many people will you hire to accomplish the same tasks accomplished by ShuleSoft ?" How much do you pay one person per year ?,.. in most cases, this question works and in most cases some schools decide even to pay more than what you propose after knowing this  </p>
+                                </li>
+                                <li>The way forward. Some people may ask you, so what is the way forward, but others will not and wait for you to say. Once you see they all understand well the system and are willingly to start, tell them steps we follow 
+                                    <br/>
+                                    <p><b>1. Agreement Form</b>: Tell them, they need to sign this agreement form (just give them) so we can proceed. Once they sign, let them give you a contact person or choose a contact person yourself. </p><p><b>2. Data entry</b>: Tell them, the next process after signing agreement, is data entry (arrange students information, parent information , teacher information), and </p>
+                                    <p><b>3. Training</b>: After data entry, training will be done to all users (staff and teachers)</p></li>
+                      
+                                </ul>
+                            </div>
                     </div>
                 </div>
                 <div class="wizard-buttons">
