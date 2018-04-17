@@ -234,8 +234,9 @@ var root_url = "<?= url('/'); ?>";
                     <?php if (Auth::check() == 1) { ?>
                         <ul class="nav navbar-top-links navbar-right pull-right">
                             <li>
-                                <form role="search" action="<?=url('/search')?>?q="  method="GET" class="app-search hidden-sm hidden-xs m-r-10">
+                                @role('admin') <form role="search" action="<?=url('/search')?>?q="  method="GET" class="app-search hidden-sm hidden-xs m-r-10">
                                     <input type="text" name="q" placeholder="Search name or phone" id="search_box" class="form-control"> <a href="#"><i class="fa fa-search"></i></a> </form>
+                                     @endrole
                             <li class="dropdown" id="search_results">
                                 <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"> 
                                     <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
