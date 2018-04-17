@@ -12,6 +12,10 @@ class WebController extends Controller {
 
     public $path = 'storage' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . '';
 
+    public function __construct() {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -23,6 +27,10 @@ class WebController extends Controller {
             $page = $pg == null ? 'home' : $pg;
         } else {
             $page = 'login';
+        }
+        if ($page == 'home') {
+            $this->data['users'] = DB::select('select count(*), usertype from all_users group by usertype');
+            $this->data['log_graph'] = $this->createBarGraph();
         }
         $data = ($pg == null || in_array($page, array('login'))) ? '' : $this->$pg($sub);
         $this->data['data'] = $data;
@@ -71,8 +79,8 @@ class WebController extends Controller {
                 if (count($check) == 0) {
                     DB::table($user->schema_name . '.' . $user->table)->where($user->table . 'ID', $user->id)->update(['phone' => $valid[1]]);
                     echo '<b style="color:green">phone updated from ' . $user->phone . ' to ' . $valid[1] . '<br/></b>';
-                }else{
-                    echo '<p color="red">Duplicate founded '.$user->schema_name.' for phone  '.$valid[1].' to user '.$user->name.',id='.$user->id.' in table'.$user->table.' |== With existing users '.$check->name.', id='.$check->{$user->table.'ID'}.',table='.$user->table.'<p>';
+                } else {
+                    echo '<p color="red">Duplicate founded ' . $user->schema_name . ' for phone  ' . $valid[1] . ' to user ' . $user->name . ',id=' . $user->id . ' in table' . $user->table . ' |== With existing users ' . $check->name . ', id=' . $check->{$user->table . 'ID'} . ',table=' . $user->table . '<p>';
                 }
             } else {
                 echo '<b style="color:pink">Not updated  ' . $user->phone . ' since its a valid<br/></b>';
