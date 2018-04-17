@@ -12,7 +12,7 @@
 
         <title>{{ config('app.name', 'ShuleSoft') }}</title>
 
-        <script src="<?= $root ?>plugins/bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="<?= $root ?>js/jquery-2.0.0.min.js ?v=1"></script>
         <link href="<?= $root ?>bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
         <!-- Menu CSS -->
         <link href="<?= $root ?>plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.css" rel="stylesheet">

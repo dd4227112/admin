@@ -88,7 +88,7 @@ foreach ($users as $key => $value) {
                 <h3>Log Requests</h3>
                 <div class="row">
 
-                    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+                
                     <?php
                     $sql = "select count(distinct user_id) from all_log where created_at::date='" . date('Y-m-d') . "' and user_id is not null";
                     $log_request = count(\DB::select($sql));
