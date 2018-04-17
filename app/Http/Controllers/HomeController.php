@@ -26,7 +26,6 @@ class HomeController extends Controller {
 
 
         $this->data['users'] = DB::select('select count(*), usertype from all_users group by usertype');
-
         $this->data['log_graph'] = $this->createBarGraph();
         return view('home', $this->data);
     }

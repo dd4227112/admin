@@ -4,6 +4,7 @@
 <?php
 $user = array();
 $total_users = 0;
+
 foreach ($users as $key => $value) {
     # code...
     $user[$value->usertype] = $value->count;

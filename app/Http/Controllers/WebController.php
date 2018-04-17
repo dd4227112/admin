@@ -19,7 +19,7 @@ class WebController extends Controller {
      */
     public function index($pg = null, $sub = null) {
 
-        if (Auth::check()) {
+        if (!Auth::guest()) {
             $page = $pg == null ? 'home' : $pg;
         } else {
             $page = 'login';
