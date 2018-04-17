@@ -100,7 +100,7 @@
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
                                 <strong>Map Location:</strong>
-                                <input id="location" readonly placeholder="location" type="text" class="form-control" name="location" value="{{empty($user->location_str())?'':$user->location_str()}}" required>
+                                <input id="location" readonly placeholder="location" type="text" class="form-control" name="location" value="" required>
                             </div>
                         </div>
 
