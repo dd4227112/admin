@@ -392,7 +392,7 @@ var root_url = "<?= url('/'); ?>";
                                                                                                                 <script src="<?= $root ?>js/custom.min.js"></script>
 
 
-                                                                                                                <script src="<?= $root ?>plugins/bower_components/jsgrid/db.js?v=1"></script>
+                                                                                                                <script src="<?= $root ?>plugins/bower_components/jsgrid/db.js?v=2"></script>
                                                                                                                 <script type="text/javascript" src="<?= $root ?>plugins/bower_components/jsgrid/dist/jsgrid.min.js"></script>
                                                                                                                 <script src="<?= $root ?>js/jsgrid-init.js?v=2"></script>
 
