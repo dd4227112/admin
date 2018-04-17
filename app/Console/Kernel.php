@@ -34,23 +34,27 @@ class Kernel extends ConsoleKernel {
 //check if there is any sms then send
 //check if there is any email then send
 //$this->testCrone();
+            //get all connected phones first
+            $phones_connected = DB::select('select distinct api_key from public.all_sms');
+            if (count($phones_connected) > 0) {
+                foreach ($phones_connected as $phone) {
+                    $messages = DB::select('select * from public.all_sms where api_key=\''.$phone->api_key.'\' order by priority desc, sms_id desc limit 8');
+                    if (!empty($messages)) {
+                        foreach ($messages as $sms) {
 
-            $messages = DB::select('select * from public.all_sms order by priority desc, sms_id desc limit 8');
-            if (!empty($messages)) {
-                foreach ($messages as $sms) {
-
-                    $karibusms = new \karibusms();
-                    $karibusms->API_KEY = $sms->api_key;
-                    $karibusms->API_SECRET = $sms->api_secret;
-                    $karibusms->set_name(strtoupper($sms->schema_name));
-                    $karibusms->karibuSMSpro = $sms->type;
-                    $result = (object) json_decode($karibusms->send_sms($sms->phone_number, strtoupper($sms->schema_name) . ': ' . $sms->body . '. https://' . $sms->schema_name . '.shulesoft.com'));
-                    if ($result->success == 1) {
-                        DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status'=>1,'return_code'=>json_encode($result),'updated_at'=>'now()']);
-                    } else {
+                            $karibusms = new \karibusms();
+                            $karibusms->API_KEY = $sms->api_key;
+                            $karibusms->API_SECRET = $sms->api_secret;
+                            $karibusms->set_name(strtoupper($sms->schema_name));
+                            $karibusms->karibuSMSpro = $sms->type;
+                            $result = (object) json_decode($karibusms->send_sms($sms->phone_number, strtoupper($sms->schema_name) . ': ' . $sms->body . '. https://' . $sms->schema_name . '.shulesoft.com'));
+                            if ($result->success == 1) {
+                                DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 1, 'return_code' => json_encode($result), 'updated_at' => 'now()']);
+                            } else {
 //stop retrying
-                        DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status'=>1,'return_code'=>json_encode($result),'updated_at'=>'now()']);
-                       
+                                DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 1, 'return_code' => json_encode($result), 'updated_at' => 'now()']);
+                            }
+                        }
                     }
                 }
             }
@@ -76,7 +80,7 @@ class Kernel extends ConsoleKernel {
                         } catch (\Exception $e) {
                             // error occur
                             //DB::table('public.sms')->insert(['body'=>'email error'.$e->getMessage(),'status'=>0,'phone_number'=>'0655406004','type'=>0]);
-                            echo 'something is not write'.$e->getMessage();
+                            echo 'something is not write' . $e->getMessage();
                         }
                     } else {
 //skip all emails with ShuleSoft title
@@ -91,7 +95,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
 // remind parents to login in shulesoft and check their child performance
-           // $this->sendNotice();
+            // $this->sendNotice();
             $this->sendBirthdayWish();
         })->dailyAt('07:00');
 
