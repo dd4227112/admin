@@ -66,7 +66,7 @@ class Kernel extends ConsoleKernel {
             if (!empty($this->emails)) {
                 foreach ($this->emails as $message) {
                     if (filter_var($message->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $message->email)) {
-                        //try {
+                        try {
                             $data = ['content' => $message->body, 'link' => $message->schema_name, 'photo' => $message->photo, 'sitename' => $message->sitename, 'name' => ''];
                             Mail::send('email.default', $data, function ($m) use ($message) {
                                 $m->from('no-reply@shulesoft.com', $message->sitename);
@@ -77,11 +77,11 @@ class Kernel extends ConsoleKernel {
                             } else {
                                 DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
                             }
-//                        } catch (\Exception $e) {
-//                            // error occur
-//                            //DB::table('public.sms')->insert(['body'=>'email error'.$e->getMessage(),'status'=>0,'phone_number'=>'0655406004','type'=>0]);
-//                            echo 'something is not write' . $e->getMessage();
-//                        }
+                        } catch (\Exception $e) {
+                            // error occur
+                            //DB::table('public.sms')->insert(['body'=>'email error'.$e->getMessage(),'status'=>0,'phone_number'=>'0655406004','type'=>0]);
+                            echo 'something is not write' . $e->getMessage();
+                        }
                     } else {
 //skip all emails with ShuleSoft title
 //skip all invalid emails
@@ -101,7 +101,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function() {
 //send login reminder to parents in all schema
-            // $this->sendLoginReminder();
+             $this->sendLoginReminder();
         })->fridays()->at('13:00');
 
         $schedule->call(function () {
@@ -358,17 +358,22 @@ select 'Hello '|| p.name|| ', matokeo yote ya '||c.name||'  hupatikana kwenye Sh
 //parents
                 $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")
 select 'Hello '|| p.name|| ', ili uweze kuingia katika program ya ShuleSoft, nenda sehemu ya internet (Google), kisha andika https://" . $schema->table_schema . ".shulesoft.com, kisha ingiza nenotumizi (username) ni '||p.username||' na nenosiri la kuanzia ni '||case when p.default_password is null then '123456' else p.default_password end||'. Matokeo yote ya mwanao na taarifa za shule utazipata ShuleSoft. Kwa msaada, piga (0655406004) au uongozi wa shule ('||s.phone||'). Asante', p.phone, 0,0, p.\"parentID\",'parent' FROM " . $schema->table_schema . ".parent p, " . $schema->table_schema . ".setting s where p.\"parentID\" NOT IN (SELECT user_id from " . $schema->table_schema . ".log where user_id is not null and \"user\"='Parent') and p.status=1";
-                DB::statement($sql);
+                
+                $sql_updated="insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")
+select 'Hello '|| p.name|| ', umeshaona matokeo ya mtoto wako katika ShuleSoft. Fungua hii link  https://" . $schema->table_schema . ".shulesoft.com, kisha ingiza nenotumizi (username) ni '||p.username||' na nenosiri la kuanzia ni '||case when p.default_password is null then '123456' else p.default_password end||'. Matokeo yote ya mwanao na taarifa za shule utazipata ShuleSoft. Kwa msaada wa kuingia, tupigie. Asante', p.phone, 0,0, p.\"parentID\",'parent' FROM " . $schema->table_schema . ".parent p, " . $schema->table_schema . ".setting s where p.\"parentID\" NOT IN (SELECT user_id from " . $schema->table_schema . ".log where user_id is not null and \"user\"='Parent') and p.status=1 and p.\"parentID\" IN (
+SELECT parent_id from " . $schema->table_schema . ".student_parents where student_id in (
+select \"studentID\" from " . $schema->table_schema . ".student_exams ) )";
+                DB::statement($sql_updated);
 
 //teachers
                 $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")
 select 'Hello '|| p.name|| ', je umewahi ingia katika akaunti yako ya ShuleSoft '||upper(s.sname)||'  na kujifunza jinsi inavyoweza kusaidia utendaji kazi wako uwe rahisi zaidi? Kama bado, ni rahis kuanza, kupitia simu yako au computer, ingia sehemu ya internet (Google), na kuandika https://" . $schema->table_schema . ".shulesoft.com, kisha ingiza nenotumizi (username) ni '||p.username||' na nenosiri la kuanzia ni '||case when p.default_password is null then 'teacher123' else p.default_password end||'. Kwa msaada(0655406004) au uongozi wa shule ('||s.phone||'). Asante', p.phone, 0,0, p.\"teacherID\",'teacher' FROM " . $schema->table_schema . ".teacher p, " . $schema->table_schema . ".setting s where p.\"teacherID\" NOT IN (SELECT user_id from " . $schema->table_schema . ".log where user_id is not null and \"user\"='Teacher') and p.status=1";
-                DB::statement($sql);
+               // DB::statement($sql);
 
 //users
                 $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")
 select 'Hello '|| p.name|| ', je umewahi ingia katika akaunti yako ya ShuleSoft '||upper(s.sname)||'  na kujifunza jinsi inavyoweza kusaidia utendaji kazi wako uwe rahisi na kuboresha taaluma ya Shule ? Kama bado, ni rahis kuanza, kupitia simu yako au computer yako, ingia sehemu ya internet (Google), na kuandika https://" . $schema->table_schema . ".shulesoft.com, kisha ingiza nenotumizi (username) ni '||p.username||' na nenosiri la kuanzia ni '||case when p.default_password is null then 'user123' else p.default_password end||'. Kwa msaada(0655406004) au uongozi wa shule ('||s.phone||'). Siku njema', p.phone, 0,0, p.\"userID\",'user' FROM " . $schema->table_schema . ".user p, " . $schema->table_schema . ".setting s where p.\"userID\" NOT IN (SELECT user_id from " . $schema->table_schema . ".log where user_id is not null and \"user\" not in ('Teacher','Parent','Student')) and p.status=1";
-                DB::statement($sql);
+              //  DB::statement($sql);
             }
         }
     }
