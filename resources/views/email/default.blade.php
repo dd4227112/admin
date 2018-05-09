@@ -430,6 +430,13 @@ img {
                             </div>
                           </div>
                         </td>
+                          <td>
+                          <div class='contentEditableContainer contentTwitterEditable'>
+                            <div class='contentEditable' style='text-align: center;color:#AAAAAA;'>
+                              <a href="https://www.youtube.com/channel/UCUNAdpZsh8AHzTMvmPX5ooQ?view_as=subscriber"><img src="http://icons.iconarchive.com/icons/danleech/simple/64/youtube-icon.png" alt="YouTube" width='40' height='40' data-max-width="40" data-customIcon="true" border="0"> </a>
+                            </div>
+                          </div>
+                        </td>
                       </tr>
                     </table></td>
       <td valign="top" width="185" class="spechide">&nbsp;</td>
