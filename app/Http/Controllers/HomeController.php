@@ -60,7 +60,7 @@ class HomeController extends Controller {
         return view('profile.search_results', $this->data);
     }
 
-    static function sendEmail() {
+     function testing() {
         $emails = DB::select('select * from public.all_email limit 8');
         if (!empty($emails)) {
             foreach ($emails as $message) {
