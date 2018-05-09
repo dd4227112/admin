@@ -38,7 +38,7 @@ class Kernel extends ConsoleKernel {
             $phones_connected = DB::select('select distinct api_key from public.all_sms');
             if (count($phones_connected) > 0) {
                 foreach ($phones_connected as $phone) {
-                    $messages = DB::select('select * from public.all_sms where api_key=\''.$phone->api_key.'\' order by priority desc, sms_id desc limit 8');
+                    $messages = DB::select('select * from public.all_sms where api_key=\'' . $phone->api_key . '\' order by priority desc, sms_id desc limit 8');
                     if (!empty($messages)) {
                         foreach ($messages as $sms) {
 
@@ -75,7 +75,11 @@ class Kernel extends ConsoleKernel {
                             if (count(Mail::failures()) > 0) {
                                 DB::update('update ' . $message->schema_name . '.email set status=0 WHERE email_id=' . $message->email_id);
                             } else {
-                                DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
+                                if ($message->email == 'inetscompany@gmail.com') {
+                                    DB::table($message->schema_name . '.email')->where('email_id', $message->email_id)->delete();
+                                } else {
+                                    DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
+                                }
                             }
                         } catch (\Exception $e) {
                             // error occur
@@ -101,8 +105,13 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function() {
 //send login reminder to parents in all schema
-             $this->sendLoginReminder();
+            $this->sendLoginReminder();
         })->fridays()->at('13:00');
+
+        $schedule->call(function() {
+//send login reminder to parents in all schema
+            $this->notifyUsersDailyReports();
+        })->weekly()->weekdays()->at('13:00');
 
         $schedule->call(function () {
 // send Birdthday 
@@ -113,6 +122,18 @@ class Kernel extends ConsoleKernel {
 // sync invoices 
             $this->syncInvoice();
         })->everyMinute();
+    }
+
+    function notifyUsersDailyReports() {
+        $users = DB::select('select * from admin.users');
+        foreach ($users as $user) {
+            $message = 'Hello ' . $user->firstname . ' ' . $user->lastname . '. Kindly remember to submit your daily marketing/sales report in your hubspot account. Thank you';
+            DB::table('public.sms')->insert([
+                'body' => $message,
+                'phone_number' => $user->phone,
+                'type' => 0
+            ]);
+        }
     }
 
     function getFeeNames($invoice_id, $schema_name) {
@@ -355,27 +376,39 @@ select 'Hello '|| p.name|| ', matokeo yote ya '||c.name||'  hupatikana kwenye Sh
         $schemas = (new \App\Http\Controllers\DatabaseController())->loadSchema();
         foreach ($schemas as $schema) {
             if (!in_array($schema->table_schema, array('public', 'api', 'admin'))) {
-//parents
-                $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")
+                $this->parentsExamLoginReminder($schema);
+                $this->sendTeachersLoginReminder($schema);
+                $this->usersLoginReminder($schema);
+            }
+        }
+    }
+
+    public function parentGeneralLoginReminder($schema) {
+
+        $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")
 select 'Hello '|| p.name|| ', ili uweze kuingia katika program ya ShuleSoft, nenda sehemu ya internet (Google), kisha andika https://" . $schema->table_schema . ".shulesoft.com, kisha ingiza nenotumizi (username) ni '||p.username||' na nenosiri la kuanzia ni '||case when p.default_password is null then '123456' else p.default_password end||'. Matokeo yote ya mwanao na taarifa za shule utazipata ShuleSoft. Kwa msaada, piga (0655406004) au uongozi wa shule ('||s.phone||'). Asante', p.phone, 0,0, p.\"parentID\",'parent' FROM " . $schema->table_schema . ".parent p, " . $schema->table_schema . ".setting s where p.\"parentID\" NOT IN (SELECT user_id from " . $schema->table_schema . ".log where user_id is not null and \"user\"='Parent') and p.status=1";
-                
-                $sql_updated="insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")
+        return DB::statement($sql);
+    }
+
+    public function parentsExamLoginReminder($schema) {
+
+        $sql_updated = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")
 select 'Hello '|| p.name|| ', umeshaona matokeo ya mtoto wako katika ShuleSoft. Fungua hii link  https://" . $schema->table_schema . ".shulesoft.com, kisha ingiza nenotumizi (username) ni '||p.username||' na nenosiri la kuanzia ni '||case when p.default_password is null then '123456' else p.default_password end||'. Matokeo yote ya mwanao na taarifa za shule utazipata ShuleSoft. Kwa msaada wa kuingia, tupigie. Asante', p.phone, 0,0, p.\"parentID\",'parent' FROM " . $schema->table_schema . ".parent p, " . $schema->table_schema . ".setting s where p.\"parentID\" NOT IN (SELECT user_id from " . $schema->table_schema . ".log where user_id is not null and \"user\"='Parent') and p.status=1 and p.\"parentID\" IN (
 SELECT parent_id from " . $schema->table_schema . ".student_parents where student_id in (
 select \"studentID\" from " . $schema->table_schema . ".student_exams ) )";
-                DB::statement($sql_updated);
+        return DB::statement($sql_updated);
+    }
 
-//teachers
-                $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")
-select 'Hello '|| p.name|| ', je umewahi ingia katika akaunti yako ya ShuleSoft '||upper(s.sname)||'  na kujifunza jinsi inavyoweza kusaidia utendaji kazi wako uwe rahisi zaidi? Kama bado, ni rahis kuanza, kupitia simu yako au computer, ingia sehemu ya internet (Google), na kuandika https://" . $schema->table_schema . ".shulesoft.com, kisha ingiza nenotumizi (username) ni '||p.username||' na nenosiri la kuanzia ni '||case when p.default_password is null then 'teacher123' else p.default_password end||'. Kwa msaada(0655406004) au uongozi wa shule ('||s.phone||'). Asante', p.phone, 0,0, p.\"teacherID\",'teacher' FROM " . $schema->table_schema . ".teacher p, " . $schema->table_schema . ".setting s where p.\"teacherID\" NOT IN (SELECT user_id from " . $schema->table_schema . ".log where user_id is not null and \"user\"='Teacher') and p.status=1";
-               // DB::statement($sql);
-
-//users
-                $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")
+    public function usersLoginReminder($schema) {
+        $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")
 select 'Hello '|| p.name|| ', je umewahi ingia katika akaunti yako ya ShuleSoft '||upper(s.sname)||'  na kujifunza jinsi inavyoweza kusaidia utendaji kazi wako uwe rahisi na kuboresha taaluma ya Shule ? Kama bado, ni rahis kuanza, kupitia simu yako au computer yako, ingia sehemu ya internet (Google), na kuandika https://" . $schema->table_schema . ".shulesoft.com, kisha ingiza nenotumizi (username) ni '||p.username||' na nenosiri la kuanzia ni '||case when p.default_password is null then 'user123' else p.default_password end||'. Kwa msaada(0655406004) au uongozi wa shule ('||s.phone||'). Siku njema', p.phone, 0,0, p.\"userID\",'user' FROM " . $schema->table_schema . ".user p, " . $schema->table_schema . ".setting s where p.\"userID\" NOT IN (SELECT user_id from " . $schema->table_schema . ".log where user_id is not null and \"user\" not in ('Teacher','Parent','Student')) and p.status=1";
-              //  DB::statement($sql);
-            }
-        }
+        return DB::statement($sql);
+    }
+
+    public function sendTeachersLoginReminder($schema) {
+        $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")
+select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, mishahara ya kila mwezi (payroll na payslip), na taarifa zote za shule '||upper(s.sname)||'  utazipata katika akaunti yako ya ShuleSoft. Ili Kuingia, fungua sehemu ya internet (Google), na andika https://" . $schema->table_schema . ".shulesoft.com, kisha ingiza nenotumizi (username) lako '||p.username||' na nenosiri(password) lako ni '||case when p.default_password is null then 'teacher123' else p.default_password end||'. Kwa msaada(0655406004) au uongozi wa shule ('||s.phone||'). Karibu', p.phone, 0,0, p.\"teacherID\",'teacher' FROM " . $schema->table_schema . ".teacher p, " . $schema->table_schema . ".setting s where p.\"teacherID\" NOT IN (SELECT user_id from " . $schema->table_schema . ".log where user_id is not null and \"table\"='teacher') and p.status=1";
+        return DB::statement($sql);
     }
 
     public function sendSchedulatedSms() {

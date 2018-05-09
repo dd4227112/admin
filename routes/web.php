@@ -16,13 +16,21 @@ Route::get('/que/{type?}', 'BackgroundController@index');
 Route::group(['middleware' => ['guest']], function() {
     Auth::routes();
 });
-
+Route::get('/testing', function() {
+    $data = ['content' => 'testing sending email', 'link' => 'link', 'photo' => 'testing', 'sitename' =>'ugali', 'name' => ''];
+    $message='none';
+    Mail::send('email.default', $data, function ($m) use ($message) {
+        $m->from('noreply@shulesoft.com', 'testing');
+        $m->to('swillae1@gmail.com')->subject('tsti message');
+    });
+    dd(Mail::failures());
+});
 
 
 Route::group(['middleware' => ['auth']], function() {
     Route::get('/management', 'UsersController@management');
     Route::resource('users', 'UsersController');
-     Route::resource('invoice', 'InvoiceController');
+    Route::resource('invoice', 'InvoiceController');
     Route::resource('roles', 'RolesController');
     Route::get('/home', 'HomeController@index')->name('home');
     Route::any('/database/upgrade', 'DatabaseController@upgrade');
@@ -30,11 +38,11 @@ Route::group(['middleware' => ['auth']], function() {
     Route::any('/message/create', 'Message@create');
     Route::any('/message/shulesoft', 'Message@shulesoft');
     Route::any('/message/show/{op?}', 'Message@show');
-     Route::any('/message/feedback', 'Message@feedback');
+    Route::any('/message/feedback', 'Message@feedback');
     Route::any('/message/destroy/{op?}/{ops?}/{schema?}', 'Message@destroy');
 
     Route::post('/search', 'HomeController@search');
-     Route::get('/search', 'HomeController@searchResult');
+    Route::get('/search', 'HomeController@searchResult');
     Route::any('/market/{op?}', 'MarketingController@index');
     Route::get('/downloadMaterial/{type?}', 'MarketingController@downloadMaterial');
 });
