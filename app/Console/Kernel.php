@@ -61,8 +61,7 @@ class Kernel extends ConsoleKernel {
         })->everyMinute();
 
         $schedule->call(function () {
-//loop through schema names and push emails
-            $this->emails = DB::select('select * from public.all_email limit 30');
+            $this->emails = DB::select('select * from public.all_email limit 8');
             if (!empty($this->emails)) {
                 foreach ($this->emails as $message) {
                     if (filter_var($message->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $message->email)) {
