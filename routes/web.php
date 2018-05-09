@@ -16,15 +16,7 @@ Route::get('/que/{type?}', 'BackgroundController@index');
 Route::group(['middleware' => ['guest']], function() {
     Auth::routes();
 });
-Route::get('/testing', function() {
-    $data = ['content' => 'testing sending email', 'link' => 'link', 'photo' => 'testing', 'sitename' =>'ugali', 'name' => ''];
-    $message='none';
-    Mail::send('email.default', $data, function ($m) use ($message) {
-        $m->from('noreply@shulesoft.com', 'testing');
-        $m->to('swillae1@gmail.com')->subject('tsti message');
-    });
-    dd(Mail::failures());
-});
+Route::get('/testing', 'HomeController@testing');
 
 
 Route::group(['middleware' => ['auth']], function() {

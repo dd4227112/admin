@@ -58,4 +58,14 @@ class HomeController extends Controller {
         return view('profile.search_results', $this->data);
     }
 
+    function testing() {
+        $data = ['content' => 'testing sending email', 'link' => 'link', 'photo' => 'testing', 'sitename' => 'demo', 'name' => ''];
+        $message = 'none';
+        Mail::send('email.default', $data, function ($m) use ($message) {
+            $m->from('noreply@shulesoft.com', 'testing');
+            $m->to('swillae1@gmail.com')->subject('tsti message');
+        });
+        dd(Mail::failures());
+    }
+
 }
