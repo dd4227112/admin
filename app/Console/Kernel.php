@@ -6,6 +6,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\Mail;
 use DB;
+use \App\Http\Controllers\HomeController;
 
 class Kernel extends ConsoleKernel {
 
@@ -30,69 +31,38 @@ class Kernel extends ConsoleKernel {
     protected function schedule(Schedule $schedule) {
 // $schedule->command('inspire')
 //          ->hourly();
-        $schedule->call(function () {
-//check if there is any sms then send
-//check if there is any email then send
-//$this->testCrone();
-            //get all connected phones first
-            $phones_connected = DB::select('select distinct api_key from public.all_sms');
-            if (count($phones_connected) > 0) {
-                foreach ($phones_connected as $phone) {
-                    $messages = DB::select('select * from public.all_sms where api_key=\'' . $phone->api_key . '\' order by priority desc, sms_id desc limit 8');
-                    if (!empty($messages)) {
-                        foreach ($messages as $sms) {
+//        $schedule->call(function () {
+////check if there is any sms then send
+////check if there is any email then send
+////$this->testCrone();
+//            //get all connected phones first
+//            $phones_connected = DB::select('select distinct api_key from public.all_sms');
+//            if (count($phones_connected) > 0) {
+//                foreach ($phones_connected as $phone) {
+//                    $messages = DB::select('select * from public.all_sms where api_key=\'' . $phone->api_key . '\' order by priority desc, sms_id desc limit 8');
+//                    if (!empty($messages)) {
+//                        foreach ($messages as $sms) {
+//
+//                            $karibusms = new \karibusms();
+//                            $karibusms->API_KEY = $sms->api_key;
+//                            $karibusms->API_SECRET = $sms->api_secret;
+//                            $karibusms->set_name(strtoupper($sms->schema_name));
+//                            $karibusms->karibuSMSpro = $sms->type;
+//                            $result = (object) json_decode($karibusms->send_sms($sms->phone_number, strtoupper($sms->schema_name) . ': ' . $sms->body . '. https://' . $sms->schema_name . '.shulesoft.com'));
+//                            if ($result->success == 1) {
+//                                DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 1, 'return_code' => json_encode($result), 'updated_at' => 'now()']);
+//                            } else {
+////stop retrying
+//                                DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 1, 'return_code' => json_encode($result), 'updated_at' => 'now()']);
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        })->everyMinute();
 
-                            $karibusms = new \karibusms();
-                            $karibusms->API_KEY = $sms->api_key;
-                            $karibusms->API_SECRET = $sms->api_secret;
-                            $karibusms->set_name(strtoupper($sms->schema_name));
-                            $karibusms->karibuSMSpro = $sms->type;
-                            $result = (object) json_decode($karibusms->send_sms($sms->phone_number, strtoupper($sms->schema_name) . ': ' . $sms->body . '. https://' . $sms->schema_name . '.shulesoft.com'));
-                            if ($result->success == 1) {
-                                DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 1, 'return_code' => json_encode($result), 'updated_at' => 'now()']);
-                            } else {
-//stop retrying
-                                DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 1, 'return_code' => json_encode($result), 'updated_at' => 'now()']);
-                            }
-                        }
-                    }
-                }
-            }
-        })->everyMinute();
-
         $schedule->call(function () {
-            $this->emails = DB::select('select * from public.all_email limit 8');
-            if (!empty($this->emails)) {
-                foreach ($this->emails as $message) {
-                    if (filter_var($message->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $message->email)) {
-                        try {
-                            $data = ['content' => $message->body, 'link' => $message->schema_name, 'photo' => $message->photo, 'sitename' => $message->sitename, 'name' => ''];
-                            Mail::send('email.default', $data, function ($m) use ($message) {
-                                $m->from('no-reply@shulesoft.com', $message->sitename);
-                                $m->to($message->email)->subject($message->subject);
-                            });
-                            if (count(Mail::failures()) > 0) {
-                                DB::update('update ' . $message->schema_name . '.email set status=0 WHERE email_id=' . $message->email_id);
-                            } else {
-                                if ($message->email == 'inetscompany@gmail.com') {
-                                    DB::table($message->schema_name . '.email')->where('email_id', $message->email_id)->delete();
-                                } else {
-                                    DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
-                                }
-                            }
-                        } catch (\Exception $e) {
-                            // error occur
-                            //DB::table('public.sms')->insert(['body'=>'email error'.$e->getMessage(),'status'=>0,'phone_number'=>'0655406004','type'=>0]);
-                            echo 'something is not write' . $e->getMessage();
-                        }
-                    } else {
-//skip all emails with ShuleSoft title
-//skip all invalid emails
-                        DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
-                    }
-//$this->updateEmailConfig();
-                }
-            }
+            HomeController::sendEmail();
         })->everyMinute();
 
 
