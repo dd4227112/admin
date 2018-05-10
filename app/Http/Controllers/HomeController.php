@@ -61,8 +61,6 @@ class HomeController extends Controller {
     }
 
      function testing() {
-      
-    
         $emails = DB::select('select * from public.all_email limit 8');
         if (!empty($emails)) {
             foreach ($emails as $message) {
@@ -73,7 +71,7 @@ class HomeController extends Controller {
                             $m->from('noreply@shulesoft.com', $message->sitename);
                             $m->to($message->email)->subject($message->subject);
                         });
-                        dd(\Mail::failures());
+                       
                         if (count(\Mail::failures()) > 0) {
                             DB::update('update ' . $message->schema_name . '.email set status=0 WHERE email_id=' . $message->email_id);
                         } else {

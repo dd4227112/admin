@@ -4,7 +4,6 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use Illuminate\Support\Facades\Mail;
 use DB;
 
 class Kernel extends ConsoleKernel {
@@ -68,11 +67,11 @@ class Kernel extends ConsoleKernel {
                     if (filter_var($message->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $message->email)) {
                         try {
                             $data = ['content' => $message->body, 'link' => $message->schema_name, 'photo' => $message->photo, 'sitename' => $message->sitename, 'name' => ''];
-                            Mail::send('email.default', $data, function ($m) use ($message) {
-                                $m->from('no-reply@shulesoft.com', $message->sitename);
+                            \Mail::send('email.default', $data, function ($m) use ($message) {
+                                $m->from('noreply@shulesoft.com', $message->sitename);
                                 $m->to($message->email)->subject($message->subject);
                             });
-                            if (count(Mail::failures()) > 0) {
+                            if (count(\Mail::failures()) > 0) {
                                 DB::update('update ' . $message->schema_name . '.email set status=0 WHERE email_id=' . $message->email_id);
                             } else {
                                 if ($message->email == 'inetscompany@gmail.com') {
@@ -92,6 +91,7 @@ class Kernel extends ConsoleKernel {
                         DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
                     }
 //$this->updateEmailConfig();
+                    sleep(5);
                 }
             }
         })->everyMinute();
