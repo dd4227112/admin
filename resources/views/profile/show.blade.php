@@ -111,10 +111,12 @@
                                         <td><strong>Username</strong></td>
                                         <td> <p class="text-muted" contenteditable="" id="username"><?= $user->username ?></p></td>
                                     </tr>
+                                    <?php if(isset($user->dob)){?>
   <tr>
                                         <td><strong>Date of Birth</strong></td>
                                         <td> <p class="text-muted" contenteditable="" id="dob"><?= $user->dob ?></p></td>
                                     </tr>
+                                    <?php }?>
                                     <tr>
                                         <td><strong>Reset Password</strong></td>
                                         <td> <p class="text-muted"><a href="#" id="reset_password" class="btn btn-rounded">Reset</a></p></td>

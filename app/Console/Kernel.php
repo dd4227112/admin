@@ -92,6 +92,7 @@ class Kernel extends ConsoleKernel {
                     }
 //$this->updateEmailConfig();
                     sleep(5);
+                  
                 }
             }
         })->everyMinute();
@@ -110,7 +111,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function() {
 //send login reminder to parents in all schema
-            $this->notifyUsersDailyReports();
+            //$this->notifyUsersDailyReports();
         })->weekly()->weekdays()->at('13:00');
 
         $schedule->call(function () {
