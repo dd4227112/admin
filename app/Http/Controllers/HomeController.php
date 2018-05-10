@@ -61,13 +61,7 @@ class HomeController extends Controller {
     }
 
      function testing() {
-            $data = ['content' => 'testing sending email to users', 'link' => 'link', 'photo' => 'testing', 'sitename' =>'ugali', 'name' => ''];
-    $message='none';
-    \Mail::send('email.default', $data, function ($m) use ($message) {
-        $m->from('noreply@shulesoft.com', 'testing');
-        $m->to('swillae1@gmail.com')->subject('tsti message');
-    });
-    dd(\Mail::failures());
+      
     
         $emails = DB::select('select * from public.all_email limit 8');
         if (!empty($emails)) {
@@ -75,11 +69,11 @@ class HomeController extends Controller {
                 if (filter_var($message->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $message->email)) {
                     try {
                         $data = ['content' => $message->body, 'link' => $message->schema_name, 'photo' => $message->photo, 'sitename' => $message->sitename, 'name' => ''];
-                        Mail::send('email.default', $data, function ($m) use ($message) {
+                        \Mail::send('email.default', $data, function ($m) use ($message) {
                             $m->from('noreply@shulesoft.com', $message->sitename);
                             $m->to($message->email)->subject($message->subject);
                         });
-                        if (count(Mail::failures()) > 0) {
+                        if (count(\Mail::failures()) > 0) {
                             DB::update('update ' . $message->schema_name . '.email set status=0 WHERE email_id=' . $message->email_id);
                         } else {
                             if ($message->email == 'inetscompany@gmail.com') {
