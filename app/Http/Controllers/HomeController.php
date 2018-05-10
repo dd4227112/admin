@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use Illuminate\Support\Facades\Auth;
-use Mail;
+
 
 class HomeController extends Controller {
 
@@ -63,11 +63,11 @@ class HomeController extends Controller {
      function testing() {
             $data = ['content' => 'testing sending email to users', 'link' => 'link', 'photo' => 'testing', 'sitename' =>'ugali', 'name' => ''];
     $message='none';
-    Mail::send('email.default', $data, function ($m) use ($message) {
+    \Mail::send('email.default', $data, function ($m) use ($message) {
         $m->from('noreply@shulesoft.com', 'testing');
         $m->to('swillae1@gmail.com')->subject('tsti message');
     });
-    dd(Mail::failures());
+    dd(\Mail::failures());
     
         $emails = DB::select('select * from public.all_email limit 8');
         if (!empty($emails)) {
