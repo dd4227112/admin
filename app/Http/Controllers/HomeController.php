@@ -61,6 +61,14 @@ class HomeController extends Controller {
     }
 
      function testing() {
+            $data = ['content' => 'testing sending email to users', 'link' => 'link', 'photo' => 'testing', 'sitename' =>'ugali', 'name' => ''];
+    $message='none';
+    Mail::send('email.default', $data, function ($m) use ($message) {
+        $m->from('noreply@shulesoft.com', 'testing');
+        $m->to('swillae1@gmail.com')->subject('tsti message');
+    });
+    dd(Mail::failures());
+    
         $emails = DB::select('select * from public.all_email limit 8');
         if (!empty($emails)) {
             foreach ($emails as $message) {
