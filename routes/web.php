@@ -17,6 +17,15 @@ Route::group(['middleware' => ['guest']], function() {
     Auth::routes();
 });
 Route::get('/testing', 'HomeController@testing');
+Route::get('/test', function() {
+    $data = ['content' => 'testing sending email to users', 'link' => 'link', 'photo' => 'testing', 'sitename' =>'ugali', 'name' => ''];
+    $message='none';
+    Mail::send('email.default', $data, function ($m) use ($message) {
+        $m->from('noreply@shulesoft.com', 'testing');
+        $m->to('swillae1@gmail.com')->subject('tsti message');
+    });
+    dd(Mail::failures());
+});
 
 
 Route::group(['middleware' => ['auth']], function() {
