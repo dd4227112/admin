@@ -67,12 +67,13 @@ class HomeController extends Controller {
         if (!empty($emails)) {
             foreach ($emails as $message) {
                 if (filter_var($message->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $message->email)) {
-                    try {
+                 
                         $data = ['content' => $message->body, 'link' => $message->schema_name, 'photo' => $message->photo, 'sitename' => $message->sitename, 'name' => ''];
                         \Mail::send('email.default', $data, function ($m) use ($message) {
                             $m->from('noreply@shulesoft.com', $message->sitename);
                             $m->to($message->email)->subject($message->subject);
                         });
+                        dd(\Mail::failures());
                         if (count(\Mail::failures()) > 0) {
                             DB::update('update ' . $message->schema_name . '.email set status=0 WHERE email_id=' . $message->email_id);
                         } else {
@@ -82,11 +83,7 @@ class HomeController extends Controller {
                                 DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
                             }
                         }
-                    } catch (\Exception $e) {
-                        // error occur
-                        //DB::table('public.sms')->insert(['body'=>'email error'.$e->getMessage(),'status'=>0,'phone_number'=>'0655406004','type'=>0]);
-                        echo 'something is not write' . $e->getMessage();
-                    }
+                  
                 } else {
 //skip all emails with ShuleSoft title
 //skip all invalid emails
