@@ -68,7 +68,7 @@ class HomeController extends Controller {
                     try {
                         $data = ['content' => $message->body, 'link' => $message->schema_name, 'photo' => $message->photo, 'sitename' => $message->sitename, 'name' => ''];
                         Mail::send('email.default', $data, function ($m) use ($message) {
-                            $m->from('no-reply@shulesoft.com', $message->sitename);
+                            $m->from('noreply@shulesoft.com', $message->sitename);
                             $m->to($message->email)->subject($message->subject);
                         });
                         if (count(Mail::failures()) > 0) {
