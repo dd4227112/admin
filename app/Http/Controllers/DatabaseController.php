@@ -86,6 +86,19 @@ AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
         }
         return $column_names;
     }
+    
+     public function loadTableColumnsBulks() {
+        $tables = DB::select("SELECT table_name, column_name,table_schema FROM INFORMATION_SCHEMA.COLUMNS");
+        $column_names = array();
+         foreach ($tables as $table) {
+             $column_names[$table->table_schema][$table->table_name]=array();
+        }
+        
+        foreach ($tables as $table) {
+            array_push($column_names[$table->table_schema][$table->table_name], $table->column_name);
+        }
+        return $column_names;
+    }
 
     public function compareSchemaTables($slave_schema = null) {
         $master_tables = $this->loadTables(self::$master_schema);

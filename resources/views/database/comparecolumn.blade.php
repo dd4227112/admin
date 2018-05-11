@@ -5,6 +5,8 @@
 use \App\Http\Controllers\DatabaseController as SCHEMA;
 
 $database = new SCHEMA();
+$master_tables = $database->loadTables(SCHEMA::$master_schema);
+$columns = $database->loadTableColumnsBulks();
 ?>
 <div class="white-box">
     <div class="table-responsive">
@@ -34,14 +36,11 @@ $database = new SCHEMA();
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $master_tables = $database->loadTables(SCHEMA::$master_schema);
-                                    //load all column in this main table
                                     $schema = $schema->table_schema;
                                     foreach ($master_tables as $table) {
-                                        # code...
-                                        $master_columns = $database->loadTableColumns(SCHEMA::$master_schema, $table);
-                                        $slave_columns = $database->loadTableColumns($schema, $table);
-                                        //missing columns
+                              
+                                        $master_columns = $columns[SCHEMA::$master_schema][$table];
+                                        $slave_columns = isset($columns[$schema][$table]) ? $columns[$schema][$table] : array();
                                         $missing_columns = array_diff($master_columns, $slave_columns);
                                         if (!empty($missing_columns)) {
                                             ?>
@@ -51,29 +50,29 @@ $database = new SCHEMA();
                                                 </td>
                                                 <td colspan="2">
                                                     <table class="table">
-                                                        <?php foreach ($missing_columns as $column) { ?>
+            <?php foreach ($missing_columns as $column) { ?>
                                                             <tr>
                                                                 <td>{{$column}}</td>
                                                                 <td><a href="#" onclick="return false" data-table='{{$table}}' data-slave='{{$schema}}' data-column='{{$column}}' class="sync_column">Sync </a>
                                                                     <span id="{{$table.$schema.$column}}"></span>
                                                                 </td>
                                                             </tr>
-                                                        <?php } ?>
+            <?php } ?>
                                                     </table>
                                                 </td>
                                             </tr>
-                                            <?php
-                                        }
-                                    }
-                                    ?>
+            <?php
+        }
+    }
+    ?>
                                 </tbody>
                             </table>
                         </td>
                     </tr>
-                    <?php
-                    $i++;
-                }
-                ?>
+    <?php
+    $i++;
+}
+?>
             </tbody>
         </table>
     </div>
@@ -84,7 +83,7 @@ $database = new SCHEMA();
             var slave = $(this).attr('data-slave');
             var table = $(this).attr('data-table');
             var column = $(this).attr('data-column');
-             $(this).hide();
+            $(this).hide();
             $.ajax({
                 type: 'GET',
                 url: "<?= url('database/syncColumn') ?>",
