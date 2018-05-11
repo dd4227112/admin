@@ -52,13 +52,13 @@ AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
     }
 
     public function loadSchema() {
-        return DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant','admin','api')");
+        return DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant','admin','api','app','skysat')");
     }
 
     /**
      * @var Default Schema which is stable
      */
-    protected static $master_schema = 'testing';
+    public static $master_schema = 'testing';
 
     /**
      * @var $schema : Schema name which we want to know its tables
