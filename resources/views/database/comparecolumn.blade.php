@@ -7,6 +7,7 @@ use \App\Http\Controllers\DatabaseController as SCHEMA;
 $database = new SCHEMA();
 $master_tables = $database->loadTables(SCHEMA::$master_schema);
 $columns = $database->loadTableColumnsBulks();
+$d=$database->loadSchema();
 ?>
 <div class="white-box">
     <div class="table-responsive">
@@ -21,7 +22,7 @@ $columns = $database->loadTableColumnsBulks();
             <tbody>
                 <?php
                 $i = 1;
-                foreach ($data as $schema) {
+                foreach ($d as $schema) {
                     ?>
                     <tr>
                         <td>{{$i}}</td>
