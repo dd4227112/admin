@@ -159,9 +159,8 @@ AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
     public function syncTable() {
         $master_table_name = request('table');
         $slave_schema = request('slave');
-        $sql = DB::select("select show_create_table('" . $master_table_name . "','" . $slave_schema . "') as result");
-        $sq = array_shift($sql);
-        DB::statement($sq->result);
+        $sql = \collect(DB::select("select show_create_table('" . $master_table_name . "','" . $slave_schema . "') as result"))->first();
+        DB::statement($sql->result);
         return redirect('database/compareTable');
     }
 
