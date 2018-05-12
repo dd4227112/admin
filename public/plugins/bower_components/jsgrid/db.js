@@ -40,9 +40,9 @@
         {Name: "China", Id: 6},
         {Name: "Russia", Id: 7}
     ];
-   $.getJSON('http://administration.shulesoft.com/market/getSchools',function(data){
-         db.clients = data;
-    });
+   //$.getJSON('market/getSchools',function(data){
+         db.clients = [];
+  //  });
     db.clien = [
         {
             "Name": "Otto Clay",

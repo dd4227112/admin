@@ -13,9 +13,10 @@ class DatabaseController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index($page = null, $sub = null) {
-        $data = ($page == null || in_array($page, array('login'))) ? '' : $this->$page($sub);
-        $page = $page != 'compareColumn' ? 'comparetable' : 'comparecolumn';       
-        return view('database.' . strtolower($page), compact('data', 'page'));
+        $this->data['data'] = ($page == null || in_array($page, array('login'))) ? '' : $this->$page($sub);
+        $this->data['page'] = $page;
+        $this->data['sub'] = $sub;
+        return view('database.' . strtolower($page), $this->data);
     }
 
     /**
@@ -44,7 +45,7 @@ class DatabaseController extends Controller {
      * 
      * @return type
      */
-    public function getConstraint($table_name, $schema_name,$constrains) {
+    public function getConstraint($table_name, $schema_name, $constrains) {
         return DB::select("SELECT * 
 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS 
 WHERE CONSTRAINT_TYPE = '$constrains' 
@@ -86,14 +87,14 @@ AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
         }
         return $column_names;
     }
-    
-     public function loadTableColumnsBulks() {
+
+    public function loadTableColumnsBulks() {
         $tables = DB::select("SELECT table_name, column_name,table_schema FROM INFORMATION_SCHEMA.COLUMNS");
         $column_names = array();
-         foreach ($tables as $table) {
-             $column_names[$table->table_schema][$table->table_name]=array();
+        foreach ($tables as $table) {
+            $column_names[$table->table_schema][$table->table_name] = array();
         }
-        
+
         foreach ($tables as $table) {
             array_push($column_names[$table->table_schema][$table->table_name], $table->column_name);
         }
@@ -114,7 +115,7 @@ AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
             $stable .= ' <b>' . $schema . '</b><p>Missing Tables: ' . implode(',', $diff) . ' </p>';
 
             foreach ($diff as $table) {
-                $stable .= "<a href='" . url('database/syncTable?table=' . $table . '&slave=' . $schema) . "'>Sync <b>" . $table . "</b> Tables</a><br/>";
+                $stable .= "<a href='#'  onclick='return false' data-table='" . $table . "' data-slave='" . $schema . "'  class='sync_table'>Sync <b>" . $table . "</b> Tables</a><br/> <span id='" . $table . $schema . "'></span>";
             }
             $stable .= '<hr/>';
         }
@@ -185,12 +186,12 @@ AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
             if ($table->column_default != '') {
                 $alter_sql = 'ALTER TABLE ' . $schema . '.' . $master_table . ' ALTER COLUMN  "' . $column_missing . '" SET DEFAULT ' . $table->column_default;
                 DB::statement($alter_sql);
-            } elseif (isset($table->is_nullable) &&  $table->is_nullable== 'NO') {
+            } elseif (isset($table->is_nullable) && $table->is_nullable == 'NO') {
                 $alter_sql = 'ALTER TABLE ' . $schema . '.' . $master_table . ' ALTER COLUMN  "' . $column_missing . '" SET NOT NULL';
                 DB::statement($alter_sql);
             }
         } else {
-            return "This table does not exists in " . $schema . ' schema. Run "background/compareTableColumn"';
+            echo "This table does not exists in " . $schema . ' schema. Run "background/compareTableColumn"';
         }
         return redirect('database/compareTableColumn/' . $schema);
     }
@@ -231,6 +232,73 @@ ORDER BY c.oid, a.attnum";
             }
         }
         return $q;
+    }
+
+    public function constrains($type = 'FOREIGN KEY') {
+        $relations = DB::select('SELECT "table_schema", constraint_name,TABLE_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE = \'' . $type . '\'  order by "table_schema"');
+        $this->data['constrains'] = array();
+        foreach ($relations as $table) {
+            $this->data['constrains'][$table->table_schema][$table->table_name] = array();
+        }
+
+        foreach ($relations as $table) {
+            array_push($this->data['constrains'][$table->table_schema][$table->table_name], $table->constraint_name);
+        }
+        return $this->data['constrains'];
+    }
+
+    public function syncConstrain() {
+        //select from information schema where column name is that which is missing
+        //selectfrom information schema table and know data type, default value for that column name
+        //complete sql below by adding correct datatype at the end and default column
+        $master_table = request('table');
+        $schema = request('slave');
+        $column_missing = request('column');
+
+        $table_sql = "SELECT column_default,data_type FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema='" . self::$master_schema . "' AND table_name='" . $master_table . "' AND column_name='" . $column_missing . "' ";
+
+        $check_table_exists = DB::select("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema='" . $schema . "' AND table_name='" . $master_table . "' ");
+        if (!empty($check_table_exists)) {
+            switch (request('relation_type')) {
+                case 'CHECK':
+                    $tb = DB::select($table_sql);
+                    $table = array_shift($tb);
+
+                    $sql = 'ALTER TABLE ' . $schema . '.' . $master_table . ' ADD CONSTRAINT  "' . $column_missing . '"  ' . $table->data_type;
+                    DB::statement($sql);
+
+                    break;
+                case 'UNIQUE':
+
+                    $tb = DB::select($table_sql);
+                    $table = array_shift($tb);
+
+                    $sql = 'ALTER TABLE ' . $schema . '.' . $master_table . ' ADD CONSTRAINT  "' . $column_missing . '"  ' . $table->data_type;
+                    DB::statement($sql);
+                    break;
+                case 'PRIMARY KEY':
+
+                    $tb = DB::select($table_sql);
+                    $table = array_shift($tb);
+
+                    $sql = 'ALTER TABLE ' . $schema . '.' . $master_table . ' ADD CONSTRAINT  "' . $column_missing . '"  ' . $table->data_type;
+                    DB::statement($sql);
+                    break;
+                case 'FOREIGN KEY':
+
+                    $tb = DB::select($table_sql);
+                    $table = array_shift($tb);
+
+                    $sql = 'ALTER TABLE ' . $schema . '.' . $master_table . ' ADD CONSTRAINT  "' . $column_missing . '"  ' . $table->data_type;
+                    DB::statement($sql);
+                    break;
+
+                default:
+                    break;
+            }
+        } else {
+            echo "This table does not exists in " . $schema . ' schema. Run "background/compareTableColumn"';
+        }
     }
 
 }

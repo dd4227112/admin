@@ -77,8 +77,8 @@ var root_url = "<?= url('/'); ?>";
                     <!-- /Logo -->
                     <!-- Search input and Toggle icon -->
                     <ul class="nav navbar-top-links navbar-left">
-<!--                        <li><a href="javascript:void(0)" class="open-close waves-effect waves-light"><i class="ti-menu"></i></a></li>-->
-                        <!--                        <li class="dropdown">
+                       <li><a href="javascript:void(0)" class="open-close waves-effect waves-light"><i class="ti-menu"></i></a></li>
+                                              <li class="dropdown">
                                                     <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"> <i class="mdi mdi-gmail"></i>
                                                         <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
                                                     </a>
@@ -111,13 +111,13 @@ var root_url = "<?= url('/'); ?>";
                                                             </div>
                                                         </li>
                                                         <li>
-                                                            <a class="text-center" href="javascript:void(0);"> <strong>See all notifications</strong> <i class="fa fa-angle-right"></i> </a>
+                                                            <a class="text-center" href="{{url('message/feedback')}}"> <strong>See all feedbacks</strong> <i class="fa fa-angle-right"></i> </a>
                                                         </li>
                                                     </ul>
-                                                     /.dropdown-messages 
-                                                </li>-->
+                                                     <!--/.dropdown-messages--> 
+                                                </li>
                         <!-- .Task dropdown -->
-                        <!--                        <li class="dropdown">
+<!--                                              <li class="dropdown">
                                                     <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"> <i class="mdi mdi-check-circle"></i>
                                                         <div class="notify"><span class="heartbit"></span><span class="point"></span></div>
                                                     </a>
@@ -172,7 +172,7 @@ var root_url = "<?= url('/'); ?>";
                                                     </ul>
                                                 </li>-->
                         <!-- .Megamenu -->
-<!--                        <li class="mega-dropdown"> <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"><span class="hidden-xs">Mega</span> <i class="icon-options-vertical"></i></a>
+<!--                       <li class="mega-dropdown"> <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"><span class="hidden-xs">Mega</span> <i class="icon-options-vertical"></i></a>
                             <ul class="dropdown-menu mega-dropdown-menu animated bounceInDown">
                                 <li class="col-sm-3">
                                     <ul>
@@ -393,7 +393,7 @@ var root_url = "<?= url('/'); ?>";
                                                                                                                 <script src="<?= $root ?>js/custom.min.js"></script>
 
 
-                                                                                                                <script src="<?= $root ?>plugins/bower_components/jsgrid/db.js?v=2"></script>
+                                                                                                                <script src="<?= $root ?>plugins/bower_components/jsgrid/db.js?v=4"></script>
                                                                                                                 <script type="text/javascript" src="<?= $root ?>plugins/bower_components/jsgrid/dist/jsgrid.min.js"></script>
                                                                                                                 <script src="<?= $root ?>js/jsgrid-init.js?v=2"></script>
 

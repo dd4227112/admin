@@ -60,9 +60,10 @@
                         <li>
                             <a href="<?= url('database/compareTable') ?>"><i data-icon="" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Compare Tables</span></a></li>
                         <li><a href="<?= url('database/compareColumn') ?>"><i data-icon="" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Compare Columns</span></a></li>
+                        <li><a href="<?= url('database/constrains') ?>"><i data-icon="k" class="linea-icon linea-software fa-fw"></i> <span class="hide-menu">DB Constraints</span></a></li>
                         <li><a href="<?= url('database/upgrade') ?>"><i class="ti-layout-menu fa-fw"></i> <span class="hide-menu">Create Upgrade</span></a></li>
 <!--                        <li><a href="sweatalert.html"><i class="ti-alert fa-fw"></i> <span class="hide-menu">Sweat alert</span></a></li>
-                        <li><a href="typography.html"><i data-icon="k" class="linea-icon linea-software fa-fw"></i> <span class="hide-menu">Typography</span></a></li>
+                        
                         <li><a href="grid.html"><i data-icon="" class="linea-icon linea-basic fa-fw"></i> <span class="hide-menu">Grid</span></a></li>
                         <li><a href="tabs.html"><i class="ti-layers fa-fw"></i> <span class="hide-menu">Tabs</span></a></li>
                         <li><a href="tab-stylish.html"><i class=" ti-layers-alt fa-fw"></i> <span class="hide-menu">Stylish Tabs</span></a></li>
