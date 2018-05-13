@@ -47,6 +47,7 @@
                 <div class="white-box">
                     <h3 class="box-title m-b-0">Sign In to Admin</h3>
                     <small>Enter your details below</small>
+                    @include('layouts.notifications')
                   <form class="form-horizontal new-lg-form" id="loginform" method="POST" action="{{ route('login') }}" >
                      {{ csrf_field() }}
                     

@@ -5,9 +5,10 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use DB;
 
-class Handler extends ExceptionHandler
-{
+class Handler extends ExceptionHandler {
+
     /**
      * A list of the exception types that should not be reported.
      *
@@ -30,8 +31,39 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return void
      */
-    public function report(Exception $exception)
-    {
+    function createLog($e) {
+        //if (!preg_match('/Router.php/',$e->getTrace()[0]['file'])) {
+        $line = @$e->getTrace()[0]['line'];
+        $err = "<br/><hr/><ul>\n";
+        $err .= "\t<li>date time " . date('Y-M-d H:m', time()) . "</li>\n";
+        $err .= "\t<li>error msg: [" . $e->getCode() . '] ' . $e->getMessage() . ' on line ' . $line . ' of file ' . @$e->getTrace()[0]['file'] . "</li>\n";
+        $err .= "\t<li>Controller route: " . url()->current() . "</li>\n";
+        $err .= "\t<li>Error from which host: " . gethostname() . "</li>\n";
+        $err .= "</ul>\n\n";
+
+        $filename = str_replace('-', '_', date('Y-M-d')) . '.html';
+        error_log($err, 3, dirname(__FILE__) . "/../../storage/logs/" . $filename);
+        $this->sendLog($err);
+    }
+
+    public function sendLog($err) {
+        return DB::table("public.email")->insert(array(
+                    'body' => $err,
+                    'subject' => 'Error Occurred at Admin Panel ',
+                    'email' => 'inetscompany@gmail.com')
+        );
+    }
+
+    /**
+     * Report or log an exception.
+     *
+     * This is a great spot to send exceptions to Sentry, Bugsnag, etc.
+     *
+     * @param  \Exception  $exception
+     * @return void
+     */
+    public function report(Exception $exception) {
+        $this->createLog($exception);
         parent::report($exception);
     }
 
@@ -42,8 +74,10 @@ class Handler extends ExceptionHandler
      * @param  \Exception  $exception
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Exception $exception)
-    {
+    public function render($request, Exception $exception) {
+        if ($exception instanceof \Illuminate\Session\TokenMismatchException) {
+            return redirect()->back()->with('info', 'Your session expired, please login below to continue');
+        }
         return parent::render($request, $exception);
     }
 
@@ -54,12 +88,12 @@ class Handler extends ExceptionHandler
      * @param  \Illuminate\Auth\AuthenticationException  $exception
      * @return \Illuminate\Http\Response
      */
-    protected function unauthenticated($request, AuthenticationException $exception)
-    {
+    protected function unauthenticated($request, AuthenticationException $exception) {
         if ($request->expectsJson()) {
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
 
         return redirect()->guest(route('login'));
     }
+
 }

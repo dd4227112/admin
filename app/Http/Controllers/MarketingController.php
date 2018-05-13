@@ -24,6 +24,13 @@ class MarketingController extends Controller {
         }
     }
 
+    function faq() {
+         return view('market.faq');
+    }
+    
+    function presentation() {
+        return view('market.presentation');
+    }
     function downloadMaterial($type){
 
        if($type=='shulesoft_brochure'){

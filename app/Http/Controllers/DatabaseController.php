@@ -16,6 +16,7 @@ class DatabaseController extends Controller {
         $this->data['data'] = ($page == null || in_array($page, array('login'))) ? '' : $this->$page($sub);
         $this->data['page'] = $page;
         $this->data['sub'] = $sub;
+        $page = $page != 'compareColumn' ? 'comparetable' : $page;
         return view('database.' . strtolower($page), $this->data);
     }
 
