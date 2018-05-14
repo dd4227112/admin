@@ -18,7 +18,7 @@
             <tbody>
                 <?php
                 $i = 1;
-                $path = 'storage' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR;
+                $path = '../shulesoft_live/storage' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR;
                 foreach ($data as $key => $value) {
                     if ($value == '.' || $value == '..')
                         continue;
