@@ -48,7 +48,7 @@ class ProfileController extends Controller {
         $this->data['user'] = \collect(DB::select('select * from ' . $schema . '.' . $table . ' where "' . $table . 'ID"=' . $user_id))->first();
         $this->data['all_logs']=DB::table($schema . '.log')->where("user_id",$user_id)->where("user", $this->data['user']->usertype)->count();
         $this->data['logs'] = DB::table($schema . '.log')->where("user_id",$user_id)->where("user", $this->data['user']->usertype)->orderBy('id','desc')->paginate(20);
-        $this->data['messages'] = \DB::select('select sms_id,body, user_id, created_at, phone_number,1 as is_sent  from ' . $schema . '.sms where user_id=' . $user_id . ' and "table"=\'' . $table . '\'  UNION ALL (select id as sms_id,message as body, device_id::integer as user_id, created_at,  "from" as phone_number,2 as is_sent from ' . $schema . '.reply_sms where user_id=' . $user_id . ' and "table"=\'' . $table . '\')');
+        $this->data['messages'] = \DB::select('select sms_id,body, user_id, created_at, phone_number,1 as is_sent  from ' . $schema . '.sms where user_id=' . $user_id . ' and "table"=\'' . $table . '\'  UNION ALL (select id as sms_id,message as body, device_id::integer as user_id, created_at,  "from" as phone_number,2 as is_sent from ' . $schema . '.reply_sms where user_id=' . $user_id . ' and "table"=\'' . $table . '\') order by created_at desc');
         if ($table == 'parent') {
             $this->data['students'] = DB::select('select * from ' . $schema . '.student where "studentID" IN (SELECT student_id FROM ' . $schema . '.student_parents where parent_id=' . $user_id . ') and status=1');
         }
