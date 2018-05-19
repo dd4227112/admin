@@ -26,6 +26,16 @@ $d = $database->loadSchema();
         </div>
 
     </div>
+    <div class="row">
+        <div class="panel panel-default panel_error" style="display: none;">
+            <div class="panel-heading">Error Message
+                <div class="panel-action"><a href="#" data-perform="panel-collapse"><i class="ti-minus"></i></a> <a href="#" data-perform="panel-dismiss"><i class="ti-close"></i></a></div>
+            </div>
+            <div class="panel-wrapper collapse in" aria-expanded="true">
+                <div class="panel-body error_message"> </div>
+            </div>
+        </div>
+    </div>
     <div class="table-responsive">
 
         <table class="table">
@@ -59,8 +69,8 @@ $d = $database->loadSchema();
 
                                         $master_columns = isset($constrains[SCHEMA::$master_schema][$table]) ? $constrains[SCHEMA::$master_schema][$table] : array();
                                         $slave_columns = isset($constrains[$schema][$table]) ? $constrains[$schema][$table] : array();
-                                        $missing_columns = array_diff($master_columns, $slave_columns);
-                                        if (!empty($missing_columns)) {
+                                        $missing_constrains = array_diff($master_columns, $slave_columns);
+                                        if (!empty($missing_constrains)) {
                                             ?>
                                             <tr>
                                                 <td>
@@ -68,11 +78,11 @@ $d = $database->loadSchema();
                                                 </td>
                                                 <td colspan="2">
                                                     <table class="table">
-                                                        <?php foreach ($missing_columns as $column) { ?>
+                                                        <?php foreach ($missing_constrains as $constrain) { ?>
                                                             <tr>
-                                                                <td>{{$column}}</td>
-                                                                <td><a href="#" onclick="return false" data-table='{{$table}}' data-slave='{{$schema}}' data-constrain='{{$column}}' data-relation="{{$sub}}" class="sync_relation">Sync </a>
-                                                                    <span id="{{$table.$schema.$column}}"></span>
+                                                                <td>{{$constrain}}</td>
+                                                                <td><a href="#" onclick="return false" data-table='{{$table}}' data-slave='{{$schema}}' data-constrain='{{$constrain}}' data-relation="{{$sub}}" class="sync_relation">Sync </a>
+                                                                    <span id="{{$table.$schema.$constrain}}"></span>
                                                                 </td>
                                                             </tr>
                                                         <?php } ?>
@@ -119,10 +129,15 @@ $d = $database->loadSchema();
                 },
                 dataType: "html ",
                 beforeSend: function (xhr) {
-                    $('#' + table + slave + column).html('<a href="#/refresh"><i class="fa fa-spin fa-refresh"></i> </a>');
+                    $('#' + table + slave + constrain).html('<a href="#/refresh"><i class="fa fa-spin fa-refresh"></i> </a>');
                 },
                 complete: function (xhr, status) {
-                    $('#' + table + slave + column).html('<span class="label label-success label-rouded">' + status + '</span>');
+                    $('#' + table + slave + constrain).html('<span class="label label-success label-rouded">' + status + '</span>');
+                    if (xhr.status == 500) {
+                        $('.panel_error').show();
+                        $('.error_message').html(xhr.responseText);
+                    }
+                    console.log(xhr);
                 },
 
                 success: function (data) {
