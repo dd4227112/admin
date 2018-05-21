@@ -6,6 +6,7 @@ use App\Jobs\PushSMS;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
+use Auth;
 
 class Message extends Controller {
 
@@ -69,8 +70,8 @@ class Message extends Controller {
         );
         $sms = preg_replace($patterns, $replacements, $message);
         foreach (explode(',', $list_schema) as $schema) {
-            $value= str_replace("'", null, $schema);
-          $sql = "insert into $value.sms (body,user_id,type,phone_number) select '{$sms}',id,'0',phone from admin.all_users WHERE schema_name::text IN ($schema) AND usertype !='Student' {$in_array} AND  phone is not NULL  AND \"table\" !='setting' "; 
+            $value = str_replace("'", null, $schema);
+            $sql = "insert into $value.sms (body,user_id,type,phone_number) select '{$sms}',id,'0',phone from admin.all_users WHERE schema_name::text IN ($schema) AND usertype !='Student' {$in_array} AND  phone is not NULL  AND \"table\" !='setting' ";
             DB::statement($sql);
         }
 
@@ -172,8 +173,27 @@ class Message extends Controller {
     }
 
     public function feedback() {
-        $feedbacks = DB::table('constant.feedback')->orderBy('id', 'desc')->paginate();
+        $feedbacks = \App\Model\Feedback::orderBy('id', 'desc')->paginate();
         return view('message.feedback', compact('feedbacks'));
+    }
+
+    public function reply() {
+        $message = request('message');
+        $message_id = request('message_id');
+        \App\Model\Feedback_reply::create(['feedback_id' => $message_id, 'message' => $message, 'user_id' => Auth::user()->id]);
+        $feedback = \App\Model\Feedback::find($message_id);
+    
+        $user = DB::table('admin.all_users')->where('id', $feedback->user_id)->where('table', $feedback->table)->where('schema_name', str_replace('.', NULL,$feedback->schema))->first();
+        if(count($user)==1){
+        DB::table('public.sms')->insert(['body' => $message, 'phone_number' => $user->phone, 'type' => 0]);
+        
+        $reply_message = '<div>'
+                . '<p><b>Your Message: </b> ' . $feedback->message . '</p><br/><br/>' . $message . '</div>';
+        DB::table('public.email')->insert(['body' => $reply_message, 'user_id' => $feedback->user_id,'subject'=> 'ShuleSoft Feedback Reply', 'email' => $user->email]);
+        echo 'Message and Email sent';
+        }else{
+            echo 'user not found';
+        }
     }
 
 }

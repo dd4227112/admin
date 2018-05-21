@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('content')
 
+@role('marketing','admin')
 <?php
 $user = array();
 $total_users = 0;
@@ -88,54 +89,54 @@ foreach ($users as $key => $value) {
                 <h3>Log Requests</h3>
                 <div class="row">
 
-                
+
                     <?php
                     $sql = "select count(distinct user_id) from all_log where created_at::date='" . date('Y-m-d') . "' and user_id is not null";
                     $log_request = count(\DB::select($sql));
                     ?>
                     <script type="text/javascript">
-$(function () {
-    $('#container').highcharts({
-        chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false,
-            type: 'pie'
-        },
-        title: {
-            text: 'Total users login Today <?=date('d M Y')?>'
-        },
-        tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: true,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: true,
-                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                    style: {
-                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                    }
-                }
-            }
-        },
-        series: [{
-                name: 'Users',
-                colorByPoint: true,
-                data: [{
-                        name: 'Total Users Login',
-                        y: <?=$log_request?>
-                    }, {
-                        name: 'Total Users',
-                        y: <?= count($users)?>,
-                        sliced: true,
-                        selected: true
-                    }]
-            }]
-    });
-});
+                        $(function () {
+                            $('#container').highcharts({
+                                chart: {
+                                    plotBackgroundColor: null,
+                                    plotBorderWidth: null,
+                                    plotShadow: false,
+                                    type: 'pie'
+                                },
+                                title: {
+                                    text: 'Total users login Today <?= date('d M Y') ?>'
+                                },
+                                tooltip: {
+                                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                                },
+                                plotOptions: {
+                                    pie: {
+                                        allowPointSelect: true,
+                                        cursor: 'pointer',
+                                        dataLabels: {
+                                            enabled: true,
+                                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                            style: {
+                                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                                            }
+                                        }
+                                    }
+                                },
+                                series: [{
+                                        name: 'Users',
+                                        colorByPoint: true,
+                                        data: [{
+                                                name: 'Total Users Login',
+                                                y: <?= $log_request ?>
+                                            }, {
+                                                name: 'Total Users',
+                                                y: <?= count($users) ?>,
+                                                sliced: true,
+                                                selected: true
+                                            }]
+                                    }]
+                            });
+                        });
                     </script>
                     </head>
                     <body>
@@ -151,5 +152,40 @@ $(function () {
 
     </div>
 </div>
+@endrole
 
+@role('Bank')
+<div class="row">
+
+    <div class="col-md-12 col-lg-8">
+        <div class="white-box">
+            <div class="row">
+                <div class="col-sm-8">
+                    <h2 class="m-b-0 font-medium">Search Invoice</h2>
+                    <h5 class="text-muted m-t-0">Payment Reference Number</h5></div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" value="Seach"> 
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 col-lg-4">
+        <div class="white-box">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h2 class="m-b-0 font-medium">Tsh 356,000,000</h2>
+                    <h5 class="text-muted m-t-0">Total Posted Today</h5></div>
+               
+            </div>
+        </div>
+    </div>
+
+</div>
+@endrole
 @endsection

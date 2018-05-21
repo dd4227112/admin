@@ -78,13 +78,16 @@ var root_url = "<?= url('/'); ?>";
                     <!-- Search input and Toggle icon -->
                     <ul class="nav navbar-top-links navbar-left">
                        <li><a href="javascript:void(0)" class="open-close waves-effect waves-light"><i class="ti-menu"></i></a></li>
+                       <?php
+                       $feedbacks = \App\Model\Feedback::where('opened',0)->get();
+                       ?>
                                               <li class="dropdown">
-                                                    <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"> <i class="mdi mdi-gmail"></i>
+                                                  <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"> <i class="mdi mdi-gmail"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b class="badge badge-danger"><?=count($feedbacks)?></b>
                                                         <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
                                                     </a>
                                                     <ul class="dropdown-menu mailbox animated bounceInDown">
                                                         <li>
-                                                            <div class="drop-title">You have 4 new messages</div>
+                                                            <div class="drop-title">You have <?=count($feedbacks)?> new messages</div>
                                                         </li>
                                                         <li>
                                                             <div class="message-center">
