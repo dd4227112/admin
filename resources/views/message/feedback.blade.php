@@ -25,7 +25,7 @@
                             <div class="btn-group">
                                 <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-gear"></i> <span class="caret"></span> </button>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#" onmousedown="$('#mess<?= $feedback->id ?>').toggle()">Reply</a> </li>
+                                    <li><a href="#" onclick="return false" onmousedown="$('#mess<?= $feedback->id ?>').toggle()">Reply</a> </li>
                                 </ul>
 
                                
