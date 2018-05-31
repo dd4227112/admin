@@ -91,6 +91,38 @@ class Message extends Controller {
     public function psms($param) {
         
     }
+    
+    public function createUpdate() {
+         if ($_POST) {
+            $this->validate(request(), [
+                'for' => 'required',
+                'message' => 'required',
+                'release_date' => 'date'
+            ]);
+            DB::table('admin.updates')->insert(array_merge(request()->except(['_token', '_wysihtml5_mode', 'for']), ['for' => implode(',', request('for'))]));
+            $message_success = 'Update recorded successfully';
+            $schemas = (new \App\Http\Controllers\DatabaseController())->loadSchema();
+            foreach ($schemas as $schema) {
+                if (!in_array($schema->table_schema, ['public','constant','admin','dodoso','app'])) {
+                    $users = DB::table($schema->table_schema . '.users')->whereIn('usertype', request('for'))->get();
+                    foreach ($users as $user) {
+                        if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
+                            DB::table($schema->table_schema . '.email')->insert(array(
+                                'email' => $user->email,
+                                'body' => request('message'),
+                                'subject' => 'ShuleSoft Latest Updates: ' . request('release_date'),
+                                'user_id' => $user->id,
+                                'table' => $user->table
+                            ));
+                        }
+                    }
+                }
+            }
+            return redirect('message/shulesoft');
+        }
+        $this->data['usertypes'] = DB::select('select distinct usertype from admin.all_users');
+        return view('message.add_updates', $this->data);
+    }
 
     /**
      * Display the specified resource.
@@ -124,7 +156,7 @@ class Message extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id) {
-        //
+      
     }
 
     /**
@@ -142,32 +174,7 @@ class Message extends Controller {
 
     public function shulesoft() {
         $message_success = '';
-        if ($_POST) {
-            $this->validate(request(), [
-                'for' => 'required',
-                'message' => 'required',
-                'release_date' => 'date'
-            ]);
-            DB::table('admin.updates')->insert(array_merge(request()->except(['_token', '_wysihtml5_mode', 'for']), ['for' => implode(',', request('for'))]));
-            $message_success = 'Update recorded successfully';
-            $schemas = (new \App\Http\Controllers\DatabaseController())->loadSchema();
-            foreach ($schemas as $schema) {
-                if ($schema->table_schema != 'public') {
-                    $users = DB::table($schema->table_schema . '.users')->whereIn('usertype', request('for'))->get();
-                    foreach ($users as $user) {
-                        if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
-                            DB::table($schema->table_schema . '.email')->insert(array(
-                                'email' => $user->email,
-                                'body' => request('message'),
-                                'subject' => 'ShuleSoft Latest Updates: ' . request('release_date'),
-                                'user_id' => $user->id,
-                                'table' => $user->table
-                            ));
-                        }
-                    }
-                }
-            }
-        }
+       
         $usertypes = DB::select('select distinct usertype from admin.all_users');
         return view('message.updates', compact('usertypes', 'message_success'));
     }
