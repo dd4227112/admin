@@ -84,8 +84,12 @@ class HomeController extends Controller {
                 $this->data['total_sms'] = DB::table($schema . 'sms')->count();
 
                 $this->data['email'] = DB::table($schema . 'email')->where(DB::raw('created_at::date'), date('Y-m-d'))->count();
-                $this->data['revenue'] = \collect(DB::select("select sum(amount) from " . $schema . "total_revenues where payment_date::date='" . date('Y-m-d') . "'"))->first();
-                $this->data['expense'] = \collect(DB::select("select sum(amount) from " . $schema . "total_revenues where payment_date::date='" . date('Y-m-d') . "'"))->first();
+                $this->data['revenue'] = \collect(DB::select("select sum(amount) from " . $schema . "total_revenues where date::date='" . date('Y-m-d') . "'"))->first();
+                
+                
+                $this->data['expense'] = \collect(DB::select("select sum(amount) from " . $schema . "expense where payment_date::date='" . date('Y-m-d') . "'"))->first();
+           
+                
                 $sql = "select  c.name as parent_name, d.classes, a.dob,a.\"classesID\", a.section, a.\"studentID\", a.name as student_name,c.phone as parent_phone FROM " . $schema . "student a join " . $schema . "student_parents b on b.student_id=a.\"studentID\" JOIN " . $schema . "parent c on c.\"parentID\"=b.parent_id join " . $schema . "classes d on d.\"classesID\"=a.\"classesID\" WHERE 
                     DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) 
                     AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE)";
