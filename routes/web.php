@@ -16,7 +16,7 @@ Route::get('/que/{type?}', 'BackgroundController@index');
 Route::group(['middleware' => ['guest']], function() {
     Auth::routes();
 });
-Route::get('/testing', 'HomeController@testing');
+Route::get('/report', 'HomeController@dailyReport');
 
 
 

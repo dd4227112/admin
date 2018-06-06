@@ -212,8 +212,8 @@ class Kernel extends ConsoleKernel {
             $setting = DB::table($invoice->schema_name . '.setting')->first();
             $url = 'https://api.mpayafrica.co.tz/v2/auth';
         }
-        $user = $setting->api_username;
-        $pass = $setting->api_password;
+        $user = "$setting->api_username";
+        $pass = "$setting->api_password";
         $request = $this->curlServer([
             'username' => $user,
             'password' => $pass
@@ -410,7 +410,7 @@ select 'Hello '|| p.name|| ', je umewahi ingia katika akaunti yako ya ShuleSoft 
     public function sendTeachersLoginReminder($schema) {
         $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")
 select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, mishahara ya kila mwezi (payroll na payslip), na taarifa zote za shule '||upper(s.sname)||'  utazipata katika akaunti yako ya ShuleSoft. Ili Kuingia, fungua sehemu ya internet (Google), na andika https://" . $schema->table_schema . ".shulesoft.com, kisha ingiza nenotumizi (username) lako '||p.username||' na nenosiri(password) lako ni '||case when p.default_password is null then 'teacher123' else p.default_password end||'. Kwa msaada(0655406004) au uongozi wa shule ('||s.phone||'). Karibu', p.phone, 0,0, p.\"teacherID\",'teacher' FROM " . $schema->table_schema . ".teacher p, " . $schema->table_schema . ".setting s where p.\"teacherID\" NOT IN (SELECT user_id from " . $schema->table_schema . ".log where user_id is not null and \"table\"='teacher') and p.status=1";
-        return DB::statement($sql);
+       // return DB::statement($sql);
     }
 
     public function sendSchedulatedSms() {
