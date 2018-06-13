@@ -41,10 +41,18 @@ class InvoiceController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function show($id) {
-        $sql = 'SELECT * FROM (SELECT * FROM public.crosstab(\'select "schema_name"::text,"table",count(*) from admin.all_users where status=1  group by "schema_name"::text,"table" order by 1,2\', \'select distinct "table"::text from admin.all_users order by 1\') AS final_result("schema_name" text,"parent" text,"setting" text, "student" text, "teacher" text, "user" text) ) a where schema_name=\''.$id."'";
-        $this->data['user'] = \collect(\DB::select($sql))->first();
-        $this->data['school'] = $setting = \DB::table($id . '.setting')->first();
-        return view('invoice.show', $this->data);
+        if ((int) $id > 0) {
+            $this->data['data'] = 1;
+
+            $this->data['results'] = \App\Model\Api_invoice::where('id', $id)->where('schema_name', request('p'))->get();
+
+            return view('home.invoice_search', $this->data);
+        } else {
+            $sql = 'SELECT * FROM (SELECT * FROM public.crosstab(\'select "schema_name"::text,"table",count(*) from admin.all_users where status=1  group by "schema_name"::text,"table" order by 1,2\', \'select distinct "table"::text from admin.all_users order by 1\') AS final_result("schema_name" text,"parent" text,"setting" text, "student" text, "teacher" text, "user" text) ) a where schema_name=\'' . $id . "'";
+            $this->data['user'] = \collect(\DB::select($sql))->first();
+            $this->data['school'] = $setting = \DB::table($id . '.setting')->first();
+            return view('invoice.show', $this->data);
+        }
     }
 
     /**
@@ -76,6 +84,11 @@ class InvoiceController extends Controller {
      */
     public function destroy($id) {
         //
+    }
+
+    public function search() {
+        $invoice = request('invoice');
+        dd(request()->all());
     }
 
 }

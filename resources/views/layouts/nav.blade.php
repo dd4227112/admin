@@ -29,18 +29,21 @@
                     <ul class="nav nav-second-level">
                         @role('admin')  <li> <a href="<?= url('/home') ?>" class=""><i class=" fa-fw">1</i><span class="hide-menu">Users Summary</span></a> </li>
 
-                        <li> <a href="<?= url('logsummary') ?>"><i class=" fa-fw">2</i><span class="hide-menu">Login Summary</span></a> </li>
+                        <li> <a href="<?= url('web/logsummary') ?>"><i class=" fa-fw">2</i><span class="hide-menu">Login Summary</span></a> </li>
 
-                        <li> <a href="<?= url('logs') ?>"><i class=" fa-fw">3</i><span class="hide-menu">Error Logs</span></a> </li>
+                        <li> <a href="<?= url('web/logs') ?>"><i class=" fa-fw">3</i><span class="hide-menu">Error Logs</span></a> </li>
                         @endrole
+                         @role('Bank')
+                         <li> <a href="<?= url('/home/invoice') ?>"><i class=" fa-fw">1</i><span class="hide-menu">Dashboard</span></a> </li>
+                         @endrole
                     </ul>
                 </li>
                 @role('Bank') 
                 <li class="active"> <a href="#" class="waves-effect"><i class="fa fa-money fa-fw" data-icon="v"></i> <span class="hide-menu">Invoices <span class="fa arrow"></span> </span></a>
                     <ul class="nav nav-second-level ">
-                        <li> <a href="{{ url('invoice') }}" class=""><i class=" fa-fw">1</i><span class="hide-menu">All Paid Invoices</span></a> </li>
-                        <li> <a href="{{ url('invoice') }}" class=""><i class=" fa-fw">2</i><span class="hide-menu">Posted Invoices</span></a> </li>
-                        <li> <a href="{{url('invoice')}}"><i class=" fa-fw">3</i><span class="hide-menu">Pending Invoices</span></a> </li>
+                        <li> <a href="{{ url('payment/paid') }}" class=""><i class=" fa-fw">1</i><span class="hide-menu">All Paid Invoices</span></a> </li>
+                        <!--<li> <a href="{{ url('payment/posted') }}" class=""><i class=" fa-fw">2</i><span class="hide-menu">Posted Invoices</span></a> </li>-->
+<!--                        <li> <a href="{{url('invoice/pending')}}"><i class=" fa-fw">3</i><span class="hide-menu">Pending Invoices</span></a> </li>-->
               
 
                     </ul>

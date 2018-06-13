@@ -379,8 +379,8 @@ select 'Hello '|| p.name|| ', matokeo yote ya '||c.name||'  hupatikana kwenye Sh
         foreach ($schemas as $schema) {
             if (!in_array($schema->table_schema, array('public', 'api', 'admin'))) {
                 $this->parentsExamLoginReminder($schema);
-                $this->sendTeachersLoginReminder($schema);
-                $this->usersLoginReminder($schema);
+                //$this->sendTeachersLoginReminder($schema);
+               // $this->usersLoginReminder($schema);
             }
         }
     }
@@ -395,7 +395,7 @@ select 'Hello '|| p.name|| ', ili uweze kuingia katika program ya ShuleSoft, nen
     public function parentsExamLoginReminder($schema) {
 
         $sql_updated = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")
-select 'Hello '|| p.name|| ', umeshaona matokeo ya mtoto wako katika ShuleSoft. Fungua hii link  https://" . $schema->table_schema . ".shulesoft.com, kisha ingiza nenotumizi (username) ni '||p.username||' na nenosiri la kuanzia ni '||case when p.default_password is null then '123456' else p.default_password end||'. Matokeo yote ya mwanao na taarifa za shule utazipata ShuleSoft. Kwa msaada wa kuingia, tupigie. Asante', p.phone, 0,0, p.\"parentID\",'parent' FROM " . $schema->table_schema . ".parent p, " . $schema->table_schema . ".setting s where p.\"parentID\" NOT IN (SELECT user_id from " . $schema->table_schema . ".log where user_id is not null and \"user\"='Parent') and p.status=1 and p.\"parentID\" IN (
+select 'Hello '|| p.name|| ', ili kuona matokeo ya mtoto wako katika ShuleSoft. Fungua hii link  https://" . $schema->table_schema . ".shulesoft.com, kisha ingiza nenotumizi (username) ni '||p.username||' na nenosiri la kuanzia ni '||case when p.default_password is null then '123456' else p.default_password end||'. Kwa msaada wa kuingia, tupigie. Asante', p.phone, 0,0, p.\"parentID\",'parent' FROM " . $schema->table_schema . ".parent p, " . $schema->table_schema . ".setting s where p.\"parentID\" NOT IN (SELECT user_id from " . $schema->table_schema . ".log where user_id is not null and \"user\"='Parent') and p.status=1 and p.\"parentID\" IN (
 SELECT parent_id from " . $schema->table_schema . ".student_parents where student_id in (
 select \"studentID\" from " . $schema->table_schema . ".student_exams ) )";
         return DB::statement($sql_updated);

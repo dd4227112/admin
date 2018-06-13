@@ -164,12 +164,17 @@ foreach ($users as $key => $value) {
                     <h2 class="m-b-0 font-medium">Search Invoice</h2>
                     <h5 class="text-muted m-t-0">Payment Reference Number</h5></div>
                 <div class="col-sm-12">
+                    <form action="<?=url('searchInvoice')?>" method="post"/>
                     <div class="form-group">
-                        <div class="col-md-12">
-                            <input type="text" class="form-control" value="Seach"> 
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" name="invoice" placeholder="Seach"> 
+                        </div>
+                        <div class="col-md-4">
+                            <?= csrf_field() ?>
+                            <input type="submit" class="btn btn-small btn-success" value="search"/>
                         </div>
                     </div>
-
+                    </form>
 
                 </div>
             </div>
@@ -181,7 +186,7 @@ foreach ($users as $key => $value) {
                 <div class="col-sm-12">
                     <h2 class="m-b-0 font-medium">Tsh 356,000,000</h2>
                     <h5 class="text-muted m-t-0">Total Posted Today</h5></div>
-               
+
             </div>
         </div>
     </div>

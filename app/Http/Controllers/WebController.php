@@ -47,7 +47,8 @@ class WebController extends Controller {
     }
 
     public function logs() {
-        return scandir($this->path);
+        $this->data['data']= scandir($this->path);
+        return view('home.logs', $this->data);
     }
 
     public function readLog($log_path) {
@@ -60,14 +61,14 @@ class WebController extends Controller {
     }
 
     public function logsummary() {
-        // DB::statement("select admin.join_all('log')");
         $this->data['start'] = request('start_date');
         $this->data['end'] = request('end_date');
         $this->data['schema'] = request('schema');
         $this->data['user'] = request('usertype');
         $this->data['schemas'] = (new \App\Http\Controllers\DatabaseController())->loadSchema();
         $this->data['users'] = DB::table('admin.all_users')->distinct('usertype')->get(['usertype']);
-        return DB::select('select count(*) as total_logs,"schema_name"::text from admin.all_log group by "schema_name"::text order by count(*)');
+        $this->data['data'] = DB::select('select count(*) as total_logs,"schema_name"::text from admin.all_log group by "schema_name"::text order by count(*)');
+        return view('home.logsummary', $this->data);
     }
 
     function updatePhoneNumber() {
@@ -122,6 +123,11 @@ class WebController extends Controller {
      */
     public function show($id) {
         //
+        if ($id == 'logsummary') {
+            return $this->logsummary();
+        }else if($id=='logs'){
+            return $this->logs();
+        }
     }
 
     /**

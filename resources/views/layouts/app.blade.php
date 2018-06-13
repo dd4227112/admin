@@ -76,6 +76,7 @@ var root_url = "<?= url('/'); ?>";
                     </div>
                     <!-- /Logo -->
                     <!-- Search input and Toggle icon -->
+                     @role('admin')
                     <ul class="nav navbar-top-links navbar-left">
                        <li><a href="javascript:void(0)" class="open-close waves-effect waves-light"><i class="ti-menu"></i></a></li>
                        <?php
@@ -234,6 +235,7 @@ var root_url = "<?= url('/'); ?>";
                         </li>-->
                         <!-- /.Megamenu -->
                     </ul>
+                     @endrole
                     <?php if (Auth::check() == 1) { ?>
                         <ul class="nav navbar-top-links navbar-right pull-right">
                             <li>

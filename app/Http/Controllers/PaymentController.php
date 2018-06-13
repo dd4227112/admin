@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use \App\Model\Api_invoice;
+use \App\Model\All_payment;
 use DB;
 
 class PaymentController extends Controller {
@@ -23,6 +25,22 @@ class PaymentController extends Controller {
         $where = request()->segment(3) == 0 ? '=' : '!=';
         $this->data['invoices'] = DB::table('api.invoices')->where('schema_name', $where, 'beta_testing')->where('amount', '>', 0)->get();
         return view('payment.invoices', $this->data);
+    }
+
+    public function show($id) {
+        $where = request()->segment(3) == 0 ? '=' : '!=';
+        if ($id == 'paid') {
+            $this->data['invoices'] = All_payment::whereIn('status', ['3', '1'])->where('amount', '>', 0)->get();
+            return view('payment.paid', $this->data);
+        } else if ($id == 'posted') {
+            $this->data['invoices'] = Api_invoice::where('schema_name', $where, 'beta_testing')->where('amount', '>', 0)->get();
+            return view('payment.paid', $this->data);
+        } else if ($id == 'info') {
+            
+        } else {
+            $this->data['invoices'] = Api_invoice::where('schema_name', $where, 'beta_testing')->where('amount', '>', 0)->get();
+            return view('payment.paid', $this->data);
+        }
     }
 
     public function syncInvoice() {
@@ -261,9 +279,9 @@ AND "b"."fee_installment_id" =  ' . $fee_installment_id->id . '');
         if ($school != null) {
             $this->data['setting'] = DB::table($school . '.setting')->first();
             if ($school == 'beta_testing') {
-                $this->data['payments'] = DB::table($school . '.payment')->join($school . '.invoices', $school . '.payment.invoiceID', $school . '.invoices.id')->join($school . '.student', $school . '.invoices.studentID', $school . '.student.studentID')->join($school.'.receipt',$school.'.receipt.paymentID',$school.'.payment.paymentID')->get();
+                $this->data['payments'] = DB::table($school . '.payment')->join($school . '.invoices', $school . '.payment.invoiceID', $school . '.invoices.id')->join($school . '.student', $school . '.invoices.studentID', $school . '.student.studentID')->join($school . '.receipt', $school . '.receipt.paymentID', $school . '.payment.paymentID')->get();
             } else {
-                $this->data['payments'] = DB::table('admin.all_payment')->join($school . '.invoices', 'admin.all_payment.invoiceID', $school . '.invoices.id')->join($school . '.student', $school . '.invoices.studentID', $school . '.student.studentID')->join($school.'.receipt',$school.'.receipt.paymentID',$school.'.payment.paymentID')->where('schema_name', $school)->get();
+                $this->data['payments'] = DB::table('admin.all_payment')->join($school . '.invoices', 'admin.all_payment.invoiceID', $school . '.invoices.id')->join($school . '.student', $school . '.invoices.studentID', $school . '.student.studentID')->join($school . '.receipt', $school . '.receipt.paymentID', $school . '.payment.paymentID')->where('schema_name', $school)->get();
             }
         } else {
             $this->data['setting'] = array();

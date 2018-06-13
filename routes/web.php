@@ -16,24 +16,32 @@ Route::get('/que/{type?}', 'BackgroundController@index');
 Route::group(['middleware' => ['guest']], function() {
     Auth::routes();
 });
+
 Route::get('/report', 'HomeController@dailyReport');
-
-
-
+ Route::any('/database/{pg?}/{path?}', 'DatabaseController@index');
 Route::group(['middleware' => ['auth']], function() {
     Route::get('/management', 'UsersController@management');
+    Route::post('/searchInvoice', 'HomeController@invoiceSearch');
+
     Route::resource('users', 'UsersController');
     Route::resource('invoice', 'InvoiceController');
     Route::resource('roles', 'RolesController');
-    Route::get('/home', 'HomeController@index')->name('home');
+    Route::resource('payment', 'PaymentController');
+    Route::resource('database', 'DatabaseController');
+    Route::resource('home', 'HomeController');
+    Route::resource('web', 'WebController');
+
+    Route::get('/', 'HomeController@index');
     Route::any('/database/upgrade', 'DatabaseController@upgrade');
-    Route::get('/database/{pg?}/{path?}', 'DatabaseController@index');
-     Route::any('/message/createUpdate', 'Message@createUpdate');
+    Route::any('/database/{pg?}/{path?}', 'DatabaseController@index');
+    Route::any('/message/createUpdate', 'Message@createUpdate');
+
+
     Route::any('/message/create', 'Message@create');
     Route::any('/message/shulesoft', 'Message@shulesoft');
     Route::any('/message/show/{op?}', 'Message@show');
     Route::any('/message/feedback', 'Message@feedback');
-     Route::any('/message/reply', 'Message@reply');
+    Route::any('/message/reply', 'Message@reply');
     Route::any('/message/destroy/{op?}/{ops?}/{schema?}', 'Message@destroy');
 
     Route::post('/search', 'HomeController@search');
@@ -41,6 +49,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::any('/market/{op?}', 'MarketingController@index');
     Route::get('/downloadMaterial/{type?}', 'MarketingController@downloadMaterial');
 });
+
 Route::get('api/request', 'PaymentController@requests');
 Route::any('api/invoices/create', 'PaymentController@createInvoice');
 Route::get('api/invoices/cancel', 'PaymentController@cancelInvoice');
@@ -53,6 +62,6 @@ Route::get('profile/reset/{table?}/{user_id?}', 'ProfileController@resetPassword
 Route::get('profile/{schema?}/{table?}/{user_id?}', 'ProfileController@show');
 
 
-Route::get('/{pg?}/{path?}/{option?}/{option2?}/{option3?}/{option4?}/{option5?}', 'WebController@index');
-Route::post('/{pg?}/{path?}/{option?}', 'WebController@tag');
+//Route::get('/{pg?}/{path?}/{option?}/{option2?}/{option3?}/{option4?}/{option5?}', 'WebController@index');
+//Route::post('/{pg?}/{path?}/{option?}', 'WebController@tag');
 

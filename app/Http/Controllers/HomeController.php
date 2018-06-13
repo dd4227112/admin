@@ -26,20 +26,39 @@ class HomeController extends Controller {
      */
     public function index() {
 
-
         $this->data['users'] = DB::select('select count(*), usertype from all_users group by usertype');
         $this->data['log_graph'] = $this->createBarGraph();
-        return view('home', $this->data);
+        return view('home.index', $this->data);
     }
 
     public function users() {
         
     }
 
+    public function searchInvoice($q) {
+        $result = '';
+        $invoices = DB::select('select * from api.invoices where lower("invoiceNO") like \'%' . strtolower($q) . '%\' or lower(student_name) like \'%' . strtolower($q) . '%\' ');
+        foreach ($invoices as $invoice) {
+
+            $result .= '<li><a href="' . url('invoice/' . $invoice->id . '/?p=' . $invoice->schema_name) . '">                <div class="user-img"><span class="profile-status online pull-right"></span> </div>
+                                            <div class="mail-contnet">
+                                                <h5>' . $invoice->student_name . '</h5> <span class="mail-desc">Invoice: ' . $invoice->invoiceNO . '</span> <span class="time">School: ' . $invoice->schema_name . '</span> </div>
+                                        </a></li>';
+        }
+        return json_encode(array(
+            'total' => count($invoices),
+            'result' => $result
+        ));
+    }
+
     public function search() {
         $q = request('q');
+
         $result = '';
         if (strlen($q) > 2) { //prevent empty search which load all results
+            if (request('type') == 2) {
+                return $this->searchInvoice($q);
+            }
             $users = DB::select('select * from admin.all_users where lower(name) like \'%' . strtolower($q) . '%\' or lower(phone) like \'%' . strtolower($q) . '%\' ');
             foreach ($users as $user) {
 
@@ -68,9 +87,9 @@ class HomeController extends Controller {
 
             // users
             $schema = $record->table_schema . '.';
-             $setting = DB::table($schema . 'setting')->first();
+            $setting = DB::table($schema . 'setting')->first();
             if (strlen($setting->email_list) > 3) {
-               
+
                 $this->data['users'] = DB::table($schema . 'users')->where('status', 1)->count();
                 $this->data['added_users'] = DB::table($schema . 'parent')->where(DB::raw('created_at::date'), date('Y-m-d'))->count() + DB::table($schema . 'teacher')->where(DB::raw('created_at::date'), date('Y-m-d'))->count() + DB::table($schema . 'student')->where(DB::raw('created_at::date'), date('Y-m-d'))->count();
 
@@ -85,11 +104,11 @@ class HomeController extends Controller {
 
                 $this->data['email'] = DB::table($schema . 'email')->where(DB::raw('created_at::date'), date('Y-m-d'))->count();
                 $this->data['revenue'] = \collect(DB::select("select sum(amount) from " . $schema . "total_revenues where date::date='" . date('Y-m-d') . "'"))->first();
-                
-                
+
+
                 $this->data['expense'] = \collect(DB::select("select sum(amount) from " . $schema . "expense where payment_date::date='" . date('Y-m-d') . "'"))->first();
-           
-                
+
+
                 $sql = "select  c.name as parent_name, d.classes, a.dob,a.\"classesID\", a.section, a.\"studentID\", a.name as student_name,c.phone as parent_phone FROM " . $schema . "student a join " . $schema . "student_parents b on b.student_id=a.\"studentID\" JOIN " . $schema . "parent c on c.\"parentID\"=b.parent_id join " . $schema . "classes d on d.\"classesID\"=a.\"classesID\" WHERE 
                     DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) 
                     AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE)";
@@ -106,6 +125,20 @@ class HomeController extends Controller {
                 });
             }
         }
+    }
+
+    public function show($id) {
+        if ($id == 'invoice') {
+            return $this->invoiceSearch();
+        }
+    }
+
+    public function invoiceSearch() {
+        $this->data['data'] = 1;
+        if (request('invoice')) {
+            $this->data['results'] = \App\Model\Api_invoice::where(DB::raw('lower("invoiceNO")'), 'like', strtolower(request('invoice')))->get();
+        }
+        return view('home.invoice_search', $this->data);
     }
 
     function testing() {

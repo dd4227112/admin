@@ -21,11 +21,11 @@
 
                             <img src='{{$root."images/uploads/user_dps/$user->dp"}}' id="curDp" alt="">
                         </div>
-                        <div class="layout">
+<!--                        <div class="layout">
                             <a class="btn btn-primary" href="{{'/user/'.$user->id}}">
                                 View Professional Profile
                             </a>
-                        </div>
+                        </div>-->
 
                     </div>
 
@@ -36,9 +36,11 @@
                             <div class="pull-left">
                                 <h2>User Details</h2>
                             </div>
+                             @role('admin')
                             <div class="pull-right">
                                 <a class="btn btn-primary" href="{{ route('users.index') }}"> Back</a>
                             </div>
+                             @endrole
                         </div>
                     </div>
     <div class="row">
