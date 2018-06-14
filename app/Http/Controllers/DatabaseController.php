@@ -222,11 +222,11 @@ ORDER BY c.oid, a.attnum";
 
     public function upgrade() {
         if (request('sql') != '') {
-            $script = $this->createUpgradeScript();
+            $this->data['script'] = $this->createUpgradeScript();
         } else {
-            $script = '';
+            $this->data['script'] = '';
         }
-        return view('database.upgrade', compact('script'));
+        return view('database.upgrade',  $this->data);
     }
 
     public function createUpgradeScript($slave_schema = null) {
