@@ -51,8 +51,10 @@ class WebController extends Controller {
         return view('home.logs', $this->data);
     }
 
-    public function readLog($log_path) {
-        return file_get_contents($this->path . '/' . $log_path);
+    public function readLog($log_path=null) {
+        $this->data['data'] = file_get_contents($this->path . '/' . $log_path);
+        $this->data['page'] = 'readlog';
+        return view('readlog', $this->data);
     }
 
     public function deleteLog($log_path) {
