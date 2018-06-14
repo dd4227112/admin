@@ -61,7 +61,7 @@ Route::get('profile/resend/{table?}/{user_id?}', 'ProfileController@resendMessag
 Route::get('profile/reset/{table?}/{user_id?}', 'ProfileController@resetPassword');
 Route::get('profile/{schema?}/{table?}/{user_id?}', 'ProfileController@show');
 
-Route::get('readLog/{path?}/{option?}', 'WebController@index');
+Route::get('readLog/{path?}/{option?}', 'WebController@readLog');
 
 //Route::get('/{pg?}/{path?}/{option?}/{option2?}/{option3?}/{option4?}/{option5?}', 'WebController@index');
 //Route::post('/{pg?}/{path?}/{option?}', 'WebController@tag');
