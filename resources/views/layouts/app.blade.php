@@ -76,105 +76,101 @@ var root_url = "<?= url('/'); ?>";
                     </div>
                     <!-- /Logo -->
                     <!-- Search input and Toggle icon -->
-                     @role('admin')
+                    @role('admin')
                     <ul class="nav navbar-top-links navbar-left">
-                       <li><a href="javascript:void(0)" class="open-close waves-effect waves-light"><i class="ti-menu"></i></a></li>
-                       <?php
-                       $feedbacks = \App\Model\Feedback::where('opened',0)->get();
-                       ?>
-                                              <li class="dropdown">
-                                                  <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"> <i class="mdi mdi-gmail"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b class="badge badge-danger"><?=count($feedbacks)?></b>
-                                                        <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
-                                                    </a>
-                                                    <ul class="dropdown-menu mailbox animated bounceInDown">
-                                                        <li>
-                                                            <div class="drop-title">You have <?=count($feedbacks)?> new messages</div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="message-center">
-                                                                <a href="#">
-                                                                    <div class="user-img"> <img src="<?= $root ?>plugins/images/users/pawandeep.jpg" alt="user" class="img-circle"> <span class="profile-status online pull-right"></span> </div>
-                                                                    <div class="mail-contnet">
-                                                                        <h5>Pavan kumar</h5> <span class="mail-desc">Just see the my admin!</span> <span class="time">9:30 AM</span> </div>
-                                                                </a>
-                                                                <a href="#">
-                                                                    <div class="user-img"> <img src="<?= $root ?>plugins/images/users/sonu.jpg" alt="user" class="img-circle"> <span class="profile-status busy pull-right"></span> </div>
-                                                                    <div class="mail-contnet">
-                                                                        <h5>Sonu Nigam</h5> <span class="mail-desc">I've sung a song! See you at</span> <span class="time">9:10 AM</span> </div>
-                                                                </a>
-                                                                <a href="#">
-                                                                    <div class="user-img"> <img src="<?= $root ?>plugins/images/users/arijit.jpg" alt="user" class="img-circle"> <span class="profile-status away pull-right"></span> </div>
-                                                                    <div class="mail-contnet">
-                                                                        <h5>Arijit Sinh</h5> <span class="mail-desc">I am a singer!</span> <span class="time">9:08 AM</span> </div>
-                                                                </a>
-                                                                <a href="#">
-                                                                    <div class="user-img"> <img src="<?= $root ?>plugins/images/users/pawandeep.jpg" alt="user" class="img-circle"> <span class="profile-status offline pull-right"></span> </div>
-                                                                    <div class="mail-contnet">
-                                                                        <h5>Pavan kumar</h5> <span class="mail-desc">Just see the my admin!</span> <span class="time">9:02 AM</span> </div>
-                                                                </a>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <a class="text-center" href="{{url('message/feedback')}}"> <strong>See all feedbacks</strong> <i class="fa fa-angle-right"></i> </a>
-                                                        </li>
-                                                    </ul>
-                                                     <!--/.dropdown-messages--> 
-                                                </li>
+                        <li><a href="javascript:void(0)" class="open-close waves-effect waves-light"><i class="ti-menu"></i></a></li>
+                        <?php
+                        $feedbacks = \App\Model\Feedback::where('opened', 1)->get();
+                        ?>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"> <i class="mdi mdi-gmail"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b class="badge badge-danger"><?= count($feedbacks) ?></b>
+                                <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
+                            </a>
+                            <ul class="dropdown-menu mailbox animated bounceInDown">
+                                <li>
+                                    <div class="drop-title">You have <?= count($feedbacks) ?> new messages</div>
+                                </li>
+                                <li>
+                                    <div class="message-center">
+                                        <?php
+                                        $f = 1;
+                                        foreach ($feedbacks as $feedback) {
+                                            if ($f == 5)
+                                                break;
+                                            $user=\DB::table($feedback->schema.$feedback->table)->where($feedback->table.'ID',$feedback->user_id)->first();
+                                            ?>
+                                            <a href="#">
+                                                <div class="user-img"> <img src="<?= $root ?>plugins/images/users/pawandeep.jpg" alt="user" class="img-circle"> <span class="profile-status online pull-right"></span> </div>
+                                                <div class="mail-contnet">
+                                                    <h5><?=count($user)==1 ? $user->name: ''?></h5>
+                                                    <span class="mail-desc"><?=$feedback->feedback?></span>
+                                                    <span class="time"><?=timeAgo($feedback->created_at)?></span> </div>
+                                            </a>
+<?php $f++; } ?>
+                                    
+                                    </div>
+                                </li>
+                                <li>
+                                    <a class="text-center" href="{{url('message/feedback')}}"> <strong>See all feedbacks</strong> <i class="fa fa-angle-right"></i> </a>
+                                </li>
+                            </ul>
+                            <!--/.dropdown-messages--> 
+                        </li>
                         <!-- .Task dropdown -->
-<!--                                              <li class="dropdown">
-                                                    <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"> <i class="mdi mdi-check-circle"></i>
-                                                        <div class="notify"><span class="heartbit"></span><span class="point"></span></div>
-                                                    </a>
-                                                    <ul class="dropdown-menu dropdown-tasks animated slideInUp">
-                                                        <li>
-                                                            <a href="#">
-                                                                <div>
-                                                                    <p> <strong>Task 1</strong> <span class="pull-right text-muted">40% Complete</span> </p>
-                                                                    <div class="progress progress-striped active">
-                                                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%"> <span class="sr-only">40% Complete (success)</span> </div>
-                                                                    </div>
-                                                                </div>
-                                                            </a>
-                                                        </li>
-                                                        <li class="divider"></li>
-                                                        <li>
-                                                            <a href="#">
-                                                                <div>
-                                                                    <p> <strong>Task 2</strong> <span class="pull-right text-muted">20% Complete</span> </p>
-                                                                    <div class="progress progress-striped active">
-                                                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%"> <span class="sr-only">20% Complete</span> </div>
-                                                                    </div>
-                                                                </div>
-                                                            </a>
-                                                        </li>
-                                                        <li class="divider"></li>
-                                                        <li>
-                                                            <a href="#">
-                                                                <div>
-                                                                    <p> <strong>Task 3</strong> <span class="pull-right text-muted">60% Complete</span> </p>
-                                                                    <div class="progress progress-striped active">
-                                                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%"> <span class="sr-only">60% Complete (warning)</span> </div>
-                                                                    </div>
-                                                                </div>
-                                                            </a>
-                                                        </li>
-                                                        <li class="divider"></li>
-                                                        <li>
-                                                            <a href="#">
-                                                                <div>
-                                                                    <p> <strong>Task 4</strong> <span class="pull-right text-muted">80% Complete</span> </p>
-                                                                    <div class="progress progress-striped active">
-                                                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%"> <span class="sr-only">80% Complete (danger)</span> </div>
-                                                                    </div>
-                                                                </div>
-                                                            </a>
-                                                        </li>
-                                                        <li class="divider"></li>
-                                                        <li>
-                                                            <a class="text-center" href="#"> <strong>See All Tasks</strong> <i class="fa fa-angle-right"></i> </a>
-                                                        </li>
-                                                    </ul>
-                                                </li>-->
+                        <!--                                              <li class="dropdown">
+                                                                            <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"> <i class="mdi mdi-check-circle"></i>
+                                                                                <div class="notify"><span class="heartbit"></span><span class="point"></span></div>
+                                                                            </a>
+                                                                            <ul class="dropdown-menu dropdown-tasks animated slideInUp">
+                                                                                <li>
+                                                                                    <a href="#">
+                                                                                        <div>
+                                                                                            <p> <strong>Task 1</strong> <span class="pull-right text-muted">40% Complete</span> </p>
+                                                                                            <div class="progress progress-striped active">
+                                                                                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%"> <span class="sr-only">40% Complete (success)</span> </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li class="divider"></li>
+                                                                                <li>
+                                                                                    <a href="#">
+                                                                                        <div>
+                                                                                            <p> <strong>Task 2</strong> <span class="pull-right text-muted">20% Complete</span> </p>
+                                                                                            <div class="progress progress-striped active">
+                                                                                                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%"> <span class="sr-only">20% Complete</span> </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li class="divider"></li>
+                                                                                <li>
+                                                                                    <a href="#">
+                                                                                        <div>
+                                                                                            <p> <strong>Task 3</strong> <span class="pull-right text-muted">60% Complete</span> </p>
+                                                                                            <div class="progress progress-striped active">
+                                                                                                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%"> <span class="sr-only">60% Complete (warning)</span> </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li class="divider"></li>
+                                                                                <li>
+                                                                                    <a href="#">
+                                                                                        <div>
+                                                                                            <p> <strong>Task 4</strong> <span class="pull-right text-muted">80% Complete</span> </p>
+                                                                                            <div class="progress progress-striped active">
+                                                                                                <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%"> <span class="sr-only">80% Complete (danger)</span> </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li class="divider"></li>
+                                                                                <li>
+                                                                                    <a class="text-center" href="#"> <strong>See All Tasks</strong> <i class="fa fa-angle-right"></i> </a>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </li>-->
                         <!-- .Megamenu -->
 <!--                       <li class="mega-dropdown"> <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"><span class="hidden-xs">Mega</span> <i class="icon-options-vertical"></i></a>
                             <ul class="dropdown-menu mega-dropdown-menu animated bounceInDown">
@@ -235,13 +231,13 @@ var root_url = "<?= url('/'); ?>";
                         </li>-->
                         <!-- /.Megamenu -->
                     </ul>
-                     @endrole
-                    <?php if (Auth::check() == 1) { ?>
+                    @endrole
+<?php if (Auth::check() == 1) { ?>
                         <ul class="nav navbar-top-links navbar-right pull-right">
                             <li>
-                                @role('admin') <form role="search" action="<?=url('/search')?>?q="  method="GET" class="app-search hidden-sm hidden-xs m-r-10">
+                                @role('admin') <form role="search" action="<?= url('/search') ?>?q="  method="GET" class="app-search hidden-sm hidden-xs m-r-10">
                                     <input type="text" name="q" placeholder="Search name or phone" id="search_box" class="form-control"> <a href="#"><i class="fa fa-search"></i></a> </form>
-                                     @endrole
+                                @endrole
                             <li class="dropdown" id="search_results">
                                 <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"> 
                                     <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
@@ -273,163 +269,166 @@ var root_url = "<?= url('/'); ?>";
                                                 <h4>  {{ Auth::user()->name() }}</h4>
                                                 <p class="text-muted">  {{ Auth::user()->email }}</p>
                                                 <a href="{{url('users/'.Auth::user()->id)}}" class="btn btn-rounded btn-danger btn-sm">View Profile</a></div>
-                                                        </div>
-                                                            </li>
-                                                                <!--                                    <li role="separator" class="divider"></                                                                    li>
-                                                                        <li><a href="#"><i class="ti                                                                    -user"></i> My Profile</a></li>
-                                                                        <li><a href="#"><i class="ti-w                                                                    allet"></i> My Balance</a></li>
-                                                                        <li><a href="#"><i class="ti-email"></i> Inbox</a></li>
-                                                                        <li role="separator" class="divider"></li>
-                                        <li><a href="#"><i class="ti-settings"></i> Account Setting</a></li>-->
-                                                                                                    <li role="separator" class="divider"></li>                                                                                                                       
-                                        <li><a href="{{ route('logout') }}"
-                                               onclick="event.preventDefault();
+                                        </div>
+                                    </li>
+                                    <!--                                    <li role="separator" class="divider"></                                                                    li>
+                                            <li><a href="#"><i class="ti                                                                    -user"></i> My Profile</a></li>
+                                            <li><a href="#"><i class="ti-w                                                                    allet"></i> My Balance</a></li>
+                                            <li><a href="#"><i class="ti-email"></i> Inbox</a></li>
+                                            <li role="separator" class="divider"></li>
+            <li><a href="#"><i class="ti-settings"></i> Account Setting</a></li>-->
+                                    <li role="separator" class="divider"></li>                                                                                                                       
+                                    <li><a href="{{ route('logout') }}"
+                                           onclick="event.preventDefault();
                                                        document.getElementById('logout-form').submit();"><i class="fa fa-power-off"></i> Logout</a></li>
-                                                                                                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                                                                                                        {{ csrf_field() }}
-                                                                                                                    </form>
-                                                                                                                    </ul>
-                                                                                                                    <!-- /.dropdown-user -->
-                                                                                                                    </li>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        {{ csrf_field() }}
+                                    </form>
+                                </ul>
+                                <!-- /.dropdown-user -->
+                            </li>
 
-                                                                                                                    <!-- /.dropdown -->
-                                                                                                                    </ul>
-                                                                                                                <?php } ?>
-                                                                                                                </div>
-                                                                                                                <!-- /.navbar-header -->
-                                                                                                                <!-- /.navbar-top-links -->
-                                                                                                                <!-- /.navbar-static-side -->
-                                                                                                                </nav>
+                            <!-- /.dropdown -->
+                        </ul>
+<?php } ?>
+                </div>
+                <!-- /.navbar-header -->
+                <!-- /.navbar-top-links -->
+                <!-- /.navbar-static-side -->
+            </nav>
 
-                                                                                                                @if (!Auth::guest())        
-                                                                                                                @include('layouts.nav')
-                                                                                                                @endif
+            @if (!Auth::guest())        
+            @include('layouts.nav')
+            @endif
 
-                                                                                                                @if (!Auth::guest())
-                                                                                                                <div id="page-wrapper" style="min-height: 163px;">
-                                                                                                                    <div class="container-fluid">
-                                                                                                                        <div class="row bg-title">
-                                                                                                                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                                                                                                                                <h4 class="page-title">{{isset($page) ? ucfirst($page):'Home'}}</h4> </div>
-                                                                                                                            <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
-                                                                                                    <!--                            <button class="right-side-toggle waves-effect waves-light btn-info btn-circle pull-right m-l-20"><i class="ti-settings text-white"></i></button>-->
-
-
-                                                                                                                            </div>
-                                                                                                                            <!-- /.col-lg-12 -->
-                                                                                                                        </div>
-                                                                                                                        @yield('content')
-                                                                                                                    </div>
-                                                                                                                </div>  
-                                                                                                                @endif
-
-                                                                                                                </div>
-
-                                                                                                                <!-- Scripts -->
-
-                                                                                                                <script type="text/javascript">
-                                                                                                                    var BASE_URL = '{{url('')}}';
-                                                                                                                    call_page = function (pg) {
-                                                                                                                        $.ajax({
-                                                                                                                            url: '{{ url("/") }}/' + pg,
-                                                                                                                            data: '',
-                                                                                                                            type: 'POST',
-                                                                                                                            success: function (data) {
-                                                                                                                                $('.contents').html(data);
-                                                                                                                            }
-                                                                                                                        });
-                                                                                                                    }
-
-                                                                                                                    downloadMaterial = function (type) {
-                                                                                                                        $.ajax({
-                                                                                                                            url: '{{ url("downloadMaterial") }}/' + type,
-                                                                                                                            data: '',
-                                                                                                                            type: 'GET',
-                                                                                                                            success: function (data) {
-                                                                                                                                console.log(data);
-                                                                                                                            }
-                                                                                                                        });
-                                                                                                                    }
-                                                                                                                </script>
-                                                                                                                @role('admin') 
-                                                                                                                <script type="text/javascript">
-                                                                                                                    search_box = function () {
-                                                                                                                        $('#search_box').keyup(function () {
-                                                                                                                            var val = $(this).val();
-                                                                                                                            if (val != '') {
-                                                                                                                                $.ajax({
-                                                                                                                                    url: '{{ url("search") }}',
-                                                                                                                                    data: {q: val},
-                                                                                                                                    type: 'POST',
-                                                                                                                                    dataType: 'JSON',
-                                                                                                                                    success: function (data) {
-                                                                                                                                        $('#search_content').html(data.result);
-                                                                                                                                        $('#search_counts').html(data.total);
-                                                                                                                                        $('#search_results').addClass('open');
-                                                                                                                                    }
-                                                                                                                                });
-                                                                                                                            }
-                                                                                                                        });
-                                                                                                                    }
-                                                                                                                    $(document).ready(search_box);
-                                                                                                                </script>
-                                                                                                                @endrole
-
-                                                                                                                <script  src="<?= url('public') ?>/intlTelInput/js/intlTelInput.js"></script>
-                                                                                                                <script  src="<?= url('public') ?>/js/customTelInput.js"></script>
-                                                                                                                <!-- Bootstrap Core JavaScript -->
-                                                                                                                <script src="<?= $root ?>bootstrap/dist/js/bootstrap.min.js"></script>
-                                                                                                                <!-- Menu Plugin JavaScript -->
-                                                                                                                <script src="<?= $root ?>plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js"></script>
-                                                                                                                <!--slimscroll JavaScript -->
-                                                                                                                <script src="<?= $root ?>js/jquery.slimscroll.js"></script>
-                                                                                                                <!--Wave Effects -->
-                                                                                                                <script src="<?= $root ?>js/waves.js"></script>
-                                                                                                                <!--Counter js -->
-                                                                                                                <script src="<?= $root ?>plugins/bower_components/waypoints/lib/jquery.waypoints.js"></script>
-                                                                                                                <script src="<?= $root ?>plugins/bower_components/counterup/jquery.counterup.min.js"></script>
-                                                                                                                <!-- Copy to clipboard-->
-                                                                                                                <script src="<?= $root ?>js/clipboard.min.js"></script>
-
-                                                                                                                <!-- Sparkline chart JavaScript -->
-                                                                                                                <script src="<?= $root ?>plugins/bower_components/jquery-sparkline/jquery.sparkline.min.js"></script>
-
-                                                                                                                <!-- Custom Theme JavaScript -->
-                                                                                                                <script src="<?= $root ?>js/custom.min.js"></script>
+            @if (!Auth::guest())
+            <div id="page-wrapper" style="min-height: 163px;">
+                <div class="container-fluid">
+                    <div class="row bg-title">
+                        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                            <h4 class="page-title">{{isset($page) ? ucfirst($page):'Home'}}</h4> </div>
+                        <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+<!--                            <button class="right-side-toggle waves-effect waves-light btn-info btn-circle pull-right m-l-20"><i class="ti-settings text-white"></i></button>-->
 
 
-                                                                                                                <script src="<?= $root ?>plugins/bower_components/jsgrid/db.js?v=4"></script>
-                                                                                                                <script type="text/javascript" src="<?= $root ?>plugins/bower_components/jsgrid/dist/jsgrid.min.js"></script>
-                                                                                                                <script src="<?= $root ?>js/jsgrid-init.js?v=2"></script>
+                        </div>
+                        <!-- /.col-lg-12 -->
+                    </div>
+                    @yield('content')
+                </div>
+            </div>  
+            @endif
+
+            @guest
+            @yield('content')
+            @endif
+        </div>
+
+        <!-- Scripts -->
+
+        <script type="text/javascript">
+            var BASE_URL = '{{url('')}}';
+            call_page = function (pg) {
+                $.ajax({
+                    url: '{{ url("/") }}/' + pg,
+                    data: '',
+                    type: 'POST',
+                    success: function (data) {
+                        $('.contents').html(data);
+                    }
+                });
+            }
+
+            downloadMaterial = function (type) {
+                $.ajax({
+                    url: '{{ url("downloadMaterial") }}/' + type,
+                    data: '',
+                    type: 'GET',
+                    success: function (data) {
+                        console.log(data);
+                    }
+                });
+            }
+        </script>
+        @role('admin') 
+        <script type="text/javascript">
+            search_box = function () {
+                $('#search_box').keyup(function () {
+                    var val = $(this).val();
+                    if (val != '') {
+                        $.ajax({
+                            url: '{{ url("search") }}',
+                            data: {q: val},
+                            type: 'POST',
+                            dataType: 'JSON',
+                            success: function (data) {
+                                $('#search_content').html(data.result);
+                                $('#search_counts').html(data.total);
+                                $('#search_results').addClass('open');
+                            }
+                        });
+                    }
+                });
+            }
+            $(document).ready(search_box);
+        </script>
+        @endrole
+
+        <script  src="<?= url('public') ?>/intlTelInput/js/intlTelInput.js"></script>
+        <script  src="<?= url('public') ?>/js/customTelInput.js"></script>
+        <!-- Bootstrap Core JavaScript -->
+        <script src="<?= $root ?>bootstrap/dist/js/bootstrap.min.js"></script>
+        <!-- Menu Plugin JavaScript -->
+        <script src="<?= $root ?>plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js"></script>
+        <!--slimscroll JavaScript -->
+        <script src="<?= $root ?>js/jquery.slimscroll.js"></script>
+        <!--Wave Effects -->
+        <script src="<?= $root ?>js/waves.js"></script>
+        <!--Counter js -->
+        <script src="<?= $root ?>plugins/bower_components/waypoints/lib/jquery.waypoints.js"></script>
+        <script src="<?= $root ?>plugins/bower_components/counterup/jquery.counterup.min.js"></script>
+        <!-- Copy to clipboard-->
+        <script src="<?= $root ?>js/clipboard.min.js"></script>
+
+        <!-- Sparkline chart JavaScript -->
+        <script src="<?= $root ?>plugins/bower_components/jquery-sparkline/jquery.sparkline.min.js"></script>
+
+        <!-- Custom Theme JavaScript -->
+        <script src="<?= $root ?>js/custom.min.js"></script>
 
 
-
-                                                                                                                <script src="<?= $root ?>plugins/bower_components/toast-master/js/jquery.toast.js"></script>
-                                                                                                                <!--Style Switcher -->
-                                                                                                                <script src="<?= $root ?>plugins/bower_components/styleswitcher/jQuery.style.switcher.js"></script>
-                                                                                                                <script src="<?= $root ?>js/custom.min.js"></script>
-                                                                                                                <script src="<?= $root ?>js/jquery.slimscroll.js"></script>
-
-                                                                                                                <!--Wave Effects -->
-
-                                                                                                                <script>
-                                                                                                                     $(document).ready(function () {
-                                                                                                                         $(".phoneNumber").intlTelInput();
-                                                                                                                     });
-                                                                                                                     $('.phoneNumber').blur(function () {
-                                                                                                                         if ($('.phoneNumber').intlTelInput('isValidNumber')) {
-                                                                                                                             $("#phone").val($(".phoneNumber").intlTelInput("getNumber"));
-
-                                                                                                                         } else {
-                                                                                                                             $("#phone").val('');
-
-
-                                                                                                                         }
-                                                                                                                     });
-                                                                                                                </script>
-                                                                                                                @yield('footer')
+        <script src="<?= $root ?>plugins/bower_components/jsgrid/db.js?v=4"></script>
+        <script type="text/javascript" src="<?= $root ?>plugins/bower_components/jsgrid/dist/jsgrid.min.js"></script>
+        <script src="<?= $root ?>js/jsgrid-init.js?v=2"></script>
 
 
 
-                                                                                                                </body>
-                                                                                                                </html>
+        <script src="<?= $root ?>plugins/bower_components/toast-master/js/jquery.toast.js"></script>
+        <!--Style Switcher -->
+        <script src="<?= $root ?>plugins/bower_components/styleswitcher/jQuery.style.switcher.js"></script>
+        <script src="<?= $root ?>js/custom.min.js"></script>
+        <script src="<?= $root ?>js/jquery.slimscroll.js"></script>
+
+        <!--Wave Effects -->
+
+        <script>
+            $(document).ready(function () {
+                $(".phoneNumber").intlTelInput();
+            });
+            $('.phoneNumber').blur(function () {
+                if ($('.phoneNumber').intlTelInput('isValidNumber')) {
+                    $("#phone").val($(".phoneNumber").intlTelInput("getNumber"));
+
+                } else {
+                    $("#phone").val('');
+
+
+                }
+            });
+        </script>
+        @yield('footer')
+
+
+
+    </body>
+</html>

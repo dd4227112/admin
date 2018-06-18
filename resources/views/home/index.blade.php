@@ -5,7 +5,6 @@
 <?php
 $user = array();
 $total_users = 0;
-
 foreach ($users as $key => $value) {
     # code...
     $user[$value->usertype] = $value->count;
@@ -91,8 +90,9 @@ foreach ($users as $key => $value) {
 
 
                     <?php
-                    $sql = "select count(distinct user_id) from all_log where created_at::date='" . date('Y-m-d') . "' and user_id is not null";
+                    $sql = "select distinct user_id from all_log where created_at::date='" . date('Y-m-d') . "' and user_id is not null";
                     $log_request = count(\DB::select($sql));
+                    $all_log_request = count(\DB::select("select distinct user_id from all_log where user_id is not null"));
                     ?>
                     <script type="text/javascript">
                         $(function () {
@@ -137,6 +137,48 @@ foreach ($users as $key => $value) {
                                     }]
                             });
                         });
+                            $(function () {
+                            $('#container2').highcharts({
+                                chart: {
+                                    plotBackgroundColor: null,
+                                    plotBorderWidth: null,
+                                    plotShadow: false,
+                                    type: 'pie'
+                                },
+                                title: {
+                                    text: 'Total users login ratio'
+                                },
+                                tooltip: {
+                                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                                },
+                                plotOptions: {
+                                    pie: {
+                                        allowPointSelect: true,
+                                        cursor: 'pointer',
+                                        dataLabels: {
+                                            enabled: true,
+                                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                            style: {
+                                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                                            }
+                                        }
+                                    }
+                                },
+                                series: [{
+                                        name: 'Users',
+                                        colorByPoint: true,
+                                        data: [{
+                                                name: 'Total Users Login',
+                                                y: <?= $all_log_request ?>
+                                            }, {
+                                                name: 'Total Users',
+                                                y: <?= count($users) ?>,
+                                                sliced: true,
+                                                selected: true
+                                            }]
+                                    }]
+                            });
+                        });
                     </script>
                     </head>
                     <body>
@@ -144,7 +186,7 @@ foreach ($users as $key => $value) {
                         <script src="<?= url('public/js/exporting.js') ?>"></script>
 
                         <div id="container" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
-
+      <div id="container2" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
 
                 </div>
             </div>

@@ -17,7 +17,7 @@ class PaymentController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function requests() {
-        $this->data['requests'] = \App\Request::orderBy('created_at', 'desc')->paginate();
+        $this->data['requests'] = \App\Model\Request::orderBy('created_at', 'desc')->paginate();
         return view('payment.api_requests', $this->data);
     }
 

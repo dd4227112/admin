@@ -18,7 +18,7 @@ Route::group(['middleware' => ['guest']], function() {
 });
 
 Route::get('/report', 'HomeController@dailyReport');
- Route::any('/database/{pg?}/{path?}', 'DatabaseController@index');
+Route::any('/database/{pg?}/{path?}', 'DatabaseController@index');
 Route::group(['middleware' => ['auth']], function() {
     Route::get('/management', 'UsersController@management');
     Route::post('/searchInvoice', 'HomeController@invoiceSearch');

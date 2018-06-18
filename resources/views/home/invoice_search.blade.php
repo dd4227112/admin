@@ -17,6 +17,7 @@
                         </div>
                         <div class="col-md-4">
                             <?= csrf_field() ?>
+                             <input type="hidden" name='action' value="search"/>
                             <input type="submit" class="btn btn-small btn-success" value="search"/>
                         </div>
                     </div>
@@ -27,7 +28,7 @@
                         </a>
                         <ul class="dropdown-menu mailbox animated bounceInDown">
                             <li>
-                                <div class="drop-title">You have <span id="search_counts"></span> results</div>
+                                <div class="drop-title">You have <b id="search_counts"></b> results</div>
                             </li>
                             <li>
                                 <div class="message-center" id="invoice_search_content">
@@ -35,9 +36,7 @@
 
                                 </div>
                             </li>
-                            <li>
-                                <a class="text-center" href="javascript:void(0);"> <strong>See all notifications</strong> <i class="fa fa-angle-right"></i> </a>
-                            </li>
+                       
                         </ul>
                         <!-- /.dropdown-messages -->
                     </li>

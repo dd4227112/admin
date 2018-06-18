@@ -40,7 +40,7 @@ class HomeController extends Controller {
         $invoices = DB::select('select * from api.invoices where lower("invoiceNO") like \'%' . strtolower($q) . '%\' or lower(student_name) like \'%' . strtolower($q) . '%\' ');
         foreach ($invoices as $invoice) {
 
-            $result .= '<li><a href="' . url('invoice/' . $invoice->id . '/?p=' . $invoice->schema_name) . '">                <div class="user-img"><span class="profile-status online pull-right"></span> </div>
+            $result .= '<li><a href="' . url('invoice/' . $invoice->id . '/?p=' . $invoice->schema_name) . '&invoice='.$invoice->invoiceNO.'">                <div class="user-img"><span class="profile-status online pull-right"></span> </div>
                                             <div class="mail-contnet">
                                                 <h5>' . $invoice->student_name . '</h5> <span class="mail-desc">Invoice: ' . $invoice->invoiceNO . '</span> <span class="time">School: ' . $invoice->schema_name . '</span> </div>
                                         </a></li>';

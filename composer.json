@@ -6,8 +6,10 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
+        "awobaz/compoships": "^1.0",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
+        "pragmarx/tracker": "^3.3",
         "zizaco/entrust": "5.2.x-dev"
     },
     "require-dev": {
