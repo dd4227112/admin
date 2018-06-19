@@ -42,13 +42,13 @@ class Kernel extends ConsoleKernel {
                         foreach ($messages as $sms) {
                             $schema = strtoupper($sms->schema_name) == 'PUBLIC' ?
                                     'SHULESOFT' : $sms->schema_name;
-                            $link = strtoupper($sms->schema_name) == 'PUBLIC' ? 'demo' : $sms->schema_name;
+                            $link = strtoupper($sms->schema_name) == 'PUBLIC' ? '' : $sms->schema_name.'.';
                             $karibusms = new \karibusms();
                             $karibusms->API_KEY = $sms->api_key;
                             $karibusms->API_SECRET = $sms->api_secret;
                             $karibusms->set_name(strtoupper($sms->schema_name));
                             $karibusms->karibuSMSpro = $sms->type;
-                            $result = (object) json_decode($karibusms->send_sms($sms->phone_number, strtoupper($schema) . ': ' . $sms->body . '. https://' . $link . '.shulesoft.com'));
+                            $result = (object) json_decode($karibusms->send_sms($sms->phone_number, strtoupper($schema) . ': ' . $sms->body . '. https://' . $link . 'shulesoft.com'));
                             if ($result->success == 1) {
                                 DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 1, 'return_code' => json_encode($result), 'updated_at' => 'now()']);
                             } else {
