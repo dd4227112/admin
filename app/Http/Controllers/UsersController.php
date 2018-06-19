@@ -6,16 +6,20 @@ use App\Model\Role;
 use Illuminate\Http\Request;
 use App\Model\User;
 use DB;
+use Auth;
 
 class UsersController extends Controller {
 
+     public function __construct() {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request) {
-        $users = User::orderBy('id', 'DESC')->paginate(6);
+        $users = User::orderBy('id', 'DESC')->where('created_by',Auth::user()->id)->paginate(6);
         return view('users.index', compact('users'))
                         ->with('i', ($request->input('page', 1) - 1) * 5);
     }
@@ -26,8 +30,8 @@ class UsersController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        $roles = Role::get();
-        $users = User::get();
+        $roles = Role::where('created_by',Auth::user()->id)->get();
+        $users = User::where('created_by',Auth::user()->id)->get();
         return view('users.create', compact('roles', 'users'));
     }
 
@@ -45,7 +49,7 @@ class UsersController extends Controller {
             'phone' => 'required|max:255|unique:users',
             'email' => 'required|max:255|unique:users'
         ]);
-        $user = new User(array_merge($request->all(), ['password' => bcrypt(request('email'))]));
+        $user = new User(array_merge($request->all(), ['password' => bcrypt(request('email')),'created_by'=>Auth::user()->id]));
         $user->save();
         $this->sendEmailAndSms($request);
         foreach ($request->input('roles') as $key => $value) {

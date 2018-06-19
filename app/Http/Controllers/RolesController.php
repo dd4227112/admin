@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Model\Role;
 use App\Model\Permission;
 use DB;
+use Auth;
 
 class RolesController extends Controller
 {
@@ -17,7 +18,7 @@ class RolesController extends Controller
      */
     public function index(Request $request)
     {
-        $roles = Role::orderBy('id','DESC')->paginate(5);
+        $roles = Role::orderBy('id','DESC')->where('created_by',Auth::user()->id)->paginate(5);
         return view('roles.index',compact('roles'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
@@ -52,6 +53,7 @@ class RolesController extends Controller
         $role->name = $request->input('name');
         $role->display_name = $request->input('display_name');
         $role->description = $request->input('description');
+        $role->created_by=Auth::user()->id;
         $role->save();
 
         foreach ($request->input('permission') as $key => $value) {

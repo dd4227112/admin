@@ -48,8 +48,8 @@
         <div class="white-box">
             <div class="row">
                 <div class="col-sm-12">
-                    <h2 class="m-b-0 font-medium">Tsh 356,000,000</h2>
-                    <h5 class="text-muted m-t-0">Total Posted Today</h5></div>
+<!--                    <h2 class="m-b-0 font-medium">Tsh 356,000,000</h2>
+                    <h5 class="text-muted m-t-0">Total Posted Today</h5></div>-->
 
             </div>
         </div>

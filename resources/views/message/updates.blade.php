@@ -26,11 +26,12 @@
                         </thead>
                         <tbody>
                             <?php
+                            $i=1;
                             $updates = \DB::table('admin.updates')->get();
                             foreach ($updates as $update) {
                                 ?>
                                 <tr>
-                                    <td class="text-center">1</td>
+                                    <td class="text-center"><?=$i?></td>
                                     <td><?=$update->update_type?></td>
                                     <td width="300" ><?=$update->message?></td>
                                     <td><?=$update->for?></td>
@@ -55,11 +56,7 @@
         </div>
     </div>
 </div>
-<script>
-    $(document).ready(function () {
-        $('.textarea_editor').wysihtml5();
-    });
-</script>
+
 <script src="<?= $root ?>js/clipboard.min.js"></script>
 
 @endsection
