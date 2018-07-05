@@ -9,18 +9,17 @@ use App\Model\Permission;
 use DB;
 use Auth;
 
-class RolesController extends Controller
-{
+class RolesController extends Controller {
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
-    {
-        $roles = Role::orderBy('id','DESC')->where('created_by',Auth::user()->id)->paginate(5);
-        return view('roles.index',compact('roles'))
-            ->with('i', ($request->input('page', 1) - 1) * 5);
+    public function index(Request $request) {
+        $roles = Role::orderBy('id', 'DESC')->where('created_by', Auth::user()->id)->paginate(5);
+        return view('roles.index', compact('roles'))
+                        ->with('i', ($request->input('page', 1) - 1) * 5);
     }
 
     /**
@@ -28,10 +27,9 @@ class RolesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create() {
         $permission = Permission::get();
-        return view('roles.create',compact('permission'));
+        return view('roles.create', compact('permission'));
     }
 
     /**
@@ -40,8 +38,7 @@ class RolesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $this->validate($request, [
             'name' => 'required|unique:roles,name',
             'display_name' => 'required',
@@ -53,7 +50,7 @@ class RolesController extends Controller
         $role->name = $request->input('name');
         $role->display_name = $request->input('display_name');
         $role->description = $request->input('description');
-        $role->created_by=Auth::user()->id;
+        $role->created_by = Auth::user()->id;
         $role->save();
 
         foreach ($request->input('permission') as $key => $value) {
@@ -61,22 +58,40 @@ class RolesController extends Controller
         }
 
         return redirect()->route('roles.index')
-            ->with('success','Role created successfully');
+                        ->with('success', 'Role created successfully');
     }
+
     /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        $role = Role::find($id);
-        $rolePermissions = Permission::join("permission_role","permission_role.permission_id","=","permissions.id")
-            ->where("permission_role.role_id",$id)
-            ->get();
+    public function show($id) {
+        if ($id == 'shulesoft') {
+            return $this->shulesoftPermission();
+        } else if ($id == 'update_tag') {
+           return $this->updateShuleSoftPermission();
+        }
 
-        return view('roles.show',compact('role','rolePermissions'));
+        $role = Role::find($id);
+        $rolePermissions = Permission::join("permission_role", "permission_role.permission_id", "=", "permissions.id")
+                ->where("permission_role.role_id", $id)
+                ->get();
+
+        return view('roles.show', compact('role', 'rolePermissions'));
+    }
+
+    public function updateShuleSoftPermission() {
+        $id = request('id');
+        $new_value = request('newvalue');
+        $column = request('column');
+        \App\Model\Constant_permission::find($id)->update([$column => $new_value]);
+    }
+
+    public function shulesoftPermission() {
+        $this->data['permission_groups'] = \App\Model\Permission_group::all();
+        return view('roles.shulesoft_permission', $this->data);
     }
 
     /**
@@ -85,14 +100,13 @@ class RolesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
+    public function edit($id) {
         $role = Role::find($id);
         $permission = Permission::get();
-        $rolePermissions = DB::table("permission_role")->where("permission_role.role_id",$id)
-            ->pluck('permission_role.permission_id','permission_role.permission_id')->toArray();
+        $rolePermissions = DB::table("permission_role")->where("permission_role.role_id", $id)
+                        ->pluck('permission_role.permission_id', 'permission_role.permission_id')->toArray();
 
-        return view('roles.edit',compact('role','permission','rolePermissions'));
+        return view('roles.edit', compact('role', 'permission', 'rolePermissions'));
     }
 
     /**
@@ -102,8 +116,7 @@ class RolesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         $this->validate($request, [
             'display_name' => 'required',
             'description' => 'required',
@@ -115,26 +128,27 @@ class RolesController extends Controller
         $role->description = $request->input('description');
         $role->save();
 
-        DB::table("permission_role")->where("permission_role.role_id",$id)
-            ->delete();
+        DB::table("permission_role")->where("permission_role.role_id", $id)
+                ->delete();
 
         foreach ($request->input('permission') as $key => $value) {
             $role->attachPermission($value);
         }
 
         return redirect()->route('roles.index')
-            ->with('success','Role '.request('display_name').' updated successfully');
+                        ->with('success', 'Role ' . request('display_name') . ' updated successfully');
     }
+
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        DB::table("roles")->where('id',$id)->delete();
+    public function destroy($id) {
+        DB::table("roles")->where('id', $id)->delete();
         return redirect()->route('roles.index')
-            ->with('success','Role deleted successfully');
+                        ->with('success', 'Role deleted successfully');
     }
+
 }

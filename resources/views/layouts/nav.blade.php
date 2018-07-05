@@ -66,6 +66,8 @@
                         <li> <a href="{{url('roles')}}"><i class=" fa-fw">3</i><span class="hide-menu">User Types</span></a> </li>
                         <li> <a href="#"><i class=" fa-fw">4</i><span class="hide-menu">Permissions</span></a> </li>
 
+                        <li> <a href="{{url('roles/shulesoft')}}"><i class=" fa-fw">4</i><span class="hide-menu">ShuleSoft Roles</span></a> </li>
+
                     </ul>
                 </li>
                 @endrole
