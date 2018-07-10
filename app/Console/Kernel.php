@@ -103,7 +103,7 @@ class Kernel extends ConsoleKernel {
 // remind parents to login in shulesoft and check their child performance
             // $this->sendNotice();
             $this->sendBirthdayWish();
-        })->dailyAt('07:00');
+        })->dailyAt('04:40'); // Eq to 07:40 AM
 
         $schedule->call(function() {
 //send login reminder to parents in all schema
@@ -358,6 +358,19 @@ class Kernel extends ConsoleKernel {
                     DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) 
                     AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE)";
                 DB::statement($sql);
+                
+                //get students with birthday, with their section teacher names
+                //get count total number of students with birthday today and send to admin
+                $sql_for_teachers="insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")"
+                        ."SELECT 'Hello '||teacher_name||', leo ni birthday ya '||string_agg(student_name, ', ')||', katika darasa lako '||classes||'('||section||'). Usisite kumtakia heri ya kuzaliwa. Asante', phone,0,0,\"teacherID\",'teacher' from ( select a.name as student_name, t.name as teacher_name, t.\"teacherID\", t.phone, c.section, d.classes from " . $schema->table_schema . ".student a join " . $schema->table_schema . ".section c on c.\"sectionID\"=a.\"sectionID\" JOIN " . $schema->table_schema . ".teacher t on t.\"teacherID\"=c.\"teacherID\" join " . $schema->table_schema . ".classes d on d.\"classesID\"=c.\"classesID\" WHERE   DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE)   AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE) ) x GROUP  BY teacher_name,phone,classes,section,phone,\"teacherID\"";
+                DB::statement($sql_for_teachers);
+                
+                //send notification to administrators
+//                $sql_to_admin="insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")"
+//                        ."select 'Hello '||s.sname||', leo ni birthday ya wanafunzi '||count(*)||' katika shule lako. Unaweza ingia katika account yako ya shule ili uwajue na uwatakie heri ya kuzaliwa. Asante', s.phone,0,0,1,'setting' from testing.student a join testing.setting s on true WHERE   DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) 
+//                    AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE) group by s.sname,s.phone";
+//                DB::statement($sql_to_admin);
+                
             }
         }
     }
@@ -393,7 +406,7 @@ select 'Habari '|| p.name|| ',ungana nasi siku ya jumatano (11/07/2018), TBC-1 k
 ShuleSoft vizuri kupata ripoti mbalimbali kutoka shuleni. Usikose kushiriki nasi ujifunze zaidi. Karibu', p.phone, 0,0, p.id,\"table\" FROM " . $schema->table_schema . ".users p where p.phone is not null and \"table\" in ('parent','teacher','user') ";
         
          
-        return DB::statement($sql_updated);
+        //return DB::statement($sql_updated);
     }
 
     public function parentGeneralLoginReminder($schema) {
