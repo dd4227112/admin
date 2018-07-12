@@ -123,6 +123,7 @@ class HomeController extends Controller {
                     $m->from('noreply@shulesoft.com', 'ShuleSoft');
                     $m->to($setting->email_list)->subject(ucwords($setting->sname) . ' Daily Report');
                 });
+                echo 'email sent to '.$setting->email_list;
             }
         }
     }
