@@ -87,7 +87,7 @@ class HomeController extends Controller {
 
             // users
             $schema = $record->table_schema . '.';
-            $setting = DB::table($schema . 'setting')->first();
+            $setting = DB::table($schema . 'setting')->select('sname','email_list','photo')->first();
             if (strlen($setting->email_list) > 3) {
 
                 $this->data['users'] = DB::table($schema . 'users')->where('status', 1)->count();
