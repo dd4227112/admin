@@ -87,7 +87,7 @@ class HomeController extends Controller {
 
             // users
             $schema = $record->table_schema . '.';
-            $setting = DB::table($schema . 'setting')->select('sname','photo')->first();
+            $setting = DB::table($schema . 'setting')->select('sname','photo','email_list')->first();
             if (isset($setting->email_list) && $setting->email_list !='') {
 
                 $this->data['users'] = DB::table($schema . 'users')->where('status', 1)->count();
