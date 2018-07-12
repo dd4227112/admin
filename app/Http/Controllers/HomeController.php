@@ -87,10 +87,8 @@ class HomeController extends Controller {
 
             // users
             $schema = $record->table_schema . '.';
-            $setting = DB::table($schema . 'setting')->select('sname','email_list','photo')->first();
-            if(!isset($setting->email_list)){
-                die('column email list is not available in schema '.$schema);
-            }else   if (strlen($setting->email_list) > 3) {
+            $setting = DB::table($schema . 'setting')->select('sname','photo')->first();
+            if (isset($setting->email_list) && $setting->email_list !='') {
 
                 $this->data['users'] = DB::table($schema . 'users')->where('status', 1)->count();
                 $this->data['added_users'] = DB::table($schema . 'parent')->where(DB::raw('created_at::date'), date('Y-m-d'))->count() + DB::table($schema . 'teacher')->where(DB::raw('created_at::date'), date('Y-m-d'))->count() + DB::table($schema . 'student')->where(DB::raw('created_at::date'), date('Y-m-d'))->count();
