@@ -16,7 +16,7 @@ class HomeController extends Controller {
      * @return void
      */
     public function __construct() {
-        $this->middleware('auth');
+       // $this->middleware('auth');
     }
 
     /**
@@ -81,8 +81,8 @@ class HomeController extends Controller {
 
     public function dailyReport() {
 
-        $schema_records = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant','admin','api','app','skysat')");
-
+        $schema_records = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant','admin','api','app','skysat','dodoso')");
+       
         foreach ($schema_records as $record) {
 
             // users
@@ -119,6 +119,7 @@ class HomeController extends Controller {
                 $this->data['photo'] = $setting->photo;
                 $this->data['name'] = ucwords($setting->sname);
                 $data = ['content' => $this->data['content'], 'link' => $schema, 'photo' => $setting->photo, 'sitename' => ucwords($setting->sname), 'name' => ucwords($setting->sname)];
+                dd($this->data);
                 \Mail::send('email.default', $data, function ($m) use ($setting) {
                     $m->from('noreply@shulesoft.com', 'ShuleSoft');
                     $m->to($setting->email_list)->subject(ucwords($setting->sname) . ' Daily Report');
