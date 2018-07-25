@@ -37,7 +37,7 @@ class Kernel extends ConsoleKernel {
             $phones_connected = DB::select('select distinct api_key from public.all_sms');
             if (count($phones_connected) > 0) {
                 foreach ($phones_connected as $phone) {
-                    $messages = DB::select('select * from public.all_sms where api_key=\'' . $phone->api_key . '\' order by priority desc, sms_id asc limit 20');
+                    $messages = DB::select('select * from public.all_sms where api_key=\'' . $phone->api_key . '\' order by priority desc, sms_id asc limit 8');
                     if (!empty($messages)) {
                         foreach ($messages as $sms) {
                             $schema = strtoupper($sms->schema_name) == 'PUBLIC' ?
