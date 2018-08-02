@@ -140,10 +140,10 @@
                         <li> <a href="<?= url('market/legal') ?>">
                                 <i class="fa-fw">T</i>
                                 <span class="hide-menu">Legal Documents </span></a> </li>
-                        <li> 
+<!--                        <li> 
                             <a href="<?= url('market/brand') ?>"><i class="fa-fw">S</i>
                                 <span class="hide-menu">Personal Brands</span></a>
-                        </li>
+                        </li>-->
 
                     </ul>
                 </li>
@@ -161,8 +161,8 @@
                                 <i class="fa-fw">M</i><span class="hide-menu">Sample Presentations</span></a> </li>
                         <li><a href="<?= url('market/faq') ?>"><i class="fa-fw">L</i>
                                 <span class="hide-menu">FAQ</span></a></li>
-                        <li><a href="<?= url('market/test') ?>"><i class="fa-fw">W</i><span class="hide-menu">
-                                    Knowledge Test</span></a></li>
+<!--                        <li><a href="<?= url('market/test') ?>"><i class="fa-fw">W</i><span class="hide-menu">
+                                    Knowledge Test</span></a></li>-->
                     </ul>
                 </li>
                 <li class="devider"></li>

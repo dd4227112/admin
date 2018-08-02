@@ -260,7 +260,7 @@ img {
       <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tbody>
     <tr>
-      <td valign="top" width="60"><img src="https://<?=$link?>.shulesoft.com/storage/uploads/images/<?=$photo?>" alt="Logo" title="Logo" width="60" height="60" data-max-width="100"></td>
+      <td valign="top" width="60"><img src="https://<?=$link?>shulesoft.com/storage/uploads/images/<?=$photo?>" alt="Logo" title="Logo" width="60" height="60" data-max-width="100"></td>
       <td width="10" valign="top">&nbsp;</td>
       <td valign="middle" style='vertical-align: middle;'>
                           <div class='contentEditableContainer contentTextEditable'>

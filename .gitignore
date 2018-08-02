@@ -1,3 +1,4 @@
+/storage
 /storage/*.key
 /vendor
 /.vagrant

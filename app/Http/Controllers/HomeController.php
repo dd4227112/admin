@@ -91,6 +91,7 @@ class HomeController extends Controller {
             if (isset($setting->email_list) && $setting->email_list !='') {
 
                 $this->data['users'] = DB::table($schema . 'users')->where('status', 1)->count();
+                 $this->data['students'] = DB::table($schema . 'student')->where('status', 1)->count();
                 $this->data['added_users'] = DB::table($schema . 'parent')->where(DB::raw('created_at::date'), date('Y-m-d'))->count() + DB::table($schema . 'teacher')->where(DB::raw('created_at::date'), date('Y-m-d'))->count() + DB::table($schema . 'student')->where(DB::raw('created_at::date'), date('Y-m-d'))->count();
 
 
@@ -119,6 +120,9 @@ class HomeController extends Controller {
                 $this->data['photo'] = $setting->photo;
                 $this->data['name'] = ucwords($setting->sname);
                 $data = ['content' => $this->data['content'], 'link' => $schema, 'photo' => $setting->photo, 'sitename' => ucwords($setting->sname), 'name' => ucwords($setting->sname)];
+                $this->data=$data;
+                return view('email.default', $this->data);
+                exit;
                 \Mail::send('email.default', $data, function ($m) use ($setting) {
                     $m->from('noreply@shulesoft.com', 'ShuleSoft');
                     $m->to($setting->email_list)->subject(ucwords($setting->sname) . ' Daily Report');

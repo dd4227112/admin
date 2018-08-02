@@ -6,9 +6,30 @@
         <div class="panel-group" role="tablist" aria-multiselectable="true">
             <div class="panel panel-default">
                 <div class="panel-heading" role="tab" id="headingOne">
-                    <h4 class="panel-title"> <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="font-bold">Your price is expensive ? </a> </h4> </div>
+                    <h4 class="panel-title"> <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="font-bold">How much do you charge ? </a> </h4> </div>
                 <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-                    <div class="panel-body"> Clarify clearly with simple calculations why our price is low and affordable to any school. Make simple calculation, tell him/her that, if you compare how much you loose when you work without this system in calculation is high compared to what you will invest. How, if you list all tasks done by this system and you decide to higher people to do those tasks, you will pay more salary. Second, if you consider the time that you loose compared to what the software will help you  to save that time, you will also notice the expense. Third, you will now that, we bring value to your management, operation (teachers and staff) and to your parents, in this case you can as well let parents contribute bse for them they loose more than 10,000 per year to visit school and ask for student performance while they can view in their phone and computers </div>
+                    <div class="panel-body"> If you need only payment integration solution, we will charge you Tsh 1000/= only per transaction. If you need other modules in the system, we will charge you based on number of modules that you need to use in your school. </div>
+                </div>
+            </div>
+             <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingOne">
+                    <h4 class="panel-title"> <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-expanded="true" aria-controls="collapseOne" class="font-bold">How do we get started to use ShuleSoft ?</a> </h4> </div>
+                <div id="collapse1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body"> You will sign an agreement form /or a contract with ShuleSoft, then we will assist you in data entry process and perform training to your staff to understand well how to use the software and get all the benefit it offer </div>
+                </div>
+            </div>
+             <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingOne">
+                    <h4 class="panel-title"> <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="true" aria-controls="collapseOne" class="font-bold">How parents will access the system</a> </h4> </div>
+                <div id="collapse2" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body"> ShuleSoft use internet. Parent will either download ShuleSoft app in their mobile phone or use computer to open shulesoft system for your school. Once parents open ShuleSoft, they will login with their username and password provided during installation of system in your school </div>
+                </div>
+            </div>
+             <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingOne">
+                    <h4 class="panel-title"> <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse3" aria-expanded="true" aria-controls="collapseOne" class="font-bold">Parents who don't have smartphone, what will they do ?</a> </h4> </div>
+                <div id="collapse3" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body"> ShuleSoft also send normal SMS to parents to inform them about all activities in school. This includes exam reports, attendance, routine, payment status and any information sent by administrator via SMS</div>
                 </div>
             </div>
             <div class="panel panel-default">
