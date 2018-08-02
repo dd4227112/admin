@@ -103,10 +103,10 @@ class HomeController extends Controller {
                 $this->data['total_sms'] = DB::table($schema . 'sms')->count();
 
                 $this->data['email'] = DB::table($schema . 'email')->where(DB::raw('created_at::date'), date('Y-m-d'))->count();
-                $this->data['revenue'] = \collect(DB::select("select sum(amount) from " . $schema . "total_revenues where date::date='" . date('Y-m-d') . "'"))->first();
+                $this->data['revenue'] = \collect(DB::select("select sum(amount) from " . $schema . "total_revenues where payment_date::date='" . date('Y-m-d') . "'"))->first();
 
 
-                $this->data['expense'] = \collect(DB::select("select sum(amount) from " . $schema . "expense where payment_date::date='" . date('Y-m-d') . "'"))->first();
+                $this->data['expense'] = \collect(DB::select("select sum(amount) from " . $schema . "expense where date::date='" . date('Y-m-d') . "'"))->first();
 
 
                 $sql = "select  c.name as parent_name, d.classes, a.dob,a.\"classesID\", a.section, a.\"studentID\", a.name as student_name,c.phone as parent_phone FROM " . $schema . "student a join " . $schema . "student_parents b on b.student_id=a.\"studentID\" JOIN " . $schema . "parent c on c.\"parentID\"=b.parent_id join " . $schema . "classes d on d.\"classesID\"=a.\"classesID\" WHERE 
@@ -119,7 +119,6 @@ class HomeController extends Controller {
                 $this->data['photo'] = $setting->photo;
                 $this->data['name'] = ucwords($setting->sname);
                 $data = ['content' => $this->data['content'], 'link' => $schema, 'photo' => $setting->photo, 'sitename' => ucwords($setting->sname), 'name' => ucwords($setting->sname)];
-                dd($this->data);
                 \Mail::send('email.default', $data, function ($m) use ($setting) {
                     $m->from('noreply@shulesoft.com', 'ShuleSoft');
                     $m->to($setting->email_list)->subject(ucwords($setting->sname) . ' Daily Report');
