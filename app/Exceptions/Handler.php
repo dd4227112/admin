@@ -63,10 +63,7 @@ class Handler extends ExceptionHandler {
      * @return void
      */
     public function report(Exception $exception) {
-        if (!$exception instanceof \Illuminate\Auth\AuthenticationException) {
-
-            $this->createLog($exception);
-        }
+        $this->createLog($exception);
         parent::report($exception);
     }
 
@@ -79,9 +76,6 @@ class Handler extends ExceptionHandler {
      */
     public function render($request, Exception $exception) {
         if ($exception instanceof \Illuminate\Session\TokenMismatchException) {
-            return redirect()->back()->with('info', 'Your session expired, please login below to continue');
-        }
-        if ($exception instanceof \Illuminate\Auth\AuthenticationException) {
             return redirect()->back()->with('info', 'Your session expired, please login below to continue');
         }
         return parent::render($request, $exception);
