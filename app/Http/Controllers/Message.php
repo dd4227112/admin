@@ -192,10 +192,10 @@ class Message extends Controller {
     
         $user = DB::table('admin.all_users')->where('id', $feedback->user_id)->where('table', $feedback->table)->where('schema_name', str_replace('.', NULL,$feedback->schema))->first();
         if(count($user)==1){
-        DB::table('public.sms')->insert(['body' => $message, 'phone_number' => $user->phone, 'type' => 0]);
+        DB::table('public.sms')->insert(['body' => "Majibu ya ujumbe:".$feedback->message.". Jibu: ".$message, 'phone_number' => $user->phone, 'type' => 0]);
         
         $reply_message = '<div>'
-                . '<p><b>Your Message: </b> ' . $feedback->message . '</p><br/><br/>' . $message . '</div>';
+                . '<p><b>Majibu ya ujumbe:: </b> ' . $feedback->message . '</p><br/><br/>Jibu:' . $message . '</div>';
         DB::table('public.email')->insert(['body' => $reply_message, 'user_id' => $feedback->user_id,'subject'=> 'ShuleSoft Feedback Reply', 'email' => $user->email]);
         echo 'Message and Email sent';
         }else{

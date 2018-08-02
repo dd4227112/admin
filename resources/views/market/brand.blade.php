@@ -33,7 +33,7 @@
                     <div class="content-wrap">
                         <section id="section-bar-1" class="content-current">
                             <h3>Your ID from ShuleSoft</h3>
-                            <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
+                            <p></p>
                         </section>
                         <section id="section-bar-2" class="">
                             <h2>BUSINESS CARD</h2></section>
