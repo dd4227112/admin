@@ -120,9 +120,6 @@ class HomeController extends Controller {
                 $this->data['photo'] = $setting->photo;
                 $this->data['name'] = ucwords($setting->sname);
                 $data = ['content' => $this->data['content'], 'link' => $schema, 'photo' => $setting->photo, 'sitename' => ucwords($setting->sname), 'name' => ucwords($setting->sname)];
-                $this->data=$data;
-                return view('email.default', $this->data);
-                exit;
                 \Mail::send('email.default', $data, function ($m) use ($setting) {
                     $m->from('noreply@shulesoft.com', 'ShuleSoft');
                     $m->to($setting->email_list)->subject(ucwords($setting->sname) . ' Daily Report');
