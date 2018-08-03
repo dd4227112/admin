@@ -22,6 +22,8 @@
                             <th>Payment Integrated</th>
                             <th>charges to parents</th>
                             <th>Transaction Fee</th>
+                            <th>API username </th>
+                            <th>API password </th>
                             <th>Amount </th>
                             <th>Parents</th>
                             <th>Teachers</th>
@@ -74,6 +76,8 @@
                                     <td> <input class="text-muted" type="text" schema='<?= $setting->payment_integrated ?>' id="payment_integrated" value="<?= $setting->payment_integrated ?>" onblur="edit_records('payment_integrated', this.value, '<?= $value->schema_name ?>')"/></td>
                                       <td> <input class="text-muted" type="text" schema='<?= $setting->transaction_charges_to_parents ?>' id="transaction_charges_to_parents" value="<?= $setting->transaction_charges_to_parents ?>" onblur="edit_records('transaction_charges_to_parents', this.value, '<?= $value->schema_name ?>')"/></td>
                                                              <td> <input class="text-muted" type="text" schema='<?= $setting->transaction_fee ?>' id="transaction_fee" <?=(int)$setting->payment_integrated==1 ?'disabled':''?> value="<?= $setting->transaction_fee ?>" onblur="edit_records('transaction_fee', this.value, '<?= $value->schema_name ?>')"/></td>
+                                                                                                <td> <input class="text-muted" type="text" schema='<?= $setting->api_username ?>' id="api_username" <?=(int)$setting->payment_integrated==1 ?'disabled':''?> value="<?= $setting->api_username ?>" onblur="edit_records('api_username', this.value, '<?= $value->schema_name ?>')"/></td>
+                                                                                                                                   <td> <input class="text-muted" type="text" schema='<?= $setting->api_password ?>' id="api_password" <?=(int)$setting->payment_integrated==1 ?'disabled':''?> value="<?= $setting->api_password ?>" onblur="edit_records('api_password', this.value, '<?= $value->schema_name ?>')"/></td>
                                     <td><?= number_format($price_per_school) ?></td>
                                     <td><?= $value->parent ?></td>
                                     <td><?= $value->teacher ?></td>
@@ -91,7 +95,7 @@
                             <tr>
                                 <td colspan="2"></td>
                                 <td><?= $students ?></td>
-                                <td colspan="4"></td>
+                                <td colspan="6"></td>
 
                                 <td></td>
                                 <td><?= number_format($total_price) ?></td>
