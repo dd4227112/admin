@@ -63,7 +63,10 @@ class Handler extends ExceptionHandler {
      * @return void
      */
     public function report(Exception $exception) {
-        $this->createLog($exception);
+        $line = @$e->getTrace()[0]['line'];
+        if ($line <> 294) {
+            $this->createLog($exception);
+        }
         parent::report($exception);
     }
 
