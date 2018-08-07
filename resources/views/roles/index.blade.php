@@ -12,9 +12,9 @@
                                 <h2>User Roles</h2>
                             </div>
                             <div class="pull-right">
-                                @permission('role-create')
+                                <?php if(can_access('add_role')){?>
                                 <a class="btn btn-success" href="{{ route('roles.create') }}"> Create New Role</a>
-                                @endpermission
+                                <?php }?>
                             </div>
                         </div>
                     </div>
@@ -39,14 +39,14 @@
                                 <td>{{ $role->description }}</td>
                                 <td>
                                     <a class="btn btn-info" href="{{ route('roles.show',$role->id) }}">Show</a>
-                                    @permission('role-edit')
+                                   <?php if(can_access('edit_role')){?>
                                     <a class="btn btn-primary" href="{{ route('roles.edit',$role->id) }}">Edit</a>
-                                    @endpermission
-                                    @permission('role-delete')
+                                   <?php } ?>
+                                    <?php if(can_access('delete_role')){?>
                                     {!! Form::open(['method' => 'DELETE','route' => ['roles.destroy', $role->id],'style'=>'display:inline']) !!}
                                     {!! Form::submit('Delete', ['class' => 'btn btn-danger']) !!}
                                     {!! Form::close() !!}
-                                    @endpermission
+                                     <?php } ?>
                                 </td>
                             </tr>
                         @endforeach
