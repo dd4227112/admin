@@ -17,7 +17,7 @@ class RolesController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request) {
-        $roles = Role::orderBy('id', 'DESC')->where('created_by', Auth::user()->id)->paginate(5);
+        $roles = Role::orderBy('id', 'DESC')->paginate(10);
         return view('roles.index', compact('roles'))
                         ->with('i', ($request->input('page', 1) - 1) * 5);
     }
@@ -39,6 +39,7 @@ class RolesController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
+
         $this->validate($request, [
             'name' => 'required|unique:roles,name',
             'display_name' => 'required',
@@ -71,15 +72,34 @@ class RolesController extends Controller {
         if ($id == 'shulesoft') {
             return $this->shulesoftPermission();
         } else if ($id == 'update_tag') {
-           return $this->updateShuleSoftPermission();
+            return $this->updateShuleSoftPermission();
+        } else if ($id == 'addPermission') {
+            return $this->addPermission();
+        } else if ($id == 'removePermission') {
+            return $this->removePermission();
         }
 
         $role = Role::find($id);
+      
         $rolePermissions = Permission::join("permission_role", "permission_role.permission_id", "=", "permissions.id")
                 ->where("permission_role.role_id", $id)
                 ->get();
 
-        return view('roles.show', compact('role', 'rolePermissions'));
+        return view('roles.show', compact('role', 'rolePermissions', 'id'));
+    }
+
+    public function addPermission() {
+        $permission_id = request('id');
+        $role_id = request('role_id');
+        \App\Model\Permission_role::create(['permission_id' => $permission_id, 'role_id' => $role_id, 'created_by' => Auth::user()->id]);
+        echo 'success';
+    }
+
+    public function removePermission() {
+        $permission_id = request('id');
+        $role_id = request('role_id');
+        \App\Model\Permission_role::where(['permission_id' => $permission_id, 'role_id' => $role_id])->delete();
+        echo 'success';
     }
 
     public function updateShuleSoftPermission() {

@@ -41,4 +41,8 @@ class User extends Authenticatable
              return '';
         return $loc->long . ", " . $loc->lat;
     }
+    
+    public function roleUser() {
+        return $this->hasMany('\App\Model\Role_user');
+    }
 }

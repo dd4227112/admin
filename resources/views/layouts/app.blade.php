@@ -76,9 +76,9 @@ var root_url = "<?= url('/'); ?>";
                     </div>
                     <!-- /Logo -->
                     <!-- Search input and Toggle icon -->
-                    @role('admin')
+                 
                     <ul class="nav navbar-top-links navbar-left">
-                        <li><a href="javascript:void(0)" class="open-close waves-effect waves-light"><i class="ti-menu"></i></a></li>
+                        <li><a href="javascript:void(0)" class="open-close waves-effect waves-light" onmousedown="$('body').toggleClass('show-sidebar hide-sidebar')"><i class="ti-menu"></i></a></li>
                         <?php
                         $feedbacks = \App\Model\Feedback::where('opened', 1)->get();
                         ?>
@@ -231,13 +231,15 @@ var root_url = "<?= url('/'); ?>";
                         </li>-->
                         <!-- /.Megamenu -->
                     </ul>
-                    @endrole
+                  
 <?php if (Auth::check() == 1) { ?>
                         <ul class="nav navbar-top-links navbar-right pull-right">
                             <li>
-                                @role('admin') <form role="search" action="<?= url('/search') ?>?q="  method="GET" class="app-search hidden-sm hidden-xs m-r-10">
+                                <?php if(can_access('view_users')){?>
+                                 <form role="search" action="<?= url('/search') ?>?q="  method="GET" class="app-search hidden-sm hidden-xs m-r-10">
                                     <input type="text" name="q" placeholder="Search name or phone" id="search_box" class="form-control"> <a href="#"><i class="fa fa-search"></i></a> </form>
-                                @endrole
+                                <?php }?>
+                             
                             <li class="dropdown" id="search_results">
                                 <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"> 
                                     <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
