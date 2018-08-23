@@ -97,12 +97,12 @@ var root_url = "<?= url('/'); ?>";
                                         foreach ($feedbacks as $feedback) {
                                             if ($f == 5)
                                                 break;
-                                            $user=\DB::table($feedback->schema.$feedback->table)->where($feedback->table.'ID',$feedback->user_id)->first();
+                                          //  $user=\DB::table($feedback->schema.$feedback->table)->where($feedback->table.'ID',$feedback->user_id)->first();
                                             ?>
                                             <a href="#">
                                                 <div class="user-img"> <img src="<?= $root ?>plugins/images/users/pawandeep.jpg" alt="user" class="img-circle"> <span class="profile-status online pull-right"></span> </div>
                                                 <div class="mail-contnet">
-                                                    <h5><?=count($user)==1 ? $user->name: ''?></h5>
+                                                    <h5><?php //count($user)==1 ? $user->name: ''?></h5>
                                                     <span class="mail-desc"><?=$feedback->feedback?></span>
                                                     <span class="time"><?=timeAgo($feedback->created_at)?></span> </div>
                                             </a>
