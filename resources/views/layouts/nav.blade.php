@@ -93,6 +93,9 @@
                             <li> <a href="{{ url('management') }}" class="">
                                     <i class=" fa-fw">1</i><span class="hide-menu">School Settings</span></a> 
                             </li>
+                             <li> <a href="{{ url('management/contact') }}" class="">
+                                    <i class=" fa-fw">2</i><span class="hide-menu">School Contacts</span></a> 
+                            </li>
                         </ul>
                     </li>
                 <?php } ?>
