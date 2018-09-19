@@ -112,7 +112,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function() {
 //send login reminder to parents in all schema
-           //$this->notifyUsersDailyReports();
+            //$this->notifyUsersDailyReports();
         })->weekly()->weekdays()->at('13:00');
 
         $schedule->call(function () {
@@ -138,8 +138,13 @@ class Kernel extends ConsoleKernel {
         }
     }
 
-    function getFeeNames($invoice_id, $schema_name) {
-        $fees = DB::select('select c.name from ' . $schema_name . '.invoice_fee a join ' . $schema_name . '.fee_installment b on b.id=a.fee_installment_id join ' . $schema_name . '.fee c on c.id=b.fee_id where a.invoices_id=' . $invoice_id);
+     function getFeeNames($invoice_id, $schema_name) {
+        $fees = DB::table($schema_name . '.invoices')
+                ->where('invoices.id', $invoice_id)
+                ->join($schema_name . '.invoices_fees_installments', 'invoices_fees_installments.invoice_id', 'invoices.id')
+                ->join($schema_name . '.fees_installments', 'fees_installments.id', 'invoices_fees_installments.fees_installment_id')
+                ->join($schema_name . '.fees', 'fees.id', 'fees_installments.fee_id')
+                ->get();
         $names = array();
         if (count($fees) > 0) {
             foreach ($fees as $fee) {
@@ -152,15 +157,15 @@ class Kernel extends ConsoleKernel {
     }
 
     public function syncInvoice() {
-        $invoices = DB::select('select * from admin.api_invoices where sync=0 and amount >0 order by random() limit 15');
+        $invoices = DB::select('select * from api.invoices where sync=0 and amount >0 order by random() limit 15');
         if (count($invoices) > 0) {
             foreach ($invoices as $invoice) {
                 $token = $this->getToken($invoice);
                 if (strlen($token) > 4) {
                     $fields = array(
-                        "reference" => $invoice->invoiceNO,
+                        "reference" => $invoice->reference,
                         "student_name" => $invoice->student_name,
-                        "student_id" => $invoice->studentID,
+                        "student_id" => $invoice->student_id,
                         "amount" => $invoice->amount,
                         "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
                         "code" => "10",
@@ -168,9 +173,10 @@ class Kernel extends ConsoleKernel {
                         "token" => $token
                     );
                     $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
+                    $push_status = 'invoice_submission';
                     if ($invoice->schema_name == 'beta_testing') {
                         //testing invoice
-                        $setting = DB::table($invoice->optional_name . '.setting')->first();
+                        $setting = DB::table('beta_testing.setting')->first();
 
                         $url = 'https://wip.mpayafrica.com/v2/' . $push_status;
                     } else {
@@ -183,10 +189,9 @@ class Kernel extends ConsoleKernel {
                     if (($result->status == 1 && strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
 //update invoice no
                         DB::table($invoice->schema_name . '.invoices')
-                                ->where('invoiceNO', $invoice->invoiceNO)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status]);
-                    } else {
-                        DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
+                                ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status]);
                     }
+                    DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
                 }
             }
         }
@@ -205,7 +210,7 @@ class Kernel extends ConsoleKernel {
     public function getToken($invoice) {
         if ($invoice->schema_name == 'beta_testing') {
             //testing invoice
-            $setting = DB::table($invoice->optional_name . '.setting')->first();
+            $setting = DB::table('beta_testing.setting')->first();
             $url = 'https://wip.mpayafrica.com/v2/auth';
         } else {
             //live invoice
@@ -358,19 +363,18 @@ class Kernel extends ConsoleKernel {
                     DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) 
                     AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE)";
                 DB::statement($sql);
-                
+
                 //get students with birthday, with their section teacher names
                 //get count total number of students with birthday today and send to admin
-                $sql_for_teachers="insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")"
-                        ."SELECT 'Hello '||teacher_name||', leo ni birthday ya '||string_agg(student_name, ', ')||', katika darasa lako '||classes||'('||section||'). Usisite kumtakia heri ya kuzaliwa. Asante', phone,0,0,\"teacherID\",'teacher' from ( select a.name as student_name, t.name as teacher_name, t.\"teacherID\", t.phone, c.section, d.classes from " . $schema->table_schema . ".student a join " . $schema->table_schema . ".section c on c.\"sectionID\"=a.\"sectionID\" JOIN " . $schema->table_schema . ".teacher t on t.\"teacherID\"=c.\"teacherID\" join " . $schema->table_schema . ".classes d on d.\"classesID\"=c.\"classesID\" WHERE  a.status=1 and  DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE)   AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE) ) x GROUP  BY teacher_name,phone,classes,section,phone,\"teacherID\"";
+                $sql_for_teachers = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")"
+                        . "SELECT 'Hello '||teacher_name||', leo ni birthday ya '||string_agg(student_name, ', ')||', katika darasa lako '||classes||'('||section||'). Usisite kumtakia heri ya kuzaliwa. Asante', phone,0,0,\"teacherID\",'teacher' from ( select a.name as student_name, t.name as teacher_name, t.\"teacherID\", t.phone, c.section, d.classes from " . $schema->table_schema . ".student a join " . $schema->table_schema . ".section c on c.\"sectionID\"=a.\"sectionID\" JOIN " . $schema->table_schema . ".teacher t on t.\"teacherID\"=c.\"teacherID\" join " . $schema->table_schema . ".classes d on d.\"classesID\"=c.\"classesID\" WHERE  a.status=1 and  DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE)   AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE) ) x GROUP  BY teacher_name,phone,classes,section,phone,\"teacherID\"";
                 DB::statement($sql_for_teachers);
-                
+
                 //send notification to administrators
 //                $sql_to_admin="insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")"
 //                        ."select 'Hello '||s.sname||', leo ni birthday ya wanafunzi '||count(*)||' katika shule lako. Unaweza ingia katika account yako ya shule ili uwajue na uwatakie heri ya kuzaliwa. Asante', s.phone,0,0,1,'setting' from testing.student a join testing.setting s on true WHERE   DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) 
 //                    AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE) group by s.sname,s.phone";
 //                DB::statement($sql_to_admin);
-                
             }
         }
     }
@@ -404,8 +408,8 @@ select 'Hello '|| p.name|| ', matokeo yote ya '||c.name||'  hupatikana kwenye Sh
         $sql_updated = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")
 select 'Habari '|| p.name|| ',ungana nasi siku ya jumatano (11/07/2018), TBC-1 kwanzia saa 1 kamili usiku tutawafundisha wazazi wote jinsi ya kutumia 
 ShuleSoft vizuri kupata ripoti mbalimbali kutoka shuleni. Usikose kushiriki nasi ujifunze zaidi. Karibu', p.phone, 0,0, p.id,\"table\" FROM " . $schema->table_schema . ".users p where p.phone is not null and \"table\" in ('parent','teacher','user') ";
-        
-         
+
+
         //return DB::statement($sql_updated);
     }
 
