@@ -36,7 +36,7 @@
                 foreach ($invoices as $key => $invoice) {
                     ?>
                     <tr>
-                        <td><?= $invoice->invoiceNO ?></td>
+                        <td><?= $invoice->reference ?></td>
                         <td><?= $invoice->student_name ?></td>
                         <td><?= $invoice->school_name ?></td>
                         <td><?= date('d M Y', strtotime($invoice->created_at)) ?></td>
@@ -51,7 +51,7 @@
                             }
                             ?></td>
 
-                        <td><a href="<?= url('api/invoices/cancel') . '?invoice=' . $invoice->invoiceNO ?>" class="btn btn-danger">Cancel</a></td>
+                        <td><a href="<?= url('api/invoices/cancel') . '?invoice=' . $invoice->reference ?>" class="btn btn-danger">Cancel</a></td>
                     </tr>
                 <?php } ?>
             </tbody>

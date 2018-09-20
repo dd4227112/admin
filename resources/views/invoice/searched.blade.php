@@ -26,7 +26,7 @@
                                         ?>
                                         <tr>
                                             <td><?= $result->student_name ?></td>
-                                            <td><?= $result->invoiceNO ?></td>
+                                            <td><?= $result->reference ?></td>
                                             <td><?= number_format($result->amount) ?></td>
                                             <td><?php
                                                 $status = $result->status;

@@ -40,7 +40,7 @@
                 foreach ($payments as $key => $request) {
                     ?>
                     <tr>
-                        <td><?= $request->invoiceNO ?></td>
+                        <td><?= $request->reference ?></td>
                         <td><?= $request->paymentamount ?></td>
                         <td><?= $request->name ?></td>
                         <td><?= $request->account_number ?></td>

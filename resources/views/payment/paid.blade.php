@@ -35,7 +35,7 @@
                 foreach ($invoices as $key => $invoice) {
                     ?>
                     <tr>
-                        <td><?= $invoice->invoiceNO ?></td>
+                        <td><?= $invoice->reference ?></td>
                         <td><?= $invoice->student_name ?></td>
                         <td><?= $invoice->school_name ?></td>
                         <td><?= date('d M Y h:m', strtotime($invoice->paymentdate)) ?></td>

@@ -48,7 +48,7 @@ class InvoiceController extends Controller {
                     ->where('schema_name', request('p'))->get();
             return view('home.invoice_search', $this->data);
         }else if($id=='searched'){
-            $this->data['results']=DB::select("select * from api.invoices where lower(\"invoiceNO\") in (select lower(content->>'invoice') from admin.logs where content->>'invoice' is not null)");
+            $this->data['results']=DB::select("select * from api.invoices where lower(\"reference\") in (select lower(content->>'invoice') from admin.logs where content->>'invoice' is not null)");
              return view('invoice.searched', $this->data);
         }else {
         

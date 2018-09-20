@@ -131,7 +131,7 @@ class ProfileController extends Controller {
         DB::table($schema . '.'.$table)->where($table.'ID', $user_id)->update([$tag =>$value]);
         if($tag=='institution_code'){
             //update existing invoices
-            DB::statement('UPDATE '.$schema.'.invoices SET "invoiceNO"=\''.$value.'\'||"invoiceNO"');
+            DB::statement('UPDATE '.$schema.'.invoices SET "reference"=\''.$value.'\'||"reference"');
         }
         echo 'Records updated successfully ';
     }

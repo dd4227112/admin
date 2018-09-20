@@ -37,12 +37,12 @@ class HomeController extends Controller {
 
     public function searchInvoice($q) {
         $result = '';
-        $invoices = DB::select('select * from api.invoices where lower("invoiceNO") like \'%' . strtolower($q) . '%\' or lower(student_name) like \'%' . strtolower($q) . '%\' ');
+        $invoices = DB::select('select * from api.invoices where lower("reference") like \'%' . strtolower($q) . '%\' or lower(student_name) like \'%' . strtolower($q) . '%\' ');
         foreach ($invoices as $invoice) {
 
-            $result .= '<li><a href="' . url('invoice/' . $invoice->id . '/?p=' . $invoice->schema_name) . '&invoice='.$invoice->invoiceNO.'">                <div class="user-img"><span class="profile-status online pull-right"></span> </div>
+            $result .= '<li><a href="' . url('invoice/' . $invoice->id . '/?p=' . $invoice->schema_name) . '&invoice='.$invoice->reference.'">                <div class="user-img"><span class="profile-status online pull-right"></span> </div>
                                             <div class="mail-contnet">
-                                                <h5>' . $invoice->student_name . '</h5> <span class="mail-desc">Invoice: ' . $invoice->invoiceNO . '</span> <span class="time">School: ' . $invoice->schema_name . '</span> </div>
+                                                <h5>' . $invoice->student_name . '</h5> <span class="mail-desc">Invoice: ' . $invoice->reference . '</span> <span class="time">School: ' . $invoice->schema_name . '</span> </div>
                                         </a></li>';
         }
         return json_encode(array(
@@ -138,7 +138,7 @@ class HomeController extends Controller {
     public function invoiceSearch() {
         $this->data['data'] = 1;
         if (request('invoice')) {
-            $this->data['results'] = \App\Model\Api_invoice::where(DB::raw('lower("invoiceNO")'), 'like', strtolower(request('invoice')))->get();
+            $this->data['results'] = \App\Model\Api_invoice::where(DB::raw('lower("reference")'), 'like', strtolower(request('invoice')))->get();
         }
         return view('home.invoice_search', $this->data);
     }

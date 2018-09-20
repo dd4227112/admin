@@ -73,7 +73,7 @@ class PaymentController extends Controller {
                     if (($result->status == 1 && strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
 //update invoice no
                         DB::table($invoice->schema_name . '.invoices')
-                                ->where('invoiceNO', $invoice->invoiceNO)->update(['sync' => 1, 'return_message' => $curl]);
+                                ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl]);
                     } else {
                         DB::table('api.requests')->insert(['content' => $curl . ', request=' . json_encode($fields)]);
                     }
@@ -98,11 +98,11 @@ class PaymentController extends Controller {
     }
 
     public function cancelInvoice() {
-        $invoice = \collect(DB::select('select * from admin.api_invoices where "invoiceNO"=\'' . request('invoice') . '\' limit 1'))->first();
+        $invoice = \collect(DB::select('select * from admin.api_invoices where "reference"=\'' . request('invoice') . '\' limit 1'))->first();
         $token = $this->getToken($invoice);
         if (strlen($token) > 4) {
             $fields = array(
-                "reference" => $invoice->invoiceNO,
+                "reference" => $invoice->reference,
                 "token" => $token
             );
             if ($invoice->schema_name == 'beta_testing') {
@@ -119,7 +119,7 @@ class PaymentController extends Controller {
             if ($result->status == 1) {
 //update invoice no
                 DB::table($invoice->schema_name . '.invoices')
-                        ->where('invoiceNO', $invoice->invoiceNO)->update(['sync' => 0, 'return_message' => $curl]);
+                        ->where('reference', $invoice->reference)->update(['sync' => 0, 'return_message' => $curl]);
                 return redirect('api/invoices/0')->with('success', 'success');
             } else {
                 DB::table('api.requests')->insert(['content' => $curl . ', request=' . json_encode($fields)]);
@@ -174,7 +174,7 @@ class PaymentController extends Controller {
 ///concatenate with registration number of the school.
 
         $invoiceNo = $schema_setting->institution_code . rand(1, 999) . substr(str_shuffle('ABCDEFGHJKLMNPQRSTUVWXYZ'), 0, 3) . rand(1, 999);
-        $data = DB::table($this->testing_schema . 'invoices')->where('invoiceNO', $invoiceNo)->first();
+        $data = DB::table($this->testing_schema . 'invoices')->where('reference', $invoiceNo)->first();
         if (!empty($data)) {
             return $this->createInvoiceNo($schema_setting);
         } else {
