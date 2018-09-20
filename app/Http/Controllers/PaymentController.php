@@ -44,15 +44,15 @@ class PaymentController extends Controller {
     }
 
     public function syncInvoice() {
-        $invoices = DB::select('select * from admin.api_invoices where sync=0 and amount >0 order by random() limit 10');
+        $invoices = DB::select('select * from api.invoices where sync=0 and amount >0 order by random() limit 10');
         if (count($invoices) > 0) {
             foreach ($invoices as $invoice) {
                 $token = $this->getToken($invoice);
                 if (strlen($token) > 4) {
                     $fields = array(
-                        "reference" => $invoice->invoiceNO,
+                        "reference" => $invoice->reference,
                         "student_name" => $invoice->student_name,
-                        "student_id" => $invoice->studentID,
+                        "student_id" => $invoice->student_id,
                         "amount" => $invoice->amount,
                         "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
                         "code" => "10",
@@ -89,7 +89,7 @@ class PaymentController extends Controller {
             $limit = request('limit');
             $students = DB::select('select * from ' . $this->testing_schema . 'student order by random() limit ' . $limit);
             foreach ($students as $student) {
-                $this->createSingleStudentInvoice($student->studentID, $student->classesID, $student->academic_year_id, $schema_setting, $schema);
+                $this->createSingleStudentInvoice($student->student_id, $student->classesID, $student->academic_year_id, $schema_setting, $schema);
             }
             return redirect('api/invoices/0')->with('success', 'Success');
         }
@@ -182,12 +182,12 @@ class PaymentController extends Controller {
         }
     }
 
-    public function createSingleStudentInvoice($studentID, $classesID, $year_id, $schema_setting, $schema) {
+    public function createSingleStudentInvoice($student_id, $classesID, $year_id, $schema_setting, $schema) {
         $academic_year_id = $year_id;
         $timedate = date("Y-m-d");
 
         $fee_installment_ids = DB::table($this->testing_schema . 'fee_installment_classes')->where('class_id', $classesID)->get();
-        $student_invoice = DB::SELECT('SELECT * FROM ' . $this->testing_schema . 'invoices where "studentID"=' . $studentID . ' AND academic_year_id=' . $academic_year_id . ' and status <>\'3\' order by date desc');
+        $student_invoice = DB::SELECT('SELECT * FROM ' . $this->testing_schema . 'invoices where "student_id"=' . $student_id . ' AND academic_year_id=' . $academic_year_id . ' and status <>\'3\' order by date desc');
 
         //Start Transaction
         try {
@@ -196,11 +196,10 @@ class PaymentController extends Controller {
                 $invoice_no = $this->createInvoiceNo($schema_setting);
                 $array = array(
                     'classesID' => $classesID,
-                    'studentID' => $studentID,
+                    'student_id' => $student_id,
                     'invoice_title' => $schema_setting->sname,
                     'optional_name' => $schema,
-                    'invoiceNO' => $invoice_no,
-                    'academic_year_id' => $academic_year_id,
+                    'reference' => $invoice_no,
                     'date' => $timedate
                 );
 
@@ -213,7 +212,7 @@ class PaymentController extends Controller {
             $type = 'success';
             $is_subscribe = 0;
             foreach ($fee_installment_ids as $fee_installment_id) {
-                // $fee_subscription = $this->fee_m->get_fee_subscription_by_student($fee_installment_id->fee_id, $studentID, $academic_year_id);
+                // $fee_subscription = $this->fee_m->get_fee_subscription_by_student($fee_installment_id->fee_id, $student_id, $academic_year_id);
                 if (TRUE) {
                     $is_subscribe = $is_subscribe + 1;
                     $fee_installment_info = DB::table($this->testing_schema . 'fee_installment')->where('id', $fee_installment_id->id)->first();
@@ -221,11 +220,11 @@ class PaymentController extends Controller {
                     $check = DB::select('SELECT "c".*, "b"."fee_installment_id" FROM ' . $this->testing_schema . 'fee_installment a
 JOIN ' . $this->testing_schema . 'invoice_fee b ON "b"."fee_installment_id" = "a"."id"
 JOIN ' . $this->testing_schema . 'invoices c ON "c"."id" = "b"."invoices_id"
-WHERE "c"."studentID" =  ' . $studentID . '
+WHERE "c"."student_id" =  ' . $student_id . '
 AND "b"."fee_installment_id" =  ' . $fee_installment_id->id . '');
 
                     if (count($check) == 0) {
-                        $check_discount = DB::table($this->testing_schema . 'fee_discount')->where(array('studentID' => $studentID, 'fee_id' => $fee_installment_info->fee_id, 'academic_year_id' => $academic_year_id))->get();
+                        $check_discount = DB::table($this->testing_schema . 'fee_discount')->where(array('student_id' => $student_id, 'fee_id' => $fee_installment_info->fee_id, 'academic_year_id' => $academic_year_id))->get();
                         $amount = $fee_installment_info->amount;
                         if (count($check_discount) > 0) {
                             if ($check_discount[0]->fee_installment_id == NULL) {
@@ -239,7 +238,7 @@ AND "b"."fee_installment_id" =  ' . $fee_installment_id->id . '');
                             }
                         }
 
-                        $check_due = collect(\DB::SELECT('select amount,installment_id from ' . $this->testing_schema . ' due_amount   where  fee_id=' . $fee_installment_info->fee_id . ' AND student_id=' . $studentID . ''))->first();
+                        $check_due = collect(\DB::SELECT('select amount,installment_id from ' . $this->testing_schema . ' due_amount   where  fee_id=' . $fee_installment_info->fee_id . ' AND student_id=' . $student_id . ''))->first();
                         if (count($check_due) > 0 && ($check_due->installment_id == $fee_installment_info->installment_id)) {
                             $amount = $amount + $check_due->amount;
                         }
@@ -251,7 +250,7 @@ AND "b"."fee_installment_id" =  ' . $fee_installment_id->id . '');
                         );
 
                         DB::table($this->testing_schema . 'invoice_fee')->insert($invoice_fee_array);
-                        $data = array('academic_year_id' => $academic_year_id, 'student_id' => $studentID);
+                        $data = array('academic_year_id' => $academic_year_id, 'student_id' => $student_id);
                         $last_due_amount = DB::table($this->testing_schema . 'student_archive')->where($data)->first();
                         if (!empty($last_due_amount)) {
                             $due_amount = $last_due_amount->due_amount + $amount;
@@ -279,9 +278,9 @@ AND "b"."fee_installment_id" =  ' . $fee_installment_id->id . '');
         if ($school != null) {
             $this->data['setting'] = DB::table($school . '.setting')->first();
             if ($school == 'beta_testing') {
-                $this->data['payments'] = DB::table($school . '.payment')->join($school . '.invoices', $school . '.payment.invoiceID', $school . '.invoices.id')->join($school . '.student', $school . '.invoices.studentID', $school . '.student.studentID')->join($school . '.receipt', $school . '.receipt.paymentID', $school . '.payment.paymentID')->get();
+                $this->data['payments'] = DB::table($school . '.payment')->join($school . '.invoices', $school . '.payment.invoiceID', $school . '.invoices.id')->join($school . '.student', $school . '.invoices.student_id', $school . '.student.student_id')->join($school . '.receipt', $school . '.receipt.paymentID', $school . '.payment.paymentID')->get();
             } else {
-                $this->data['payments'] = DB::table('admin.all_payment')->join($school . '.invoices', 'admin.all_payment.invoiceID', $school . '.invoices.id')->join($school . '.student', $school . '.invoices.studentID', $school . '.student.studentID')->join($school . '.receipt', $school . '.receipt.paymentID', $school . '.payment.paymentID')->where('schema_name', $school)->get();
+                $this->data['payments'] = DB::table('admin.all_payment')->join($school . '.invoices', 'admin.all_payment.invoiceID', $school . '.invoices.id')->join($school . '.student', $school . '.invoices.student_id', $school . '.student.student_id')->join($school . '.receipt', $school . '.receipt.paymentID', $school . '.payment.paymentID')->where('schema_name', $school)->get();
             }
         } else {
             $this->data['setting'] = array();

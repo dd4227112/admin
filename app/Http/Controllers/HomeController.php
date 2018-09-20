@@ -110,7 +110,7 @@ class HomeController extends Controller {
                 $this->data['expense'] = \collect(DB::select("select sum(amount) from " . $schema . "expense where date::date='" . date('Y-m-d') . "'"))->first();
 
 
-                $sql = "select  c.name as parent_name, d.classes, a.dob,a.\"classesID\", a.section, a.\"studentID\", a.name as student_name,c.phone as parent_phone FROM " . $schema . "student a join " . $schema . "student_parents b on b.student_id=a.\"studentID\" JOIN " . $schema . "parent c on c.\"parentID\"=b.parent_id join " . $schema . "classes d on d.\"classesID\"=a.\"classesID\" WHERE 
+                $sql = "select  c.name as parent_name, d.classes, a.dob,a.\"classesID\", a.section, a.\"student_id\", a.name as student_name,c.phone as parent_phone FROM " . $schema . "student a join " . $schema . "student_parents b on b.student_id=a.\"student_id\" JOIN " . $schema . "parent c on c.\"parentID\"=b.parent_id join " . $schema . "classes d on d.\"classesID\"=a.\"classesID\" WHERE 
                     DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) 
                     AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE)";
                 $this->data['birthday'] = count(DB::select($sql));
