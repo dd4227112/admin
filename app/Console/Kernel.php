@@ -172,7 +172,7 @@ class Kernel extends ConsoleKernel {
                         "callback_url" => "http://158.69.112.216:8081/api/init",
                         "token" => $token
                     );
-                    $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
+                   // $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
                     $push_status = 'invoice_submission';
                     if ($invoice->schema_name == 'beta_testing') {
                         //testing invoice
