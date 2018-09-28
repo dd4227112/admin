@@ -76,7 +76,5 @@ if (createRoute() != NULL) {
 
     if (file_exists($file)) {
         Route::any('/{controller?}/{method?}/{param1?}/{param2?}/{param3?}/{param4?}/{param5?}/{param6?}/{param7?}', createRoute());
-    }else{
-        die('File does not exists '.$file);
     }
 }
