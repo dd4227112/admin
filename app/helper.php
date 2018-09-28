@@ -16,7 +16,7 @@ function userAccessRole() {
                 array_push($objet, $perm->permission->name);
             }
         }
-       
+
         return $objet;
     }
 }
@@ -27,6 +27,17 @@ function can_access($permission) {
         $global = userAccessRole();
         return in_array($permission, $global) ? 1 : 0;
     }
+}
+
+function createRoute() {
+    $url = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+    $url_param = explode('/', $url);
+
+    $controller = isset($url_param[2]) && !empty($url_param[2]) ? $url_param[2].'Controller' : 'userController';
+    $method = isset($url_param[3]) && !empty($url_param[3]) ? $url_param[3] : 'index';
+    $view = $method == 'view' ? 'show' : $method;
+
+    return in_array($controller, array('public', 'storage')) ? NULL : ucfirst($controller) . '@' . $view;
 }
 
 function timeAgo($datetime, $full = false) {

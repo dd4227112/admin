@@ -64,22 +64,7 @@ foreach ($users as $key => $value) {
     <div class="col-lg-4 col-md-12">
         <div class="white-box">
             <h3 class="box-title">Other Users</h3>
-            <ul class="country-state  p-t-20">
-                <?php
-                foreach ($users as $key => $value) {
-                    if (in_array($value->usertype, array('Parent', 'Student', 'Teacher')))
-                        continue;
-                    $percent = round($value->count * 100 / $total_users, 2);
-                    ?>
-                    <li>
-                        <h2><?= $value->count ?></h2> <small>{{$value->usertype}}</small>
-                        <div class="pull-right"><?= $percent ?>% <i class="fa fa-level-up text-success"></i></div>
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:48%;"> <span class="sr-only"><?= $percent ?>% By number</span></div>
-                        </div>
-                    </li>
-                <?php } ?>
-            </ul>
+         
         </div>
     </div>
     <div class="col-md-12 col-lg-8">
