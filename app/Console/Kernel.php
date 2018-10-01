@@ -138,7 +138,7 @@ class Kernel extends ConsoleKernel {
         }
     }
 
-     function getFeeNames($invoice_id, $schema_name) {
+    function getFeeNames($invoice_id, $schema_name) {
         $fees = DB::table($schema_name . '.invoices')
                 ->where('invoices.id', $invoice_id)
                 ->join($schema_name . '.invoices_fees_installments', 'invoices_fees_installments.invoice_id', 'invoices.id')
@@ -172,7 +172,7 @@ class Kernel extends ConsoleKernel {
                         "callback_url" => "http://158.69.112.216:8081/api/init",
                         "token" => $token
                     );
-                   // $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
+                    // $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
                     $push_status = 'invoice_submission';
                     if ($invoice->schema_name == 'beta_testing') {
                         //testing invoice
@@ -217,15 +217,19 @@ class Kernel extends ConsoleKernel {
             $setting = DB::table($invoice->schema_name . '.setting')->first();
             $url = 'https://api.mpayafrica.co.tz/v2/auth';
         }
-        $user = "$setting->api_username";
-        $pass = "$setting->api_password";
-        $request = $this->curlServer([
-            'username' => $user,
-            'password' => $pass
-                ], $url);
-        $obj = json_decode($request);
-        if (isset($obj) && is_object($obj) && isset($obj->status) && $obj->status == 1) {
-            return $obj->token;
+        if ($setting->payment_integrated == 1) {
+            $user = "$setting->api_username";
+            $pass = "$setting->api_password";
+            $request = $this->curlServer([
+                'username' => $user,
+                'password' => $pass
+                    ], $url);
+            $obj = json_decode($request);
+            if (isset($obj) && is_object($obj) && isset($obj->status) && $obj->status == 1) {
+                return $obj->token;
+            }
+        } else {
+            return false;
         }
     }
 
