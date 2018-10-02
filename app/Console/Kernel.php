@@ -162,6 +162,7 @@ class Kernel extends ConsoleKernel {
             foreach ($invoices as $invoice) {
                 $token = $this->getToken($invoice);
                 $fields=[];
+                $curl='';
                 if (strlen($token) > 4) {
                     $fields = array(
                         "reference" => trim($invoice->reference),
