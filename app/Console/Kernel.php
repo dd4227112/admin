@@ -161,8 +161,6 @@ class Kernel extends ConsoleKernel {
         if (count($invoices) > 0) {
             foreach ($invoices as $invoice) {
                 $token = $this->getToken($invoice);
-                $fields=[];
-                $curl='';
                 if (strlen($token) > 4) {
                     $fields = array(
                         "reference" => trim($invoice->reference),
@@ -193,8 +191,8 @@ class Kernel extends ConsoleKernel {
                         DB::table($invoice->schema_name . '.invoices')
                                 ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status]);
                     }
+                    DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
                 }
-                DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields),'token'=>$token]);
             }
         }
     }
@@ -227,10 +225,12 @@ class Kernel extends ConsoleKernel {
                 'password' => $pass
                     ], $url);
             $obj = json_decode($request);
+            DB::table('api.requests')->insert(['return' => $obj, 'content' => json_encode($request)]);
             if (isset($obj) && is_object($obj) && isset($obj->status) && $obj->status == 1) {
                 return $obj->token;
             }
         } else {
+
             return false;
         }
     }
