@@ -157,7 +157,7 @@ class Kernel extends ConsoleKernel {
     }
 
     public function syncInvoice() {
-        $invoices = DB::select('select * from api.invoices where sync=0 and amount >0 order by random() limit 15');
+        $invoices = DB::select('select * from api.invoices where sync=0 and amount >0 and payment_integrated=1 order by random() limit 15');
         if (count($invoices) > 0) {
             foreach ($invoices as $invoice) {
                 $token = $this->getToken($invoice);
@@ -217,21 +217,16 @@ class Kernel extends ConsoleKernel {
             $setting = DB::table($invoice->schema_name . '.setting')->first();
             $url = 'https://api.mpayafrica.co.tz/v2/auth';
         }
-        if ($setting->payment_integrated == 1) {
-            $user = trim($setting->api_username);
-            $pass = trim($setting->api_password);
-            $request = $this->curlServer([
-                'username' => $user,
-                'password' => $pass
-                    ], $url);
-            $obj = json_decode($request);
-            DB::table('api.requests')->insert(['return' => $obj, 'content' => json_encode($request)]);
-            if (isset($obj) && is_object($obj) && isset($obj->status) && $obj->status == 1) {
-                return $obj->token;
-            }
-        } else {
-
-            return false;
+        $user = trim($setting->api_username);
+        $pass = trim($setting->api_password);
+        $request = $this->curlServer([
+            'username' => $user,
+            'password' => $pass
+                ], $url);
+        $obj = json_decode($request);
+        DB::table('api.requests')->insert(['return' => $obj, 'content' => json_encode($request)]);
+        if (isset($obj) && is_object($obj) && isset($obj->status) && $obj->status == 1) {
+            return $obj->token;
         }
     }
 
