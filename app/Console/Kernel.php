@@ -163,7 +163,7 @@ class Kernel extends ConsoleKernel {
                 $token = $this->getToken($invoice);
                 if (strlen($token) > 4) {
                     $fields = array(
-                        "reference" => $invoice->reference,
+                        "reference" => trim($invoice->reference),
                         "student_name" => $invoice->student_name,
                         "student_id" => $invoice->student_id,
                         "amount" => $invoice->amount,
@@ -218,8 +218,8 @@ class Kernel extends ConsoleKernel {
             $url = 'https://api.mpayafrica.co.tz/v2/auth';
         }
         if ($setting->payment_integrated == 1) {
-            $user = "$setting->api_username";
-            $pass = "$setting->api_password";
+            $user =trim($setting->api_username);
+            $pass = trim($setting->api_password);
             $request = $this->curlServer([
                 'username' => $user,
                 'password' => $pass
