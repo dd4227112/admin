@@ -161,6 +161,7 @@ class Kernel extends ConsoleKernel {
         if (count($invoices) > 0) {
             foreach ($invoices as $invoice) {
                 $token = $this->getToken($invoice);
+                $fields=[];
                 if (strlen($token) > 4) {
                     $fields = array(
                         "reference" => trim($invoice->reference),
@@ -191,8 +192,8 @@ class Kernel extends ConsoleKernel {
                         DB::table($invoice->schema_name . '.invoices')
                                 ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status]);
                     }
-                    DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
                 }
+                DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields),'token'=>$token]);
             }
         }
     }
@@ -218,7 +219,7 @@ class Kernel extends ConsoleKernel {
             $url = 'https://api.mpayafrica.co.tz/v2/auth';
         }
         if ($setting->payment_integrated == 1) {
-            $user =trim($setting->api_username);
+            $user = trim($setting->api_username);
             $pass = trim($setting->api_password);
             $request = $this->curlServer([
                 'username' => $user,
