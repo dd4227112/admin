@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Http\Controllers\Message;
 use DB;
 
 class Kernel extends ConsoleKernel {
@@ -29,99 +30,40 @@ class Kernel extends ConsoleKernel {
     protected function schedule(Schedule $schedule) {
 // $schedule->command('inspire')
 //          ->hourly();
+
         $schedule->call(function () {
-//check if there is any sms then send
-//check if there is any email then send
-//$this->testCrone();
-            //get all connected phones first
-            $phones_connected = DB::select('select distinct api_key from public.all_sms');
-            if (count($phones_connected) > 0) {
-                foreach ($phones_connected as $phone) {
-                    $messages = DB::select('select * from public.all_sms where api_key=\'' . $phone->api_key . '\' order by priority desc, sms_id asc limit 8');
-                    if (!empty($messages)) {
-                        foreach ($messages as $sms) {
-                            $schema = strtoupper($sms->schema_name) == 'PUBLIC' ?
-                                    'SHULESOFT' : $sms->schema_name;
-                            $link = strtoupper($sms->schema_name) == 'PUBLIC' ? '' : $sms->schema_name . '.';
-                            $karibusms = new \karibusms();
-                            $karibusms->API_KEY = $sms->api_key;
-                            $karibusms->API_SECRET = $sms->api_secret;
-                            $karibusms->set_name(strtoupper($sms->schema_name));
-                            $karibusms->karibuSMSpro = $sms->type;
-                            $result = (object) json_decode($karibusms->send_sms($sms->phone_number, strtoupper($schema) . ': ' . $sms->body . '. https://' . $link . 'shulesoft.com'));
-                            if ($result->success == 1) {
-                                DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 1, 'return_code' => json_encode($result), 'updated_at' => 'now()']);
-                            } else {
-//stop retrying
-                                DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 1, 'return_code' => json_encode($result), 'updated_at' => 'now()']);
-                            }
-                        }
-                    }
-                }
-            }
+            (new Message())->sendSms();
         })->everyMinute();
 
         $schedule->call(function () {
-//loop through schema names and push emails
-            $this->emails = DB::select('select * from public.all_email limit 8');
-            if (!empty($this->emails)) {
-                foreach ($this->emails as $message) {
-                    if (filter_var($message->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $message->email)) {
-                        try {
-                            $data = ['content' => $message->body, 'link' => $message->schema_name, 'photo' => $message->photo, 'sitename' => $message->sitename, 'name' => ''];
-                            \Mail::send('email.default', $data, function ($m) use ($message) {
-                                $m->from('noreply@shulesoft.com', $message->sitename);
-                                $m->to($message->email)->subject($message->subject);
-                            });
-                            if (count(\Mail::failures()) > 0) {
-                                DB::update('update ' . $message->schema_name . '.email set status=0 WHERE email_id=' . $message->email_id);
-                            } else {
-                                if ($message->email == 'inetscompany@gmail.com') {
-                                    DB::table($message->schema_name . '.email')->where('email_id', $message->email_id)->delete();
-                                } else {
-                                    DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
-                                }
-                            }
-                        } catch (\Exception $e) {
-                            // error occur
-                            //DB::table('public.sms')->insert(['body'=>'email error'.$e->getMessage(),'status'=>0,'phone_number'=>'0655406004','type'=>0]);
-                            echo 'something is not write' . $e->getMessage();
-                        }
-                    } else {
-//skip all emails with ShuleSoft title
-//skip all invalid emails
-                        DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
-                    }
-//$this->updateEmailConfig();
-                    sleep(5);
-                }
-            }
+            (new Message())->sendEmail();
         })->everyMinute();
 
 
         $schedule->call(function () {
-// remind parents to login in shulesoft and check their child performance
+            // remind parents to login in shulesoft and check their child performance
             // $this->sendNotice();
             $this->sendBirthdayWish();
         })->dailyAt('04:40'); // Eq to 07:40 AM 
 
         $schedule->call(function() {
-//send login reminder to parents in all schema
+            //send login reminder to parents in all schema
             $this->sendLoginReminder();
         })->fridays()->at('9:00');
 
         $schedule->call(function() {
-//send login reminder to parents in all schema
+            //send login reminder to parents in all schema
             //$this->notifyUsersDailyReports();
         })->weekly()->weekdays()->at('13:00');
 
         $schedule->call(function () {
-// send Birdthday 
+            // send Birdthday 
             // $this->sendReportReminder();
-        })->dailyAt('07:00');
+            (new Message())->paymentReminder();
+        })->dailyAt('05:10');
 
         $schedule->call(function () {
-// sync invoices 
+            // sync invoices 
             $this->syncInvoice();
         })->everyMinute();
     }
@@ -396,10 +338,10 @@ select 'Hello '|| p.name|| ', matokeo yote ya '||c.name||'  hupatikana kwenye Sh
         $schemas = (new \App\Http\Controllers\DatabaseController())->loadSchema();
         foreach ($schemas as $schema) {
             if (!in_array($schema->table_schema, array('public', 'api', 'admin'))) {
-                // $this->parentsExamLoginReminder($schema);
-                $this->sendGeneralReminder($schema);
+                $this->parentsExamLoginReminder($schema);
+                //$this->sendGeneralReminder($schema);
                 //$this->sendTeachersLoginReminder($schema);
-                // $this->usersLoginReminder($schema);
+                // $this->usersLoginReminder($schema); 
             }
         }
     }
@@ -424,8 +366,8 @@ select 'Hello '|| p.name|| ', ili uweze kuingia katika program ya ShuleSoft, nen
     public function parentsExamLoginReminder($schema) {
 
         $sql_updated = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")
-select 'Hello '|| p.name|| ', ili kuona matokeo ya mtoto wako katika ShuleSoft. Fungua hii link  https://" . $schema->table_schema . ".shulesoft.com, kisha ingiza nenotumizi (username) ni '||p.username||' na nenosiri la kuanzia ni '||case when p.default_password is null then '123456' else p.default_password end||'. Kwa msaada wa kuingia, tupigie. Asante', p.phone, 0,0, p.\"parentID\",'parent' FROM " . $schema->table_schema . ".parent p, " . $schema->table_schema . ".setting s where p.\"parentID\" NOT IN (SELECT user_id from " . $schema->table_schema . ".log where user_id is not null and \"user\"='Parent') and p.status=1 and p.\"parentID\" IN (
-SELECT parent_id from " . $schema->table_schema . ".student_parents where student_id in (
+select 'Hello '|| p.name|| ', ili kuona matokeo ya  mtoto wako katika ShuleSoft. Fungua  https://" . $schema->table_schema . ".shulesoft.com, kisha ingiza username ambayo ni '||p.username||' na password ya kuanzia ni '||p.default_password||'. Kwa msaada zaidi tupigie. Asante', p.phone, 0,0, p.\"parentID\",'parent' FROM " . $schema->table_schema . ".parent p, " . $schema->table_schema . ".setting s where p.\"parentID\" NOT IN (SELECT user_id from " . $schema->table_schema . ".log where user_id is not null and \"user\"='Parent') and p.status=1 and p.\"parentID\" IN (
+SELECT a.parent_id from " . $schema->table_schema . ".student_parents a join " . $schema->table_schema . ".student b on b.student_id=a.student_id   where b.status=1 and a.student_id in (
 select \"student_id\" from " . $schema->table_schema . ".student_exams ) )";
         return DB::statement($sql_updated);
     }

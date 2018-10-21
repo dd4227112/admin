@@ -91,9 +91,9 @@ class Message extends Controller {
     public function psms($param) {
         
     }
-    
+
     public function createUpdate() {
-         if ($_POST) {
+        if ($_POST) {
             $this->validate(request(), [
                 'for' => 'required',
                 'message' => 'required',
@@ -103,7 +103,7 @@ class Message extends Controller {
             $message_success = 'Update recorded successfully';
             $schemas = (new \App\Http\Controllers\DatabaseController())->loadSchema();
             foreach ($schemas as $schema) {
-                if (!in_array($schema->table_schema, ['public','constant','admin','dodoso','app'])) {
+                if (!in_array($schema->table_schema, ['public', 'constant', 'admin', 'dodoso', 'app'])) {
                     $users = DB::table($schema->table_schema . '.users')->whereIn('usertype', request('for'))->get();
                     foreach ($users as $user) {
                         if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
@@ -156,7 +156,7 @@ class Message extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id) {
-      
+        
     }
 
     /**
@@ -174,7 +174,7 @@ class Message extends Controller {
 
     public function shulesoft() {
         $message_success = '';
-       
+
         $usertypes = DB::select('select distinct usertype from admin.all_users');
         return view('message.updates', compact('usertypes', 'message_success'));
     }
@@ -189,17 +189,134 @@ class Message extends Controller {
         $message_id = request('message_id');
         \App\Model\Feedback_reply::create(['feedback_id' => $message_id, 'message' => $message, 'user_id' => Auth::user()->id]);
         $feedback = \App\Model\Feedback::find($message_id);
-    
-        $user = DB::table('admin.all_users')->where('id', $feedback->user_id)->where('table', $feedback->table)->where('schema_name', str_replace('.', NULL,$feedback->schema))->first();
-        if(count($user)==1){
-        DB::table('public.sms')->insert(['body' => "Majibu ya ujumbe:".$feedback->message.". Jibu: ".$message, 'phone_number' => $user->phone, 'type' => 0]);
-        
-        $reply_message = '<div>'
-                . '<p><b>Majibu ya ujumbe:: </b> ' . $feedback->message . '</p><br/><br/>Jibu:' . $message . '</div>';
-        DB::table('public.email')->insert(['body' => $reply_message, 'user_id' => $feedback->user_id,'subject'=> 'ShuleSoft Feedback Reply', 'email' => $user->email]);
-        echo 'Message and Email sent';
-        }else{
+
+        $user = DB::table('admin.all_users')->where('id', $feedback->user_id)->where('table', $feedback->table)->where('schema_name', str_replace('.', NULL, $feedback->schema))->first();
+        if (count($user) == 1) {
+            DB::table('public.sms')->insert(['body' => "Majibu ya ujumbe:" . $feedback->message . ". Jibu: " . $message, 'phone_number' => $user->phone, 'type' => 0]);
+
+            $reply_message = '<div>'
+                    . '<p><b>Majibu ya ujumbe:: </b> ' . $feedback->message . '</p><br/><br/>Jibu:' . $message . '</div>';
+            DB::table('public.email')->insert(['body' => $reply_message, 'user_id' => $feedback->user_id, 'subject' => 'ShuleSoft Feedback Reply', 'email' => $user->email]);
+            echo 'Message and Email sent';
+        } else {
             echo 'user not found';
+        }
+    }
+
+    public function sendSms() {
+        //get all connected phones first
+        $phones_connected = DB::select('select distinct api_key from public.all_sms');
+        if (count($phones_connected) > 0) {
+            foreach ($phones_connected as $phone) {
+                $messages = DB::select('select * from public.all_sms where api_key=\'' . $phone->api_key . '\' order by priority desc, sms_id asc limit 8');
+                if (!empty($messages)) {
+                    foreach ($messages as $sms) {
+                        $schema = strtoupper($sms->schema_name) == 'PUBLIC' ?
+                                'SHULESOFT' : $sms->schema_name;
+                        $link = strtoupper($sms->schema_name) == 'PUBLIC' ? '' : $sms->schema_name . '.';
+                        $karibusms = new \karibusms();
+                        $karibusms->API_KEY = $sms->api_key;
+                        $karibusms->API_SECRET = $sms->api_secret;
+                        $karibusms->set_name(strtoupper($sms->schema_name));
+                        $karibusms->karibuSMSpro = $sms->type;
+                        $result = (object) json_decode($karibusms->send_sms($sms->phone_number, strtoupper($schema) . ': ' . $sms->body . '. https://' . $link . 'shulesoft.com'));
+                        if ($result->success == 1) {
+                            DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 1, 'return_code' => json_encode($result), 'updated_at' => 'now()']);
+                        } else {
+//stop retrying
+                            DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 1, 'return_code' => json_encode($result), 'updated_at' => 'now()']);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public function sendEmail() {
+        //loop through schema names and push emails
+        $this->emails = DB::select('select * from public.all_email limit 8');
+        if (!empty($this->emails)) {
+            foreach ($this->emails as $message) {
+                if (filter_var($message->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $message->email)) {
+                    try {
+                        $data = ['content' => $message->body, 'link' => $message->schema_name, 'photo' => $message->photo, 'sitename' => $message->sitename, 'name' => ''];
+                        \Mail::send('email.default', $data, function ($m) use ($message) {
+                            $m->from('noreply@shulesoft.com', $message->sitename);
+                            $m->to($message->email)->subject($message->subject);
+                        });
+                        if (count(\Mail::failures()) > 0) {
+                            DB::update('update ' . $message->schema_name . '.email set status=0 WHERE email_id=' . $message->email_id);
+                        } else {
+                            if ($message->email == 'inetscompany@gmail.com') {
+                                DB::table($message->schema_name . '.email')->where('email_id', $message->email_id)->delete();
+                            } else {
+                                DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        // error occur
+                        //DB::table('public.sms')->insert(['body'=>'email error'.$e->getMessage(),'status'=>0,'phone_number'=>'0655406004','type'=>0]);
+                        echo 'something is not write' . $e->getMessage();
+                    }
+                } else {
+//skip all emails with ShuleSoft title
+//skip all invalid emails
+                    DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
+                }
+//$this->updateEmailConfig();
+                sleep(5);
+            }
+        }
+    }
+
+    public function paymentReminder() {
+        $default_deadlines = DB::table('accounts.student')->get(['name', 'student_id', 'username', 'email', 'phone']);
+
+        foreach ($default_deadlines as $school) {
+            $payment = DB::table('accounts.payments')->where('student_id', $school->student_id)->orderBy('id', 'desc')->first();
+            if (count($payment) == 0) {
+                continue;
+            }
+            $now = date('Y-m-d'); // or your date as well
+            $your_date = date('Y-m-d', strtotime($payment->next_payment_date));
+            $date1 = new \DateTime($now);
+            $date2 = new \DateTime($your_date);
+            $days = $date2->diff($date1)->format("%a");
+            print_r($days);
+            echo '<br/>';
+            if (in_array($days, [30, 15, 7, 3, 1,18])) {
+                $message = 'Dear ' . $school->name . '<br/>,
+
+This is a reminder that your ShuleSoft Account is going to expire on  ' . date('d M Y', strtotime($payment->next_payment_date)) . '.<br/>
+Kindly consider to make payments before due time. 
+
+<h2>Payment Instructions</h2>
+<ul>
+<li>Login into your ShuleSoft Account</li>
+<li>Go to setting tab</li>
+<li>Then click upgrade ShuleSoft service</li>
+<li>Create your reference/invoice number</li>
+<li>Choose your payment method, either bank, wakala, sim banking or mobile payments</li>
+</ul>
+If you need any assistance, please contact us by replying to this email.
+
+Thank you.';
+
+                if (filter_var($school->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $school->email)) {
+                    DB::statement("insert into " . $school->username . ".email (email,subject,body) values ('" . $school->email . "', 'Payment Reminder','" . $message . "')");
+                }
+                DB::statement("insert into " . $school->username . ".sms (phone_number,body,type) values ('" . $school->phone . "','" . strip_tags($message) . "',0)");
+            } else if ($days <= 0 && in_array($days, [0, -2, -5, -10])) {
+                $message = 'Hi ' . $school->name . '<br/>,
+
+This is the reminder that your ShuleSoft account has been expired since ' . date('d M Y', strtotime($payment->next_payment_date)) . ' . This means your management staff and parents are now not able to login, view any report, prepare any report. If you have any challange on how to make your payment kindly call us and let us know your concern. <br/>
+
+Kind regards,';
+                if (filter_var($school->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $school->email)) {
+                    DB::statement("insert into " . $school->username . ".email (email,subject,body) values ('" . $school->email . "', 'Payment Reminder','" . $message . "')");
+                }
+                DB::statement("insert into " . $school->username . ".sms (phone_number,body,type) values ('" . $school->phone . "','" . strip_tags($message) . "',0)");
+            }
         }
     }
 
