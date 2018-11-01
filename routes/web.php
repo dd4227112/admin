@@ -22,7 +22,7 @@ Route::get('/report', 'HomeController@dailyReport');
 Route::any('/database/{pg?}/{path?}', 'DatabaseController@index');
 Route::group(['middleware' => ['auth']], function() {
     Route::get('/management', 'UsersController@management');
-     Route::get('/management/contact', 'UsersController@contact');
+    Route::get('/management/contact', 'UsersController@contact');
     Route::post('/searchInvoice', 'HomeController@invoiceSearch');
 
     Route::resource('users', 'UsersController');
@@ -32,7 +32,9 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('database', 'DatabaseController');
     Route::resource('home', 'HomeController');
     Route::resource('web', 'WebController');
-
+    Route::resource('exam', 'ExamController');
+    
+    
     Route::get('/', 'HomeController@index');
     Route::any('/database/upgrade', 'DatabaseController@upgrade');
     Route::any('/database/{pg?}/{path?}', 'DatabaseController@index');

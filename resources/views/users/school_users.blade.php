@@ -58,14 +58,14 @@
                                             $total = 0;
                                             $total_price = 0;
                                             $paid_schools = [];
-                                            $no_students=[];
+                                            $no_students = [];
                                             foreach ($users as $key => $value) {
                                                 $setting = \DB::table($value->schema_name . '.setting')->first();
 
                                                 if ($setting->payment_status == 1) {
                                                     array_push($paid_schools, ['school' => $setting, 'data' => $value]);
                                                 }
-                                                if((int)$value->student <10){
+                                                if ((int) $value->student < 10) {
                                                     array_push($no_students, ['school' => $setting, 'data' => $value]);
                                                 }
                                                 $price = $setting->price_per_student;
@@ -162,19 +162,20 @@
                                             <td><?= number_format($price_per_school) ?></td>
                                             <td> <?= (int) $setting->payment_integrated == 1 ? 'Yes' : 'No' ?> </td>
                                         </tr>
-                                        <?php $p++;
+                                        <?php
+                                        $p++;
                                     }
                                     ?>
                                 </tbody>
                             </table>
                         </div>
-                                </section>
-                                <section id="section-bar-3">
-                                    <h2>No Records</h2>
-                       
-                                </section>
-                                <section id="section-bar-4">
-                                    <h2>No Complete Data Records</h2>         
+                    </section>
+                    <section id="section-bar-3">
+                        <h2>No Records</h2>
+
+                    </section>
+                    <section id="section-bar-4">
+                        <h2>No Complete Data Records</h2>         
                         <div class="table-responsive"> 
                             <table id="example23" class="table display nowrap table color-table success-table table-bordered">
                                 <thead>
@@ -203,19 +204,20 @@
                                             <td><?= number_format($price_per_school) ?></td>
                                             <td> <?= (int) $setting->payment_integrated == 1 ? 'Yes' : 'No' ?> </td>
                                         </tr>
-                                        <?php $x++;
+                                        <?php
+                                        $x++;
                                     }
                                     ?>
                                 </tbody>
                             </table>
                         </div>
-                                </section>
-                                <section id="section-bar-5">
-                                    <h2>Tabbing 5</h2></section>
-                        </div>
-                        <!-- /content -->
+                    </section>
+                    <section id="section-bar-5">
+                        <h2>Tabbing 5</h2></section>
                 </div>
-                <!-- /tabs -->
+                <!-- /content -->
+            </div>
+            <!-- /tabs -->
         </section>
 
     </div>

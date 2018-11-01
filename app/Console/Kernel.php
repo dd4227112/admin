@@ -152,15 +152,21 @@ class Kernel extends ConsoleKernel {
     public function getToken($invoice) {
         if ($invoice->schema_name == 'beta_testing') {
             //testing invoice
-            $setting = DB::table('beta_testing.setting')->first();
+            //  $setting = DB::table('beta_testing.setting')->first();
             $url = 'https://wip.mpayafrica.com/v2/auth';
         } else {
             //live invoice
-            $setting = DB::table($invoice->schema_name . '.setting')->first();
+            // $setting = DB::table($invoice->schema_name . '.setting')->first();
             $url = 'https://api.mpayafrica.co.tz/v2/auth';
         }
-        $user = trim($setting->api_username);
-        $pass = trim($setting->api_password);
+        $credentials = DB::table($invoice->schema_name . 'bank_accounts_integrations')->where('invoice_prefix', $invoice->prefix)->first();
+        if (count($credentials) == 1) {
+            $user = trim($credentials->api_username);
+            $pass = trim($credentials->api_password);
+        } else {
+            $user = '';
+            $pass = '';
+        }
         $request = $this->curlServer([
             'username' => $user,
             'password' => $pass
