@@ -159,7 +159,7 @@ class Kernel extends ConsoleKernel {
             // $setting = DB::table($invoice->schema_name . '.setting')->first();
             $url = 'https://api.mpayafrica.co.tz/v2/auth';
         }
-        $credentials = DB::table($invoice->schema_name . 'bank_accounts_integrations')->where('invoice_prefix', $invoice->prefix)->first();
+        $credentials = DB::table($invoice->schema_name . '.bank_accounts_integrations')->where('invoice_prefix', $invoice->prefix)->first();
         if (count($credentials) == 1) {
             $user = trim($credentials->api_username);
             $pass = trim($credentials->api_password);
