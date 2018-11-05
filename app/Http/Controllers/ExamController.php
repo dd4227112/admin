@@ -67,16 +67,49 @@ class ExamController extends Controller {
         }
     }
 
+    private function createLocalExam($global_exam) {
+        //check refere exam if we have an exam with this name first
+        //then create a map record on all schema
+        $association = \App\Model\Association::find(request('association_id'));
+
+        $school_associations = \App\Model\SchoolAssociation::where('association_id', $association->id)->get();
+        foreach ($school_associations as $school) {
+
+            $check_refer_exam = DB::table($school->schema_name . '.refer_exam')->where(DB::raw('lower(name)'), strtolower($association->name))->first();
+            if (count($check_refer_exam) == 0) {
+                $school_level=request('class_level_id');
+                $classlevel=DB::table($school->schema_name . '.classlevel')->where('school_level_id',$school_level)->first();
+                dd($classlevel);
+                $refer_exam_id = DB::table($school->schema_name . '.refer_exam')->insertGetId(['name' => strtoupper($association->name),'classlevel_id'=>$classlevel->id,'note' => strtoupper($association->name)]);
+            } else {
+                $refer_exam_id = $check_refer_exam->id;
+            }
+            $special_grade = DB::table($school->schema_name . '.special_grade_names')->where('association_id', $association->id)->first();
+            if (count($special_grade) == 1) {
+                $grade_id = $special_grade->id;
+            } else {
+                $grade_id = DB::table($school->schema_name . '.special_grade_names')->insertGetId(['name' => $association->name, 'association_id', $association->id,'note'=> strtoupper($association->name)]);
+            }
+            DB::table($school->schema_name . '.exam')->insert([
+                'exam' => $association->name,
+                'date' => date('Y-m-d', strtotime(request('date'))),
+                'refer_exam_id' => $refer_exam_id,
+                'global_exam_id' => $global_exam->id,
+                'special_grade_name_id' => $grade_id
+            ]);
+        }
+    }
+
     public function globalExam($a, $b = null, $action = null, $state = null) {
         if (strtolower($action) == 'add') {
             $this->data['levels'] = \App\Model\SchoolLevel::all();
             $this->data['associations'] = \App\Model\Association::all();
-            $this->data['classes']=DB::table('constant.refer_classes')->get();
+            $this->data['classes'] = DB::table('constant.refer_classes')->get();
             if ($_POST) {
-                $association=\App\Model\Association::find(request());
-                $grade = \App\Model\GlobalExam::create(['name'=>$association->name]);
-                $this->createLocalGrade($grade);
-                return redirect('exam/grade?id=' . request('classlevel_id'))->with('success', 'Grade created successfully');
+                $association = \App\Model\Association::find(request('association_id'));
+                $global_exam = \App\Model\GlobalExam::create(['name' => $association->name, 'association_id' => request('association_id'), 'classlevel_id' => request('class_level_id'), 'date' => date('Y-m-d', strtotime(request('date')))]);
+                $this->createLocalExam($global_exam);
+                return redirect('exam/definition')->with('success', 'Grade created successfully');
             }
             return view('exam.global.add', $this->data);
         } else if (strtolower($action) == 'edit') {
@@ -89,21 +122,26 @@ class ExamController extends Controller {
             }
             return view('exam.global.edit', $this->data);
         } else if (strtolower($action) == 'delete') {
-            \App\Model\GlobalGrade::find($state)->delete();
+            \App\Model\GlobalExam::find($state)->delete();
             return redirect()->back()->with('success', 'Grade deleted successfully');
+        } else if (strtolower($action) == 'show') {
+            $this->data['schools'] =\App\Model\SchoolAssociation::all();
+            $this->data['associations'] = \App\Model\Association::all();
+            return view('exam.global.show', $this->data);
         }
     }
 
     public function createLocalGrade($grades) {
         //check if there is any special grade name with such name in all defined schema
-        $school_associations = \App\Model\SchoolAssociation::where('association_id', $association_id)->get();
+        $association = \App\Model\Association::find(request('association_id'));
+        $school_associations = \App\Model\SchoolAssociation::where('association_id', $association->id)->get();
         foreach ($school_associations as $school) {
-            $special_grade_name = DB::table($school->schema_name . '.special_grade_names')->where('association_id', $association_id)->first();
+            $special_grade_name = DB::table($school->schema_name . '.special_grade_names')->where('association_id', $association->id)->first();
             if (count($special_grade_name) == 0) {
-                $special_grade_name_id = DB::table($school->schema_name . '.special_grade_names')->insertGetId(['name' => $association->name, 'note' => 'Grades for ' . $association->name, 'association_id' => $association_id]);
+                $special_grade_name_id = DB::table($school->schema_name . '.special_grade_names')->insertGetId(['name' => $association->name, 'note' => 'Grades for ' . $association->name, 'association_id' => $association->id]);
 
                 foreach ($grades as $grade) {
-                    $special_grade = DB::table()->where('association_id', $association_id)->where('grade', $grade->grade)->first();
+                    $special_grade = DB::table()->where('association_id', $association->id)->where('grade', $grade->grade)->first();
                     if (count($special_grade) == 0) {
                         DB::table()->insert([
                             'grade' => $grade->grade, 'point' => $grade->point,

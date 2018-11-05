@@ -45,9 +45,9 @@
                                 <td><?= $exam->class_level_id ?></td>
                                 <td><?= $exam->created_at ?></td>
                                 <td>
-                                    <a class="btn btn-success btn-sm" href="#">Show</a>
-                                <a class="btn btn-info btn-sm" href="#">Edit</a>
-                                <a class="btn btn-danger btn-sm" href="#">Delete</a></td>
+                                    <a class="btn btn-success btn-sm" href="<?php echo url('exam/globalExam/show/'.$exam->id) ?>">Show</a>
+                                <a class="btn btn-info btn-sm" href="<?php echo url('exam/globalExam/edit/'.$exam->id) ?>">Edit</a>
+                                <a class="btn btn-danger btn-sm" href="<?php echo url('exam/globalExam/delete/'.$exam->id) ?>">Delete</a></td>
                             </tr>
                             <?php
                             $i++;
