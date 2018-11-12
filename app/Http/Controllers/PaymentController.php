@@ -186,7 +186,7 @@ class PaymentController extends Controller {
         $academic_year_id = $year_id;
         $timedate = date("Y-m-d");
 
-        $fee_installment_ids = DB::table($this->testing_schema . 'fee_installment_classes')->where('class_id', $classesID)->get();
+        $fee_installment_ids = DB::table($this->testing_schema . 'fees_installments_classes')->where('class_id', $classesID)->get();
         $student_invoice = DB::SELECT('SELECT * FROM ' . $this->testing_schema . 'invoices where "student_id"=' . $student_id . ' AND academic_year_id=' . $academic_year_id . ' and status <>\'3\' order by date desc');
 
         //Start Transaction
