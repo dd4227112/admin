@@ -35,7 +35,7 @@
                 <?php
                 foreach ($invoices as $key => $invoice) {
                     ?>
-                {{dd($invoice)}}
+
                     <tr>
                         <td><?= $invoice->reference ?></td>
                         <td><?= $invoice->student_name ?></td>
@@ -43,9 +43,9 @@
                         <td><?= date('d M Y', strtotime($invoice->created_at)) ?></td>
                         <td><?= $invoice->amount ?></td>
                         <td><?php
-                            if ($invoice->status == 2) {
+                            if ($invoice->push_status == 2) {
                                 echo '<b class="label label-info">Partially Paid</b>';
-                            } else if ($invoice->status == 3) {
+                            } else if ($invoice->push_status == 3) {
                                 echo '<b class="label label-success">Fully Paid</b>';
                             } else {
                                 echo '<b class="label label-warning">Not paid</b>';
