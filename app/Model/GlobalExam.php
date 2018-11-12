@@ -8,9 +8,9 @@ class GlobalExam extends Model
 {
     protected $table = 'constant.global_exams';
     
-      protected $fillable = ['id', 'name', 'association_id','date', 'class_level_id'];
+      protected $fillable = ['id', 'name', 'global_exam_definition_id','date', 'school_level_id'];
 
-    public function association() {
-        return $this->belongsTo('\App\Model\Association');
+    public function globalExamDefinition() {
+        return $this->belongsTo('\App\Model\GlobalExamDefinition');
     }
 }

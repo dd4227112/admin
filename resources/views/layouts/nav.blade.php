@@ -192,8 +192,9 @@
                     </ul>
                 </li>
                 <li class="devider"></li>
-                <?php 
-                if (can_access('manage_schools_records')) { ?>
+              
+                 <?php 
+                if (can_access('manage_exams')) { ?>
                  <li>
                         <a href="#" class="waves-effect">
                             <i class="mdi mdi-apps fa-fw"></i> 
@@ -206,9 +207,15 @@
                                     <span class="hide-menu">definition</span>
                                 </a>
                             </li>
+                             <li>
+                                <a href="<?= url('exam/schedule') ?>">
+                                    <i class="ti-list fa-fw"></i>
+                                    <span class="hide-menu">Schedule</span>
+                                </a>
+                            </li>
                             <li>
                                 <a href="<?= url('exam/grade') ?>">
-                                    <i class="ti-comments-smiley fa-fw"></i>
+                                    <i class="ti-layers fa-fw"></i>
                                     <span class="hide-menu">Grades</span>
                                 </a>
                             </li>
@@ -221,7 +228,7 @@
 
                             <li><a href="#" class="waves-effect"><i class="ti-desktop fa-fw"></i><span class="hide-menu">Reports</span><span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level collapse">
-                                    <li> <a href="<?= url('exam/report/single') ?>"><i class="ti-email fa-fw"></i><span class="hide-menu">Single Exam</span></a></li>
+                                    <li> <a href="<?= url('exam/report/single') ?>"><i class="ti-book fa-fw"></i><span class="hide-menu">Single Exam</span></a></li>
                                     <!--<li> <a href="<?= url('exam/report/accumulative') ?>"><i class="ti-layout-media-left-alt fa-fw"></i><span class="hide-menu">Accumulative Exams</span></a></li>-->
                                     <!--<li> <a href="<?= url('exam/insight') ?>"><i class="ti-layout-media-left-alt fa-fw"></i><span class="hide-menu">Insight</span></a></li>-->
                                     <li>
@@ -229,6 +236,10 @@
                             </li>
                         </ul>
                     </li>
+                    
+                <?php } ?>
+                      <?php 
+                if (can_access('manage_schools_records')) { ?>
                     <li>
                         <a href="inbox.html" class="waves-effect">
                             <i class="mdi mdi-apps fa-fw"></i> 

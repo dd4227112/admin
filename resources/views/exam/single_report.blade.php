@@ -68,9 +68,9 @@
                         <div class="col-sm-6">
                             <?php
                             $type_array = array("0" => 'Select Type');
-                            $type_array['school'] = 'School Average Report';
+                            $type_array['school'] = 'School Ranking Report';
                             $type_array['student'] = 'Student Average Report';
-                            $type_array['subject'] = 'Student Subjects Report';
+                            $type_array['subject'] = 'Student Overall Report';
                             echo form_dropdown("type_id", $type_array, old("type_id"), "id='type_id' class='form-control'");
                             ?>
                         </div> <span id="sem_id"></span>
@@ -124,7 +124,7 @@
                             <th>Subject</th>
                             <th>Average</th>
                             <th>Grade</th>
-                            <th>Rank</th>
+                            <th>Position</th>
                             <?= request('type_id') == 'school' ? '<th>Action</th>' : '<th>School</th>' ?>
                         </tr>
                     </thead>

@@ -8,6 +8,52 @@
                     <div class="col-sm-8">
                         <form class="form-horizontal" role="form" method="post">
                             
+                            <?php
+                            if (form_error($errors, 'global_exam_definition_id'))
+                                echo "<div class='form-group has-error' >";
+                            else
+                                echo "<div class='form-group' >";
+                            ?>
+                            <label for="global_exam_definition_id" class="col-sm-2 control-label">
+                                Exam Name<span class="red">*</span>
+                            </label>
+                            <div class="col-sm-6 col-xs-12">
+                                <?php
+                                $array_ass = array();
+                                foreach ($exams as $exam) {
+                                    $array_ass[$exam->id] = $exam->name;
+                                }
+                                echo form_dropdown("global_exam_definition_id", $array_ass, old("global_exam_definition_id"), "id='global_exam_definition_id' class='form-control'");
+                                ?>
+                            </div>
+                            <span class="col-sm-4 control-label">
+                                <?php echo form_error($errors, 'global_exam_definition_id'); ?>
+                            </span>
+                    </div>
+
+                    <?php
+                    if (form_error($errors, 'class_id'))
+                        echo "<div class='form-group has-error' >";
+                    else
+                        echo "<div class='form-group' >";
+                    ?>
+                    <label for="class_id" class="col-sm-2 control-label">
+                        <?= __('Classes') ?><span class="red">*</span>
+                    </label>
+                    <div class="col-sm-6 col-xs-12">
+                        <?php
+                        $array = array("0" => __("select level"));
+                        if (isset($classes)) {
+                            foreach ($classes as $class) {
+                                $array[$class->id] = $class->name;
+                            }
+                        }
+                        echo form_dropdown("class_id", $array, old("class_id"), "id='class_id' class='form-control'");
+                        ?>
+                    </div>
+                </div>
+
+
                 <?php
                 if (form_error($errors, 'date'))
                     echo "<div class='form-group has-error' >";
@@ -15,63 +61,38 @@
                     echo "<div class='form-group' >";
                 ?>
                 <label for="date" class="col-sm-2 control-label">
-                    <?= __("Exam Name") ?><span class="red">*</span>
+                    <?= __("Exam Date") ?><span class="red">*</span>
                 </label>
                 <div class="col-sm-6 col-xs-12">
-                    <input type="text" id="exam" name="exam" class="form-control calendar" placeholder=""/>
+                    <input type="text" id="datepicker" name="date" class="form-control calendar" placeholder="dd/mm/yyyy"/>
 
                 </div>
                 <span class="col-sm-4 control-label">
                     <?php echo form_error($errors, 'date'); ?>
                 </span>
         </div>
-                            <?php
-                            if (form_error($errors, 'association_id'))
-                                echo "<div class='form-group has-error' >";
-                            else
-                                echo "<div class='form-group' >";
-                            ?>
-                            <label for="association_id" class="col-sm-2 control-label">
-                                Association<span class="red">*</span>
-                            </label>
-                            <div class="col-sm-6 col-xs-12">
-                                <?php
-                                $array_ass = array();
-                                foreach ($associations as $association) {
-                                    $array_ass[$association->id] = $association->name;
-                                }
-                                echo form_dropdown("association_id", $array_ass, old("association_id"), "id='association_id' class='form-control'");
-                                ?>
-                            </div>
-                            <span class="col-sm-4 control-label">
-                                <?php echo form_error($errors, 'association_id'); ?>
-                            </span>
-                    </div>
-
-                    <?php
-                    if (form_error($errors, 'class_level'))
-                        echo "<div class='form-group has-error' >";
-                    else
-                        echo "<div class='form-group' >";
-                    ?>
-                    <label for="class_level_id" class="col-sm-2 control-label">
-                        <?= __('School Level') ?><span class="red">*</span>
-                    </label>
-                    <div class="col-sm-6 col-xs-12">
-                        <?php
-                        $array = array("0" => __("select level"));
-                        if (isset($levels)) {
-                            foreach ($levels as $level) {
-                                $array[$level->id] = $level->name;
-                            }
-                        }
-                        echo form_dropdown("class_level_id", $array, old("class_level_id"), "id='class_level_id' class='form-control'");
-                        ?>
-                    </div>
-                </div>
 
 
 
+<?php
+if (form_error($errors, 'show_division'))
+    echo "<div class='form-group has-error' id='show_division' style='display:none' >";
+else
+    echo "<div class='form-group' id='show_division' style='display:none'>";
+?>
+<label for="show_division" class="col-sm-2 control-label">
+    <?= __("show_division") ?> 
+</label>
+<div class="col-sm-6 col-xs-12">
+    <?= __("YES") ?>
+    <input type="radio" id="is_counted" name="show_division" value="1">
+    &nbsp;&nbsp; <?= __("NO") ?> 
+    <input type="radio" id="is_counted" name="show_division" value="0">
+</div>
+<span class="col-sm-4 control-label">
+    <?php echo form_error($errors, 'show_division'); ?>
+</span>
+</div>
 
 <?php
 if (form_error($errors, 'note'))

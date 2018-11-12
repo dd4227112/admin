@@ -169,7 +169,7 @@
                                                     }
                                                     $subject_sum["$subject_name"] += $student->{$subject_name};
 
-                                                    echo '<td contenteditable="true" class="mark" subject_id="" student_id="' . $student->student_id . '" data-title="' . $subject_name . '" style="background: ' . $color . ';">';
+                                                    echo '<td  class="mark" subject_id="" student_id="' . $student->student_id . '" data-title="' . $subject_name . '" style="background: ' . $color . ';">';
                                                     echo $student->{$subject_name};
                                                     echo '</td>';
                                                     if (isset($show_grade) && $show_grade == 1) {
@@ -199,7 +199,7 @@
                                                     }
                                                 } else {
                                                     //here you will check if this student subscribe to this subject or not . if yes, place a yellow box, if not disable the input if result format is based on the subject counted otherwise, place yellow and content editable in all cases
-                                                    echo '<td contenteditable="true" data-title="' . $subject_name . '" class="mark" subject_id="" student_id="' . $student->student_id . '"></td>';
+                                                    echo '<td  data-title="' . $subject_name . '" class="mark" subject_id="" student_id="' . $student->student_id . '"></td>';
                                                     echo isset($show_grade) && $show_grade == 1 ? '<td></td>' : '';
                                                 }
                                             }

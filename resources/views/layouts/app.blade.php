@@ -315,6 +315,11 @@ var root_url = "<?= url('/'); ?>";
 
                         </div>
                         <!-- /.col-lg-12 -->
+                         @if (session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
                     </div>
                     @yield('content')
                 </div>
