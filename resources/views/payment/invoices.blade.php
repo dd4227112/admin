@@ -35,6 +35,7 @@
                 <?php
                 foreach ($invoices as $key => $invoice) {
                     ?>
+                {{dd($invoice)}}
                     <tr>
                         <td><?= $invoice->reference ?></td>
                         <td><?= $invoice->student_name ?></td>
