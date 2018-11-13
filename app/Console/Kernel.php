@@ -154,7 +154,7 @@ class Kernel extends ConsoleKernel {
             //testing invoice
             //  $setting = DB::table('beta_testing.setting')->first();
             $url = 'https://wip.mpayafrica.com/v2/auth';
-            $credentials = DB::table($invoice->schema_name . '.bank_accounts_integrations')->where('invoice_prefix', $invoice->prefix)->first();
+            $credentials = DB::table('admin.all_bank_accounts_integrations')->where('invoice_prefix', $invoice->prefix)->first();
             if (count($credentials) == 1) {
                 $user = trim($credentials->sandbox_api_username);
                 $pass = trim($credentials->sandbox_api_password);
