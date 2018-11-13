@@ -215,9 +215,9 @@ class PaymentController extends Controller {
                 // $fee_subscription = $this->fee_m->get_fee_subscription_by_student($fee_installment_id->fee_id, $student_id, $academic_year_id);
                 if (TRUE) {
                     $is_subscribe = $is_subscribe + 1;
-                    $fee_installment_info = DB::table($this->testing_schema . 'fee_installment')->where('id', $fee_installment_id->id)->first();
+                    $fee_installment_info = DB::table($this->testing_schema . 'fee_installments')->where('id', $fee_installment_id->id)->first();
 //check if a student is subscribed to that fee;
-                    $check = DB::select('SELECT "c".*, "b"."fee_installment_id" FROM ' . $this->testing_schema . 'fee_installment a
+                    $check = DB::select('SELECT "c".*, "b"."fee_installment_id" FROM ' . $this->testing_schema . 'fee_installments a
 JOIN ' . $this->testing_schema . 'invoice_fee b ON "b"."fee_installment_id" = "a"."id"
 JOIN ' . $this->testing_schema . 'invoices c ON "c"."id" = "b"."invoices_id"
 WHERE "c"."student_id" =  ' . $student_id . '
