@@ -16,7 +16,7 @@ class HomeController extends Controller {
      * @return void
      */
     public function __construct() {
-       // $this->middleware('auth');
+        // $this->middleware('auth');
     }
 
     /**
@@ -27,7 +27,7 @@ class HomeController extends Controller {
     public function index() {
 
         $this->data['users'] = DB::select('select count(*), usertype from all_users group by usertype');
-        $this->data['log_graph'] = $this->createBarGraph();
+        // $this->data['log_graph'] = $this->createBarGraph();
         return view('home.index', $this->data);
     }
 
@@ -40,7 +40,7 @@ class HomeController extends Controller {
         $invoices = DB::select('select * from api.invoices where lower("reference") like \'%' . strtolower($q) . '%\' or lower(student_name) like \'%' . strtolower($q) . '%\' ');
         foreach ($invoices as $invoice) {
 
-            $result .= '<li><a href="' . url('invoice/' . $invoice->id . '/?p=' . $invoice->schema_name) . '&invoice='.$invoice->reference.'">                <div class="user-img"><span class="profile-status online pull-right"></span> </div>
+            $result .= '<li><a href="' . url('invoice/' . $invoice->id . '/?p=' . $invoice->schema_name) . '&invoice=' . $invoice->reference . '">                <div class="user-img"><span class="profile-status online pull-right"></span> </div>
                                             <div class="mail-contnet">
                                                 <h5>' . $invoice->student_name . '</h5> <span class="mail-desc">Invoice: ' . $invoice->reference . '</span> <span class="time">School: ' . $invoice->schema_name . '</span> </div>
                                         </a></li>';
@@ -49,6 +49,11 @@ class HomeController extends Controller {
             'total' => count($invoices),
             'result' => $result
         ));
+    }
+
+    public function store(Request $request) {
+        $id = DB::table('faq')->insertGetId(['question' => $request->question, 'answer' => $request->answer, 'created_by' => Auth::user()->id]);
+        echo $id > 0 ? 'Success' : ' Error, try again later';
     }
 
     public function search() {
@@ -82,16 +87,16 @@ class HomeController extends Controller {
     public function dailyReport() {
 
         $schema_records = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant','admin','api','app','skysat','dodoso')");
-       
+
         foreach ($schema_records as $record) {
 
             // users
             $schema = $record->table_schema . '.';
-            $setting = DB::table($schema . 'setting')->select('sname','photo','email_list')->first();
-            if (isset($setting->email_list) && $setting->email_list !='') {
+            $setting = DB::table($schema . 'setting')->select('sname', 'photo', 'email_list')->first();
+            if (isset($setting->email_list) && $setting->email_list != '') {
 
                 $this->data['users'] = DB::table($schema . 'users')->where('status', 1)->count();
-                 $this->data['students'] = DB::table($schema . 'student')->where('status', 1)->count();
+                $this->data['students'] = DB::table($schema . 'student')->where('status', 1)->count();
                 $this->data['added_users'] = DB::table($schema . 'parent')->where(DB::raw('created_at::date'), date('Y-m-d'))->count() + DB::table($schema . 'teacher')->where(DB::raw('created_at::date'), date('Y-m-d'))->count() + DB::table($schema . 'student')->where(DB::raw('created_at::date'), date('Y-m-d'))->count();
 
 
@@ -124,7 +129,7 @@ class HomeController extends Controller {
                     $m->from('noreply@shulesoft.com', 'ShuleSoft');
                     $m->to($setting->email_list)->subject(ucwords($setting->sname) . ' Daily Report');
                 });
-                echo 'email sent to '.$setting->email_list;
+                echo 'email sent to ' . $setting->email_list;
             }
         }
     }
@@ -137,8 +142,10 @@ class HomeController extends Controller {
 
     public function invoiceSearch() {
         $this->data['data'] = 1;
-        if (request('invoice')) {
-            $this->data['results'] = \App\Model\Api_invoice::where(DB::raw('lower("reference")'), 'like', strtolower(request('invoice')))->get();
+        if ($_POST) {
+            $q = request('invoice');
+            $school_name = strtolower(request('school')) == 'all' ? '' : ' AND "schema_name"=\'' . request('school') . "'";
+            $this->data['results'] = DB::select('select * from api.invoices where lower("reference") like \'%' . strtolower($q) . '%\' or lower(student_name) like \'%' . strtolower($q) . '%\'  ' . $school_name);
         }
         return view('home.invoice_search', $this->data);
     }

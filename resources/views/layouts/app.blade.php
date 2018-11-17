@@ -36,6 +36,8 @@
         <script src="<?= $root ?>plugins/bower_components/datatables/jquery.dataTables.min.js"></script>
         <link type="text/css" rel="stylesheet" href="<?= $root ?>plugins/bower_components/jsgrid/dist/jsgrid.min.css" />
         <link type="text/css" rel="stylesheet" href="<?= $root ?>plugins/bower_components/jsgrid/dist/jsgrid-theme.min.css" />
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
         <script type="text/javascript">
 $.ajaxSetup({
     headers: {
@@ -76,12 +78,13 @@ var root_url = "<?= url('/'); ?>";
                     </div>
                     <!-- /Logo -->
                     <!-- Search input and Toggle icon -->
-                 
+          
                     <ul class="nav navbar-top-links navbar-left">
                         <li><a href="javascript:void(0)" class="open-close waves-effect waves-light" onmousedown="$('body').toggleClass('show-sidebar hide-sidebar')"><i class="ti-menu"></i></a></li>
                         <?php
                         $feedbacks = \App\Model\Feedback::where('opened', 1)->get();
                         ?>
+                          <?php if (can_access('manage_messages')) { ?>     
                         <li class="dropdown">
                             <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"> <i class="mdi mdi-gmail"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b class="badge badge-danger"><?= count($feedbacks) ?></b>
                                 <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
@@ -116,6 +119,7 @@ var root_url = "<?= url('/'); ?>";
                             </ul>
                             <!--/.dropdown-messages--> 
                         </li>
+                          <?php }?>
                         <!-- .Task dropdown -->
                         <!--                                              <li class="dropdown">
                                                                             <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"> <i class="mdi mdi-check-circle"></i>
@@ -232,7 +236,7 @@ var root_url = "<?= url('/'); ?>";
                         <!-- /.Megamenu -->
                     </ul>
                   
-<?php if (Auth::check() == 1) { ?>
+<?php  if (Auth::check() == 1) { ?>
                         <ul class="nav navbar-top-links navbar-right pull-right">
                             <li>
                                 <?php if(can_access('view_users')){?>
@@ -439,3 +443,4 @@ var root_url = "<?= url('/'); ?>";
 
     </body>
 </html>
+<!--<p align="center">End of ClickDesk  This page took <?php echo (microtime(true) - LARAVEL_START) ?> seconds to render</p>-->

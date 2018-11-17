@@ -9,7 +9,6 @@ use DB;
 
 class MarketingController extends Controller {
 
-    
     /**
      * Display a listing of the resource.
      *
@@ -25,28 +24,31 @@ class MarketingController extends Controller {
     }
 
     function faq() {
-         return view('market.faq');
+        if ((int) request('id') > 0 && request('action') == 'delete') {
+            DB::table('faq')->where('id', request('id'))->delete();
+        }
+        $this->data['faqs'] = DB::table('faq')->get();
+        return view('market.faq', $this->data);
     }
-    
+
     function presentation() {
         return view('market.presentation');
     }
-    function downloadMaterial($type){
 
-       if($type=='shulesoft_brochure'){
+    function downloadMaterial($type) {
+
+        if ($type == 'shulesoft_brochure') {
             $headers = array(
                 'Content-Type: image/jpg',
             );
             $extension = 'jpg';
-        }else{
+        } else {
             $headers = array(
                 'Content-Type: application/pdf',
             );
             $extension = 'pdf';
         }
-        return response()->download("resources/materials/$type.$extension","$type.$extension", $headers);
-
-
+        return response()->download("resources/materials/$type.$extension", "$type.$extension", $headers);
     }
 
     function material() {
@@ -75,9 +77,9 @@ group by ownership');
         // $this->data['schools']=DB::table('schools')->get();
         $this->data['regions'] = DB::select('select distinct region from admin.schools');
         if (request('region')) {
-            $this->data['schools'] = DB::select("select * from admin.schools where region='". request('region')."'");
+            $this->data['schools'] = DB::select("select * from admin.schools where region='" . request('region') . "'");
         } else {
-           $this->data['schools'] = array(); 
+            $this->data['schools'] = array();
         }
         return view('market.allocation', $this->data);
     }
@@ -87,8 +89,9 @@ group by ownership');
     }
 
     function objective() {
-         return view('market.objective');
+        return view('market.objective');
     }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -158,6 +161,7 @@ group by ownership');
      */
     public function show($id) {
         //
+        return $id;
         $this->data['type'] = $id;
         $table = $id == 'sms' ? 'all_sms' : 'all_email';
         $this->data['messages'] = DB::select('select * from public.' . $table);

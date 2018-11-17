@@ -33,8 +33,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('home', 'HomeController');
     Route::resource('web', 'WebController');
     Route::resource('exam', 'ExamController');
-    
-    
+    //Route::resource('market', 'MarketingController');
+
     Route::get('/', 'HomeController@index');
     Route::any('/database/upgrade', 'DatabaseController@upgrade');
     Route::any('/database/{pg?}/{path?}', 'DatabaseController@index');

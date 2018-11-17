@@ -8,10 +8,6 @@
                     <a href="#" class="dropdown-toggle u-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> {{ Auth::user()->name() }}<span class="caret"></span></a>
                     <ul class="dropdown-menu animated flipInY">
                         <li><a href="{{url('users/'.Auth::user()->id)}}"><i class="ti-user"></i> My Profile</a></li>
-<!--                        <li><a href="#"><i class="ti-wallet"></i> My Balance</a></li>
-                        <li><a href="#"><i class="ti-email"></i> Inbox</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#"><i class="ti-settings"></i> Account Setting</a></li>-->
                         <li role="separator" class="divider"></li>
                         <li><a href="{{ route('logout') }}"
                                onclick="event.preventDefault();
@@ -51,15 +47,15 @@
                     </ul>
                 </li>
                 <?php if (can_access('view_invoices')) { ?>
-                    <li class="active"> <a href="#" class="waves-effect"><i class="fa fa-money fa-fw" data-icon="v"></i> <span class="hide-menu">Invoices <span class="fa arrow"></span> </span></a>
-                        <ul class="nav nav-second-level ">
-                            <li> <a href="{{ url('payment/paid') }}" class=""><i class=" fa-fw">1</i><span class="hide-menu">All Paid Invoices</span></a> </li>
-                            <!--<li> <a href="{{ url('payment/posted') }}" class=""><i class=" fa-fw">2</i><span class="hide-menu">Posted Invoices</span></a> </li>-->
-                            <li> <a href="{{url('invoice/searched')}}"><i class=" fa-fw">2</i><span class="hide-menu">Searched Invoices</span></a> </li>
+                <!--                    <li class="active"> <a href="#" class="waves-effect"><i class="fa fa-money fa-fw" data-icon="v"></i> <span class="hide-menu">Invoices <span class="fa arrow"></span> </span></a>
+                                        <ul class="nav nav-second-level ">
+                                            <li> <a href="{{ url('payment/paid') }}" class=""><i class=" fa-fw">1</i><span class="hide-menu">All Paid Invoices</span></a> </li>
+                                            <li> <a href="{{ url('payment/posted') }}" class=""><i class=" fa-fw">2</i><span class="hide-menu">Posted Invoices</span></a> </li>
+                                            <li> <a href="{{url('invoice/searched')}}"><i class=" fa-fw">2</i><span class="hide-menu">Searched Invoices</span></a> </li>
 
 
-                        </ul>
-                    </li>
+                                        </ul>
+                                    </li>-->
                 <?php } ?>
 <!--                 <li class=""> <a href="#" class="waves-effect"><i class="fa fa-users fa-fw" data-icon="v"></i> <span class="hide-menu"> User Roles <span class="fa arrow"></span> </span></a>
     <ul class="nav nav-second-level ">
@@ -75,7 +71,7 @@
                         <a href="#" class="waves-effect"><i class="fa fa-users fa-fw" data-icon="v"></i>
                             <span class="hide-menu"> Staff Management <span class="fa arrow"></span> </span></a>
                         <ul class="nav nav-second-level ">
-                           
+
                             <li> <a href="{{ url('users') }}" class=""><i class=" fa-fw">2</i><span class="hide-menu">Staff Users</span></a> </li>
                             <li> <a href="{{url('roles')}}"><i class=" fa-fw">3</i><span class="hide-menu">User Types</span></a> </li>
                             <li> <a href="#"><i class=" fa-fw">4</i><span class="hide-menu">Permissions</span></a> </li>
@@ -93,7 +89,7 @@
                             <li> <a href="{{ url('management') }}" class="">
                                     <i class=" fa-fw">1</i><span class="hide-menu">School Settings</span></a> 
                             </li>
-                             <li> <a href="{{ url('management/contact') }}" class="">
+                            <li> <a href="{{ url('management/contact') }}" class="">
                                     <i class=" fa-fw">2</i><span class="hide-menu">School Contacts</span></a> 
                             </li>
                         </ul>
@@ -160,42 +156,54 @@
                         </ul>
                     </li>
                 <?php } ?>
-                <li> <a href="#" class="waves-effect"><i class="mdi mdi-emoticon fa-fw"></i> <span class="hide-menu">Resources<span class="fa arrow"></span></span></a>
-                    <ul class="nav nav-second-level collapse">
-                        <li> <a href="<?= url('market/material') ?>"><i class="fa-fw">F</i>
-                                <span class="hide-menu">Sales Materials</span></a> </li>
-                        <li> <a href="<?= url('market/legal') ?>">
-                                <i class="fa-fw">T</i>
-                                <span class="hide-menu">Legal Documents </span></a> </li>
-                        <!--                        <li> 
-                                                    <a href="<?= url('market/brand') ?>"><i class="fa-fw">S</i>
-                                                        <span class="hide-menu">Personal Brands</span></a>
-                                                </li>-->
+                <?php if (can_access('manage_sales')) { ?>
+                    <li> <a href="#" class="waves-effect"><i class="mdi mdi-emoticon fa-fw"></i> <span class="hide-menu">Resources<span class="fa arrow"></span></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="<?= url('market/material') ?>"><i class="fa-fw">F</i>
+                                    <span class="hide-menu">Sales Materials</span></a> </li>
+                            <li> <a href="<?= url('market/legal') ?>">
+                                    <i class="fa-fw">T</i>
+                                    <span class="hide-menu">Legal Documents </span></a> </li>
+                            <!--                        <li> 
+                                                        <a href="<?= url('market/brand') ?>"><i class="fa-fw">S</i>
+                                                            <span class="hide-menu">Personal Brands</span></a>
+                                                    </li>-->
 
-                    </ul>
-                </li>
-
-                <li> <a href="#" class="waves-effect"><i class="mdi mdi-emoticon fa-fw"></i> <span class="hide-menu">Training<span class="fa arrow"></span></span></a>
+                        </ul>
+                    </li>
+                <?php } ?>
+                <?php if (can_access('manage_sales')) { ?>
+                    <li> <a href="#" class="waves-effect"><i class="mdi mdi-emoticon fa-fw"></i> <span class="hide-menu">Training<span class="fa arrow"></span></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li> <a href="<?= url('market/allocation') ?>"><i class="fa-fw">F</i>
+                                    <span class="hide-menu">Market Allocations</span></a> </li>
+                            <li> <a href="<?= url('market/objective') ?>"><i class="fa-fw">T</i>
+                                    <span class="hide-menu">How to Market</span></a> </li>
+    <!--                        <li> <a href="<?= url('market/training') ?>"><i class="fa-fw">S</i>
+                                    <span class="hide-menu">How it works</span></a> </li>-->
+                            <li> <a href="<?= url('market/presentation') ?>">
+                                    <i class="fa-fw">M</i><span class="hide-menu">Sample Presentations</span></a> </li>
+                            <li><a href="<?= url('market/faq') ?>"><i class="fa-fw">L</i>
+                                    <span class="hide-menu">FAQ</span></a></li>
+    <!--                        <li><a href="<?= url('market/test') ?>"><i class="fa-fw">W</i><span class="hide-menu">
+                                        Knowledge Test</span></a></li>-->
+                        </ul>
+                    </li>
+                <?php } ?>
+                <li> <a href="#" class="waves-effect"><i class="mdi mdi-emoticon fa-fw"></i> <span class="hide-menu">Help<span class="fa arrow"></span></span></a>
                     <ul class="nav nav-second-level collapse">
-                        <li> <a href="<?= url('market/allocation') ?>"><i class="fa-fw">F</i>
-                                <span class="hide-menu">Market Allocations</span></a> </li>
-                        <li> <a href="<?= url('market/objective') ?>"><i class="fa-fw">T</i>
-                                <span class="hide-menu">How to Market</span></a> </li>
-<!--                        <li> <a href="<?= url('market/training') ?>"><i class="fa-fw">S</i>
-                                <span class="hide-menu">How it works</span></a> </li>-->
-                        <li> <a href="<?= url('market/presentation') ?>">
-                                <i class="fa-fw">M</i><span class="hide-menu">Sample Presentations</span></a> </li>
-                        <li><a href="<?= url('market/faq') ?>"><i class="fa-fw">L</i>
+
+                        <li><a href="<?= url('market/faq') ?>"><i class="fa-fw">Q</i>
                                 <span class="hide-menu">FAQ</span></a></li>
-<!--                        <li><a href="<?= url('market/test') ?>"><i class="fa-fw">W</i><span class="hide-menu">
-                                    Knowledge Test</span></a></li>-->
+                        <li> <a href="<?= url('market/presentation') ?>">
+                                <i class="fa-fw">G</i><span class="hide-menu">Usage Guide</span></a> </li>
+
                     </ul>
                 </li>
                 <li class="devider"></li>
-              
-                 <?php 
-                if (can_access('manage_exams')) { ?>
-                 <li>
+
+                <?php if (can_access('manage_exams')) { ?>
+                    <li>
                         <a href="#" class="waves-effect">
                             <i class="mdi mdi-apps fa-fw"></i> 
                             <span class="hide-menu">Exams<span class="fa arrow"></span></span>
@@ -207,7 +215,7 @@
                                     <span class="hide-menu">definition</span>
                                 </a>
                             </li>
-                             <li>
+                            <li>
                                 <a href="<?= url('exam/schedule') ?>">
                                     <i class="ti-list fa-fw"></i>
                                     <span class="hide-menu">Schedule</span>
@@ -219,12 +227,12 @@
                                     <span class="hide-menu">Grades</span>
                                 </a>
                             </li>
-<!--                            <li>
-                                <a href="<?= url('exam/schedule') ?>">
-                                    <i class="ti-comments-smiley fa-fw"></i>
-                                    <span class="hide-menu">Schedule</span>
-                                </a>
-                            </li>-->
+                            <!--                            <li>
+                                                            <a href="<?= url('exam/schedule') ?>">
+                                                                <i class="ti-comments-smiley fa-fw"></i>
+                                                                <span class="hide-menu">Schedule</span>
+                                                            </a>
+                                                        </li>-->
 
                             <li><a href="#" class="waves-effect"><i class="ti-desktop fa-fw"></i><span class="hide-menu">Reports</span><span class="fa arrow"></span></a>
                                 <ul class="nav nav-third-level collapse">
@@ -236,10 +244,9 @@
                             </li>
                         </ul>
                     </li>
-                    
+
                 <?php } ?>
-                      <?php 
-                if (can_access('manage_schools_records')) { ?>
+                <?php if (can_access('manage_schools_records')) { ?>
                     <li>
                         <a href="inbox.html" class="waves-effect">
                             <i class="mdi mdi-apps fa-fw"></i> 

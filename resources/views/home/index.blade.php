@@ -64,7 +64,11 @@ foreach ($users as $key => $value) {
     <div class="col-lg-4 col-md-12">
         <div class="white-box">
             <h3 class="box-title">Other Users</h3>
-         
+            <ul class="list-inline m-t-30 p-t-10 two-part">
+                <li><i class="icon-people text-info"></i></li>
+                <li class="text-right"><span class="counter">  <?= $total_users - ( $user['Teacher'] + $user['Student'] + $user['Parent']) ?></span> </ul>
+
+            </li>
         </div>
     </div>
     <div class="col-md-12 col-lg-8">
@@ -122,7 +126,7 @@ foreach ($users as $key => $value) {
                                     }]
                             });
                         });
-                            $(function () {
+                        $(function () {
                             $('#container2').highcharts({
                                 chart: {
                                     plotBackgroundColor: null,
@@ -171,7 +175,7 @@ foreach ($users as $key => $value) {
                         <script src="<?= url('public/js/exporting.js') ?>"></script>
 
                         <div id="container" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
-      <div id="container2" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+                        <div id="container2" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
 
                 </div>
             </div>
@@ -182,42 +186,7 @@ foreach ($users as $key => $value) {
 @endrole
 
 @role('Bank')
-<div class="row">
 
-    <div class="col-md-12 col-lg-8">
-        <div class="white-box">
-            <div class="row">
-                <div class="col-sm-8">
-                    <h2 class="m-b-0 font-medium">Search Invoice</h2>
-                    <h5 class="text-muted m-t-0">Payment Reference Number</h5></div>
-                <div class="col-sm-12">
-                    <form action="<?=url('searchInvoice')?>" method="post"/>
-                    <div class="form-group">
-                        <div class="col-md-8">
-                            <input type="text" class="form-control" name="invoice" placeholder="Seach"> 
-                        </div>
-                        <div class="col-md-4">
-                            <?= csrf_field() ?>
-                            <input type="submit" class="btn btn-small btn-success" value="search"/>
-                        </div>
-                    </div>
-                    </form>
-
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-12 col-lg-4">
-        <div class="white-box">
-            <div class="row">
-                <div class="col-sm-12">
-                    <h2 class="m-b-0 font-medium">Tsh 356,000,000</h2>
-                    <h5 class="text-muted m-t-0">Total Posted Today</h5></div>
-
-            </div>
-        </div>
-    </div>
-
-</div>
+@include('home.invoice_search')
 @endrole
 @endsection
