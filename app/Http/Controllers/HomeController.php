@@ -145,7 +145,7 @@ class HomeController extends Controller {
         if ($_POST) {
             $q = request('invoice');
             $school_name = strtolower(request('school')) == 'all' ? '' : ' AND "schema_name"=\'' . request('school') . "'";
-            $this->data['results'] = DB::select('select * from api.invoices where lower("reference") like \'%' . strtolower($q) . '%\' or lower(student_name) like \'%' . strtolower($q) . '%\'  ' . $school_name);
+            $this->data['results'] = DB::select('select * from api.invoices where payment_integrated=1 and lower("reference") like \'%' . strtolower($q) . '%\' or lower(student_name) like \'%' . strtolower($q) . '%\'  ' . $school_name);
         }
         return view('home.invoice_search', $this->data);
     }
