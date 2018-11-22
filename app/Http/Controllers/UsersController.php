@@ -168,4 +168,9 @@ class UsersController extends Controller {
         return view('users.school_contact', $this->data);
     }
 
+      public function banks() {
+        $this->data['settings'] = DB::table('admin.all_setting')->get();
+        return view('users.school_account', $this->data);
+    }
+
 }

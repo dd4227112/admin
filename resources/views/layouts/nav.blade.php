@@ -124,6 +124,7 @@
                             <li><a href="<?= url('message/feedback') ?>"><i class="ti-comments-smiley fa-fw"></i> <span class="hide-menu">User Feedbacks</span></a></li>
                         </ul>
                     </li>
+                
                 <?php } ?>
 
                 <!-- Payment navigations --->

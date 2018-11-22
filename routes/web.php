@@ -23,6 +23,7 @@ Route::any('/database/{pg?}/{path?}', 'DatabaseController@index');
 Route::group(['middleware' => ['auth']], function() {
     Route::get('/management', 'UsersController@management');
     Route::get('/management/contact', 'UsersController@contact');
+    Route::get('/management/banks', 'UsersController@banks');
     Route::post('/searchInvoice', 'HomeController@invoiceSearch');
 
     Route::resource('users', 'UsersController');
