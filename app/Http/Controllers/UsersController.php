@@ -168,8 +168,11 @@ class UsersController extends Controller {
         return view('users.school_contact', $this->data);
     }
 
-      public function banks() {
+    public function banks() {
         $this->data['settings'] = DB::table('admin.all_setting')->get();
+        $seg= request()->segment(3);
+        $this->data['banks']=DB::select('select b.*,a.api_username,a.api_password,a.invoice_prefix,a.testing_api_username,a.testing_api_password from '.$seg.'.bank_accounts_integrations a right join '.$seg.'.bank_accounts b on a.bank_account_id=b.id');
+        $this->data['schema']= $seg;
         return view('users.school_account', $this->data);
     }
 

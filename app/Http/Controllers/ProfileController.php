@@ -124,6 +124,20 @@ class ProfileController extends Controller {
         echo 'Message has been resent successfully';
     }
 
+    public function setBankParameters() {
+        $check = DB::table(request('schema').'.bank_accounts_integrations')->where('bank_account_id', request('bank_id'));
+        if (count($check->first()) == 1) {
+            $check->update([request('tag') => request('val')]);
+            echo 'Records updated successfully';
+        } else {
+            DB::table(request('schema').'.bank_accounts_integrations')->insert([
+                'bank_account_id' => request('bank_id'),
+                request('tag') => request('val')
+            ]);
+            echo 'Records added successfully';
+        }
+    }
+
     public function updateProfile() {
         $schema = request('schema');
         $tag = request('tag');
@@ -131,12 +145,16 @@ class ProfileController extends Controller {
         $user_id = request('user_id');
         $value = request('val');
         $column = $table == 'student' ? 'student_id' : $table . 'ID';
-        DB::table($schema . '.' . $table)->where($column, $user_id)->update([$tag => $value]);
-        if ($tag == 'institution_code') {
-            //update existing invoices
-            DB::statement('UPDATE ' . $schema . '.invoices SET "reference"=\'' . $value . '\'||"reference"');
+        if ($table == 'bank') {
+            return $this->setBankParameters();
+        } else {
+            DB::table($schema . '.' . $table)->where($column, $user_id)->update([$tag => $value]);
+            if ($tag == 'institution_code') {
+                //update existing invoices
+                DB::statement('UPDATE ' . $schema . '.invoices SET "reference"=\'' . $value . '\'||"reference"');
+            }
+            echo 'Records updated successfully ';
         }
-        echo 'Records updated successfully ';
     }
 
 }

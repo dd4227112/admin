@@ -92,6 +92,9 @@
                             <li> <a href="{{ url('management/contact') }}" class="">
                                     <i class=" fa-fw">2</i><span class="hide-menu">School Contacts</span></a> 
                             </li>
+                             <li> <a href="{{ url('management/banks') }}" class="">
+                                    <i class=" fa-fw">3</i><span class="hide-menu">School Banks</span></a> 
+                            </li>
                         </ul>
                     </li>
                 <?php } ?>
