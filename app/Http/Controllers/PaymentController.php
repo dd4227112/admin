@@ -149,6 +149,7 @@ class PaymentController extends Controller {
     }
 
      public function getToken($invoice) {
+         print_r($invoice);
         if ($invoice->schema_name == 'beta_testing') {
             //testing invoice
             //  $setting = DB::table('beta_testing.setting')->first();
