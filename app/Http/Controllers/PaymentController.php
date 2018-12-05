@@ -148,23 +148,38 @@ class PaymentController extends Controller {
         return $result;
     }
 
-    public function getToken($invoice) {
+     public function getToken($invoice) {
         if ($invoice->schema_name == 'beta_testing') {
             //testing invoice
-            $setting = DB::table($invoice->optional_name . '.setting')->first();
+            //  $setting = DB::table('beta_testing.setting')->first();
             $url = 'https://wip.mpayafrica.com/v2/auth';
+            $credentials = DB::table('admin.all_bank_accounts_integrations')->where('invoice_prefix', $invoice->prefix)->first();
+            if (count($credentials) == 1) {
+                $user = trim($credentials->sandbox_api_username);
+                $pass = trim($credentials->sandbox_api_password);
+            } else {
+                $user = '';
+                $pass = '';
+            }
         } else {
             //live invoice
-            $setting = DB::table($invoice->schema_name . '.setting')->first();
+            // $setting = DB::table($invoice->schema_name . '.setting')->first();
             $url = 'https://api.mpayafrica.co.tz/v2/auth';
+            $credentials = DB::table($invoice->schema_name . '.bank_accounts_integrations')->where('invoice_prefix', $invoice->prefix)->first();
+            if (count($credentials) == 1) {
+                $user = trim($credentials->api_username);
+                $pass = trim($credentials->api_password);
+            } else {
+                $user = '';
+                $pass = '';
+            }
         }
-        $user = $setting->api_username;
-        $pass = $setting->api_password;
         $request = $this->curlServer([
             'username' => $user,
             'password' => $pass
                 ], $url);
         $obj = json_decode($request);
+        //DB::table('api.requests')->insert(['return' => json_encode($obj), 'content' => json_encode($request)]);
         if (isset($obj) && is_object($obj) && isset($obj->status) && $obj->status == 1) {
             return $obj->token;
         }
@@ -294,8 +309,8 @@ AND "b"."fee_installment_id" =  ' . $fee_installment_id->id . '');
         $this->data['payments'] = array();
         $this->data['schools'] = DB::select("select distinct table_schema from information_schema.tables where table_schema not in ('admin','pg_catalog','information_schema','api','app')");
         if ($_POST) {
-            $school= request('school');
-            $invoice = DB::table('api.invoices')->where('schema_name',$school)->first();
+            $school = request('school');
+            $invoice = DB::table('api.invoices')->where('schema_name', $school)->first();
             $token = $this->getToken($invoice);
             $fields = array(
                 "reconcile_date" => request('from'),
