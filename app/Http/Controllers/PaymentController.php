@@ -179,6 +179,7 @@ class PaymentController extends Controller {
             'password' => $pass
                 ], $url);
         $obj = json_decode($request);
+        print_r($request);
         //DB::table('api.requests')->insert(['return' => json_encode($obj), 'content' => json_encode($request)]);
         if (isset($obj) && is_object($obj) && isset($obj->status) && $obj->status == 1) {
             return $obj->token;
@@ -317,6 +318,7 @@ AND "b"."fee_installment_id" =  ' . $fee_installment_id->id . '');
                 "callback_url" => "http://158.69.112.216:8081/api/init",
                 "token" => $token
             );
+            print_r($fields);
             $url = 'https://api.mpayafrica.co.tz/v2/reconcilliation';
             $curl = $this->curlServer($fields, $url);
             $result = json_decode($curl);
