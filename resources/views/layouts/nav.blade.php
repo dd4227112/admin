@@ -166,7 +166,7 @@
                         </ul>
                     </li>
                 <?php } ?>
-                <?php if (can_access('manage_sales')) { ?>
+              
                     <li> <a href="#" class="waves-effect"><i class="mdi mdi-emoticon fa-fw"></i> <span class="hide-menu">Resources<span class="fa arrow"></span></span></a>
                         <ul class="nav nav-second-level collapse">
                             <li> <a href="<?= url('market/material') ?>"><i class="fa-fw">F</i>
@@ -181,8 +181,8 @@
 
                         </ul>
                     </li>
-                <?php } ?>
-                <?php if (can_access('manage_sales')) { ?>
+         
+         
                     <li> <a href="#" class="waves-effect"><i class="mdi mdi-emoticon fa-fw"></i> <span class="hide-menu">Training<span class="fa arrow"></span></span></a>
                         <ul class="nav nav-second-level collapse">
                             <li> <a href="<?= url('market/allocation') ?>"><i class="fa-fw">F</i>
@@ -199,7 +199,7 @@
                                         Knowledge Test</span></a></li>-->
                         </ul>
                     </li>
-                <?php } ?>
+            
                 <li> <a href="#" class="waves-effect"><i class="mdi mdi-emoticon fa-fw"></i> <span class="hide-menu">Help<span class="fa arrow"></span></span></a>
                     <ul class="nav nav-second-level collapse">
 
