@@ -148,10 +148,8 @@ class PaymentController extends Controller {
         return $result;
     }
 
-     public function getToken($invoice) {
-         print_r($invoice);
+    public function getToken($invoice) {
         if ($invoice->schema_name == 'beta_testing') {
-            //testing invoice
             //  $setting = DB::table('beta_testing.setting')->first();
             $url = 'https://wip.mpayafrica.com/v2/auth';
             $credentials = DB::table('admin.all_bank_accounts_integrations')->where('invoice_prefix', $invoice->prefix)->first();
@@ -179,8 +177,8 @@ class PaymentController extends Controller {
             'username' => $user,
             'password' => $pass
                 ], $url);
+
         $obj = json_decode($request);
-        print_r($request);
         //DB::table('api.requests')->insert(['return' => json_encode($obj), 'content' => json_encode($request)]);
         if (isset($obj) && is_object($obj) && isset($obj->status) && $obj->status == 1) {
             return $obj->token;
@@ -315,11 +313,10 @@ AND "b"."fee_installment_id" =  ' . $fee_installment_id->id . '');
             $invoice = DB::table('api.invoices')->where('schema_name', $school)->first();
             $token = $this->getToken($invoice);
             $fields = array(
-                "reconcile_date" => request('from'),
+                "reconcile_date" => date('d-m-Y',strtotime(request('from'))),
                 "callback_url" => "http://158.69.112.216:8081/api/init",
                 "token" => $token
             );
-            print_r($fields);
             $url = 'https://api.mpayafrica.co.tz/v2/reconcilliation';
             $curl = $this->curlServer($fields, $url);
             $result = json_decode($curl);
