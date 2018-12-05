@@ -324,7 +324,7 @@ AND "b"."fee_installment_id" =  ' . $fee_installment_id->id . '');
                 );
                 $url = 'https://api.mpayafrica.co.tz/v2/reconcilliation';
                 $curl = $this->curlServer($fields, $url);
-                $result = json_decode($curl);
+                $result =(array) json_decode($curl);
                 $obj = array_merge($result, $obj);
             }
             dd($obj);
