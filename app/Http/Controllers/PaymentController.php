@@ -289,4 +289,25 @@ AND "b"."fee_installment_id" =  ' . $fee_installment_id->id . '');
         return view('payment.payment', $this->data);
     }
 
+    public function transactions() {
+        $this->data['setting'] = array();
+        $this->data['payments'] = array();
+        $this->data['schools'] = DB::select("select distinct table_schema from information_schema.tables where table_schema not in ('admin','pg_catalog','information_schema','api','app')");
+        if ($_POST) {
+            $school= request('school');
+            $invoice = DB::table('api.invoices')->where('schema_name',$school)->first();
+            $token = $this->getToken($invoice);
+            $fields = array(
+                "reconcile_date" => request('from'),
+                "callback_url" => "http://158.69.112.216:8081/api/init",
+                "token" => $token
+            );
+            $url = 'https://api.mpayafrica.co.tz/v2/reconcilliation';
+            $curl = $this->curlServer($fields, $url);
+            $result = json_decode($curl);
+            dd($result);
+        }
+        return view('payment.transactions', $this->data);
+    }
+
 }
