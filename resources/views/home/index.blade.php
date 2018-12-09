@@ -1,7 +1,6 @@
 @extends('layouts.app')
 @section('content')
-
-@role('marketing','admin')
+ <?php if (can_access('view_users')) { ?>
 <?php
 $user = array();
 $total_users = 0;
@@ -183,7 +182,7 @@ foreach ($users as $key => $value) {
 
     </div>
 </div>
-@endrole
+ <?php }?>
 
 @role('Bank')
 
