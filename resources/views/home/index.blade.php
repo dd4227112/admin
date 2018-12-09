@@ -181,9 +181,4 @@ foreach ($users as $key => $value) {
 
     </div>
 </div>
-
-@role('Bank')
-
-@include('home.invoice_search')
-@endrole
 @endsection
