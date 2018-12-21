@@ -343,7 +343,7 @@ class Kernel extends ConsoleKernel {
 //parents
                 $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")
 select 'Hello '|| p.name|| ', matokeo yote ya '||c.name||'  hupatikana kwenye ShuleSoft. Ili kuyaona, fungua https://" . $schema->table_schema . ".shulesoft.com, kisha nenda upande wa kushoto (sehemu imendikwa Exam Report (au Alama)) Kisha utaona matokeo yote. Kama umesahau neno siri lako ni '||p.username||' na nenosiri la kuanzia ni '||case when p.default_password is null then '123456' else p.default_password end||'.  Asante', p.phone, 0,0, p.\"parentID\",'parent' FROM " . $schema->table_schema . ".parent p join " . $schema->table_schema . ".student_parents sp on sp.parent_id=p.\"parentID\" JOIN " . $schema->table_schema . ".student c on c.\"student_id\"=sp.student_id, " . $schema->table_schema . ".setting s where p.status=1";
-                DB::statement($sql);
+              //  DB::statement($sql);
             }
         }
     }
@@ -352,7 +352,7 @@ select 'Hello '|| p.name|| ', matokeo yote ya '||c.name||'  hupatikana kwenye Sh
         $schemas = (new \App\Http\Controllers\DatabaseController())->loadSchema();
         foreach ($schemas as $schema) {
             if (!in_array($schema->table_schema, array('public', 'api', 'admin'))) {
-                $this->parentsExamLoginReminder($schema);
+               // $this->parentsExamLoginReminder($schema);
                 //$this->sendGeneralReminder($schema);
                 //$this->sendTeachersLoginReminder($schema);
                 // $this->usersLoginReminder($schema); 
