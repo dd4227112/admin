@@ -43,6 +43,7 @@
                                             <th>Total</th>
                                             <th>Payment Status</th>
                                             <th>Payment Deadline Date</th>
+                                            <th>Estimated students</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -105,6 +106,7 @@
                                                     <td><?= $value->student + $value->parent + $value->teacher + $value->user ?></td>
                                                     <td><input class="text-muted" type="text" schema='<?= $value->schema_name ?>' id="payment_status" value="<?= isset($setting->payment_status) ? $setting->payment_status : '' ?>" onblur="edit_records('payment_status', this.value, '<?= $value->schema_name ?>')"/></td>
                                                     <td><input class="text-muted" type="text" schema='<?= $value->schema_name ?>' id="payment_deadline_date" value="<?= isset($setting->payment_deadline_date) ? $setting->payment_deadline_date : '' ?>" onblur="edit_records('payment_deadline_date', this.value, '<?= $value->schema_name ?>')"/></td>
+                                                    <td><input class="text-muted" type="text" schema='<?= $value->schema_name ?>' id="estimated_students" value="<?= isset($setting->estimated_students) ? $setting->estimated_students : '' ?>" onblur="edit_records('estimated_students', this.value, '<?= $value->schema_name ?>')"/></td>
                                                     <td><?php if (isset($setting->payment_status) && $setting->payment_status == 0) { ?><a href="<?= url('invoice/' . $value->schema_name) ?>" class="btn btn-sm btn-primary"><i class="fa fa-download"></i>Invoice</a> <?php } ?></td>
                                                 </tr>
                                                 <?php
@@ -123,7 +125,7 @@
                                                 <td><?= $teachers ?></td>
                                                 <td><?= $staff ?></td>
                                                 <td><?= $total ?></td>
-                                                <td colspan="3"></td>
+                                                <td colspan="4"></td>
                                             </tr>
                                         </tfoot>
                                     <?php } ?>
