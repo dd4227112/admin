@@ -47,6 +47,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::any('/message/show/{op?}', 'Message@show');
     Route::any('/message/feedback', 'Message@feedback');
     Route::any('/message/reply', 'Message@reply');
+    Route::any('/message/showreply', 'Message@showreply');
     Route::any('/message/destroy/{op?}/{ops?}/{schema?}', 'Message@destroy');
 
     Route::post('/search', 'HomeController@search');

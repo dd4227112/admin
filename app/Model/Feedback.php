@@ -9,7 +9,7 @@ class Feedback extends Model {
     protected $table = 'constant.feedback';
     public $timestamps = false;
     protected $fillable = [
-        'feedback', 'username', 'schema','user_id','opened','table'
+        'feedback', 'username', 'schema','user_id','opened','table','shared'
     ];
 
     public function reply() {

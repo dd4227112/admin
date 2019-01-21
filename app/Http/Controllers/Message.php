@@ -284,7 +284,7 @@ class Message extends Controller {
             $days = $date2->diff($date1)->format("%a");
             print_r($days);
             echo '<br/>';
-            if (in_array($days, [30, 15, 7, 3, 1,18])) {
+            if (in_array($days, [30, 15, 7, 3, 1, 18])) {
                 $message = 'Dear ' . $school->name . '<br/>,
 
 This is a reminder that your ShuleSoft Account is going to expire on  ' . date('d M Y', strtotime($payment->next_payment_date)) . '.<br/>
@@ -318,6 +318,12 @@ Kind regards,';
                 DB::statement("insert into " . $school->username . ".sms (phone_number,body,type) values ('" . $school->phone . "','" . strip_tags($message) . "',0)");
             }
         }
+    }
+
+    public function showreply() {
+        $update=\App\Model\Feedback::find(request('message_id'));
+        $update->update(['shared' => request('status')=='false' ? 1 :0]);
+    return 1;
     }
 
 }

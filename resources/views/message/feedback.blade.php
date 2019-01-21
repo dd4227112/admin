@@ -26,24 +26,24 @@
                                 <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown"> <i class="fa fa-gear"></i> <span class="caret"></span> </button>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="#" onclick="return false" onmousedown="$('#mess<?= $feedback->id ?>').toggle()">Reply</a> </li>
-                                </ul>
 
-                               
+                                </ul>
+                                &nbsp;&nbsp; <input type="checkbox" <?=(int) $feedback->shared==1 ?'checked':'' ?> value="<?= $feedback->shared ?>" id="checkbox<?= $feedback->id ?>" onmousedown="show_to_school(<?= $feedback->id ?>)"/>Show to School <span id="replystatus<?= $feedback->id ?>"></span>
+
                             </div>
-                             <p>Replies</p>
-                                <div>
-                                    <?php
-                                    $replies = $feedback->reply()->get();
-                                   
-                                    foreach ($replies as $reply) {
-                                      
-                                        ?>
+                            <p>Replies </p>
+                            <div>
+                                <?php
+                                $replies = $feedback->reply()->get();
+
+                                foreach ($replies as $reply) {
+                                    ?>
                                     <div class="col-lg-12 col-sm-12 col-xs-12 m-t-40">
-                                        <span class="m-b-0"><b><?= \Carbon\Carbon::createFromTimeStamp(strtotime($reply->created_at))->diffForHumans().' by '.$reply->user->firstname?></b></span>
-                                    <p class="text-muted"><?= $reply->message ?></p>
-                                </div>
-                                    <?php } ?>
-                                </div>
+                                        <span class="m-b-0"><b><?= \Carbon\Carbon::createFromTimeStamp(strtotime($reply->created_at))->diffForHumans() . ' by ' . $reply->user->firstname ?></b></span>
+                                        <p class="text-muted"><?= $reply->message ?></p>
+                                    </div>
+                                <?php } ?>
+                            </div>
                             <div class="form-group" id="mess<?= $feedback->id ?>" style="display:none">
                                 <textarea class="form-control" placeholder="write a message" id="message<?= $feedback->id ?>"></textarea>
                                 <button class="btn btn-primary" data-id='<?= $feedback->id ?>' id='idmessage<?= $feedback->id ?>' onmousedown="submit_reply('message<?= $feedback->id ?>')">Submit</button>
@@ -85,6 +85,30 @@
                 $('#stat' + a).after(data);
             }
         });
+    }
+    function show_to_school(a) {
+        var val = $('#checkbox' + a).prop('checked');
+       // alert(val);
+        $.ajax({
+            type: 'GET',
+            url: "<?= url('message/showreply') ?>",
+            data: {
+                "status": val,
+                "message_id": a
+            },
+            dataType: "html ",
+            beforeSend: function (xhr) {
+                $('#replystatus' + a).html('<a href="#/refresh"><i class="fa fa-spin fa-refresh"></i> </a>');
+            },
+            complete: function (xhr, status) {
+                $('#replystatus' + a).html('<span class="label label-success label-rouded">' + status + '</span>');
+            },
+
+            success: function (data) {
+               // $('#replystatus' + a).after(data);
+            }
+        });
+
     }
 </script>
 @include('layouts.datatable')
