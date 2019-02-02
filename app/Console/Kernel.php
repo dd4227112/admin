@@ -80,26 +80,41 @@ class Kernel extends ConsoleKernel {
         return $pattern;
     }
 
+    public function saveSms($schema, $phone, $body, $user_id) {
+        return DB::table($schema . '.sms')->insert(array('phone_number' => $phone,
+                    'body' => $body,
+                    'user_id' => $user_id,
+                    'type' => 0));
+    }
+
+    public function saveEmail($schema, $email, $body, $user_id, $title) {
+        return DB::table($schema . '.email')->insert(array('email' => $email,
+                    'body' => $body,
+                    'user_id' => $user_id,
+                    'subject' => $title));
+    }
+
     public function sendReminder($schedule) {
-        $check_payment_pattern = 0;
         $users = DB::table($schedule->schema_name . '.users')->whereIn('id', explode(',', $schedule->user_id))->where('role_id', $schedule->role_id)->get();
-        if (preg_match('/#balance/i', $schedule->message) || preg_match('/#invoice/i', $schedule->message)) {
-            $check_payment_pattern = 1;
-        }
+
+        $check_payment_pattern = (preg_match('/#balance/i', $schedule->message) || preg_match('/#invoice/i', $schedule->message)) ? 1 : 0;
         foreach ($users as $user) {
             $payment_pattern = $check_payment_pattern == 1 ? $this->checkPaymentPattern($user, $schedule->schema_name) : [];
             $patterns = array(
                 '/#name/i', '/#username/i', '/#balance/i', '/#student_name/i', '/#invoice/i'
             );
             $replacements = count($payment_pattern) > 0 ? array(
-                $user->name, $user->username, $payment_pattern[0], $payment_pattern[1], $payment_pattern[2]
-                    ) : array($user->name, $user->username, 0, 0, 0
+                $user->name, $user->username, $payment_pattern[0], $payment_pattern[1], $payment_pattern[2]) : array($user->name, $user->username, 0, 0, 0
             );
             $body = preg_replace($patterns, $replacements, $schedule->message);
-            DB::table($schedule->schema_name . '.sms')->insert(array('phone_number' => $user->phone,
-                'body' => $body,
-                'user_id' => $user->id,
-                'type' => 0));
+            if ($schedule->type == 2) { //email
+                $this->saveEmail($schedule->schema_name, $user->email, $body, $user->id, $schedule->title);
+            } else if ($schedule->type == 1) {
+                $this->saveSms($schedule->schema_name, $user->phone, $body, $user->id);
+            } else {
+                $this->saveSms($schedule->schema_name, $user->phone, $body, $user->id);
+                $this->saveEmail($schedule->schema_name, $user->email, $body, $user->id, $schedule->title);
+            }
         }
     }
 
