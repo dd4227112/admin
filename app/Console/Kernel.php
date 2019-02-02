@@ -28,9 +28,8 @@ class Kernel extends ConsoleKernel {
      * @return void
      */
     protected function schedule(Schedule $schedule) {
-// $schedule->command('inspire')
-//          ->hourly();
-
+        $schedule->command('inspire')
+                ->hourly();
         $schedule->call(function () {
             (new Message())->sendSms();
         })->everyMinute();
@@ -38,24 +37,24 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             (new Message())->sendEmail();
         })->everyMinute();
-
-
+//
+//
         $schedule->call(function () {
             // remind parents to login in shulesoft and check their child performance
             // $this->sendNotice();
             $this->sendBirthdayWish();
         })->dailyAt('04:40'); // Eq to 07:40 AM 
-
+//
         $schedule->call(function() {
             //send login reminder to parents in all schema
             $this->sendLoginReminder();
         })->fridays()->at('9:00');
-
+//
         $schedule->call(function() {
             //send login reminder to parents in all schema
             //$this->notifyUsersDailyReports();
         })->weekly()->weekdays()->at('13:00');
-
+//
         $schedule->call(function () {
             // send Birdthday 
             // $this->sendReportReminder();
@@ -65,7 +64,63 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             // sync invoices 
             $this->syncInvoice();
+            $this->checkSchedule();
         })->everyMinute();
+    }
+
+    function checkPaymentPattern($user, $schema) {
+        $pattern = [0, 0, 0];
+        if ($user->table == 'parent') {
+            $sql = 'select  coalesce(coalesce(sum(a.total_amount),0)-sum(a.discount_amount),0) as amount, coalesce(coalesce(sum(a.total_payment_invoice_fee_amount),0)+ coalesce(sum(a.total_advance_invoice_fee_amount)),0) as paid_amount, sum(a.balance) as balance, a.invoice_id as id,a.student_id, c.reference, b.name as student_name, a.created_at,f.phone,f.name as parent_name,f.username from ' . $schema . '. invoice_balances a join ' . $schema . '.student b on a.student_id=b.student_id JOIN  ' . $schema . '.student_parents e on e.student_id=b.student_id join ' . $schema . '.parent f on f."parentID"=e.parent_id JOIN  ' . $schema . '.invoices c on c.id=a.invoice_id where e.parent_id=' . $user->id . ' and  a.student_id in (select student_id from ' . $schema . '.student_archive where section_id in (select "sectionID" FROM ' . $schema . '.section ) )  group by a.invoice_id,a.created_at,b.name ,a.student_id,c.reference,f.phone,f.name,f.username ';
+            $parent = \collect(DB::select($sql))->first();
+            if (count($parent) == 1) {
+                $pattern = [$parent->balance, $parent->student_name, $parent->reference];
+            }
+        }
+        return $pattern;
+    }
+
+    public function sendReminder($schedule) {
+        $check_payment_pattern = 0;
+        $users = DB::table($schedule->schema_name . '.users')->whereIn('id', explode(',', $schedule->user_id))->where('role_id', $schedule->role_id)->get();
+        if (preg_match('/#balance/i', $schedule->message) || preg_match('/#invoice/i', $schedule->message)) {
+            $check_payment_pattern = 1;
+        }
+        foreach ($users as $user) {
+            $payment_pattern = $check_payment_pattern == 1 ? $this->checkPaymentPattern($user, $schedule->schema_name) : [];
+            $patterns = array(
+                '/#name/i', '/#username/i', '/#balance/i', '/#student_name/i', '/#invoice/i'
+            );
+            $replacements = count($payment_pattern) > 0 ? array(
+                $user->name, $user->username, $payment_pattern[0], $payment_pattern[1], $payment_pattern[2]
+                    ) : array($user->name, $user->username, 0, 0, 0
+            );
+            $body = preg_replace($patterns, $replacements, $schedule->message);
+            DB::table($schedule->schema_name . '.sms')->insert(array('phone_number' => $user->phone,
+                'body' => $body,
+                'user_id' => $user->id,
+                'type' => 0));
+        }
+    }
+
+    public function checkSchedule() {
+        $schedules = DB::table('admin.all_reminders')->get();
+        $current_time = date('H:i', strtotime(date('H:i')) + 60 * 60 * 3); // plus +3 GMT hours to match with Tanzania time
+        foreach ($schedules as $schedule) {
+            if (strlen($schedule->days) > 4) {
+                $days = explode(',', $schedule->days);
+
+                if (in_array(date('l'), $days) && $current_time == date('H:i', strtotime($schedule->time))) {
+                    //execute command
+                    $this->sendReminder($schedule);
+                }
+            } else {
+                $day = $schedule->date;
+                if (date('dmY', strtotime($day)) == date('dmY') && $current_time == date('H:i', strtotime($schedule->time))) {
+                    $this->sendReminder($schedule);
+                }
+            }
+        }
     }
 
     function notifyUsersDailyReports() {
@@ -343,7 +398,7 @@ class Kernel extends ConsoleKernel {
 //parents
                 $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")
 select 'Hello '|| p.name|| ', matokeo yote ya '||c.name||'  hupatikana kwenye ShuleSoft. Ili kuyaona, fungua https://" . $schema->table_schema . ".shulesoft.com, kisha nenda upande wa kushoto (sehemu imendikwa Exam Report (au Alama)) Kisha utaona matokeo yote. Kama umesahau neno siri lako ni '||p.username||' na nenosiri la kuanzia ni '||case when p.default_password is null then '123456' else p.default_password end||'.  Asante', p.phone, 0,0, p.\"parentID\",'parent' FROM " . $schema->table_schema . ".parent p join " . $schema->table_schema . ".student_parents sp on sp.parent_id=p.\"parentID\" JOIN " . $schema->table_schema . ".student c on c.\"student_id\"=sp.student_id, " . $schema->table_schema . ".setting s where p.status=1";
-              //  DB::statement($sql);
+                //  DB::statement($sql);
             }
         }
     }
@@ -352,7 +407,7 @@ select 'Hello '|| p.name|| ', matokeo yote ya '||c.name||'  hupatikana kwenye Sh
         $schemas = (new \App\Http\Controllers\DatabaseController())->loadSchema();
         foreach ($schemas as $schema) {
             if (!in_array($schema->table_schema, array('public', 'api', 'admin'))) {
-               // $this->parentsExamLoginReminder($schema);
+                // $this->parentsExamLoginReminder($schema);
                 //$this->sendGeneralReminder($schema);
                 //$this->sendTeachersLoginReminder($schema);
                 // $this->usersLoginReminder($schema); 
