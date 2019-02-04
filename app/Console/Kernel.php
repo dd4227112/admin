@@ -41,7 +41,7 @@ class Kernel extends ConsoleKernel {
 //
         $schedule->call(function () {
             // remind parents to login in shulesoft and check their child performance
-            // $this->sendNotice();
+            $this->sendNotice();
             $this->sendBirthdayWish();
         })->dailyAt('04:40'); // Eq to 07:40 AM 
 //
@@ -120,8 +120,8 @@ class Kernel extends ConsoleKernel {
 
     public function checkSchedule() {
         $schedules = DB::table('admin.all_reminders')->get();
-       $current_time = date('H:i', strtotime(date('H:i')) + 60 * 60 * 3); // plus +3 GMT hours to match with Tanzania time
-     //   $current_time = date('H:i');
+        $current_time = date('H:i', strtotime(date('H:i')) + (60 * 60 * 3 + 60 * 3)); // plus +3 GMT hours to match with Tanzania time
+        //   $current_time = date('H:i');
         foreach ($schedules as $schedule) {
             if (strlen($schedule->days) > 4) {
                 $days = explode(',', $schedule->days);
