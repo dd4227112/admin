@@ -131,6 +131,9 @@ class Kernel extends ConsoleKernel {
                     $this->sendReminder($schedule);
                 }
             } else {
+                echo date('H:i', strtotime($schedule->time));
+                echo '<br/>';
+                echo $current_time;
                 $day = $schedule->date;
                 if (date('dmY', strtotime($day)) == date('dmY') && $current_time == date('H:i', strtotime($schedule->time))) {
                     $this->sendReminder($schedule);
