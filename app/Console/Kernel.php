@@ -120,7 +120,8 @@ class Kernel extends ConsoleKernel {
 
     public function checkSchedule() {
         $schedules = DB::table('admin.all_reminders')->get();
-        $current_time = date('H:i', strtotime(date('H:i')) + 60 * 60 * 3); // plus +3 GMT hours to match with Tanzania time
+       // $current_time = date('H:i', strtotime(date('H:i')) + 60 * 60 * 3); // plus +3 GMT hours to match with Tanzania time
+        $current_time = date('H:i');
         foreach ($schedules as $schedule) {
             if (strlen($schedule->days) > 4) {
                 $days = explode(',', $schedule->days);
@@ -131,9 +132,6 @@ class Kernel extends ConsoleKernel {
                 }
             } else {
                 $day = $schedule->date;
-                echo $current_time;
-                echo '<br/>';
-                echo  date('H:i', strtotime($schedule->time));
                 if (date('dmY', strtotime($day)) == date('dmY') && $current_time == date('H:i', strtotime($schedule->time))) {
                     $this->sendReminder($schedule);
                 }
