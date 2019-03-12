@@ -239,7 +239,8 @@ class Message extends Controller {
             foreach ($this->emails as $message) {
                 if (filter_var($message->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $message->email)) {
                     try {
-                        $data = ['content' => $message->body, 'link' => $message->schema_name, 'photo' => $message->photo, 'sitename' => $message->sitename, 'name' => ''];
+                        $link = strtoupper($message->schema_name) == 'PUBLIC' ? 'demo.' : $message->schema_name . '.';
+                        $data = ['content' => $message->body, 'link' =>$link, 'photo' => $message->photo, 'sitename' => $message->sitename, 'name' => ''];
                         \Mail::send('email.default', $data, function ($m) use ($message) {
                             $m->from('noreply@shulesoft.com', $message->sitename);
                             $m->to($message->email)->subject($message->subject);

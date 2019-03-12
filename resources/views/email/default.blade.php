@@ -277,7 +277,7 @@ img {
       <td valign="middle" style='vertical-align: middle;' width='150'>
                           <div class='contentEditableContainer contentTextEditable'>
                             <div class='contentEditable' style='text-align: right;'>
-                              <a target='_blank' href="https://<?=$link?>.shulesoft.com" class='link1' >Login to ShuleSoft</a>
+                              <a target='_blank' href="https://<?=$link?>shulesoft.com" class='link1' >Login to ShuleSoft</a>
                             </div>
                           </div>
                         </td>
