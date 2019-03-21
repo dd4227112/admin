@@ -103,7 +103,7 @@ var root_url = "<?= url('/'); ?>";
                                           //  $user=\DB::table($feedback->schema.$feedback->table)->where($feedback->table.'ID',$feedback->user_id)->first();
                                             ?>
                                             <a href="#">
-                                                <div class="user-img"> <img src="<?= $root ?>plugins/images/users/pawandeep.jpg" alt="user" class="img-circle"> <span class="profile-status online pull-right"></span> </div>
+                                                <div class="user-img"> <img src="<?=url('storage/uploads/images/'.Auth::user()->photo)?>" alt="user" class="img-circle"> <span class="profile-status online pull-right"></span> </div>
                                                 <div class="mail-contnet">
                                                     <h5><?php //count($user)==1 ? $user->name: ''?></h5>
                                                     <span class="mail-desc"><?=$feedback->feedback?></span>
@@ -266,7 +266,7 @@ var root_url = "<?= url('/'); ?>";
                             </li>
                             </li>
                             <li class="dropdown">
-                                <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#"> <img src="<?= $root ?>plugins/images/users/varun.jpg" alt="user-img" width="36" class="img-circle"><b class="hidden-xs">  {{ Auth::user()->name() }}</b><span class="caret"></span> </a>
+                                <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#"> <img src="<?=url('storage/uploads/images/'.Auth::user()->photo)?>" alt="user-img" width="36" class="img-circle"><b class="hidden-xs">  {{ Auth::user()->name() }}</b><span class="caret"></span> </a>
                                 <ul class="dropdown-menu dropdown-user animated flipInY">
                                     <li>
                                         <div class="dw-user-box">
@@ -385,8 +385,7 @@ var root_url = "<?= url('/'); ?>";
         </script>
         @endrole
 
-        <script  src="<?= url('public') ?>/intlTelInput/js/intlTelInput.js"></script>
-        <script  src="<?= url('public') ?>/js/customTelInput.js"></script>
+     
         <!-- Bootstrap Core JavaScript -->
         <script src="<?= $root ?>bootstrap/dist/js/bootstrap.min.js"></script>
         <!-- Menu Plugin JavaScript -->
@@ -422,21 +421,7 @@ var root_url = "<?= url('/'); ?>";
 
         <!--Wave Effects -->
 
-        <script>
-            $(document).ready(function () {
-                $(".phoneNumber").intlTelInput();
-            });
-            $('.phoneNumber').blur(function () {
-                if ($('.phoneNumber').intlTelInput('isValidNumber')) {
-                    $("#phone").val($(".phoneNumber").intlTelInput("getNumber"));
-
-                } else {
-                    $("#phone").val('');
-
-
-                }
-            });
-        </script>
+      
         @yield('footer')
 
 

@@ -25,7 +25,9 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/management/contact', 'UsersController@contact');
     Route::get('/management/banks/{pg?}/{path?}', 'UsersController@banks');
     Route::post('/searchInvoice', 'HomeController@invoiceSearch');
-
+    Route::post('/user/changePhoto/{pg?}', 'UsersController@changePhoto');
+    
+    
     Route::resource('users', 'UsersController');
     Route::resource('invoice', 'InvoiceController');
     Route::resource('roles', 'RolesController');
@@ -34,6 +36,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('home', 'HomeController');
     Route::resource('web', 'WebController');
     Route::resource('exam', 'ExamController');
+    Route::resource('support', 'SupportController');
     //Route::resource('market', 'MarketingController');
 
     Route::get('/', 'HomeController@index');

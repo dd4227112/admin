@@ -16,7 +16,7 @@
                         <div class="panel-body"> <?= $faq->answer ?></div>
                         <div class="row col-lg-offset-1">
                             <!--<a href="#"><i class="fa fa-edit"></i>Edit </a>-->
-                            <a href="<?=url('market/faq?action=delete&id='.$faq->id)?>"><i class="fa fa-trash-o"></i> Delete </a>
+                            <a href="<?=url('support/faq?action=delete&id='.$faq->id)?>"><i class="fa fa-trash-o"></i> Delete </a>
                         </div>
                         <br/>
                     </div>
@@ -37,6 +37,12 @@
             <div class="modal-body" id="message_result">
                 <form>
                     <div class="form-group">
+                        <label for="recipient-name" class="control-label">For:</label>
+                        <input type="radio" class="form-input" name="table" value="parent">Parents
+                    <input type="radio" class="form-input" name="table" value="teacher">Teachers 
+                    <input type="radio" class="form-input" name="table" value="student">Students
+                    <input type="radio" class="form-input" name="table" value="user">Staff Members </div>
+                    <div class="form-group">
                         <label for="recipient-name" class="control-label">Question:</label>
                         <input type="text" class="form-control" id="recipient-name1"> </div>
                     <div class="form-group">
@@ -48,7 +54,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="add_faq">Send message</button>
+                <button type="button" class="btn btn-primary" id="add_faq">Submit</button>
             </div>
         </div>
     </div>

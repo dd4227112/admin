@@ -4,7 +4,7 @@
                 <h3><span class="fa-fw open-close"><i class="ti-close ti-menu"></i></span> <span class="hide-menu">Navigation</span></h3> </div>
             <div class="user-profile">
                 <div class="dropdown user-pro-body">
-                    <div><img src="<?= $root ?>plugins/images/users/varun.jpg" alt="user-img" class="img-circle"></div>
+                    <div><img src="<?=url('storage/uploads/images/'.Auth::user()->photo)?>" alt="user-img" class="img-circle"></div>
                     <a href="#" class="dropdown-toggle u-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> {{ Auth::user()->name() }}<span class="caret"></span></a>
                     <ul class="dropdown-menu animated flipInY">
                         <li><a href="{{url('users/'.Auth::user()->id)}}"><i class="ti-user"></i> My Profile</a></li>
@@ -47,15 +47,15 @@
                     </ul>
                 </li>
                 <?php if (can_access('view_invoices')) { ?>
-                <!--                    <li class="active"> <a href="#" class="waves-effect"><i class="fa fa-money fa-fw" data-icon="v"></i> <span class="hide-menu">Invoices <span class="fa arrow"></span> </span></a>
-                                        <ul class="nav nav-second-level ">
-                                            <li> <a href="{{ url('payment/paid') }}" class=""><i class=" fa-fw">1</i><span class="hide-menu">All Paid Invoices</span></a> </li>
-                                            <li> <a href="{{ url('payment/posted') }}" class=""><i class=" fa-fw">2</i><span class="hide-menu">Posted Invoices</span></a> </li>
-                                            <li> <a href="{{url('invoice/searched')}}"><i class=" fa-fw">2</i><span class="hide-menu">Searched Invoices</span></a> </li>
+                    <!--                    <li class="active"> <a href="#" class="waves-effect"><i class="fa fa-money fa-fw" data-icon="v"></i> <span class="hide-menu">Invoices <span class="fa arrow"></span> </span></a>
+                                            <ul class="nav nav-second-level ">
+                                                <li> <a href="{{ url('payment/paid') }}" class=""><i class=" fa-fw">1</i><span class="hide-menu">All Paid Invoices</span></a> </li>
+                                                <li> <a href="{{ url('payment/posted') }}" class=""><i class=" fa-fw">2</i><span class="hide-menu">Posted Invoices</span></a> </li>
+                                                <li> <a href="{{url('invoice/searched')}}"><i class=" fa-fw">2</i><span class="hide-menu">Searched Invoices</span></a> </li>
 
 
-                                        </ul>
-                                    </li>-->
+                                            </ul>
+                                        </li>-->
                 <?php } ?>
 <!--                 <li class=""> <a href="#" class="waves-effect"><i class="fa fa-users fa-fw" data-icon="v"></i> <span class="hide-menu"> User Roles <span class="fa arrow"></span> </span></a>
     <ul class="nav nav-second-level ">
@@ -92,7 +92,7 @@
                             <li> <a href="{{ url('management/contact') }}" class="">
                                     <i class=" fa-fw">2</i><span class="hide-menu">School Contacts</span></a> 
                             </li>
-                             <li> <a href="{{ url('management/banks') }}" class="">
+                            <li> <a href="{{ url('management/banks') }}" class="">
                                     <i class=" fa-fw">3</i><span class="hide-menu">School Banks</span></a> 
                             </li>
                         </ul>
@@ -127,7 +127,7 @@
                             <li><a href="<?= url('message/feedback') ?>"><i class="ti-comments-smiley fa-fw"></i> <span class="hide-menu">User Feedbacks</span></a></li>
                         </ul>
                     </li>
-                
+
                 <?php } ?>
 
                 <!-- Payment navigations --->
@@ -150,7 +150,7 @@
                                     <span class="hide-menu">Payment Status</span>
                                 </a>
                             </li>
-                             <li>
+                            <li>
                                 <a href="<?= url('api/transactions') ?>">
                                     <i class="ti-comments-smiley fa-fw"></i>
                                     <span class="hide-menu">NMB Transactions</span>
@@ -166,48 +166,51 @@
                         </ul>
                     </li>
                 <?php } ?>
-              
-                    <li> <a href="#" class="waves-effect"><i class="mdi mdi-emoticon fa-fw"></i> <span class="hide-menu">Resources<span class="fa arrow"></span></span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li> <a href="<?= url('market/material') ?>"><i class="fa-fw">F</i>
-                                    <span class="hide-menu">Sales Materials</span></a> </li>
-                            <li> <a href="<?= url('market/legal') ?>">
-                                    <i class="fa-fw">T</i>
-                                    <span class="hide-menu">Legal Documents </span></a> </li>
-                            <!--                        <li> 
-                                                        <a href="<?= url('market/brand') ?>"><i class="fa-fw">S</i>
-                                                            <span class="hide-menu">Personal Brands</span></a>
-                                                    </li>-->
 
-                        </ul>
-                    </li>
-         
-         
-                    <li> <a href="#" class="waves-effect"><i class="mdi mdi-emoticon fa-fw"></i> <span class="hide-menu">Training<span class="fa arrow"></span></span></a>
-                        <ul class="nav nav-second-level collapse">
-                            <li> <a href="<?= url('market/allocation') ?>"><i class="fa-fw">F</i>
-                                    <span class="hide-menu">Market Allocations</span></a> </li>
-                            <li> <a href="<?= url('market/objective') ?>"><i class="fa-fw">T</i>
-                                    <span class="hide-menu">How to Market</span></a> </li>
-    <!--                        <li> <a href="<?= url('market/training') ?>"><i class="fa-fw">S</i>
-                                    <span class="hide-menu">How it works</span></a> </li>-->
-                            <li> <a href="<?= url('market/presentation') ?>">
-                                    <i class="fa-fw">M</i><span class="hide-menu">Sample Presentations</span></a> </li>
-                            <li><a href="<?= url('market/faq') ?>"><i class="fa-fw">L</i>
-                                    <span class="hide-menu">FAQ</span></a></li>
-    <!--                        <li><a href="<?= url('market/test') ?>"><i class="fa-fw">W</i><span class="hide-menu">
-                                        Knowledge Test</span></a></li>-->
-                        </ul>
-                    </li>
-            
-                <li> <a href="#" class="waves-effect"><i class="mdi mdi-emoticon fa-fw"></i> <span class="hide-menu">Help<span class="fa arrow"></span></span></a>
+                <li> <a href="#" class="waves-effect"><i class="mdi mdi-emoticon fa-fw"></i> <span class="hide-menu">Resources<span class="fa arrow"></span></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li> <a href="<?= url('market/material') ?>"><i class="fa-fw">F</i>
+                                <span class="hide-menu">Sales Materials</span></a> </li>
+                        <li> <a href="<?= url('market/legal') ?>">
+                                <i class="fa-fw">T</i>
+                                <span class="hide-menu">Legal Documents </span></a> </li>
+                        <!--                        <li> 
+                                                    <a href="<?= url('market/brand') ?>"><i class="fa-fw">S</i>
+                                                        <span class="hide-menu">Personal Brands</span></a>
+                                                </li>-->
+
+                    </ul>
+                </li>
+
+
+                <li> <a href="#" class="waves-effect"><i class="mdi mdi-emoticon fa-fw"></i> <span class="hide-menu">Training<span class="fa arrow"></span></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li> <a href="<?= url('market/allocation') ?>"><i class="fa-fw">F</i>
+                                <span class="hide-menu">Market Allocations</span></a> </li>
+                        <li> <a href="<?= url('market/objective') ?>"><i class="fa-fw">T</i>
+                                <span class="hide-menu">How to Market</span></a> </li>
+<!--                        <li> <a href="<?= url('market/training') ?>"><i class="fa-fw">S</i>
+                                <span class="hide-menu">How it works</span></a> </li>-->
+                        <li> <a href="<?= url('market/presentation') ?>">
+                                <i class="fa-fw">M</i><span class="hide-menu">Sample Presentations</span></a> </li>
+                        <li><a href="<?= url('market/faq') ?>"><i class="fa-fw">L</i>
+                                <span class="hide-menu">FAQ</span></a></li>
+<!--                        <li><a href="<?= url('market/test') ?>"><i class="fa-fw">W</i><span class="hide-menu">
+                                    Knowledge Test</span></a></li>-->
+                    </ul>
+                </li>
+
+                <li> <a href="#" class="waves-effect"><i class="mdi mdi-emoticon fa-fw"></i> <span class="hide-menu">Customer Support<span class="fa arrow"></span></span></a>
                     <ul class="nav nav-second-level collapse">
 
-                        <li><a href="<?= url('market/faq') ?>"><i class="fa-fw">Q</i>
+                        <li><a href="<?= url('support/faq') ?>"><i class="fa-fw">Q</i>
                                 <span class="hide-menu">FAQ</span></a></li>
-                        <li> <a href="<?= url('market/presentation') ?>">
-                                <i class="fa-fw">G</i><span class="hide-menu">Usage Guide</span></a> </li>
-
+                        <li> <a href="<?= url('support/guide') ?>">
+                                <i class="fa-fw">U</i><span class="hide-menu">Usage Guide</span></a> </li>
+                        <li> <a href="<?= url('support/parents') ?>">
+                                <i class="fa-fw">P</i><span class="hide-menu">Parents Feedback</span></a> </li>
+                        <li> <a href="<?= url('support/sentsms') ?>">
+                                <i class="fa-fw">S</i><span class="hide-menu">Sent SMS</span></a> </li>
                     </ul>
                 </li>
                 <li class="devider"></li>

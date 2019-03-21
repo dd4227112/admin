@@ -6,6 +6,8 @@ use App\Model\Role;
 use Illuminate\Http\Request;
 use App\Model\User;
 use DB;
+use Intervention\Image\ImageManagerStatic as Image;
+
 use Auth;
 
 class UsersController extends Controller {
@@ -44,6 +46,7 @@ class UsersController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
+
         $this->validate($request, [
             'firstname' => 'required|max:255',
             'lastname' => 'required|max:255',
@@ -176,6 +179,19 @@ class UsersController extends Controller {
         }
         $this->data['schema'] = $seg;
         return view('users.school_account', $this->data);
+    }
+
+    public function changePhoto() {  
+
+        if (request()->file('photo')) {
+            $this->validate(\request(), ['image' => 'max:1000'], ['image' => 'The photo size must be less than 1MB']);
+            $filename = time() . rand(11, 8844) . '.' . request()->file('photo')->guessExtension();
+            $folder='storage/uploads/images';
+            is_file($folder) ? mkdir($folder,0777,TRUE): '';
+            Image::make(request()->file('photo'))->resize(132, 185)->save('storage/uploads/images/' . $filename);
+            \App\Model\User::where('id', request()->segment(3))->update(['photo' => $filename]);
+            return redirect()->back();
+        }
     }
 
 }

@@ -9,6 +9,7 @@
         "awobaz/compoships": "^1.0",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
+        "intervention/image": "^2.4",
         "pragmarx/tracker": "^3.3",
         "zizaco/entrust": "5.2.x-dev"
     },

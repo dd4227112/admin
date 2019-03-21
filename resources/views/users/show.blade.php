@@ -1,99 +1,124 @@
 @extends('layouts.app')
 
 @section('content')
-    @include('users.style')
-    <?php $root =url('/').'/public/' ?>
-    <div id="newUser">
-        <div id="outer" class="container">
-            <div id="wrapper" class="layout" style="background-color: #fff; margin-bottom: 40px;">
+@include('users.style')
 
-                <div id="dpEditor" class="flex">
-
-                    <div  class="layout vertical center">
-
-
-                        <div id="dp">
-                            <?php
-                            $dp = "images/uploads/user_dps/";
-                            $dp = isset($user->dp) ? $user->dp : 'dp.png' ;
-
-                            ?>
-
-                            <img src='{{$root."images/uploads/user_dps/$user->dp"}}' id="curDp" alt="">
-                        </div>
-<!--                        <div class="layout">
-                            <a class="btn btn-primary" href="{{'/user/'.$user->id}}">
-                                View Professional Profile
-                            </a>
-                        </div>-->
-
-                    </div>
-
-                </div>
-                <div id="editorForm">
-                    <div class="row">
-                        <div class="col-lg-12 margin-tb">
-                            <div class="pull-left">
-                                <h2>User Details</h2>
-                            </div>
-                             @role('admin')
-                            <div class="pull-right">
-                                <a class="btn btn-primary" href="{{ route('users.index') }}"> Back</a>
-                            </div>
-                             @endrole
-                        </div>
-                    </div>
+<div class="container-fluid">
+    @role('admin')
+    <div class="pull-right">
+        <a class="btn btn-primary" href="{{ route('users.index') }}"> Back</a>
+    </div>
+    @endrole
+    <!-- /.row -->
+    <!-- .row -->
     <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="form-group">
-                <strong>First Name:</strong>
-                {{ $user->firstname }}
+        <div class="col-md-4 col-xs-12">
+            <div class="white-box">
+                <div class="user-bg"> <img width="100%" alt="user" src="<?=url('storage/uploads/images/'.$user->photo)?>">
+                    <div class="overlay-box">
+                        <div class="user-content">
+                            <a href="javascript:void(0)"><img src="<?=url('storage/uploads/images/'.$user->photo)?>" class="thumb-lg img-circle" alt="img"></a>
+                            <h4 class="text-white">{{ $user->firstname.' '.$user->lastname }}</h4>
+                            <h5 class="text-white">{{ $user->email }}</h5> </div>
+                    </div>
+                </div>
+                <div class="user-btm-box">
+                    <div class="col-md-4 col-sm-4 text-center">
+                        <p class="text-purple"><i class="ti-facebook"></i></p>
+                        <h1>258</h1> </div>
+                    <div class="col-md-4 col-sm-4 text-center">
+                        <p class="text-blue"><i class="ti-twitter"></i></p>
+                        <h1>125</h1> </div>
+                    <div class="col-md-4 col-sm-4 text-center">
+                        <p class="text-danger"><i class="ti-dribbble"></i></p>
+                        <h1>556</h1> </div>
+                </div>
             </div>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="form-group">
-                <strong>Last Name:</strong>
-                {{ $user->lastname }}
-            </div>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="form-group">
-                <strong>Email:</strong>
-                {{ $user->email }}
-            </div>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="form-group">
-                <strong>Gender:</strong>
-                {{ $user->gender }}
-            </div>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="form-group">
-                <strong>Skills:</strong>
-                {{ $user->skills }}
-            </div>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="form-group">
-                <strong>Town:</strong>
-                {{ $user->town }}
-            </div>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="form-group">
-                <strong>Roles:</strong>
+        <div class="col-md-8 col-xs-12">
+            <div class="white-box">
+                <ul class="nav nav-tabs tabs customtab">
+                    <li class="active tab">
+                        <a href="#home" data-toggle="tab"> <span class="visible-xs"><i class="fa fa-home"></i></span> <span class="hidden-xs">User Information</span> </a>
+                    </li>
 
-                @if(!empty($userRoles))
-                    @foreach($userRoles as $v)
-                        <label class="label label-success">{{ $v->display_name }}</label>
-                    @endforeach
-                @endif
+                    <li class="tab">
+                        <a href="#settings" data-toggle="tab" aria-expanded="false"> <span class="visible-xs"><i class="fa fa-cog"></i></span> <span class="hidden-xs">Settings</span> </a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="home">
+                        <div class="steamline">
+
+
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="text-nowrap" width="150"></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-nowrap"> First Name</td>
+                                        <td>  {{ $user->firstname }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap"> Last Name</td>
+                                        <td>  {{ $user->lastname }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">Email</td>
+                                        <td>  {{ $user->email }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap"> Gender</td>
+                                        <td>  {{ $user->gender }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap"> skills</td>
+                                        <td>  {{ $user->skills }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">Town</td>
+                                        <td>  {{ $user->town }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap"> Roles</td>
+                                        <td>  @if(!empty($userRoles))
+                                            @foreach($userRoles as $v)
+                                            <label class="label label-success">{{ $v->display_name }}</label>
+                                            @endforeach
+                                            @endif</td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="settings">
+                        <form class="form-horizontal form-material" method="post" action="<?=url('user/changePhoto/'.$user->id)?>" enctype="multipart/form-data">
+                           
+                            <div class="form-group">
+                                <label class="col-md-12">Photo</label>
+                                <div class="col-md-12">
+                                    <input type="file" name="photo" accept=".png,.jpg,.jpeg,.gif" class="form-control form-control-line">
+                                </div>
+                            </div>
+                       
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <?= csrf_field()?>
+                                    <button class="btn btn-success">Update Profile</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    </div>
-    </div>
-        </div>
-    </div>
+
+</div>
 @endsection

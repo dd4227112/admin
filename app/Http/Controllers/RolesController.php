@@ -110,7 +110,7 @@ class RolesController extends Controller {
     }
 
     public function shulesoftPermission() {
-        $this->data['permission_groups'] = \App\Model\Permission_group::all();
+        $this->data['permission_groups'] = \App\Model\PermissionGroup::all();
         return view('roles.shulesoft_permission', $this->data);
     }
 
