@@ -3,7 +3,7 @@
 <div class="row">
     <div class="col-md-12">
         <p align='left'>
-            <a class="btn btn-success" href="<?= url('support/guide/add') ?>">Add New Guide</a></p>
+            <a class="btn btn-success" href="<?= url('support/guide?pg=add') ?>">Add New Guide</a></p>
         <br/>
     </div>
 </div>

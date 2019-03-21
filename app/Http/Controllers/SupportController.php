@@ -112,7 +112,7 @@ class SupportController extends Controller {
         if (request()->segment(3) == 'delete') {
             \App\Model\Guide::find(request()->segment(4))->delete();
             return redirect()->back();
-        } else if (request()->segment(3) == 'add') {
+        } else if (request('pg') == 'add') {
             $this->data['guides'] =[];
             $page = 'add_guide';
         } else if (request()->segment(3) == 'edit') {

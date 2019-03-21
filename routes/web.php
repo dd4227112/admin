@@ -26,7 +26,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/management/banks/{pg?}/{path?}', 'UsersController@banks');
     Route::post('/searchInvoice', 'HomeController@invoiceSearch');
     Route::post('/user/changePhoto/{pg?}', 'UsersController@changePhoto');
-    Route::any('support/guide/add/{?pg}','SupportController@guide');
+    Route::any('support/guide/{?pg}','SupportController@guide');
     
     Route::resource('users', 'UsersController');
     Route::resource('invoice', 'InvoiceController');
