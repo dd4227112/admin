@@ -69,7 +69,7 @@
                 $.ajax({
                     url: '{{ url("home") }}',
                     data: {question: question, answer: answer},
-                    type: 'POST',
+                    type: 'get',
                     dataType: 'HTML',
                     success: function (data) {
                         $('#message_result').html(data);

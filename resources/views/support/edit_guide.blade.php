@@ -88,7 +88,7 @@
                 $('#content_for').val(0);
             } else {
                 $.ajax({
-                    type: 'POST',
+                    type: 'get',
                     url: "<?= url('support/getPermission') ?>",
                     data: "group_id=" + group_id,
                     dataType: "html",
