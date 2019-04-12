@@ -30,8 +30,8 @@
                     ?>
                     <tr>
                         <td><?= $i ?></td>
-                        <td><?= $value->permission->display_name ?></td>
-                        <td><?= $value->permission->permissionGroup->name ?></td>
+                        <td><?= isset($value->permission->display_name) ?$value->permission->display_name:''  ?></td>
+                        <td><?= isset( $value->permission->permissionGroup->name) ? $value->permission->permissionGroup->name:'' ?></td>
                         <td><a href="#"  data-toggle="modal" data-target="#exampleModal<?= $i ?>" data-whatever="@mdo">View</a>
                             <div class="modal fade bs-example-modal-lg" id="exampleModal<?= $i ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1" style="display: none;">
                                 <div class="modal-dialog modal-lg" role="document">

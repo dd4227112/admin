@@ -22,9 +22,9 @@
                 <label class="control-label">Update Type:</label>
                 <div class="col-md-12">
                     <select name="update_type" class="form-control">
-                        <option value="Bug">Bug</option>
-                        <option value="Added Module">Added Module</option>
-                        <option value="Upgraded Module">Upgraded Module</option>
+                        <option value="Issue Resolved">Issue Resolved</option>
+                        <option value="Added Feature">Added Feature</option>
+                        <option value="Modified Feature">Modified Feature</option>
                     </select>
                     <span></span>
                 </div>
@@ -54,13 +54,27 @@
     </form>
 
 </div>
-<script src="<?= $root ?>plugins/bower_components/html5-editor/wysihtml5-0.3.0.js"></script>
-<script src="<?= $root ?>plugins/bower_components/html5-editor/bootstrap-wysihtml5.js"></script>
-<script>
-$(document).ready(function () {
-$('.textarea_editor').wysihtml5();
-});
-</script>
+<script src="https://cloud.tinymce.com/5/tinymce.min.js"></script>
+<script type="text/javascript">
+
+    wywg = function () {
+            tinymce.init({
+                selector: "textarea",
+                //theme: "modern",
+                height: 300,
+                plugins: [
+                    "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+                    "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                    "save table contextmenu directionality emoticons template paste textcolor"
+                ],
+                toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
+
+            });
+        
+    }
+
+    $(document).ready(wywg);
+    </script>
 <script src="<?= $root ?>js/clipboard.min.js"></script>
 <script>
 var clipboard = new Clipboard('.mycode');
