@@ -89,9 +89,9 @@ class HomeController extends Controller {
 
         foreach ($schema_records as $record) {
             $schema = $record->table_schema . '.';
-            $revenue = \collect(DB::select("select sum(amount) from " . $schema . "total_revenues where payment_date::date='" . date('Y-m-d') . "'"))->first();
+            $revenue = \collect(DB::select("select sum(amount) from " . $schema . "total_revenues where date::date='" . date('Y-m-d') . "'"))->first();
 
-            $expense = \collect(DB::select("select sum(amount) from " . $schema . "expense where date::date='" . date('Y-m-d') . "'"))->first();
+            $expense = \collect(DB::select("select sum(amount) from " . $schema . "total_expense where date::date='" . date('Y-m-d') . "'"))->first();
             $message = ' <div class="col-lg-6 col-sm-6 col-xs-12">
             <div class="white-box">
                 <h3 class="box-title">Revenue</h3>
