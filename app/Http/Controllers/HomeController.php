@@ -111,7 +111,7 @@ class HomeController extends Controller {
         </div>';
             $setting = DB::table($schema . 'setting')->first();
             $link = strtoupper($record->table_schema) == 'PUBLIC' ? 'demo.' : $record->table_schema . '.';
-            $data = ['content' => $message, 'link' => $link, 'photo' => $setting->photo, 'sitename' => $setting->sitename, 'name' => ''];
+            $data = ['content' => $message, 'link' => $link, 'photo' => $setting->photo, 'sitename' => $setting->sname, 'name' => ''];
             \Mail::send('email.default', $data, function ($m) use ($setting) {
                 $m->from('noreply@shulesoft.com', $setting->sname);
                 $m->to($setting->email)->subject(date('d M Y') . ' Daily Report');
