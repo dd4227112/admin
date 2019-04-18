@@ -93,11 +93,11 @@ class HomeController extends Controller {
             $setting = DB::table($schema . 'setting')->first();
             $expense = \collect(DB::select("select sum(amount) from " . $schema . "total_expenses where date::date='" . date('Y-m-d') . "'"))->first();
             $message = ' <p>Hello,<br/>
-                ' . date('d M Y') . '  Report
+                Find ' . date('d M Y') . '  Report
  </p><div class="col-lg-6 col-sm-6 col-xs-12">
             <div class="white-box">
                 <h3 class="box-title">Revenue</h3>
-                <div class="text-right"> <span class="text-muted">Today Total Revenue</span>
+                <div class="text-right"> <span class="text-muted">Total Revenue </span>
                     <h1>' . $setting->currency_symbol . ' ' . number_format($revenue->sum) . '</h1> </div>
                 <span class="text-info">Student Payments +other sources</span>
                
@@ -106,11 +106,11 @@ class HomeController extends Controller {
         <div class="col-lg-6 col-sm-6 col-xs-12">
             <div class="white-box">
                 <h3 class="box-title">Expense</h3>
-                <div class="text-right"> <span class="text-muted">Today Expense</span>
+                <div class="text-right"> <span class="text-muted">Total Expense</span>
                     <h1>' . $setting->currency_symbol . ' ' . number_format($expense->sum) . '</h1> </div> 
                         <span class="text-inverse">Without depreciation</span>
             </div>
-        </div><p>For more detailed report, please login into your ShuleSoft Account</p>';
+        </div><br/><p>For more detailed report, please login into your ShuleSoft Account</p>';
 
             $link = strtoupper($record->table_schema) == 'PUBLIC' ? 'demo.' : $record->table_schema . '.';
             $data = ['content' => $message, 'link' => $link, 'photo' => $setting->photo, 'sitename' => $setting->sname, 'name' => ''];
