@@ -220,7 +220,7 @@ class Message extends Controller {
                         $karibusms->set_name(strtoupper($sms->schema_name));
                         $karibusms->karibuSMSpro = $sms->type;
                         $result = (object) json_decode($karibusms->send_sms($sms->phone_number, strtoupper($schema) . ': ' . $sms->body . '. https://' . $link . 'shulesoft.com'));
-                        if ($result->success == 1) {
+                        if (is_object($result) && isset($result->success) &&  $result->success== 1) {
                             DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 1, 'return_code' => json_encode($result), 'updated_at' => 'now()']);
                         } else {
 //stop retrying

@@ -84,8 +84,43 @@ class HomeController extends Controller {
         return view('profile.search_results', $this->data);
     }
 
-    public function dailyReport() {
+    public function createTodayReport() {
+        $schema_records = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant','admin','api','app','skysat','dodoso') and table_schema='public'");
 
+        foreach ($schema_records as $record) {
+            $schema = $record->table_schema . '.';
+            $revenue = \collect(DB::select("select sum(amount) from " . $schema . "total_revenues where payment_date::date='" . date('Y-m-d') . "'"))->first();
+
+            $expense = \collect(DB::select("select sum(amount) from " . $schema . "expense where date::date='" . date('Y-m-d') . "'"))->first();
+            $message = ' <div class="col-lg-6 col-sm-6 col-xs-12">
+            <div class="white-box">
+                <h3 class="box-title">Revenue</h3>
+                <div class="text-right"> <span class="text-muted">Today Total Revenue</span>
+                    <h1>' . $revenue->sum . '</h1> </div>
+                <span class="text-info">Student Payments +other sources</span>
+               
+            </div>
+        </div>
+        <div class="col-lg-6 col-sm-6 col-xs-12">
+            <div class="white-box">
+                <h3 class="box-title">Expense</h3>
+                <div class="text-right"> <span class="text-muted">Today Expense</span>
+                    <h1>' . $expense->sum . '</h1> </div> 
+                        <span class="text-inverse">Without depreciation</span>
+            </div>
+        </div>';
+            $setting = DB::table($schema . 'setting')->first();
+            $link = strtoupper($record->table_schema) == 'PUBLIC' ? 'demo.' : $record->table_schema . '.';
+            $data = ['content' => $message, 'link' => $link, 'photo' => $setting->photo, 'sitename' => $setting->sitename, 'name' => ''];
+            \Mail::send('email.default', $data, function ($m) use ($setting) {
+                $m->from('noreply@shulesoft.com', $setting->sitename);
+                $m->to($setting->email)->subject(date('d M Y') . ' Daily Report');
+            });
+        }
+    }
+
+    public function dailyReport() {
+        return $this->createTodayReport();
         $schema_records = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant','admin','api','app','skysat','dodoso')");
 
         foreach ($schema_records as $record) {
