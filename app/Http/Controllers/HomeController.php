@@ -92,11 +92,13 @@ class HomeController extends Controller {
             $revenue = \collect(DB::select("select sum(amount) from " . $schema . "total_revenues where date::date='" . date('Y-m-d') . "'"))->first();
             $setting = DB::table($schema . 'setting')->first();
             $expense = \collect(DB::select("select sum(amount) from " . $schema . "total_expenses where date::date='" . date('Y-m-d') . "'"))->first();
-            $message = ' <div class="col-lg-6 col-sm-6 col-xs-12">
+            $message = ' <p>Hello,<br/>
+                ' . date('d M Y') . '  Report
+ </p><div class="col-lg-6 col-sm-6 col-xs-12">
             <div class="white-box">
                 <h3 class="box-title">Revenue</h3>
                 <div class="text-right"> <span class="text-muted">Today Total Revenue</span>
-                    <h1>' . $setting->currency_symbol.' '.number_format($revenue->sum) . '</h1> </div>
+                    <h1>' . $setting->currency_symbol . ' ' . number_format($revenue->sum) . '</h1> </div>
                 <span class="text-info">Student Payments +other sources</span>
                
             </div>
@@ -105,10 +107,10 @@ class HomeController extends Controller {
             <div class="white-box">
                 <h3 class="box-title">Expense</h3>
                 <div class="text-right"> <span class="text-muted">Today Expense</span>
-                    <h1>' . $setting->currency_symbol.' '.number_format($expense->sum) . '</h1> </div> 
+                    <h1>' . $setting->currency_symbol . ' ' . number_format($expense->sum) . '</h1> </div> 
                         <span class="text-inverse">Without depreciation</span>
             </div>
-        </div>';
+        </div><p>For more detailed report, please login into your ShuleSoft Account</p>';
 
             $link = strtoupper($record->table_schema) == 'PUBLIC' ? 'demo.' : $record->table_schema . '.';
             $data = ['content' => $message, 'link' => $link, 'photo' => $setting->photo, 'sitename' => $setting->sname, 'name' => ''];
