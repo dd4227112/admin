@@ -99,7 +99,7 @@ class HomeController extends Controller {
         
     }
     public function createTodayReport() {
-        $schema_records = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant','admin','api','app','skysat','dodoso') and table_schema='public'");
+        $schema_records = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant','admin','api','app','skysat','dodoso')");
 
         foreach ($schema_records as $record) {
             $schema = $record->table_schema . '.';
@@ -107,17 +107,17 @@ class HomeController extends Controller {
             $setting = DB::table($schema . 'setting')->first();
             $expense = \collect(DB::select("select sum(amount) from " . $schema . "total_expenses where date::date='" . date('Y-m-d') . "'"))->first();
             if ($revenue->sum > 0 || $expense->sum > 0) {
-                $message = ' <p>Hello,<br/>
-                Find ' . date('d M Y') . '  Report
- </p>
+                $message = ' <h2><b>
+                ' . date('d M Y') . '  Report
+ </b></h2><p></p>
         ' . $this->putMessage('Revenue', 'Total Revenue', $setting->currency_symbol . ' ' . number_format($revenue->sum), 'Student Payments +other sources') . $this->putMessage('Expense', 'Total Expense', $setting->currency_symbol . ' ' . number_format($expense->sum), 'Without depreciation') . '
-        <br/><p>For more detailed report, please login into your ShuleSoft Account</p>';
+        <br/><p>This is automated report. For more detailed report, please login into your ShuleSoft Account</p>';
 
                 $link = strtoupper($record->table_schema) == 'PUBLIC' ? 'demo.' : $record->table_schema . '.';
                 $data = ['content' => $message, 'link' => $link, 'photo' => $setting->photo, 'sitename' => $setting->sname, 'name' => ''];
                 \Mail::send('email.default', $data, function ($m) use ($setting) {
                     $m->from('noreply@shulesoft.com', $setting->sname);
-                    $m->to($setting->email)->subject(date('d M Y') . ' Daily Report');
+                    $m->to($setting->email)->subject($setting->sname.' '.date('d M Y') . ' Report');
                 });
             }
         }
