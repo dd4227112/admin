@@ -5,6 +5,7 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Http\Controllers\Message;
+use App\Http\Controllers\HomeController;
 use DB;
 
 class Kernel extends ConsoleKernel {
@@ -68,6 +69,10 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             $this->checkSchedule();
         })->everyMinute();
+
+        $schedule->call(function () {
+            (new HomeController())->createTodayReport();
+        })->dailyAt('14:50'); // Eq to 17:50 h 
     }
 
     function checkPaymentPattern($user, $schema) {

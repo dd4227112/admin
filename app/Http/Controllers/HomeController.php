@@ -84,6 +84,20 @@ class HomeController extends Controller {
         return view('profile.search_results', $this->data);
     }
 
+    public function putMessage($title, $subtitle, $value, $value_desc) {
+        return '<div class="col-lg-6 col-sm-6 col-xs-12">
+            <div class="white-box">
+                <h3 class="box-title">' . $title . '</h3>
+                <div class="text-right"> <span class="text-muted">' . $subtitle . '</span>
+                    <h1>' . $value . '</h1> </div>
+                <span class="text-info">' . $value_desc . '</span>
+               
+            </div>
+        </div>';
+    }
+    public function additionalStatusReport() {
+        
+    }
     public function createTodayReport() {
         $schema_records = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant','admin','api','app','skysat','dodoso') and table_schema='public'");
 
@@ -92,33 +106,49 @@ class HomeController extends Controller {
             $revenue = \collect(DB::select("select sum(amount) from " . $schema . "total_revenues where date::date='" . date('Y-m-d') . "'"))->first();
             $setting = DB::table($schema . 'setting')->first();
             $expense = \collect(DB::select("select sum(amount) from " . $schema . "total_expenses where date::date='" . date('Y-m-d') . "'"))->first();
-            $message = ' <p>Hello,<br/>
+            if ($revenue->sum > 0 || $expense->sum > 0) {
+                $message = ' <p>Hello,<br/>
                 Find ' . date('d M Y') . '  Report
- </p><div class="col-lg-6 col-sm-6 col-xs-12">
-            <div class="white-box">
-                <h3 class="box-title">Revenue</h3>
-                <div class="text-right"> <span class="text-muted">Total Revenue </span>
-                    <h1>' . $setting->currency_symbol . ' ' . number_format($revenue->sum) . '</h1> </div>
-                <span class="text-info">Student Payments +other sources</span>
-               
-            </div>
-        </div>
-        <div class="col-lg-6 col-sm-6 col-xs-12">
-            <div class="white-box">
-                <h3 class="box-title">Expense</h3>
-                <div class="text-right"> <span class="text-muted">Total Expense</span>
-                    <h1>' . $setting->currency_symbol . ' ' . number_format($expense->sum) . '</h1> </div> 
-                        <span class="text-inverse">Without depreciation</span>
-            </div>
-        </div><br/><p>For more detailed report, please login into your ShuleSoft Account</p>';
+ </p>
+        ' . $this->putMessage('Revenue', 'Total Revenue', $setting->currency_symbol . ' ' . number_format($revenue->sum), 'Student Payments +other sources') . $this->putMessage('Expense', 'Total Expense', $setting->currency_symbol . ' ' . number_format($expense->sum), 'Without depreciation') . '
+        <br/><p>For more detailed report, please login into your ShuleSoft Account</p>';
 
-            $link = strtoupper($record->table_schema) == 'PUBLIC' ? 'demo.' : $record->table_schema . '.';
-            $data = ['content' => $message, 'link' => $link, 'photo' => $setting->photo, 'sitename' => $setting->sname, 'name' => ''];
-            \Mail::send('email.default', $data, function ($m) use ($setting) {
-                $m->from('noreply@shulesoft.com', $setting->sname);
-                $m->to($setting->email)->subject(date('d M Y') . ' Daily Report');
-            });
+                $link = strtoupper($record->table_schema) == 'PUBLIC' ? 'demo.' : $record->table_schema . '.';
+                $data = ['content' => $message, 'link' => $link, 'photo' => $setting->photo, 'sitename' => $setting->sname, 'name' => ''];
+                \Mail::send('email.default', $data, function ($m) use ($setting) {
+                    $m->from('noreply@shulesoft.com', $setting->sname);
+                    $m->to($setting->email)->subject(date('d M Y') . ' Daily Report');
+                });
+            }
         }
+    }
+
+    /**
+     * we send this report every Friday evening, 16:45h
+     */
+    public function weeklyReport() {
+        
+    }
+
+    /**
+     * we send this report at the end of each month
+     */
+    public function monthlyReport() {
+        
+    }
+
+    /**
+     * We send this report at the end of each quarter as defined in fee installments
+     */
+    public function quarterReport() {
+        
+    }
+
+    /**
+     * we send this report at the end of each year as defined in a given academic year
+     */
+    public function annualReport() {
+        
     }
 
     public function dailyReport() {
