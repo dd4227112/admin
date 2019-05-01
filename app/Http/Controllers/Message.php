@@ -109,7 +109,7 @@ class Message extends Controller {
                         if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
                             DB::table($schema->table_schema . '.email')->insert(array(
                                 'email' => $user->email,
-                                'body' => request('message'),
+                                'body' => str_replace('href="','href="'.$schema->table_schema.'.shulesoft.com/',request('message')),
                                 'subject' => 'ShuleSoft Latest Updates: ' . request('release_date'),
                                 'user_id' => $user->id,
                                 'table' => $user->table
