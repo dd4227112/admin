@@ -99,7 +99,7 @@ class Message extends Controller {
                 'message' => 'required',
                 'release_date' => 'date'
             ]);
-            DB::table('admin.updates')->insert(array_merge(request()->except(['_token', '_wysihtml5_mode', 'for']), ['for' => implode(',', request('for'))]));
+            DB::table('admin.updates')->insert(array_merge(request()->except(['_token', '_wysihtml5_mode', 'for','subject']), ['for' => implode(',', request('for'))]));
             $message_success = 'Update recorded successfully';
             $schemas = (new \App\Http\Controllers\DatabaseController())->loadSchema();
             foreach ($schemas as $schema) {
@@ -109,8 +109,8 @@ class Message extends Controller {
                         if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
                             DB::table($schema->table_schema . '.email')->insert(array(
                                 'email' => $user->email,
-                                'body' => str_replace('href="','href="'.$schema->table_schema.'.shulesoft.com/',request('message')),
-                                'subject' => 'ShuleSoft Latest Updates: ' . request('release_date'),
+                                'body' => str_replace('href="', 'href="' . $schema->table_schema . '.shulesoft.com/', request('message')),
+                                'subject' => strlen(request('subject')) > 4 ? request('subject') : 'ShuleSoft Latest Updates: ' . request('release_date'),
                                 'user_id' => $user->id,
                                 'table' => $user->table
                             ));
@@ -220,7 +220,7 @@ class Message extends Controller {
                         $karibusms->set_name(strtoupper($sms->schema_name));
                         $karibusms->karibuSMSpro = $sms->type;
                         $result = (object) json_decode($karibusms->send_sms($sms->phone_number, strtoupper($schema) . ': ' . $sms->body . '. https://' . $link . 'shulesoft.com'));
-                        if (is_object($result) && isset($result->success) &&  $result->success== 1) {
+                        if (is_object($result) && isset($result->success) && $result->success == 1) {
                             DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 1, 'return_code' => json_encode($result), 'updated_at' => 'now()']);
                         } else {
 //stop retrying
@@ -240,7 +240,7 @@ class Message extends Controller {
                 if (filter_var($message->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $message->email)) {
                     try {
                         $link = strtoupper($message->schema_name) == 'PUBLIC' ? 'demo.' : $message->schema_name . '.';
-                        $data = ['content' => $message->body, 'link' =>$link, 'photo' => $message->photo, 'sitename' => $message->sitename, 'name' => ''];
+                        $data = ['content' => $message->body, 'link' => $link, 'photo' => $message->photo, 'sitename' => $message->sitename, 'name' => ''];
                         \Mail::send('email.default', $data, function ($m) use ($message) {
                             $m->from('noreply@shulesoft.com', $message->sitename);
                             $m->to($message->email)->subject($message->subject);
@@ -322,9 +322,9 @@ Kind regards,';
     }
 
     public function showreply() {
-        $update=\App\Model\Feedback::find(request('message_id'));
-        $update->update(['shared' => request('status')=='false' ? 1 :0]);
-    return 1;
+        $update = \App\Model\Feedback::find(request('message_id'));
+        $update->update(['shared' => request('status') == 'false' ? 1 : 0]);
+        return 1;
     }
 
 }
