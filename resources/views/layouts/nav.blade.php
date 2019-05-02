@@ -4,7 +4,7 @@
                 <h3><span class="fa-fw open-close"><i class="ti-close ti-menu"></i></span> <span class="hide-menu">Navigation</span></h3> </div>
             <div class="user-profile">
                 <div class="dropdown user-pro-body">
-                    <div><img src="<?=url('storage/uploads/images/'.Auth::user()->photo)?>" alt="user-img" class="img-circle"></div>
+                    <div><img src="<?= url('storage/uploads/images/' . Auth::user()->photo) ?>" alt="user-img" class="img-circle"></div>
                     <a href="#" class="dropdown-toggle u-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> {{ Auth::user()->name() }}<span class="caret"></span></a>
                     <ul class="dropdown-menu animated flipInY">
                         <li><a href="{{url('users/'.Auth::user()->id)}}"><i class="ti-user"></i> My Profile</a></li>
@@ -47,15 +47,15 @@
                     </ul>
                 </li>
                 <?php if (can_access('view_invoices')) { ?>
-                    <!--                    <li class="active"> <a href="#" class="waves-effect"><i class="fa fa-money fa-fw" data-icon="v"></i> <span class="hide-menu">Invoices <span class="fa arrow"></span> </span></a>
-                                            <ul class="nav nav-second-level ">
-                                                <li> <a href="{{ url('payment/paid') }}" class=""><i class=" fa-fw">1</i><span class="hide-menu">All Paid Invoices</span></a> </li>
-                                                <li> <a href="{{ url('payment/posted') }}" class=""><i class=" fa-fw">2</i><span class="hide-menu">Posted Invoices</span></a> </li>
-                                                <li> <a href="{{url('invoice/searched')}}"><i class=" fa-fw">2</i><span class="hide-menu">Searched Invoices</span></a> </li>
+                        <!--                    <li class="active"> <a href="#" class="waves-effect"><i class="fa fa-money fa-fw" data-icon="v"></i> <span class="hide-menu">Invoices <span class="fa arrow"></span> </span></a>
+                                                <ul class="nav nav-second-level ">
+                                                    <li> <a href="{{ url('payment/paid') }}" class=""><i class=" fa-fw">1</i><span class="hide-menu">All Paid Invoices</span></a> </li>
+                                                    <li> <a href="{{ url('payment/posted') }}" class=""><i class=" fa-fw">2</i><span class="hide-menu">Posted Invoices</span></a> </li>
+                                                    <li> <a href="{{url('invoice/searched')}}"><i class=" fa-fw">2</i><span class="hide-menu">Searched Invoices</span></a> </li>
 
 
-                                            </ul>
-                                        </li>-->
+                                                </ul>
+                                            </li>-->
                 <?php } ?>
 <!--                 <li class=""> <a href="#" class="waves-effect"><i class="fa fa-users fa-fw" data-icon="v"></i> <span class="hide-menu"> User Roles <span class="fa arrow"></span> </span></a>
     <ul class="nav nav-second-level ">
@@ -120,11 +120,12 @@
                     <li> 
                         <a href="#" class="waves-effect"><i class="mdi mdi-content-copy fa-fw"></i> <span class="hide-menu">Message(s)<span class="fa arrow"></span><span class="label label-rouded label-warning pull-right"></span></span></a>
                         <ul class="nav nav-second-level collapse">
-                            <li><a href="<?= url('message/create') ?>"><i class="ti-layout-width-default fa-fw"></i> <span class="hide-menu">Send Message</span></a></li>
-                            <li><a href="<?= url('message/show/email') ?>"><i class="ti-email fa-fw"></i> <span class="hide-menu">Pending Emails</span></a></li>
-                            <li><a href="<?= url('message/show/sms') ?>"><i class="ti-envelope fa-fw"></i> <span class="hide-menu">Pending SMS</span></a></li>
+                            <li><a href="<?= url('message/create') ?>"><i class="ti-layout-width-default fa-fw"></i> <span class="hide-menu"> Emails & SMS</span></a></li>
+
+
                             <li><a href="<?= url('message/shulesoft') ?>"><i class="ti-envelope fa-fw"></i> <span class="hide-menu">ShuleSoft Updates</span></a></li>
                             <li><a href="<?= url('message/feedback') ?>"><i class="ti-comments-smiley fa-fw"></i> <span class="hide-menu">User Feedbacks</span></a></li>
+                            <li><a href="<?= url('message/website') ?>"><i class="ti-envelope fa-fw"></i> <span class="hide-menu">Website Requests</span></a></li>
                         </ul>
                     </li>
 

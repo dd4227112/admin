@@ -99,7 +99,7 @@ class Message extends Controller {
                 'message' => 'required',
                 'release_date' => 'date'
             ]);
-            DB::table('admin.updates')->insert(array_merge(request()->except(['_token', '_wysihtml5_mode', 'for','subject']), ['for' => implode(',', request('for'))]));
+            DB::table('admin.updates')->insert(array_merge(request()->except(['_token', '_wysihtml5_mode', 'for', 'subject']), ['for' => implode(',', request('for'))]));
             $message_success = 'Update recorded successfully';
             $schemas = (new \App\Http\Controllers\DatabaseController())->loadSchema();
             foreach ($schemas as $schema) {
@@ -130,12 +130,14 @@ class Message extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id) {
+    public function show($pg) {
         //
-        $this->data['type'] = $id;
-        $table = $id == 'sms' ? 'all_sms' : 'all_email';
-        $this->data['messages'] = DB::select('select * from public.' . $table);
-        return view('message.show', $this->data);
+
+        if (method_exists($this, $pg) && is_callable(array($this, $pg))) {
+            return $this->$pg();
+        } else {
+            die('Page under construction');
+        }
     }
 
     /**
@@ -182,6 +184,11 @@ class Message extends Controller {
     public function feedback() {
         $feedbacks = \App\Model\Feedback::orderBy('id', 'desc')->paginate();
         return view('message.feedback', compact('feedbacks'));
+    }
+
+    public function website() {
+        $feedbacks = \App\Model\Feedback::orderBy('id', 'desc')->paginate();
+        return view('message.website', compact('feedbacks'));
     }
 
     public function reply() {

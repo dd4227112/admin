@@ -36,6 +36,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('home', 'HomeController');
     Route::resource('web', 'WebController');
     Route::resource('exam', 'ExamController');
+    Route::resource('message', 'Message');
     Route::resource('support', 'SupportController');
     //Route::resource('market', 'MarketingController');
 
