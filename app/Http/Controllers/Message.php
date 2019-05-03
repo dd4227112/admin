@@ -334,4 +334,11 @@ Kind regards,';
         return 1;
     }
 
+      public function delete() {
+          if(request('type')=='website'){
+              DB::table('website_contact_us')->where('id',request('id'))->delete();
+              echo 'success';
+          }
+        return 1;
+    }
 }

@@ -46,9 +46,9 @@
                                 <td><?= $request->contact_phone ?></td>
                                 <td><?= $request->contact_email ?></td>
                                 <td><?= date('d M Y h:m:i', strtotime($request->created_at)) ?></td>
-                                    <td>
-                                        <!--<a class="btn btn-success">Attend</a>-->
-                                    </td>
+                                <td>
+                                    <!--<a class="btn btn-success">Attend</a>-->
+                                </td>
                             </tr>
                             <?php
                             $i++;
@@ -59,7 +59,7 @@
             </div>
         </section>
         <section id="section-iconbox-2">
-           <h3>ShuleSoft Demo Requests</h3>
+            <h3>ShuleSoft Demo Requests</h3>
             <div class="table-responsive"> 
                 <table id="example23" class="display nowrap table color-table success-table">
                     <thead>
@@ -92,9 +92,9 @@
                                 <td><?= $request->contact_phone ?></td>
                                 <td><?= $request->contact_email ?></td>
                                 <td><?= date('d M Y h:m:i', strtotime($request->created_at)) ?></td>
-                                    <td>
-                                        <!--<a class="btn btn-success">Attend</a>-->
-                                    </td>
+                                <td>
+                                    <!--<a class="btn btn-success">Attend</a>-->
+                                </td>
                             </tr>
                             <?php
                             $i++;
@@ -105,7 +105,8 @@
             </div>
         </section>
         <section id="section-iconbox-3">
-           <h3>Contact Us Requests</h3>
+            <h3>Contact Us Requests</h3>
+
             <div class="table-responsive"> 
                 <table id="example23" class="display nowrap table color-table success-table">
                     <thead>
@@ -125,16 +126,17 @@
                         $i = 1;
                         foreach ($contact_us_requests as $key => $request) {
                             ?>
-                            <tr>
+                            <tr id="row<?= $request->id ?>">
                                 <td><?= $i ?></td>
                                 <td><?= $request->name ?></td>
                                 <td><?= $request->phone ?></td>
                                 <td><?= $request->email ?></td>
                                 <td><?= $request->message ?></td>
                                 <td><?= date('d M Y h:m:i', strtotime($request->created_at)) ?></td>
-                                    <td>
-                                        <!--<a class="btn btn-success">Attend</a>-->
-                                    </td>
+                                <td>
+                                    <a class="btn btn-danger btn-sm" onmousedown="deleteMessage(<?= $request->id ?>,'website')">Delete</a>
+                                    <span id="stat<?= $request->id ?>"></span>
+                                </td>
                             </tr>
                             <?php
                             $i++;
@@ -155,6 +157,27 @@
             new CBPFWTabs(el);
         });
     })();
+    function deleteMessage(a,type) {
+        $.ajax({
+            type: 'GET',
+            url: "<?= url('message/delete') ?>",
+            data: {
+                "id": a,type:type
+            },
+            dataType: "html ",
+            beforeSend: function (xhr) {
+                $('#stat' + a).html('<a href="#/refresh"><i class="fa fa-spin fa-refresh"></i> </a>');
+            },
+            complete: function (xhr, status) {
+                $('#stat' + a).html('<span class="label label-success label-rouded">' + status + '</span>');
+            },
+
+            success: function (data) {
+                $('#stat' + a).after(data);
+                $('#row' + a).hide();
+            }
+        });
+    }
 </script>
 @include('layouts.datatable')
 @endsection
