@@ -95,9 +95,11 @@ class HomeController extends Controller {
             </div>
         </div>';
     }
+
     public function additionalStatusReport() {
         
     }
+
     public function createTodayReport() {
         $schema_records = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant','admin','api','app','skysat','dodoso')");
 
@@ -107,18 +109,23 @@ class HomeController extends Controller {
             $setting = DB::table($schema . 'setting')->first();
             $expense = \collect(DB::select("select sum(amount) from " . $schema . "total_expenses where date::date='" . date('Y-m-d') . "'"))->first();
             if ($revenue->sum > 0 || $expense->sum > 0) {
-                $message = ' <h2><b>
+
+                $users = DB::table($schema . 'users')->where(DB::raw('lower(usertype)'), 'admin')->get();
+                foreach ($users as $user) {
+
+                    $message = ' <h2><b>
                 ' . date('d M Y') . '  Report
  </b></h2><p></p>
         ' . $this->putMessage('Revenue', 'Total Revenue', $setting->currency_symbol . ' ' . number_format($revenue->sum), 'Student Payments +other sources') . $this->putMessage('Expense', 'Total Expense', $setting->currency_symbol . ' ' . number_format($expense->sum), 'Without depreciation') . '
         <br/><p>This is automated report. For more detailed report, please login into your ShuleSoft Account</p>';
 
-                $link = strtoupper($record->table_schema) == 'PUBLIC' ? 'demo.' : $record->table_schema . '.';
-                $data = ['content' => $message, 'link' => $link, 'photo' => $setting->photo, 'sitename' => $setting->sname, 'name' => ''];
-                \Mail::send('email.default', $data, function ($m) use ($setting) {
-                    $m->from('noreply@shulesoft.com', $setting->sname);
-                    $m->to($setting->email)->subject($setting->sname.' '.date('d M Y') . ' Report');
-                });
+                    $link = strtoupper($record->table_schema) == 'PUBLIC' ? 'demo.' : $record->table_schema . '.';
+                    $data = ['content' => $message, 'link' => $link, 'photo' => $setting->photo, 'sitename' => $setting->sname, 'name' => ''];
+                    \Mail::send('email.default', $data, function ($m) use ($user) {
+                        $m->from('noreply@shulesoft.com', 'ShuleSoft Report');
+                        $m->to($user->email)->subject(' ' . date('d M Y') . ' Report');
+                    });
+                }
             }
         }
     }
