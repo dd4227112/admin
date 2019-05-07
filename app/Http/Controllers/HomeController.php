@@ -121,9 +121,10 @@ class HomeController extends Controller {
 
                     $link = strtoupper($record->table_schema) == 'PUBLIC' ? 'demo.' : $record->table_schema . '.';
                     $data = ['content' => $message, 'link' => $link, 'photo' => $setting->photo, 'sitename' => $setting->sname, 'name' => ''];
-                    \Mail::send('email.default', $data, function ($m) use ($user) {
-                        $m->from('noreply@shulesoft.com', 'ShuleSoft Report');
-                        $m->to($user->email)->subject(' ' . date('d M Y') . ' Report');
+                    $param=['email'=>$user->email,'school'=>$setting->sname];
+                    \Mail::send('email.default', $data, function ($m) use ($param) {
+                        $m->from('noreply@shulesoft.com', $param['school']);
+                        $m->to($param['email'])->subject($param['school'] .' '. date('d M Y') . ' Report');
                     });
                 }
             }
