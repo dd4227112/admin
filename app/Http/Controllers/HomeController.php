@@ -106,9 +106,9 @@ class HomeController extends Controller {
         foreach ($schema_records as $record) {
             $schema = $record->table_schema . '.';
             $revenue = \collect(DB::select("select sum(amount) from " . $schema . "total_revenues where date::date='" . date('Y-m-d') . "'"))->first();
-            $setting = DB::table($schema . 'setting')->first();
+            $setting = DB::table($schema . 'setting')->where('email_enabled',1)->first();
             $expense = \collect(DB::select("select sum(amount) from " . $schema . "total_expenses where date::date='" . date('Y-m-d') . "'"))->first();
-            if ($revenue->sum > 0 || $expense->sum > 0) {
+            if (($revenue->sum > 0 || $expense->sum > 0) && $setting->email_enabled ==1) {
 
                 $users = DB::table($schema . 'users')->where(DB::raw('lower(usertype)'), 'admin')->get();
                 foreach ($users as $user) {
