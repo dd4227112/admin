@@ -161,5 +161,9 @@ class SupportController extends Controller {
     public function delete() {
         //
     }
+    
+    public function usage() {
+        return view('support/usage');
+    }
 
 }

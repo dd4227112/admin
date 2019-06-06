@@ -47,15 +47,15 @@
                     </ul>
                 </li>
                 <?php if (can_access('view_invoices')) { ?>
-                        <!--                    <li class="active"> <a href="#" class="waves-effect"><i class="fa fa-money fa-fw" data-icon="v"></i> <span class="hide-menu">Invoices <span class="fa arrow"></span> </span></a>
-                                                <ul class="nav nav-second-level ">
-                                                    <li> <a href="{{ url('payment/paid') }}" class=""><i class=" fa-fw">1</i><span class="hide-menu">All Paid Invoices</span></a> </li>
-                                                    <li> <a href="{{ url('payment/posted') }}" class=""><i class=" fa-fw">2</i><span class="hide-menu">Posted Invoices</span></a> </li>
-                                                    <li> <a href="{{url('invoice/searched')}}"><i class=" fa-fw">2</i><span class="hide-menu">Searched Invoices</span></a> </li>
+                            <!--                    <li class="active"> <a href="#" class="waves-effect"><i class="fa fa-money fa-fw" data-icon="v"></i> <span class="hide-menu">Invoices <span class="fa arrow"></span> </span></a>
+                                                    <ul class="nav nav-second-level ">
+                                                        <li> <a href="{{ url('payment/paid') }}" class=""><i class=" fa-fw">1</i><span class="hide-menu">All Paid Invoices</span></a> </li>
+                                                        <li> <a href="{{ url('payment/posted') }}" class=""><i class=" fa-fw">2</i><span class="hide-menu">Posted Invoices</span></a> </li>
+                                                        <li> <a href="{{url('invoice/searched')}}"><i class=" fa-fw">2</i><span class="hide-menu">Searched Invoices</span></a> </li>
 
 
-                                                </ul>
-                                            </li>-->
+                                                    </ul>
+                                                </li>-->
                 <?php } ?>
 <!--                 <li class=""> <a href="#" class="waves-effect"><i class="fa fa-users fa-fw" data-icon="v"></i> <span class="hide-menu"> User Roles <span class="fa arrow"></span> </span></a>
     <ul class="nav nav-second-level ">
@@ -212,6 +212,8 @@
                                 <i class="fa-fw">P</i><span class="hide-menu">Parents Feedback</span></a> </li>
                         <li> <a href="<?= url('support/sentsms') ?>">
                                 <i class="fa-fw">S</i><span class="hide-menu">Sent SMS</span></a> </li>
+                        <li> <a href="<?= url('support/usage') ?>">
+                                <i class="fa-fw">S</i><span class="hide-menu">Usage Reports</span></a> </li>
                     </ul>
                 </li>
                 <li class="devider"></li>
