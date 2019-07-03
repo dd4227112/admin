@@ -37,7 +37,7 @@
         <link type="text/css" rel="stylesheet" href="<?= $root ?>plugins/bower_components/jsgrid/dist/jsgrid.min.css" />
         <link type="text/css" rel="stylesheet" href="<?= $root ?>plugins/bower_components/jsgrid/dist/jsgrid-theme.min.css" />
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
         <script type="text/javascript">
 $.ajaxSetup({
     headers: {
@@ -56,7 +56,7 @@ var root_url = "<?= url('/'); ?>";
         </style>
     </head>
     <body class="fix-header">
-
+        @if (!Auth::guest())  
         <div class="preloader" style="display: none;">
             <svg class="circular" viewBox="25 25 50 50">
             <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle> 
@@ -78,48 +78,50 @@ var root_url = "<?= url('/'); ?>";
                     </div>
                     <!-- /Logo -->
                     <!-- Search input and Toggle icon -->
-          
+
                     <ul class="nav navbar-top-links navbar-left">
                         <li><a href="javascript:void(0)" class="open-close waves-effect waves-light" onmousedown="$('body').toggleClass('show-sidebar hide-sidebar')"><i class="ti-menu"></i></a></li>
                         <?php
                         $feedbacks = \App\Model\Feedback::where('opened', 1)->get();
                         ?>
-                          <?php if (can_access('manage_messages')) { ?>     
-                        <li class="dropdown">
-                            <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"> <i class="mdi mdi-gmail"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b class="badge badge-danger"><?= count($feedbacks) ?></b>
-                                <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
-                            </a>
-                            <ul class="dropdown-menu mailbox animated bounceInDown">
-                                <li>
-                                    <div class="drop-title">You have <?= count($feedbacks) ?> new messages</div>
-                                </li>
-                                <li>
-                                    <div class="message-center">
-                                        <?php
-                                        $f = 1;
-                                        foreach ($feedbacks as $feedback) {
-                                            if ($f == 5)
-                                                break;
-                                          //  $user=\DB::table($feedback->schema.$feedback->table)->where($feedback->table.'ID',$feedback->user_id)->first();
+                        <?php if (can_access('manage_messages')) { ?>     
+                            <li class="dropdown">
+                                <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"> <i class="mdi mdi-gmail"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b class="badge badge-danger"><?= count($feedbacks) ?></b>
+                                    <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
+                                </a>
+                                <ul class="dropdown-menu mailbox animated bounceInDown">
+                                    <li>
+                                        <div class="drop-title">You have <?= count($feedbacks) ?> new messages</div>
+                                    </li>
+                                    <li>
+                                        <div class="message-center">
+                                            <?php
+                                            $f = 1;
+                                            foreach ($feedbacks as $feedback) {
+                                                if ($f == 5)
+                                                    break;
+                                                //  $user=\DB::table($feedback->schema.$feedback->table)->where($feedback->table.'ID',$feedback->user_id)->first();
+                                                ?>
+                                                <a href="#">
+                                                    <div class="user-img"> <img src="<?= url('storage/uploads/images/' . Auth::user()->photo) ?>" alt="user" class="img-circle"> <span class="profile-status online pull-right"></span> </div>
+                                                    <div class="mail-contnet">
+                                                        <h5><?php //count($user)==1 ? $user->name: ''  ?></h5>
+                                                        <span class="mail-desc"><?= $feedback->feedback ?></span>
+                                                        <span class="time"><?= timeAgo($feedback->created_at) ?></span> </div>
+                                                </a>
+                                                <?php $f++;
+                                            }
                                             ?>
-                                            <a href="#">
-                                                <div class="user-img"> <img src="<?=url('storage/uploads/images/'.Auth::user()->photo)?>" alt="user" class="img-circle"> <span class="profile-status online pull-right"></span> </div>
-                                                <div class="mail-contnet">
-                                                    <h5><?php //count($user)==1 ? $user->name: ''?></h5>
-                                                    <span class="mail-desc"><?=$feedback->feedback?></span>
-                                                    <span class="time"><?=timeAgo($feedback->created_at)?></span> </div>
-                                            </a>
-<?php $f++; } ?>
-                                    
-                                    </div>
-                                </li>
-                                <li>
-                                    <a class="text-center" href="{{url('message/feedback')}}"> <strong>See all feedbacks</strong> <i class="fa fa-angle-right"></i> </a>
-                                </li>
-                            </ul>
-                            <!--/.dropdown-messages--> 
-                        </li>
-                          <?php }?>
+
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <a class="text-center" href="{{url('message/feedback')}}"> <strong>See all feedbacks</strong> <i class="fa fa-angle-right"></i> </a>
+                                    </li>
+                                </ul>
+                                <!--/.dropdown-messages--> 
+                            </li>
+<?php } ?>
                         <!-- .Task dropdown -->
                         <!--                                              <li class="dropdown">
                                                                             <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"> <i class="mdi mdi-check-circle"></i>
@@ -235,15 +237,15 @@ var root_url = "<?= url('/'); ?>";
                         </li>-->
                         <!-- /.Megamenu -->
                     </ul>
-                  
-<?php  if (Auth::check() == 1) { ?>
+
+<?php if (Auth::check() == 1) { ?>
                         <ul class="nav navbar-top-links navbar-right pull-right">
                             <li>
-                                <?php if(can_access('view_users')){?>
-                                 <form role="search" action="<?= url('/search') ?>?q="  method="GET" class="app-search hidden-sm hidden-xs m-r-10">
-                                    <input type="text" name="q" placeholder="Search name or phone" id="search_box" class="form-control"> <a href="#"><i class="fa fa-search"></i></a> </form>
-                                <?php }?>
-                             
+    <?php if (can_access('view_users')) { ?>
+                                    <form role="search" action="<?= url('/search') ?>?q="  method="GET" class="app-search hidden-sm hidden-xs m-r-10">
+                                        <input type="text" name="q" placeholder="Search name or phone" id="search_box" class="form-control"> <a href="#"><i class="fa fa-search"></i></a> </form>
+    <?php } ?>
+
                             <li class="dropdown" id="search_results">
                                 <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"> 
                                     <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
@@ -266,7 +268,7 @@ var root_url = "<?= url('/'); ?>";
                             </li>
                             </li>
                             <li class="dropdown">
-                                <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#"> <img src="<?=url('storage/uploads/images/'.Auth::user()->photo)?>" alt="user-img" width="36" class="img-circle"><b class="hidden-xs">  {{ Auth::user()->name() }}</b><span class="caret"></span> </a>
+                                <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#"> <img src="<?= url('storage/uploads/images/' . Auth::user()->photo) ?>" alt="user-img" width="36" class="img-circle"><b class="hidden-xs">  {{ Auth::user()->name() }}</b><span class="caret"></span> </a>
                                 <ul class="dropdown-menu dropdown-user animated flipInY">
                                     <li>
                                         <div class="dw-user-box">
@@ -302,7 +304,7 @@ var root_url = "<?= url('/'); ?>";
                 <!-- /.navbar-top-links -->
                 <!-- /.navbar-static-side -->
             </nav>
-
+            @endif
             @if (!Auth::guest())        
             @include('layouts.nav')
             @endif
@@ -319,11 +321,11 @@ var root_url = "<?= url('/'); ?>";
 
                         </div>
                         <!-- /.col-lg-12 -->
-                         @if (session('success'))
+                        @if (session('success'))
                         <div class="alert alert-success">
                             {{ session('success') }}
                         </div>
-                    @endif
+                        @endif
                     </div>
                     @yield('content')
                 </div>
@@ -380,12 +382,13 @@ var root_url = "<?= url('/'); ?>";
                         });
                     }
                 });
+
             }
             $(document).ready(search_box);
         </script>
         @endrole
 
-     
+
         <!-- Bootstrap Core JavaScript -->
         <script src="<?= $root ?>bootstrap/dist/js/bootstrap.min.js"></script>
         <!-- Menu Plugin JavaScript -->
@@ -394,9 +397,6 @@ var root_url = "<?= url('/'); ?>";
         <script src="<?= $root ?>js/jquery.slimscroll.js"></script>
         <!--Wave Effects -->
         <script src="<?= $root ?>js/waves.js"></script>
-        <!--Counter js -->
-        <script src="<?= $root ?>plugins/bower_components/waypoints/lib/jquery.waypoints.js"></script>
-        <script src="<?= $root ?>plugins/bower_components/counterup/jquery.counterup.min.js"></script>
         <!-- Copy to clipboard-->
         <script src="<?= $root ?>js/clipboard.min.js"></script>
 
@@ -417,11 +417,14 @@ var root_url = "<?= url('/'); ?>";
         <!--Style Switcher -->
         <script src="<?= $root ?>plugins/bower_components/styleswitcher/jQuery.style.switcher.js"></script>
         <script src="<?= $root ?>js/custom.min.js"></script>
-        <script src="<?= $root ?>js/jquery.slimscroll.js"></script>
 
         <!--Wave Effects -->
+        <script type="text/javascript">
+           // var scrollToVal = $('.sidebar').scrollTop() + $('#el').position();
+        //    $('.sidebar').slimScroll({scrollTo:  '100em'});
+         // $('#side-menu').slimScroll();
+        </script>
 
-      
         @yield('footer')
 
 

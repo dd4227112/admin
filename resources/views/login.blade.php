@@ -25,11 +25,10 @@
         <![endif]-->
 
     </head>
+    
     <body>
         <!-- Preloader -->
-        <div class="preloader">
-            <div class="cssload-speeding-wheel"></div>
-        </div>
+       
         <section id="wrapper" class="new-login-register">
             <div class="lg-info-panel">
                 <div class="inner-panel">
@@ -40,7 +39,7 @@
 
                     </div>
                 </div>
-            </div>
+            </div> 
             <div class="new-login-box">
                 <a href="javascript:void(0)">
                     <img src="<?= $root ?>images/ShuleSoft-TM.png" width="50%" height="50%"></a>
@@ -80,7 +79,7 @@
                                     <input id="checkbox-signup" type="checkbox">
                                     <label for="checkbox-signup"> Remember me </label>
                                 </div>
-                                <a href="{{ route('password.request') }}" id="to-recover" class="text-dark pull-right"><i class="fa fa-lock m-r-5"></i> Forgot pwd?</a> </div>
+                                <a href="{{ route('password.request') }}"  class="text-dark pull-right"><i class="fa fa-lock m-r-5"></i> Forgot pwd?</a> </div>
                         </div>
                         <div class="form-group text-center m-t-20">
                             <div class="col-xs-12">
@@ -141,16 +140,11 @@
         <script src="<?= $root ?>plugins/bower_components/jquery/dist/jquery.min.js"></script>
         <!-- Bootstrap Core JavaScript -->
         <script src="<?= $root ?>bootstrap/dist/js/bootstrap.min.js"></script>
-        <!-- Menu Plugin JavaScript -->
-        <script src="<?= $root ?>plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js"></script>
-
         <!--slimscroll JavaScript -->
         <script src="<?= $root ?>js/jquery.slimscroll.js"></script>
-        <!--Wave Effects -->
-        <script src="<?= $root ?>js/waves.js"></script>
         <!-- Custom Theme JavaScript -->
         <script src="<?= $root ?>js/custom.min.js"></script>
         <!--Style Switcher -->
-        <script src="<?= $root ?>plugins/bower_components/styleswitcher/jQuery.style.switcher.js"></script>
+
     </body>
 </html>

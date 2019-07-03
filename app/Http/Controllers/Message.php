@@ -334,11 +334,49 @@ Kind regards,';
         return 1;
     }
 
-      public function delete() {
-          if(request('type')=='website'){
-              DB::table('website_contact_us')->where('id',request('id'))->delete();
-              echo 'success';
-          }
+    public function delete() {
+        if (request('type') == 'website') {
+            DB::table('website_contact_us')->where('id', request('id'))->delete();
+            echo 'success';
+        }
         return 1;
     }
+
+    //this is the temporaly function to sync sms uploaded manually
+    public function syncSms() {
+        $contents = DB::table('admin.phone_sms')->where('published',0)->limit(20)->get();
+        foreach ($contents as $content) {
+
+            $check_phone = validate_phone_number($content->address);
+
+            if (!in_array($check_phone[1], array('+255714825469', '100', '+255652160360', '+255753867887')) && count($check_phone) == 2 && $content->type=='Inbox') {
+                $phone = $check_phone[1];
+                $array = array(
+                    'secret' => time(),
+                    'from' => $phone,
+                    'message_id' => $content->slot,
+                    'message' => $content->body,
+                    'sent_timestamp' => strtotime($content->date),
+                    'sent_to' =>$content->slot,
+                    'device_id' => '3234223',
+                );
+
+                $user = \collect(DB::select("select * from admin.all_users where phone='" . $phone . "' and usertype !='Student' "))->first();
+                if (count($user) > 0) {
+                    $check = DB::table($user->schema_name . '.reply_sms')->where('message', $content->body)->where('from', $phone)->get();
+                    if (count($check) == 0) {
+                        DB::table($user->schema_name . '.reply_sms')->insert(array_merge($array, array(
+                            'user_id' => $user->id,
+                            'table' => $user->table
+                        )));
+                    }
+                } else {
+                    //save to public schema
+                    DB::table('reply_sms')->insert($array);
+                }
+            }
+            $content->update(['published'=>1]);
+        }
+    }
+
 }
