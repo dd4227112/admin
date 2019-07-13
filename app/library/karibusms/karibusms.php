@@ -36,7 +36,7 @@ class karibusms {
     private $HEADER = array(
 	'application/x-www-form-urlencoded'
     );
-    private $URL = 'http://karibusms.com/api';
+    private $URL = 'http://158.69.112.216:8282/api';
     private $name;
 
     public $API_KEY;
@@ -135,6 +135,14 @@ class karibusms {
 	return $this->curl($fields);
     }
 
+    public function check_phone_status() {
+	$fields = array(
+	    'api_secret' => $this->API_SECRET,
+	    'tag' => 'get_phone_status',
+	    'api_key' => $this->API_KEY
+	);
+	return $this->curl($fields);
+    }
     /**
      * 
      * @param type $pure_string
