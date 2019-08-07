@@ -90,7 +90,7 @@ var root_url = "<?= url('/'); ?>";
                         <i class="ti-search"></i>
                     </a>
                     <a href="<?= url('/') ?>">
-                        <img class="img-fluid" src="<?= $root ?>assets/images/logo.png" alt="Theme-Logo" />
+                        <img class="img-fluid" src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="ShuleSoft" height="50" width="50" />
                     </a>
                     <a class="mobile-options">
                         <i class="ti-more"></i>
@@ -396,26 +396,14 @@ var root_url = "<?= url('/'); ?>";
                 <img class="img-40" src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image">
                 <div class="user-details">
                     <span>{{ Auth::user()->name() }}</span>
-                    <span id="more-details"> {{ Auth::user()->role }}<i class="ti-angle-down"></i></span>
+                    <span id="more-details"> Admin {{ Auth::user()->role }}</span>
                 </div>
             </div>
             <div class="main-menu-content">
                 <ul class="main-navigation">
-                    <li class="more-details">
-                        <a href="{{url('users/'.Auth::user()->id)}}"><i class="ti-user"></i>View Profile</a>
-                        <a href="#!"><i class="ti-settings"></i>Settings</a>
-                
-                               <a href="{{ route('logout') }}"
-                               onclick="event.preventDefault();
-                                       document.getElementById('logout-form').submit();"><i class="ti-layout-sidebar-left"></i> Logout</a>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            {{ csrf_field() }}
-                        </form>
-                    </li>
-                    <li class="nav-title" data-i18n="nav.category.navigation">
-                        <i class="ti-line-dashed"></i>
-                        <span>Summary</span>
-                    </li>
+                 
+                    <hr style="background:white"/>
+                       
                     <li class="nav-item">
                         <a href="#!">
                             <i class="ti-home"></i>
