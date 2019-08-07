@@ -147,8 +147,8 @@
                                 <i class="icofont icofont-star"></i>
                             </div>
                             <div class="col-sm-9">
-                                <h4>4000 +</h4>
-                                <h6>Ratings Received</h6>
+                                <h4><?=$total_schools?></h4>
+                                <h6>Schools in ShuleSoft</h6>
                             </div>
                         </div>
                     </div>
@@ -687,6 +687,10 @@
     </div>
 </div>
 
-
-
 @endsection
+<script type="text/javascript">
+    dashboard_summary = function () {
+
+    }
+    $(document).ready(dashboard_summary);
+</script>

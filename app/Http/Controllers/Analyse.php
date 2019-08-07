@@ -21,7 +21,16 @@ class Analyse extends Controller
     
     public function index() {
          $this->data['users'] = [];
+         $this->data['total_schools']=\collect(DB::select(" select count(distinct \"table_schema\") as aggregate from INFORMATION_SCHEMA.TABLES where \"table_schema\" not in ('admin', 'beta_testing', 'api', 'app', 'constant', 'public','administration')"))->first()->aggregate;
+         $this->data['active_schools']=\collect(DB::select(" select count(distinct \"schema_name\") as aggregate from admin.all_log where \"table\"  in ('user', 'teacher') and (created_at >= date_trunc('week', CURRENT_TIMESTAMP - interval '1 week') and
+       created_at < date_trunc('week', CURRENT_TIMESTAMP)
+      )"))->first()->aggregate;
         // $this->data['log_graph'] = $this->createBarGraph();
         return view('analyse.index', $this->data);
+    }
+    
+    public function summary() {
+        
+        
     }
 }
