@@ -5,7 +5,7 @@
 <html lang="{{ app()->getLocale() }}">
 
     <head>
-        <title>Flat Able - Premium Admin Template by Phoenixcoded</title>
+        <title>ShuleSoft Admin Panel</title>
         <!-- HTML5 Shim and Respond.js IE9 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -49,8 +49,6 @@
         <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css">
 
 
-        <!--color css-->
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/color/color-1.css" id="color"/>
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script>
         <script type="text/javascript">
@@ -327,13 +325,13 @@ var root_url = "<?= url('/'); ?>";
                                             <i class="ti-lock"></i> Lock Screen
                                         </a>
                                     </li>
-                                     <li><a href="{{ route('logout') }}"
-                               onclick="event.preventDefault();
+                                    <li><a href="{{ route('logout') }}"
+                                           onclick="event.preventDefault();
                                        document.getElementById('logout-form').submit();"><i class="ti-layout-sidebar-left"></i> Logout</a></li>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            {{ csrf_field() }}
-                        </form>
-                                   
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        {{ csrf_field() }}
+                                    </form>
+
                                 </ul>
                             </li>
                         </ul>
@@ -401,9 +399,9 @@ var root_url = "<?= url('/'); ?>";
             </div>
             <div class="main-menu-content">
                 <ul class="main-navigation">
-                 
+
                     <hr style="background:white"/>
-                       
+
                     <li class="nav-item">
                         <a href="#!">
                             <i class="ti-home"></i>
@@ -539,7 +537,7 @@ var root_url = "<?= url('/'); ?>";
                         <ul class="tree-1">
                             <li><a href="<?= url('account/projection') ?>" data-i18n="nav.advance-components.draggable">Projections</a></li>
                             <li><a href="bs-grid.html" data-i18n="nav.advance-components.grid-stack">Invoice</a></li>
-                              <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Transactions</a>
+                            <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Transactions</a>
                                 <ul class="tree-2">
                                     <li><a href="<?= url('customer/calls') ?>" target="_blank" data-i18n="nav.page_layout.horizontal.static-layout"> Call Logs</a></li>
                                     <li><a href="<?= url('customer/emailsms') ?>" target="_blank" data-i18n="nav.page_layout.horizontal.static-layout"> SMS & Email Logs</a></li>
@@ -848,18 +846,18 @@ var root_url = "<?= url('/'); ?>";
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery-i18next/jquery-i18next.min.js"></script>
         <!-- Custom js -->
         <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/custom-dashboard.js"></script>
-        <script type="text/javascript" src="<?= $root ?>assets/js/script.js"></script>
-        
-<script src="<?= $root ?>bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-<script src="<?= $root ?>bower_components/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-<script src="<?= $root ?>assets/pages/data-table/js/jszip.min.js"></script>
-<script src="<?= $root ?>assets/pages/data-table/js/pdfmake.min.js"></script>
-<script src="<?= $root ?>assets/pages/data-table/js/vfs_fonts.js"></script>
-<script src="<?= $root ?>bower_components/datatables.net-buttons/js/buttons.print.min.js"></script>
-<script src="<?= $root ?>bower_components/datatables.net-buttons/js/buttons.html5.min.js"></script>
-<script src="<?= $root ?>bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
-<script src="<?= $root ?>bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-<script src="<?= $root ?>bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+        <script type="text/javascript" src="<?= $root ?>assets/js/script.js?v=2"></script>
+
+        <script src="<?= $root ?>bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+        <script src="<?= $root ?>bower_components/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+        <script src="<?= $root ?>assets/pages/data-table/js/jszip.min.js"></script>
+        <script src="<?= $root ?>assets/pages/data-table/js/pdfmake.min.js"></script>
+        <script src="<?= $root ?>assets/pages/data-table/js/vfs_fonts.js"></script>
+        <script src="<?= $root ?>bower_components/datatables.net-buttons/js/buttons.print.min.js"></script>
+        <script src="<?= $root ?>bower_components/datatables.net-buttons/js/buttons.html5.min.js"></script>
+        <script src="<?= $root ?>bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+        <script src="<?= $root ?>bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+        <script src="<?= $root ?>bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
         @yield('footer')
     </body>
 </html>
