@@ -34,7 +34,7 @@
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?=url('/')?>">
+                        <a href="<?= url('/') ?>">
                             <i class="icofont icofont-home"></i>
                         </a>
                     </li>
@@ -64,21 +64,21 @@
                         </div>
 
                         <div class="card-block">
-                  
+
                             <div class="table-responsive dt-responsive">
                                 <table id="dt-ajax-array" class="table table-striped table-bordered nowrap">
                                     <thead>
                                         <tr>
                                             <th>School Name</th>
-                                        
+
                                             <th>Class Levels</th>
                                             <th>Academic Years</th>
                                             <th>Terms</th>
-                                           
+
                                             <th>Sections</th>
-                                            <th>Subjects</th>
-                                        
+
                                             <th>School Stamp</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -134,11 +134,11 @@
                                                     ?>  
 
                                                 </td>
-                 
+
                                                 <td class="get_data" schema='<?= $school->schema_name ?>' tag='section'><span id="<?= $school->schema_name ?>section"></span></td>
-                                                <td class="get_data" schema='<?= $school->schema_name ?>' tag='subject'><span id="<?= $school->schema_name ?>subject"></span></td>
-                                             
-                                              
+
+
+
                                                 <td ><?php
                                                     //stamp
                                                     if (count($levels) > 0) {
@@ -149,6 +149,7 @@
                                                         }
                                                     }
                                                     ?></td>
+                                                <td><a href="<?= url('customer/profile/' . $school->schema_name) ?>" class="btn btn-mini waves-effect waves-light btn-primary"><i class="icofont icofont-eye-alt"></i> View</a></td>
                                             </tr>
                                         <?php } ?>
                                     </tbody>
@@ -158,11 +159,11 @@
                                             <th>Class Levels</th>
                                             <th>Academic Years</th>
                                             <th>Terms</th>
-                                        
+
                                             <th>Sections</th>
-                                            <th>Subjects</th>
- 
+
                                             <th>School Stamp</th>
+                                            <th>Action</th>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -170,64 +171,64 @@
                         </div>
                     </div>
 
+                </div>
             </div>
+            <!-- Page-body end -->
         </div>
-        <!-- Page-body end -->
     </div>
-</div>
-<!-- Main-body end -->
-@endsection
-@section('footer')
-<!-- data-table js -->
-<?php $root = url('/') . '/public/' ?>
+    <!-- Main-body end -->
+    @endsection
+    @section('footer')
+    <!-- data-table js -->
+    <?php $root = url('/') . '/public/' ?>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#dt-ajax-array').DataTable();
-//        $('#dt-ajax-users').DataTable({
-//            "ajax": '<?= url('customer/getData/data/?tag=users') ?>'
-//        });
-    });
-    get_statistic = function () {
-       // var data = getData();
-        // console.log(data);
-//        $(".get_data").each(function (index) {
-//            var tag = $(this).attr('tag');
-//            var schema = $(this).attr('schema');
-//            //$(schema + tag).html(1);
-//
-//
-//        });
-    }
-    function getData() {
-        $.ajax({
-            type: 'get',
-            url: '<?= url('customer/getData/null/') ?>',
-            data: {tag: 'users'},
-            dataType: 'json',
-            success: function (data) {
-                $.each(data, function (i, info)
-                {
-                    $(".get_data").each(function (index) {
-                        var tag = $(this).attr('tag');
-                        var schema = $(this).attr('schema');
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#dt-ajax-array').DataTable();
+            //        $('#dt-ajax-users').DataTable({
+            //            "ajax": '<?= url('customer/getData/data/?tag=users') ?>'
+            //        });
+        });
+        get_statistic = function () {
+            // var data = getData();
+            // console.log(data);
+            //        $(".get_data").each(function (index) {
+            //            var tag = $(this).attr('tag');
+            //            var schema = $(this).attr('schema');
+            //            //$(schema + tag).html(1);
+            //
+            //
+            //        });
+        }
+        function getData() {
+            $.ajax({
+                type: 'get',
+                url: '<?= url('customer/getData/null/') ?>',
+                data: {tag: 'users'},
+                dataType: 'json',
+                success: function (data) {
+                    $.each(data, function (i, info)
+                    {
+                        $(".get_data").each(function (index) {
+                            var tag = $(this).attr('tag');
+                            var schema = $(this).attr('schema');
 
-                        if (tag == info.table && schema == info.schema_name) {
-                            $('#' + schema + tag).html(info.count);
-                        }
+                            if (tag == info.table && schema == info.schema_name) {
+                                $('#' + schema + tag).html(info.count);
+                            }
 
+
+                        });
 
                     });
+                    return data;
+                },
+                error: function () {
+                    return 2;
+                }
 
-                });
-                return data;
-            },
-            error: function () {
-                return 2;
-            }
-
-        });
-    }
-    $(document).ready(get_statistic);
-</script>
-@endsection
+            });
+        }
+        $(document).ready(get_statistic);
+    </script>
+    @endsection

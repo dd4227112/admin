@@ -4,6 +4,17 @@ function mailConfig() {
     
 }
 
+function json_call($array = null) {
+    if (isset($_GET['callback']) === TRUE) {
+        header('Content-Type: text/javascript;');
+        header('Access-Control-Allow-Origin: http://client');
+        header('Access-Control-Max-Age: 3628800');
+        header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
+
+        return request('callback') . '(' . (json_encode($array)) . ')';
+    }
+}
+
 function userAccessRole() {
     $user_id = \Auth::user()->id;
 

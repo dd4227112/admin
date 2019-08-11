@@ -188,4 +188,11 @@ class Customer extends Controller {
         return view('support/usage');
     }
 
+    public function profile() {
+        $school = request()->segment(3);
+        $this->data['school'] = DB::table($school . '.setting')->first();
+        $this->data['levels']=DB::table($school.'.classlevel')->get();
+        return view('customer/profile', $this->data);
+    }
+
 }

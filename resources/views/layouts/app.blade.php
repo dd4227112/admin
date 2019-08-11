@@ -327,7 +327,7 @@ var root_url = "<?= url('/'); ?>";
                                     </li>
                                     <li><a href="{{ route('logout') }}"
                                            onclick="event.preventDefault();
-                                       document.getElementById('logout-form').submit();"><i class="ti-layout-sidebar-left"></i> Logout</a></li>
+                                                   document.getElementById('logout-form').submit();"><i class="ti-layout-sidebar-left"></i> Logout</a></li>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         {{ csrf_field() }}
                                     </form>
@@ -474,10 +474,10 @@ var root_url = "<?= url('/'); ?>";
                             <span data-i18n="nav.navigate.main">Sales</span>
                         </a>
                         <ul class="tree-1">
-                            <li><a href="navbar-light.html" data-i18n="nav.navigate.navbar">Sales Materials</a>
+                            <li><a href="<?= url('sales/index')?>" data-i18n="nav.navigate.navbar">Sales Materials</a>
                             </li>
-                            <li><a href="navbar-dark.html" data-i18n="nav.navigate.navbar-inverse">Navbar Inverse</a></li>
-                            <li><a href="navbar-elements.html" data-i18n="nav.navigate.navbar-with-elements">Navbar With Elements</a></li>
+                           
+                            <li><a href="<?= url('sales/index')?>" data-i18n="nav.navigate.navbar-with-elements">Sales Reports</a></li>
                         </ul>
                     </li>
 
@@ -486,12 +486,12 @@ var root_url = "<?= url('/'); ?>";
                             <i class="ti-gift "></i>
                             <span data-i18n="nav.extra-components.main">Marketing</span>
                         </a>
-                        <ul class="tree-1">
+<!--                        <ul class="tree-1">
                             <li><a href="session-timeout.html" data-i18n="nav.extra-components.session-timeout">Session Timeout</a></li>
                             <li><a href="session-idle-timeout.html" data-i18n="nav.extra-components.session-idle-timeout">Session Idle Timeout</a>
                             </li>
                             <li><a href="offline.html" data-i18n="nav.extra-components.offline">Offline</a></li>
-                        </ul>
+                        </ul>-->
                     </li>
                     <li class="nav-item">
                         <a href="#!">
@@ -499,33 +499,33 @@ var root_url = "<?= url('/'); ?>";
                             <span data-i18n="nav.basic-components.main">Software Development</span>
                         </a>
                         <ul class="tree-1">
-                            <li><a href="alert.html" data-i18n="nav.basic-components.alert">Templates & Policies</a></li>
+                            <li><a href="<?= url('software/template')?>" data-i18n="nav.basic-components.alert">Templates & Policies</a></li>
                             <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Database</a>
                                 <ul class="tree-2" style="display: none;">
-                                    <li><a href="#" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Tables</a></li>
-                                    <li><a href="#" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Columns</a></li>
-                                    <li><a href="#" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Constrains</a></li>
-                                    <li><a href="#" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Backup</a></li>
-                                    <li><a href="#" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Reports</a></li>
-                                    <li><a href="#" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Create Script</a></li>
+                                    <li><a href="<?= url('software/template')?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Tables</a></li>
+                                    <li><a href="<?= url('software/template')?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Columns</a></li>
+                                    <li><a href="<?= url('software/template')?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Constrains</a></li>
+                                    <li><a href="<?= url('software/template')?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Backup</a></li>
+                                    <li><a href="<?= url('software/template')?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Reports</a></li>
+                                    <li><a href="<?= url('software/template')?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Create Script</a></li>
 
                                 </ul>
                             </li>
 
                             <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Payment Integration</a>
                                 <ul class="tree-2" style="display: none;">
-                                    <li><a href="#" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">API Requests</a></li>
-                                    <li><a href="#" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Transaction Reports</a></li>
-                                    <li><a href="#" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Live Invoices</a></li>
-                                    <li><a href="#" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Testing Invoices</a></li>
+                                    <li><a href="<?= url('software/api')?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">API Requests</a></li>
+                                    <li><a href="<?= url('software/api/requests')?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Transaction Reports</a></li>
+                                    <li><a href="<?= url('software/invoice/live')?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Live Invoices</a></li>
+                                    <li><a href="<?= url('software/invoice/uat')?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Testing Invoices</a></li>
 
 
                                 </ul>
                             </li>
 
-                            <li><a href="button.html" data-i18n="nav.basic-components.button">Server Administration</a></li>
-                            <li><a href="box-shadow.html" data-i18n="nav.basic-components.box-shadow">Error Logs</a></li>
-                            <li><a href="accordion.html" data-i18n="nav.basic-components.collapse–accordion">Project Management</a></li>
+                            <li><a href="<?= url('software/server')?>" data-i18n="nav.basic-components.button">Server Administration</a></li>
+                            <li><a href="<?= url('software/logs')?>" data-i18n="nav.basic-components.box-shadow">Error Logs</a></li>
+                            <li><a href="<?= url('software/pmp')?>" data-i18n="nav.basic-components.collapse–accordion">Project Management</a></li>
 
                         </ul>
                     </li>
@@ -536,24 +536,26 @@ var root_url = "<?= url('/'); ?>";
                         </a>
                         <ul class="tree-1">
                             <li><a href="<?= url('account/projection') ?>" data-i18n="nav.advance-components.draggable">Projections</a></li>
-                            <li><a href="bs-grid.html" data-i18n="nav.advance-components.grid-stack">Invoice</a></li>
+                            <li><a href="<?= url('account/invoice') ?>" data-i18n="nav.advance-components.grid-stack">Invoice</a></li>
                             <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Transactions</a>
                                 <ul class="tree-2">
-                                    <li><a href="<?= url('customer/calls') ?>" target="_blank" data-i18n="nav.page_layout.horizontal.static-layout"> Call Logs</a></li>
-                                    <li><a href="<?= url('customer/emailsms') ?>" target="_blank" data-i18n="nav.page_layout.horizontal.static-layout"> SMS & Email Logs</a></li>
-                                    <li><a href="<?= url('customer/feedbacks') ?>" target="_blank" data-i18n="nav.page_layout.horizontal.fixed-layout">Customer Feedbacks </a></li>
-                                    <li><a href="<?= url('customer/update') ?>" target="_blank" data-i18n="nav.page_layout.horizontal.static-with-icon">ShuleSoft Updates </a></li>
+                                    <a href="<?= url('revenue/index') ?>"><i class="fa icon-account"></i> Revenue</a>
+                                    <a href="<?= url('expense/index/4') ?>"><i class="fa icon-expense"></i> Expense</a>
+                                    <a href="<?= url('expense/index/1') ?>"><i class="fa icon-account"></i> Fixed assets</a>
+                                    <a href="<?= url('expense/index/5') ?>"><i class="fa icon-account"></i> Current assets</a>
+                                    <a href="<?= url('expense/index/2') ?>"><i class="fa icon-account"></i> liabilities</a>
+                                    <a href="<?= url('expense/index/3') ?>"><i class="fa icon-account"></i> capital</a>
+                                    <a href="<?= url('payment/reconciliation') ?>"><i class="fa icon-account"></i> Reconciliation</a>
+
 
                                 </ul>
                             </li>
                             <li><a href="light-box.html" data-i18n="nav.advance-components.light-box">Reports</a></li>
                             <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Settings</a>
                                 <ul class="tree-2">
-                                    <li><a href="<?= url('customer/calls') ?>" target="_blank" data-i18n="nav.page_layout.horizontal.static-layout"> Call Logs</a></li>
-                                    <li><a href="<?= url('customer/emailsms') ?>" target="_blank" data-i18n="nav.page_layout.horizontal.static-layout"> SMS & Email Logs</a></li>
-                                    <li><a href="<?= url('customer/feedbacks') ?>" target="_blank" data-i18n="nav.page_layout.horizontal.fixed-layout">Customer Feedbacks </a></li>
-                                    <li><a href="<?= url('customer/update') ?>" target="_blank" data-i18n="nav.page_layout.horizontal.static-with-icon">ShuleSoft Updates </a></li>
-
+                                    <a href="<?= url('bankaccount/index') ?>"><i class="fa icon-account"></i> Banking</a>
+                                    <a href="<?= url('group/index') ?>"><i class="fa icon-account"></i> Account Groups</a>
+                                    <a href="<?= url('expense/financial_category') ?>"><i class="fa icon-account"></i> Charts of Accounts</a>
                                 </ul>
                             </li>
                         </ul>

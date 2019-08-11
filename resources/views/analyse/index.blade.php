@@ -33,8 +33,8 @@
                                         <i class="icofont icofont-eye-alt text-success"></i>
                                     </div>
                                     <div class="col-sm-8 text-center">
-                                        <h5>10k</h5>
-                                        <span>Visitors</span>
+                                        <h5 id="all_users"></h5>
+                                        <span>Users</span>
                                     </div>
                                 </div>
                             </div>
@@ -44,8 +44,8 @@
                                         <i class="icofont icofont-ui-music text-danger"></i>
                                     </div>
                                     <div class="col-sm-8 text-center">
-                                        <h5>100%</h5>
-                                        <span>Volume</span>
+                                        <h5 id="all_parents"></h5>
+                                        <span>Parents</span>
                                     </div>
                                 </div>
                             </div>
@@ -59,8 +59,8 @@
                                         <i class="icofont icofont-files text-info"></i>
                                     </div>
                                     <div class="col-sm-8 text-center">
-                                        <h5>2000 +</h5>
-                                        <span>Files</span>
+                                        <h5 id="all_students"></h5>
+                                        <span>Students</span>
                                     </div>
                                 </div>
                             </div>
@@ -70,8 +70,8 @@
                                         <i class="icofont icofont-envelope-open text-warning"></i>
                                     </div>
                                     <div class="col-sm-8 text-center">
-                                        <h5>120</h5>
-                                        <span>Mails</span>
+                                        <h5 id="all_teachers">120</h5>
+                                        <span>Teachers</span>
                                     </div>
                                 </div>
                             </div>
@@ -91,8 +91,8 @@
                                         <div id="barchart" style="height:40px;width:40px;"></div>
                                     </div>
                                     <div class="col-sm-8 text-center">
-                                        <h5>1000</h5>
-                                        <span>Shares</span>
+                                        <h5 id="active_users"></h5>
+                                        <span>(A) Users</span>
                                     </div>
                                 </div>
                             </div>
@@ -102,8 +102,8 @@
                                         <i class="icofont icofont-network text-primary"></i>
                                     </div>
                                     <div class="col-sm-8 text-center">
-                                        <h5>600</h5>
-                                        <span>Network</span>
+                                        <h5 id="active_parents"></h5>
+                                        <span>(A)Parents</span>
                                     </div>
                                 </div>
                             </div>
@@ -117,8 +117,8 @@
                                         <div id="barchart2" style="height:40px;width:40px;"></div>
                                     </div>
                                     <div class="col-sm-8 text-center">
-                                        <h5>350</h5>
-                                        <span>Returns</span>
+                                        <h5 id="active_students"></h5>
+                                        <span>(A)Students</span>
                                     </div>
                                 </div>
                             </div>
@@ -128,8 +128,8 @@
                                         <i class="icofont icofont-network-tower text-primary"></i>
                                     </div>
                                     <div class="col-sm-8 text-center">
-                                        <h5>100%</h5>
-                                        <span>Connections</span>
+                                        <h5 id="active_teachers"></h5>
+                                        <span>(A)Teachers</span>
                                     </div>
                                 </div>
                             </div>
@@ -147,7 +147,7 @@
                                 <i class="icofont icofont-star"></i>
                             </div>
                             <div class="col-sm-9">
-                                <h4><?=$total_schools?></h4>
+                                <h4  id="schools_with_shulesoft"></h4>
                                 <h6>Schools in ShuleSoft</h6>
                             </div>
                         </div>
@@ -162,8 +162,8 @@
                                 <i class="icofont icofont-trophy-alt"></i>
                             </div>
                             <div class="col-sm-9">
-                                <h4>17</h4>
-                                <h6>Achievements</h6>
+                                <h4 id="schools_with_students"></h4>
+                                <h6>Schools without Students</h6>
                             </div>
                         </div>
                     </div>
@@ -686,11 +686,29 @@
         </div>
     </div>
 </div>
-
-@endsection
 <script type="text/javascript">
     dashboard_summary = function () {
-
+        $.ajax({
+            url: '<?= url('analyse/summary/null') ?>',
+            data: {},
+            dataType: 'JSONP',
+            success: function (data) {
+                console.log(data);
+                $('#all_users').html(data.users);
+                $('#all_students').html(data.students);
+                $('#all_parents').html(data.parents);
+                $('#all_teachers').html(data.teachers);
+                $('#schools_with_shulesoft').html(data.total_schools);
+                $('#schools_with_students').html(data.total_schools-data.schools_with_students);
+                //
+                $('#active_users').html(data.active_users);
+                $('#active_students').html(data.active_students);
+                $('#active_parents').html(data.active_parents);
+                $('#active_teachers').html(data.active_teachers);
+            }
+        });
     }
     $(document).ready(dashboard_summary);
 </script>
+@endsection
+
