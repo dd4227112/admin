@@ -1,0 +1,312 @@
+@extends('layouts.app')
+@section('content')
+
+<div class="main-body">
+    <div class="page-wrapper">
+        <div class="page-header">
+            <div class="page-header-title">
+                <h4>System Erros</h4>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                        <a href="index-2.html">
+                            <i class="icofont icofont-home"></i>
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Error Logs</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-body">
+            <div class="row">
+                <div class="col-lg-6"></div>
+                <div class="card table-card widget-danger-card col-lg-6">
+                    <div class="card-footer">
+                        <div class="task-list-table">
+                            <p class="task-due"><strong>School with highest Error Logs : </strong><strong class="label label-danger"><?= count($danger_schema) == 1 ? $danger_schema->danger_schema : '' ?></strong></p>
+                        </div>
+                        <div class="task-board m-0">
+                            <a href="#" class="btn btn-info btn-mini b-none" title="view"><i class="icofont icofont-eye-alt m-0"></i></a>
+
+                        </div>
+                        <!-- end of pull-right class -->
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+                <!-- Documents card start -->
+                <div class="col-md-6 col-xl-3">
+                    <div class="card client-blocks dark-primary-border">
+                        <div class="card-block">
+                            <h5>All Errors</h5>
+                            <ul>
+                                <li>
+                                    <i class="icofont icofont-document-folder"></i>
+                                </li>
+                                <li class="text-right">
+                                    <?= $total_errors ?>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Documents card end -->
+                <!-- New clients card start -->
+                <div class="col-md-6 col-xl-3">
+                    <div class="card client-blocks warning-border">
+                        <div class="card-block">
+                            <h5>Database Errors</h5>
+                            <ul>
+                                <li>
+                                    <i class="icofont icofont-ui-user-group text-warning"></i>
+                                </li>
+                                <li class="text-right text-warning">
+                                    
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- New clients card end -->
+                <!-- New files card start -->
+                <div class="col-md-6 col-xl-3">
+                    <div class="card client-blocks danger-border">
+                        <div class="card-block">
+                            <h5>Fatal Errors </h5>
+                            <ul>
+                                <li>
+                                    <i class="icofont icofont-files text-danger"></i>
+                                </li>
+                                <li class="text-right text-danger">
+                                    
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- New files card end -->
+                <!-- Open Project card start -->
+                <div class="col-md-6 col-xl-3">
+                    <div class="card client-blocks">
+                        <div class="card-block">
+                            <h5>Resolved Errors</h5>
+                            <ul>
+                                <li>
+                                    <i class="icofont icofont-ui-folder text-primary"></i>
+                                </li>
+                                <li class="text-right text-primary">
+                                    
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Open Project card end -->
+                <div class="col-md-12 col-xl-12">
+                    <div class="form-group row col-lg-offset-6">
+                        <label class="col-sm-4 col-form-label">Select School</label>
+                        <div class="col-sm-4">
+                            <select name="select" class="form-control">
+                                <option value="">Select</option>
+                                <?php
+                                $schemas=DB::select('select distinct "schema_name" from admin.error_logs');
+                                foreach ($schemas as $schema) { ?>
+                                     <option value="<?=$schema->schema_name?>"><?=$schema->schema_name?></option>
+                             <?php   }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-xl-12">
+                    <div class="card tab-card">
+                        <ul class="nav nav-tabs md-tabs" role="tablist">
+                            <li class="nav-item complete">
+                                <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true">
+                                    <strong>(15)</strong> Errors
+                                </a>
+                                <div class="slide"></div>
+                            </li>
+                            <li class="nav-item complete">
+                                <a class="nav-link" data-toggle="tab" href="#profile3" role="tab" aria-expanded="false">Resolved</a>
+                                <div class="slide"></div>
+                            </li>
+                            <li class="nav-item complete">
+                                <a class="nav-link" data-toggle="tab" href="#messages3" role="tab" aria-expanded="false">Summary</a>
+                                <div class="slide"></div>
+                            </li>
+
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="home3" role="tabpanel" aria-expanded="true">
+
+                                <div class="card-block">
+                                    <div class="dt-responsive table-responsive">
+                                        <table id="simpletable" class="table table-striped table-bordered nowrap">
+                                            <thead>
+                                                <tr>
+                                                    <th>Client Name</th>
+                                                    <th>Error Message</th>
+                                                    <th>File</th>
+                                                    <th>url</th>
+                                                    <th>Created By</th>
+                                                    <th>Date</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                if (isset($error_logs) && count($error_logs) > 0) {
+                                                    ?>
+                                                    @foreach($error_logs as $log)
+                                                    <tr>
+                                                        <td>{{$log->schema_name}}</td>
+                                                        <td>{{$log->error_message}}</td>
+                                                        <td>{{$log->file}}</td>
+                                                        <td>{{$log->url}}</td>
+                                                        <td>ID: {{$log->created_by}}, Table: {{$log->created_by_table}}</td>
+                                                        <td>{{$log->created_at}}</td>
+                                                        <td><a href="#" class="btn btn-sm btn-danger">Delete</a></td>
+                                                    </tr>
+                                                    @endforeach
+                                                <?php } ?>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Client Name</th>
+                                                    <th>Error Message</th>
+                                                    <th>File</th>
+                                                    <th>url</th>
+                                                    <th>Created By</th>
+                                                    <th>Date</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="tab-pane" id="profile3" role="tabpanel" aria-expanded="false">
+                                <div class="card-block">
+                                    <div class="dt-responsive table-responsive">
+                                        <table id="simpletable" class="table table-striped table-bordered nowrap">
+                                            <thead>
+                                                <tr>
+                                                    <th>Client Name</th>
+                                                    <th>Error Message</th>
+                                                    <th>File</th>
+                                                    <th>url</th>
+                                                    <th>Created By</th>
+                                                    <th>Date</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                if (isset($error_logs) && count($error_logs) > 0) {
+                                                    ?>
+                                                    @foreach($error_logs as $log)
+
+                                                    <tr>
+                                                        <td>{{$log->schema_name}}</td>
+                                                        <td>{{$log->error_message}}</td>
+                                                        <td>{{$log->file}}</td>
+                                                        <td>{{$log->url}}</td>
+                                                        <td>ID: {{$log->created_by}}, Table: {{$log->created_by_table}}</td>
+                                                        <td>{{$log->created_at}}</td>
+                                                        <td></td>
+                                                    </tr>
+                                                    @endforeach
+                                                <?php } ?>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Client Name</th>
+                                                    <th>Error Message</th>
+                                                    <th>File</th>
+                                                    <th>url</th>
+                                                    <th>Created By</th>
+                                                    <th>Date</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="messages3" role="tabpanel" aria-expanded="false">
+                                <div class="email-card p-0">
+                                    <div class="card-block">
+
+                                        <div class="mail-body-content">
+                                            <div class="card">
+
+
+                                                <div class="card-block table-border-style">
+                                                    <div class="table-responsive analytic-table">
+                                                        <table class="table">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>
+                                                                        <span class="count text-primary">2567</span>
+                                                                        <span class="table-msg">Total Message Sent</span>
+                                                                    </td>
+                                                                    <td>34%</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <span class="count text-success">3058</span>
+                                                                        <span class="table-msg">Last Activity</span>
+                                                                    </td>
+                                                                    <td>56%</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <span class="count text-inverse">6451</span>
+                                                                        <span class="table-msg">Total Message Received</span>
+                                                                    </td>
+                                                                    <td>84%</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <span class="count text-warning">9512</span>
+                                                                        <span class="table-msg">Monthly Income</span>
+                                                                    </td>
+                                                                    <td>79%</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <span class="count text-info">9874</span>
+                                                                        <span class="table-msg">Total Transfer</span>
+                                                                    </td>
+                                                                    <td>81%</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 
-class DatabaseController extends Controller {
+class Software extends Controller {
 
     /**
      * Display a listing of the resource.
@@ -226,7 +226,7 @@ ORDER BY c.oid, a.attnum";
         } else {
             $this->data['script'] = '';
         }
-        return view('database.upgrade',  $this->data);
+        return view('database.upgrade', $this->data);
     }
 
     public function createUpgradeScript($slave_schema = null) {
@@ -289,12 +289,21 @@ ORDER  BY conrelid::regclass::text, contype DESC";
         $constrain_params = $this->getConstrainByName($constrain);
 
         if (count($constrain_params) > 0) {
-          $sql = 'ALTER TABLE ' . $schema . '.' . $table . ' ADD CONSTRAINT  "' . $constrain_params->conname . '"  ' . str_replace(self::$master_schema,$schema,$constrain_params->pg_get_constraintdef);
+            $sql = 'ALTER TABLE ' . $schema . '.' . $table . ' ADD CONSTRAINT  "' . $constrain_params->conname . '"  ' . str_replace(self::$master_schema, $schema, $constrain_params->pg_get_constraintdef);
             return DB::statement($sql);
         } else {
-            echo 2; exit;
+            echo 2;
+            exit;
             return "This table does not exists in " . $schema . ' schema. Run "background/compareTableColumn"';
         }
+    }
+
+    public function logs() {
+
+        $this->data['total_errors'] = DB::table('admin.error_logs')->count();
+        $this->data['error_logs'] = DB::table('admin.error_logs')->get();
+        $this->data['danger_schema']=\collect(DB::select('select count(*), "schema_name" from admin.error_logs group by "schema_name" order by count desc limit 1 '))->first();
+        return view('software.logs', $this->data);
     }
 
 }
