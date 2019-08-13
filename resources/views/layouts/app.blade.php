@@ -447,7 +447,7 @@ var root_url = "<?= url('/'); ?>";
                             <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
                                         class="icon-arrow-right"></i>Usage Analysis</a>
                                 <ul class="tree-2">
-                                    <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.vertical.static-layout"> Modules </a></li>
+                                    <li><a href="<?= url('customer/modules') ?>" data-i18n="nav.page_layout.vertical.static-layout"> Modules </a></li>
                                     <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.vertical.header-fixed">
                                             User Logs</a></li>
                                     <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.vertical.compact"> Page Logs </a>

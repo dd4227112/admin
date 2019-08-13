@@ -51,7 +51,7 @@ class Customer extends Controller {
                 )
             ));
         } else {
-            $this->data['schools'] = DB::select("SELECT distinct table_schema as schema_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','beta_testing','accounts','pg_catalog','constant','api','information_schema')");
+            $this->data['schools'] = DB::select("SELECT distinct table_schema as schema_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','beta_testing','accounts','pg_catalog','constant','api','information_schema','public')");
             return view('customer.setup', $this->data);
         }
     }
@@ -198,6 +198,11 @@ class Customer extends Controller {
     public function requirements() {
         $this->data['levels'] = [];
         return view('customer/analysis', $this->data);
+    }
+
+    public function modules() {
+        $this->data['schools'] = DB::select("SELECT distinct table_schema as schema_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','beta_testing','accounts','pg_catalog','constant','api','information_schema','public')");
+        return view('customer.modules', $this->data);
     }
 
 }
