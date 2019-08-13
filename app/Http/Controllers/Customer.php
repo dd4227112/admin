@@ -191,8 +191,13 @@ class Customer extends Controller {
     public function profile() {
         $school = request()->segment(3);
         $this->data['school'] = DB::table($school . '.setting')->first();
-        $this->data['levels']=DB::table($school.'.classlevel')->get();
+        $this->data['levels'] = DB::table($school . '.classlevel')->get();
         return view('customer/profile', $this->data);
+    }
+
+    public function requirements() {
+        $this->data['levels'] = [];
+        return view('customer/analysis', $this->data);
     }
 
 }
