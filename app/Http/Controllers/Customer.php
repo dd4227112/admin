@@ -189,9 +189,10 @@ class Customer extends Controller {
     }
 
     public function profile() {
-        $school = request()->segment(3);
+        $school = $this->data['schema']= request()->segment(3);
         $this->data['school'] = DB::table($school . '.setting')->first();
         $this->data['levels'] = DB::table($school . '.classlevel')->get();
+        $this->data['top_users'] = DB::select('select count(*), user_id,a."table",b.name,b.usertype from '.$school.'.log a join '.$school.'.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
         return view('customer/profile', $this->data);
     }
 

@@ -45,7 +45,7 @@
                                         <!-- Social wallpaper end -->
                                         <!-- Timeline button start -->
                                         <div class="timeline-btn">
-                                            <a href="#" class="btn btn-primary waves-effect waves-light m-r-10">follows</a>
+              
                                             <a href="#" class="btn btn-primary waves-effect waves-light">Send Message</a>
                                         </div>
                                         <!-- Timeline button end -->
@@ -70,93 +70,52 @@
                                                     <h4><?= $school->sname ?></h4>
                                                     <h5><?= $school->address ?></h5>
                                                     <div class="row follower-counter">
-                                                        <div class="col-md-12 col-lg-4">
-                                                            <div class="txt-primary">485</div>
-                                                            <div>Followings</div>
+                                                        <div class="col-md-12 col-lg-3">
+                                                            <div class="txt-primary"><?= \DB::table($schema . '.student')->where('status', 1)->count() ?></div>
+                                                            <div>Students</div>
                                                         </div>
-                                                        <div class="col-md-12 col-lg-4">
-                                                            <div class="txt-primary">2k</div>
-                                                            <div>Followers</div>
+                                                        <div class="col-md-12 col-lg-3">
+                                                            <div class="txt-primary"><?= \DB::table($schema . '.parent')->where('status', 1)->count() ?></div>
+                                                            <div>Parents</div>
                                                         </div>
-                                                        <div class="col-md-12 col-lg-4">
-                                                            <div class="txt-primary">90</div>
-                                                            <div>Activities</div>
+                                                        <div class="col-md-12 col-lg-3">
+                                                            <div class="txt-primary"><?= \DB::table($schema . '.user')->where('status', 1)->count() ?></div>
+                                                            <div>Staff</div>
+                                                        </div>
+                                                        <div class="col-md-12 col-lg-3">
+                                                            <div class="txt-primary"><?= \DB::table($schema . '.teacher')->where('status', 1)->count() ?></div>
+                                                            <div>Teacher</div>
                                                         </div>
                                                     </div>
-                                                    <div class="btn-group">
-                                                        <button type="button" class="btn btn-outline-primary waves-effect"><i class="icofont icofont-ui-user m-r-10"></i> Add as Friend</button>
-                                                    </div>
+
                                                 </div>
                                             </div>
                                             <!-- social-profile card end -->
                                             <!-- Who to follow card start -->
                                             <div class="card">
                                                 <div class="card-header">
-                                                    <h5 class="card-header-text">Who to follow</h5>
+                                                    <h5 class="card-header-text">Top USER Logins</h5>
                                                 </div>
                                                 <div class="card-block user-box">
-                                                    <div class="media m-b-10">
-                                                        <a class="media-left" href="#!">
-                                                            <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
-                                                            <div class="live-status bg-danger"></div>
-                                                        </a>
-                                                        <div class="media-body">
-                                                            <div class="chat-header">Josephin Doe</div>
-                                                            <div class="text-muted social-designation">Softwear Engineer</div>
+                                                    <?php
+                                                    foreach ($top_users as $log) {
+                                                        ?>
+                                                        <div class="media m-b-10">
+                                                            <a class="media-left" href="#!">
+                                                                <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
+                                                                <div class="live-status bg-danger"></div>
+                                                            </a>
+                                                            <div class="media-body">
+                                                                <div class="chat-header"><?=$log->name?></div>
+                                                                <div class="text-muted social-designation"><?=$log->usertype?></div>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="media m-b-10">
-                                                        <a class="media-left" href="#!">
-                                                            <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-2.png" alt="Generic placeholder image">
-                                                            <div class="live-status bg-success"></div>
-                                                        </a>
-                                                        <div class="media-body">
-                                                            <div class="chat-header">Josephin Doe</div>
-                                                            <div class="text-muted social-designation">Softwear Engineer</div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="media m-b-10">
-                                                        <a class="media-left" href="#!">
-                                                            <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-3.png" alt="Generic placeholder image">
-                                                            <div class="live-status bg-danger"></div>
-                                                        </a>
-                                                        <div class="media-body">
-                                                            <div class="chat-header">Josephin Doe</div>
-                                                            <div class="text-muted social-designation">Softwear Engineer</div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="media m-b-10">
-                                                        <a class="media-left" href="#!">
-                                                            <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-2.png" alt="Generic placeholder image">
-                                                            <div class="live-status bg-success"></div>
-                                                        </a>
-                                                        <div class="media-body">
-                                                            <div class="chat-header">Josephin Doe</div>
-                                                            <div class="text-muted social-designation">Softwear Engineer</div>
-                                                        </div>
-                                                    </div>
+                                                    <?php } ?>
+                                                    
                                                 </div>
                                             </div>
                                             <!-- Who to follow card end -->
-                                            <!-- Friends card start -->
-                                            <div class="card">
-                                                <div class="card-header">
-                                                    <h5 class="card-header-text d-inline-block">Friends</h5>
-                                                    <!-- <span class="friend-more f-right">see 12 more</span> -->
-                                                    <span class="label label-primary f-right"> See 12 More </span>
-                                                </div>
-                                                <div class="card-block friend-box">
-                                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="">
-                                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-2.png" alt="">
-                                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-3.png" alt="">
-                                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-4.png" alt="">
-                                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="">
-                                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-4.png" alt="">
-                                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-3.png" alt="">
-                                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-2.png" alt="">
-                                                </div>
-                                            </div>
-                                            <!-- Friends card end -->
+                                     
                                         </div>
                                         <!-- Social timeline left end -->
                                     </div>
@@ -173,7 +132,7 @@
                                                     <div class="slide"></div>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" data-toggle="tab" href="#photos" role="tab" aria-expanded="false">Photos</a>
+                                                    <a class="nav-link" data-toggle="tab" href="#photos" role="tab" aria-expanded="false">Modules Usage</a>
                                                     <div class="slide"></div>
                                                 </li>
                                                 <li class="nav-item">
@@ -205,45 +164,45 @@
                                                                             <a class="dropdown-item" href="#">Blog User</a>
                                                                         </div>
                                                                         <div class="card-block post-timelines">
-                              
+
                                                                             <div class="social-time text-muted">August 2019</div>
                                                                         </div>
-                                              
+
                                                                         <div class="card-block">
-                        <div class="table-responsive">
-                            <table class="table table-xl">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Username</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">3</th>
-                                        <td>Larry</td>
-                                        <td>the Bird</td>
-                                        <td>@twitter</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                                                                 
+                                                                            <div class="table-responsive">
+                                                                                <table class="table table-xl">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th>#</th>
+                                                                                            <th>First Name</th>
+                                                                                            <th>Last Name</th>
+                                                                                            <th>Username</th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <th scope="row">1</th>
+                                                                                            <td>Mark</td>
+                                                                                            <td>Otto</td>
+                                                                                            <td>@mdo</td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <th scope="row">2</th>
+                                                                                            <td>Jacob</td>
+                                                                                            <td>Thornton</td>
+                                                                                            <td>@fat</td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <th scope="row">3</th>
+                                                                                            <td>Larry</td>
+                                                                                            <td>the Bird</td>
+                                                                                            <td>@twitter</td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
+
                                                                         <div class="card-block user-box">
                                                                             <div class="p-b-30"> <span class="f-14"><a href="#">Task Done & Requirements</a></span></div>
                                                                             <div class="media m-b-20">
@@ -444,10 +403,10 @@
                                                                                     <tr>
                                                                                         <th class="social-label b-none p-b-0">School Level</th>
                                                                                         <td class="social-user-name b-none p-b-0 text-muted"><?php
-                                                                                            foreach ($levels as $level) {
-                                                                                                echo $level->name . ' - ' . $level->result_format . '<br/>';
-                                                                                            }
-                                                                                            ?></td>
+                                                    foreach ($levels as $level) {
+                                                        echo $level->name . ' - ' . $level->result_format . '<br/>';
+                                                    }
+                                                    ?></td>
                                                                                     </tr>
                                                                                 </tbody></table>
                                                                         </form>

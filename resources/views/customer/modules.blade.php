@@ -70,6 +70,7 @@
                                     <thead>
                                         <tr>
                                             <th>School Name</th>
+                                            <td>Students</td>
                                             <th>Marks Entered</th>
                                             <th>Exams Published</th>
                                             <th>Invoice Created</th>
@@ -80,10 +81,11 @@
                                     <tbody>
                                         <?php
                                         foreach ($schools as $school) {
+                                               $students= DB::table($school->schema_name . '.student')->count();
                                             ?>
                                             <tr>
                                                 <td><?= $school->schema_name ?></td>
-
+<td><?= $students ?></td>
                                                 <td>   <?php
                                                     //classlevel
                                                     $mark = DB::table($school->schema_name . '.mark')->select('created_at')->orderBy('created_at', 'desc')->first();
@@ -110,7 +112,7 @@
                                                     //classlevel
                                                     $invoices = DB::table($school->schema_name . '.invoices')->count();
                                                     if ($invoices > 0) {
-                                                        $students= DB::table($school->schema_name . '.student')->count();
+                                                     
                                                         echo '<b class="label label-success">' . $invoices . ' out of '.$students.'</b>';
                                                     } else {
                                                         echo '<b class="label label-warning">Not Invoice Created</b>';
@@ -122,7 +124,16 @@
 
 
 
-                                                <td ><?php ?></td>
+                                                <td >      <?php
+                                                    //classlevel
+                                                    $expense = DB::table($school->schema_name . '.expense')->count();
+                                                    if ($expense > 0) {
+                                                       
+                                                        echo '<b class="label label-success">' . $expense . ' trans</b>';
+                                                    } else {
+                                                        echo '<b class="label label-warning">Not Expense Recorded</b>';
+                                                    }
+                                                    ?></td>
                                                 <td><a href="<?= url('customer/profile/' . $school->schema_name) ?>" class="btn btn-mini waves-effect waves-light btn-primary"><i class="icofont icofont-eye-alt"></i> View</a></td>
                                             </tr>
                                         <?php } ?>
@@ -130,10 +141,11 @@
                                     <tfoot>
                                         <tr>
                                             <th>School Name</th>
-                                            <th>Class Levels</th>
-                                            <th>Class Levels</th>
-                                            <th>Academic Years</th>
-                                            <th>Terms</th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
 
                                         
                                             <th>Action</th>
