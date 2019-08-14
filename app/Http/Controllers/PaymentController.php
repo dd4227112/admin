@@ -9,6 +9,9 @@ use DB;
 
 class PaymentController extends Controller {
 
+     public function __construct() {
+        $this->middleware('auth');
+    }
     public $testing_schema = 'beta_testing.';
 
     /**
