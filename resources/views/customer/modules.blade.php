@@ -90,9 +90,10 @@
                                             ?>
                                             <tr>
                                                 <td><?= $school->schema_name ?></td>
-                                                <td><?php if ($students == 0) {
+                                                <td><?php
+                                                if ($students == 0) {
                                             echo 0;
-                                            $no_students;
+                                            $no_students++;
                                         } else {
                                             echo $students;
                                         } ?></td>
