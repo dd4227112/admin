@@ -49,7 +49,7 @@
                                     <i class="icofont icofont-document-folder"></i>
                                 </li>
                                 <li class="text-right">
-                                    <?= $total_errors ?>
+                                    <?= count($error_logs) ?>
                                 </li>
                             </ul>
                         </div>
@@ -66,7 +66,7 @@
                                     <i class="icofont icofont-ui-user-group text-warning"></i>
                                 </li>
                                 <li class="text-right text-warning">
-                                    
+
                                 </li>
                             </ul>
                         </div>
@@ -83,7 +83,7 @@
                                     <i class="icofont icofont-files text-danger"></i>
                                 </li>
                                 <li class="text-right text-danger">
-                                    
+
                                 </li>
                             </ul>
                         </div>
@@ -101,7 +101,7 @@
                                     <i class="icofont icofont-ui-folder text-primary"></i>
                                 </li>
                                 <li class="text-right text-primary">
-                                    
+
                                 </li>
                             </ul>
                         </div>
@@ -113,13 +113,14 @@
                     <div class="form-group row col-lg-offset-6">
                         <label class="col-sm-4 col-form-label">Select School</label>
                         <div class="col-sm-4">
-                            <select name="select" class="form-control">
-                                <option value="">Select</option>
+                            <select name="select" class="form-control" id="schema_select">
+                                <option value="0">Select</option>
                                 <?php
-                                $schemas=DB::select('select distinct "schema_name" from admin.error_logs');
-                                foreach ($schemas as $schema) { ?>
-                                     <option value="<?=$schema->schema_name?>"><?=$schema->schema_name?></option>
-                             <?php   }
+                                $schemas = DB::select('select distinct "schema_name" from admin.error_logs');
+                                foreach ($schemas as $schema) {
+                                    ?>
+                                    <option value="<?= $schema->schema_name ?>"><?= $schema->schema_name ?></option>
+                                <?php }
                                 ?>
                             </select>
                         </div>
@@ -149,7 +150,7 @@
                             <div class="tab-pane active" id="home3" role="tabpanel" aria-expanded="true">
 
                                 <div class="card-block">
-                                    <div class="dt-responsive table-responsive">
+                                    <div class="dt-responsive2 table-responsive2">
                                         <table id="simpletable" class="table table-striped table-bordered nowrap">
                                             <thead>
                                                 <tr>
@@ -167,14 +168,14 @@
                                                 if (isset($error_logs) && count($error_logs) > 0) {
                                                     ?>
                                                     @foreach($error_logs as $log)
-                                                    <tr>
+                                                    <tr id="log{{$log->id}}">
                                                         <td>{{$log->schema_name}}</td>
                                                         <td>{{$log->error_message}}</td>
                                                         <td>{{$log->file}}</td>
                                                         <td>{{$log->url}}</td>
                                                         <td>ID: {{$log->created_by}}, Table: {{$log->created_by_table}}</td>
                                                         <td>{{$log->created_at}}</td>
-                                                        <td><a href="#" class="btn btn-sm btn-danger">Delete</a></td>
+                                                        <td><a href="#" id="{{$log->id}}" class="btn btn-sm btn-danger dlt_log">Delete</a></td>
                                                     </tr>
                                                     @endforeach
                                                 <?php } ?>
@@ -255,42 +256,30 @@
                                                 <div class="card-block table-border-style">
                                                     <div class="table-responsive analytic-table">
                                                         <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Error Instance Name</th>
+                                                                    <th>Count</th>
+                                                                    <th>Action</th>
+                                                                </tr>
+                                                            </thead>
                                                             <tbody>
-                                                                <tr>
-                                                                    <td>
-                                                                        <span class="count text-primary">2567</span>
-                                                                        <span class="table-msg">Total Message Sent</span>
-                                                                    </td>
-                                                                    <td>34%</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <span class="count text-success">3058</span>
-                                                                        <span class="table-msg">Last Activity</span>
-                                                                    </td>
-                                                                    <td>56%</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <span class="count text-inverse">6451</span>
-                                                                        <span class="table-msg">Total Message Received</span>
-                                                                    </td>
-                                                                    <td>84%</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <span class="count text-warning">9512</span>
-                                                                        <span class="table-msg">Monthly Income</span>
-                                                                    </td>
-                                                                    <td>79%</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>
-                                                                        <span class="count text-info">9874</span>
-                                                                        <span class="table-msg">Total Transfer</span>
-                                                                    </td>
-                                                                    <td>81%</td>
-                                                                </tr>
+                                                                <?php
+                                                                $sql = 'select error_instance,count(*) from admin.error_logs group by error_instance';
+                                                                $logs = DB::select($sql);
+                                                                foreach ($logs as $log) {
+                                                                    ?>
+                                                                    <tr>
+                                                                        <td>
+
+                                                                            <span class="table-msg"><?= $log->error_instance ?></span>
+                                                                        </td>
+                                                                        <td><?= $log->count ?></td>
+                                                                        <td><?= $log->count ?></td>
+                                                                    </tr>
+                                                                <?php }
+                                                                ?>
+
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -309,4 +298,24 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $('#schema_select').change(function () {
+        var schema = $(this).val();
+        if (schema == 0) {
+            return false;
+        } else {
+            window.location.href = "<?= url('software/logs') ?>/" + schema;
+        }
+    });
+    delete_log = function (a) {
+        $.ajax({
+            url: '<?= url('software/logsDelete') ?>',
+            method: 'post',
+            data: {id: a},
+            success: function (data) {
+                console.log(data);
+            }
+        });
+    }
+</script>
 @endsection

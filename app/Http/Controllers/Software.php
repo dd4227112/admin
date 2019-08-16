@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use DB;
 
 class Software extends Controller {
-    
-     public function __construct() {
+
+    public function __construct() {
         $this->middleware('auth');
     }
 
@@ -303,11 +303,15 @@ ORDER  BY conrelid::regclass::text, contype DESC";
     }
 
     public function logs() {
-
-        $this->data['total_errors'] = DB::table('admin.error_logs')->count();
-        $this->data['error_logs'] = DB::table('admin.error_logs')->get();
-        $this->data['danger_schema']=\collect(DB::select('select count(*), "schema_name" from admin.error_logs group by "schema_name" order by count desc limit 1 '))->first();
+        $schema = request()->segment(3);
+        $where = strlen($schema) > 3 ? ' where "schema_name"=\'' . $schema . '\' ' : '';
+        $this->data['error_logs'] = DB::select('select * from admin.error_logs ' . $where);
+        $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1 '))->first();
         return view('software.logs', $this->data);
+    }
+    
+    public function logsDelete() {
+      echo  $id=request('id');
     }
 
 }
