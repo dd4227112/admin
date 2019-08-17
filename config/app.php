@@ -158,8 +158,8 @@ return [
 //        'Way\Generators\GeneratorsServiceProvider',
 //        'Xethron\MigrationsGenerator\MigrationsGeneratorServiceProvider',
 //        'User11001\EloquentModelGenerator\EloquentModelGeneratorProvider',
-        'Xethron\MigrationsGenerator\MigrationsGeneratorServiceProvider',
-        'User11001\EloquentModelGenerator\EloquentModelGeneratorProvider',
+//        'Xethron\MigrationsGenerator\MigrationsGeneratorServiceProvider',
+//        'User11001\EloquentModelGenerator\EloquentModelGeneratorProvider',
     ],
     /*
       |--------------------------------------------------------------------------

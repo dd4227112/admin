@@ -47,11 +47,11 @@ class Handler extends ExceptionHandler {
     }
 
     public function sendLog($err) {
-        return DB::table("public.email")->insert(array(
-                    'body' => $err,
-                    'subject' => 'Error Occurred at Admin Panel ',
-                    'email' => 'inetscompany@gmail.com')
-        );
+//        return DB::table("public.email")->insert(array(
+//                    'body' => $err,
+//                    'subject' => 'Error Occurred at Admin Panel ',
+//                    'email' => 'inetscompany@gmail.com')
+//        );
     }
 
     /**
