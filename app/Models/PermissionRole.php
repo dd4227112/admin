@@ -1,47 +1,24 @@
-<?php
-
-namespace App;
+<?php namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PermissionRole extends Model  
-{
-
-    
+class PermissionRole extends Model {
 
     /**
-     * The database table used by the model.
-     *
-     * @var string
+     * Generated
      */
+
     protected $table = 'permission_role';
+    protected $fillable = ['permission_id', 'role_id', 'created_by', 'id'];
 
-    /**
-     * Attributes that should be mass-assignable.
-     *
-     * @var array
-     */
-    protected $fillable = ['permission_id', 'role_id', 'created_at', 'created_by', 'updated_at'];
 
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = [];
+    public function role() {
+        return $this->belongsTo(\App\Models\Role::class, 'role_id', 'id');
+    }
 
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
-    protected $casts = [];
+    public function permission() {
+        return $this->belongsTo(\App\Models\Permission::class, 'permission_id', 'id');
+    }
 
-    /**
-     * The attributes that should be mutated to dates.
-     *
-     * @var array
-     */
-    protected $dates = [];
 
 }

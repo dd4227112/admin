@@ -132,7 +132,7 @@
                         <ul class="nav nav-tabs md-tabs" role="tablist">
                             <li class="nav-item complete">
                                 <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true">
-                                    <strong>(15)</strong> Errors
+                                    <strong>( <?= count($error_logs) ?>)</strong> Errors
                                 </a>
                                 <div class="slide"></div>
                             </li>
@@ -150,8 +150,8 @@
                             <div class="tab-pane active" id="home3" role="tabpanel" aria-expanded="true">
 
                                 <div class="card-block">
-                                    <div class="dt-responsive2 table-responsive2">
-                                        <table id="simpletable" class="table table-striped table-bordered nowrap">
+                                    <div class="dt-responsive table-responsive">
+                                        <table id="error_log_table" class="table table-striped table-bordered nowrap">
                                             <thead>
                                                 <tr>
                                                     <th>Client Name</th>
@@ -170,12 +170,12 @@
                                                     @foreach($error_logs as $log)
                                                     <tr id="log{{$log->id}}">
                                                         <td>{{$log->schema_name}}</td>
-                                                        <td>{{$log->error_message}}</td>
+                                                        <td class="col-sm-2">{{$log->error_message}}</td>
                                                         <td>{{$log->file}}</td>
                                                         <td>{{$log->url}}</td>
                                                         <td>ID: {{$log->created_by}}, Table: {{$log->created_by_table}}</td>
                                                         <td>{{$log->created_at}}</td>
-                                                        <td><a href="#" id="{{$log->id}}" class="btn btn-sm btn-danger dlt_log">Delete</a></td>
+                                                        <td><a href="#" id="{{$log->id}}" class="btn btn-sm btn-danger dlt_log" onmousedown="delete_log({{$log->id}})" onclick="return false">Delete</a></td>
                                                     </tr>
                                                     @endforeach
                                                 <?php } ?>
@@ -246,7 +246,9 @@
                                 </div>
                             </div>
                             <div class="tab-pane" id="messages3" role="tabpanel" aria-expanded="false">
-                                <div class="email-card p-0">
+                                <a href="#" class="btn btn-sm btn-success" id="show_summary" style="display: none">Show Summary</a>
+                                <div id="custom_logs"></div>
+                                <div class="email-card p-0" id="log_summary">
                                     <div class="card-block">
 
                                         <div class="mail-body-content">
@@ -275,7 +277,7 @@
                                                                             <span class="table-msg"><?= $log->error_instance ?></span>
                                                                         </td>
                                                                         <td><?= $log->count ?></td>
-                                                                        <td><?= $log->count ?></td>
+                                                                        <td> <a href="#" onmousedown='getErrorPage("<?= $log->count ?>")' onclick="return false" class="btn btn-sm btn-warning btn-outline-warning waves-effect md-trigger">View</a></td>
                                                                     </tr>
                                                                 <?php }
                                                                 ?>
@@ -298,24 +300,51 @@
         </div>
     </div>
 </div>
+
 <script type="text/javascript">
+    $(document).ready(function () {
+    $('#error_log_table').DataTable();
+    //        $('#dt-ajax-users').DataTable({
+    //            "ajax": '<?= url('customer/getData/data/?tag=users') ?>'
+    //        });
+    });
     $('#schema_select').change(function () {
-        var schema = $(this).val();
-        if (schema == 0) {
-            return false;
-        } else {
-            window.location.href = "<?= url('software/logs') ?>/" + schema;
-        }
+    var schema = $(this).val();
+    if (schema == 0) {
+    return false;
+    } else {
+    window.location.href = "<?= url('software/logs') ?>/" + schema;
+    }
     });
     delete_log = function (a) {
-        $.ajax({
-            url: '<?= url('software/logsDelete') ?>',
-            method: 'post',
+    $.ajax({
+    url: '<?= url('software/logsDelete') ?>/null',
+            method: 'get',
             data: {id: a},
             success: function (data) {
-                console.log(data);
+            if (data == '1'){
+            $('#log' + a).fadeOut();
             }
-        });
+            }
+    });
     }
+    getErrorPage = function (a) {
+    $.ajax({
+    url: '<?= url('software/logsView') ?>/null',
+            method: 'get',
+            data: {type: a},
+            success: function (data) {
+            $('#log_summary').hide();
+            $('#custom_logs').html(data).show();
+            $('#show_summary').show();
+            console.log(data);
+            }
+    });
+    }
+    $('#show_summary').mousedown(function () {
+    $(this).hide();
+    $('#log_summary').show();
+    $('#custom_logs').hide();
+    });
 </script>
 @endsection

@@ -309,9 +309,17 @@ ORDER  BY conrelid::regclass::text, contype DESC";
         $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1 '))->first();
         return view('software.logs', $this->data);
     }
-    
+
     public function logsDelete() {
-      echo  $id=request('id');
+         $id = request('id');
+        \App\Models\ErrorLog::find($id)->delete();
+        echo 1;
+    }
+
+    public function logsView() {
+        $type = request('type');
+        $this->data['logs'] = DB::select("select * from admin.error_logs where error_instance in (select error_instance from (select error_instance,count(*) from admin.error_logs  group by error_instance having count(*)=" . $type . ") a )  ");
+        return view('software.custom_logs', $this->data);
     }
 
 }
