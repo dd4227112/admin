@@ -189,11 +189,32 @@ class Customer extends Controller {
     }
 
     public function profile() {
-        $school = $this->data['schema']= request()->segment(3);
+        $school = $this->data['schema'] = request()->segment(3);
         $this->data['school'] = DB::table($school . '.setting')->first();
         $this->data['levels'] = DB::table($school . '.classlevel')->get();
-        $this->data['top_users'] = DB::select('select count(*), user_id,a."table",b.name,b.usertype from '.$school.'.log a join '.$school.'.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
+        $client = \App\Models\Client::where('username', $school)->first();
+        if (count($client) == 0) {
+
+            $client = \App\Models\Client::create(['name' => $this->data['school']->sname, 'email' => $this->data['school']->email, 'phone' => $this->data['school']->phone, 'address' => $this->data['school']->address, 'username' => $this->data['school']->schema_name]);
+        }
+        $this->data['client_id'] = $client->id;
+        if ($_POST) {
+            $data = array_merge(request()->all(), ['user_id' => Auth::user()->id]);
+            \App\Models\Task::create($data);
+        }
+        $this->data['top_users'] = DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
         return view('customer/profile', $this->data);
+    }
+
+    public function createReminder($task) {
+        $data = [
+            'user_id'=>1,
+            'role_id'=>1,
+            'date'=>$task->date,
+            "time"=>$task->time,
+            'title',
+            'is_repeated' => 0,
+            'days'];
     }
 
     public function requirements() {

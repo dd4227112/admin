@@ -9,7 +9,7 @@ class Payment extends Model {
      */
 
     protected $table = 'payments';
-    protected $fillable = ['id', 'invoice_id', 'amount', 'transaction_fee', 'method', 'transaction_id', 'mobile_transaction_id', 'transaction_time', 'account_number', 'token', 'bank_account_id', 'status', 'reconciled', 'note', 'financial_entity_id', 'checksum', 'payment_type', 'amount_type', 'currency', 'receipt_sent'];
+    protected $fillable = ['id', 'invoice_id', 'amount', 'transaction_fee', 'method', 'transaction_id', 'mobile_transaction_id', 'transaction_time', 'account_number', 'token', 'bank_account_id', 'status', 'reconciled', 'note', 'financial_entity_id', 'checksum', 'payment_type', 'amount_type', 'currency', 'receipt_sent','client_id'];
 
 
     public function invoice() {
@@ -24,5 +24,8 @@ class Payment extends Model {
         return $this->hasMany(\App\Models\InvoiceFeesPayment::class, 'payment_id', 'id');
     }
 
+     public function client() {
+        return $this->belongsTo(\App\Models\Client::class, 'client_id', 'id');
+    }
 
 }

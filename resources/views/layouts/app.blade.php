@@ -474,10 +474,10 @@ var root_url = "<?= url('/'); ?>";
                             <span data-i18n="nav.navigate.main">Sales</span>
                         </a>
                         <ul class="tree-1">
-                            <li><a href="<?= url('sales/index')?>" data-i18n="nav.navigate.navbar">Sales Materials</a>
+                            <li><a href="<?= url('sales/index') ?>" data-i18n="nav.navigate.navbar">Sales Materials</a>
                             </li>
-                           
-                            <li><a href="<?= url('sales/index')?>" data-i18n="nav.navigate.navbar-with-elements">Sales Reports</a></li>
+
+                            <li><a href="<?= url('sales/index') ?>" data-i18n="nav.navigate.navbar-with-elements">Sales Reports</a></li>
                         </ul>
                     </li>
 
@@ -486,12 +486,12 @@ var root_url = "<?= url('/'); ?>";
                             <i class="ti-gift "></i>
                             <span data-i18n="nav.extra-components.main">Marketing</span>
                         </a>
-<!--                        <ul class="tree-1">
-                            <li><a href="session-timeout.html" data-i18n="nav.extra-components.session-timeout">Session Timeout</a></li>
-                            <li><a href="session-idle-timeout.html" data-i18n="nav.extra-components.session-idle-timeout">Session Idle Timeout</a>
-                            </li>
-                            <li><a href="offline.html" data-i18n="nav.extra-components.offline">Offline</a></li>
-                        </ul>-->
+                        <!--                        <ul class="tree-1">
+                                                    <li><a href="session-timeout.html" data-i18n="nav.extra-components.session-timeout">Session Timeout</a></li>
+                                                    <li><a href="session-idle-timeout.html" data-i18n="nav.extra-components.session-idle-timeout">Session Idle Timeout</a>
+                                                    </li>
+                                                    <li><a href="offline.html" data-i18n="nav.extra-components.offline">Offline</a></li>
+                                                </ul>-->
                     </li>
                     <li class="nav-item">
                         <a href="#!">
@@ -499,33 +499,33 @@ var root_url = "<?= url('/'); ?>";
                             <span data-i18n="nav.basic-components.main">Software Development</span>
                         </a>
                         <ul class="tree-1">
-                            <li><a href="<?= url('software/template')?>" data-i18n="nav.basic-components.alert">Templates & Policies</a></li>
+                            <li><a href="<?= url('software/template') ?>" data-i18n="nav.basic-components.alert">Templates & Policies</a></li>
                             <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Database</a>
                                 <ul class="tree-2" style="display: none;">
-                                    <li><a href="<?= url('software/template')?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Tables</a></li>
-                                    <li><a href="<?= url('software/template')?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Columns</a></li>
-                                    <li><a href="<?= url('software/template')?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Constrains</a></li>
-                                    <li><a href="<?= url('software/template')?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Backup</a></li>
-                                    <li><a href="<?= url('software/template')?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Reports</a></li>
-                                    <li><a href="<?= url('software/template')?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Create Script</a></li>
+                                    <li><a href="<?= url('software/template') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Tables</a></li>
+                                    <li><a href="<?= url('software/template') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Columns</a></li>
+                                    <li><a href="<?= url('software/template') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Constrains</a></li>
+                                    <li><a href="<?= url('software/template') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Backup</a></li>
+                                    <li><a href="<?= url('software/template') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Reports</a></li>
+                                    <li><a href="<?= url('software/template') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Create Script</a></li>
 
                                 </ul>
                             </li>
 
                             <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Payment Integration</a>
                                 <ul class="tree-2" style="display: none;">
-                                    <li><a href="<?= url('software/api')?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">API Requests</a></li>
-                                    <li><a href="<?= url('software/api/requests')?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Transaction Reports</a></li>
-                                    <li><a href="<?= url('software/invoice/live')?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Live Invoices</a></li>
-                                    <li><a href="<?= url('software/invoice/uat')?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Testing Invoices</a></li>
+                                    <li><a href="<?= url('software/api') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">API Requests</a></li>
+                                    <li><a href="<?= url('software/api/requests') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Transaction Reports</a></li>
+                                    <li><a href="<?= url('software/invoice/live') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Live Invoices</a></li>
+                                    <li><a href="<?= url('software/invoice/uat') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Testing Invoices</a></li>
 
 
                                 </ul>
                             </li>
 
-                            <li><a href="<?= url('software/server')?>" data-i18n="nav.basic-components.button">Server Administration</a></li>
-                            <li><a href="<?= url('software/logs')?>" data-i18n="nav.basic-components.box-shadow">Error Logs</a></li>
-                            <li><a href="<?= url('software/pmp')?>" data-i18n="nav.basic-components.collapse–accordion">Project Management</a></li>
+                            <li><a href="<?= url('software/server') ?>" data-i18n="nav.basic-components.button">Server Administration</a></li>
+                            <li><a href="<?= url('software/logs') ?>" data-i18n="nav.basic-components.box-shadow">Error Logs</a></li>
+                            <li><a href="<?= url('software/pmp') ?>" data-i18n="nav.basic-components.collapse–accordion">Project Management</a></li>
 
                         </ul>
                     </li>
@@ -539,23 +539,26 @@ var root_url = "<?= url('/'); ?>";
                             <li><a href="<?= url('account/invoice') ?>" data-i18n="nav.advance-components.grid-stack">Invoice</a></li>
                             <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Transactions</a>
                                 <ul class="tree-2">
-                                    <a href="<?= url('revenue/index') ?>"><i class="fa icon-account"></i> Revenue</a>
-                                    <a href="<?= url('expense/index/4') ?>"><i class="fa icon-expense"></i> Expense</a>
-                                    <a href="<?= url('expense/index/1') ?>"><i class="fa icon-account"></i> Fixed assets</a>
-                                    <a href="<?= url('expense/index/5') ?>"><i class="fa icon-account"></i> Current assets</a>
-                                    <a href="<?= url('expense/index/2') ?>"><i class="fa icon-account"></i> liabilities</a>
-                                    <a href="<?= url('expense/index/3') ?>"><i class="fa icon-account"></i> capital</a>
-                                    <a href="<?= url('payment/reconciliation') ?>"><i class="fa icon-account"></i> Reconciliation</a>
+                                    <a href="<?= url('account/revenue') ?>"><i class="fa icon-account"></i> Revenue</a>
+                                    <a href="<?= url('account/transaction/4') ?>"><i class="fa icon-expense"></i> Expense</a>
+                                    <a href="<?= url('account/transaction/1') ?>"><i class="fa icon-account"></i> Fixed assets</a>
+                                    <a href="<?= url('account/transaction/5') ?>"><i class="fa icon-account"></i> Current assets</a>
+                                    <a href="<?= url('account/transaction/2') ?>"><i class="fa icon-account"></i> liabilities</a>
+                                    <a href="<?= url('account/transaction/3') ?>"><i class="fa icon-account"></i> capital</a>
+                                    <a href="<?= url('account/reconciliation') ?>"><i class="fa icon-account"></i> Reconciliation</a>
 
 
                                 </ul>
                             </li>
-                            <li><a href="light-box.html" data-i18n="nav.advance-components.light-box">Reports</a></li>
+                            <li><a href="<?= url('account/report') ?>" data-i18n="nav.advance-components.light-box">Reports</a></li>
                             <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Settings</a>
                                 <ul class="tree-2">
-                                    <a href="<?= url('bankaccount/index') ?>"><i class="fa icon-account"></i> Banking</a>
-                                    <a href="<?= url('group/index') ?>"><i class="fa icon-account"></i> Account Groups</a>
-                                    <a href="<?= url('expense/financial_category') ?>"><i class="fa icon-account"></i> Charts of Accounts</a>
+                                    <a href="<?= url('account/client') ?>"><i class="fa icon-account"></i>  Clients</a>
+                                    <a href="<?= url('account/bank') ?>"><i class="fa icon-account"></i> Banking</a>
+                                    <a href="<?= url('account/group') ?>"><i class="fa icon-account"></i> Account Groups</a>
+                                    <a href="<?= url('account/chart') ?>"><i class="fa icon-account"></i> Charts of Accounts</a>
+                                    <a href="<?= url('account/project') ?>"><i class="fa icon-account"></i> Company Projects</a>
+
                                 </ul>
                             </li>
                         </ul>
@@ -830,7 +833,6 @@ var root_url = "<?= url('/'); ?>";
         <script type="text/javascript" src="<?= $root ?>bower_components/classie/classie.js"></script>
         <!-- Rickshow Chart js -->
         <script src="<?= $root ?>bower_components/d3/d3.js"></script>
-        <script src="<?= $root ?>bower_components/rickshaw/rickshaw.js"></script>
         <!-- Morris Chart js -->
         <script src="<?= $root ?>bower_components/raphael/raphael.min.js"></script>
         <script src="<?= $root ?>bower_components/morris.js/morris.js"></script>
@@ -847,7 +849,7 @@ var root_url = "<?= url('/'); ?>";
         <script type="text/javascript" src="<?= $root ?>bower_components/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery-i18next/jquery-i18next.min.js"></script>
         <!-- Custom js -->
-        <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/custom-dashboard.js"></script>
+        <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/custom-dashboard.js?v=3"></script>
         <script type="text/javascript" src="<?= $root ?>assets/js/script.js?v=2"></script>
 
         <script src="<?= $root ?>bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
@@ -862,5 +864,10 @@ var root_url = "<?= url('/'); ?>";
         <script src="<?= $root ?>bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
         @yield('footer')
     </body>
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $('.dataTable').DataTable();
+    });
+</script>
 </html>
 <p align="center">End of ClickDesk  This page took <?php echo (microtime(true) - LARAVEL_START) ?> seconds to render</p>

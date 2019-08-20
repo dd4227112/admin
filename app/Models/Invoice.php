@@ -9,7 +9,7 @@ class Invoice extends Model {
      */
 
     protected $table = 'invoices';
-    protected $fillable = ['id', 'reference', 'client_id', 'title', 'optional_name', 'date', 'status', 'year', 'active', 'sync', 'return_message', 'push_status', 'note', 'type', 'currency', 'user_id'];
+    protected $fillable = ['id', 'reference', 'client_id', 'title', 'optional_name', 'date', 'status', 'year', 'active', 'sync', 'return_message', 'push_status', 'note', 'type', 'currency', 'user_id','due_date'];
 
 
     public function client() {

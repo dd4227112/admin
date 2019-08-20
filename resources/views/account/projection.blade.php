@@ -54,14 +54,14 @@
 
                                         </div>
                                         <div class="card-block"  style="height: 35em">
-                                            <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQuBJ4rHfr8JsT5ZK9tATvR4qztc3svo5Mhakv34V0fWuJDfFYn0fqkAO2Hw56OOzAjx2G-0y8pyntH/pubhtml?widget=true&amp;headers=false" width="100%" height="100%"></iframe>
+                                            <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTUgl5FL_1xQswE7AahA4eoZ3jlDD4_wzSZxo4xo4iDot83kAG17NsqmYF522vvQ6hPSC1hVs5Pum6Z/pubhtml?widget=true&amp;headers=false" height='100%' width="100%"></iframe>
                                         </div>
                                     </div>
                                     <div class="tab-pane" id="profile7" role="tabpanel">
                                         <div class="card-block">
 
                                             <div class="table-responsive dt-responsive">
-                                                <table id="dt-ajax-array" class="table table-striped table-bordered nowrap">
+                                                <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                                                     <thead>
                                                         <tr>
                                                             <th>School Name</th>
@@ -137,10 +137,5 @@
         </div>
     </div>
 </div>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#dt-ajax-array').DataTable();
-    });
-</script>
 @endsection
 

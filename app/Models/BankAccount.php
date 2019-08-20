@@ -12,12 +12,12 @@ class BankAccount extends Model {
     protected $fillable = ['id', 'number', 'branch', 'note', 'account_name', 'refer_currency_id', 'refer_bank_id', 'opening_balance'];
 
 
-    public function constant.referCurrency() {
-        return $this->belongsTo(\App\Models\Constant.referCurrency::class, 'refer_currency_id', 'id');
+    public function referCurrency() {
+        return $this->belongsTo(\App\Models\ReferCurrency::class, 'refer_currency_id', 'id');
     }
 
-    public function constant.referBank() {
-        return $this->belongsTo(\App\Models\Constant.referBank::class, 'refer_bank_id', 'id');
+    public function referBank() {
+        return $this->belongsTo(\App\Models\ReferBank::class, 'refer_bank_id', 'id');
     }
 
     public function referExpenses() {

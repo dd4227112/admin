@@ -20,6 +20,40 @@
   ● select distinct &quot;schema_name&quot; from admin.all_expense where extract (year from
   created_at)=&#39;2019&#39; -to
  */
+$marks = DB::select('select distinct "schema_name", max(created_at) as created_at from admin.all_marks group by schema_name');
+$mark_status = [];
+foreach ($marks as $mark) {
+    $mark_status[$mark->schema_name] = $mark->created_at;
+}
+
+
+$exam_reports = DB::select('select distinct "schema_name", max(created_at) as created_at from admin.all_exam_report  group by schema_name');
+$exam_report_status = [];
+foreach ($exam_reports as $report) {
+    $exam_report_status[$report->schema_name] = $report->created_at;
+}
+
+
+$invoices = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_invoices  group by schema_name');
+$invoice_status = [];
+foreach ($invoices as $invoice) {
+    $invoice_status[$invoice->schema_name] = $invoice->created_at;
+    $invoice_status['count'] = $invoice->count;
+}
+
+$expenses = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_expense  group by schema_name');
+$expense_status = [];
+foreach ($expenses as $expense) {
+    $expense_status[$expense->schema_name] = $expense->created_at;
+    $expense_status['count'] = $expense->count;
+}
+
+$payments = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_payments  group by schema_name');
+$payment_status = [];
+foreach ($payments as $payment) {
+    $payment_status[$payment->schema_name] = $payment->created_at;
+    $payment_status['count'] = $payment->count;
+}
 ?>
 <!-- Sidebar inner chat end-->
 <!-- Main-body start -->
@@ -75,6 +109,7 @@
                                             <th>Exams Published</th>
                                             <th>Invoice Created</th>
                                             <th>Expense Recorded</th>
+                                            <th>Payments Recorded</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -85,23 +120,26 @@
                                         $no_exams_published = 0;
                                         $no_invoice = 0;
                                         $no_expense = 0;
+                                        $no_payment = 0;
                                         foreach ($schools as $school) {
                                             $students = DB::table($school->schema_name . '.student')->count();
                                             ?>
                                             <tr>
                                                 <td><?= $school->schema_name ?></td>
                                                 <td><?php
-                                                if ($students == 0) {
-                                            echo 0;
-                                            $no_students++;
-                                        } else {
-                                            echo $students;
-                                        } ?></td>
+                                                    if ($students == 0) {
+                                                        echo 0;
+                                                        $no_students++;
+                                                    } else {
+                                                        echo $students;
+                                                    }
+                                                    ?></td>
                                                 <td>   <?php
                                                     //classlevel
-                                                    $mark = DB::table($school->schema_name . '.mark')->select('created_at')->orderBy('created_at', 'desc')->first();
-                                                    if (count($mark) == 1) {
-                                                        echo '<b class="label label-success">' . date('d M Y', strtotime($mark->created_at)) . '</b>';
+
+                                                    if (isset($mark_status[$school->schema_name])) {
+
+                                                        echo '<b class="label label-success">' . date('d M Y', strtotime($mark_status[$school->schema_name])) . '</b>';
                                                     } else {
                                                         $no_marks++;
                                                         echo '<b class="label label-warning">Not Defined</b>';
@@ -111,9 +149,9 @@
                                                 <td>
                                                     <?php
                                                     //classlevel
-                                                    $exam_report = DB::table($school->schema_name . '.exam_report')->select('created_at')->orderBy('created_at', 'desc')->first();
-                                                    if (count($exam_report) == 1) {
-                                                        echo '<b class="label label-success">' . date('d M Y', strtotime($exam_report->created_at)) . '</b>';
+
+                                                    if (isset($exam_report_status[$school->schema_name])) {
+                                                        echo '<b class="label label-success">' . date('d M Y', strtotime($exam_report_status[$school->schema_name])) . '</b>';
                                                     } else {
                                                         $no_exams_published++;
                                                         echo '<b class="label label-warning">Not Defined</b>';
@@ -123,13 +161,12 @@
                                                 <td>
                                                     <?php
                                                     //classlevel
-                                                    $invoices = DB::table($school->schema_name . '.invoices')->count();
-                                                    if ($invoices > 0) {
+                                                    if (isset($invoice_status[$school->schema_name])) {
 
-                                                        echo '<b class="label label-success">' . $invoices . ' out of ' . $students . '</b>';
+                                                        echo '<b class="label label-success">' . $invoice_status['count'] . ' out of ' . $students . '</b><br/><b  class="label label-success">Last created: '.date('d M Y',strtotime($invoice_status[$school->schema_name])).'</b>';
                                                     } else {
                                                         $no_invoice++;
-                                                        echo '<b class="label label-warning">Not Invoice Created</b>';
+                                                        echo '<b class="label label-warning">No Invoice Created</b>';
                                                     }
                                                     ?>
                                                 </td>
@@ -140,28 +177,37 @@
 
                                                 <td >      <?php
                                                     //classlevel
-                                                    $expense = DB::table($school->schema_name . '.expense')->count();
-                                                    if ($expense > 0) {
+                                                    if (isset($expense_status[$school->schema_name])) {
 
-                                                        echo '<b class="label label-success">' . $expense . ' trans</b>';
+                                                        echo '<b class="label label-success">' . $expense_status['count'] . ' trans</b><br/><b  class="label label-success">Last created: '.date('d M Y',strtotime($expense_status[$school->schema_name])).'</b>';
                                                     } else {
                                                         $no_expense++;
-                                                        echo '<b class="label label-warning">Not Expense Recorded</b>';
+                                                        echo '<b class="label label-warning">No Expense Recorded</b>';
+                                                    }
+                                                    ?></td>
+                                                <td >      <?php
+                                                    //classlevel
+                                                    if (isset($payment_status[$school->schema_name])) {
+
+                                                        echo '<b class="label label-success">' . $payment_status['count'] . ' trans</b><br/><b  class="label label-success">Last created: '.date('d M Y',strtotime($payment_status[$school->schema_name])).'</b>';
+                                                    } else {
+                                                        $no_payment++;
+                                                        echo '<b class="label label-warning">No Payment Recorded</b>';
                                                     }
                                                     ?></td>
                                                 <td><a href="<?= url('customer/profile/' . $school->schema_name) ?>" class="btn btn-mini waves-effect waves-light btn-primary"><i class="icofont icofont-eye-alt"></i> View</a></td>
                                             </tr>
-<?php } ?>
+                                        <?php } ?>
                                     </tbody>
                                     <tfoot>
                                         <tr>
                                             <th>School Name</th>
-                                            <th><?=$no_students?></th>
-                                            <th><?=$no_marks?></th>
-                                            <th><?=$no_exams_published?></th>
-                                            <th><?=$no_invoice?></th>
-                                            <th><?=$no_expense?></th>
-
+                                            <th><?= $no_students ?></th>
+                                            <th><?= $no_marks ?></th>
+                                            <th><?= $no_exams_published ?></th>
+                                            <th><?= $no_invoice ?></th>
+                                            <th><?= $no_expense ?></th>
+                                            <th><?= $no_payment ?></th>
 
                                             <th>Action</th>
                                         </tr>
@@ -180,7 +226,7 @@
     @endsection
     @section('footer')
     <!-- data-table js -->
-<?php $root = url('/') . '/public/' ?>
+    <?php $root = url('/') . '/public/' ?>
 
     <script type="text/javascript">
         $(document).ready(function () {

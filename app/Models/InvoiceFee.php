@@ -9,7 +9,7 @@ class InvoiceFee extends Model {
      */
 
     protected $table = 'invoice_fees';
-    protected $fillable = ['id', 'invoice_id', 'amount', 'status', 'note', 'item_name', 'project_id'];
+    protected $fillable = ['id', 'invoice_id', 'amount', 'status', 'note', 'item_name', 'project_id','quantity','unit_price'];
 
 
     public function project() {

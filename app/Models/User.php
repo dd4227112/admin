@@ -16,7 +16,7 @@ class User extends Model {
         return $this->belongsToMany(\App\Models\Deduction::class, 'user_deductions', 'user_id', 'deduction_id');
     }
 
-    public function constant.pensions() {
+    public function pensions() {
         return $this->belongsToMany(\App\Models\Constant.pension::class, 'user_pensions', 'user_id', 'pension_id');
     }
 

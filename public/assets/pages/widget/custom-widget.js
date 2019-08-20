@@ -2,71 +2,71 @@
 $(document).ready(function() {
     /*Multiple Bars*/
     $("#barchart").html('');
-    var graph2 = new Rickshaw.Graph({
-        element: document.querySelector("#barchart"),
-        renderer: 'bar',
-        stack: false,
-        series: [{
-            data: [{
-                x: 0,
-                y: 40
-            }, {
-                x: 1,
-                y: 49
-            }, {
-                x: 2,
-                y: 30
-            }],
-            color: '#1abc9c'
-        }, {
-            data: [{
-                x: 0,
-                y: 10
-            }, {
-                x: 1,
-                y: 24
-            }, {
-                x: 2,
-                y: 15
-            }],
-            color: '#bdc3c7'
-        }]
-    });
-    graph2.render();
+//    var graph2 = new Rickshaw.Graph({
+//        element: document.querySelector("#barchart"),
+//        renderer: 'bar',
+//        stack: false,
+//        series: [{
+//            data: [{
+//                x: 0,
+//                y: 40
+//            }, {
+//                x: 1,
+//                y: 49
+//            }, {
+//                x: 2,
+//                y: 30
+//            }],
+//            color: '#1abc9c'
+//        }, {
+//            data: [{
+//                x: 0,
+//                y: 10
+//            }, {
+//                x: 1,
+//                y: 24
+//            }, {
+//                x: 2,
+//                y: 15
+//            }],
+//            color: '#bdc3c7'
+//        }]
+//    });
+//    graph2.render();
     /*Multiple Bars*/
     $("#barchart2").html('');
-    var graph3 = new Rickshaw.Graph({
-        element: document.querySelector("#barchart2"),
-        renderer: 'bar',
-        stack: false,
-        series: [{
-            data: [{
-                x: 0,
-                y: 28
-            }, {
-                x: 1,
-                y: 48
-            }, {
-                x: 2,
-                y: 78
-            }],
-            color: '#1abc9c'
-        }, {
-            data: [{
-                x: 0,
-                y: 78
-            }, {
-                x: 1,
-                y: 88
-            }, {
-                x: 2,
-                y: 98
-            }],
-            color: '#bdc3c7'
-        }]
-    });
-
-    graph3.render();
+//    var graph3 = new Rickshaw.Graph({
+//        element: document.querySelector("#barchart2"),
+//        renderer: 'bar',
+//        stack: false,
+//        series: [{
+//            data: [{
+//                x: 0,
+//                y: 28
+//            }, {
+//                x: 1,
+//                y: 48
+//            }, {
+//                x: 2,
+//                y: 78
+//            }],
+//            color: '#1abc9c'
+//        }, {
+//            data: [{
+//                x: 0,
+//                y: 78
+//            }, {
+//                x: 1,
+//                y: 88
+//            }, {
+//                x: 2,
+//                y: 98
+//            }],
+//            color: '#bdc3c7'
+//        }]
+//    });
+//
+//    graph3.render();
 
 
     // Calender js
@@ -382,25 +382,25 @@ $(document).ready(function() {
         /*Area chart*/
         $("#areachart").html('');
         var widchart = $("#areachart").width();
-        var graph = new Rickshaw.Graph({
-            element: document.querySelector("#areachart"),
-            width: widchart,
-            height: 200,
-            series: [{
-                color: '#1abc9c',
-                data: [
-                    { x: 0, y: 10 },
-                    { x: 1, y: 16 },
-                    { x: 2, y: 50 },
-                    { x: 3, y: 25 },
-                    { x: 4, y: 15 },
-                    { x: 5, y: 25 },
-                    { x: 6, y: 35 },
-                    { x: 7, y: 15 },
-                ]
-            }]
-        });
-        graph.render();
+//        var graph = new Rickshaw.Graph({
+//            element: document.querySelector("#areachart"),
+//            width: widchart,
+//            height: 200,
+//            series: [{
+//                color: '#1abc9c',
+//                data: [
+//                    { x: 0, y: 10 },
+//                    { x: 1, y: 16 },
+//                    { x: 2, y: 50 },
+//                    { x: 3, y: 25 },
+//                    { x: 4, y: 15 },
+//                    { x: 5, y: 25 },
+//                    { x: 6, y: 35 },
+//                    { x: 7, y: 15 },
+//                ]
+//            }]
+//        });
+//        graph.render();
     }
 
     var chart = c3.generate({
