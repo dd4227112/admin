@@ -195,7 +195,7 @@ class Customer extends Controller {
         $client = \App\Models\Client::where('username', $school)->first();
         if (count($client) == 0) {
 
-            $client = \App\Models\Client::create(['name' => $this->data['school']->sname, 'email' => $this->data['school']->email, 'phone' => $this->data['school']->phone, 'address' => $this->data['school']->address, 'username' =>$school]);
+            $client = \App\Models\Client::create(['name' => $this->data['school']->sname, 'email' => $this->data['school']->email, 'phone' => $this->data['school']->phone, 'address' => $this->data['school']->address, 'username' => $school]);
         }
         $this->data['client_id'] = $client->id;
         if ($_POST) {
@@ -207,7 +207,6 @@ class Customer extends Controller {
         return view('customer/profile', $this->data);
     }
 
-
     public function requirements() {
         $this->data['levels'] = [];
         return view('customer/analysis', $this->data);
@@ -216,6 +215,13 @@ class Customer extends Controller {
     public function modules() {
         $this->data['schools'] = DB::select("SELECT distinct table_schema as schema_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','beta_testing','accounts','pg_catalog','constant','api','information_schema','public')");
         return view('customer.modules', $this->data);
+    }
+
+    public function taskComment() {
+        if (request('content') != '' && (int) request('task_id') > 0) {
+            \App\Models\TaskComment::create(array_merge(request()->all(), ['user_id' => Auth::user()->id]));
+            echo ' <div class="media m-b-20"><a class="media-left" href="#"><img class="media-object img-circle m-r-20" src="'.url('/').'/public/assets/images/avatar-1.png" alt="Generic placeholder image"></a> <div class="media-body b-b-muted social-client-description"><div class="chat-header">' . Auth::user()->name . '<span class="text-muted">' . date('d M Y') . '</span></div><p class="text-muted">' . request('content') . '</p></div> </div>';
+        }
     }
 
 }

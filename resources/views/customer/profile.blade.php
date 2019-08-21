@@ -243,9 +243,9 @@
                                                                                             <p class="text-muted"><?= $comment->content ?></p>
                                                                                         </div>
                                                                                     </div>
-                                                                                <div class="new_comment"></div>
-                                                                               
-
+                                                                              
+                                                                                <?php } ?>
+  <div class="new_comment<?=$task->id?>"></div>
                                                                                 <div class="media">
                                                                                     <a class="media-left" href="#">
                                                                                         <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-blank.jpg" alt="Generic placeholder image">
@@ -253,13 +253,12 @@
                                                                                     <div class="media-body">
                                                                                         <form class="">
                                                                                             <div class="">
-                                                                                                <textarea rows="5" cols="5" id="task_comment<?=$comment->id?>" class="form-control" placeholder="Write Something here..."></textarea>
-                                                                                                <div class="text-right m-t-20"><a href="#" class="btn btn-primary waves-effect waves-light" onmousedown="$.get('<?=url('customer/taskComment')?>',{content:$('#task_comment<?=$comment->id?>'.text(),task_id:<?=$comment->task_id?>)},function(data){$('#').html(data)}))">Post</a></div>
+                                                                                                <textarea rows="5" cols="5" id="task_comment<?=$task->id?>" class="form-control" placeholder="Write Something here..."></textarea>
+                                                                                                <div class="text-right m-t-20"><a href="#" class="btn btn-primary waves-effect waves-light" onclick="return false" onmousedown="$.get('<?=url('customer/taskComment/null')?>',{content:$('#task_comment<?=$task->id?>').val(),task_id:<?=$task->id?>},function(data){$('.new_comment<?=$task->id?>').after(data);$('#task_comment<?=$task->id?>').val('') })">Post</a></div>
                                                                                             </div>
                                                                                         </form>
                                                                                     </div>
                                                                                 </div>
-                                                                                 <?php } ?>
                                                                             </div>
                                                                         </div>
                                                                     </div>
