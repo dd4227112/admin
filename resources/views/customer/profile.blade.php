@@ -231,7 +231,7 @@
                                                                             <div class="card-block user-box">
                                                                                 <div class="p-b-30"> <span class="f-14"><a href="#">What have been done</a></span></div>
                                                                                 <?php
-                                                                                $comments = $task->comment()->get();
+                                                                                $comments = $task->taskComments()->get();
                                                                                 foreach ($comments as $comment) {
                                                                                     ?>
                                                                                     <div class="media m-b-20">
@@ -239,10 +239,11 @@
                                                                                             <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
                                                                                         </a>
                                                                                         <div class="media-body b-b-muted social-client-description">
-                                                                                            <div class="chat-header">About Marta Williams<span class="text-muted">Jane 10, 2015</span></div>
-                                                                                            <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                                                                            <div class="chat-header"><?= $comment->user->name ?><span class="text-muted"><?= date('d M Y', strtotime($comment->created_at)) ?></span></div>
+                                                                                            <p class="text-muted"><?= $comment->content ?></p>
                                                                                         </div>
                                                                                     </div>
+                                                                                <div class="new_comment"></div>
                                                                                 <?php } ?>
 
                                                                                 <div class="media">
@@ -252,8 +253,8 @@
                                                                                     <div class="media-body">
                                                                                         <form class="">
                                                                                             <div class="">
-                                                                                                <textarea rows="5" cols="5" class="form-control" placeholder="Write Something here..."></textarea>
-                                                                                                <div class="text-right m-t-20"><a href="#" class="btn btn-primary waves-effect waves-light">Post</a></div>
+                                                                                                <textarea rows="5" cols="5" id="task_comment<?=$comment->id?>" class="form-control" placeholder="Write Something here..."></textarea>
+                                                                                                <div class="text-right m-t-20"><a href="#" class="btn btn-primary waves-effect waves-light" onmousedown="$.get('<?=url('customer/taskComment')?>',{content:$('#task_comment<?=$comment->id?>'.text(),task_id:<?=$comment->task_id?>)},function(data){$('#').html(data)}))">Post</a></div>
                                                                                             </div>
                                                                                         </form>
                                                                                     </div>
@@ -306,10 +307,10 @@
                                                                                     <tr>
                                                                                         <th class="social-label b-none p-b-0">School Level</th>
                                                                                         <td class="social-user-name b-none p-b-0 text-muted"><?php
-                                                        foreach ($levels as $level) {
-                                                            echo $level->name . ' - ' . $level->result_format . '<br/>';
-                                                        }
-                                                        ?></td>
+                                                                                            foreach ($levels as $level) {
+                                                                                                echo $level->name . ' - ' . $level->result_format . '<br/>';
+                                                                                            }
+                                                                                            ?></td>
                                                                                     </tr>
                                                                                 </tbody></table>
                                                                         </form>
