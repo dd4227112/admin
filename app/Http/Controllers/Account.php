@@ -35,13 +35,19 @@ class Account extends Controller {
 
     public function invoice() {
         $this->data['budget'] = [];
-        $project_id = (int) request()->segment(3);
+        $project_id = request()->segment(3);
         if ((int) $project_id == 1) {
             //create shulesoft invoices
             //check in client table if all schools with students and have generated reports are registered
             // if exists, check if invoice exists, else, create new invoice
             $this->getShuleSoftInvoice();
         }
+        if ($project_id == 'delete') {
+            $invoice_id = request()->segment(4);
+            \App\Models\Invoice::find($invoice_id)->delete();
+            return redirect()->back()->with('success', 'success');
+        }
+
         $from = $this->data['from'] = request('from');
         $to = $this->data['to'] = request('to');
         $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
@@ -79,24 +85,30 @@ class Account extends Controller {
         if (request('noexcel')) {
             $data = request('users');
             $client_id = request('client_id');
-            $user_invoice = Invoice::where('client_id', $client_id)->first();
             $client_record = \App\Models\Client::find($client_id);
+            if (request('force_new') == true) {
+                $user_invoice = [];
+                $reference = 'SASA11' . date('Y') . $client_record->id.rand(10,100);
+            } else {
+                $user_invoice = Invoice::where('client_id', $client_id)->first();
+                $reference = 'SASA11' . date('Y') . $client_record->id;
+            }
+
 
             if (count($user_invoice) == 0) {
 
-                $reference = 'SASA11' . date('Y') . $client_record->id;
-                $invoice = Invoice::create(['reference' => $reference, 'client_id' => $client_record->id, 'date' => date('d M Y', strtotime(request('date'))), 'year' => date('Y', strtotime(request('date'))), 'sync', 'user_id' => Auth::user()->id]);
+
+                $invoice = Invoice::create(['reference' => $reference, 'client_id' => $client_record->id, 'date' => date('d M Y', strtotime(request('date'))), 'due_date' => date('d M Y', strtotime(' +30 day')), 'year' => date('Y', strtotime(request('date'))), 'sync', 'user_id' => Auth::user()->id]);
 
                 foreach ($data as $value) {
                     //check if this user has invoice already 
                     $project = Project::where('name', 'ílike', $value['project'])->first();
-                    $amount = (int) $value['quantity'] * (float) $value['unit_price'];
-                    \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => (float) $amount, 'project_id' => count($project) == 1 ? $project->id : request('project_id'), 'item_name' => $value['name'], 'quantity' => (int) $value['quantity'], 'unit_price' => (float) $value['unit_price']]);
-
-                    $status .= ' <div class="alert alert-warning">Invoice fee for user <b>' . $client_record->name . '</b>  already created</div>';
+                    $amount = (float) $value['quantity'] * (float) $value['unit_price'];
+                    \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => count($project) == 1 ? $project->id : request('project_id'), 'item_name' => $value['name'], 'quantity' => (int) $value['quantity'], 'unit_price' => (float) $value['unit_price']]);
                 }
+                echo 1;
             } else {
-                $status .= ' <div class="alert alert-warning">User <b>' . $client_record->name . '</b>  has an invoice number ' . $user_invoice->reference . ' already generated on ' . $user_invoice->created_at . '. Please update</div>';
+                echo ' <div class="alert alert-warning">User <b>' . $client_record->name . '</b>  has an invoice number ' . $user_invoice->reference . ' already generated on ' . $user_invoice->created_at . '. Please update</div>';
             }
         }
         return view('account.invoice.create', $this->data);

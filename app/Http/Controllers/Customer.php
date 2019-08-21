@@ -201,21 +201,12 @@ class Customer extends Controller {
         if ($_POST) {
             $data = array_merge(request()->all(), ['user_id' => Auth::user()->id]);
             \App\Models\Task::create($data);
+            return redirect()->back();
         }
         $this->data['top_users'] = DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
         return view('customer/profile', $this->data);
     }
 
-    public function createReminder($task) {
-        $data = [
-            'user_id'=>1,
-            'role_id'=>1,
-            'date'=>$task->date,
-            "time"=>$task->time,
-            'title',
-            'is_repeated' => 0,
-            'days'];
-    }
 
     public function requirements() {
         $this->data['levels'] = [];

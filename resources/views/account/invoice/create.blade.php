@@ -137,11 +137,18 @@
                                                         <!-- Editable table -->
                                                     </div>
                                                 </div>
+                                                <div class="form-group">
+                                                       <div class="col-lg-6"> <input type="checkbox" name="force_new" value="" id="force_new" />            Force to Create New Invoice if Exists
+                                                   
+                                        
+
+                                                    </div> 
+                                                </div>
 
                                                 <div class="form-group">
                                                     <div class="col-lg-offset-3 col-lg-6">
                                                         <?= csrf_field() ?>
-                                                        <button onclick="return false" class="btn btn-primary" type="button" id="noexcel">Create Invoice</button>
+                                                        <button class="btn btn-primary" type="button" id="noexcel">Create Invoice</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -371,6 +378,8 @@
             var client_id = $('#client_id').val();
             var project_id = $('#project_id').val();
             var date = $('#date').val();
+            var force_new = $('#force_new').is(':checked');
+  
             var ary = [];
 
             if (parseInt(project_id) < 1 || project_id == null) {
@@ -388,7 +397,7 @@
 
             $('#user_area tr').each(function (a, b) {
                 var name = $('.name', b).text();
-                var quantity = $('.phone', b).text();
+                var quantity = $('.quantity', b).text();
                 var unit_price = $('.unit_price', b).text();
                 var project = $('.project', b).text();
                 if (quantity == '' || name == '' || unit_price == '' || project == '') {
@@ -400,19 +409,17 @@
 
             });
             //alert(JSON.stringify(ary));
-            return false;
             $.ajax({
                 type: 'get',
                 url: "<?= url('account/createInvoice') ?>/null",
-                data: {date: date, client_id: client_id, noexcel: 1, users: ary, project_id: project_id},
+                data: {date: date, client_id: client_id, noexcel: 1, users: ary, project_id: project_id,force_new:force_new},
                 dataType: "html",
                 success: function (data) {
-                    console.log(data);
-//                    if (data === 'success') {
-//$('#home7').html('<div clas="alert alert-success">Recorded successfully. To add new record, please refresh </div>');
-//
-//                    }
-
+                    if(data=='1'){
+                       window.location.href="<?=url('account/invoice')?>";
+                    }else{
+                    $('#table_error_area').html(data);    
+        }
                 }
             });
         });

@@ -139,35 +139,23 @@
                                                                 <th>#</th>
                                                                 <th>Description</th>
                                                                 <th class="text-center">Quantity</th>
-                                                                <th class="text-center">Total</th>
+                                                                 <th class="text-center">Unit Price</th>
+                                                                <th class="text-center">Total (Tsh)</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <?php
                                                             $i = 1;
+                                                              foreach ($invoice_fee as $fees) {
                                                             ?>
                                                             <tr>
                                                                 <td><?= $i ?></td>
-                                                                <td>
-                                                                    <h4>  
-                                                                        <?php
-                                                                        $names = '';
-                                                                        foreach ($invoice_fee as $fees) {
-                                                                            ?>
-                                                                            <?php $names .= $fees->item_name . ',' ?>
-
-                                                                            <?php
-                                                                            $i++;
-                                                                        }
-                                                                        echo rtrim($names, ',');
-                                                                        ?>
-                                                                    </h4>
-                                                                    <p>Summary: <?= isset($fees) && count($fees) == 1 ? $fees->note : '' ?></p>
-                                                                </td>
-                                                                <td class="text-center"><?= $invoice->invoiceFees()->count() ?></td>
-                                                                <td class="text-center"><?= isset($fees) && count($fees) == 1 ? number_format($fees->amount * $invoice->invoiceFees()->count()) : 0 ?></td>
+                                                                <td><?= $fees->item_name?></td>
+                                                                <td class="text-center"><?= $fees->quantity ?></td>
+                                                                 <td class="text-center"><?= $fees->unit_price ?></td>
+                                                                <td class="text-center"><?= money($fees->amount)?></td>
                                                             </tr>
-
+                                                              <?php }?>
 
                                                         </tbody>
                                                     </table>
@@ -183,9 +171,7 @@
 
 
                                                             </p>
-                                                            <p>
-                                                                <br/><b  style="color:#0066cc">FOR MOBILE</b><br/>
-                                                                Use <b>888999</b> as the Business number and use the CONTROL NUMBER from the system as the reference number to make payments in the selected Mobile Company.</p>
+                                                       
                                                             <br/><p><b  style="color:#0066cc">NB;</b><br/>
                                                                 in case you face any challenge, please call +255 655 406004</p>
 

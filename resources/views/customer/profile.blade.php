@@ -194,75 +194,80 @@
                                                     </div>
                                                     <div class="col-md-12 timeline-dot">
                                                         <?php
-                                                        $tasks=\App\Models\Task::where('client_id',$client_id)->get();
+                                                        $tasks = \App\Models\Task::where('client_id', $client_id)->get();
                                                         foreach ($tasks as $task) {
-                                                        ?>
-                                                        <div class="social-timelines p-relative o-hidden">
-                                                            <div class="row timeline-right p-t-35">
-                                                                <div class="col-xs-2 col-sm-1">
-                                                                    <div class="social-timelines-left">
-                                                                        <img class="img-circle timeline-icon" src="<?= $root ?>assets/images/avatar-2.png" alt="">
+                                                            ?>
+                                                            <div class="social-timelines p-relative o-hidden">
+                                                                <div class="row timeline-right p-t-35">
+                                                                    <div class="col-xs-2 col-sm-1">
+                                                                        <div class="social-timelines-left">
+                                                                            <img class="img-circle timeline-icon" src="<?= $root ?>assets/images/avatar-2.png" alt="">
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="col-xs-10 col-sm-11 p-l-5 p-b-35">
-                                                                    <div class="card m-0">
-                                                                        <span class="dropdown-toggle addon-btn text-muted f-right service-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" role="tooltip"></span>
-                                                                        <div class="dropdown-menu dropdown-menu-right b-none services-list">
-                                                                            <a class="dropdown-item" href="#">Remove tag</a>
-                                                                            <a class="dropdown-item" href="#">Report Photo</a>
-                                                                            <a class="dropdown-item" href="#">Hide From Timeline</a>
-                                                                            <a class="dropdown-item" href="#">Blog User</a>
-                                                                        </div>
-                                                                        <div class="card-block post-timelines">
-
-                                                                            <div class="social-time text-muted">
-                                                                                <?=date("d M Y", strtotime($task->date))?>
+                                                                    <div class="col-xs-10 col-sm-11 p-l-5 p-b-35">
+                                                                        <div class="card m-0">
+                                                                            <span class="dropdown-toggle addon-btn text-muted f-right service-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" role="tooltip"></span>
+                                                                            <div class="dropdown-menu dropdown-menu-right b-none services-list">
+                                                                                <a class="dropdown-item" href="#">Remove tag</a>
+                                                                                <a class="dropdown-item" href="#">Report Photo</a>
+                                                                                <a class="dropdown-item" href="#">Hide From Timeline</a>
+                                                                                <a class="dropdown-item" href="#">Blog User</a>
                                                                             </div>
-                                                                        </div>
+                                                                            <div class="card-block post-timelines">
 
-                                                                        
-                                                                        <div class="card-block">
-                                                                            <div class="timeline-details">
-                                                                                <div class="chat-header"><?=$task->user->name?></div>
-                                                                                <p class="text-muted"><?=$task->activity?></p>
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div class="card-block user-box">
-                                                                            <div class="p-b-30"> <span class="f-14"><a href="#">What have been done</a></span></div>
-                                                                            <div class="media m-b-20">
-                                                                                <a class="media-left" href="#">
-                                                                                    <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
-                                                                                </a>
-                                                                                <div class="media-body b-b-muted social-client-description">
-                                                                                    <div class="chat-header">About Marta Williams<span class="text-muted">Jane 10, 2015</span></div>
-                                                                                    <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                                                                                <div class="social-time text-muted">
+                                                                                    <?= date("d M Y", strtotime($task->date)) ?>
                                                                                 </div>
                                                                             </div>
-                                                                          
-                                                                            <div class="media">
-                                                                                <a class="media-left" href="#">
-                                                                                    <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-blank.jpg" alt="Generic placeholder image">
-                                                                                </a>
-                                                                                <div class="media-body">
-                                                                                    <form class="">
-                                                                                        <div class="">
-                                                                                            <textarea rows="5" cols="5" class="form-control" placeholder="Write Something here..."></textarea>
-                                                                                            <div class="text-right m-t-20"><a href="#" class="btn btn-primary waves-effect waves-light">Post</a></div>
+
+
+                                                                            <div class="card-block">
+                                                                                <div class="timeline-details">
+                                                                                    <div class="chat-header"><?= $task->user->name ?></div>
+                                                                                    <p class="text-muted"><?= $task->activity ?></p>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="card-block user-box">
+                                                                                <div class="p-b-30"> <span class="f-14"><a href="#">What have been done</a></span></div>
+                                                                                <?php
+                                                                                $comments = $task->comment()->get();
+                                                                                foreach ($comments as $comment) {
+                                                                                    ?>
+                                                                                    <div class="media m-b-20">
+                                                                                        <a class="media-left" href="#">
+                                                                                            <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
+                                                                                        </a>
+                                                                                        <div class="media-body b-b-muted social-client-description">
+                                                                                            <div class="chat-header">About Marta Williams<span class="text-muted">Jane 10, 2015</span></div>
+                                                                                            <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                                                                                         </div>
-                                                                                    </form>
+                                                                                    </div>
+                                                                                <?php } ?>
+
+                                                                                <div class="media">
+                                                                                    <a class="media-left" href="#">
+                                                                                        <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-blank.jpg" alt="Generic placeholder image">
+                                                                                    </a>
+                                                                                    <div class="media-body">
+                                                                                        <form class="">
+                                                                                            <div class="">
+                                                                                                <textarea rows="5" cols="5" class="form-control" placeholder="Write Something here..."></textarea>
+                                                                                                <div class="text-right m-t-20"><a href="#" class="btn btn-primary waves-effect waves-light">Post</a></div>
+                                                                                            </div>
+                                                                                        </form>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                      <?php }?>
+                                                        <?php } ?>
                                                     </div>
                                                 </div>
                                                 <div class="f-30 text-muted text-center">2014</div>
-                                            
+
                                             </div>
                                             <!-- Timeline tab end -->
                                             <!-- About tab start -->
@@ -301,10 +306,10 @@
                                                                                     <tr>
                                                                                         <th class="social-label b-none p-b-0">School Level</th>
                                                                                         <td class="social-user-name b-none p-b-0 text-muted"><?php
-                                                                                            foreach ($levels as $level) {
-                                                                                                echo $level->name . ' - ' . $level->result_format . '<br/>';
-                                                                                            }
-                                                                                            ?></td>
+                                                        foreach ($levels as $level) {
+                                                            echo $level->name . ' - ' . $level->result_format . '<br/>';
+                                                        }
+                                                        ?></td>
                                                                                     </tr>
                                                                                 </tbody></table>
                                                                         </form>
