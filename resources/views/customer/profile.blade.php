@@ -244,7 +244,7 @@
                                                                                         </div>
                                                                                     </div>
                                                                                 <div class="new_comment"></div>
-                                                                                <?php } ?>
+                                                                               
 
                                                                                 <div class="media">
                                                                                     <a class="media-left" href="#">
@@ -259,6 +259,7 @@
                                                                                         </form>
                                                                                     </div>
                                                                                 </div>
+                                                                                 <?php } ?>
                                                                             </div>
                                                                         </div>
                                                                     </div>
