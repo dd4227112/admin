@@ -195,7 +195,7 @@ class Customer extends Controller {
         $client = \App\Models\Client::where('username', $school)->first();
         if (count($client) == 0) {
 
-            $client = \App\Models\Client::create(['name' => $this->data['school']->sname, 'email' => $this->data['school']->email, 'phone' => $this->data['school']->phone, 'address' => $this->data['school']->address, 'username' => $this->data['school']->schema_name]);
+            $client = \App\Models\Client::create(['name' => $this->data['school']->sname, 'email' => $this->data['school']->email, 'phone' => $this->data['school']->phone, 'address' => $this->data['school']->address, 'username' =>$school]);
         }
         $this->data['client_id'] = $client->id;
         if ($_POST) {
