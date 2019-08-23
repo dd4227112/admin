@@ -10,7 +10,7 @@ class GlobalExamDefinition extends Model
     public $timestamps=false;
 
 
-    protected $fillable = ['id', 'name', 'association_id', 'school_level_id'];
+    protected $fillable = ['id', 'name', 'association_id', 'school_level_id','note'];
 
     public function association() {
         return $this->belongsTo('\App\Model\Association')->withDefault(['name'=>'unknown']);

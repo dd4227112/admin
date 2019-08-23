@@ -20,7 +20,7 @@
   ● select distinct &quot;schema_name&quot; from admin.all_expense where extract (year from
   created_at)=&#39;2019&#39; -to
  */
-$marks = DB::select('select distinct "schema_name", max(created_at) as created_at from admin.all_marks group by schema_name');
+$marks = DB::select('select distinct "schema_name", max(created_at) as created_at from admin.all_mark group by schema_name');
 $mark_status = [];
 foreach ($marks as $mark) {
     $mark_status[$mark->schema_name] = $mark->created_at;

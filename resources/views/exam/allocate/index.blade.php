@@ -6,8 +6,8 @@
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4 class="box-title">Exams Schedule</h4>
-                <span>Exams schedule defined each time to create easiness of reference</span>
+                <h4 class="box-title">Exams Definition</h4>
+                <span>Exams definition  to create easiness of reference</span>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -30,7 +30,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <h5 class="card-header">
-                            <a class="btn btn-success" href="<?php echo url('exam/schedule/add') ?>">
+                            <a class="btn btn-success" href="<?php echo url('exam/addAllocation') ?>">
                                 <i class="fa fa-plus"></i> 
                                 <?= __('add Exam') ?>
                             </a>
@@ -44,7 +44,7 @@
                                     <th>#</th>
                                     <th>Exam Name</th>
                                     <th>Association</th>
-                                    <th>Academic Year</th>
+                                    <th>Year</th>
                                     <th>Date</th>
                                     <th>Class Level</th>
                                     <th>Date created</th>
@@ -66,9 +66,9 @@
                                             <td><?= $exam->globalExamDefinition->schoolLevel->name ?></td>
                                             <td><?= $exam->created_at ?></td>
                                             <td>
-                                                <a class="btn btn-success btn-sm" href="<?php echo url('exam/globalExam/show/' . $exam->id) ?>">Show</a>
+                                
                                                 <a class="btn btn-info btn-sm" href="<?php echo url('exam/schedule/edit/' . $exam->id) ?>">Edit</a>
-                                                <a class="btn btn-danger btn-sm" href="<?php echo url('exam/schedule/delete/' . $exam->id) ?>">Delete</a></td>
+                                                <a class="btn btn-danger btn-sm" href="<?php echo url('exam/deleteAllocation/' . $exam->id) ?>">Delete</a></td>
                                         </tr>
                                         <?php
                                         $i++;

@@ -1,171 +1,124 @@
 @extends('layouts.app')
 @section('content')
-<div class="box">
-    <div class="box-body">
-        <div class="white-box">
-         <p> <?=__('Fields marked')?> <span class="red">*</span>  <?=__(' are_mandatory')?></p>
-        <div class="row">
-            <div class="col-sm-8">
-                <form class="form-horizontal" role="form" method="post">
- <?php
-		    if (form_error($errors,'association_id'))
-			echo "<div class='form-group has-error' >";
-		    else
-			echo "<div class='form-group' >";
-		    ?>
-		    <label for="association_id" class="col-sm-2 control-label">
-			Association<span class="red">*</span>
-		    </label>
-		    <div class="col-sm-6 col-xs-12">
-			<?php
-			$array_ass = array();
-			foreach ($associations as $association) {
-			    $array_ass[$association->id] = $association->name;
-			}
-			echo form_dropdown("association_id", $array_ass, old("association_id"), "id='association_id' class='form-control'");
-			?>
-		    </div>
-		    <span class="col-sm-4 control-label">
-			<?php echo form_error($errors,'association_id'); ?>
-		    </span>
-	    </div>
-                    <?php 
-                        if(form_error($errors,'grade')) 
-                            echo "<div class='form-group has-error' >";
-                        else     
-                            echo "<div class='form-group' >";
-                    ?>
-                        <label for="grade" class="col-sm-2 control-label">
-                            <?=__("Grade Name")?><span class="red">*</span>
-                        </label>
-                        <div class="col-sm-6">
-                            <input type="text" placeholder="<?=__('Grade Name')?>" class="form-control" id="grade" name="grade" value="<?=old('grade', $grade->grade)?>" >
-                        </div>
-                        <span class="col-sm-4 control-label">
-                            <?php echo form_error($errors,'grade'); ?>
-                        </span>
-                    </div>
-
-	    <?php
-		    if (form_error($errors,'classlevel'))
-			echo "<div class='form-group has-error' >";
-		    else
-			echo "<div class='form-group' >";
-		    ?>
-		    <label for="classlevel" class="col-sm-2 control-label">
-			<?= __("class level") ?><span class="red">*</span>
-		    </label>
-		    <div class="col-sm-6">
-			<?php
-			$array = array();
-			foreach ($levels as $classlevel) {
-			    $array[$classlevel->id] = $classlevel->name;
-			}
-			echo form_dropdown("classlevel_id", $array, old("classlevel_id",$grade->classlevel_id), "id='classlevel_id' class='form-control'");
-			?>
-		    </div>
-		    <span class="col-sm-4 control-label">
-			<?php echo form_error($errors,'classlevel'); ?>
-		    </span>
-	    </div>
-                    <?php 
-                        if(form_error($errors,'point')) 
-                            echo "<div class='form-group has-error' >";
-                        else     
-                            echo "<div class='form-group' >";
-                    ?>
-                        <label for="point" class="col-sm-2 control-label">
-                            <?=__("Grade Point")?><span class="red">*</span>
-                        </label>
-                        <div class="col-sm-6">
-                            <input placeholder="<?=__("weight")?>" type="number" class="form-control" id="point" name="point" value="<?=old('point', $grade->point)?>" >
-                        </div>
-                        <span class="col-sm-4 control-label">
-                            <?php echo form_error($errors,'point'); ?>
-                        </span>
-                    </div>
-
-                    <?php 
-                        if(form_error($errors,'gradefrom')) 
-                            echo "<div class='form-group has-error' >";
-                        else     
-                            echo "<div class='form-group' >";
-                    ?>
-                        <label for="gradefrom" class="col-sm-2 control-label">
-                            <?=__("Grade from")?><span class="red">*</span>
-                        </label>
-                        <div class="col-sm-6">
-                            <input placeholder="<?=__("minimum")?>" type="text" class="form-control gradeinfo" id="gradefrom" name="gradefrom" value="<?=old('gradefrom', $grade->gradefrom)?>" >
-                        </div>
-                        <span class="col-sm-4 control-label">
-                            <?php echo form_error($errors,'gradefrom'); ?>
-                        </span>
-                    </div>
-
-                    <?php 
-                        if(form_error($errors,'gradeupto')) 
-                            echo "<div class='form-group has-error' >";
-                        else     
-                            echo "<div class='form-group' >";
-                    ?>
-                        <label for="gradeupto" class="col-sm-2 control-label">
-                            <?=__("Grade upto")?><span class="red">*</span>
-                        </label>
-                        <div class="col-sm-6">
-                            <input placeholder="<?=__("max")?>" type="text" class="form-control gradeinfo" id="gradeupto" name="gradeupto" value="<?=old('gradeupto', $grade->gradeupto)?>" >
-                        </div>
-                        <span class="col-sm-4 control-label">
-                            <?php echo form_error($errors,'gradeupto'); ?>
-                        </span>
-                    </div>
-
-                    <?php 
-                        if(form_error($errors,'note')) 
-                            echo "<div class='form-group has-error' >";
-                        else     
-                            echo "<div class='form-group' >";
-                    ?>
-                        <label for="note" class="col-sm-2 control-label">
-                            <?=__("notes")?><span class="red">*</span>
-                        </label>
-                        <div class="col-sm-6">
-                            <textarea placeholder="<?=__("excellent")?>" style="resize:none;" class="form-control" id="note" name="note"><?=old('note', $grade->note)?></textarea>
-                        </div>
-                        <span class="col-sm-4 control-label">
-                            <?php echo form_error($errors,'note'); ?>
-                        </span>
-<a><i class="fa fa-question-circle" data-container="body"
-      data-toggle="popover" data-placement="top" data-trigger="hover"
-      data-content="<?=__("remarks")?>"
-      title="<?=__("grade_remarks")?>"></i></a>
-                    </div>
-
-                    
-             
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-8">
-                            <input type="submit" class="btn btn-success" value="<?=__("update")?>" >
-                        </div>
-                    </div>
-
-                <?= csrf_field() ?>
-</form>
-            </div>    
-        </div>
+<div class="main-body">
+    <div class="page-wrapper">
+        <!-- Page header start -->
+        <div class="page-header">
+            <div class="page-header-title">
+                <h4>Define New Exam</h4>
+                <span>Exams are only defined once</span>
             </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                        <a href="<?=url('/')?>">
+                            <i class="icofont icofont-home"></i>
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Exam</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Definition</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- Page header end -->
+        <!-- Page body start -->
+        <div class="page-body">
+            <div class="row">
+                <div class="col-sm-12">
+                    <!-- Basic Form Inputs card start -->
+                    <div class="card">
+                        <div class="card-header">
+                            <!--<h5>Basic Form Inputs</h5>-->
+                            <span>Specify information correctly as specified. Area marked with * are mandatory</span>
+                            <div class="card-header-right">
+                                <i class="icofont icofont-rounded-down"></i>
+                                <i class="icofont icofont-refresh"></i>
+                            </div>
+                        </div>
+                        <div class="card-block">
+                            <!--<h4 class="sub-title">Basic Inputs</h4>-->
+                            <form action="" method="post">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Exam Name</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" id="exam" name="name" class="form-control calendar" placeholder="" value="<?=$exam->name?>"/>
+                                    </div>
+                                    <span class="col-sm-4 control-label">
+                                        <?php echo form_error($errors, 'date'); ?>
+                                    </span>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Association</label>
+                                    <div class="col-sm-10">
+                                        <?php
+                                        $array_ass = array();
+                                        foreach ($associations as $association) {
+                                            $array_ass[$association->id] = $association->name;
+                                        }
+                                        echo form_dropdown("association_id", $array_ass, old("association_id",$exam->association_id), "id='association_id' class='form-control'");
+                                        ?>
+                                    </div>
+                                    <span class="col-sm-4 control-label">
+                                        <?php echo form_error($errors, 'association_id'); ?>
+                                    </span>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">School Level</label>
+                                    <div class="col-sm-10">
+                                        <?php
+                                        $array = array("0" => __("select level"));
+                                        if (isset($levels)) {
+                                            foreach ($levels as $level) {
+                                                $array[$level->id] = $level->name;
+                                            }
+                                        }
+                                        echo form_dropdown("class_level_id", $array, old("class_level_id",$exam->school_level_id), "id='class_level_id' class='form-control'");
+                                        ?> </div>
+                                </div>
+                               
+                              
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Note</label>
+                                    <div class="col-sm-10">
+                                        <textarea rows="5" cols="5" id="note" name="note" class="form-control" placeholder="Write exam note"><?= old('note') ?><?=$exam->note?></textarea>
+                                    </div>
+                                    <span class="col-sm-4 control-label">
+                                        <?php echo form_error($errors, 'note'); ?>
+                                    </span>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label"></label>
+                                    <div class="col-sm-4">
+                                        <input type="submit" class="btn btn-block btn-success" value="<?= __("Submit") ?>" >
+                                    </div>
+                                </div>
+                     
+                        <?= csrf_field() ?>
+                        </form>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    <!-- Page body end -->
 </div>
+</div>
+
 <script type="text/javascript">
-     $('.gradeinfo').keyup(function(){
-  var val=$(this).val();
-  if(val >100){
-swal('Warning','mark cannot exceed 100');
-$(this).val('').css('border','1px solid red');
-  }else if(val <0){
-swal('Warning','mark cannot be below 0');
-$(this).val('').css('border','1px solid red');
-  }
-     });
+    $('.gradeinfo').keyup(function () {
+        var val = $(this).val();
+        if (val > 100) {
+            swal('Warning', 'mark cannot exceed 100');
+            $(this).val('').css('border', '1px solid red');
+        } else if (val < 0) {
+            swal('Warning', 'mark cannot be below 0');
+            $(this).val('').css('border', '1px solid red');
+        }
+    });
 </script>
-@include('layouts.datatable')
 @endsection

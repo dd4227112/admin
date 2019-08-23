@@ -1,6 +1,6 @@
 <div class="card-block">
     <div class="dt-responsive table-responsive">
-        <table id="simpletable" class="table table-striped table-bordered nowrap">
+        <table id="simpletable" class="table table-striped table-bordered nowrap dataTable">
             <thead>
                 <tr>
                     <th>Client Name</th>
@@ -44,3 +44,8 @@
         </table>
     </div>
 </div>
+ <script type="text/javascript">
+                                               $(document).ready(function () {
+                                                   $('.dataTable').DataTable();
+                                               });
+    </script>
