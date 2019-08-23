@@ -424,7 +424,7 @@ var root_url = "<?= url('/'); ?>";
                         <i class="ti-line-dashed"></i>
                         <span>Operations</span>
                     </li>
-                    <?php if (false) { ?>
+                    <?php if (true) { ?>
                         <li class="nav-item">
                             <a href="#!">
                                 <i class="ti-layout"></i>
@@ -572,7 +572,7 @@ var root_url = "<?= url('/'); ?>";
                         </li>
                         <?php
                     }
-                    if (can_access('schools')) {
+                    if (can_access('schools') && false) {
                         ?>
                         <li class="nav-item">
                             <a href="#!">
