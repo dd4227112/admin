@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
+use Excel;
 
 class Exam extends Controller {
 
@@ -347,7 +348,7 @@ class Exam extends Controller {
             $class_id = request('class_id');
             $class = DB::table('constant.refer_classes')->where('id', $class_id)->first();
             $this->data['grades'] = \App\Model\GlobalGrade::where('classlevel_id', $class->school_level_id)->orderBy('grade')->get();
-            $sql='select distinct lower(subject_name) as subject_name from admin.all_mark_info where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' and mark is not null order by 1';
+            $sql = 'select distinct lower(subject_name) as subject_name from admin.all_mark_info where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' and mark is not null order by 1';
             $this->data['subjects'] = DB::select($sql);
             if (request('type_id') == 'school') {
                 //get school reports
@@ -377,8 +378,8 @@ class Exam extends Controller {
 
     private function createStudentReport($exam_id, $subject_id, $class_id) {
         $class = DB::table('constant.refer_classes')->where('id', $class_id)->first();
-       $subject_list = ($subject_id == 'all' || $subject_id == '0') ? ' ' : " and lower(subject_name)='" . strtolower($subject_id) . "'";
-        $sql = 'select name,round(avg(mark)) as average, "schema_name", rank() over (order by round(avg(mark)) desc) as rank, rank() over (partition by "schema_name" order by round(avg(mark)) desc ) as school_rank, (select grade from constant.global_grades where classlevel_id=' . $class->school_level_id . ' and round(avg(mark)) between gradefrom and gradeupto ) from admin.all_mark_info where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' ' . $subject_list . ' group by "schema_name",name'; 
+        $subject_list = ($subject_id == 'all' || $subject_id == '0') ? ' ' : " and lower(subject_name)='" . strtolower($subject_id) . "'";
+        $sql = 'select name,round(avg(mark)) as average, "schema_name", rank() over (order by round(avg(mark)) desc) as rank, rank() over (partition by "schema_name" order by round(avg(mark)) desc ) as school_rank, (select grade from constant.global_grades where classlevel_id=' . $class->school_level_id . ' and round(avg(mark)) between gradefrom and gradeupto ) from admin.all_mark_info where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' ' . $subject_list . ' group by "schema_name",name';
         return DB::select($sql);
     }
 
@@ -398,7 +399,7 @@ class Exam extends Controller {
         $this->data['subjects'] = $result;
         $this->data['grades'] = DB::select('select * from constant.global_grades where classlevel_id=' . $school->school_level_id);
         $this->data['subject_evaluations'] = DB::select('select round(AVG(mark),1) as average, lower(subject_name) as subject_name, sum(mark), rank() OVER (ORDER BY (avg(mark)) DESC) AS ranking from admin.all_mark_info where global_exam_id=' . $exam_id . '  and refer_class_id=' . $class_id . '  group by lower(subject_name)');
-        $sql='with tempa as ( select b.name,b.roll,b.sex,b."schema_name",a.*, c.subject_count, c.sum as total, c.average FROM (SELECT * FROM public.crosstab( \'select "student_id"::integer, lower(subject_name), mark from admin.all_mark_info where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' order by 1,2 \',\' SELECT distinct lower(subject_name)  as subject_name FROM admin.all_mark_info where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' order by 1\') AS final_result("student_id" integer, ' . $subject_list . ') ) as a JOIN admin.all_student b ON (a."student_id"=b."student_id") JOIN admin.all_sum_exam_average_done c ON (c."student_id"=b."student_id"  AND c."schema_name"=b."schema_name") where c.refer_class_id=' . $class_id . ' and c.global_exam_id=' . $exam_id . '), tempb as (select * from tempa ) select *, rank() over (order by average desc) as rank, rank() over ( partition by "schema_name" order by average desc) as school_rank from tempb';
+        $sql = 'with tempa as ( select b.name,b.roll,b.sex,b."schema_name",a.*, c.subject_count, c.sum as total, c.average FROM (SELECT * FROM public.crosstab( \'select "student_id"::integer, lower(subject_name), mark from admin.all_mark_info where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' order by 1,2 \',\' SELECT distinct lower(subject_name)  as subject_name FROM admin.all_mark_info where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' order by 1\') AS final_result("student_id" integer, ' . $subject_list . ') ) as a JOIN admin.all_student b ON (a."student_id"=b."student_id") JOIN admin.all_sum_exam_average_done c ON (c."student_id"=b."student_id"  AND c."schema_name"=b."schema_name") where c.refer_class_id=' . $class_id . ' and c.global_exam_id=' . $exam_id . '), tempb as (select * from tempa ) select *, rank() over (order by average desc) as rank, rank() over ( partition by "schema_name" order by average desc) as school_rank from tempb';
         return DB::select($sql);
     }
 
@@ -420,9 +421,9 @@ class Exam extends Controller {
     public function getSubjects() {
         $class_id = request('class_id');
         $exam_id = request('exam_id');
-         $sql='select distinct lower(subject_name) as subject_name from admin.all_mark_info where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' and mark is not null order by 1';
-            $this->data['subjects'] = DB::select($sql);
-            
+        $sql = 'select distinct lower(subject_name) as subject_name from admin.all_mark_info where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' and mark is not null order by 1';
+        $this->data['subjects'] = DB::select($sql);
+
         $subjects = DB::select($sql);
         if (!empty($subjects)) {
             echo "<option value='0'>Select Subject</option>";
@@ -463,7 +464,87 @@ class Exam extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function marking() {
-        //
+        $this->data['academic_years'] = [2019 => 2019];
+        $this->data['class_id'] = request()->segment(3);
+        $this->data['classes'] = DB::table('constant.refer_classes')->get();
+        $this->data['exams'] = (int) $this->data['class_id'] == 0 ? [] : \App\Model\GlobalExam::all();
+        return view('exam.mark.index', $this->data);
+    }
+
+    public function uploadMark() {
+        $this->data['academic_years'] = [2019 => 2019];
+        $class_id = request()->segment(4);
+        $exam_id = request()->segment(3);
+        if ($_POST) {
+            $address = request()->file('file');
+            $results = Excel::load($address)->all();
+            //once we upload excel, register students and marks in mark_info table
+            $subjects = \App\Models\Subject::where('class_id', $class_id)->get();
+            foreach ($results as $value) {
+                foreach ($subjects as $subject) {
+                    $mark = isset($value->{strtolower($subject->name)}) ? $value->{strtolower($subject->name)} : null;
+                    if ((float) $mark <= 0) {
+                        continue;
+                    }
+                    $array = [
+                        'subject_name' => $subject->name,
+                        'roll' => $value->roll,
+                        'mark' => round($mark, 1),
+                        'student_status' => 1,
+                        'sex' => $value->sex,
+                        'region' => $value->region,
+                        'schema_name' => $value->school
+                    ];
+                    $where = ['subject_id' => $subject->id, 'name' => $value->name, 'refer_class_id' => $class_id, 'global_exam_id' => $exam_id];
+                    $return = DB::table('marks')->where($where);
+                    if (count($return->first()) == 1) {
+                        $return->update($array);
+                    } else {
+                        DB::table('marks')->insert(array_merge($where, $array));
+                    }
+                }
+            }
+            return redirect('exam/marking')->with('success', 'success');
+        }
+
+        return view('exam.mark.upload_by_excel', $this->data);
+    }
+
+    public function addMark() {
+        
+    }
+
+    public function subject() {
+        $this->data['classes'] = DB::table('constant.refer_classes')->get();
+        $this->data['subjects'] = (int) request('id') > 0 ?
+                \App\Models\Subject::where('class_id', request('id'))->get() : [];
+        return view('exam.subject.index', $this->data);
+    }
+
+    public function editSubject() {
+        $state = request()->segment(3);
+         $this->data['classes'] = DB::table('constant.refer_classes')->get();
+         $this->data['subject']= \App\Models\Subject::find($state);
+        if ($_POST) {
+            \App\Models\Subject::find($state)->update(request()->all());
+            return redirect('exam/subject/null?id=' . request('class_id'))->with('success', 'Subject updated successfully');
+        }
+       return view('exam.subject.edit', $this->data);
+    }
+
+    public function deleteSubject() {
+        $state = request()->segment(3);
+        \App\Models\Subject::find($state)->delete();
+        return redirect()->back()->with('success', 'Subject deleted successfully');
+    }
+
+    public function addSubject() {
+        $this->data['classes'] = DB::table('constant.refer_classes')->get();
+        if ($_POST) {
+            \App\Models\Subject::create(request()->all());
+            return redirect('exam/subject/null?id=' . request('class_id'))->with('success', 'Subject created successfully');
+        }
+        return view('exam.subject.add', $this->data);
     }
 
 }

@@ -12,8 +12,8 @@ class AccountGroup extends Model {
     protected $fillable = ['id', 'name', 'note', 'financial_category_id'];
 
 
-    public function constant.financialCategory() {
-        return $this->belongsTo(\App\Models\Constant.financialCategory::class, 'financial_category_id', 'id');
+    public function financialCategory() {
+        return $this->belongsTo(\App\Models\FinancialCategory::class, 'financial_category_id', 'id');
     }
 
     public function referExpenses() {

@@ -628,6 +628,8 @@ function toast(message) {
                                         <!--<a href="<?= url('exam/schedule') ?>"><i class="fa icon-expense"></i> Schedule</a>-->
                                         <a href="<?= url('exam/grade') ?>"><i class="fa icon-account"></i> Grades</a>
 
+                                        <a href="<?= url('exam/subject') ?>"><i class="fa icon-account"></i> Subjects</a>
+
                                         <li class="nav-sub-item-3">
                                             <a href="#" data-i18n="nav.menu-levels.menu-level-22.menu-level-32.main">&nbsp; Reports</a>
                                             <ul class="tree-3">

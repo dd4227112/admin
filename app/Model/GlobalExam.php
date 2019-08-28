@@ -17,4 +17,8 @@ class GlobalExam extends Model
      public function schoolLevel() {
         return $this->belongsTo('\App\Model\SchoolLevel','school_level_id','id');
     }
+    
+    public function marks() {
+       return $this->hasMany(\App\Models\Mark::class);
+    }
 }
