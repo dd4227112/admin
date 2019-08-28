@@ -104,8 +104,8 @@
                                                 </td>
 
                                                 <td data-title="<?= __('action') ?>">
-                                                    <?php echo '<a  href="' . url("/exam/grade/edit/$grade->id") . ' " class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> ' . __('edit') . ' </a>' ?>
-                                                    <?php echo '<a  href="' . url("exam/grade/delete/$grade->id") . ' " class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> ' . __('delete') . ' </a>' ?>
+                                                    <?php echo '<a  href="' . url("/exam/editGrade/$grade->id") . ' " class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> ' . __('edit') . ' </a>' ?>
+                                                    <?php echo '<a  href="' . url("exam/deleteGrade/$grade->id") . ' " class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> ' . __('delete') . ' </a>' ?>
                                                 </td>
                                             </tr>
                                             <?php

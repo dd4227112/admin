@@ -1,8 +1,32 @@
 @extends('layouts.app')
 
 @section('content')
-@include('users.style')
-<div id="newUser">
+<div class="main-body">
+    <div class="page-wrapper">
+        <!-- Page-header start -->
+        <div class="page-header">
+            <div class="page-header-title">
+                <h4 class="box-title">Users </h4>
+                <span>Exams are defined only once for quick reference</span>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                        <a href="<?= url('/') ?>">
+                            <i class="icofont icofont-home"></i>
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Exams</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Listing</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- Page-header end -->
+        <!-- Page-body start -->
+        <div class="page-body">
+            <div class="row">
     <div id="outer" class="container">
         <div id="wrapper" class="layout" style="background-color: #fff; margin-bottom: 40px;">
             <div id="editorForm">
@@ -12,7 +36,7 @@
                             <h2>Create New User</h2>
                         </div>
                         <div class="pull-right">
-                            <a class="btn btn-primary" href="{{ route('users.index') }}"> Back</a>
+                            <a class="btn btn-primary" href="{{ url('users.index') }}"> Back</a>
                         </div>
                     </div>
                 </div>
@@ -26,7 +50,7 @@
                     </ul>
                 </div>
                 @endif
-                {!! Form::open(array('route' => 'users.store','method'=>'POST')) !!}
+                {!! Form::open(array('url' => 'users/store','method'=>'POST')) !!}
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <div class="form-group">
@@ -78,9 +102,11 @@
         </div>
     </div>
 </div>
-
+        </div>
+    </div>
+</div>
 @endsection
-@content('footer')
+
 <script  src="<?= url('public') ?>/intlTelInput/js/intlTelInput.js"></script>
 <script  src="<?= url('public') ?>/js/customTelInput.js"></script>
   <script>
@@ -98,4 +124,3 @@
                 }
             });
         </script>
-@endsection

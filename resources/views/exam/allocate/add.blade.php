@@ -119,16 +119,5 @@
         </div>
     </div>
 </div>
-        <script type="text/javascript">
-            $('.gradeinfo').keyup(function () {
-                var val = $(this).val();
-                if (val > 100) {
-                    swal('Warning', 'mark cannot exceed 100');
-                    $(this).val('').css('border', '1px solid red');
-                } else if (val < 0) {
-                    swal('Warning', 'mark cannot be below 0');
-                    $(this).val('').css('border', '1px solid red');
-                }
-            });
-        </script>
+
         @endsection

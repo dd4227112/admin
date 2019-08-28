@@ -16,9 +16,10 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
-        <meta name="description" content="Phoenixcoded">
+        <meta name="description" content="ShuleSoft Admin">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="keywords" content=", Flat ui, Admin , Responsive, Landing, Bootstrap, App, Template, Mobile, iOS, Android, apple, creative app">
-        <meta name="author" content="Phoenixcoded">
+        <meta name="author" content="ShuleSoft">
         <!-- Favicon icon -->
         <link rel="icon" href="<?= $root ?>assets/images/favicon.ico" type="image/x-icon">
         <!-- Google font-->
@@ -52,12 +53,34 @@
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script>
         <script type="text/javascript">
-$.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-});
-var root_url = "<?= url('/'); ?>";
+ajax_setup = function () {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        async: true,
+        cache: false,
+        beforeSend: function (xhr) {
+            // jQuery('.theme-loader').show();
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            // jQuery('.theme-loader').hide();
+        },
+        complete: function (xhr, status) {
+            // jQuery('.theme-loader').hide();
+        }
+    });
+}
+$(document).ready(ajax_setup);
+function toast(message) {
+    new PNotify({
+        title: 'Feedback',
+        text: message,
+        type: 'success',
+        hide: 'false',
+        icon: 'icofont icofont-info-circle'
+    });
+}
         </script>
         <style>
             #valid-msg {
@@ -402,29 +425,32 @@ var root_url = "<?= url('/'); ?>";
 
                     <hr style="background:white"/>
 
-                    <li class="nav-item">
-                        <a href="#!">
-                            <i class="ti-home"></i>
-                            <span data-i18n="nav.dash.main">Dashboard</span>
-                        </a>
-                        <ul class="tree-1 has-class">
-                            <li>
-                                <a href="<?= url('analyse/index') ?>" data-i18n="nav.dash.default"> Sales </a></li>
-                            <li>
-                            <li><a href="<?= url('analyse/marketing') ?>" data-i18n="nav.dash.ecommerce"> Marketing</a></li>
-                            <li><a href="<?= url('analyse/accounts') ?>" data-i18n="nav.dash.crm">Accounts</a></li>
-                            <li><a href="<?= url('analyse/customers') ?>" data-i18n="nav.dash.analytics">Customers</a>
-                                <label class="label label-info menu-caption">NEW</label>
-                            </li>
-                            <li><a href="<?= url('analyse/software') ?>" data-i18n="nav.dash.project">Software Dev</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="nav-title" data-i18n="nav.category.navigation">
-                        <i class="ti-line-dashed"></i>
-                        <span>Operations</span>
-                    </li>
-                    <?php if (true) { ?>
+                    <?php if (can_access('manage_users')) { ?>
+                        <li class="nav-item">
+                            <a href="#!">
+                                <i class="ti-home"></i>
+                                <span data-i18n="nav.dash.main">Dashboard</span>
+                            </a>
+                            <ul class="tree-1 has-class">
+                                <li>
+                                    <a href="<?= url('analyse/index') ?>" data-i18n="nav.dash.default"> Sales </a></li>
+                                <li>
+                                <li><a href="<?= url('analyse/marketing') ?>" data-i18n="nav.dash.ecommerce"> Marketing</a></li>
+                                <li><a href="<?= url('analyse/accounts') ?>" data-i18n="nav.dash.crm">Accounts</a></li>
+                                <li><a href="<?= url('analyse/customers') ?>" data-i18n="nav.dash.analytics">Customers</a>
+                                    <label class="label label-info menu-caption">NEW</label>
+                                </li>
+                                <li><a href="<?= url('analyse/software') ?>" data-i18n="nav.dash.project">Software Dev</a>
+                                </li>
+                            </ul>
+                        </li>
+                    <?php } ?>
+                    <?php if (can_access('manage_customers')) { ?>
+                        <li class="nav-title" data-i18n="nav.category.navigation">
+                            <i class="ti-line-dashed"></i>
+                            <span>Operations</span>
+                        </li>
+
                         <li class="nav-item">
                             <a href="#!">
                                 <i class="ti-layout"></i>
@@ -469,6 +495,8 @@ var root_url = "<?= url('/'); ?>";
                                 <li><a href="<?= url('customer/requirements') ?>" data-i18n="nav.page_layout.bottom-menu">Customer Requirements</a></li>
                             </ul>
                         </li>
+                    <?php } ?>
+                    <?php if (can_access('manage_sales')) { ?>
                         <li class="nav-item">
                             <a href="#!">
                                 <i class="ti-layout-cta-right"></i>
@@ -481,7 +509,8 @@ var root_url = "<?= url('/'); ?>";
                                 <li><a href="<?= url('sales/index') ?>" data-i18n="nav.navigate.navbar-with-elements">Sales Reports</a></li>
                             </ul>
                         </li>
-
+                    <?php } ?>
+                    <?php if (can_access('manage_marketing')) { ?>
                         <li class="nav-item">
                             <a href="#!">
                                 <i class="ti-gift "></i>
@@ -494,6 +523,8 @@ var root_url = "<?= url('/'); ?>";
                                                         <li><a href="offline.html" data-i18n="nav.extra-components.offline">Offline</a></li>
                                                     </ul>-->
                         </li>
+                    <?php } ?>
+                    <?php if (can_access('manage_software')) { ?>
                         <li class="nav-item">
                             <a href="#!">
                                 <i class="ti-layout-grid2-alt"></i>
@@ -530,6 +561,8 @@ var root_url = "<?= url('/'); ?>";
 
                             </ul>
                         </li>
+                    <?php } ?>
+                    <?php if (can_access('manage_finance')) { ?>
                         <li class="nav-item">
                             <a href="#!">
                                 <i class="ti-crown"></i>
@@ -564,27 +597,29 @@ var root_url = "<?= url('/'); ?>";
                                 </li>
                             </ul>
                         </li>
+                    <?php } ?>
+                    <?php if (can_access('manage_users')) { ?>
                         <li class="nav-item single-item">
-                            <a href="<?= url('user/index') ?>">
+                            <a href="<?= url('users/index') ?>">
                                 <i class="ti-layers-alt"></i>
                                 <span data-i18n="nav.sticky-notes.main"> Users</span>
                             </a>
                         </li>
                         <?php
                     }
-                    if (can_access('schools') && false) {
-                        ?>
+                    ?>
+                    <?php if (can_access('manage_schools')) { ?>
                         <li class="nav-item">
                             <a href="#!">
                                 <i class="ti-crown"></i>
                                 <span data-i18n="nav.advance-components.main">Schools</span>
                             </a>
                             <ul class="tree-1">
-                                <li><a href="<?= url('account/projection') ?>" data-i18n="nav.advance-components.draggable">Dashboard</a></li>
+                                <li><a href="<?= url('exam/dashboard') ?>" data-i18n="nav.advance-components.draggable">Dashboard</a></li>
 
                                 <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Exams</a>
                                     <ul class="tree-2">
-                                        <a href="<?= url('exam/definition') ?>"><i class="fa icon-account"></i> Listing</a>
+                                        <a href="<?= url('exam/listing') ?>"><i class="fa icon-account"></i> Listing</a>
                                         <a href="<?= url('exam/allocate') ?>"><i class="fa icon-account"></i> Definition</a>
                                         <a href="<?= url('exam/schedule') ?>"><i class="fa icon-expense"></i> Schedule</a>
                                         <a href="<?= url('exam/grade') ?>"><i class="fa icon-account"></i> Grades</a>
@@ -597,22 +632,11 @@ var root_url = "<?= url('/'); ?>";
 
                                             </ul>
                                         </li>
+                                        <li><a href="<?= url('exam/marking') ?>" data-i18n="nav.advance-components.draggable">Marking</a></li>
 
                                     </ul>
                                 </li>
 
-
-                                <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Accounts</a>
-                                    <ul class="tree-2">
-                                        <a href="<?= url('account/client') ?>"><i class="fa icon-account"></i>  Clients</a>
-                                        <a href="<?= url('account/bank') ?>"><i class="fa icon-account"></i> Banking</a>
-                                        <a href="<?= url('account/group') ?>"><i class="fa icon-account"></i> Account Groups</a>
-                                        <a href="<?= url('account/chart') ?>"><i class="fa icon-account"></i> Charts of Accounts</a>
-                                        <a href="<?= url('account/project') ?>"><i class="fa icon-account"></i> Company Projects</a>
-
-                                    </ul>
-                                </li>
-                                <li><a href="<?= url('account/projection') ?>" data-i18n="nav.advance-components.draggable">Reports</a></li>
                             </ul>
                         </li>
                     <?php } ?>
@@ -819,6 +843,7 @@ var root_url = "<?= url('/'); ?>";
         <!-- Sidebar inner chat end-->
         <!-- Main-body start-->
         <div class="main-body">
+            @include('layouts.notifications')
             @yield('content')
         </div>
         <!-- Main-body end-->

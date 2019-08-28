@@ -47,4 +47,8 @@ class Analyse extends Controller {
         return json_call($this->data);
     }
 
+    public function setting() {
+        $this->data['association']=\App\Model\Association::first();
+        return view('analyse.setting', $this->data); 
+    }
 }

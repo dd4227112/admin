@@ -6,7 +6,9 @@ use App\Jobs\PushSMS;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use \App\Models\User;
 use DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class Customer extends Controller {
 
@@ -224,4 +226,8 @@ class Customer extends Controller {
         }
     }
 
+    public function calls() {
+         $this->data['levels'] = [];
+        return view('customer/analysis', $this->data);
+    }
 }

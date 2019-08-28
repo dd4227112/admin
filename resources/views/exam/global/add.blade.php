@@ -11,7 +11,7 @@
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?=url('/')?>">
+                        <a href="<?= url('/') ?>">
                             <i class="icofont icofont-home"></i>
                         </a>
                     </li>
@@ -36,6 +36,9 @@
                                 <i class="icofont icofont-rounded-down"></i>
                                 <i class="icofont icofont-refresh"></i>
                             </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <p id="notes" class="notes"></p>
                         </div>
                         <div class="card-block">
                             <!--<h4 class="sub-title">Basic Inputs</h4>-->
@@ -77,8 +80,8 @@
                                         echo form_dropdown("class_level_id", $array, old("class_level_id"), "id='class_level_id' class='form-control'");
                                         ?> </div>
                                 </div>
-                               
-                              
+
+
                                 <div class="form-group row">
                                     <label class="col-sm-2 col-form-label">Note</label>
                                     <div class="col-sm-10">
@@ -94,31 +97,18 @@
                                         <input type="submit" class="btn btn-block btn-success" value="<?= __("Submit") ?>" >
                                     </div>
                                 </div>
-                     
-                        <?= csrf_field() ?>
-                        </form>
+
+                                <?= csrf_field() ?>
+                            </form>
 
 
 
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- Page body end -->
     </div>
-    <!-- Page body end -->
 </div>
-</div>
-
-<script type="text/javascript">
-    $('.gradeinfo').keyup(function () {
-        var val = $(this).val();
-        if (val > 100) {
-            swal('Warning', 'mark cannot exceed 100');
-            $(this).val('').css('border', '1px solid red');
-        } else if (val < 0) {
-            swal('Warning', 'mark cannot be below 0');
-            $(this).val('').css('border', '1px solid red');
-        }
-    });
-</script>
 @endsection
