@@ -273,6 +273,7 @@ function toast(message) {
                                     </li>
                                 </ul>
                             </li>
+                            <?php if(false){?>
                             <li class="header-notification">
                                 <a href="#!">
                                     <i class="ti-bell"></i>
@@ -321,12 +322,14 @@ function toast(message) {
                                     <span class="badge">9</span>
                                 </a>
                             </li>
+                            <?php }?>
                             <li class="user-profile header-notification">
                                 <a href="#!">
                                     <img src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image">
                                     <span>{{ Auth::user()->name() }}</span>
                                     <i class="ti-angle-down"></i>
                                 </a>
+                                <?php if(false){?>
                                 <ul class="show-notification profile-notification">
                                     <li>
                                         <a href="#!">
@@ -356,6 +359,7 @@ function toast(message) {
                                     </form>
 
                                 </ul>
+                                <?php } ?>
                             </li>
                         </ul>
                         <!-- search -->
@@ -615,20 +619,20 @@ function toast(message) {
                                 <span data-i18n="nav.advance-components.main">Schools</span>
                             </a>
                             <ul class="tree-1">
-                                <li><a href="<?= url('exam/dashboard') ?>" data-i18n="nav.advance-components.draggable">Dashboard</a></li>
+                                <!--<li><a href="<?= url('exam/dashboard') ?>" data-i18n="nav.advance-components.draggable">Dashboard</a></li>-->
 
                                 <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Exams</a>
                                     <ul class="tree-2">
                                         <a href="<?= url('exam/listing') ?>"><i class="fa icon-account"></i> Listing</a>
                                         <a href="<?= url('exam/allocate') ?>"><i class="fa icon-account"></i> Definition</a>
-                                        <a href="<?= url('exam/schedule') ?>"><i class="fa icon-expense"></i> Schedule</a>
+                                        <!--<a href="<?= url('exam/schedule') ?>"><i class="fa icon-expense"></i> Schedule</a>-->
                                         <a href="<?= url('exam/grade') ?>"><i class="fa icon-account"></i> Grades</a>
 
                                         <li class="nav-sub-item-3">
                                             <a href="#" data-i18n="nav.menu-levels.menu-level-22.menu-level-32.main">&nbsp; Reports</a>
                                             <ul class="tree-3">
                                                 <li><a href="<?= url('exam/report/single') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-32.menu-level-41">Single</a> </li>
-                                                <li><a href="<?= url('exam/report/accumulative') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-32.menu-level-41">Combined</a> </li>
+                                                <!--<li><a href="<?= url('exam/report/accumulative') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-32.menu-level-41">Combined</a> </li>-->
 
                                             </ul>
                                         </li>
