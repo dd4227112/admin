@@ -13,13 +13,14 @@
                         <i class="icofont icofont-home"></i>
                     </a>
                 </li>
-                <li class="breadcrumb-item"><a href="#!">Pages</a>
+                <li class="breadcrumb-item"><a href="#!">Summary</a>
                 </li>
                 <li class="breadcrumb-item"><a href="#!">Dashboard</a>
                 </li>
             </ul>
         </div>
     </div>
+    <?php if(can_access('manage_users')){ ?>
     <div class="page-body">
         <div class="row">
             <div class="col-md-12 col-xl-4">
@@ -685,7 +686,9 @@
             </div>
         </div>
     </div>
+    <?php }?>
 </div>
+ <?php if(can_access('manage_users')){ ?>
 <script type="text/javascript">
     dashboard_summary = function () {
         $.ajax({
@@ -710,5 +713,6 @@
     }
     $(document).ready(dashboard_summary);
 </script>
+  <?php }?>
 @endsection
 
