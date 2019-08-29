@@ -478,7 +478,7 @@
                                     <td><?= $boys ?></td>
                                     <td><?= $boys_pass ?></td>	
                                     <td><?= $boys - $boys_pass ?></td>
-                                    <td><?= round($boys_average / $boys, 2) ?></td>	
+                                    <td><?= round($boys_average / max($boys,1), 2) ?></td>	
                                 </tr>
                                 <tr>
                                     <td>GIRLS</td>
@@ -487,7 +487,7 @@
                                     <td><?= $girls ?></td>
                                     <td><?= $girls_pass ?></td>	
                                     <td><?= $girls - $girls_pass ?></td>
-                                    <td><?= round($girls_average / $girls, 2) ?></td>	
+                                    <td><?= round($girls_average / max($girls,1), 2) ?></td>	
                                 </tr>
                                 <tr>
                                     <td>Total</td>
@@ -497,7 +497,7 @@
                                     <td><?= $student_pass ?></td>
 
                                     <td><?= count($reports) - $student_pass ?></td>
-                                    <td><?= round($total_average / count($reports), 2) ?></td>	
+                                    <td><?= round($total_average / count(max($reports,1)), 2) ?></td>	
                                 </tr>
                             </tbody>
                         </table>
@@ -638,7 +638,7 @@
                                             if ($total_sat == 0) {
                                                 echo '0';
                                             } else {
-                                                echo round($subject_sum[$subj] / $total_sat, 2);
+                                                echo round($subject_sum[$subj] / max($total_sat,1), 2);
                                             }
                                             ?></td>
 
