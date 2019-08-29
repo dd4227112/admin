@@ -329,8 +329,9 @@ function toast(message) {
                                     <span>{{ Auth::user()->name() }}</span>
                                     <i class="ti-angle-down"></i>
                                 </a>
-                                <?php if(false){?>
+                               
                                 <ul class="show-notification profile-notification">
+                                     <?php if(false){?>
                                     <li>
                                         <a href="#!">
                                             <i class="ti-settings"></i> Settings
@@ -351,6 +352,7 @@ function toast(message) {
                                             <i class="ti-lock"></i> Lock Screen
                                         </a>
                                     </li>
+                                     <?php } ?>
                                     <li><a href="{{ route('logout') }}"
                                            onclick="event.preventDefault();
                                                    document.getElementById('logout-form').submit();"><i class="ti-layout-sidebar-left"></i> Logout</a></li>
@@ -359,7 +361,7 @@ function toast(message) {
                                     </form>
 
                                 </ul>
-                                <?php } ?>
+                               
                             </li>
                         </ul>
                         <!-- search -->

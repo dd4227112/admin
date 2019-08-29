@@ -218,7 +218,7 @@ class Message extends Controller {
         $phones_connected = DB::select('select distinct api_key from public.all_sms');
         if (count($phones_connected) > 0) {
             foreach ($phones_connected as $phone) {
-                $messages = DB::select('select * from public.all_sms where api_key=\'' . $phone->api_key . '\' order by priority desc, sms_id asc limit 8');
+                $messages = DB::select('select * from public.all_sms where api_key=\'' . $phone->api_key . '\' order by priority desc, sms_id asc limit 100');
                 if (!empty($messages)) {
                     foreach ($messages as $sms) {
                         $schema = strtoupper($sms->schema_name) == 'PUBLIC' ?
@@ -229,7 +229,7 @@ class Message extends Controller {
                         $karibusms->API_SECRET = $sms->api_secret;
                         $karibusms->set_name(strtoupper($sms->schema_name));
                         $karibusms->karibuSMSpro = $sms->type;
-                        $result = (object) json_decode($karibusms->send_sms($sms->phone_number, strtoupper($schema) . ': ' . $sms->body . '. https://' . $link . 'shulesoft.com'));
+                        $result = (object) json_decode($karibusms->send_sms($sms->phone_number, strtoupper($schema) . ': ' . $sms->body . '. https://' . $link . 'shulesoft.com',$sms->schema_name.$sms->sms_id));
                         if (is_object($result) && isset($result->success) && $result->success == 1) {
                             DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 1, 'return_code' => json_encode($result), 'updated_at' => 'now()']);
                         } else {
