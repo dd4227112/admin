@@ -5,8 +5,8 @@
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4 class="box-title">Exams Schedule</h4>
-                <span>Exams schedule defined each time to create easiness of reference</span>
+                <h4 class="box-title">Subject Definition</h4>
+                <span>All subjects done per specific class are required to be registered here</span>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -17,7 +17,7 @@
                     </li>
                     <li class="breadcrumb-item"><a href="#!">Exams</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Schedule</a>
+                    <li class="breadcrumb-item"><a href="#!">Subjects</a>
                     </li>
                 </ul>
             </div>
@@ -31,25 +31,25 @@
                         <h5 class="card-header">
                             <a class="btn btn-success" href="<?php echo url('exam/addSubject') ?>">
                                 <i class="fa fa-plus"></i> 
-                                <?= __('add grade') ?>
+                                <?= __('add Subject') ?>
                             </a>
                         </h5>
                         <?php // } ?>
 
-                        <div class="col-sm-6 col-xs-12 col-lg-offset-3">
+                        <div class="col-sm-6 col-xs-12 col-lg-offset-3" style="margin-left: 27%">
                             <div class="list-group-item">
                                 <form style="" class="form-horizontal" role="form" method="post">  
-                                    <div class="form-group">              
-                                        <label for="class_id" class="col-sm-2 col-lg-offset-2 control-label">
-                                            <?= __("class") ?>
+                                    <div class="form-group row">              
+                                        <label for="class_id" class="col-sm-6 control-label">
+                                            <?= __("Select Class") ?>
                                         </label>
                                         <div class="col-sm-6 col-xs-12">
                                             <?php
-                                            $array = array("0" => __("class_id"));
+                                            $array = array("0" => __("select class"));
                                             foreach ($classes as $class) {
                                                 $array[$class->id] = $class->name;
                                             }
-                                            echo form_dropdown("class_id_id", $array, old("class_id", request('id')), "id='class_id' class='form-control'");
+                                            echo form_dropdown("class_id_id", $array, old("class_id", request('id')), "id='class_id' class='form-control col-sm-12'");
                                             ?>
                                         </div>
                                         <a
@@ -70,7 +70,7 @@
                                     <thead>
                                         <tr>
                                             <th class="col-lg-1"><?= __('#') ?></th>
-                                            <th class="col-lg-2"><?= __('Subject name') ?></th>
+                                            <th class="col-lg-4"><?= __('Subject name') ?></th>
                                             <th class="col-lg-4"><?= __('action') ?></th>
                                         </tr>
                                     </thead>
@@ -83,7 +83,7 @@
                                                 <td data-title="<?= __('slno') ?>">
                                                     <?php echo $i; ?>
                                                 </td>
-                                                <td data-title="<?= __('grade_name') ?>">
+                                                <td data-title="<?= __('subject') ?>">
                                                     <?php echo $subject->name; ?>
                                                 </td>
                                                 

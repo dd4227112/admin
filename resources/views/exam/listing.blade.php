@@ -6,8 +6,8 @@
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4 class="box-title">Exams </h4>
-                <span>Exams are defined only once for quick reference</span>
+                <h4 class="box-title">Exams List</h4>
+                <span>This parts show exams that are defined only once for quick reference</span>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">

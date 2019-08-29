@@ -5,8 +5,8 @@
         <!-- Page header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4>Define New Exam</h4>
-                <span>Exams are only defined once</span>
+                <h4>Upload Marks by Excel</h4>
+                <span>Please use the correct excel format to upload marks</span>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -17,7 +17,7 @@
                     </li>
                     <li class="breadcrumb-item"><a href="#!">Exam</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Definition</a>
+                    <li class="breadcrumb-item"><a href="#!">Mark Upload by Excel</a>
                     </li>
                 </ul>
             </div>
@@ -31,7 +31,7 @@
                     <div class="card">
                         <div class="card-header">
                             <!--<h5>Basic Form Inputs</h5>-->
-                            <span>Specify information correctly as specified. Area marked with * are mandatory</span>
+                            <span>Please use the correct excel template. <a href="<?=url('storage/app/sample.xls')?>">Click here to view sample</a>. Ensure subject names in excel tally with what defined in the system</span>
                             <div class="card-header-right">
                                 <i class="icofont icofont-rounded-down"></i>
                                 <i class="icofont icofont-refresh"></i>

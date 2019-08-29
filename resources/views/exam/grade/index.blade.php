@@ -36,12 +36,12 @@
                         </h5>
                         <?php // } ?>
 
-                        <div class="col-sm-6 col-xs-12 col-lg-offset-3">
+                        <div class="col-sm-6 col-xs-12 col-lg-offset-3" style="margin-left: 27%">
                             <div class="list-group-item">
                                 <form style="" class="form-horizontal" role="form" method="post">  
-                                    <div class="form-group">              
-                                        <label for="classlevel_id" class="col-sm-2 col-lg-offset-2 control-label">
-                                            <?= __("classlevel") ?>
+                                    <div class="form-group row">              
+                                        <label for="classlevel_id" class="col-sm-6 control-label">
+                                            <?= __("Select classlevel") ?>
                                         </label>
                                         <div class="col-sm-6 col-xs-12">
                                             <?php
@@ -49,7 +49,7 @@
                                             foreach ($levels as $classlevel) {
                                                 $array[$classlevel->id] = $classlevel->name;
                                             }
-                                            echo form_dropdown("classlevel_id", $array, old("classlevel_id", request('id')), "id='classlevel_id' class='form-control'");
+                                            echo form_dropdown("classlevel_id", $array, old("classlevel_id", request('id')), "id='classlevel_id' class='form-control col-sm-12'");
                                             ?>
                                         </div>
                                         <a
@@ -104,8 +104,8 @@
                                                 </td>
 
                                                 <td data-title="<?= __('action') ?>">
-                                                    <?php echo '<a  href="' . url("/exam/editGrade/$grade->id") . ' " class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> ' . __('edit') . ' </a>' ?>
-                                                    <?php echo '<a  href="' . url("exam/deleteGrade/$grade->id") . ' " class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> ' . __('delete') . ' </a>' ?>
+                                                    <?php echo '<a  href="' . url("/exam/editGrade/$grade->id") . ' " class="btn btn-info btn-sm"><i class="fa fa-pencil"></i> ' . __('edit') . ' </a>' ?>
+                                                    <?php echo '<a  href="' . url("exam/deleteGrade/$grade->id") . ' " class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> ' . __('delete') . ' </a>' ?>
                                                 </td>
                                             </tr>
                                             <?php

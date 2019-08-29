@@ -497,7 +497,7 @@ class Exam extends Controller {
                         'region' => $value->region,
                         'schema_name' => $value->school
                     ];
-                    $where = ['subject_id' => $subject->id, 'name' => $value->name, 'refer_class_id' => $class_id, 'global_exam_id' => $exam_id];
+                    $where = ['subject_id' => $subject->id, 'name' => $value->name, 'refer_class_id' => $class_id, 'global_exam_id' => $exam_id,'schema_name' => $value->school];
                     $return = DB::table('marks')->where($where);
                     if (count($return->first()) == 1) {
                         $return->update($array);

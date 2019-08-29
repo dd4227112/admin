@@ -5,8 +5,8 @@
         <!-- Page header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4>Define New Exam</h4>
-                <span>Exams are only defined once</span>
+                <h4>Exam Marking</h4>
+                <span>You can upload marks from excel sheet and system will generate reports for you automatically</span>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -17,7 +17,7 @@
                     </li>
                     <li class="breadcrumb-item"><a href="#!">Exam</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Definition</a>
+                    <li class="breadcrumb-item"><a href="#!">Marking</a>
                     </li>
                 </ul>
             </div>
@@ -29,13 +29,13 @@
                 <div class="col-sm-12">
 
                     <div class="card">
-
+<br/>
                         <div class="col-sm-6 col-sm-offset-3 list-group" style="margin-left: 27%">
-                            <div class="list-group-item list-group-item-warning">
+                            <div class="list-group-item">
                                 <form class="form-horizontal" role="form" method="post">
 
                                     <div class='form-group row' >
-                                        <label for="class_id" class="col-sm-2 col-sm-offset-2 control-label">
+                                        <label for="class_id" class="col-sm-6 col-sm-offset-2 control-label">
                                             <?= __('Classes') ?>
                                         </label>
 
@@ -52,7 +52,7 @@
                                     </div>
 
                                     <div class='form-group row' >
-                                        <label for="sectionID" class="col-sm-2 col-sm-offset-2 control-label">
+                                        <label for="sectionID" class="col-sm-6 col-sm-offset-2 control-label">
                                             <?= __('Year') ?>
                                         </label>
                                         <div class="col-sm-6">

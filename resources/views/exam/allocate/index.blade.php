@@ -7,7 +7,7 @@
         <div class="page-header">
             <div class="page-header-title">
                 <h4 class="box-title">Exams Definition</h4>
-                <span>Exams definition  to create easiness of reference</span>
+                <span>Once you define exam in Exam Listing Section, You can allocate exam details here including date of exam, class etc </span>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -18,7 +18,7 @@
                     </li>
                     <li class="breadcrumb-item"><a href="#!">Exams</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Schedule</a>
+                    <li class="breadcrumb-item"><a href="#!">Definition</a>
                     </li>
                 </ul>
             </div>
@@ -32,7 +32,7 @@
                         <h5 class="card-header">
                             <a class="btn btn-success" href="<?php echo url('exam/addAllocation') ?>">
                                 <i class="fa fa-plus"></i> 
-                                <?= __('add Exam') ?>
+                                <?= __('Define Exam') ?>
                             </a>
                         </h5>
  <div class="card-block">

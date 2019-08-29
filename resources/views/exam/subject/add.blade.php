@@ -5,8 +5,8 @@
         <!-- Page header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4>Define New Exam</h4>
-                <span>Exams are only defined once</span>
+                <h4>Define New Subject</h4>
+                <span>Subjects needed to be defined per each class</span>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -17,7 +17,7 @@
                     </li>
                     <li class="breadcrumb-item"><a href="#!">Exam</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Definition</a>
+                    <li class="breadcrumb-item"><a href="#!">Subject</a>
                     </li>
                 </ul>
             </div>
@@ -29,8 +29,9 @@
                 <div class="col-sm-12">
                     <!-- Basic Form Inputs card start -->
                     <div class="card">
+                        <p> <?= __('Fields marked') ?>  <span class="red">*</span> <?= __(' are mandatory') ?> </p>
+                             
                         <div class="card-header">
-                            <span class="section"> <p> <?= __('Fields marked') ?>  <span class="red">*</span> <?= __(' are mandatory') ?> </p>
                                 <div class="row">
                                     <div class="col-sm-8">
                                         <form class="form-horizontal" role="form" method="post">
@@ -63,7 +64,8 @@
 
 
 
-                                            <div class="form-group">
+                                            <div class="form-group row">
+                                                 <label class="col-sm-2 col-form-label"></label>
                                                 <div class="col-sm-offset-2 col-sm-6 col-xs-12">
                                                     <input type="submit" class="btn btn-block btn-success" value="<?= __("Submit") ?>" >
                                                 </div>
