@@ -273,86 +273,86 @@ function toast(message) {
                                     </li>
                                 </ul>
                             </li>
-                            <?php if(false){?>
-                            <li class="header-notification">
-                                <a href="#!">
-                                    <i class="ti-bell"></i>
-                                    <span class="badge">5</span>
-                                </a>
-                                <ul class="show-notification">
-                                    <li>
-                                        <h6>Notifications</h6>
-                                        <label class="label label-danger">New</label>
-                                    </li>
-                                    <li>
-                                        <div class="media">
-                                            <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Generic placeholder image">
-                                            <div class="media-body">
-                                                <h5 class="notification-user">John Doe</h5>
-                                                <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
-                                                <span class="notification-time">30 minutes ago</span>
+                            <?php if (false) { ?>
+                                <li class="header-notification">
+                                    <a href="#!">
+                                        <i class="ti-bell"></i>
+                                        <span class="badge">5</span>
+                                    </a>
+                                    <ul class="show-notification">
+                                        <li>
+                                            <h6>Notifications</h6>
+                                            <label class="label label-danger">New</label>
+                                        </li>
+                                        <li>
+                                            <div class="media">
+                                                <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Generic placeholder image">
+                                                <div class="media-body">
+                                                    <h5 class="notification-user">John Doe</h5>
+                                                    <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
+                                                    <span class="notification-time">30 minutes ago</span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="media">
-                                            <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Generic placeholder image">
-                                            <div class="media-body">
-                                                <h5 class="notification-user">Joseph William</h5>
-                                                <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
-                                                <span class="notification-time">30 minutes ago</span>
+                                        </li>
+                                        <li>
+                                            <div class="media">
+                                                <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Generic placeholder image">
+                                                <div class="media-body">
+                                                    <h5 class="notification-user">Joseph William</h5>
+                                                    <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
+                                                    <span class="notification-time">30 minutes ago</span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="media">
-                                            <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Generic placeholder image">
-                                            <div class="media-body">
-                                                <h5 class="notification-user">Sara Soudein</h5>
-                                                <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
-                                                <span class="notification-time">30 minutes ago</span>
+                                        </li>
+                                        <li>
+                                            <div class="media">
+                                                <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Generic placeholder image">
+                                                <div class="media-body">
+                                                    <h5 class="notification-user">Sara Soudein</h5>
+                                                    <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
+                                                    <span class="notification-time">30 minutes ago</span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="header-notification">
-                                <a href="#!" class="displayChatbox">
-                                    <i class="ti-comments"></i>
-                                    <span class="badge">9</span>
-                                </a>
-                            </li>
-                            <?php }?>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="header-notification">
+                                    <a href="#!" class="displayChatbox">
+                                        <i class="ti-comments"></i>
+                                        <span class="badge">9</span>
+                                    </a>
+                                </li>
+                            <?php } ?>
                             <li class="user-profile header-notification">
                                 <a href="#!">
                                     <img src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image">
                                     <span>{{ Auth::user()->name() }}</span>
                                     <i class="ti-angle-down"></i>
                                 </a>
-                               
+
                                 <ul class="show-notification profile-notification">
-                                     <?php if(false){?>
-                                    <li>
-                                        <a href="#!">
-                                            <i class="ti-settings"></i> Settings
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="user-profile.html">
-                                            <i class="ti-user"></i> Profile
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="email-inbox.html">
-                                            <i class="ti-email"></i> My Messages
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="auth-lock-screen.html">
-                                            <i class="ti-lock"></i> Lock Screen
-                                        </a>
-                                    </li>
-                                     <?php } ?>
+                                    <?php if (false) { ?>
+                                        <li>
+                                            <a href="#!">
+                                                <i class="ti-settings"></i> Settings
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="user-profile.html">
+                                                <i class="ti-user"></i> Profile
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="email-inbox.html">
+                                                <i class="ti-email"></i> My Messages
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="auth-lock-screen.html">
+                                                <i class="ti-lock"></i> Lock Screen
+                                            </a>
+                                        </li>
+                                    <?php } ?>
                                     <li><a href="{{ route('logout') }}"
                                            onclick="event.preventDefault();
                                                    document.getElementById('logout-form').submit();"><i class="ti-layout-sidebar-left"></i> Logout</a></li>
@@ -361,7 +361,7 @@ function toast(message) {
                                     </form>
 
                                 </ul>
-                               
+
                             </li>
                         </ul>
                         <!-- search -->
@@ -614,17 +614,20 @@ function toast(message) {
                         <?php
                     }
                     ?>
-                    <?php if (can_access('manage_schools')) { ?>
-                        <li class="nav-item">
+                    <?php
+                    if (can_access('manage_schools')) {
+                        $has_class = preg_match('/exam/', url()->current()) ? 'has-class open' : '';
+                        ?>
+                        <li class="nav-item <?= $has_class ?>">
                             <a href="#!">
                                 <i class="ti-crown"></i>
                                 <span data-i18n="nav.advance-components.main">Schools</span>
                             </a>
-                            <ul class="tree-1">
+                            <ul class="tree-1 ">
                                 <!--<li><a href="<?= url('exam/dashboard') ?>" data-i18n="nav.advance-components.draggable">Dashboard</a></li>-->
 
                                 <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Exams</a>
-                                    <ul class="tree-2">
+                                    <ul class="tree-2 <?= $has_class ?>">
                                         <a href="<?= url('exam/listing') ?>"><i class="fa icon-account"></i> Listing</a>
                                         <a href="<?= url('exam/allocate') ?>"><i class="fa icon-account"></i> Definition</a>
                                         <!--<a href="<?= url('exam/schedule') ?>"><i class="fa icon-expense"></i> Schedule</a>-->
