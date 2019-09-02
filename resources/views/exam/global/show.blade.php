@@ -18,7 +18,7 @@
                 <tbody>
                     <?php
                     $i = 1;
-         
+
                     if (count($schools) > 0) {
                         foreach ($schools as $school) {
                             ?>

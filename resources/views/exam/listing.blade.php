@@ -55,6 +55,7 @@
                                     <tbody>
                                         <?php
                                         $i = 1;
+
                                         if (count($exams) > 0) {
                                             foreach ($exams as $exam) {
                                                 ?>

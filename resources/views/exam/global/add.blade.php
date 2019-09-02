@@ -77,7 +77,7 @@
                                                 $array[$level->id] = $level->name;
                                             }
                                         }
-                                        echo form_dropdown("class_level_id", $array, old("class_level_id"), "id='class_level_id' class='form-control'");
+                                        echo form_dropdown("school_level_id", $array, old("school_level_id"), "id='school_level_id' class='form-control'");
                                         ?> </div>
                                 </div>
 

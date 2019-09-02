@@ -105,7 +105,8 @@
                                         <?php echo form_error($errors, 'note'); ?>
                                     </span>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group row">
+                                    <label for="note" class="col-sm-2 control-label"></label>
                                     <div class="col-sm-offset-2 col-sm-6 col-xs-12">
                                         <input type="submit" class="btn btn-block btn-success" value="<?= __("Submit") ?>" >
                                     </div>
