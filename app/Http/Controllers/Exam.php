@@ -68,7 +68,7 @@ class Exam extends Controller {
         $this->data['associations'] = \App\Model\Association::all();
         if ($_POST) {
             $grade = \App\Model\GlobalGrade::create(request()->all());
-          //  $this->createLocalGrade($grade);
+            //  $this->createLocalGrade($grade);
             return redirect('exam/grade/null?id=' . request('classlevel_id'))->with('success', 'Grade created successfully');
         }
         return view('exam.grade.add', $this->data);
@@ -491,6 +491,7 @@ class Exam extends Controller {
             $results = Excel::load($address)->all();
             //once we upload excel, register students and marks in mark_info table
             $subjects = \App\Models\Subject::where('class_id', $class_id)->get();
+            $this->data['status'] = '';
             foreach ($results as $value) {
                 foreach ($subjects as $subject) {
                     $mark = isset($value->{strtolower($subject->name)}) ? $value->{strtolower($subject->name)} : null;
@@ -513,9 +514,11 @@ class Exam extends Controller {
                     } else {
                         DB::table('marks')->insert(array_merge($where, $array));
                     }
+                    $this->data['status'] .= '<div class="alert alert-success">' . $subject->name . ' Marks for ' . $value->name . ' uploaded successfully</div>';
                 }
             }
-            return redirect('exam/marking')->with('success', 'success');
+            //  return redirect('exam/marking')->with('success', 'success');
+            return view('exam.mark.upload_status', $this->data);
         }
 
         return view('exam.mark.upload_by_excel', $this->data);
