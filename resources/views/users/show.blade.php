@@ -117,6 +117,10 @@
                                                                 </form>
                                                             </div></td>
                                                     </tr>
+                                                    <tr>
+                                                        <td class="text-nowrap"></td>
+                                                        <td>                      <a href="<?=url('user/reset/'.$user->id)?>" class="btn btn-success">Reset Password</a></td>
+                                                    </tr>
 
                                                 </tbody>
                                             </table>

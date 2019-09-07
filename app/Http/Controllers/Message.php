@@ -214,7 +214,7 @@ class Message extends Controller {
     }
 
     public function sendSms() {
-        //get all connected phones first
+        //get all connected phones first, we use parallel approach to implement this
         $phones_connected = DB::select('select distinct api_key from public.all_sms');
         if (count($phones_connected) > 0) {
             foreach ($phones_connected as $phone) {

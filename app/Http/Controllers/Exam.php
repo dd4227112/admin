@@ -560,5 +560,19 @@ class Exam extends Controller {
         }
         return view('exam.subject.add', $this->data);
     }
+    
+    public function viewMark() {
+          $state = request()->segment(3);
+          $this->data['exam_id']=$state;
+        $this->data['marks'] = DB::select('select distinct "schema_name", count(*) from marks  where global_exam_id='.$state.' group by "schema_name" ');
+        return view('exam.mark.view', $this->data);
+    }
+    
+    public function deleteMark() {
+        $school = request()->segment(4);
+         $state = request()->segment(3);
+         DB::statement('delete from marks where "schema_name"=\''.$school.'\' and global_exam_id='.$state);
+         return redirect()->back()->with('success','success');
+    }
 
 }

@@ -114,11 +114,12 @@
                                                 </td>
 
 <!--                                                <td>
-                                                    <a  href="<?= url("exam/addMark/$exam->id/$class_id") ?> " class="btn btn-info btn-sm"><i class="fa fa-pencil"></i> View or Add Marks </a>
+                                                    
 
                                                 </td>-->
                                                 <td>
  <a  href="<?= url("exam/uploadMark/$exam->id/$class_id") ?> " class="btn btn-info btn-sm"><i class="fa fa-pencil"></i> Upload Marks </a>
+ <a  href="<?= url("exam/viewMark/$exam->id/$class_id") ?> " class="btn btn-info btn-sm"><i class="fa fa-pencil"></i> View</a>
 
                                                 </td>
                                             </tr>
