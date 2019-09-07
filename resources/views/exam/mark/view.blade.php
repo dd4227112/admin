@@ -38,7 +38,7 @@
                         </div> 
 
                         <div id="hide-table" class="card-block">
-                            <table class="table table-striped table-bordered table-hover no-footer">
+                            <table class="table table-striped table-bordered table-hover no-footer dataTable">
                                 <thead>
                                     <tr>
                                         <th><?= __('slno') ?></th>
