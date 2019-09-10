@@ -495,9 +495,13 @@ class Exam extends Controller {
             foreach ($results as $value) {
 
                 foreach ($subjects as $subject) {
-                    $subject_name = strtolower(str_replace('  ', '_', preg_replace('!\s&+!', ' ', $subject->name)));
+                    $init_subject_name = strtolower(str_replace('  ', '_', preg_replace('!\s&+!', ' ', $subject->name)));
+                    $subject_name = str_replace(' ', '_', $init_subject_name);
                     $mark = isset($value->{$subject_name}) ? $value->{$subject_name} : null;
                     if ((float) $mark <= 0) {
+                        echo $subject_name;
+                        dd($value);
+                        exit;
                         continue;
                     }
                     $array = [
@@ -514,7 +518,7 @@ class Exam extends Controller {
                     if (count($return->first()) == 1) {
                         $return->update($array);
                     } else {
-                         DB::table('marks')->insert(array_merge($where, $array));
+                        DB::table('marks')->insert(array_merge($where, $array));
                     }
                     $this->data['status'] .= '<div class="alert alert-success">' . $subject->name . ' Marks for ' . $value->name . ' uploaded successfully</div>';
                 }
