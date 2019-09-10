@@ -518,24 +518,26 @@ class Exam extends Controller {
                     ];
                     $where = ['subject_id' => $subject->id, 'name' => $value->name, 'refer_class_id' => $class_id, 'global_exam_id' => $exam_id, 'schema_name' => $value->school];
                     //check unique name
-              
-$check_name=DB::select('select distinct name, "schema_name" from marks where name=\''.$value->name.'\' and "schema_name" !=\''.$value->school.'\'');
+
+                    $check_name = DB::table('marks')->distinct()->where('name', $value->name)->where('schema_name', '!=', $value->school)->get(['schema_name']);
                     if (count($check_name) > 0) {
                         $l_name = '';
                         foreach ($check_name as $check) {
                             $l_name .= $check->schema_name . ', ';
                         }
-                        $this->data['status'] .= '<div class="alert alert-danger">Student name ' . $value->name . ' is available in another school ' . $l_name . '. Marks not uploaded. Please change this name in your excel file and upload it again.</div>';
+                        $this->data['status'] .= '<div class="alert alert-danger">Student name ' . $value->name . ' is available in another school ' . $l_name . '. Marks for subject '.$subject->name.' not uploaded. Please change this name in your excel file and upload it again.</div>';
                         continue;
                     }
 
                     $return = DB::table('marks')->where($where);
                     if (count($return->first()) == 1) {
                         $return->update($array);
+                        $this->data['status'] .= '<div class="alert alert-info">' . $subject->name . ' Marks for ' . $value->name . ' updated successfully</div>';
                     } else {
                         DB::table('marks')->insert(array_merge($where, $array));
+                        $this->data['status'] .= '<div class="alert alert-success">' . $subject->name . ' Marks for ' . $value->name . ' uploaded successfully</div>';
                     }
-                    $this->data['status'] .= '<div class="alert alert-success">' . $subject->name . ' Marks for ' . $value->name . ' uploaded successfully</div>';
+                    
                 }
             }
             //  return redirect('exam/marking')->with('success', 'success');
