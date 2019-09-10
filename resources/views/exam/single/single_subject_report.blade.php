@@ -100,8 +100,8 @@
                             <th class="col-sm-2" <?= $row_span ?>>Grade</th>
 
                             <?php if (true) { ?>
-                                                                                        <!--                    <th <?= $row_span ?>>Div</th>
-                                                                                                            <th <?= $row_span ?>>Point</th>-->
+                                                                                                <!--                    <th <?= $row_span ?>>Div</th>
+                                                                                                                    <th <?= $row_span ?>>Point</th>-->
                             <?php } ?>
                             <th class="col-sm-2" <?= $row_span ?>>School Rank</th>
                             <th class="col-sm-2" <?= $row_span ?>>Overall Rank</th>
@@ -273,17 +273,17 @@
                                         $total_average += $student->average;
                                         strtolower($student->sex) == 'male' ? $boys_average += $student->average : $girls_average += $student->average;
                                         echo '<td data-title="" style="background: ' . $color . ';">';
-                                        echo $student->average;
-                                        $absent += (int) $student->average == 0 ? $absent + 1 : 0;
-                                        $boys_absent = strtolower($student->sex) == 'male' && (int) $student->average == 0 ? $boys_absent+1 : 0;
-                                        $girls_absent = strtolower($student->sex) != 'male' && (int) $student->average == 0 ? $girls_absent+1 : 0;
+                                        echo (int) $student->average==0 ? '': $student->average;
+                                        (int) $student->average == 0 ? $absent++ : 0;
+                                        strtolower($student->sex) == 'male' && (int) $student->average == 0 ? $boys_absent++ : 0;
+                                        strtolower($student->sex) != 'male' && (int) $student->average == 0 ? $girls_absent++ : 0;
 
                                         echo '</td>';
 
 
                                         foreach ($grades as $grade) {
                                             if ($grade->gradefrom <= round($student->average, 0) && $grade->gradeupto >= round($student->average, 0)) {
-                                                echo '<td>' . $grade->grade . '</td>';
+                                                echo (int) $student->average==0 ?'<td></td>': '<td>' . $grade->grade . '</td>';
                                                 break;
                                             }
                                         }
@@ -305,7 +305,7 @@
                                     }
                                     ?>
                                     <?php if (true) { ?>
-                                                                                                                                                                                                                                                                                                    <!--<td data-title='Div'>-->
+                                                                                                                                                                                                                                                                                                                            <!--<td data-title='Div'>-->
                                         <?php
 //                                                    if ($classlevel->result_format == 'ACSEE') {
 ////                                                        echo '<span  class="division" format="' . $classlevel->result_format . '" student_id="' . $student['student_id'] . '" exam_id="' . $examID . '" class_id="' . $classesID . '" id="div' . $student['student_id'] . $examID . $classesID . '"></span>';
@@ -337,10 +337,10 @@
                                         ?></td>-->
                                     <?php } ?>
                                     <td data-title="School Rank">
-                                        <?php echo $student->school_rank; ?>
+                                        <?php echo (int) $student->average == 0 ? '' : $student->school_rank; ?>
                                     </td>
                                     <td data-title="Overall Rank">
-                                        <?php echo $student->rank; ?>
+                                        <?php echo (int) $student->average == 0 ? '' : $student->rank; ?>
                                     </td>
 
                                     <td data-title="Action" class="action_btn">
