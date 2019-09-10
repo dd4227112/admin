@@ -500,8 +500,8 @@ class Exam extends Controller {
                     $mark = isset($value->{$subject_name}) ? $value->{$subject_name} : null;
                     if ((float) $mark <= 0) {
                        
-                        $this->data['status'] .=  '<div class="alert alert-danger">'. $subject_name . ' is not properly defined. Kindly define it correctly in the excel document</div>';
-                        continue;
+                        $this->data['status'] .=  '<div class="alert alert-danger">'. $subject->name . ' subject has no marks for student '.$value->name.' Or its not properly defined. Kindly validate this with the excel document</div>';
+                        //continue;
                     }
                     $array = [
                         'subject_name' => $subject->name,
