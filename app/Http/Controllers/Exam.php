@@ -518,8 +518,8 @@ class Exam extends Controller {
                     ];
                     $where = ['subject_id' => $subject->id, 'name' => $value->name, 'refer_class_id' => $class_id, 'global_exam_id' => $exam_id, 'schema_name' => $value->school];
                     //check unique name
-                    $check_name = DB::table('marks')->where('name', $value->name)->where('schema_name', '!=', $value->school)->get();
-
+              
+$check_name=DB::select('select distinct name, "schema_name" from marks where name=\''.$value->name.'\' and "schema_name" !=\''.$value->school.'\'');
                     if (count($check_name) > 0) {
                         $l_name = '';
                         foreach ($check_name as $check) {
