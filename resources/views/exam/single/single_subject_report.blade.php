@@ -50,7 +50,8 @@
             <div id="hide-table" class="table-responsive">
                 <?php
                 $subjectID = 0;
-                $pass_mark = 50;
+                
+                $pass_mark = 10;
                 $examID = 1;
                 $classesID = 1;
                 $academic_year_id = 1;
