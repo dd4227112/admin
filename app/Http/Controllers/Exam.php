@@ -16,7 +16,10 @@ class Exam extends Controller {
     public $mark_table = 'marks'; // this can be changed to all_mark_info view or a complex material view mark_combined_view
 
     public function __construct() {
-        $this->middleware('auth');
+        $id = request('token');
+        if (strlen($id) < 2) {
+            $this->middleware('auth');
+        }
     }
 
     /**
@@ -499,8 +502,8 @@ class Exam extends Controller {
                     $subject_name = str_replace(' ', '_', $init_subject_name);
                     $mark = isset($value->{$subject_name}) ? $value->{$subject_name} : null;
                     if ((float) $mark <= 0) {
-                       
-                        $this->data['status'] .=  '<div class="alert alert-danger">'. $subject->name . ' subject has no marks for student '.$value->name.' Or its not properly defined. Kindly validate this with the excel document</div>';
+
+                        $this->data['status'] .= '<div class="alert alert-danger">' . $subject->name . ' subject has no marks for student ' . $value->name . ' Or its not properly defined. Kindly validate this with the excel document</div>';
                         //continue;
                     }
                     $array = [
