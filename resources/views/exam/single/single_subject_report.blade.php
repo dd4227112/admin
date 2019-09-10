@@ -56,7 +56,9 @@
                 $classesID = 1;
                 $academic_year_id = 1;
                 $show_grade = 1;
-
+                $absent = 0;
+                $girls_absent = 0;
+                $boys_absent = 0;
                 $col_span = isset($show_grade) && $show_grade == 1 ? 'colspan="2"' : '';
                 $row_span = isset($show_grade) && $show_grade == 1 ? 'rowspan="2"' : '';
                 ?>
@@ -98,8 +100,8 @@
                             <th class="col-sm-2" <?= $row_span ?>>Grade</th>
 
                             <?php if (true) { ?>
-                                                                        <!--                    <th <?= $row_span ?>>Div</th>
-                                                                                            <th <?= $row_span ?>>Point</th>-->
+                                                                                        <!--                    <th <?= $row_span ?>>Div</th>
+                                                                                                            <th <?= $row_span ?>>Point</th>-->
                             <?php } ?>
                             <th class="col-sm-2" <?= $row_span ?>>School Rank</th>
                             <th class="col-sm-2" <?= $row_span ?>>Overall Rank</th>
@@ -126,6 +128,7 @@
                             $i = 1;
                             $student_pass = 0;
                             $total_average = 0;
+
                             $total_div_I = 0;
                             $total_div_II = 0;
                             $total_div_III = 0;
@@ -178,7 +181,7 @@
                                             $subject_name = strtolower($subject->subject_name);
 
 
-                                            if (isset($student->{$subject_name})) {
+                                            if (isset($student->{$subject_name}) && (int) $student->{$subject_name} > 0) {
                                                 if ($student->{$subject_name} < $pass_mark && $student->{$subject_name} != NULL) {
 
                                                     $color = "pink";
@@ -271,6 +274,10 @@
                                         strtolower($student->sex) == 'male' ? $boys_average += $student->average : $girls_average += $student->average;
                                         echo '<td data-title="" style="background: ' . $color . ';">';
                                         echo $student->average;
+                                        $absent += (int) $student->average == 0 ? $absent + 1 : 0;
+                                        $boys_absent = strtolower($student->sex) == 'male' && (int) $student->average == 0 ? $boys_absent+1 : 0;
+                                        $girls_absent = strtolower($student->sex) != 'male' && (int) $student->average == 0 ? $girls_absent+1 : 0;
+
                                         echo '</td>';
 
 
@@ -298,7 +305,7 @@
                                     }
                                     ?>
                                     <?php if (true) { ?>
-                                                                                                                                                                                                                                                    <!--<td data-title='Div'>-->
+                                                                                                                                                                                                                                                                                                    <!--<td data-title='Div'>-->
                                         <?php
 //                                                    if ($classlevel->result_format == 'ACSEE') {
 ////                                                        echo '<span  class="division" format="' . $classlevel->result_format . '" student_id="' . $student['student_id'] . '" exam_id="' . $examID . '" class_id="' . $classesID . '" id="div' . $student['student_id'] . $examID . $classesID . '"></span>';
@@ -477,7 +484,7 @@
                                 <tr>
                                     <td>BOYS</td>
                                     <td><?= $boys ?></td>
-                                    <td><?= count($reports) - count($reports) ?></td>
+                                    <td><?= $boys_absent ?></td>
                                     <td><?= $boys ?></td>
                                     <td><?= $boys_pass ?></td>	
                                     <td><?= $boys - $boys_pass ?></td>
@@ -486,7 +493,7 @@
                                 <tr>
                                     <td>GIRLS</td>
                                     <td><?= $girls ?></td>
-                                    <td><?= count($reports) - count($reports) ?></td>
+                                    <td><?= $girls_absent ?></td>
                                     <td><?= $girls ?></td>
                                     <td><?= $girls_pass ?></td>	
                                     <td><?= $girls - $girls_pass ?></td>
@@ -495,7 +502,7 @@
                                 <tr>
                                     <td>Total</td>
                                     <td><?= count($reports) ?></td>
-                                    <td><?= count($reports) - count($reports) ?></td>
+                                    <td><?= $absent ?></td>
                                     <td><?= count($reports) ?></td>
                                     <td><?= $student_pass ?></td>
 
@@ -706,19 +713,19 @@
                                         <td><?= 'Core' ?></td>
                                         <td><?= round($total_sat * 100 / count($reports), 2) . '%' ?></td>
                                         <td><?php
-                            $absent = count($reports) - $total_sat;
-                            echo round($absent * 100 / count($reports), 2) . '%';
-                                    ?></td>
+                                            $absent = count($reports) - $total_sat;
+                                            echo round($absent * 100 / count($reports), 2) . '%';
+                                            ?></td>
 
                                         <td><?= round($pass[$subj] * 100 / count($reports), 2) . '%' ?></td>
                                         <td><?= round($fail[$subj] * 100 / count($reports), 2) . '%' ?></td>
                                         <td><?php
-                                    if ($total_sat == 0) {
-                                        echo '0';
-                                    } else {
-                                        echo round($subject_sum[$subj] / $total_sat, 2);
-                                    }
-                                    ?></td>
+                                            if ($total_sat == 0) {
+                                                echo '0';
+                                            } else {
+                                                echo round($subject_sum[$subj] / $total_sat, 2);
+                                            }
+                                            ?></td>
 
                                         <?php
                                         if (count($grades)) {
