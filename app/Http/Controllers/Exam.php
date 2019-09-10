@@ -359,7 +359,9 @@ class Exam extends Controller {
                 'exam_id' => 'required|min:1',
                 'class_id' => 'required|min:1',
             ]);
-            $class = DB::table('constant.refer_classes')->where('id', $class_id)->first();
+            $this->data['exam_definition'] = \App\Model\GlobalExam::find($exam_id);
+            $this->data['class_info']=$class = DB::table('constant.refer_classes')->where('id', $class_id)->first();
+            
             $this->data['grades'] = \App\Model\GlobalGrade::where('classlevel_id', $class->school_level_id)->orderBy('grade')->get();
             $sql = 'select distinct lower(subject_name) as subject_name from admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' and mark is not null order by 1';
             $this->data['subjects'] = DB::select($sql);
@@ -525,7 +527,7 @@ class Exam extends Controller {
                         foreach ($check_name as $check) {
                             $l_name .= $check->schema_name . ', ';
                         }
-                        $this->data['status'] .= '<div class="alert alert-danger">Student name ' . $value->name . ' is available in another school ' . $l_name . '. Marks for subject '.$subject->name.' not uploaded. Please change this name in your excel file and upload it again.</div>';
+                        $this->data['status'] .= '<div class="alert alert-danger">Student name ' . $value->name . ' is available in another school ' . $l_name . '. Marks for subject ' . $subject->name . ' not uploaded. Please change this name in your excel file and upload it again.</div>';
                         continue;
                     }
 
@@ -537,7 +539,6 @@ class Exam extends Controller {
                         DB::table('marks')->insert(array_merge($where, $array));
                         $this->data['status'] .= '<div class="alert alert-success">' . $subject->name . ' Marks for ' . $value->name . ' uploaded successfully</div>';
                     }
-                    
                 }
             }
             //  return redirect('exam/marking')->with('success', 'success');

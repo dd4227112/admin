@@ -45,94 +45,96 @@
                                 ?>
                             </div>
                         </div>
-                        <div class='form-group row' >
-                            <label for="class_id" class="col-sm-2 col-sm-offset-2 control-label">
-                                Class
-                            </label>
-                            <div class="col-sm-6">
-                                <?php
-                                $array = array("0" => 'select Class');
-                                foreach ($classes as $class) {
-                                    $array[$class->id] = $class->name;
-                                }
-                                $class_id = isset($class_id) ? $class_id : '0';
-                                $class_name = $array[$class_id];
-                                echo form_dropdown("class_id", $array, NULL, "id='class_id' class='form-control'");
-                                ?>
-                            </div>
-                        </div>
-                        <div id="report_filter_div">
+                        <div id="option_exam_parts" style="display: none;">
                             <div class='form-group row' >
-                                <label for="year" class="col-sm-2 col-sm-offset-2 control-label">
-                                    Academic Year
+                                <label for="class_id" class="col-sm-2 col-sm-offset-2 control-label">
+                                    Class
                                 </label>
                                 <div class="col-sm-6">
                                     <?php
-                                    $ac_array = array("0" => 'select Year');
-                                    if (isset($academic_years) && count($academic_years) > 0) {
+                                    $array = array("0" => 'select Class');
+                                    foreach ($classes as $class) {
+                                        $array[$class->id] = $class->name;
+                                    }
+                                    $class_id = isset($class_id) ? $class_id : '0';
+                                    $class_name = $array[$class_id];
+                                    echo form_dropdown("class_id", $array, NULL, "id='class_id' class='form-control'");
+                                    ?>
+                                </div>
+                            </div>
+                            <div id="report_filter_div">
+                                <div class='form-group row' >
+                                    <label for="year" class="col-sm-2 col-sm-offset-2 control-label">
+                                        Academic Year
+                                    </label>
+                                    <div class="col-sm-6">
+                                        <?php
+                                        $ac_array = array("0" => 'select Year');
+                                        if (isset($academic_years) && count($academic_years) > 0) {
 
 //                                            foreach ($academic_years as $academic) {
 //                                                $ac_array[$academic->academic_year] = $academic->academic_year;
 //                                            }
-                                    }
-
-                                    echo form_dropdown("academic_year_id", $academic_years, old("academic_year_id"), "id='academic_year_id' class='form-control'");
-                                    ?>
-                                </div>
-                            </div>
-
-
-                            <div class='form-group row' >
-                                <label for="type_id" class="col-sm-2 col-sm-offset-2 control-label">
-                                    Report Type
-                                </label>
-                                <div class="col-sm-6">
-                                    <?php
-                                    $type_array = array("0" => 'Select Type');
-                                    $type_array['school'] = 'School Ranking Report';
-                                    $type_array['student'] = 'Student Average Report';
-                                    $type_array['subject'] = 'Student Overall Report';
-                                    echo form_dropdown("type_id", $type_array, old("type_id"), "id='type_id' class='form-control'");
-                                    ?>
-                                </div> <span id="sem_id"></span>
-                            </div>
-                            <div class='form-group row' >
-                                <label for="subject_id" class="col-sm-2 col-sm-offset-2 control-label">
-                                    Subject
-                                </label>
-                                <div class="col-sm-6">
-                                    <?php
-                                    $subject_array = array("0" => 'Select Subject');
-                                    if (isset($subjects)) {
-                                        $subject_array['all'] = 'All Subjects';
-                                        foreach ($subjects as $subject) {
-                                            $subject_array[$subject->subject_name] = $subject->subject_name;
                                         }
-                                    }
-                                    echo form_dropdown("subject_id", $subject_array, old("subject_id"), "id='subject_id' class='form-control'");
-                                    ?>
-                                </div>
-                            </div>
 
-
-                            <div class="form-group row">
-                                <label for="subject_id" class="col-sm-2 col-sm-offset-2 control-label">
-
-                                </label>
-                                <div class="col-sm-6">
-                                    <div id="grade_option" style="display: none">
-                                        <div class="form-check form-check-inline">
-                                            <label class="form-check-label">
-                                                <input class="form-check-input" type="radio" name="gender" id="gender-1" value="average" checked=""> Rank By AVG
-                                            </label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <label class="form-check-label">
-                                                <input class="form-check-input" type="radio" name="gender" id="gender-2" value="total"> Rank by Total
-                                            </label>
-                                        </div>
+                                        echo form_dropdown("academic_year_id", $academic_years, old("academic_year_id"), "id='academic_year_id' class='form-control'");
+                                        ?>
                                     </div>
-                                    <input type="submit" class="btn btn-success" style="margin-bottom:0px" value="View Report" >
+                                </div>
+
+
+                                <div class='form-group row' >
+                                    <label for="type_id" class="col-sm-2 col-sm-offset-2 control-label">
+                                        Report Type
+                                    </label>
+                                    <div class="col-sm-6">
+                                        <?php
+                                        $type_array = array("0" => 'Select Type');
+                                        $type_array['school'] = 'School Ranking Report';
+                                        $type_array['student'] = 'Student Average Report';
+                                        $type_array['subject'] = 'Student Overall Report';
+                                        echo form_dropdown("type_id", $type_array, old("type_id"), "id='type_id' class='form-control'");
+                                        ?>
+                                    </div> <span id="sem_id"></span>
+                                </div>
+                                <div class='form-group row' >
+                                    <label for="subject_id" class="col-sm-2 col-sm-offset-2 control-label">
+                                        Subject
+                                    </label>
+                                    <div class="col-sm-6">
+                                        <?php
+                                        $subject_array = array("0" => 'Select Subject');
+                                        if (isset($subjects)) {
+                                            $subject_array['all'] = 'All Subjects';
+                                            foreach ($subjects as $subject) {
+                                                $subject_array[$subject->subject_name] = $subject->subject_name;
+                                            }
+                                        }
+                                        echo form_dropdown("subject_id", $subject_array, old("subject_id"), "id='subject_id' class='form-control'");
+                                        ?>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group row">
+                                    <label for="subject_id" class="col-sm-2 col-sm-offset-2 control-label">
+
+                                    </label>
+                                    <div class="col-sm-6">
+                                        <div id="grade_option" style="display: none">
+                                            <div class="form-check form-check-inline">
+                                                <label class="form-check-label">
+                                                    <input class="form-check-input" type="radio" name="gender" id="gender-1" value="average" checked=""> Rank By AVG
+                                                </label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <label class="form-check-label">
+                                                    <input class="form-check-input" type="radio" name="gender" id="gender-2" value="total"> Rank by Total
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <input type="submit" class="btn btn-success" style="margin-bottom:0px" value="View Report" >
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -144,7 +146,34 @@
 
             <div class="card">
                 <h5 class="card-header">Exam Reports</h5>
-                <?php
+                <?php if (count($exam_definition) > 0) { ?>
+                    <div class="row">
+                        <div class="col-sm-3"></div>
+                        <div class="col-sm-6 list-group">
+                            <div class="list-group-item">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Exam Name</th>
+                                            <th>Exam Date</th>
+                                            <th>Class Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><?= $exam_definition->name ?></td>
+                                            <td><?= $exam_definition->date ?></td>
+                                            <td><?= $class_info->name ?></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <?php
+                }
                 if (count($reports) > 0 && request('type_id') != 'subject') {
 
                     $schools = [];
@@ -170,7 +199,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th><?= request('type_id') == 'school' ? 'School ' : 'Student ' ?> Name</th>
-                                                <?php // request('type_id') == 'school' ? '' : '<th>Sex</th>' ?>      
+                                            <?php // request('type_id') == 'school' ? '' : '<th>Sex</th>' ?>      
                                             <th>Subject</th>
                                             <th>Average</th>
                                             <th>Grade</th>
@@ -197,7 +226,7 @@
                                             <tr>
                                                 <td><?= $i ?></td>
                                                 <td><?= request('type_id') == 'school' ? $report->schema_name : $report->name ?></td>
-<!--                                                 <?php // request('type_id') == 'school' ? '' : '<td>'.$report->sex.'</td>' ?> -->
+                                                <!--                                                 <?php // request('type_id') == 'school' ? '' : '<td>'.$report->sex.'</td>'   ?> -->
                                                 <td><?= ucfirst(request('subject_id')) ?></td>
                                                 <td><?= $report->average ?></td>
                                                 <td><?= $report->grade ?></td>
@@ -214,7 +243,7 @@
                                                         <?= $report->schema_name ?>
                                                     </td>
                                                 <?php } ?>
-                                                    <!--<td><?php //$report->region ?></td>-->
+                                            <!--<td><?php //$report->region   ?></td>-->
                                             </tr>
                                             <?php
                                             $i++;
@@ -326,6 +355,15 @@
                     $('#subject_id').html(data);
                 }
             });
+        }
+    });
+    $('#exam_id').change(function (event) {
+
+        var exam_id = $(this).val();
+        if (exam_id === '0') {
+            $('#option_exam_parts').hide();
+        } else {
+            $('#option_exam_parts').show();
         }
     });
 </script>

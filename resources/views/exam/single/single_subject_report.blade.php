@@ -30,7 +30,7 @@
         }*/
 </style>
 
-<div class="sub-title">Tab With Icon</div>                                        
+<div class="sub-title"></div>                                        
 <div class="sttabs tabs-style-iconbox">
 
     <ul class="nav nav-tabs md-tabs " role="tablist">
