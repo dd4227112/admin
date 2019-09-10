@@ -506,6 +506,7 @@ class Exam extends Controller {
                         $this->data['status'] .= '<div class="alert alert-danger">' . $subject->name . ' subject has no marks for student ' . $value->name . ' Or its not properly defined. Kindly validate this with the excel document</div>';
                         //continue;
                     }
+
                     $array = [
                         'subject_name' => $subject->name,
                         'roll' => $value->roll,
@@ -516,6 +517,18 @@ class Exam extends Controller {
                         'schema_name' => $value->school
                     ];
                     $where = ['subject_id' => $subject->id, 'name' => $value->name, 'refer_class_id' => $class_id, 'global_exam_id' => $exam_id, 'schema_name' => $value->school];
+                    //check unique name
+                    $check_name = DB::table('marks')->where(['subject_id' => $subject->id, 'name' => $value->name, 'refer_class_id' => $class_id, 'global_exam_id' => $exam_id])->where('mark', '>', 0)->get('name');
+
+                    if (count($check_name) > 0) {
+                        $l_name = '';
+                        foreach ($check_name as $check) {
+                            $l_name .= $check->name . ', ';
+                        }
+                        $this->data['status'] .= '<div class="alert alert-danger">Student name ' . $value->name . ' is available in another school ' . $l_name . '. Marks not uploaded. Please change this name in your excel file and upload it again./div>';
+                        continue;
+                    }
+
                     $return = DB::table('marks')->where($where);
                     if (count($return->first()) == 1) {
                         $return->update($array);
