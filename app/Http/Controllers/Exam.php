@@ -499,9 +499,8 @@ class Exam extends Controller {
                     $subject_name = str_replace(' ', '_', $init_subject_name);
                     $mark = isset($value->{$subject_name}) ? $value->{$subject_name} : null;
                     if ((float) $mark <= 0) {
-                        echo $subject_name;
-                        dd($value);
-                        exit;
+                       
+                        $this->data['status'] .=  '<div class="alert alert-danger">'. $subject_name . ' is not properly defined. Kindly define it correctly in the excel document</div>';
                         continue;
                     }
                     $array = [

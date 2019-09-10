@@ -50,7 +50,7 @@
             <div id="hide-table" class="table-responsive">
                 <?php
                 $subjectID = 0;
-                
+
                 $pass_mark = 10;
                 $examID = 1;
                 $classesID = 1;
@@ -98,8 +98,8 @@
                             <th class="col-sm-2" <?= $row_span ?>>Grade</th>
 
                             <?php if (true) { ?>
-                                                                    <!--                    <th <?= $row_span ?>>Div</th>
-                                                                                        <th <?= $row_span ?>>Point</th>-->
+                                                                        <!--                    <th <?= $row_span ?>>Div</th>
+                                                                                            <th <?= $row_span ?>>Point</th>-->
                             <?php } ?>
                             <th class="col-sm-2" <?= $row_span ?>>School Rank</th>
                             <th class="col-sm-2" <?= $row_span ?>>Overall Rank</th>
@@ -193,13 +193,15 @@
                                                 echo $student->{$subject_name};
                                                 echo '</td>';
                                                 if (isset($show_grade) && $show_grade == 1) {
+                                                    $grade_tag = '<td></td>';
                                                     foreach ($grades as $grade) {
                                                         if ($grade->gradefrom <= round($student->{$subject_name}, 0) && $grade->gradeupto >= round($student->{$subject_name}, 0)) {
 
 
-                                                            echo ' <td>' . $grade->grade . '</td>';
+                                                            $grade_tag = ' <td>' . $grade->grade . '</td>';
                                                         }
                                                     }
+                                                    echo $grade_tag;
                                                 }
 
                                                 $sum_subj[$subject_name] += $student->{$subject_name};
@@ -220,7 +222,7 @@
                                             } else {
                                                 //here you will check if this student subscribe to this subject or not . if yes, place a yellow box, if not disable the input if result format is based on the subject counted otherwise, place yellow and content editable in all cases
                                                 echo '<td  data-title="' . $subject_name . '" class="mark" subject_id="" student_id="' . $student->student_id . '"></td>';
-                                                echo isset($show_grade) && $show_grade == 1 ? '<td></td>' : '';
+                                                echo isset($show_grade) && (int) $show_grade == 1 ? '<td></td>' : '';
                                             }
                                         }
                                     } else {
@@ -296,7 +298,7 @@
                                     }
                                     ?>
                                     <?php if (true) { ?>
-                                                                                                                                                                                                                                        <!--<td data-title='Div'>-->
+                                                                                                                                                                                                                                                    <!--<td data-title='Div'>-->
                                         <?php
 //                                                    if ($classlevel->result_format == 'ACSEE') {
 ////                                                        echo '<span  class="division" format="' . $classlevel->result_format . '" student_id="' . $student['student_id'] . '" exam_id="' . $examID . '" class_id="' . $classesID . '" id="div' . $student['student_id'] . $examID . $classesID . '"></span>';
@@ -404,7 +406,7 @@
                                 <!--<th class="col-sm-2">Rank</th>-->
                                 <th class="col-sm-2">Rank</th>
                                 <th class="col-sm-1"></th>
-<th class="col-sm-1"></th>
+                                <th class="col-sm-1"></th>
                                 <?php
                                 if ($subjectID == 0) {
                                     //Loop in all subjects to show list of them here
@@ -479,7 +481,7 @@
                                     <td><?= $boys ?></td>
                                     <td><?= $boys_pass ?></td>	
                                     <td><?= $boys - $boys_pass ?></td>
-                                    <td><?= round($boys_average / max($boys,1), 2) ?></td>	
+                                    <td><?= round($boys_average / max($boys, 1), 2) ?></td>	
                                 </tr>
                                 <tr>
                                     <td>GIRLS</td>
@@ -488,7 +490,7 @@
                                     <td><?= $girls ?></td>
                                     <td><?= $girls_pass ?></td>	
                                     <td><?= $girls - $girls_pass ?></td>
-                                    <td><?= round($girls_average / max($girls,1), 2) ?></td>	
+                                    <td><?= round($girls_average / max($girls, 1), 2) ?></td>	
                                 </tr>
                                 <tr>
                                     <td>Total</td>
@@ -498,7 +500,7 @@
                                     <td><?= $student_pass ?></td>
 
                                     <td><?= count($reports) - $student_pass ?></td>
-                                    <td><?= round($total_average / count(max($reports,1)), 2) ?></td>	
+                                    <td><?= round($total_average / count(max($reports, 1)), 2) ?></td>	
                                 </tr>
                             </tbody>
                         </table>
@@ -618,10 +620,10 @@
                             </thead>
                             <tbody>
                                 <?php
-                                $total_grade=[];
-                                 foreach ($grades as $grade) {
-                                     $total_grade[$grade->grade]=0;
-                                 }
+                                $total_grade = [];
+                                foreach ($grades as $grade) {
+                                    $total_grade[$grade->grade] = 0;
+                                }
                                 foreach ($subjects as $subject) {
                                     $subj = strtolower($subject->subject_name);
                                     $total_sat = $pass[$subj] + $fail[$subj];
@@ -639,31 +641,30 @@
                                             if ($total_sat == 0) {
                                                 echo '0';
                                             } else {
-                                                echo round($subject_sum[$subj] / max($total_sat,1), 2);
+                                                echo round($subject_sum[$subj] / max($total_sat, 1), 2);
                                             }
                                             ?></td>
 
                                         <?php
                                         if (count($grades)) {
                                             foreach ($grades as $grade) {
-                                                
                                                 ?>
                                                 <td><?= ${$subj . '_' . $grade->grade} ?></td>
 
                                                 <?php
-                                                $total_grade[$grade->grade]+=${$subj . '_' . $grade->grade};
+                                                $total_grade[$grade->grade] += ${$subj . '_' . $grade->grade};
                                             }
                                         }
                                         ?>
                                     </tr>
                                 <?php } ?>
-                                     <tr>
+                                <tr>
                                     <td colspan="8">Total</td>
                                     <?php
                                     if (count($grades)) {
                                         foreach ($grades as $grade) {
                                             ?>
-                                            <td><?=$total_grade[$grade->grade]?></td>
+                                            <td><?= $total_grade[$grade->grade] ?></td>
 
                                             <?php
                                         }
@@ -672,7 +673,7 @@
                                 </tr>
                             </tbody>
                             <tfoot>
-                               
+
                             </tfoot>
                             <tbody>
                                 <tr>
@@ -705,19 +706,19 @@
                                         <td><?= 'Core' ?></td>
                                         <td><?= round($total_sat * 100 / count($reports), 2) . '%' ?></td>
                                         <td><?php
-                                            $absent = count($reports) - $total_sat;
-                                            echo round($absent * 100 / count($reports), 2) . '%';
-                                            ?></td>
+                            $absent = count($reports) - $total_sat;
+                            echo round($absent * 100 / count($reports), 2) . '%';
+                                    ?></td>
 
                                         <td><?= round($pass[$subj] * 100 / count($reports), 2) . '%' ?></td>
                                         <td><?= round($fail[$subj] * 100 / count($reports), 2) . '%' ?></td>
                                         <td><?php
-                                            if ($total_sat == 0) {
-                                                echo '0';
-                                            } else {
-                                                echo round($subject_sum[$subj] / $total_sat, 2);
-                                            }
-                                            ?></td>
+                                    if ($total_sat == 0) {
+                                        echo '0';
+                                    } else {
+                                        echo round($subject_sum[$subj] / $total_sat, 2);
+                                    }
+                                    ?></td>
 
                                         <?php
                                         if (count($grades)) {
