@@ -525,7 +525,7 @@ class Exam extends Controller {
                         foreach ($check_name as $check) {
                             $l_name .= $check->name . ', ';
                         }
-                        $this->data['status'] .= '<div class="alert alert-danger">Student name ' . $value->name . ' is available in another school ' . $l_name . '. Marks not uploaded. Please change this name in your excel file and upload it again./div>';
+                        $this->data['status'] .= '<div class="alert alert-danger">Student name ' . $value->name . ' is available in another school ' . $l_name . '. Marks not uploaded. Please change this name in your excel file and upload it again.</div>';
                         continue;
                     }
 
