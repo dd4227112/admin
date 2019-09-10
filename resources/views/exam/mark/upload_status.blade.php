@@ -6,7 +6,7 @@
         <div class="page-header">
             <div class="page-header-title">
                 <h4>Upload Marks by Excel</h4>
-                <span>Please use the correct excel format to upload marks</span>
+                <span></span>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -27,17 +27,27 @@
         <div class="page-body">
             <div class="row">
                 <div class="col-sm-12">
-                    <span class="pull-left"> @if(url()->previous()!=url()->current())
-                        <a class="btn btn-sm btn-info" href="{{url()->previous()}}"><i class="fa fa-arrow-circle-left"> @lang('application_lang.go_back')</i></a>
-                        @endif
-                    </span>
-                    <div class="col-sm-6 col-sm-offset-3 list-group">
-                        <div class="list-group-item list-group-item-warning">
+                    <!-- Basic Form Inputs card start -->
+                    <div class="card">
+                        <div class="card-header">
+                            <!--<h5>Basic Form Inputs</h5>-->
+                            <span>Marks uploaded successfully</span>
+                            <div class="card-header-right">
+                                <i class="icofont icofont-rounded-down"></i>
+                                <i class="icofont icofont-refresh"></i>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <p id="notes" class="notes"></p>
+                        </div>
+                        <div class="card-block">
                             <?= $status ?>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- Page body end -->
     </div>
 </div>
+@endsection

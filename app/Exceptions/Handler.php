@@ -44,6 +44,22 @@ class Handler extends ExceptionHandler {
         $filename = str_replace('-', '_', date('Y-M-d')) . '.html';
         error_log($err, 3, dirname(__FILE__) . "/../../storage/logs/" . $filename);
         $this->sendLog($err);
+         $line = @$e->getTrace()[0]['line'];
+        $object = [
+            'error_message' => $e->getMessage() . ' on line ' . $line . ' of file ' . @$e->getTrace()[0]['file'],
+            'file' => @$e->getTrace()[0]['file'],
+            'route' => createRoute(),
+            "url" => url()->current(),
+            'error_instance' => get_class($e),
+            'request' => json_encode(request()->all()),
+            "schema_name" => str_replace('.', null, set_schema_name()),
+            'created_by' => session('id'),
+            'created_by_table' => session('table')
+        ];
+        if (!preg_match('/ValidatesRequests.php/i', @$e->getTrace()[0]['file']) || !preg_match('/Router.php/i', @$e->getTrace()[0]['file'])) {
+            $this->createLog($e);
+            DB::table('admin.error_logs')->insert($object);
+        }
     }
 
     public function sendLog($err) {

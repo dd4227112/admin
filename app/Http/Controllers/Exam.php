@@ -493,8 +493,10 @@ class Exam extends Controller {
             $subjects = \App\Models\Subject::where('class_id', $class_id)->get();
             $this->data['status'] = '';
             foreach ($results as $value) {
+
                 foreach ($subjects as $subject) {
-                    $mark = isset($value->{strtolower($subject->name)}) ? $value->{strtolower($subject->name)} : null;
+                    $subject_name = strtolower(str_replace('  ', '_', preg_replace('!\s&+!', ' ', $subject->name)));
+                    $mark = isset($value->{$subject_name}) ? $value->{$subject_name} : null;
                     if ((float) $mark <= 0) {
                         continue;
                     }
@@ -512,7 +514,7 @@ class Exam extends Controller {
                     if (count($return->first()) == 1) {
                         $return->update($array);
                     } else {
-                        DB::table('marks')->insert(array_merge($where, $array));
+                         DB::table('marks')->insert(array_merge($where, $array));
                     }
                     $this->data['status'] .= '<div class="alert alert-success">' . $subject->name . ' Marks for ' . $value->name . ' uploaded successfully</div>';
                 }
@@ -560,19 +562,19 @@ class Exam extends Controller {
         }
         return view('exam.subject.add', $this->data);
     }
-    
+
     public function viewMark() {
-          $state = request()->segment(3);
-          $this->data['exam_id']=$state;
-        $this->data['marks'] = DB::select('select distinct "schema_name", count(*) from marks  where global_exam_id='.$state.' group by "schema_name" ');
+        $state = request()->segment(3);
+        $this->data['exam_id'] = $state;
+        $this->data['marks'] = DB::select('select distinct "schema_name", count(*) from marks  where global_exam_id=' . $state . ' group by "schema_name" ');
         return view('exam.mark.view', $this->data);
     }
-    
+
     public function deleteMark() {
         $school = request()->segment(4);
-         $state = request()->segment(3);
-         DB::statement('delete from marks where "schema_name"=\''.$school.'\' and global_exam_id='.$state);
-         return redirect()->back()->with('success','success');
+        $state = request()->segment(3);
+        DB::statement('delete from marks where "schema_name"=\'' . $school . '\' and global_exam_id=' . $state);
+        return redirect()->back()->with('success', 'success');
     }
 
 }
