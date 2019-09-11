@@ -156,88 +156,88 @@
                         <div class="col-sm-12 col-xl-6">
                             <div class="list-group-item">
                                 <div class="table">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Exam Name</th>
-                                            <th>Exam Date</th>
-                                            <th>Class Name</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><?= $exam_definition->name ?></td>
-                                            <td><?= $exam_definition->date ?></td>
-                                            <td><?= $class_info->name ?></td>
-                                            <td>
-                                                <?php
-                                                $report_published = DB::table('exam_reports')->where('token', sha1(md5($exam_definition->id)))->first();
-                                                if (count($report_published) == 1) {
-                                                    ?>
-                                                    <a href="<?= url('exam/report/single/null?token=' . $report_published->token) ?>" class="label label-success label-sm waves-effect">Exam Published</a>  
-                                                <?php } else {
-                                                    ?>
-                                                    Not Published: <br/>
-                                                    <a href="#" class="label label-warning label-sm waves-effect" data-toggle="modal" data-target="#large_modal">Click to Publish</a>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Exam Name</th>
+                                                <th>Exam Date</th>
+                                                <th>Class Name</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><?= $exam_definition->name ?></td>
+                                                <td><?= $exam_definition->date ?></td>
+                                                <td><?= $class_info->name ?></td>
+                                                <td>
                                                     <?php
-                                                    if (isset($schools) && count($schools) > 0) {
+                                                    $report_published = DB::table('exam_reports')->where('token', sha1(md5($exam_definition->id)))->first();
+                                                    if (count($report_published) == 1) {
                                                         ?>
-                                                        <div class="modal fade" id="large_modal" tabindex="-1" role="dialog">
-                                                            <div class="modal-dialog modal-lg" role="document">
-                                                                <form action="<?= url('exam/createReport') ?>" method="post">
-                                                                    <div class="modal-content">
-                                                                        <div class="modal-header">
-                                                                            <h4 class="modal-title">Publish Exam Report</h4>
-                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                <span aria-hidden="true">&times;</span>
-                                                                            </button>
-                                                                        </div>
-                                                                        <div class="modal-body">
-                                                                            <p>Fill this form to publish this Exam </p>
-                                                                            <br/>
-
-                                                                            <div class="form-group row">
-                                                                                <label class="col-sm-2 col-form-label">Report Name</label>
-                                                                                <div class="col-sm-10">
-                                                                                    <input type="text" class="form-control" name="name" value="<?= $exam_definition->name ?>" disabled="">
-                                                                                </div>
+                                                        <a href="<?= url('exam/report/single/null?token=' . $report_published->token) ?>" class="label label-success label-sm waves-effect">Exam Published</a>  
+                                                    <?php } else {
+                                                        ?>
+                                                        Not Published: <br/>
+                                                        <a href="#" class="label label-warning label-sm waves-effect" data-toggle="modal" data-target="#large_modal">Click to Publish</a>
+                                                        <?php
+                                                        if (isset($schools) && count($schools) > 0) {
+                                                            ?>
+                                                            <div class="modal fade" id="large_modal" tabindex="-1" role="dialog">
+                                                                <div class="modal-dialog modal-lg" role="document">
+                                                                    <form action="<?= url('exam/createReport') ?>" method="post">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h4 class="modal-title">Publish Exam Report</h4>
+                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </button>
                                                                             </div>
+                                                                            <div class="modal-body">
+                                                                                <p>Fill this form to publish this Exam </p>
+                                                                                <br/>
 
-
-                                                                            <div class="form-group row">
-                                                                                <label class="col-sm-2 col-form-label">Schools To Exclude</label>
-                                                                                <div class="col-sm-10">
-                                                                                    <select name="schools[]" class="form-control col-sm-12" multiple="multiple">
-                                                                                        <option value="0">Select One or more school</option>
-                                                                                        <?php
-                                                                                        foreach ($schools as $school) {
-                                                                                            ?>
-                                                                                            <option value="<?= $school->school ?>"><?= $school->school ?></option>
-                                                                                        <?php } ?>
-                                                                                    </select>
+                                                                                <div class="form-group row">
+                                                                                    <label class="col-sm-2 col-form-label">Report Name</label>
+                                                                                    <div class="col-sm-10">
+                                                                                        <input type="text" class="form-control" name="name" value="<?= $exam_definition->name ?>" disabled="">
+                                                                                    </div>
                                                                                 </div>
+
+
+                                                                                <div class="form-group row">
+                                                                                    <label class="col-sm-2 col-form-label">Schools To Exclude</label>
+                                                                                    <div class="col-sm-10">
+                                                                                        <select name="schools[]" class="form-control col-sm-12" multiple="multiple">
+                                                                                            <option value="0">Select One or more school</option>
+                                                                                            <?php
+                                                                                            foreach ($schools as $school) {
+                                                                                                ?>
+                                                                                                <option value="<?= $school->school ?>"><?= $school->school ?></option>
+                                                                                            <?php } ?>
+                                                                                        </select>
+                                                                                    </div>
+                                                                                </div>
+
+
                                                                             </div>
-
-
+                                                                            <div class="modal-footer">
+                                                                                <?= csrf_field() ?>
+                                                                                <input type="hidden" name="exam_id" value="<?= $exam_definition->id ?>"/>
+                                                                                <input type="hidden" name="class_id" value="<?= $class_info->id ?>"/>
+                                                                                <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                                                                                <button type="submit" class="btn btn-primary waves-effect waves-light ">Publish Exam</button>
+                                                                            </div>
                                                                         </div>
-                                                                        <div class="modal-footer">
-                                                                            <?= csrf_field() ?>
-                                                                            <input type="hidden" name="exam_id" value="<?= $exam_definition->id ?>"/>
-                                                                            <input type="hidden" name="class_id" value="<?= $class_info->id ?>"/>
-                                                                            <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                                                                            <button type="submit" class="btn btn-primary waves-effect waves-light ">Publish Exam</button>
-                                                                        </div>
-                                                                    </div>
-                                                                </form>
+                                                                    </form>
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                        <?php } ?>
                                                     <?php } ?>
-                                                <?php } ?>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -267,90 +267,90 @@
                             <div class="tab-pane active" id="home7" role="tabpanel" aria-expanded="true">
 
                                 <div class="col-lg-12 table-responsive">
-                                   
-                                <table id="example23" class="dataTable nowrap table color-table success-table">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th><?= request('type_id') == 'school' ? 'School ' : 'Student ' ?> Name</th>
-                                            <?php // request('type_id') == 'school' ? '' : '<th>Sex</th>'   ?>      
-                                            <th>Subject</th>
-                                            <th>Average</th>
-                                            <th>Grade</th>
-                                           <?= request('type_id') == 'school' ?'':'<th class="col-sm-2">School Rank</th>'?>
-                                            <th class="col-sm-2">Overall Rank</th>
-                                            <?= request('type_id') == 'school' ? '<th>Action</th>' : '<th>School</th>' ?>
-                                            <!--<th>Region</th>-->
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        $i = 1;
-                                        $grade_school = [];
-                                        foreach ($grades as $grade) {
-                                            $grade_{$grade->grade} = 0;
-                                            //$grade_school[$grade->grade]=[];
-                                        }
 
-                                        foreach ($reports as $report) {
-                                            $grade_{$report->grade} ++;
-
-                                            array_push($grade_school, [$report->schema_name => $report->grade]);
-                                            ?>
+                                    <table id="example23" class="dataTable nowrap table color-table success-table">
+                                        <thead>
                                             <tr>
-                                                <td><?= $i ?></td>
-                                                <td><?= request('type_id') == 'school' ? $report->schema_name : $report->name ?></td>
-                                                <!--                                                 <?php // request('type_id') == 'school' ? '' : '<td>'.$report->sex.'</td>'           ?> -->
-                                                <td><?= ucfirst(request('subject_id')) ?></td>
-                                                <td><?= $report->average ?></td>
-                                                <td><?= $report->grade ?></td>
-                                                <?= request('type_id') == 'school' ?'':'<td>'.$report->school_rank.'</td>'?>
-                                                <td><?= $report->rank ?></td>
-                                                <?php
-                                                if (request('type_id') == 'school') {
-                                                    ?>
-                                                    <td>
-                                                        <!--<a class="btn btn-success btn-sm" href="#">View</a>-->
-                                                    </td>
-                                                <?php } else { ?>
-                                                    <td>
-                                                        <?= $report->schema_name ?>
-                                                    </td>
-                                                <?php } ?>
-            <!--<td><?php //$report->region          ?></td>-->
+                                                <th>#</th>
+                                                <th><?= request('type_id') == 'school' ? 'School ' : 'Student ' ?> Name</th>
+                                                <?php // request('type_id') == 'school' ? '' : '<th>Sex</th>'   ?>      
+                                                <th>Subject</th>
+                                                <th>Average</th>
+                                                <th>Grade</th>
+                                                <?= request('type_id') == 'school' ? '' : '<th class="col-sm-2">School Rank</th>' ?>
+                                                <th class="col-sm-2">Overall Rank</th>
+                                                <?= request('type_id') == 'school' ? '<th>Action</th>' : '<th>School</th>' ?>
+                                                <!--<th>Region</th>-->
                                             </tr>
+                                        </thead>
+                                        <tbody>
                                             <?php
-                                            $i++;
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>        
-                            </div>
+                                            $i = 1;
+                                            $grade_school = [];
+                                            foreach ($grades as $grade) {
+                                                $grade_{$grade->grade} = 0;
+                                                //$grade_school[$grade->grade]=[];
+                                            }
+
+                                            foreach ($reports as $report) {
+                                                $grade_{$report->grade} ++;
+
+                                                array_push($grade_school, [$report->schema_name => $report->grade]);
+                                                ?>
+                                                <tr>
+                                                    <td><?= $i ?></td>
+                                                    <td><?= request('type_id') == 'school' ? $report->schema_name : $report->name ?></td>
+                                                    <!--                                                 <?php // request('type_id') == 'school' ? '' : '<td>'.$report->sex.'</td>'            ?> -->
+                                                    <td><?= ucfirst(request('subject_id')) == '0' ? 'All Subjects' : ucfirst(request('subject_id')) ?></td>
+                                                    <td><?= $report->average ?></td>
+                                                    <td><?= $report->grade ?></td>
+                                                    <?= request('type_id') == 'school' ? '' : '<td>' . $report->school_rank . '</td>' ?>
+                                                    <td><?= $report->rank ?></td>
+                                                    <?php
+                                                    if (request('type_id') == 'school') {
+                                                        ?>
+                                                        <td>
+                                                            <!--<a class="btn btn-success btn-sm" href="#">View</a>-->
+                                                        </td>
+                                                    <?php } else { ?>
+                                                        <td>
+                                                            <?= $report->schema_name ?>
+                                                        </td>
+                                                    <?php } ?>
+            <!--<td><?php //$report->region           ?></td>-->
+                                                </tr>
+                                                <?php
+                                                $i++;
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>        
+                                </div>
                             </div>
                             <div  class="tab-pane" id="profile7" role="tabpanel" aria-expanded="false">
                                 <h2>Summary</h2>
                                 <div class="col-lg-12 table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <?php foreach ($grades as $grade) { ?>
-                                                <th><?= $grade->grade ?></th>                                 
-                                            <?php }
-                                            ?>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <?php foreach ($grades as $grade) { ?>
+                                                    <th><?= $grade->grade ?></th>                                 
+                                                <?php }
+                                                ?>
 
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>No of <?= request('type_id') == 'school' ? 'Schools ' : 'Students ' ?></td>
-                                            <?php foreach ($grades as $grade) { ?>
-                                                <td><?= $grade_{$grade->grade} ?></td>                                 
-                                            <?php }
-                                            ?>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>No of <?= request('type_id') == 'school' ? 'Schools ' : 'Students ' ?></td>
+                                                <?php foreach ($grades as $grade) { ?>
+                                                    <td><?= $grade_{$grade->grade} ?></td>                                 
+                                                <?php }
+                                                ?>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                                 <h2>Grading Summary per School</h2>
 
@@ -372,31 +372,31 @@
                                 $uschemas = (array_unique($schemas));
                                 ?>
                                 <div class="col-lg-12 table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>School</th>
-                                            <?php foreach ($grades as $grade) { ?>
-                                                <th><?= $grade->grade ?></th>                                 
-                                            <?php }
-                                            ?>
-
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        foreach ($uschemas as $sname) {
-                                            ?>
+                                    <table class="table">
+                                        <thead>
                                             <tr>
-                                                <td><?= $sname ?></td>
+                                                <th>School</th>
                                                 <?php foreach ($grades as $grade) { ?>
-                                                    <td><?= isset($mc[$sname][$grade->grade]) ? $mc[$sname][$grade->grade] : 0 ?></td>                                 
+                                                    <th><?= $grade->grade ?></th>                                 
                                                 <?php }
                                                 ?>
+
                                             </tr>
-                                        <?php } ?>
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            foreach ($uschemas as $sname) {
+                                                ?>
+                                                <tr>
+                                                    <td><?= $sname ?></td>
+                                                    <?php foreach ($grades as $grade) { ?>
+                                                        <td><?= isset($mc[$sname][$grade->grade]) ? $mc[$sname][$grade->grade] : 0 ?></td>                                 
+                                                    <?php }
+                                                    ?>
+                                                </tr>
+                                            <?php } ?>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div> 
