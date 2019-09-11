@@ -88,7 +88,7 @@ class Account extends Controller {
             $client_record = \App\Models\Client::find($client_id);
             if (request('force_new') == true) {
                 $user_invoice = [];
-                $reference = 'SASA11' . date('Y') . $client_record->id.rand(10,100);
+                $reference = 'SASA11' . date('Y') . $client_record->id . rand(10, 100);
             } else {
                 $user_invoice = Invoice::where('client_id', $client_id)->first();
                 $reference = 'SASA11' . date('Y') . $client_record->id;
@@ -616,5 +616,7 @@ class Account extends Controller {
     public function report() {
         
     }
+
+   
 
 }

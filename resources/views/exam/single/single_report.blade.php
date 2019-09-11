@@ -300,7 +300,7 @@
                                                 <tr>
                                                     <td><?= $i ?></td>
                                                     <td><?= request('type_id') == 'school' ? $report->schema_name : $report->name ?></td>
-                                                    <!--                                                 <?php // request('type_id') == 'school' ? '' : '<td>'.$report->sex.'</td>'            ?> -->
+                                                    <!--                                                 <?php // request('type_id') == 'school' ? '' : '<td>'.$report->sex.'</td>'                      ?> -->
                                                     <td><?= ucfirst(request('subject_id')) == '0' ? 'All Subjects' : ucfirst(request('subject_id')) ?></td>
                                                     <td><?= $report->average ?></td>
                                                     <td><?= $report->grade ?></td>
@@ -310,14 +310,28 @@
                                                     if (request('type_id') == 'school') {
                                                         ?>
                                                         <td>
-                                                            <!--<a class="btn btn-success btn-sm" href="#">View</a>-->
+
+
+                                                            <form action="<?= url('exam/report/single/null?token=' . request('token')) ?>" method="post">
+                                                                <input type="hidden" value="<?= $exam_definition->id ?>" name="exam_id"/>
+                                                                <input type="hidden" value="<?= $class_info->id ?>" name="class_id"/>
+                                                                <input type="hidden" value="all" name="subject_id"/>
+                                                                <input type="hidden" value="subject" name="type_id"/>
+                                                                <input type="hidden" value="<?= $report->schema_name ?>" name="school"/>
+                                                                <input type="hidden" value="<?= request('token') ?>" name="token"/>
+                                                                <?= csrf_field() ?>
+                                                                <button type="submit" class="btn btn-sm btn-success btn-sm" href="#">View </button>
+                                                                <a href="#" onclick="return false" data-toggle="modal" data-target="#large-Modal" class="btn btn-info btn-sm">Link with ShuleSoft</a>
+                                                            </form>
+
+
                                                         </td>
                                                     <?php } else { ?>
                                                         <td>
                                                             <?= $report->schema_name ?>
                                                         </td>
                                                     <?php } ?>
-            <!--<td><?php //$report->region           ?></td>-->
+        <!--<td><?php //$report->region                     ?></td>-->
                                                 </tr>
                                                 <?php
                                                 $i++;
@@ -417,6 +431,64 @@
     </div>
 </div>
 
+<div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Link Mofet Results with ShuleSoft</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5>Do you use ShuleSoft in your School ?</h5>
+                <div id="shulesoft_instruction">
+                    <p>You can link these results to your school and get these benefits</p>
+                    <ul class="list-group">
+                        <li class="list-group-item "> 
+                            <i class="icofont icofont-eye-alt text-success"></i> 
+                            All parents will be able to view these results in their ShuleSoft account or via SMS notifications</li>
+                        <li  class="list-group-item "> <i class="icofont icofont-eye-alt text-success"></i>  You will get more statistics and analysis to help you analyze your performance and improve. These includes comparison charts from previous exams, class wise average, comparison with other exams, correlation of your school performance with age, distance from school, teachers qualifications etc</li>
+
+                        <li  class="list-group-item "> 
+                            <i class="icofont icofont-eye-alt text-success"></i>  Automated generated student report cards</li>
+                    </ul>
+                </div>
+                <a href="#" onclick="return false" onmousedown="$('#shulesoft_instruction,#login_form').toggle()">Click here to link with ShuleSoft</a> or if you are not using ShuleSoft,  <a href="https://www.shulesoft.com/join-now" target="_blank">click here to join shulesoft</a>
+                <div id="ajax_res"></div>
+                <div class="card-block" style="display: none;" id="login_form">
+                    <form id="main" method="post" action="#" novalidate="">
+                        <div class="form-group row has-success">
+                            <label class="col-sm-2 col-form-label">Select Your School </label>
+                            <div class="col-sm-10">
+                                <select name="school" id="school_name" class="form-control col-sm-12">
+                                    <option value="0">Select school</option>
+                                    <?php
+                                    $shulesoft_schools = DB::select('select distinct "schema_name" from admin.all_setting');
+                                    foreach ($shulesoft_schools as $sschool) {
+                                        ?>
+                                        <option value="<?= $sschool->schema_name ?>"><?= $sschool->schema_name ?></option>
+                                    <?php } ?>
+                                </select>
+                                <span class="messages"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-2"></label>
+                            <div class="col-sm-10">
+                                <button type="button" onmousedown="link_shulesoft()" class="btn btn-primary m-b-0">Submit to Link</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
 <script type="text/javascript">
     $('#class_id').change(function (event) {
         var exam_id = $('#exam_id').val();
@@ -427,7 +499,7 @@
             $.ajax({
                 type: 'POST',
                 url: "<?= url('exam/getSubjects/null') ?>",
-                data: "class_id=" + class_id + '&exam_id=' + exam_id+'&token=<?=request('token')?>',
+                data: "class_id=" + class_id + '&exam_id=' + exam_id + '&token=<?= request('token') ?>',
                 dataType: "html",
                 success: function (data) {
                     $('#subject_id').html(data);
@@ -444,5 +516,23 @@
             $('#option_exam_parts').show();
         }
     });
+    link_shulesoft = function () {
+        var school = $('#school_name').val();
+        if (school === '0') {
+            $('#ajax_res').html('<div class="alert alert-danger">Please Select School Name First</div>');
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: "<?= url('exam/remoteLogin/null') ?>",
+                data: "school=" + school + '&token=<?= request('token') ?>&password',
+                dataType: "html",
+                success: function (data) {
+                    $('#ajax_res').hide();
+                    $('#login_form').hide();
+                    $('#login_form').after(data);
+                }
+            });
+        }
+    }
 </script>
 @endsection

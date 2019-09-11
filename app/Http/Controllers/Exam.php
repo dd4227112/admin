@@ -362,7 +362,7 @@ class Exam extends Controller {
     public function singleReport() {
         $this->data['reports'] = [];
         if ($_POST) {
-           
+
             $this->validate(request(), [
                 'exam_id' => 'required|min:1',
                 'class_id' => 'required|integer|min:1',
@@ -378,7 +378,7 @@ class Exam extends Controller {
             $sql = 'select distinct lower(subject_name) as subject_name from admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' and mark is not null and "schema_name" is not null order by 1';
             $this->data['subjects'] = DB::select($sql);
             $this->data['schools'] = DB::select('select distinct "schema_name" as school from admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' and "schema_name" is not null');
-            // dd($this->data['schools']);
+            //dd(request()->all());
             if (request('type_id') == 'school') {
                 //get school reports
                 $this->data['reports'] = $this->createSchoolReport($exam_id, $subject_id, $class_id);
@@ -625,6 +625,18 @@ class Exam extends Controller {
         $state = request()->segment(3);
         DB::statement('delete from marks where "schema_name"=\'' . $school . '\' and global_exam_id=' . $state);
         return redirect()->back()->with('success', 'success');
+    }
+
+    public function remoteLogin() {
+        $school = request('school');
+        $ass = DB::table('school_associations')->where('schema_name', $school)->first();
+        if (count($ass) == 1) {
+            //already
+            echo '<div class="alert alert-info">School Linked already</div>';
+        } else {
+            DB::table('school_associations')->insert(['schema_name' => $school, 'association_id' => 1]);
+            echo '<div class="alert alert-success">School Linked successfully</div>';
+        }
     }
 
 }
