@@ -267,9 +267,7 @@
                             <div class="tab-pane active" id="home7" role="tabpanel" aria-expanded="true">
 
                                 <div class="col-lg-12 table-responsive">
-                                    <?php
-                                    echo request('type_id');
-                                    ?>
+                                    
                                 <table id="example23" class="dataTable nowrap table color-table success-table">
                                     <thead>
                                         <tr>
@@ -279,7 +277,7 @@
                                             <th>Subject</th>
                                             <th>Average</th>
                                             <th>Grade</th>
-                                           <?= request('type_id') == 'school' ?'':'<th class="col-sm-2">School Rank</th>'?>
+                                           <th class="col-sm-2">School Rank</th>
                                             <th class="col-sm-2">Overall Rank</th>
                                             <?= request('type_id') == 'school' ? '<th>Action</th>' : '<th>School</th>' ?>
                                             <!--<th>Region</th>-->
@@ -306,7 +304,7 @@
                                                 <td><?= ucfirst(request('subject_id')) ?></td>
                                                 <td><?= $report->average ?></td>
                                                 <td><?= $report->grade ?></td>
-                                                <?= request('type_id') == 'school' ?'':'<td>'.$report->school_rank.'</td>'?>
+                                                <td><?= $report->school_rank ?></td>
                                                 <td><?= $report->rank ?></td>
                                                 <?php
                                                 if (request('type_id') == 'school') {
