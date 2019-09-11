@@ -154,7 +154,7 @@
                     <div class="row">
                         <div class="col-sm-12 col-xl-3"></div>
                         <div class="col-sm-12 col-xl-6">
-                            <div class="list-group-item">
+                            <div class="table-responsive" style="border: 1px solid #cccccc">
                                 <div class="table">
                                     <table class="table">
                                         <thead>
