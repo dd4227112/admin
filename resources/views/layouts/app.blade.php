@@ -1027,6 +1027,8 @@ function toast(message) {
     </script>
 </html>
 <?php
-echo url()->current();
+///echo url()->current();
+if(preg_match('/localhost/', url()->current())){
 ?>
-<!--<p align="center">End of ClickDesk  This page took <?php echo (microtime(true) - LARAVEL_START) ?> seconds to render</p>-->
+<p align="center">This page took <?php echo (microtime(true) - LARAVEL_START) ?> seconds to render</p>
+<?php } ?>

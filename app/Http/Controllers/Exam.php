@@ -365,6 +365,7 @@ class Exam extends Controller {
             $this->data['grades'] = \App\Model\GlobalGrade::where('classlevel_id', $class->school_level_id)->orderBy('grade')->get();
             $sql = 'select distinct lower(subject_name) as subject_name from admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' and mark is not null order by 1';
             $this->data['subjects'] = DB::select($sql);
+            $this->data['schools']=DB::select('select distinct "schema_name" as school from admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' and "schema_name" is not null');
 
             if (request('type_id') == 'school') {
                 //get school reports
