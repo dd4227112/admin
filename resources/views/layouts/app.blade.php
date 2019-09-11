@@ -92,7 +92,7 @@ function toast(message) {
         </style>
     </head>
 
-    <body class="fix-menu">
+    <body class="<?= strlen(request('token')) > 5 ? 'menu-collapsed menu-static' : 'fix-menu' ?>">
         <!-- Pre-loader start -->
         <div class="theme-loader">
             <div class="ball-scale">
@@ -101,17 +101,21 @@ function toast(message) {
         </div>
         <!-- Pre-loader end -->
         <!-- Menu header start -->
-        <nav class="navbar header-navbar">
+        <nav class="navbar header-navbar" >
             <div class="navbar-wrapper">
-                <div class="navbar-logo">
+                <div class="navbar-logo" style="<?=strlen(request('token'))>5 ? 'height:6em':''?>">
                     <a class="mobile-menu" id="mobile-collapse" href="#!">
                         <i class="ti-menu"></i>
                     </a>
                     <a class="mobile-search morphsearch-search" href="#">
                         <i class="ti-search"></i>
                     </a>
+                    <?php
+                   
+                    $width=strlen(request('token'))>5 ? '80':'50';
+                    ?>
                     <a href="<?= url('/') ?>">
-                        <img class="img-fluid" src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="ShuleSoft" height="50" width="50" />
+                        <img class="img-fluid" src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="ShuleSoft" height="<?=$width?>" width="<?=$width?>" />
                     </a>
                     <a class="mobile-options">
                         <i class="ti-more"></i>
@@ -125,12 +129,16 @@ function toast(message) {
                                     <i class="ti-menu"></i>
                                 </a>
                             </li>
+                            <?php
+                        if (strlen(request('token')) < 4) {
+                            ?>
                             <li>
                                 <a class="main-search morphsearch-search" href="#">
                                     <!-- themify icon -->
                                     <i class="ti-search"></i>
                                 </a>
                             </li>
+                        <?php }?>
                             <!--                            <li>
                                                             <a href="#!" onclick="javascript:toggleFullScreen()">
                                                                 <i class="ti-fullscreen"></i>
@@ -255,116 +263,120 @@ function toast(message) {
                                                             </ul>
                                                         </li>-->
                         </ul>
-                        <ul class="nav-right">
-                            <li class="header-notification lng-dropdown">
-                                <a href="#" id="dropdown-active-item">
-                                    <i class="flag-icon flag-icon-gb m-r-5"></i> English
-                                </a>
-                                <ul class="show-notification">
-                                    <li>
-                                        <a href="#" data-lng="en">
-                                            <i class="flag-icon  flag-icon-es m-r-5"></i> English
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#" data-lng="es">
-                                            <i class="flag-icon flag-icon-tz m-r-5"></i> Swahili
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <?php if (false) { ?>
-                                <li class="header-notification">
-                                    <a href="#!">
-                                        <i class="ti-bell"></i>
-                                        <span class="badge">5</span>
+                        <?php
+                        if (strlen(request('token')) < 4) {
+                            ?>
+                            <ul class="nav-right">
+                                <li class="header-notification lng-dropdown">
+                                    <a href="#" id="dropdown-active-item">
+                                        <i class="flag-icon flag-icon-gb m-r-5"></i> English
                                     </a>
                                     <ul class="show-notification">
                                         <li>
-                                            <h6>Notifications</h6>
-                                            <label class="label label-danger">New</label>
+                                            <a href="#" data-lng="en">
+                                                <i class="flag-icon  flag-icon-es m-r-5"></i> English
+                                            </a>
                                         </li>
                                         <li>
-                                            <div class="media">
-                                                <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Generic placeholder image">
-                                                <div class="media-body">
-                                                    <h5 class="notification-user">John Doe</h5>
-                                                    <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
-                                                    <span class="notification-time">30 minutes ago</span>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="media">
-                                                <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Generic placeholder image">
-                                                <div class="media-body">
-                                                    <h5 class="notification-user">Joseph William</h5>
-                                                    <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
-                                                    <span class="notification-time">30 minutes ago</span>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="media">
-                                                <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Generic placeholder image">
-                                                <div class="media-body">
-                                                    <h5 class="notification-user">Sara Soudein</h5>
-                                                    <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
-                                                    <span class="notification-time">30 minutes ago</span>
-                                                </div>
-                                            </div>
+                                            <a href="#" data-lng="es">
+                                                <i class="flag-icon flag-icon-tz m-r-5"></i> Swahili
+                                            </a>
                                         </li>
                                     </ul>
                                 </li>
-                                <li class="header-notification">
-                                    <a href="#!" class="displayChatbox">
-                                        <i class="ti-comments"></i>
-                                        <span class="badge">9</span>
+                                <?php if (false) { ?>
+                                    <li class="header-notification">
+                                        <a href="#!">
+                                            <i class="ti-bell"></i>
+                                            <span class="badge">5</span>
+                                        </a>
+                                        <ul class="show-notification">
+                                            <li>
+                                                <h6>Notifications</h6>
+                                                <label class="label label-danger">New</label>
+                                            </li>
+                                            <li>
+                                                <div class="media">
+                                                    <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Generic placeholder image">
+                                                    <div class="media-body">
+                                                        <h5 class="notification-user">John Doe</h5>
+                                                        <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
+                                                        <span class="notification-time">30 minutes ago</span>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="media">
+                                                    <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Generic placeholder image">
+                                                    <div class="media-body">
+                                                        <h5 class="notification-user">Joseph William</h5>
+                                                        <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
+                                                        <span class="notification-time">30 minutes ago</span>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="media">
+                                                    <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Generic placeholder image">
+                                                    <div class="media-body">
+                                                        <h5 class="notification-user">Sara Soudein</h5>
+                                                        <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
+                                                        <span class="notification-time">30 minutes ago</span>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="header-notification">
+                                        <a href="#!" class="displayChatbox">
+                                            <i class="ti-comments"></i>
+                                            <span class="badge">9</span>
+                                        </a>
+                                    </li>
+                                <?php } ?>
+                                <li class="user-profile header-notification">
+                                    <a href="#!">
+                                        <img src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image">
+                                        <span>{{ Auth::user()->name() }}</span>
+                                        <i class="ti-angle-down"></i>
                                     </a>
+
+                                    <ul class="show-notification profile-notification">
+                                        <?php if (false) { ?>
+                                            <li>
+                                                <a href="#!">
+                                                    <i class="ti-settings"></i> Settings
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="user-profile.html">
+                                                    <i class="ti-user"></i> Profile
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="email-inbox.html">
+                                                    <i class="ti-email"></i> My Messages
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="auth-lock-screen.html">
+                                                    <i class="ti-lock"></i> Lock Screen
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                        <li><a href="{{ route('logout') }}"
+                                               onclick="event.preventDefault();
+                                                           document.getElementById('logout-form').submit();"><i class="ti-layout-sidebar-left"></i> Logout</a></li>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                            {{ csrf_field() }}
+                                        </form>
+
+                                    </ul>
+
                                 </li>
-                            <?php } ?>
-                            <li class="user-profile header-notification">
-                                <a href="#!">
-                                    <img src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image">
-                                    <span>{{ Auth::user()->name() }}</span>
-                                    <i class="ti-angle-down"></i>
-                                </a>
-
-                                <ul class="show-notification profile-notification">
-                                    <?php if (false) { ?>
-                                        <li>
-                                            <a href="#!">
-                                                <i class="ti-settings"></i> Settings
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="user-profile.html">
-                                                <i class="ti-user"></i> Profile
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="email-inbox.html">
-                                                <i class="ti-email"></i> My Messages
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="auth-lock-screen.html">
-                                                <i class="ti-lock"></i> Lock Screen
-                                            </a>
-                                        </li>
-                                    <?php } ?>
-                                    <li><a href="{{ route('logout') }}"
-                                           onclick="event.preventDefault();
-                                                   document.getElementById('logout-form').submit();"><i class="ti-layout-sidebar-left"></i> Logout</a></li>
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        {{ csrf_field() }}
-                                    </form>
-
-                                </ul>
-
-                            </li>
-                        </ul>
-                        <!-- search -->
+                            </ul>
+                            <!-- search -->
+                        <?php } ?>
                         <div id="morphsearch" class="morphsearch">
                             <form class="morphsearch-form">
                                 <input class="morphsearch-input" type="search" placeholder="Search..." />
@@ -416,443 +428,446 @@ function toast(message) {
         <!-- Menu header end -->
 
 
-
-        <!-- Menu aside start -->
-        <div class="main-menu">
-            <div class="main-menu-header">
-                <img class="img-40" src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image">
-                <div class="user-details">
-                    <span>{{ Auth::user()->name() }}</span>
-                    <span id="more-details"> Admin {{ Auth::user()->role }}</span>
+        <?php
+        if (strlen(request('token')) < 3) {
+            ?>
+            <!-- Menu aside start -->
+            <div class="main-menu">
+                <div class="main-menu-header">
+                    <img class="img-40" src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image">
+                    <div class="user-details">
+                        <span>{{ Auth::user()->name() }}</span>
+                        <span id="more-details"> Admin {{ Auth::user()->role }}</span>
+                    </div>
                 </div>
-            </div>
-            <div class="main-menu-content">
-                <ul class="main-navigation">
+                <div class="main-menu-content">
+                    <ul class="main-navigation">
 
-                    <hr style="background:white"/>
+                        <hr style="background:white"/>
 
-                    <?php if (can_access('manage_users')) { ?>
-                        <li class="nav-item">
-                            <a href="#!">
-                                <i class="ti-home"></i>
-                                <span data-i18n="nav.dash.main">Dashboard</span>
-                            </a>
-                            <ul class="tree-1 has-class">
-                                <li>
-                                    <a href="<?= url('analyse/index') ?>" data-i18n="nav.dash.default"> Sales </a></li>
-                                <li>
-                                <li><a href="<?= url('analyse/marketing') ?>" data-i18n="nav.dash.ecommerce"> Marketing</a></li>
-                                <li><a href="<?= url('analyse/accounts') ?>" data-i18n="nav.dash.crm">Accounts</a></li>
-                                <li><a href="<?= url('analyse/customers') ?>" data-i18n="nav.dash.analytics">Customers</a>
-                                    <label class="label label-info menu-caption">NEW</label>
-                                </li>
-                                <li><a href="<?= url('analyse/software') ?>" data-i18n="nav.dash.project">Software Dev</a>
-                                </li>
-                            </ul>
-                        </li>
-                    <?php } ?>
-                    <?php if (can_access('manage_customers')) { ?>
-                        <li class="nav-title" data-i18n="nav.category.navigation">
-                            <i class="ti-line-dashed"></i>
-                            <span>Operations</span>
-                        </li>
+                        <?php if (can_access('manage_users')) { ?>
+                            <li class="nav-item">
+                                <a href="#!">
+                                    <i class="ti-home"></i>
+                                    <span data-i18n="nav.dash.main">Dashboard</span>
+                                </a>
+                                <ul class="tree-1 has-class">
+                                    <li>
+                                        <a href="<?= url('analyse/index') ?>" data-i18n="nav.dash.default"> Sales </a></li>
+                                    <li>
+                                    <li><a href="<?= url('analyse/marketing') ?>" data-i18n="nav.dash.ecommerce"> Marketing</a></li>
+                                    <li><a href="<?= url('analyse/accounts') ?>" data-i18n="nav.dash.crm">Accounts</a></li>
+                                    <li><a href="<?= url('analyse/customers') ?>" data-i18n="nav.dash.analytics">Customers</a>
+                                        <label class="label label-info menu-caption">NEW</label>
+                                    </li>
+                                    <li><a href="<?= url('analyse/software') ?>" data-i18n="nav.dash.project">Software Dev</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        <?php } ?>
+                        <?php if (can_access('manage_customers')) { ?>
+                            <li class="nav-title" data-i18n="nav.category.navigation">
+                                <i class="ti-line-dashed"></i>
+                                <span>Operations</span>
+                            </li>
 
-                        <li class="nav-item">
-                            <a href="#!">
-                                <i class="ti-layout"></i>
-                                <span data-i18n="nav.page_layout.main">Customer Service</span>
-                            </a>
-                            <ul class="tree-1">
-                                <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.bottom-menu">System Setup</a></li>
+                            <li class="nav-item">
+                                <a href="#!">
+                                    <i class="ti-layout"></i>
+                                    <span data-i18n="nav.page_layout.main">Customer Service</span>
+                                </a>
+                                <ul class="tree-1">
+                                    <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.bottom-menu">System Setup</a></li>
 
-                                <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
-                                            class="icon-arrow-right"></i>Training</a>
-                                    <ul class="tree-2">
+                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
+                                                class="icon-arrow-right"></i>Training</a>
+                                        <ul class="tree-2">
 
-                                        <li><a href="<?= url('customer/guide') ?>l" data-i18n="nav.page_layout.vertical.header-fixed">User Guide</a></li>
-                                        <li><a href="<?= url('customer/faq') ?>" data-i18n="nav.page_layout.vertical.compact"> FAQ </a>
-                                        </li>
-                                        <li><a href="<?= url('customer/report') ?>" data-i18n="nav.page_layout.vertical.static-layout">Report </a></li>
+                                            <li><a href="<?= url('customer/guide') ?>l" data-i18n="nav.page_layout.vertical.header-fixed">User Guide</a></li>
+                                            <li><a href="<?= url('customer/faq') ?>" data-i18n="nav.page_layout.vertical.compact"> FAQ </a>
+                                            </li>
+                                            <li><a href="<?= url('customer/report') ?>" data-i18n="nav.page_layout.vertical.static-layout">Report </a></li>
 
-                                    </ul>
-                                </li>
+                                        </ul>
+                                    </li>
 
-                                <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
-                                            class="icon-arrow-right"></i>Usage Analysis</a>
-                                    <ul class="tree-2">
-                                        <li><a href="<?= url('customer/modules') ?>" data-i18n="nav.page_layout.vertical.static-layout"> Modules </a></li>
-                                        <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.vertical.header-fixed">
-                                                User Logs</a></li>
-                                        <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.vertical.compact"> Page Logs </a>
-                                        </li>
+                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
+                                                class="icon-arrow-right"></i>Usage Analysis</a>
+                                        <ul class="tree-2">
+                                            <li><a href="<?= url('customer/modules') ?>" data-i18n="nav.page_layout.vertical.static-layout"> Modules </a></li>
+                                            <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.vertical.header-fixed">
+                                                    User Logs</a></li>
+                                            <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.vertical.compact"> Page Logs </a>
+                                            </li>
 
-                                    </ul>
-                                </li>
+                                        </ul>
+                                    </li>
 
-                                <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Communications</a>
-                                    <ul class="tree-2">
-                                        <li><a href="<?= url('customer/calls') ?>" target="_blank" data-i18n="nav.page_layout.horizontal.static-layout"> Call Logs</a></li>
-                                        <li><a href="<?= url('customer/emailsms') ?>" target="_blank" data-i18n="nav.page_layout.horizontal.static-layout"> SMS & Email Logs</a></li>
-                                        <li><a href="<?= url('customer/feedbacks') ?>" target="_blank" data-i18n="nav.page_layout.horizontal.fixed-layout">Customer Feedbacks </a></li>
-                                        <li><a href="<?= url('customer/update') ?>" target="_blank" data-i18n="nav.page_layout.horizontal.static-with-icon">ShuleSoft Updates </a></li>
+                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Communications</a>
+                                        <ul class="tree-2">
+                                            <li><a href="<?= url('customer/calls') ?>" target="_blank" data-i18n="nav.page_layout.horizontal.static-layout"> Call Logs</a></li>
+                                            <li><a href="<?= url('customer/emailsms') ?>" target="_blank" data-i18n="nav.page_layout.horizontal.static-layout"> SMS & Email Logs</a></li>
+                                            <li><a href="<?= url('customer/feedbacks') ?>" target="_blank" data-i18n="nav.page_layout.horizontal.fixed-layout">Customer Feedbacks </a></li>
+                                            <li><a href="<?= url('customer/update') ?>" target="_blank" data-i18n="nav.page_layout.horizontal.static-with-icon">ShuleSoft Updates </a></li>
 
-                                    </ul>
-                                </li>
-                                <li><a href="<?= url('customer/requirements') ?>" data-i18n="nav.page_layout.bottom-menu">Customer Requirements</a></li>
-                            </ul>
-                        </li>
-                    <?php } ?>
-                    <?php if (can_access('manage_sales')) { ?>
-                        <li class="nav-item">
-                            <a href="#!">
-                                <i class="ti-layout-cta-right"></i>
-                                <span data-i18n="nav.navigate.main">Sales</span>
-                            </a>
-                            <ul class="tree-1">
-                                <li><a href="<?= url('sales/index') ?>" data-i18n="nav.navigate.navbar">Sales Materials</a>
-                                </li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="<?= url('customer/requirements') ?>" data-i18n="nav.page_layout.bottom-menu">Customer Requirements</a></li>
+                                </ul>
+                            </li>
+                        <?php } ?>
+                        <?php if (can_access('manage_sales')) { ?>
+                            <li class="nav-item">
+                                <a href="#!">
+                                    <i class="ti-layout-cta-right"></i>
+                                    <span data-i18n="nav.navigate.main">Sales</span>
+                                </a>
+                                <ul class="tree-1">
+                                    <li><a href="<?= url('sales/index') ?>" data-i18n="nav.navigate.navbar">Sales Materials</a>
+                                    </li>
 
-                                <li><a href="<?= url('sales/index') ?>" data-i18n="nav.navigate.navbar-with-elements">Sales Reports</a></li>
-                            </ul>
-                        </li>
-                    <?php } ?>
-                    <?php if (can_access('manage_marketing')) { ?>
-                        <li class="nav-item">
-                            <a href="#!">
-                                <i class="ti-gift "></i>
-                                <span data-i18n="nav.extra-components.main">Marketing</span>
-                            </a>
-                            <!--                        <ul class="tree-1">
-                                                        <li><a href="session-timeout.html" data-i18n="nav.extra-components.session-timeout">Session Timeout</a></li>
-                                                        <li><a href="session-idle-timeout.html" data-i18n="nav.extra-components.session-idle-timeout">Session Idle Timeout</a>
-                                                        </li>
-                                                        <li><a href="offline.html" data-i18n="nav.extra-components.offline">Offline</a></li>
-                                                    </ul>-->
-                        </li>
-                    <?php } ?>
-                    <?php if (can_access('manage_software')) { ?>
-                        <li class="nav-item">
-                            <a href="#!">
-                                <i class="ti-layout-grid2-alt"></i>
-                                <span data-i18n="nav.basic-components.main">Software Development</span>
-                            </a>
-                            <ul class="tree-1">
-                                <li><a href="<?= url('software/template') ?>" data-i18n="nav.basic-components.alert">Templates & Policies</a></li>
-                                <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Database</a>
-                                    <ul class="tree-2" style="display: none;">
-                                        <li><a href="<?= url('software/template') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Tables</a></li>
-                                        <li><a href="<?= url('software/template') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Columns</a></li>
-                                        <li><a href="<?= url('software/template') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Constrains</a></li>
-                                        <li><a href="<?= url('software/template') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Backup</a></li>
-                                        <li><a href="<?= url('software/template') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Reports</a></li>
-                                        <li><a href="<?= url('software/template') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Create Script</a></li>
+                                    <li><a href="<?= url('sales/index') ?>" data-i18n="nav.navigate.navbar-with-elements">Sales Reports</a></li>
+                                </ul>
+                            </li>
+                        <?php } ?>
+                        <?php if (can_access('manage_marketing')) { ?>
+                            <li class="nav-item">
+                                <a href="#!">
+                                    <i class="ti-gift "></i>
+                                    <span data-i18n="nav.extra-components.main">Marketing</span>
+                                </a>
+                                <!--                        <ul class="tree-1">
+                                                            <li><a href="session-timeout.html" data-i18n="nav.extra-components.session-timeout">Session Timeout</a></li>
+                                                            <li><a href="session-idle-timeout.html" data-i18n="nav.extra-components.session-idle-timeout">Session Idle Timeout</a>
+                                                            </li>
+                                                            <li><a href="offline.html" data-i18n="nav.extra-components.offline">Offline</a></li>
+                                                        </ul>-->
+                            </li>
+                        <?php } ?>
+                        <?php if (can_access('manage_software')) { ?>
+                            <li class="nav-item">
+                                <a href="#!">
+                                    <i class="ti-layout-grid2-alt"></i>
+                                    <span data-i18n="nav.basic-components.main">Software Development</span>
+                                </a>
+                                <ul class="tree-1">
+                                    <li><a href="<?= url('software/template') ?>" data-i18n="nav.basic-components.alert">Templates & Policies</a></li>
+                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Database</a>
+                                        <ul class="tree-2" style="display: none;">
+                                            <li><a href="<?= url('software/template') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Tables</a></li>
+                                            <li><a href="<?= url('software/template') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Columns</a></li>
+                                            <li><a href="<?= url('software/template') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Constrains</a></li>
+                                            <li><a href="<?= url('software/template') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Backup</a></li>
+                                            <li><a href="<?= url('software/template') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Reports</a></li>
+                                            <li><a href="<?= url('software/template') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Create Script</a></li>
 
-                                    </ul>
-                                </li>
+                                        </ul>
+                                    </li>
 
-                                <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Payment Integration</a>
-                                    <ul class="tree-2" style="display: none;">
-                                        <li><a href="<?= url('software/api') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">API Requests</a></li>
-                                        <li><a href="<?= url('software/api/requests') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Transaction Reports</a></li>
-                                        <li><a href="<?= url('software/invoice/live') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Live Invoices</a></li>
-                                        <li><a href="<?= url('software/invoice/uat') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Testing Invoices</a></li>
-
-
-                                    </ul>
-                                </li>
-
-                                <li><a href="<?= url('software/server') ?>" data-i18n="nav.basic-components.button">Server Administration</a></li>
-                                <li><a href="<?= url('software/logs') ?>" data-i18n="nav.basic-components.box-shadow">Error Logs</a></li>
-                                <li><a href="<?= url('software/pmp') ?>" data-i18n="nav.basic-components.collapse–accordion">Project Management</a></li>
-
-                            </ul>
-                        </li>
-                    <?php } ?>
-                    <?php if (can_access('manage_finance')) { ?>
-                        <li class="nav-item">
-                            <a href="#!">
-                                <i class="ti-crown"></i>
-                                <span data-i18n="nav.advance-components.main">Accounts & Finance</span>
-                            </a>
-                            <ul class="tree-1">
-                                <li><a href="<?= url('account/projection') ?>" data-i18n="nav.advance-components.draggable">Projections</a></li>
-                                <li><a href="<?= url('account/invoice') ?>" data-i18n="nav.advance-components.grid-stack">Invoice</a></li>
-                                <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Transactions</a>
-                                    <ul class="tree-2">
-                                        <a href="<?= url('account/revenue') ?>"><i class="fa icon-account"></i> Revenue</a>
-                                        <a href="<?= url('account/transaction/4') ?>"><i class="fa icon-expense"></i> Expense</a>
-                                        <a href="<?= url('account/transaction/1') ?>"><i class="fa icon-account"></i> Fixed assets</a>
-                                        <a href="<?= url('account/transaction/5') ?>"><i class="fa icon-account"></i> Current assets</a>
-                                        <a href="<?= url('account/transaction/2') ?>"><i class="fa icon-account"></i> liabilities</a>
-                                        <a href="<?= url('account/transaction/3') ?>"><i class="fa icon-account"></i> capital</a>
-                                        <a href="<?= url('account/reconciliation') ?>"><i class="fa icon-account"></i> Reconciliation</a>
+                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Payment Integration</a>
+                                        <ul class="tree-2" style="display: none;">
+                                            <li><a href="<?= url('software/api') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">API Requests</a></li>
+                                            <li><a href="<?= url('software/api/requests') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Transaction Reports</a></li>
+                                            <li><a href="<?= url('software/invoice/live') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Live Invoices</a></li>
+                                            <li><a href="<?= url('software/invoice/uat') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Testing Invoices</a></li>
 
 
-                                    </ul>
-                                </li>
-                                <li><a href="<?= url('account/report') ?>" data-i18n="nav.advance-components.light-box">Reports</a></li>
-                                <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Settings</a>
-                                    <ul class="tree-2">
-                                        <a href="<?= url('account/client') ?>"><i class="fa icon-account"></i>  Clients</a>
-                                        <a href="<?= url('account/bank') ?>"><i class="fa icon-account"></i> Banking</a>
-                                        <a href="<?= url('account/group') ?>"><i class="fa icon-account"></i> Account Groups</a>
-                                        <a href="<?= url('account/chart') ?>"><i class="fa icon-account"></i> Charts of Accounts</a>
-                                        <a href="<?= url('account/project') ?>"><i class="fa icon-account"></i> Company Projects</a>
+                                        </ul>
+                                    </li>
 
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                    <?php } ?>
-                    <?php if (can_access('manage_users')) { ?>
-                        <li class="nav-item single-item">
-                            <a href="<?= url('users/index') ?>">
-                                <i class="ti-layers-alt"></i>
-                                <span data-i18n="nav.sticky-notes.main"> Users</span>
-                            </a>
-                        </li>
-                        <?php
-                    }
-                    ?>
-                    <?php
-                    if (can_access('manage_schools')) {
-                        $has_class = preg_match('/exam/', url()->current()) ? 'has-class open' : '';
+                                    <li><a href="<?= url('software/server') ?>" data-i18n="nav.basic-components.button">Server Administration</a></li>
+                                    <li><a href="<?= url('software/logs') ?>" data-i18n="nav.basic-components.box-shadow">Error Logs</a></li>
+                                    <li><a href="<?= url('software/pmp') ?>" data-i18n="nav.basic-components.collapse–accordion">Project Management</a></li>
+
+                                </ul>
+                            </li>
+                        <?php } ?>
+                        <?php if (can_access('manage_finance')) { ?>
+                            <li class="nav-item">
+                                <a href="#!">
+                                    <i class="ti-crown"></i>
+                                    <span data-i18n="nav.advance-components.main">Accounts & Finance</span>
+                                </a>
+                                <ul class="tree-1">
+                                    <li><a href="<?= url('account/projection') ?>" data-i18n="nav.advance-components.draggable">Projections</a></li>
+                                    <li><a href="<?= url('account/invoice') ?>" data-i18n="nav.advance-components.grid-stack">Invoice</a></li>
+                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Transactions</a>
+                                        <ul class="tree-2">
+                                            <a href="<?= url('account/revenue') ?>"><i class="fa icon-account"></i> Revenue</a>
+                                            <a href="<?= url('account/transaction/4') ?>"><i class="fa icon-expense"></i> Expense</a>
+                                            <a href="<?= url('account/transaction/1') ?>"><i class="fa icon-account"></i> Fixed assets</a>
+                                            <a href="<?= url('account/transaction/5') ?>"><i class="fa icon-account"></i> Current assets</a>
+                                            <a href="<?= url('account/transaction/2') ?>"><i class="fa icon-account"></i> liabilities</a>
+                                            <a href="<?= url('account/transaction/3') ?>"><i class="fa icon-account"></i> capital</a>
+                                            <a href="<?= url('account/reconciliation') ?>"><i class="fa icon-account"></i> Reconciliation</a>
+
+
+                                        </ul>
+                                    </li>
+                                    <li><a href="<?= url('account/report') ?>" data-i18n="nav.advance-components.light-box">Reports</a></li>
+                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Settings</a>
+                                        <ul class="tree-2">
+                                            <a href="<?= url('account/client') ?>"><i class="fa icon-account"></i>  Clients</a>
+                                            <a href="<?= url('account/bank') ?>"><i class="fa icon-account"></i> Banking</a>
+                                            <a href="<?= url('account/group') ?>"><i class="fa icon-account"></i> Account Groups</a>
+                                            <a href="<?= url('account/chart') ?>"><i class="fa icon-account"></i> Charts of Accounts</a>
+                                            <a href="<?= url('account/project') ?>"><i class="fa icon-account"></i> Company Projects</a>
+
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        <?php } ?>
+                        <?php if (can_access('manage_users')) { ?>
+                            <li class="nav-item single-item">
+                                <a href="<?= url('users/index') ?>">
+                                    <i class="ti-layers-alt"></i>
+                                    <span data-i18n="nav.sticky-notes.main"> Users</span>
+                                </a>
+                            </li>
+                            <?php
+                        }
                         ?>
-                        <li class="nav-item <?= $has_class ?>">
-                            <a href="#!">
-                                <i class="ti-crown"></i>
-                                <span data-i18n="nav.advance-components.main">Schools</span>
-                            </a>
-                            <ul class="tree-1 ">
-                                <!--<li><a href="<?= url('exam/dashboard') ?>" data-i18n="nav.advance-components.draggable">Dashboard</a></li>-->
+                        <?php
+                        if (can_access('manage_schools')) {
+                            $has_class = preg_match('/exam/', url()->current()) ? 'has-class open' : '';
+                            ?>
+                            <li class="nav-item <?= $has_class ?>">
+                                <a href="#!">
+                                    <i class="ti-crown"></i>
+                                    <span data-i18n="nav.advance-components.main">Schools</span>
+                                </a>
+                                <ul class="tree-1 ">
+                                    <!--<li><a href="<?= url('exam/dashboard') ?>" data-i18n="nav.advance-components.draggable">Dashboard</a></li>-->
 
-                                <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Exams</a>
-                                    <ul class="tree-2 <?= $has_class ?>">
-                                        <a href="<?= url('exam/listing') ?>"><i class="fa icon-account"></i> Listing</a>
-                                        <a href="<?= url('exam/allocate') ?>"><i class="fa icon-account"></i> Definition</a>
-                                        <!--<a href="<?= url('exam/schedule') ?>"><i class="fa icon-expense"></i> Schedule</a>-->
-                                        <a href="<?= url('exam/grade') ?>"><i class="fa icon-account"></i> Grades</a>
+                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Exams</a>
+                                        <ul class="tree-2 <?= $has_class ?>">
+                                            <a href="<?= url('exam/listing') ?>"><i class="fa icon-account"></i> Listing</a>
+                                            <a href="<?= url('exam/allocate') ?>"><i class="fa icon-account"></i> Definition</a>
+                                            <!--<a href="<?= url('exam/schedule') ?>"><i class="fa icon-expense"></i> Schedule</a>-->
+                                            <a href="<?= url('exam/grade') ?>"><i class="fa icon-account"></i> Grades</a>
 
-                                        <a href="<?= url('exam/subject') ?>"><i class="fa icon-account"></i> Subjects</a>
+                                            <a href="<?= url('exam/subject') ?>"><i class="fa icon-account"></i> Subjects</a>
 
-                                        <li class="nav-sub-item-3">
-                                            <a href="#" data-i18n="nav.menu-levels.menu-level-22.menu-level-32.main">&nbsp; Reports</a>
-                                            <ul class="tree-3">
-                                                <li><a href="<?= url('exam/report/single') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-32.menu-level-41">Single</a> </li>
-                                                <!--<li><a href="<?= url('exam/report/accumulative') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-32.menu-level-41">Combined</a> </li>-->
+                                            <li class="nav-sub-item-3">
+                                                <a href="#" data-i18n="nav.menu-levels.menu-level-22.menu-level-32.main">&nbsp; Reports</a>
+                                                <ul class="tree-3">
+                                                    <li><a href="<?= url('exam/report/single') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-32.menu-level-41">Single</a> </li>
+                                                    <!--<li><a href="<?= url('exam/report/accumulative') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-32.menu-level-41">Combined</a> </li>-->
 
-                                            </ul>
-                                        </li>
-                                        <li><a href="<?= url('exam/marking') ?>" data-i18n="nav.advance-components.draggable">Marking</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="<?= url('exam/marking') ?>" data-i18n="nav.advance-components.draggable">Marking</a></li>
 
-                                    </ul>
-                                </li>
+                                        </ul>
+                                    </li>
 
-                            </ul>
-                        </li>
-                    <?php } ?>
+                                </ul>
+                            </li>
+                        <?php } ?>
 
 
-                </ul>
+                    </ul>
+                </div>
             </div>
-        </div>
-        <!-- Menu aside end -->
-        <!-- Sidebar chat start -->
-        <div id="sidebar" class="users p-chat-user showChat">
-            <div class="had-container">
-                <div class="card card_main p-fixed users-main">
-                    <div class="user-box">
-                        <div class="card-block">
-                            <div class="right-icon-control">
-                                <input type="text" class="form-control  search-text" placeholder="Search Friend" id="search-friends">
-                                <div class="form-icon">
-                                    <i class="icofont icofont-search"></i>
+            <!-- Menu aside end -->
+            <!-- Sidebar chat start -->
+            <div id="sidebar" class="users p-chat-user showChat">
+                <div class="had-container">
+                    <div class="card card_main p-fixed users-main">
+                        <div class="user-box">
+                            <div class="card-block">
+                                <div class="right-icon-control">
+                                    <input type="text" class="form-control  search-text" placeholder="Search Friend" id="search-friends">
+                                    <div class="form-icon">
+                                        <i class="icofont icofont-search"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="main-friend-list">
+                                <div class="media userlist-box" data-id="1" data-status="online" data-username="Josephin Doe" data-toggle="tooltip" data-placement="left" title="Josephin Doe">
+                                    <a class="media-left" href="#!">
+                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
+                                        <div class="live-status bg-success"></div>
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="f-13 chat-header">Josephin Doe</div>
+                                    </div>
+                                </div>
+                                <div class="media userlist-box" data-id="2" data-status="online" data-username="Lary Doe" data-toggle="tooltip" data-placement="left" title="Lary Doe">
+                                    <a class="media-left" href="#!">
+                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u1.jpg" alt="Generic placeholder image">
+                                        <div class="live-status bg-success"></div>
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="f-13 chat-header">Lary Doe</div>
+                                    </div>
+                                </div>
+                                <div class="media userlist-box" data-id="3" data-status="online" data-username="Alice" data-toggle="tooltip" data-placement="left" title="Alice">
+                                    <a class="media-left" href="#!">
+                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-2.png" alt="Generic placeholder image">
+                                        <div class="live-status bg-success"></div>
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="f-13 chat-header">Alice</div>
+                                    </div>
+                                </div>
+                                <div class="media userlist-box" data-id="4" data-status="online" data-username="Alia" data-toggle="tooltip" data-placement="left" title="Alia">
+                                    <a class="media-left" href="#!">
+                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u2.jpg" alt="Generic placeholder image">
+                                        <div class="live-status bg-success"></div>
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="f-13 chat-header">Alia</div>
+                                    </div>
+                                </div>
+                                <div class="media userlist-box" data-id="5" data-status="online" data-username="Suzen" data-toggle="tooltip" data-placement="left" title="Suzen">
+                                    <a class="media-left" href="#!">
+                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u3.jpg" alt="Generic placeholder image">
+                                        <div class="live-status bg-success"></div>
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="f-13 chat-header">Suzen</div>
+                                    </div>
+                                </div>
+                                <div class="media userlist-box" data-id="6" data-status="offline" data-username="Michael Scofield" data-toggle="tooltip" data-placement="left" title="Michael Scofield">
+                                    <a class="media-left" href="#!">
+                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-3.png" alt="Generic placeholder image">
+                                        <div class="live-status bg-danger"></div>
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="f-13 chat-header">Michael Scofield</div>
+                                    </div>
+                                </div>
+                                <div class="media userlist-box" data-id="7" data-status="online" data-username="Irina Shayk" data-toggle="tooltip" data-placement="left" title="Irina Shayk">
+                                    <a class="media-left" href="#!">
+                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-4.png" alt="Generic placeholder image">
+                                        <div class="live-status bg-success"></div>
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="f-13 chat-header">Irina Shayk</div>
+                                    </div>
+                                </div>
+                                <div class="media userlist-box" data-id="8" data-status="offline" data-username="Sara Tancredi" data-toggle="tooltip" data-placement="left" title="Sara Tancredi">
+                                    <a class="media-left" href="#!">
+                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-5.png" alt="Generic placeholder image">
+                                        <div class="live-status bg-danger"></div>
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="f-13 chat-header">Sara Tancredi</div>
+                                    </div>
+                                </div>
+                                <div class="media userlist-box" data-id="9" data-status="online" data-username="Samon" data-toggle="tooltip" data-placement="left" title="Samon">
+                                    <a class="media-left" href="#!">
+                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
+                                        <div class="live-status bg-success"></div>
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="f-13 chat-header">Samon</div>
+                                    </div>
+                                </div>
+                                <div class="media userlist-box" data-id="10" data-status="online" data-username="Daizy Mendize" data-toggle="tooltip" data-placement="left" title="Daizy Mendize">
+                                    <a class="media-left" href="#!">
+                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u3.jpg" alt="Generic placeholder image">
+                                        <div class="live-status bg-success"></div>
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="f-13 chat-header">Daizy Mendize</div>
+                                    </div>
+                                </div>
+                                <div class="media userlist-box" data-id="11" data-status="offline" data-username="Loren Scofield" data-toggle="tooltip" data-placement="left" title="Loren Scofield">
+                                    <a class="media-left" href="#!">
+                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-3.png" alt="Generic placeholder image">
+                                        <div class="live-status bg-danger"></div>
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="f-13 chat-header">Loren Scofield</div>
+                                    </div>
+                                </div>
+                                <div class="media userlist-box" data-id="12" data-status="online" data-username="Shayk" data-toggle="tooltip" data-placement="left" title="Shayk">
+                                    <a class="media-left" href="#!">
+                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-4.png" alt="Generic placeholder image">
+                                        <div class="live-status bg-success"></div>
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="f-13 chat-header">Shayk</div>
+                                    </div>
+                                </div>
+                                <div class="media userlist-box" data-id="13" data-status="offline" data-username="Sara" data-toggle="tooltip" data-placement="left" title="Sara">
+                                    <a class="media-left" href="#!">
+                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u3.jpg" alt="Generic placeholder image">
+                                        <div class="live-status bg-danger"></div>
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="f-13 chat-header">Sara</div>
+                                    </div>
+                                </div>
+                                <div class="media userlist-box" data-id="14" data-status="online" data-username="Doe" data-toggle="tooltip" data-placement="left" title="Doe">
+                                    <a class="media-left" href="#!">
+                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
+                                        <div class="live-status bg-success"></div>
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="f-13 chat-header">Doe</div>
+                                    </div>
+                                </div>
+                                <div class="media userlist-box" data-id="15" data-status="online" data-username="Lary" data-toggle="tooltip" data-placement="left" title="Lary">
+                                    <a class="media-left" href="#!">
+                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u1.jpg" alt="Generic placeholder image">
+                                        <div class="live-status bg-success"></div>
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="f-13 chat-header">Lary</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="main-friend-list">
-                            <div class="media userlist-box" data-id="1" data-status="online" data-username="Josephin Doe" data-toggle="tooltip" data-placement="left" title="Josephin Doe">
-                                <a class="media-left" href="#!">
-                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
-                                    <div class="live-status bg-success"></div>
-                                </a>
-                                <div class="media-body">
-                                    <div class="f-13 chat-header">Josephin Doe</div>
-                                </div>
-                            </div>
-                            <div class="media userlist-box" data-id="2" data-status="online" data-username="Lary Doe" data-toggle="tooltip" data-placement="left" title="Lary Doe">
-                                <a class="media-left" href="#!">
-                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u1.jpg" alt="Generic placeholder image">
-                                    <div class="live-status bg-success"></div>
-                                </a>
-                                <div class="media-body">
-                                    <div class="f-13 chat-header">Lary Doe</div>
-                                </div>
-                            </div>
-                            <div class="media userlist-box" data-id="3" data-status="online" data-username="Alice" data-toggle="tooltip" data-placement="left" title="Alice">
-                                <a class="media-left" href="#!">
-                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-2.png" alt="Generic placeholder image">
-                                    <div class="live-status bg-success"></div>
-                                </a>
-                                <div class="media-body">
-                                    <div class="f-13 chat-header">Alice</div>
-                                </div>
-                            </div>
-                            <div class="media userlist-box" data-id="4" data-status="online" data-username="Alia" data-toggle="tooltip" data-placement="left" title="Alia">
-                                <a class="media-left" href="#!">
-                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u2.jpg" alt="Generic placeholder image">
-                                    <div class="live-status bg-success"></div>
-                                </a>
-                                <div class="media-body">
-                                    <div class="f-13 chat-header">Alia</div>
-                                </div>
-                            </div>
-                            <div class="media userlist-box" data-id="5" data-status="online" data-username="Suzen" data-toggle="tooltip" data-placement="left" title="Suzen">
-                                <a class="media-left" href="#!">
-                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u3.jpg" alt="Generic placeholder image">
-                                    <div class="live-status bg-success"></div>
-                                </a>
-                                <div class="media-body">
-                                    <div class="f-13 chat-header">Suzen</div>
-                                </div>
-                            </div>
-                            <div class="media userlist-box" data-id="6" data-status="offline" data-username="Michael Scofield" data-toggle="tooltip" data-placement="left" title="Michael Scofield">
-                                <a class="media-left" href="#!">
-                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-3.png" alt="Generic placeholder image">
-                                    <div class="live-status bg-danger"></div>
-                                </a>
-                                <div class="media-body">
-                                    <div class="f-13 chat-header">Michael Scofield</div>
-                                </div>
-                            </div>
-                            <div class="media userlist-box" data-id="7" data-status="online" data-username="Irina Shayk" data-toggle="tooltip" data-placement="left" title="Irina Shayk">
-                                <a class="media-left" href="#!">
-                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-4.png" alt="Generic placeholder image">
-                                    <div class="live-status bg-success"></div>
-                                </a>
-                                <div class="media-body">
-                                    <div class="f-13 chat-header">Irina Shayk</div>
-                                </div>
-                            </div>
-                            <div class="media userlist-box" data-id="8" data-status="offline" data-username="Sara Tancredi" data-toggle="tooltip" data-placement="left" title="Sara Tancredi">
-                                <a class="media-left" href="#!">
-                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-5.png" alt="Generic placeholder image">
-                                    <div class="live-status bg-danger"></div>
-                                </a>
-                                <div class="media-body">
-                                    <div class="f-13 chat-header">Sara Tancredi</div>
-                                </div>
-                            </div>
-                            <div class="media userlist-box" data-id="9" data-status="online" data-username="Samon" data-toggle="tooltip" data-placement="left" title="Samon">
-                                <a class="media-left" href="#!">
-                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
-                                    <div class="live-status bg-success"></div>
-                                </a>
-                                <div class="media-body">
-                                    <div class="f-13 chat-header">Samon</div>
-                                </div>
-                            </div>
-                            <div class="media userlist-box" data-id="10" data-status="online" data-username="Daizy Mendize" data-toggle="tooltip" data-placement="left" title="Daizy Mendize">
-                                <a class="media-left" href="#!">
-                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u3.jpg" alt="Generic placeholder image">
-                                    <div class="live-status bg-success"></div>
-                                </a>
-                                <div class="media-body">
-                                    <div class="f-13 chat-header">Daizy Mendize</div>
-                                </div>
-                            </div>
-                            <div class="media userlist-box" data-id="11" data-status="offline" data-username="Loren Scofield" data-toggle="tooltip" data-placement="left" title="Loren Scofield">
-                                <a class="media-left" href="#!">
-                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-3.png" alt="Generic placeholder image">
-                                    <div class="live-status bg-danger"></div>
-                                </a>
-                                <div class="media-body">
-                                    <div class="f-13 chat-header">Loren Scofield</div>
-                                </div>
-                            </div>
-                            <div class="media userlist-box" data-id="12" data-status="online" data-username="Shayk" data-toggle="tooltip" data-placement="left" title="Shayk">
-                                <a class="media-left" href="#!">
-                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-4.png" alt="Generic placeholder image">
-                                    <div class="live-status bg-success"></div>
-                                </a>
-                                <div class="media-body">
-                                    <div class="f-13 chat-header">Shayk</div>
-                                </div>
-                            </div>
-                            <div class="media userlist-box" data-id="13" data-status="offline" data-username="Sara" data-toggle="tooltip" data-placement="left" title="Sara">
-                                <a class="media-left" href="#!">
-                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u3.jpg" alt="Generic placeholder image">
-                                    <div class="live-status bg-danger"></div>
-                                </a>
-                                <div class="media-body">
-                                    <div class="f-13 chat-header">Sara</div>
-                                </div>
-                            </div>
-                            <div class="media userlist-box" data-id="14" data-status="online" data-username="Doe" data-toggle="tooltip" data-placement="left" title="Doe">
-                                <a class="media-left" href="#!">
-                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
-                                    <div class="live-status bg-success"></div>
-                                </a>
-                                <div class="media-body">
-                                    <div class="f-13 chat-header">Doe</div>
-                                </div>
-                            </div>
-                            <div class="media userlist-box" data-id="15" data-status="online" data-username="Lary" data-toggle="tooltip" data-placement="left" title="Lary">
-                                <a class="media-left" href="#!">
-                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u1.jpg" alt="Generic placeholder image">
-                                    <div class="live-status bg-success"></div>
-                                </a>
-                                <div class="media-body">
-                                    <div class="f-13 chat-header">Lary</div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- Sidebar inner chat start-->
-        <div class="showChat_inner">
-            <div class="media chat-inner-header">
-                <a class="back_chatBox">
-                    <i class="icofont icofont-rounded-left"></i> Josephin Doe
-                </a>
-            </div>
-            <div class="media chat-messages">
-                <a class="media-left photo-table" href="#!">
-                    <img class="media-object img-circle m-t-5" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
-                </a>
-                <div class="media-body chat-menu-content">
-                    <div class="">
-                        <p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
-                        <p class="chat-time">8:20 a.m.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="media chat-messages">
-                <div class="media-body chat-menu-reply">
-                    <div class="">
-                        <p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
-                        <p class="chat-time">8:20 a.m.</p>
-                    </div>
-                </div>
-                <div class="media-right photo-table">
-                    <a href="#!">
-                        <img class="media-object img-circle m-t-5" src="<?= $root ?>assets/images/avatar-2.png" alt="Generic placeholder image">
+            <!-- Sidebar inner chat start-->
+            <div class="showChat_inner">
+                <div class="media chat-inner-header">
+                    <a class="back_chatBox">
+                        <i class="icofont icofont-rounded-left"></i> Josephin Doe
                     </a>
                 </div>
-            </div>
-            <div class="chat-reply-box p-b-20">
-                <div class="right-icon-control">
-                    <input type="text" class="form-control search-text" placeholder="Share Your Thoughts">
-                    <div class="form-icon">
-                        <i class="icofont icofont-paper-plane"></i>
+                <div class="media chat-messages">
+                    <a class="media-left photo-table" href="#!">
+                        <img class="media-object img-circle m-t-5" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
+                    </a>
+                    <div class="media-body chat-menu-content">
+                        <div class="">
+                            <p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
+                            <p class="chat-time">8:20 a.m.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="media chat-messages">
+                    <div class="media-body chat-menu-reply">
+                        <div class="">
+                            <p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
+                            <p class="chat-time">8:20 a.m.</p>
+                        </div>
+                    </div>
+                    <div class="media-right photo-table">
+                        <a href="#!">
+                            <img class="media-object img-circle m-t-5" src="<?= $root ?>assets/images/avatar-2.png" alt="Generic placeholder image">
+                        </a>
+                    </div>
+                </div>
+                <div class="chat-reply-box p-b-20">
+                    <div class="right-icon-control">
+                        <input type="text" class="form-control search-text" placeholder="Share Your Thoughts">
+                        <div class="form-icon">
+                            <i class="icofont icofont-paper-plane"></i>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- Sidebar inner chat end-->
-        <!-- Main-body start-->
+            <!-- Sidebar inner chat end-->
+            <!-- Main-body start-->
+        <?php } ?>
         <div class="main-body">
             @include('layouts.notifications')
             @yield('content')
@@ -948,88 +963,89 @@ function toast(message) {
         @yield('footer')
     </body>
     <script type="text/javascript">
-                                               $(document).ready(function () {
-                                                   $('.dataTable').DataTable({
-                                                       dom: 'Bfrtip',
-                                                       responsive: false,
-                                                       paging: true,
-                                                       info: false,
-                                                       "pageLength": 10,
-                                                       buttons: [
-                                                           {
-                                                               text: 'PDF',
-                                                               extend: 'pdfHtml5',
-                                                               message: '',
-                                                               orientation: 'landscape',
-                                                               exportOptions: {
-                                                                   columns: ':visible'
+        
+                                                   $(document).ready(function () {
+                                                       $('.dataTable').DataTable({
+                                                           dom: 'Bfrtip',
+                                                           responsive: false,
+                                                           paging: true,
+                                                           info: false,
+                                                           "pageLength": 10,
+                                                           buttons: [
+                                                               {
+                                                                   text: 'PDF',
+                                                                   extend: 'pdfHtml5',
+                                                                   message: '',
+                                                                   orientation: 'landscape',
+                                                                   exportOptions: {
+                                                                       columns: ':visible'
+                                                                   },
+                                                                   customize: function (doc) {
+                                                                       doc.pageMargins = [10, 10, 10, 10];
+                                                                       doc.defaultStyle.fontSize = 7;
+                                                                       doc.styles.tableHeader.fontSize = 7;
+                                                                       doc.styles.title.fontSize = 9;
+                                                                       // Remove spaces around page title
+                                                                       doc.content[0].text = doc.content[0].text.trim();
+                                                                       // Create a footer
+                                                                       doc['footer'] = (function (page, pages) {
+                                                                           return {
+                                                                               columns: [
+                                                                                   'www.shulesoft.com',
+                                                                                   {
+                                                                                       // This is the right column
+                                                                                       alignment: 'right',
+                                                                                       text: ['page ', {text: page.toString()}, ' of ', {text: pages.toString()}]
+                                                                                   }
+                                                                               ],
+                                                                               margin: [10, 0]
+                                                                           }
+                                                                       });
+                                                                       // Styling the table: create style object
+                                                                       var objLayout = {};
+                                                                       // Horizontal line thickness
+                                                                       objLayout['hLineWidth'] = function (i) {
+                                                                           return .5;
+                                                                       };
+                                                                       // Vertikal line thickness
+                                                                       objLayout['vLineWidth'] = function (i) {
+                                                                           return .5;
+                                                                       };
+                                                                       // Horizontal line color
+                                                                       objLayout['hLineColor'] = function (i) {
+                                                                           return '#aaa';
+                                                                       };
+                                                                       // Vertical line color
+                                                                       objLayout['vLineColor'] = function (i) {
+                                                                           return '#aaa';
+                                                                       };
+                                                                       // Left padding of the cell
+                                                                       objLayout['paddingLeft'] = function (i) {
+                                                                           return 4;
+                                                                       };
+                                                                       // Right padding of the cell
+                                                                       objLayout['paddingRight'] = function (i) {
+                                                                           return 4;
+                                                                       };
+                                                                       // Inject the object in the document
+                                                                       doc.content[1].layout = objLayout;
+                                                                   }
                                                                },
-                                                               customize: function (doc) {
-                                                                   doc.pageMargins = [10, 10, 10, 10];
-                                                                   doc.defaultStyle.fontSize = 7;
-                                                                   doc.styles.tableHeader.fontSize = 7;
-                                                                   doc.styles.title.fontSize = 9;
-                                                                   // Remove spaces around page title
-                                                                   doc.content[0].text = doc.content[0].text.trim();
-                                                                   // Create a footer
-                                                                   doc['footer'] = (function (page, pages) {
-                                                                       return {
-                                                                           columns: [
-                                                                               'www.shulesoft.com',
-                                                                               {
-                                                                                   // This is the right column
-                                                                                   alignment: 'right',
-                                                                                   text: ['page ', {text: page.toString()}, ' of ', {text: pages.toString()}]
-                                                                               }
-                                                                           ],
-                                                                           margin: [10, 0]
-                                                                       }
-                                                                   });
-                                                                   // Styling the table: create style object
-                                                                   var objLayout = {};
-                                                                   // Horizontal line thickness
-                                                                   objLayout['hLineWidth'] = function (i) {
-                                                                       return .5;
-                                                                   };
-                                                                   // Vertikal line thickness
-                                                                   objLayout['vLineWidth'] = function (i) {
-                                                                       return .5;
-                                                                   };
-                                                                   // Horizontal line color
-                                                                   objLayout['hLineColor'] = function (i) {
-                                                                       return '#aaa';
-                                                                   };
-                                                                   // Vertical line color
-                                                                   objLayout['vLineColor'] = function (i) {
-                                                                       return '#aaa';
-                                                                   };
-                                                                   // Left padding of the cell
-                                                                   objLayout['paddingLeft'] = function (i) {
-                                                                       return 4;
-                                                                   };
-                                                                   // Right padding of the cell
-                                                                   objLayout['paddingRight'] = function (i) {
-                                                                       return 4;
-                                                                   };
-                                                                   // Inject the object in the document
-                                                                   doc.content[1].layout = objLayout;
-                                                               }
-                                                           },
-                                                     
-                                                           {extend: 'excelHtml5', footer: true},
-                                                           {extend: 'csvHtml5', customize: function (csv) {
-                                                                   return "ShuleSoft" + csv + "ShuleSoft";
-                                                               }},
-                                                           {extend: 'print', footer: true}
 
-                                                       ]
+                                                               {extend: 'excelHtml5', footer: true},
+                                                               {extend: 'csvHtml5', customize: function (csv) {
+                                                                       return "ShuleSoft" + csv + "ShuleSoft";
+                                                                   }},
+                                                               {extend: 'print', footer: true}
+
+                                                           ]
+                                                       });
                                                    });
-                                               });
     </script>
 </html>
 <?php
 ///echo url()->current();
-if(preg_match('/localhost/', url()->current())){
-?>
-<p align="center">This page took <?php echo (microtime(true) - LARAVEL_START) ?> seconds to render</p>
+if (preg_match('/localhost/', url()->current())) {
+    ?>
+    <p align="center">This page took <?php echo (microtime(true) - LARAVEL_START) ?> seconds to render</p>
 <?php } ?>

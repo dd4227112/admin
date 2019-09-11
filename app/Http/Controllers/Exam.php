@@ -336,8 +336,18 @@ class Exam extends Controller {
     }
 
     public function report() {
-        $this->data['classes'] = \App\Model\ReferClasses::all();
-        $this->data['exams'] = \App\Model\GlobalExam::all();
+        $token = request('token');
+        if (strlen($token) > 10) {
+            $report_published = DB::table('exam_reports')->where('token', $token)->first();
+            if (count($report_published) == 0) {
+                die('This url is not valid');
+            }
+            $this->data['exams'] = \App\Model\GlobalExam::where('id', $report_published->global_exam_id)->get();
+            $this->data['classes'] = \App\Model\ReferClasses::where('id', $report_published->refer_class_id)->get();
+        } else {
+            $this->data['exams'] = \App\Model\GlobalExam::all();
+            $this->data['classes'] = \App\Model\ReferClasses::all();
+        }
 
         $this->data['academic_years'] = ['academic_year' => date('Y')];
         // $this->data['subjects'] = DB::select('select distinct lower(subject_name) as subject_name from admin.all_mark_info ');
@@ -352,13 +362,15 @@ class Exam extends Controller {
     public function singleReport() {
         $this->data['reports'] = [];
         if ($_POST) {
+           
+            $this->validate(request(), [
+                'exam_id' => 'required|min:1',
+                'class_id' => 'required|integer|min:1',
+            ]);
             $exam_id = request('exam_id');
             $subject_id = request('subject_id');
             $class_id = request('class_id');
-            $this->validate(request(), [
-                'exam_id' => 'required|min:1',
-                'class_id' => 'required|min:1',
-            ]);
+
             $this->data['exam_definition'] = \App\Model\GlobalExam::find($exam_id);
             $this->data['class_info'] = $class = DB::table('constant.refer_classes')->where('id', $class_id)->first();
 
@@ -366,7 +378,7 @@ class Exam extends Controller {
             $sql = 'select distinct lower(subject_name) as subject_name from admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' and mark is not null and "schema_name" is not null order by 1';
             $this->data['subjects'] = DB::select($sql);
             $this->data['schools'] = DB::select('select distinct "schema_name" as school from admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' and "schema_name" is not null');
-           // dd($this->data['schools']);
+            // dd($this->data['schools']);
             if (request('type_id') == 'school') {
                 //get school reports
                 $this->data['reports'] = $this->createSchoolReport($exam_id, $subject_id, $class_id);
@@ -381,7 +393,7 @@ class Exam extends Controller {
     }
 
     public function createReport() {
-        $schools = request('schools'); 
+        $schools = request('schools');
         $exam_id = request('exam_id');
         $name = request('name');
         $class_id = request('class_id');
@@ -389,7 +401,7 @@ class Exam extends Controller {
             'refer_class_id' => $class_id,
             'global_exam_id' => $exam_id,
             'name' => $name,
-            'school_excluded' =>count($schools) >0 ? implode(',', $schools) :'',
+            'school_excluded' => count($schools) > 0 ? implode(',', $schools) : '',
             'token' => sha1(md5($exam_id))
         ]);
         return redirect()->back()->with('success', 'Report generated successfully');

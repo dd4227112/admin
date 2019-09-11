@@ -6,7 +6,7 @@
         <div class="page-header">
             <div class="page-header-title">
                 <h4 class="box-title">Exams Reports</h4>
-                <span>This allows different reports to be generated after all marks generated</span>
+                <span>You can view different types of reports here</span>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -23,123 +23,127 @@
             </div>
         </div>
         <div class="page-body">
-            <div class="card row">
-                <div class="col-lg-6 " style="margin-left: 27%">
+            <div class="card">
+                <div class="row">
+                    <div class="col-sm-12 col-xl-3"></div>
+                    <div class="col-sm-12 col-xl-6 ">
 
-                    <p align="center"></p>
-                    <form class="form-horizontal col-lg-12" role="form" method="post">
-                        <div class="form-group row">
-                            <label for="exam_id" class="col-sm-2 col-sm-offset-2 control-label">
-                                Exam
-                            </label>
-                            <div class="col-sm-6">
-                                <?php
-                                $exam_array = array("0" => 'Select Exam');
-                                if (isset($exams)) {
-                                    foreach ($exams as $exam) {
-                                        $exam_array[$exam->id] = $exam->name;
-                                    }
-                                }
-
-                                echo form_dropdown("exam_id", $exam_array, old("exam_id"), "id='exam_id' class='form-control'");
-                                ?>
-                            </div>
-                        </div>
-                        <div id="option_exam_parts" style="display: none;">
-                            <div class='form-group row' >
-                                <label for="class_id" class="col-sm-2 col-sm-offset-2 control-label">
-                                    Class
+                        <p align="center"></p>
+                        <form class="form-horizontal col-lg-12" role="form" method="post">
+                            <div class="form-group row">
+                                <label for="exam_id" class="col-sm-2 col-sm-offset-2 control-label">
+                                    Exam
                                 </label>
                                 <div class="col-sm-6">
                                     <?php
-                                    $array = array("0" => 'select Class');
-                                    foreach ($classes as $class) {
-                                        $array[$class->id] = $class->name;
+                                    $exam_array = array("0" => 'Select Exam');
+                                    if (isset($exams)) {
+                                        foreach ($exams as $exam) {
+                                            $exam_array[$exam->id] = $exam->name;
+                                        }
                                     }
-                                    $class_id = isset($class_id) ? $class_id : '0';
-                                    $class_name = $array[$class_id];
-                                    echo form_dropdown("class_id", $array, NULL, "id='class_id' class='form-control'");
+
+                                    echo form_dropdown("exam_id", $exam_array, old("exam_id"), "id='exam_id' class='form-control '");
                                     ?>
                                 </div>
                             </div>
-                            <div id="report_filter_div">
+                            <div id="option_exam_parts" style="display: none;">
                                 <div class='form-group row' >
-                                    <label for="year" class="col-sm-2 col-sm-offset-2 control-label">
-                                        Academic Year
+                                    <label for="class_id" class="col-sm-2 col-sm-offset-2 control-label">
+                                        Class
                                     </label>
                                     <div class="col-sm-6">
                                         <?php
-                                        $ac_array = array("0" => 'select Year');
-                                        if (isset($academic_years) && count($academic_years) > 0) {
+                                        $array = array("0" => 'select Class');
+                                        foreach ($classes as $class) {
+                                            $array[$class->id] = $class->name;
+                                        }
+                                        $class_id = isset($class_id) ? $class_id : '0';
+                                        $class_name = $array[$class_id];
+                                        echo form_dropdown("class_id", $array, NULL, "id='class_id' class='form-control'");
+                                        ?>
+                                    </div>
+                                </div>
+                                <div id="report_filter_div">
+                                    <div class='form-group row' >
+                                        <label for="year" class="col-sm-2 col-sm-offset-2 control-label">
+                                            Academic Year
+                                        </label>
+                                        <div class="col-sm-6">
+                                            <?php
+                                            $ac_array = array("0" => 'select Year');
+                                            if (isset($academic_years) && count($academic_years) > 0) {
 
 //                                            foreach ($academic_years as $academic) {
 //                                                $ac_array[$academic->academic_year] = $academic->academic_year;
 //                                            }
-                                        }
-
-                                        echo form_dropdown("academic_year_id", $academic_years, old("academic_year_id"), "id='academic_year_id' class='form-control'");
-                                        ?>
-                                    </div>
-                                </div>
-
-
-                                <div class='form-group row' >
-                                    <label for="type_id" class="col-sm-2 col-sm-offset-2 control-label">
-                                        Report Type
-                                    </label>
-                                    <div class="col-sm-6">
-                                        <?php
-                                        $type_array = array("0" => 'Select Type');
-                                        $type_array['school'] = 'School Ranking Report';
-                                        $type_array['student'] = 'Student Average Report';
-                                        $type_array['subject'] = 'Student Overall Report';
-                                        echo form_dropdown("type_id", $type_array, old("type_id"), "id='type_id' class='form-control'");
-                                        ?>
-                                    </div> <span id="sem_id"></span>
-                                </div>
-                                <div class='form-group row' >
-                                    <label for="subject_id" class="col-sm-2 col-sm-offset-2 control-label">
-                                        Subject
-                                    </label>
-                                    <div class="col-sm-6">
-                                        <?php
-                                        $subject_array = array("0" => 'Select Subject');
-                                        if (isset($subjects)) {
-                                            $subject_array['all'] = 'All Subjects';
-                                            foreach ($subjects as $subject) {
-                                                $subject_array[$subject->subject_name] = $subject->subject_name;
                                             }
-                                        }
-                                        echo form_dropdown("subject_id", $subject_array, old("subject_id"), "id='subject_id' class='form-control'");
-                                        ?>
-                                    </div>
-                                </div>
 
-
-                                <div class="form-group row">
-                                    <label for="subject_id" class="col-sm-2 col-sm-offset-2 control-label">
-
-                                    </label>
-                                    <div class="col-sm-6">
-                                        <div id="grade_option" style="display: none">
-                                            <div class="form-check form-check-inline">
-                                                <label class="form-check-label">
-                                                    <input class="form-check-input" type="radio" name="gender" id="gender-1" value="average" checked=""> Rank By AVG
-                                                </label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <label class="form-check-label">
-                                                    <input class="form-check-input" type="radio" name="gender" id="gender-2" value="total"> Rank by Total
-                                                </label>
-                                            </div>
+                                            echo form_dropdown("academic_year_id", $academic_years, old("academic_year_id"), "id='academic_year_id' class='form-control'");
+                                            ?>
                                         </div>
-                                        <input type="submit" class="btn btn-success" style="margin-bottom:0px" value="View Report" >
+                                    </div>
+
+
+                                    <div class='form-group row' >
+                                        <label for="type_id" class="col-sm-2 col-sm-offset-2 control-label">
+                                            Report Type
+                                        </label>
+                                        <div class="col-sm-6">
+                                            <?php
+                                            $type_array = array("0" => 'Select Type');
+                                            $type_array['school'] = 'School Ranking Report';
+                                            $type_array['student'] = 'Student Average Report';
+                                            $type_array['subject'] = 'Student Overall Report';
+                                            echo form_dropdown("type_id", $type_array, old("type_id"), "id='type_id' class='form-control'");
+                                            ?>
+                                        </div> <span id="sem_id"></span>
+                                    </div>
+                                    <div class='form-group row' >
+                                        <label for="subject_id" class="col-sm-2 col-sm-offset-2 control-label">
+                                            Subject
+                                        </label>
+                                        <div class="col-sm-6">
+                                            <?php
+                                            $subject_array = array("0" => 'Select Subject');
+                                            if (isset($subjects)) {
+                                                $subject_array['all'] = 'All Subjects';
+                                                foreach ($subjects as $subject) {
+                                                    $subject_array[$subject->subject_name] = $subject->subject_name;
+                                                }
+                                            }
+                                            echo form_dropdown("subject_id", $subject_array, old("subject_id"), "id='subject_id' class='form-control'");
+                                            ?>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group row">
+                                        <label for="subject_id" class="col-sm-2 col-sm-offset-2 control-label">
+
+                                        </label>
+                                        <div class="col-sm-6">
+                                            <div id="grade_option" style="display: none">
+                                                <div class="form-check form-check-inline">
+                                                    <label class="form-check-label">
+                                                        <input class="form-check-input" type="radio" name="gender" id="gender-1" value="average" checked=""> Rank By AVG
+                                                    </label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <label class="form-check-label">
+                                                        <input class="form-check-input" type="radio" name="gender" id="gender-2" value="total"> Rank by Total
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <input type="submit" class="btn btn-success" style="margin-bottom:0px" value="View Report" >
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <?= csrf_field() ?>
-                    </form>
+                            <?= csrf_field() ?>
+                        </form>
+                    </div>
+                    <div class="col-sm-12 col-xl-3"></div>
                 </div>
             </div>
 
@@ -148,9 +152,10 @@
                 <h5 class="card-header">Exam Reports</h5>
                 <?php if (isset($exam_definition) && count($exam_definition) > 0) { ?>
                     <div class="row">
-                        <div class="col-sm-3"></div>
-                        <div class="col-sm-6 list-group">
+                        <div class="col-sm-12 col-xl-3"></div>
+                        <div class="col-sm-12 col-xl-6">
                             <div class="list-group-item">
+                                <div class="table">
                                 <table class="table">
                                     <thead>
                                         <tr>
@@ -176,7 +181,6 @@
                                                     Not Published: <br/>
                                                     <a href="#" class="label label-warning label-sm waves-effect" data-toggle="modal" data-target="#large_modal">Click to Publish</a>
                                                     <?php
-                                                   
                                                     if (isset($schools) && count($schools) > 0) {
                                                         ?>
                                                         <div class="modal fade" id="large_modal" tabindex="-1" role="dialog">
@@ -234,9 +238,10 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                </div>
                             </div>
                         </div>
-
+                        <div class="col-sm-12 col-xl-3"></div>
                     </div>
 
                     <?php
@@ -261,16 +266,17 @@
                         <div class="tab-content card-block">
                             <div class="tab-pane active" id="home7" role="tabpanel" aria-expanded="true">
 
+                                <div class="col-lg-12 table-responsive">
                                 <table id="example23" class="dataTable nowrap table color-table success-table">
                                     <thead>
                                         <tr>
                                             <th>#</th>
                                             <th><?= request('type_id') == 'school' ? 'School ' : 'Student ' ?> Name</th>
-                                            <?php // request('type_id') == 'school' ? '' : '<th>Sex</th>'  ?>      
+                                            <?php // request('type_id') == 'school' ? '' : '<th>Sex</th>'   ?>      
                                             <th>Subject</th>
                                             <th>Average</th>
                                             <th>Grade</th>
-                                            <th class="col-sm-2">School Rank</th>
+                                           <th class="col-sm-2">School Rank</th>
                                             <th class="col-sm-2">Overall Rank</th>
                                             <?= request('type_id') == 'school' ? '<th>Action</th>' : '<th>School</th>' ?>
                                             <!--<th>Region</th>-->
@@ -293,7 +299,7 @@
                                             <tr>
                                                 <td><?= $i ?></td>
                                                 <td><?= request('type_id') == 'school' ? $report->schema_name : $report->name ?></td>
-                                                <!--                                                 <?php // request('type_id') == 'school' ? '' : '<td>'.$report->sex.'</td>'          ?> -->
+                                                <!--                                                 <?php // request('type_id') == 'school' ? '' : '<td>'.$report->sex.'</td>'           ?> -->
                                                 <td><?= ucfirst(request('subject_id')) ?></td>
                                                 <td><?= $report->average ?></td>
                                                 <td><?= $report->grade ?></td>
@@ -303,14 +309,14 @@
                                                 if (request('type_id') == 'school') {
                                                     ?>
                                                     <td>
-                                                        <a class="btn btn-success btn-sm" href="#">View</a>
+                                                        <!--<a class="btn btn-success btn-sm" href="#">View</a>-->
                                                     </td>
                                                 <?php } else { ?>
                                                     <td>
                                                         <?= $report->schema_name ?>
                                                     </td>
                                                 <?php } ?>
-                <!--<td><?php //$report->region          ?></td>-->
+            <!--<td><?php //$report->region          ?></td>-->
                                             </tr>
                                             <?php
                                             $i++;
@@ -318,10 +324,11 @@
                                         ?>
                                     </tbody>
                                 </table>        
-
+                            </div>
                             </div>
                             <div  class="tab-pane" id="profile7" role="tabpanel" aria-expanded="false">
                                 <h2>Summary</h2>
+                                <div class="col-lg-12 table-responsive">
                                 <table class="table">
                                     <thead>
                                         <tr>
@@ -343,7 +350,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
-
+                                </div>
                                 <h2>Grading Summary per School</h2>
 
                                 <?php
@@ -363,6 +370,7 @@
                                 }
                                 $uschemas = (array_unique($schemas));
                                 ?>
+                                <div class="col-lg-12 table-responsive">
                                 <table class="table">
                                     <thead>
                                         <tr>
@@ -388,6 +396,7 @@
                                         <?php } ?>
                                     </tbody>
                                 </table>
+                                </div>
                             </div>
                         </div> 
 
