@@ -418,16 +418,16 @@
 </div>
 
 <script type="text/javascript">
-    $('#type_id').change(function (event) {
+    $('#class_id').change(function (event) {
         var exam_id = $('#exam_id').val();
-        var class_id = $('#class_id').val();
+        var class_id = $(this).val();
         if (exam_id === '0') {
             $('#subject_id').val(0);
         } else {
             $.ajax({
                 type: 'POST',
                 url: "<?= url('exam/getSubjects/null') ?>",
-                data: "class_id=" + class_id + '&exam_id=' + exam_id,
+                data: "class_id=" + class_id + '&exam_id=' + exam_id+'&token=<?=request('token')?>',
                 dataType: "html",
                 success: function (data) {
                     $('#subject_id').html(data);
