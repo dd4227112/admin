@@ -360,12 +360,12 @@ class Exam extends Controller {
                 'class_id' => 'required|min:1',
             ]);
             $this->data['exam_definition'] = \App\Model\GlobalExam::find($exam_id);
-            $this->data['class_info']=$class = DB::table('constant.refer_classes')->where('id', $class_id)->first();
-            
+            $this->data['class_info'] = $class = DB::table('constant.refer_classes')->where('id', $class_id)->first();
+
             $this->data['grades'] = \App\Model\GlobalGrade::where('classlevel_id', $class->school_level_id)->orderBy('grade')->get();
             $sql = 'select distinct lower(subject_name) as subject_name from admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' and mark is not null order by 1';
             $this->data['subjects'] = DB::select($sql);
-            $this->data['schools']=DB::select('select distinct "schema_name" as school from admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' and "schema_name" is not null');
+            $this->data['schools'] = DB::select('select distinct "schema_name" as school from admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' and "schema_name" is not null');
 
             if (request('type_id') == 'school') {
                 //get school reports
@@ -378,6 +378,21 @@ class Exam extends Controller {
             }
         }
         return view('exam.single.single_report', $this->data);
+    }
+
+    public function createReport() {
+        $schools = request('schools');
+        $exam_id = request('exam_id');
+        $name = request('name');
+        $class_id = request('class_id');
+        DB::table('exam_reports')->insert([
+            'refer_class_id' => $class_id,
+            'global_exam_id' => $exam_id,
+            'name' => $name,
+            'school_excluded' => implode(',', $schools),
+            'token' => sha1(md5($exam_id))
+        ]);
+        return redirect()->back()->with('success', 'Report generated successfully');
     }
 
     public function combinedReport() {

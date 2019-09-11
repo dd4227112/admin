@@ -165,8 +165,18 @@
                                             <td><?= $exam_definition->name ?></td>
                                             <td><?= $exam_definition->date ?></td>
                                             <td><?= $class_info->name ?></td>
-                                            <td>Not Published: <br/>
-                                                <a href="#" class="label label-success label-sm waves-effect" data-toggle="modal" data-target="#large_modal">Click to Publish</a></td>
+                                            <td>
+                                                <?php
+                                                $report_published = DB::table('exam_reports')->where('token', sha1(md5($exam_definition->id)))->first();
+                                                if (count($report_published) == 1) {
+                                                    ?>
+                                                    <a href="<?= url('exam/report/single/null?token=' . $report_published->token) ?>" class="label label-success label-sm waves-effect">Exam Published</a>  
+                                                <?php } else {
+                                                    ?>
+                                                    Not Published: <br/>
+                                                    <a href="#" class="label label-warning label-sm waves-effect" data-toggle="modal" data-target="#large_modal">Click to Publish</a>
+                                                <?php } ?>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -202,7 +212,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th><?= request('type_id') == 'school' ? 'School ' : 'Student ' ?> Name</th>
-                                            <?php // request('type_id') == 'school' ? '' : '<th>Sex</th>' ?>      
+                                            <?php // request('type_id') == 'school' ? '' : '<th>Sex</th>'  ?>      
                                             <th>Subject</th>
                                             <th>Average</th>
                                             <th>Grade</th>
@@ -229,7 +239,7 @@
                                             <tr>
                                                 <td><?= $i ?></td>
                                                 <td><?= request('type_id') == 'school' ? $report->schema_name : $report->name ?></td>
-                                                <!--                                                 <?php // request('type_id') == 'school' ? '' : '<td>'.$report->sex.'</td>'       ?> -->
+                                                <!--                                                 <?php // request('type_id') == 'school' ? '' : '<td>'.$report->sex.'</td>'         ?> -->
                                                 <td><?= ucfirst(request('subject_id')) ?></td>
                                                 <td><?= $report->average ?></td>
                                                 <td><?= $report->grade ?></td>
@@ -246,7 +256,7 @@
                                                         <?= $report->schema_name ?>
                                                     </td>
                                                 <?php } ?>
-                            <!--<td><?php //$report->region       ?></td>-->
+                    <!--<td><?php //$report->region         ?></td>-->
                                             </tr>
                                             <?php
                                             $i++;
@@ -347,21 +357,22 @@ if (isset($schools) && count($schools) > 0) {
     ?>
     <div class="modal fade" id="large_modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Publish Exam Report</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Fill this form to publish this Exam </p>
-                    <br/>
-                    <form>
+            <form action="<?= url('exam/createReport') ?>" method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Publish Exam Report</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Fill this form to publish this Exam </p>
+                        <br/>
+
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Report Name</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="" value="<?= $exam_definition->name ?>" disabled="">
+                                <input type="text" class="form-control" name="name" value="<?= $exam_definition->name ?>" disabled="">
                             </div>
                         </div>
 
@@ -369,8 +380,8 @@ if (isset($schools) && count($schools) > 0) {
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Schools To Exclude</label>
                             <div class="col-sm-10">
-                                <select name="schools[]" class="form-control select2" multiple="">
-                                    <option value="">Select One or more school</option>
+                                <select name="schools[]" class="form-control col-sm-12" multiple="multiple">
+                                    <option value="0">Select One or more school</option>
                                     <?php
                                     foreach ($schools as $school) {
                                         ?>
@@ -380,13 +391,17 @@ if (isset($schools) && count($schools) > 0) {
                             </div>
                         </div>
 
-                    </form>
+
+                    </div>
+                    <div class="modal-footer">
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="exam_id" value="<?= $exam_definition->id ?>"/>
+                        <input type="hidden" name="class_id" value="<?= $class_info->id ?>"/>
+                        <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary waves-effect waves-light ">Publish Exam</button>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary waves-effect waves-light ">Publish Exam</button>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
 <?php } ?>
