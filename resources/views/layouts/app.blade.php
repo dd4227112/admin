@@ -101,9 +101,9 @@ function toast(message) {
         </div>
         <!-- Pre-loader end -->
         <!-- Menu header start -->
-        <nav class="navbar header-navbar" >
+        <nav class="navbar header-navbar">
             <div class="navbar-wrapper">
-                <div class="navbar-logo" style="<?=strlen(request('token'))>5 ? 'height:6em':''?>">
+                <div class="navbar-logo">
                     <a class="mobile-menu" id="mobile-collapse" href="#!">
                         <i class="ti-menu"></i>
                     </a>
