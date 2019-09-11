@@ -366,7 +366,7 @@ class Exam extends Controller {
             $sql = 'select distinct lower(subject_name) as subject_name from admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' and mark is not null and "schema_name" is not null order by 1';
             $this->data['subjects'] = DB::select($sql);
             $this->data['schools'] = DB::select('select distinct "schema_name" as school from admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' and "schema_name" is not null');
-
+           // dd($this->data['schools']);
             if (request('type_id') == 'school') {
                 //get school reports
                 $this->data['reports'] = $this->createSchoolReport($exam_id, $subject_id, $class_id);

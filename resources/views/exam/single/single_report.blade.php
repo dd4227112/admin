@@ -175,6 +175,60 @@
                                                     ?>
                                                     Not Published: <br/>
                                                     <a href="#" class="label label-warning label-sm waves-effect" data-toggle="modal" data-target="#large_modal">Click to Publish</a>
+                                                    <?php
+                                                   
+                                                    if (isset($schools) && count($schools) > 0) {
+                                                        ?>
+                                                        <div class="modal fade" id="large_modal" tabindex="-1" role="dialog">
+                                                            <div class="modal-dialog modal-lg" role="document">
+                                                                <form action="<?= url('exam/createReport') ?>" method="post">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h4 class="modal-title">Publish Exam Report</h4>
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <p>Fill this form to publish this Exam </p>
+                                                                            <br/>
+
+                                                                            <div class="form-group row">
+                                                                                <label class="col-sm-2 col-form-label">Report Name</label>
+                                                                                <div class="col-sm-10">
+                                                                                    <input type="text" class="form-control" name="name" value="<?= $exam_definition->name ?>" disabled="">
+                                                                                </div>
+                                                                            </div>
+
+
+                                                                            <div class="form-group row">
+                                                                                <label class="col-sm-2 col-form-label">Schools To Exclude</label>
+                                                                                <div class="col-sm-10">
+                                                                                    <select name="schools[]" class="form-control col-sm-12" multiple="multiple">
+                                                                                        <option value="0">Select One or more school</option>
+                                                                                        <?php
+                                                                                        foreach ($schools as $school) {
+                                                                                            ?>
+                                                                                            <option value="<?= $school->school ?>"><?= $school->school ?></option>
+                                                                                        <?php } ?>
+                                                                                    </select>
+                                                                                </div>
+                                                                            </div>
+
+
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <?= csrf_field() ?>
+                                                                            <input type="hidden" name="exam_id" value="<?= $exam_definition->id ?>"/>
+                                                                            <input type="hidden" name="class_id" value="<?= $class_info->id ?>"/>
+                                                                            <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                                                                            <button type="submit" class="btn btn-primary waves-effect waves-light ">Publish Exam</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    <?php } ?>
                                                 <?php } ?>
                                             </td>
                                         </tr>
@@ -239,7 +293,7 @@
                                             <tr>
                                                 <td><?= $i ?></td>
                                                 <td><?= request('type_id') == 'school' ? $report->schema_name : $report->name ?></td>
-                                                <!--                                                 <?php // request('type_id') == 'school' ? '' : '<td>'.$report->sex.'</td>'         ?> -->
+                                                <!--                                                 <?php // request('type_id') == 'school' ? '' : '<td>'.$report->sex.'</td>'          ?> -->
                                                 <td><?= ucfirst(request('subject_id')) ?></td>
                                                 <td><?= $report->average ?></td>
                                                 <td><?= $report->grade ?></td>
@@ -256,7 +310,7 @@
                                                         <?= $report->schema_name ?>
                                                     </td>
                                                 <?php } ?>
-                    <!--<td><?php //$report->region         ?></td>-->
+                <!--<td><?php //$report->region          ?></td>-->
                                             </tr>
                                             <?php
                                             $i++;
@@ -352,59 +406,7 @@
         </div>
     </div>
 </div>
-<?php
-if (isset($schools) && count($schools) > 0) {
-    ?>
-    <div class="modal fade" id="large_modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
-            <form action="<?= url('exam/createReport') ?>" method="post">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Publish Exam Report</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Fill this form to publish this Exam </p>
-                        <br/>
 
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Report Name</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" name="name" value="<?= $exam_definition->name ?>" disabled="">
-                            </div>
-                        </div>
-
-
-                        <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Schools To Exclude</label>
-                            <div class="col-sm-10">
-                                <select name="schools[]" class="form-control col-sm-12" multiple="multiple">
-                                    <option value="0">Select One or more school</option>
-                                    <?php
-                                    foreach ($schools as $school) {
-                                        ?>
-                                        <option value="<?= $school->school ?>"><?= $school->school ?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                        </div>
-
-
-                    </div>
-                    <div class="modal-footer">
-                        <?= csrf_field() ?>
-                        <input type="hidden" name="exam_id" value="<?= $exam_definition->id ?>"/>
-                        <input type="hidden" name="class_id" value="<?= $class_info->id ?>"/>
-                        <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary waves-effect waves-light ">Publish Exam</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-<?php } ?>
 <script type="text/javascript">
     $('#type_id').change(function (event) {
         var exam_id = $('#exam_id').val();
