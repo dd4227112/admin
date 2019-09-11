@@ -381,7 +381,7 @@ class Exam extends Controller {
     }
 
     public function createReport() {
-        $schools = request('schools');
+        $schools = request('schools'); 
         $exam_id = request('exam_id');
         $name = request('name');
         $class_id = request('class_id');
@@ -389,7 +389,7 @@ class Exam extends Controller {
             'refer_class_id' => $class_id,
             'global_exam_id' => $exam_id,
             'name' => $name,
-            'school_excluded' => implode(',', $schools),
+            'school_excluded' =>count($schools) >0 ? implode(',', $schools) :'',
             'token' => sha1(md5($exam_id))
         ]);
         return redirect()->back()->with('success', 'Report generated successfully');
