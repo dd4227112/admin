@@ -146,7 +146,7 @@
 
             <div class="card">
                 <h5 class="card-header">Exam Reports</h5>
-                <?php if (count($exam_definition) > 0) { ?>
+                <?php if (isset($exam_definition) && count($exam_definition) > 0) { ?>
                     <div class="row">
                         <div class="col-sm-3"></div>
                         <div class="col-sm-6 list-group">
