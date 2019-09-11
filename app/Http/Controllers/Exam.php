@@ -363,7 +363,7 @@ class Exam extends Controller {
             $this->data['class_info'] = $class = DB::table('constant.refer_classes')->where('id', $class_id)->first();
 
             $this->data['grades'] = \App\Model\GlobalGrade::where('classlevel_id', $class->school_level_id)->orderBy('grade')->get();
-            $sql = 'select distinct lower(subject_name) as subject_name from admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' and mark is not null order by 1';
+            $sql = 'select distinct lower(subject_name) as subject_name from admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' and mark is not null and "schema_name" is not null order by 1';
             $this->data['subjects'] = DB::select($sql);
             $this->data['schools'] = DB::select('select distinct "schema_name" as school from admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' and "schema_name" is not null');
 
@@ -404,19 +404,19 @@ class Exam extends Controller {
         $class = DB::table('constant.refer_classes')->where('id', $class_id)->first();
 
         $subject_list = $subject_id == 'all' || $subject_id == '0' ? ' ' : " and lower(subject_name)='" . strtolower($subject_id) . "'";
-        $sql = 'select round(avg(mark)) as average,"schema_name", rank() over (order by round(avg(mark)) desc) as rank, rank() over (partition by "schema_name" order by round(avg(mark)) desc ) as school_rank,  (select grade from constant.global_grades where classlevel_id=' . $class->school_level_id . ' and round(avg(mark)) between gradefrom and gradeupto ) from admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' ' . $subject_list . ' group by "schema_name"';
+        $sql = 'select round(avg(mark)) as average,"schema_name", rank() over (order by round(avg(mark)) desc) as rank, rank() over (partition by "schema_name" order by round(avg(mark)) desc ) as school_rank,  (select grade from constant.global_grades where classlevel_id=' . $class->school_level_id . ' and round(avg(mark)) between gradefrom and gradeupto ) from admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' and "schema_name" is not null AND global_exam_id=' . $exam_id . ' ' . $subject_list . ' group by "schema_name"';
         return DB::select($sql);
     }
 
     private function createStudentReport($exam_id, $subject_id, $class_id) {
         $class = DB::table('constant.refer_classes')->where('id', $class_id)->first();
         $subject_list = ($subject_id == 'all' || $subject_id == '0') ? ' ' : " and lower(subject_name)='" . strtolower($subject_id) . "'";
-        $sql = 'select name,round(avg(mark)) as average, "schema_name", rank() over (order by round(avg(mark)) desc) as rank, rank() over (partition by "schema_name" order by round(avg(mark)) desc ) as school_rank, (select grade from constant.global_grades where classlevel_id=' . $class->school_level_id . ' and round(avg(mark)) between gradefrom and gradeupto ) from admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' ' . $subject_list . ' group by "schema_name",name';
+        $sql = 'select name,round(avg(mark)) as average, "schema_name", rank() over (order by round(avg(mark)) desc) as rank, rank() over (partition by "schema_name" order by round(avg(mark)) desc ) as school_rank, (select grade from constant.global_grades where classlevel_id=' . $class->school_level_id . ' and round(avg(mark)) between gradefrom and gradeupto ) from admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' and "schema_name" is not null AND global_exam_id=' . $exam_id . ' ' . $subject_list . ' group by "schema_name",name';
         return DB::select($sql);
     }
 
     public function showAllSubjectReport($exam_id, $class_id) {
-        $subject_status = 'SELECT distinct lower(subject_name)  as subject_name FROM admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' order by 1';
+        $subject_status = 'SELECT distinct lower(subject_name)  as subject_name FROM admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' and "schema_name" is not null  AND global_exam_id=' . $exam_id . ' order by 1';
         $school = DB::table('constant.refer_classes')->where('id', $class_id)->first();
         $result = DB::select($subject_status);
         if (!empty($result)) {
@@ -431,7 +431,7 @@ class Exam extends Controller {
         $this->data['subjects'] = $result;
         $this->data['grades'] = DB::select('select * from constant.global_grades where classlevel_id=' . $school->school_level_id);
         $this->data['subject_evaluations'] = DB::select('select round(AVG(mark),1) as average, lower(subject_name) as subject_name, sum(mark), rank() OVER (ORDER BY (avg(mark)) DESC) AS ranking from admin.' . $this->mark_table . ' where global_exam_id=' . $exam_id . '  and refer_class_id=' . $class_id . '  group by lower(subject_name)');
-        $sql = 'with tempa as ( select distinct b.name,b.roll,b.sex,b."schema_name",a.*, c.sum as total, 1 as student_id, c.average FROM (SELECT * FROM public.crosstab( \'select "roll", lower(subject_name), mark from admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' order by 1,2 \',\' SELECT distinct lower(subject_name)  as subject_name FROM admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' order by 1\') AS final_result("roll" text, ' . $subject_list . ') ) as a JOIN admin.' . $this->mark_table . ' b ON (a."roll"=b."roll") JOIN admin.exam_average_done c ON (c."roll"=b."roll") where c.refer_class_id=' . $class_id . ' and c.global_exam_id=' . $exam_id . '), tempb as (select * from tempa ) select *, rank() over (order by average desc) as rank, rank() over ( partition by "schema_name" order by average desc) as school_rank from tempb';
+        $sql = 'with tempa as ( select distinct b.name,b.roll,b.sex,b."schema_name",a.*, c.sum as total, 1 as student_id, c.average FROM (SELECT * FROM public.crosstab( \'select "roll", lower(subject_name), mark from admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' order by 1,2 \',\' SELECT distinct lower(subject_name)  as subject_name FROM admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' AND global_exam_id=' . $exam_id . ' order by 1\') AS final_result("roll" text, ' . $subject_list . ') ) as a JOIN admin.' . $this->mark_table . ' b ON (a."roll"=b."roll") JOIN admin.exam_average_done c ON (c."roll"=b."roll") where c.refer_class_id=' . $class_id . ' and "schema_name" is not null and c.global_exam_id=' . $exam_id . '), tempb as (select * from tempa ) select *, rank() over (order by average desc) as rank, rank() over ( partition by "schema_name" order by average desc) as school_rank from tempb';
         return DB::select($sql);
     }
 

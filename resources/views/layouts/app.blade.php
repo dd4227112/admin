@@ -952,8 +952,9 @@ function toast(message) {
                                                    $('.dataTable').DataTable({
                                                        dom: 'Bfrtip',
                                                        responsive: false,
-                                                       paging: false,
+                                                       paging: true,
                                                        info: false,
+                                                       "pageLength": 10,
                                                        buttons: [
                                                            {
                                                                text: 'PDF',
