@@ -47,8 +47,9 @@
                                     ?>
                                 </div>
                             </div>
+                            <input type="hidden" name="class_id" value="8"/>
                             <div id="option_exam_parts" style="display: none;">
-                                <div class='form-group row' >
+<!--                                <div class='form-group row' >
                                     <label for="class_id" class="col-sm-2 col-sm-offset-2 control-label">
                                         Class
                                     </label>
@@ -63,9 +64,9 @@
                                         echo form_dropdown("class_id", $array, NULL, "id='class_id' class='form-control'");
                                         ?>
                                     </div>
-                                </div>
+                                </div>-->
                                 <div id="report_filter_div">
-                                    <div class='form-group row' >
+<!--                                    <div class='form-group row' >
                                         <label for="year" class="col-sm-2 col-sm-offset-2 control-label">
                                             Academic Year
                                         </label>
@@ -82,7 +83,7 @@
                                             echo form_dropdown("academic_year_id", $academic_years, old("academic_year_id"), "id='academic_year_id' class='form-control'");
                                             ?>
                                         </div>
-                                    </div>
+                                    </div>-->
 
 
                                     <div class='form-group row' >
@@ -420,9 +421,9 @@
 
                 <?php } ?>
                 <?php
-                if (count($reports) > 0 && request('type_id') == 'subject') {
+                if (request('type_id') == 'subject') {
                     ?>
-                    @include('exam.single.single_subject_report')    
+                    @include('exam.single.ajax_report')    
                 <?php } ?>
             </div>
 
@@ -490,9 +491,9 @@
     </div>
 </div>
 <script type="text/javascript">
-    $('#class_id').change(function (event) {
-        var exam_id = $('#exam_id').val();
-        var class_id = $(this).val();
+    $('#exam_id').change(function (event) {
+        var exam_id = $(this).val();
+        var class_id = 8;
         if (exam_id === '0') {
             $('#subject_id').val(0);
         } else {

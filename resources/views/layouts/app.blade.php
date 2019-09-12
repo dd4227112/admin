@@ -970,6 +970,9 @@ function toast(message) {
         <script src="<?= $root ?>bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
         @yield('footer')
     </body>
+    <?php
+   if (request('type_id') != 'subject') {
+    ?>
     <script type="text/javascript">
 
                                                    $(document).ready(function () {
@@ -1050,6 +1053,7 @@ function toast(message) {
                                                        });
                                                    });
     </script>
+    <?php }?>
 </html>
 <?php
 ///echo url()->current();
