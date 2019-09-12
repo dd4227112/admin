@@ -134,6 +134,91 @@ foreach ($subjects_perfomance as $subject_ev) {
 
                 <div id="container" style="min-width: 70%;  height: 480px; margin: 0 auto"></div>
             </div>
+            <div class="card">
+                <h3>Best Students - Top Ten</h3>
+                <div class="table-responsive">
+                <table  id="result_table_top_ten" class="table table-bordered dataTable">
+                    <thead>
+                        <tr>
+                            <th class="col-sm-1" >#</th>
+                            <th class="col-sm-2" >Name</th>
+                            <th class="col-sm-2" >Sex</th>
+                            <?php foreach ($subjects as $subject) { ?>
+                                <th class="col-sm-1" ><?= $subject->subject_name ?></th>
+                                <th class="col-sm-1" >GD</th>
+                            <?php } ?>
+                            <th class="col-sm-2" >Total Marks</th>
+                            <th class="col-sm-2" >Average</th>
+                            <th class="col-sm-2" >Grade</th>
+                            <th class="col-sm-2" >School Rank</th>
+                            <th class="col-sm-2" >Overall Rank</th>
+                            <th class="col-sm-3">School</th>
+                            <th class="col-sm-3">Region</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+            </div>
+            
+             <div class="card">
+                <h3>Best Students - GIRLS</h3>
+                <div class="table-responsive">
+                <table  id="result_table_girls" class="table table-bordered dataTable">
+                    <thead>
+                        <tr>
+                            <th class="col-sm-1" >#</th>
+                            <th class="col-sm-2" >Name</th>
+                            <th class="col-sm-2" >Sex</th>
+                            <?php foreach ($subjects as $subject) { ?>
+                                <th class="col-sm-1" ><?= $subject->subject_name ?></th>
+                                <th class="col-sm-1" >GD</th>
+                            <?php } ?>
+                            <th class="col-sm-2" >Total Marks</th>
+                            <th class="col-sm-2" >Average</th>
+                            <th class="col-sm-2" >Grade</th>
+                            <th class="col-sm-2" >School Rank</th>
+                            <th class="col-sm-2" >Overall Rank</th>
+                            <th class="col-sm-3">School</th>
+                            <th class="col-sm-3">Region</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+             </div>
+            </div>
+             <div class="card">
+                <h3>Best Students - BOYS</h3>
+                <div class="table-responsive">
+                <table  id="result_table_boys" class="table table-bordered dataTable">
+                    <thead>
+                        <tr>
+                            <th class="col-sm-1" >#</th>
+                            <th class="col-sm-2" >Name</th>
+                            <th class="col-sm-2" >Sex</th>
+                            <?php foreach ($subjects as $subject) { ?>
+                                <th class="col-sm-1" ><?= $subject->subject_name ?></th>
+                                <th class="col-sm-1" >GD</th>
+                            <?php } ?>
+                            <th class="col-sm-2" >Total Marks</th>
+                            <th class="col-sm-2" >Average</th>
+                            <th class="col-sm-2" >Grade</th>
+                            <th class="col-sm-2" >School Rank</th>
+                            <th class="col-sm-2" >Overall Rank</th>
+                            <th class="col-sm-3">School</th>
+                            <th class="col-sm-3">Region</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -144,7 +229,7 @@ foreach ($subjects_perfomance as $subject_ev) {
             "serverSide": true,
             'serverMethod': 'post',
             'ajax': {
-            'url': "<?= url('exam/ajaxResults/null?class_id=' . $class_info->id . '&school='.request('school').'&exam_id=' . $exam_definition->id . '&token=' . request('token')) ?>"
+            'url': "<?= url('exam/ajaxResults/null?class_id=' . $class_info->id . '&school='.request('school').'&exam_id=' . $exam_definition->id . '&type=all&token=' . request('token')) ?>"
             },
             "columns": [
             {"data": "roll"},
@@ -201,9 +286,214 @@ foreach ($subjects as $subject) {
 ?>
             ],
     });
-    $('#applicant_ajax tbody').on('click', '.check', function () {
+  
+    }
+    );
+</script>
 
+<script type="text/javascript">
+    $(document).ready(function () {
+    var table = $('#result_table_top_ten').DataTable({
+    "processing": true,
+            "serverSide": true,
+            'serverMethod': 'post',
+            'ajax': {
+            'url': "<?= url('exam/ajaxResults/null?class_id=' . $class_info->id . '&school='.request('school').'&exam_id=' . $exam_definition->id . '&type=result_table_top_ten&token=' . request('token')) ?>"
+            },
+            "columns": [
+            {"data": "roll"},
+            {"data": "name"},
+            {"data": "sex"},
+<?php foreach ($subjects as $subject) { ?>
+                {"data": "<?= $subject->subject_name ?>"},
+                {"data": ""}
+                ,
+<?php } ?>
+            {"data": "total"}
+            ,
+            {"data": "average"}
+            ,
+            {"data": "grade"}
+            ,
+            {"data": "school_rank"}
+            ,
+            {"data": "rank"}
+            ,
+            {"data": "schema_name"}
+            ,
+            {"data": "region"
+            }
+            ],
+            "columnDefs": [
+
+<?php
+$i = 4;
+foreach ($subjects as $subject) {
+    ?>
+                {
+                "targets": <?= $i ?>,
+                        "data": null,
+                        "render": function (data, type, row, meta) {
+                        var grades = <?= json_encode($grades) ?>;
+                        var value = Math.round(row['<?= $subject->subject_name ?>']);
+                        var g;
+                        $.each(grades, function(i, item) {
+
+                        if (grades[i].gradefrom <= value && grades[i].gradeupto >= value){
+                        g = grades[i].grade;
+                        }
+                        });
+                        return g;
+                        // console.log(row['<?= $subject->subject_name ?>']);
+
+                        }
+
+                },
+    <?php
+    $i = $i + 2;
+}
+?>
+            ],
     });
+  
+    }
+    );
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+    var table = $('#result_table_girls').DataTable({
+    "processing": true,
+            "serverSide": true,
+            'serverMethod': 'post',
+            'ajax': {
+            'url': "<?= url('exam/ajaxResults/null?class_id=' . $class_info->id . '&school='.request('school').'&exam_id=' . $exam_definition->id . '&type=result_table_girls&token=' . request('token')) ?>"
+            },
+            "columns": [
+            {"data": "roll"},
+            {"data": "name"},
+            {"data": "sex"},
+<?php foreach ($subjects as $subject) { ?>
+                {"data": "<?= $subject->subject_name ?>"},
+                {"data": ""}
+                ,
+<?php } ?>
+            {"data": "total"}
+            ,
+            {"data": "average"}
+            ,
+            {"data": "grade"}
+            ,
+            {"data": "school_rank"}
+            ,
+            {"data": "rank"}
+            ,
+            {"data": "schema_name"}
+            ,
+            {"data": "region"
+            }
+            ],
+            "columnDefs": [
+
+<?php
+$i = 4;
+foreach ($subjects as $subject) {
+    ?>
+                {
+                "targets": <?= $i ?>,
+                        "data": null,
+                        "render": function (data, type, row, meta) {
+                        var grades = <?= json_encode($grades) ?>;
+                        var value = Math.round(row['<?= $subject->subject_name ?>']);
+                        var g;
+                        $.each(grades, function(i, item) {
+
+                        if (grades[i].gradefrom <= value && grades[i].gradeupto >= value){
+                        g = grades[i].grade;
+                        }
+                        });
+                        return g;
+                        // console.log(row['<?= $subject->subject_name ?>']);
+
+                        }
+
+                },
+    <?php
+    $i = $i + 2;
+}
+?>
+            ],
+    });
+  
+    }
+    );
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+    var table = $('#result_table_boys').DataTable({
+    "processing": true,
+            "serverSide": true,
+            'serverMethod': 'post',
+            'ajax': {
+            'url': "<?= url('exam/ajaxResults/null?class_id=' . $class_info->id . '&school='.request('school').'&exam_id=' . $exam_definition->id . '&type=result_table_boys&token=' . request('token')) ?>"
+            },
+            "columns": [
+            {"data": "roll"},
+            {"data": "name"},
+            {"data": "sex"},
+<?php foreach ($subjects as $subject) { ?>
+                {"data": "<?= $subject->subject_name ?>"},
+                {"data": ""}
+                ,
+<?php } ?>
+            {"data": "total"}
+            ,
+            {"data": "average"}
+            ,
+            {"data": "grade"}
+            ,
+            {"data": "school_rank"}
+            ,
+            {"data": "rank"}
+            ,
+            {"data": "schema_name"}
+            ,
+            {"data": "region"
+            }
+            ],
+            "columnDefs": [
+
+<?php
+$i = 4;
+foreach ($subjects as $subject) {
+    ?>
+                {
+                "targets": <?= $i ?>,
+                        "data": null,
+                        "render": function (data, type, row, meta) {
+                        var grades = <?= json_encode($grades) ?>;
+                        var value = Math.round(row['<?= $subject->subject_name ?>']);
+                        var g;
+                        $.each(grades, function(i, item) {
+
+                        if (grades[i].gradefrom <= value && grades[i].gradeupto >= value){
+                        g = grades[i].grade;
+                        }
+                        });
+                        return g;
+                        // console.log(row['<?= $subject->subject_name ?>']);
+
+                        }
+
+                },
+    <?php
+    $i = $i + 2;
+}
+?>
+            ],
+    });
+  
     }
     );
 </script>
