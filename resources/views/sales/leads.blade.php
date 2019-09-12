@@ -162,27 +162,66 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane" id="messages5" role="tabpanel">
-                                        <div class="card-block" style="max-width: 40%">
-
-                                            <div class="table-responsive">
-                                                <table id="dt-ajax-array" class="table table-striped dataTable table-bordered ">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>#</th>
-                                                            <th>Name</th>
-                                                            <th>Phone</th>
-                                                            <th>Email</th>
-                                                            <th  class="col-lg-2">Message</th>
-                                                            <th>Date Submitted</th>
-                                                            <th>Action</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
+                                        <div class="col-md-12 timeline-dot">
+                                                        <?php
                                                     
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
+                                                        foreach ($contact_requests as $contact) {
+                                                            ?>
+                                                            <div class="social-timelines p-relative o-hidden">
+                                                                <div class="row timeline-right p-t-35">
+                                                                    <div class="col-xs-2 col-sm-1">
+                                                                        <div class="social-timelines-left">
+                                                 
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-xs-10 col-sm-11 p-l-5 p-b-35">
+                                                                        <div class="card m-0">
+                                                                            <span class="dropdown-toggle addon-btn text-muted f-right service-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" role="tooltip"></span>
+                                                                            <div class="dropdown-menu dropdown-menu-right b-none services-list">
+                                                                                <a class="dropdown-item" href="#">Remove tag</a>
+                                                                                <a class="dropdown-item" href="#">Report Photo</a>
+                                                                                <a class="dropdown-item" href="#">Hide From Timeline</a>
+                                                                                <a class="dropdown-item" href="#">Blog User</a>
+                                                                            </div>
+                                                                            <div class="card-block post-timelines">
+
+                                                                                <div class="social-time text-muted">
+                                                                                    <?= date("d M Y", strtotime($contact->created_at)) ?>
+                                                                                </div>
+                                                                            </div>
+
+
+                                                                            <div class="card-block">
+                                                                                <div class="timeline-details">
+                                                                                    <div class="chat-header"><?= $contact->name .' , '.$contact->phone.' ,'.$contact->email?></div>
+                                                                                    <p class="text-muted"><?= $contact->message ?></p>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="card-block user-box">
+                                                                                <div class="p-b-30"> <span class="f-14"><a href="#">Reply</a></span> &n&nbsp; <a href="<?=url('sales/website/delete/contact/'.$contact->id)?>" class="btn btn-sm btn-danger">Delete</a></div>
+                                                                              
+  <div class="new_comment<?=$contact->id?>"></div>
+                                                                                <div class="media">
+                                                                                    <a class="media-left" href="#">
+                                                                                     
+                                                                                    </a>
+                                                                                    <div class="media-body">
+                                                                                        <form class="">
+                                                                                            <div class="">
+                                                                                                <textarea rows="5" cols="5" id="task_comment<?=$contact->id?>" class="form-control" placeholder="Write Something here..."></textarea>
+                                                                                                <div class="text-right m-t-20"><a href="#" class="btn btn-primary waves-effect waves-light" onclick="return false" onmousedown="$.get('<?=url('customer/taskComment/null')?>',{content:$('#task_comment<?=$contact->id?>').val(),task_id:<?=$contact->id?>},function(data){$('.new_comment<?=$contact->id?>').after(data);$('#task_comment<?=$contact->id?>').val('') })">Post</a></div>
+                                                                                            </div>
+                                                                                        </form>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        <?php } ?>
+                                                    </div>
 
                                     </div>
                                     <div class="tab-pane" id="settings5" role="tabpanel">

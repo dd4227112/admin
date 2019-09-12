@@ -35,6 +35,15 @@ class Sales extends Controller {
         $this->data['demo_requests']=DB::table('website_demo_requests')->get();
         $this->data['join_requests']=DB::table('website_join_shulesoft')->get();
         $this->data['contact_requests']=DB::table('website_contact_us')->get();
+        $page=request()->segment(3);
+        if($page=='delete'){
+             $type=request()->segment(4);
+             $id=request()->segment(5);
+             if($type=='contact'){
+                 DB::table('website_contact_us')->where('id',$id)->delete();
+                 return redirect()->back()->with('success','success');
+             }
+        }
         return view('sales.leads', $this->data);
     }
 
