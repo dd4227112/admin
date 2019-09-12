@@ -111,11 +111,10 @@ function toast(message) {
                         <i class="ti-search"></i>
                     </a>
                     <?php
-                   
-                    $width=strlen(request('token'))>5 ? '80':'50';
+                    $width = strlen(request('token')) > 5 ? '80' : '50';
                     ?>
                     <a href="<?= url('/') ?>">
-                        <img class="img-fluid" src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="ShuleSoft" height="<?=$width?>" width="<?=$width?>" />
+                        <img class="img-fluid" src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="ShuleSoft" height="<?= $width ?>" width="<?= $width ?>" />
                     </a>
                     <a class="mobile-options">
                         <i class="ti-more"></i>
@@ -130,15 +129,15 @@ function toast(message) {
                                 </a>
                             </li>
                             <?php
-                        if (strlen(request('token')) < 4) {
-                            ?>
-                            <li>
-                                <a class="main-search morphsearch-search" href="#">
-                                    <!-- themify icon -->
-                                    <i class="ti-search"></i>
-                                </a>
-                            </li>
-                        <?php }?>
+                            if (strlen(request('token')) < 4) {
+                                ?>
+                                <li>
+                                    <a class="main-search morphsearch-search" href="#">
+                                        <!-- themify icon -->
+                                        <i class="ti-search"></i>
+                                    </a>
+                                </li>
+                            <?php } ?>
                             <!--                            <li>
                                                             <a href="#!" onclick="javascript:toggleFullScreen()">
                                                                 <i class="ti-fullscreen"></i>
@@ -526,7 +525,16 @@ function toast(message) {
                                     <li><a href="<?= url('sales/index') ?>" data-i18n="nav.navigate.navbar">Sales Materials</a>
                                     </li>
 
-                                    <li><a href="<?= url('sales/index') ?>" data-i18n="nav.navigate.navbar-with-elements">Sales Reports</a></li>
+                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Sales Reports</a>
+                                        <ul class="tree-2" style="display: none;">
+                                            <li><a href="<?= url('sales/website') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Website Requests</a></li>
+                                            <li><a href="<?= url('sales/direct') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Direct Sales</a></li>
+                                            <li><a href="<?= url('sales/followups') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Followups</a></li>
+                                            
+
+                                        </ul>
+                                    </li>
+
                                 </ul>
                             </li>
                         <?php } ?>
@@ -963,7 +971,7 @@ function toast(message) {
         @yield('footer')
     </body>
     <script type="text/javascript">
-        
+
                                                    $(document).ready(function () {
                                                        $('.dataTable').DataTable({
                                                            dom: 'Bfrtip',
