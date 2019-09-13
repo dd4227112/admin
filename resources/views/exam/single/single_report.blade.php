@@ -292,7 +292,11 @@
                                                 $grade_{$grade->grade} = 0;
                                                 //$grade_school[$grade->grade]=[];
                                             }
-
+                                             $subject_name='All';
+if((int) request('subject_id')>0){
+    $subject=\collect(DB::select('select subject_name from admin.marks where subject_id='.request('subject_id').'  limit 1'))->first();
+    $subject_name=$subject->subject_name;
+}
                                             foreach ($reports as $report) {
                                                 $grade_{$report->grade} ++;
 
@@ -302,7 +306,7 @@
                                                     <td><?= $i ?></td>
                                                     <td><?= request('type_id') == 'school' ? $report->schema_name : $report->name ?></td>
                                                     <!--                                                 <?php // request('type_id') == 'school' ? '' : '<td>'.$report->sex.'</td>'                      ?> -->
-                                                    <td><?= ucfirst(request('subject_id')) == '0' ? 'All Subjects' : ucfirst(request('subject_id')) ?></td>
+                                                    <td><?= ucfirst(request('subject_id')) == '0' ? 'All Subjects' : ucfirst($subject_name) ?></td>
                                                     <td><?= $report->average ?></td>
                                                     <td><?= $report->grade ?></td>
                                                     <?= request('type_id') == 'school' ? '' : '<td>' . $report->school_rank . '</td>' ?>
