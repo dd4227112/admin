@@ -61,8 +61,18 @@ class Users extends Controller {
         return redirect('users/index')->with('success', 'User ' . $request['firstname'] . ' created successfully');
     }
 
-    public function sendEmailAndSms($request) {
-        $message = 'Hello ' . $request->name . ' You have been added in ShuleSoft Administration panel. You can login for Administration of schools with username ' . $request->email . ' and password ' . $request->email;
+    public function resetPassword() {
+        $id = request()->segment(3);
+        $pass = 'shulesoft_' . rand(32323, 443434344) . '';
+        $user = User::find($id);
+        $user->update(['password'=> bcrypt($pass)]);
+        $content = 'Hello ' . $user->name . ' Your password has been updated by administrator. Kindly login  with username ' . $user->email . ' and password ' . $pass;
+        $this->sendEmailAndSms($user, $content);
+         return redirect()->back()->with('success', 'Password sent successfully');
+    }
+
+    public function sendEmailAndSms($request, $content = null) {
+        $message = $content == null ? 'Hello ' . $request->name . ' You have been added in ShuleSoft Administration panel. You can login for Administration of schools with username ' . $request->email . ' and password ' . $request->email : $content;
         \DB::table('public.sms')->insert([
             'body' => $message,
             'user_id' => 1,

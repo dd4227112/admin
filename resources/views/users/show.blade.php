@@ -119,7 +119,7 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="text-nowrap"></td>
-                                                        <td>                      <a href="<?=url('user/reset/'.$user->id)?>" class="btn btn-success">Reset Password</a></td>
+                                                        <td>                      <a href="<?=url('users/resetPassword/'.$user->id)?>" class="btn btn-warning btn-sm">Reset Password</a></td>
                                                     </tr>
 
                                                 </tbody>

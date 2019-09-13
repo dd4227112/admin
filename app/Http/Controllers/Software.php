@@ -20,7 +20,7 @@ class Software extends Controller {
         $this->data['data'] = ($page == null || in_array($page, array('login'))) ? '' : $this->$page($sub);
         $this->data['page'] = $page;
         $this->data['sub'] = $sub;
-        $view = 'database.' . strtolower($page);
+        $view = 'software.database.' . strtolower($page);
         if (view()->exists($view)) {
             return view($view, $this->data);
         }
@@ -48,12 +48,20 @@ class Software extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function compareTable($schema = null) {
-        return $this->compareSchemaTables($schema);
+        $this->data['data'] = $this->compareSchemaTables($schema);
+        $view = 'software.database.' . strtolower('compareTable');
+        if (view()->exists($view)) {
+            return view($view, $this->data);
+        }
     }
 
     public function compareColumn($pg = null) {
-        return DB::select("SELECT * FROM crosstab('SELECT distinct table_schema,table_type,count(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''information_schema'',''constant'',''admin'') group by table_schema,table_type','select distinct table_type FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''information_schema'',''constant'',''admin'',''dodoso'')')
+        $this->data['data'] = DB::select("SELECT * FROM crosstab('SELECT distinct table_schema,table_type,count(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''information_schema'',''constant'',''admin'') group by table_schema,table_type','select distinct table_type FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''information_schema'',''constant'',''admin'',''dodoso'')')
            AS ct (table_schema text, views text, tables text)");
+        $view = 'software.database.' . strtolower('compareColumn');
+        if (view()->exists($view)) {
+            return view($view, $this->data);
+        }
     }
 
     /**
@@ -82,7 +90,7 @@ AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
     /**
      * @var Default Schema which is stable
      */
-    public static $master_schema = 'testing';
+    public static $master_schema = 'beta_testing';
 
     /**
      * @var $schema : Schema name which we want to know its tables
@@ -214,7 +222,7 @@ AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
         } else {
             echo "This table does not exists in " . $schema . ' schema. Run "background/compareTableColumn"';
         }
-        return redirect('database/compareTableColumn/' . $schema);
+        return redirect('software/compareTableColumn/' . $schema);
     }
 
     public function addIndex() {
@@ -230,7 +238,7 @@ ORDER BY c.oid, a.attnum";
         } else {
             $this->data['script'] = '';
         }
-        return view('database.upgrade', $this->data);
+        return view('software.database.upgrade', $this->data);
     }
 
     public function createUpgradeScript($slave_schema = null) {
@@ -255,7 +263,8 @@ ORDER BY c.oid, a.attnum";
         return $q;
     }
 
-    public function constrains($type = 'FOREIGN KEY') {
+    public function constrains() {
+        $type = $this->data['sub'] = request()->segment(3);
         if ($type == 'CHECK') {
             $relations = DB::select('SELECT nspname as "table_schema",conname as constraint_name, replace( conrelid::regclass::text , nspname||\'.\', \'\') AS TABLE_NAME FROM   pg_constraint c JOIN   pg_namespace n ON n.oid = c.connamespace WHERE  contype IN (\'c\') ORDER  BY "nspname"');
         } else {
@@ -269,7 +278,8 @@ ORDER BY c.oid, a.attnum";
         foreach ($relations as $table) {
             array_push($this->data['constrains'][$table->table_schema][$table->table_name], $table->constraint_name);
         }
-        return $this->data['constrains'];
+        //  return $this->data['constrains'];
+        return view('software.database.constrains', $this->data);
     }
 
     public function getConstrainByName($name) {
@@ -294,11 +304,10 @@ ORDER  BY conrelid::regclass::text, contype DESC";
 
         if (count($constrain_params) > 0) {
             $sql = 'ALTER TABLE ' . $schema . '.' . $table . ' ADD CONSTRAINT  "' . $constrain_params->conname . '"  ' . str_replace(self::$master_schema, $schema, $constrain_params->pg_get_constraintdef);
-            return DB::statement($sql);
+            DB::statement($sql);
+            echo 1;
         } else {
-            echo 2;
-            exit;
-            return "This table does not exists in " . $schema . ' schema. Run "background/compareTableColumn"';
+            echo "This table does not exists in " . $schema . ' schema. Run "background/compareTableColumn"';
         }
     }
 
@@ -311,7 +320,7 @@ ORDER  BY conrelid::regclass::text, contype DESC";
     }
 
     public function logsDelete() {
-         $id = request('id');
+        $id = request('id');
         \App\Models\ErrorLog::find($id)->delete();
         echo 1;
     }

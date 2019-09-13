@@ -562,12 +562,12 @@ function toast(message) {
                                     <li><a href="<?= url('software/template') ?>" data-i18n="nav.basic-components.alert">Templates & Policies</a></li>
                                     <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Database</a>
                                         <ul class="tree-2" style="display: none;">
-                                            <li><a href="<?= url('software/template') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Tables</a></li>
-                                            <li><a href="<?= url('software/template') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Columns</a></li>
-                                            <li><a href="<?= url('software/template') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Constrains</a></li>
-                                            <li><a href="<?= url('software/template') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Backup</a></li>
-                                            <li><a href="<?= url('software/template') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Reports</a></li>
-                                            <li><a href="<?= url('software/template') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Create Script</a></li>
+                                            <li><a href="<?= url('software/compareTable') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Tables</a></li>
+                                            <li><a href="<?= url('software/compareColumn') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Columns</a></li>
+                                            <li><a href="<?= url('software/constrains') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Constrains</a></li>
+                                            <li><a href="<?= url('software/backup') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Backup</a></li>
+                                            <li><a href="<?= url('software/analysis') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Reports</a></li>
+                                            <li><a href="<?= url('software/upgrade') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Create Script</a></li>
 
                                         </ul>
                                     </li>
