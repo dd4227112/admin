@@ -385,7 +385,7 @@ class Exam extends Controller {
                 $this->data['reports'] = $this->createSchoolReport($exam_id, $subject_id, $class_id);
             } else if (request('type_id') == 'subject') {
 
-                $school_name = request('school');
+                $school_name = trim(request('school'));
                 $where_school = strlen($school_name) < 3 ? '' : ' and "schema_name"=\'' . $school_name . '\' ';
                 $this->data['subjects_perfomance'] = DB::select('select round(avg(mark),1) as average,subject_name from admin.' . $this->mark_table . ' where mark is not null and refer_class_id=' . $class_id . '  ' . $where_school . ' AND global_exam_id=' . $exam_id . '  group by subject_name');
                 //$this->data['reports'] = $this->showAllSubjectReport($exam_id, $class_id);
@@ -455,7 +455,7 @@ class Exam extends Controller {
     public function ajaxResults($export = null) {
         $class_id = request('class_id');
         $exam_id = request('exam_id');
-        $school_name = request('school');
+        $school_name = trim(request('school'));
         $where_school = strlen($school_name) < 3 ? '' : ' and "schema_name"=\'' . $school_name . '\' ';
         $subject_status = 'SELECT distinct lower(subject_name)  as subject_name FROM admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' and "schema_name" is not null  ' . $where_school . ' AND global_exam_id=' . $exam_id . ' order by 1';
         $school = DB::table('constant.refer_classes')->where('id', $class_id)->first();
@@ -678,7 +678,7 @@ class Exam extends Controller {
     }
 
     public function remoteLogin() {
-        $school = request('school');
+        $school = trim(request('school'));
         $ass = DB::table('school_associations')->where('schema_name', $school)->first();
         if (count($ass) == 1) {
             //already
