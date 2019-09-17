@@ -229,12 +229,7 @@ foreach ($payments as $payment) {
     <?php $root = url('/') . '/public/' ?>
 
     <script type="text/javascript">
-        $(document).ready(function () {
-            $('#dt-ajax-array').DataTable();
-            //        $('#dt-ajax-users').DataTable({
-            //            "ajax": '<?= url('customer/getData/data/?tag=users') ?>'
-            //        });
-        });
+      
         get_statistic = function () {
             // var data = getData();
             // console.log(data);

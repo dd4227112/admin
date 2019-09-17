@@ -66,7 +66,7 @@
                         <div class="card-block">
 
                             <div class="table-responsive dt-responsive">
-                                <table id="dt-ajax-array" class="table table-striped table-bordered nowrap">
+                                <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                                     <thead>
                                         <tr>
                                             <th>School Name</th>
@@ -183,12 +183,7 @@
     <?php $root = url('/') . '/public/' ?>
 
     <script type="text/javascript">
-        $(document).ready(function () {
-            $('#dt-ajax-array').DataTable();
-            //        $('#dt-ajax-users').DataTable({
-            //            "ajax": '<?= url('customer/getData/data/?tag=users') ?>'
-            //        });
-        });
+      
         get_statistic = function () {
             // var data = getData();
             // console.log(data);
