@@ -69,6 +69,9 @@
                                                 <div class="card-block social-follower">
                                                     <h4><?= $school->sname ?></h4>
                                                     <h5><?= $school->address ?></h5>
+                                                    <?php
+                                                    if($is_client==1){
+                                                    ?>
                                                     <div class="row follower-counter">
                                                         <div class="col-md-12 col-lg-3">
                                                             <div class="txt-primary"><?= \DB::table($schema . '.student')->where('status', 1)->count() ?></div>
@@ -87,17 +90,21 @@
                                                             <div>Teacher</div>
                                                         </div>
                                                     </div>
-
+                                                    <?php }?>
                                                 </div>
                                             </div>
                                             <!-- social-profile card end -->
                                             <!-- Who to follow card start -->
+                                             <?php
+                                                    if($is_client==1){
+                                                    ?>
                                             <div class="card">
                                                 <div class="card-header">
                                                     <h5 class="card-header-text">Top USER Logins</h5>
                                                 </div>
                                                 <div class="card-block user-box">
                                                     <?php
+                                                   
                                                     foreach ($top_users as $log) {
                                                         ?>
                                                         <div class="media m-b-10">
@@ -115,7 +122,7 @@
                                                 </div>
                                             </div>
                                             <!-- Who to follow card end -->
-
+                                                    <?php }?>
                                         </div>
                                         <!-- Social timeline left end -->
                                     </div>
@@ -232,6 +239,7 @@
                                                                                 <div class="p-b-30"> <span class="f-14"><a href="#">What have been done</a></span></div>
                                                                                 <?php
                                                                                 $comments = $task->taskComments()->get();
+                                                                                if(count($comments)>0){
                                                                                 foreach ($comments as $comment) {
                                                                                     ?>
                                                                                     <div class="media m-b-20">
@@ -244,7 +252,7 @@
                                                                                         </div>
                                                                                     </div>
                                                                               
-                                                                                <?php } ?>
+                                                        <?php } }?>
   <div class="new_comment<?=$task->id?>"></div>
                                                                                 <div class="media">
                                                                                     <a class="media-left" href="#">
@@ -296,6 +304,7 @@
                                                                                         <th class="social-label b-none">Location</th>
                                                                                         <td class="social-user-name b-none text-muted"><?= $school->address ?></td>
                                                                                     </tr>
+                                                                                    <?php if($is_client==1){?>
                                                                                     <tr>
                                                                                         <th class="social-label b-none">Date On boarded</th>
                                                                                         <td class="social-user-name b-none text-muted"><?= date('d M Y h:i', strtotime($school->created_at)) ?></td>
@@ -312,6 +321,7 @@
                                                                                             }
                                                                                             ?></td>
                                                                                     </tr>
+                                                                                    <?php }?>
                                                                                 </tbody></table>
                                                                         </form>
                                                                     </div>

@@ -5,8 +5,8 @@
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4 class="box-title">Sales Lead Reports</h4>
-                <span>This shows list of leads that needs to be attended to be customers in future</span>
+                <h4 class="box-title">Sales Prospect Reports</h4>
+                <span>This shows list of prospects that needs to be attended to be converted into Leads</span>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -17,7 +17,7 @@
                     </li>
                     <li class="breadcrumb-item"><a href="#!">Sales</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Leads</a>
+                    <li class="breadcrumb-item"><a href="#!">Prospects</a>
                     </li>
                 </ul>
             </div>
@@ -31,7 +31,7 @@
                         <div class="card-block">
 
                             <div class="row">
-                              
+
                                 <div class="col-md-12 col-xl-4">
                                     <div class="card counter-card-1">
                                         <div class="card-block-big">
@@ -46,7 +46,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            <div class="col-md-12 col-xl-4">
+                                <div class="col-md-12 col-xl-4">
                                     <div class="card counter-card-1">
                                         <div class="card-block-big">
                                             <div>
@@ -82,7 +82,7 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="white-box">
-                                        <h3 class="box-title">Lead Report</h3>
+                                        <h3 class="box-title">Prospects Report</h3>
                                         <div class="row">
                                             <div class="col-lg-4"></div>
                                             <div class="col-lg-4">
@@ -95,12 +95,13 @@
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
-                                                        <th>Name</th>
+                                                        <th>School Name</th>
+                                                        <th>Contact Name</th>
                                                         <th>Location</th>
                                                         <th>Person in Charge</th>
                                                         <th>Last Contacted</th>
                                                         <th>Next Action Date</th>
-                                                        <th>Last Message</th>
+                                                        <th>Message</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -127,26 +128,27 @@
             "serverSide": true,
             'serverMethod': 'post',
             'ajax': {
-                'url': "<?= url('sales/show/null?page=leads') ?>"
+                'url': "<?= url('sales/show/null?page=prospects') ?>"
             },
             "columns": [
                 {"data": "id"},
                 {"data": "name"},
-                {"data": "region"},
-                {"data": "district"},
-                {"data": "ward"},
-                {"data": "type"},
-                {"data": "ownership"},
+                {"data": "contact_name"},
+                {"data": "location"},
+                {"data": "person_in_charge"},
+                {"data": "last_activity"},
+                {"data": "action_date"},
+                {"data": "last_message"},
                 {"data": ""}
             ],
             "columnDefs": [
                 {
-                    "targets": 7,
+                    "targets": 8,
                     "data": null,
                     "render": function (data, type, row, meta) {
 
-                       // return '<a href="#" class="label label-warning">Prospect </a>';
-                       return '';
+                   return '<a href="<?=url('sales/prospect/delete/')?>/'+row.id+'" class="label label-danger">Delete </a>';
+                      
 
                     }
 

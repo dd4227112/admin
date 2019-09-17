@@ -527,10 +527,12 @@ function toast(message) {
 
                                     <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Sales Reports</a>
                                         <ul class="tree-2" style="display: none;">
-                                            <li><a href="<?= url('sales/website') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Website Requests</a></li>
-                                            <li><a href="<?= url('sales/direct') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Direct Sales</a></li>
-                                            <li><a href="<?= url('sales/followups') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Followups</a></li>
-                                            
+                                            <li><a href="<?= url('sales/school') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Schools</a></li>
+                                            <li><a href="<?= url('sales/prospect') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Prospects</a></li>
+                                            <li><a href="<?= url('sales/lead') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Leads</a></li>
+                                            <li><a href="<?= url('sales/customer') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Customers</a></li>
+
+
 
                                         </ul>
                                     </li>
@@ -971,89 +973,89 @@ function toast(message) {
         @yield('footer')
     </body>
     <?php
-   if (request('type_id') != 'subject') {
-    ?>
-    <script type="text/javascript">
+    if (request('type_id') != 'subject' && !preg_match('/sales/', url()->current()) && !preg_match('/logs/', url()->current())) {
+        ?>
+        <script type="text/javascript">
 
-                                                   $(document).ready(function () {
-                                                       $('.dataTable').DataTable({
-                                                           dom: 'Bfrtip',
-                                                           responsive: false,
-                                                           paging: true,
-                                                           info: false,
-                                                           "pageLength": 10,
-                                                           buttons: [
-                                                               {
-                                                                   text: 'PDF',
-                                                                   extend: 'pdfHtml5',
-                                                                   message: '',
-                                                                   orientation: 'landscape',
-                                                                   exportOptions: {
-                                                                       columns: ':visible'
+                                                       $(document).ready(function () {
+                                                           $('.dataTable').DataTable({
+                                                               dom: 'Bfrtip',
+                                                               responsive: false,
+                                                               paging: true,
+                                                               info: false,
+                                                               "pageLength": 10,
+                                                               buttons: [
+                                                                   {
+                                                                       text: 'PDF',
+                                                                       extend: 'pdfHtml5',
+                                                                       message: '',
+                                                                       orientation: 'landscape',
+                                                                       exportOptions: {
+                                                                           columns: ':visible'
+                                                                       },
+                                                                       customize: function (doc) {
+                                                                           doc.pageMargins = [10, 10, 10, 10];
+                                                                           doc.defaultStyle.fontSize = 7;
+                                                                           doc.styles.tableHeader.fontSize = 7;
+                                                                           doc.styles.title.fontSize = 9;
+                                                                           // Remove spaces around page title
+                                                                           doc.content[0].text = doc.content[0].text.trim();
+                                                                           // Create a footer
+                                                                           doc['footer'] = (function (page, pages) {
+                                                                               return {
+                                                                                   columns: [
+                                                                                       'www.shulesoft.com',
+                                                                                       {
+                                                                                           // This is the right column
+                                                                                           alignment: 'right',
+                                                                                           text: ['page ', {text: page.toString()}, ' of ', {text: pages.toString()}]
+                                                                                       }
+                                                                                   ],
+                                                                                   margin: [10, 0]
+                                                                               }
+                                                                           });
+                                                                           // Styling the table: create style object
+                                                                           var objLayout = {};
+                                                                           // Horizontal line thickness
+                                                                           objLayout['hLineWidth'] = function (i) {
+                                                                               return .5;
+                                                                           };
+                                                                           // Vertikal line thickness
+                                                                           objLayout['vLineWidth'] = function (i) {
+                                                                               return .5;
+                                                                           };
+                                                                           // Horizontal line color
+                                                                           objLayout['hLineColor'] = function (i) {
+                                                                               return '#aaa';
+                                                                           };
+                                                                           // Vertical line color
+                                                                           objLayout['vLineColor'] = function (i) {
+                                                                               return '#aaa';
+                                                                           };
+                                                                           // Left padding of the cell
+                                                                           objLayout['paddingLeft'] = function (i) {
+                                                                               return 4;
+                                                                           };
+                                                                           // Right padding of the cell
+                                                                           objLayout['paddingRight'] = function (i) {
+                                                                               return 4;
+                                                                           };
+                                                                           // Inject the object in the document
+                                                                           doc.content[1].layout = objLayout;
+                                                                       }
                                                                    },
-                                                                   customize: function (doc) {
-                                                                       doc.pageMargins = [10, 10, 10, 10];
-                                                                       doc.defaultStyle.fontSize = 7;
-                                                                       doc.styles.tableHeader.fontSize = 7;
-                                                                       doc.styles.title.fontSize = 9;
-                                                                       // Remove spaces around page title
-                                                                       doc.content[0].text = doc.content[0].text.trim();
-                                                                       // Create a footer
-                                                                       doc['footer'] = (function (page, pages) {
-                                                                           return {
-                                                                               columns: [
-                                                                                   'www.shulesoft.com',
-                                                                                   {
-                                                                                       // This is the right column
-                                                                                       alignment: 'right',
-                                                                                       text: ['page ', {text: page.toString()}, ' of ', {text: pages.toString()}]
-                                                                                   }
-                                                                               ],
-                                                                               margin: [10, 0]
-                                                                           }
-                                                                       });
-                                                                       // Styling the table: create style object
-                                                                       var objLayout = {};
-                                                                       // Horizontal line thickness
-                                                                       objLayout['hLineWidth'] = function (i) {
-                                                                           return .5;
-                                                                       };
-                                                                       // Vertikal line thickness
-                                                                       objLayout['vLineWidth'] = function (i) {
-                                                                           return .5;
-                                                                       };
-                                                                       // Horizontal line color
-                                                                       objLayout['hLineColor'] = function (i) {
-                                                                           return '#aaa';
-                                                                       };
-                                                                       // Vertical line color
-                                                                       objLayout['vLineColor'] = function (i) {
-                                                                           return '#aaa';
-                                                                       };
-                                                                       // Left padding of the cell
-                                                                       objLayout['paddingLeft'] = function (i) {
-                                                                           return 4;
-                                                                       };
-                                                                       // Right padding of the cell
-                                                                       objLayout['paddingRight'] = function (i) {
-                                                                           return 4;
-                                                                       };
-                                                                       // Inject the object in the document
-                                                                       doc.content[1].layout = objLayout;
-                                                                   }
-                                                               },
 
-                                                               {extend: 'excelHtml5', footer: true},
-                                                               {extend: 'csvHtml5', customize: function (csv) {
-                                                                       return "ShuleSoft" + csv + "ShuleSoft";
-                                                                   }},
-                                                               {extend: 'print', footer: true}
+                                                                   {extend: 'excelHtml5', footer: true},
+                                                                   {extend: 'csvHtml5', customize: function (csv) {
+                                                                           return "ShuleSoft" + csv + "ShuleSoft";
+                                                                       }},
+                                                                   {extend: 'print', footer: true}
 
-                                                           ]
+                                                               ]
+                                                           });
                                                        });
-                                                   });
-    </script>
-    <?php }?>
+        </script>
+    <?php } ?>
 </html>
 <?php
 ///echo url()->current();

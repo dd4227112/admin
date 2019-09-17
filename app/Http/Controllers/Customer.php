@@ -192,20 +192,30 @@ class Customer extends Controller {
 
     public function profile() {
         $school = $this->data['schema'] = request()->segment(3);
-        $this->data['school'] = DB::table($school . '.setting')->first();
-        $this->data['levels'] = DB::table($school . '.classlevel')->get();
-        $client = \App\Models\Client::where('username', $school)->first();
-        if (count($client) == 0) {
+        $is_client=0;
+        if ($school == 'school') {
+            $id = request()->segment(4);
+            $this->data['client_id'] = $id;
+            $this->data['school'] = \collect(DB::select(' select name as sname, name, region , ward, district as address  from admin.schools where id=' . $id))->first();
+        } else {
+            $is_client=1;
+            $this->data['school'] = DB::table($school . '.setting')->first();
+            $this->data['levels'] = DB::table($school . '.classlevel')->get();
+            $client = \App\Models\Client::where('username', $school)->first();
+            if (count($client) == 0) {
 
-            $client = \App\Models\Client::create(['name' => $this->data['school']->sname, 'email' => $this->data['school']->email, 'phone' => $this->data['school']->phone, 'address' => $this->data['school']->address, 'username' => $school]);
+                $client = \App\Models\Client::create(['name' => $this->data['school']->sname, 'email' => $this->data['school']->email, 'phone' => $this->data['school']->phone, 'address' => $this->data['school']->address, 'username' => $school]);
+            }
+            $this->data['client_id'] = $client->id;
+            $this->data['top_users'] = DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
         }
-        $this->data['client_id'] = $client->id;
+         $this->data['is_client']=$is_client;
         if ($_POST) {
             $data = array_merge(request()->all(), ['user_id' => Auth::user()->id]);
             \App\Models\Task::create($data);
             return redirect()->back();
         }
-        $this->data['top_users'] = DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
+
         return view('customer/profile', $this->data);
     }
 
@@ -222,12 +232,13 @@ class Customer extends Controller {
     public function taskComment() {
         if (request('content') != '' && (int) request('task_id') > 0) {
             \App\Models\TaskComment::create(array_merge(request()->all(), ['user_id' => Auth::user()->id]));
-            echo ' <div class="media m-b-20"><a class="media-left" href="#"><img class="media-object img-circle m-r-20" src="'.url('/').'/public/assets/images/avatar-1.png" alt="Generic placeholder image"></a> <div class="media-body b-b-muted social-client-description"><div class="chat-header">' . Auth::user()->name . '<span class="text-muted">' . date('d M Y') . '</span></div><p class="text-muted">' . request('content') . '</p></div> </div>';
+            echo ' <div class="media m-b-20"><a class="media-left" href="#"><img class="media-object img-circle m-r-20" src="' . url('/') . '/public/assets/images/avatar-1.png" alt="Generic placeholder image"></a> <div class="media-body b-b-muted social-client-description"><div class="chat-header">' . Auth::user()->name . '<span class="text-muted">' . date('d M Y') . '</span></div><p class="text-muted">' . request('content') . '</p></div> </div>';
         }
     }
 
     public function calls() {
-         $this->data['levels'] = [];
+        $this->data['levels'] = [];
         return view('customer/analysis', $this->data);
     }
+
 }

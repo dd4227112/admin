@@ -102,12 +102,12 @@
                                         </div>
                                         @if ($errors->has('password'))
                                         <span class="help-block">
-                                            <strong>{{ $errors->first('password') }}</strong>
+                                            <strong class="alert alert-danger">{{ $errors->first('password') }}</strong>
                                         </span>
                                         @endif
                                         @if ($errors->has('email'))
                                         <span class="help-block">
-                                            <strong>{{ $errors->first('email') }}</strong>
+                                            <strong class="alert alert-danger">{{ $errors->first('email') }}</strong>
                                         </span>
                                         @endif
                                         <hr/>

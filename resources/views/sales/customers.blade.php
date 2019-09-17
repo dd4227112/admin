@@ -5,8 +5,8 @@
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4 class="box-title">Sales Lead Reports</h4>
-                <span>This shows list of leads that needs to be attended to be customers in future</span>
+                <h4 class="box-title">ShuleSoft Customers</h4>
+                <span>These are active customers using ShuleSoft</span>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -17,7 +17,7 @@
                     </li>
                     <li class="breadcrumb-item"><a href="#!">Sales</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Leads</a>
+                    <li class="breadcrumb-item"><a href="#!">Customers</a>
                     </li>
                 </ul>
             </div>
@@ -36,8 +36,8 @@
                                     <div class="card counter-card-1">
                                         <div class="card-block-big">
                                             <div>
-                                                <h3><?= count($demo_requests) ?></h3>
-                                                <p>Demo Requests</p>
+                                                <h3><?= $customers ?></h3>
+                                                <p>Total Customers</p>
                                                 <div class="progress ">
                                                     <div class="progress-bar progress-bar-striped progress-xs progress-bar-pink" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
                                                 </div>
@@ -50,8 +50,8 @@
                                     <div class="card counter-card-1">
                                         <div class="card-block-big">
                                             <div>
-                                                <h3><?= count($join_requests) ?></h3>
-                                                <p>Website Requests</p>
+                                                <h3><?= $active_customers ?></h3>
+                                                <p>Active Customers</p>
                                                 <div class="progress ">
                                                     <div class="progress-bar progress-bar-striped progress-xs progress-bar-pink" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
                                                 </div>
@@ -82,7 +82,7 @@
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="white-box">
-                                        <h3 class="box-title">Lead Report</h3>
+                                        <h3 class="box-title">Customers Report</h3>
                                         <div class="row">
                                             <div class="col-lg-4"></div>
                                             <div class="col-lg-4">
@@ -96,11 +96,11 @@
                                                     <tr>
                                                         <th>#</th>
                                                         <th>Name</th>
+                                                        <th>Phone</th>
+                                                        <th>Email</th>
                                                         <th>Location</th>
-                                                        <th>Person in Charge</th>
-                                                        <th>Last Contacted</th>
-                                                        <th>Next Action Date</th>
-                                                        <th>Last Message</th>
+                                                        <th>Payment Automated</th>
+                                                        <th>Date Joined</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -127,16 +127,16 @@
             "serverSide": true,
             'serverMethod': 'post',
             'ajax': {
-                'url': "<?= url('sales/show/null?page=leads') ?>"
+                'url': "<?= url('sales/show/null?page=customers') ?>"
             },
             "columns": [
-                {"data": "id"},
-                {"data": "name"},
-                {"data": "region"},
-                {"data": "district"},
-                {"data": "ward"},
-                {"data": "type"},
-                {"data": "ownership"},
+                {"data": "number"},
+                {"data": "sname"},
+                {"data": "phone"},
+                {"data": "email"},
+                {"data": "address"},
+                {"data": "payment_integrated"},
+                {"data": "created_at"},
                 {"data": ""}
             ],
             "columnDefs": [

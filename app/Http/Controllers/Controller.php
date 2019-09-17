@@ -22,7 +22,7 @@ class Controller extends BaseController {
         // return view('graph.bargraph', $this->data);
     }
 
-    public function ajaxTable($table, $columns, $custom_sql = null) {
+    public function ajaxTable($table, $columns, $custom_sql = null,$order_name=null) {
         ## Read value
         if (isset($_POST) && request()->ajax() == true) {
             $draw = $_POST['draw'];
@@ -49,15 +49,16 @@ class Controller extends BaseController {
 ## Fetch records
             $columnName = strlen($columnName) < 1 ? '1' : $columnName;
             if (strlen($custom_sql) < 2) {
+                // strlen($searchQuery); exit;
                 $sel = DB::select("select * from " . $table . " WHERE true " . $searchQuery);
 
-                $empQuery = "select * from " . $table . " WHERE true " . $searchQuery . " order by \"" . $columnName . "\" " . $columnSortOrder . " offset  " . $row . " limit " . $rowperpage;
+                $empQuery = "select * from " . $table . " WHERE true " . $searchQuery . " order by \"" . $columnName . "\" " . $columnSortOrder . " offset  " . $row . " limit " . $rowperpage; 
             } else {
                 $empQuery = $custom_sql . " " . $searchQuery . " order by \"" . $columnName . "\" " . $columnSortOrder . " offset  " . $row . " limit " . $rowperpage;
                 $sel = DB::select($custom_sql);
             }
             $empRecords = DB::select($empQuery);
-
+          
 
 ## Response
             $response = array(

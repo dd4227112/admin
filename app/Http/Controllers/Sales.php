@@ -6,6 +6,7 @@ use App\Jobs\PushSMS;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
+use Auth;
 
 class Sales extends Controller {
 
@@ -19,7 +20,7 @@ class Sales extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $this->data['faqs'] = DB::table('faq')->get();
+        $this->data['faqs'] = [];
         return view('sales.index', $this->data);
     }
 
@@ -31,20 +32,49 @@ class Sales extends Controller {
         return view('market.faq', $this->data);
     }
 
-    function website() {
-        $this->data['demo_requests']=DB::table('website_demo_requests')->get();
-        $this->data['join_requests']=DB::table('website_join_shulesoft')->get();
-        $this->data['contact_requests']=DB::table('website_contact_us')->get();
-        $page=request()->segment(3);
-        if($page=='delete'){
-             $type=request()->segment(4);
-             $id=request()->segment(5);
-             if($type=='contact'){
-                 DB::table('website_contact_us')->where('id',$id)->delete();
-                 return redirect()->back()->with('success','success');
-             }
-        }
+    function lead() {
+        $this->data['demo_requests'] = DB::table('website_demo_requests')->get();
+        $this->data['join_requests'] = DB::table('website_join_shulesoft')->get();
         return view('sales.leads', $this->data);
+    }
+
+    public function prospect() {
+        $this->data['demo_requests'] = DB::table('website_demo_requests')->get();
+        $this->data['join_requests'] = DB::table('website_join_shulesoft')->get();
+        $page = request()->segment(3);
+        if ($page == 'add') {
+            $id = request()->segment(4);
+            if ($_POST) {
+                $task_id = DB::table('tasks')->insertGetId(
+                        [
+                            'activity' => request('message'), 'date' => date('Y-m-d', strtotime(request('action_date'))), 'user_id' => Auth::user()->id, 'action' => request('action'), 'time' => 'now()'
+                ]);
+                DB::table('prospects')->insert([
+                    'school_id' => $id,
+                    'title' => request('title'),
+                    'name' => request('name'),
+                    'email' => request('email'),
+                    'phone_number' => request('phone_number'),
+                    'software_status' => request('software_status'),
+                    'software_name' => request('software_name'),
+                    'task_id' => $task_id,
+                    'user_id' => Auth::user()->id
+                ]);
+                return redirect('sales/prospect')->with('success', 'Success');
+            }
+            return view('sales.add_prospect', $this->data);
+        } else if ($page == 'delete') {
+            $id = request()->segment(4);
+            DB::table('prospects')->where('id', $id)->delete();
+            return redirect('sales/prospect')->with('success', 'Success');
+        }
+        return view('sales.prospects', $this->data);
+    }
+
+    public function customer() {
+        $this->data['customers'] = DB::table('all_setting')->count();
+        $this->data['active_customers'] = DB::table('all_setting')->where('payment_status', 1)->count();
+        return view('sales.customers', $this->data);
     }
 
     function downloadMaterial($type) {
@@ -63,7 +93,7 @@ class Sales extends Controller {
         return response()->download("resources/materials/$type.$extension", "$type.$extension", $headers);
     }
 
-    function material() {
+    function materials() {
         return view('market.material');
     }
 
@@ -71,33 +101,19 @@ class Sales extends Controller {
         return view('market.legal');
     }
 
-    function brand() {
-        return view('market.brand');
+    function profile() {
+        return view('sales.profile');
     }
 
-    public function allocation() {
-        $this->data['school_types'] = DB::select('select type, COUNT(*) as count, 
-SUM(COUNT(*)) over() as total_schools, 
-(COUNT(*) * 1.0) / SUM(COUNT(*)) over() as percent
-FROM admin.schools
-group by type');
+    public function school() {
+        $this->data['school_types'] = DB::select("select type, count(*) from admin.schools where ownership='Non-Government' group by type,ownership");
         $this->data['ownerships'] = DB::select('select ownership, COUNT(*) as count, 
 SUM(COUNT(*)) over() as total_schools, 
 (COUNT(*) * 1.0) / SUM(COUNT(*)) over() as percent
 FROM admin.schools
 group by ownership');
-        // $this->data['schools']=DB::table('schools')->get();
-        $this->data['regions'] = DB::select('select distinct region from admin.schools');
-        if (request('region')) {
-            $this->data['schools'] = DB::select("select * from admin.schools where region='" . request('region') . "'");
-        } else {
-            $this->data['schools'] = array();
-        }
-        return view('market.allocation', $this->data);
-    }
 
-    function getSchools() {
-        return response()->json(DB::table('schools')->get());
+        return view('market.allocation', $this->data);
     }
 
     function objective() {
@@ -171,13 +187,31 @@ group by ownership');
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id) {
-        //
-        return $id;
-        $this->data['type'] = $id;
-        $table = $id == 'sms' ? 'all_sms' : 'all_email';
-        $this->data['messages'] = DB::select('select * from public.' . $table);
-        return view('message.show', $this->data);
+    public function show() {
+        $page = request('page');
+        switch ($page) {
+            case 'leads':
+                $sql = 'select a.* from admin.leads a join admin.schools b on a.school_id=b.id join admin.users c on c.id=a.user_id join admin.prospects d on d.id=a.prospect_id join admin.tasks e on e.id=a.task_id';
+                return $this->ajaxTable('schools', ['b.name'], $sql);
+                break;
+            case 'schools':
+                $sql = "select a.*, b.id as prospect_id, c.id as lead_id from admin.schools a  left join admin.prospects b on b.school_id=a.id left join admin.leads c on c.school_id=a.id where lower(a.ownership) <>'government'";
+                return $this->ajaxTable('schools', ['name', 'region', 'ward', 'district'], $sql);
+                break;
+            case 'prospects':
+                $sql = "select a.id, b.name, a.title||' '||a.name||' <br/> Email: '||a.email||' , phone: '||a.phone_number  as contact_name, c.name as person_in_charge,  b.region||' '||b.district||' '||b.ward as location, e.created_at as last_activity, e.date || ' at '||e.time as action_date, e.action||' : '|| e.activity as last_message from admin.prospects a join admin.schools b on a.school_id=b.id join admin.users c on c.id=a.user_id join admin.tasks e on e.id=a.task_id";
+                return $this->ajaxTable('schools', ['b.name', 'contact_name', 'person_in_charge', 'location', 'last_activity', 'action_date', 'last_message'], $sql);
+                break;
+            case 'customers':
+                //$sql = 'select * fr';
+                return $this->ajaxTable('all_setting', ['sname', 'phone', 'address', 'email', 'payment_integrated', 'created_at']);
+                break;
+            case 'errors':
+                  return $this->ajaxTable('error_logs', ['file', 'error_message', 'route', 'url', 'error_instance', 'created_at','schema_name']);
+                break;
+            default:
+                break;
+        }
     }
 
     /**

@@ -154,6 +154,7 @@
                                         <table id="error_log_table" class="table table-striped table-bordered nowrap">
                                             <thead>
                                                 <tr>
+                                                    <th>#</th>
                                                     <th>Client Name</th>
                                                     <th>Error Message</th>
                                                     <th>File</th>
@@ -163,34 +164,7 @@
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                <?php
-                                                if (isset($error_logs) && count($error_logs) > 0) {
-                                                    ?>
-                                                    @foreach($error_logs as $log)
-                                                    <tr id="log{{$log->id}}">
-                                                        <td>{{$log->schema_name}}</td>
-                                                        <td class="col-sm-2">{{$log->error_message}}</td>
-                                                        <td>{{$log->file}}</td>
-                                                        <td>{{$log->url}}</td>
-                                                        <td>ID: {{$log->created_by}}, Table: {{$log->created_by_table}}</td>
-                                                        <td>{{$log->created_at}}</td>
-                                                        <td><a href="#" id="{{$log->id}}" class="btn btn-sm btn-danger dlt_log" onmousedown="delete_log({{$log->id}})" onclick="return false">Delete</a></td>
-                                                    </tr>
-                                                    @endforeach
-                                                <?php } ?>
-                                            </tbody>
-                                            <tfoot>
-                                                <tr>
-                                                    <th>Client Name</th>
-                                                    <th>Error Message</th>
-                                                    <th>File</th>
-                                                    <th>url</th>
-                                                    <th>Created By</th>
-                                                    <th>Date</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </tfoot>
+
                                         </table>
                                     </div>
                                 </div>
@@ -303,48 +277,82 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-    $('#error_log_table').DataTable();
-    //        $('#dt-ajax-users').DataTable({
-    //            "ajax": '<?= url('customer/getData/data/?tag=users') ?>'
-    //        });
-    });
+        var table = $('#error_log_table').DataTable({
+            "processing": true,
+            "serverSide": true,
+            'serverMethod': 'post',
+            'ajax': {
+                'url': "<?= url('sales/show/null?page=errors') ?>"
+            },
+            "columns": [
+                {"data": "id"},
+                {"data": "schema_name"},
+                {"data": "error_message"},
+                {"data": "file"},
+                {"data": "url"},
+                {"data": "created_by"},
+                {"data": "created_at"},
+                {"data": ""}
+            ],
+            "columnDefs": [
+                {
+                    "targets": 7,
+                    "data": null,
+                    "render": function (data, type, row, meta) {
+
+                        return '<a href="#" id="' + row.id + '" class="label label-danger dlt_log" onmousedown="delete_log(' + row.id + ')" onclick="return false">Delete</a>';
+
+
+                    }
+
+                }
+            ],
+                    
+            rowCallback: function (row, data) {
+                //$(row).addClass('selectRow');
+                $(row).attr('id', 'log' + data.id);
+            }
+        });
+        delete_log = function (a) {
+            $.ajax({
+                url: '<?= url('software/logsDelete') ?>/null',
+                method: 'get',
+                data: {id: a},
+                success: function (data) {
+                    if (data == '1') {
+                        $('#log' + a).fadeOut();
+                    }
+                }
+            });
+        }
+    }
+    );
     $('#schema_select').change(function () {
-    var schema = $(this).val();
-    if (schema == 0) {
-    return false;
-    } else {
-    window.location.href = "<?= url('software/logs') ?>/" + schema;
-    }
+        var schema = $(this).val();
+        if (schema == 0) {
+            return false;
+        } else {
+            window.location.href = "<?= url('software/logs') ?>/" + schema;
+        }
     });
-    delete_log = function (a) {
-    $.ajax({
-    url: '<?= url('software/logsDelete') ?>/null',
-            method: 'get',
-            data: {id: a},
-            success: function (data) {
-            if (data == '1'){
-            $('#log' + a).fadeOut();
-            }
-            }
-    });
-    }
+
     getErrorPage = function (a) {
-    $.ajax({
-    url: '<?= url('software/logsView') ?>/null',
+        $.ajax({
+            url: '<?= url('software/logsView') ?>/null',
             method: 'get',
             data: {type: a},
             success: function (data) {
-            $('#log_summary').hide();
-            $('#custom_logs').html(data).show();
-            $('#show_summary').show();
-            console.log(data);
+                $('#log_summary').hide();
+                $('#custom_logs').html(data).show();
+                $('#show_summary').show();
+                console.log(data);
             }
-    });
+        });
     }
     $('#show_summary').mousedown(function () {
-    $(this).hide();
-    $('#log_summary').show();
-    $('#custom_logs').hide();
+        $(this).hide();
+        $('#log_summary').show();
+        $('#custom_logs').hide();
     });
 </script>
 @endsection
