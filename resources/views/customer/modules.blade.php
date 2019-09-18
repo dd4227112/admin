@@ -50,9 +50,10 @@ foreach ($expenses as $expense) {
 
 $payments = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_payments  group by schema_name');
 $payment_status = [];
+$payment_count=[];
 foreach ($payments as $payment) {
     $payment_status[$payment->schema_name] = $payment->created_at;
-    $payment_status['count'] = $payment->count;
+    $payment_count[$payment->schema_name] = $payment->count;
 }
 ?>
 <!-- Sidebar inner chat end-->
@@ -189,7 +190,7 @@ foreach ($payments as $payment) {
                                                     //classlevel
                                                     if (isset($payment_status[$school->schema_name])) {
 
-                                                        echo '<b class="label label-success">' . $payment_status['count'] . ' trans</b><br/><b  class="label label-success">Last created: '.date('d M Y',strtotime($payment_status[$school->schema_name])).'</b>';
+                                                        echo '<b class="label label-success">' . $payment_count[$school->schema_name] . ' trans</b><br/><b  class="label label-success">Last created: '.date('d M Y',strtotime($payment_status[$school->schema_name])).'</b>';
                                                     } else {
                                                         $no_payment++;
                                                         echo '<b class="label label-warning">No Payment Recorded</b>';

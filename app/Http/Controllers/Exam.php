@@ -386,7 +386,7 @@ class Exam extends Controller {
             } else if (request('type_id') == 'subject') {
 
                 $school_name = trim(request('school'));
-                $where_school = strlen($school_name) < 3 ? '' : ' and "schema_name"=\'' . $school_name . '\' ';
+                $where_school = strlen($school_name) < 3 ? '' : ' and "schema_name"=\'' . pg_escape_string($school_name) . '\' ';
                 $this->data['subjects_perfomance'] = DB::select('select round(avg(mark),1) as average,subject_name from admin.' . $this->mark_table . ' where mark is not null and refer_class_id=' . $class_id . '  ' . $where_school . ' AND global_exam_id=' . $exam_id . '  group by subject_name');
                 //$this->data['reports'] = $this->showAllSubjectReport($exam_id, $class_id);
             } else {
