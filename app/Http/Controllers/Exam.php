@@ -456,7 +456,7 @@ class Exam extends Controller {
         $class_id = request('class_id');
         $exam_id = request('exam_id');
         $school_name = trim(request('school'));
-        $where_school = strlen($school_name) < 3 ? '' : ' and "schema_name"=\'' . $school_name . '\' ';
+        $where_school = strlen($school_name) < 3 ? '' : ' and "schema_name"=\'' . pg_escape_string($school_name) . '\' ';
         $subject_status = 'SELECT distinct lower(subject_name)  as subject_name FROM admin.' . $this->mark_table . ' where refer_class_id=' . $class_id . ' and "schema_name" is not null  ' . $where_school . ' AND global_exam_id=' . $exam_id . ' order by 1';
         $school = DB::table('constant.refer_classes')->where('id', $class_id)->first();
         $result = DB::select($subject_status);
