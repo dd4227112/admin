@@ -70,59 +70,58 @@
                                                     <h4><?= $school->sname ?></h4>
                                                     <h5><?= $school->address ?></h5>
                                                     <?php
-                                                    if($is_client==1){
-                                                    ?>
-                                                    <div class="row follower-counter">
-                                                        <div class="col-md-12 col-lg-3">
-                                                            <div class="txt-primary"><?= \DB::table($schema . '.student')->where('status', 1)->count() ?></div>
-                                                            <div>Students</div>
+                                                    if ($is_client == 1) {
+                                                        ?>
+                                                        <div class="row follower-counter">
+                                                            <div class="col-md-12 col-lg-3">
+                                                                <div class="txt-primary"><?= \DB::table($schema . '.student')->where('status', 1)->count() ?></div>
+                                                                <div>Students</div>
+                                                            </div>
+                                                            <div class="col-md-12 col-lg-3">
+                                                                <div class="txt-primary"><?= \DB::table($schema . '.parent')->where('status', 1)->count() ?></div>
+                                                                <div>Parents</div>
+                                                            </div>
+                                                            <div class="col-md-12 col-lg-3">
+                                                                <div class="txt-primary"><?= \DB::table($schema . '.user')->where('status', 1)->count() ?></div>
+                                                                <div>Staff</div>
+                                                            </div>
+                                                            <div class="col-md-12 col-lg-3">
+                                                                <div class="txt-primary"><?= \DB::table($schema . '.teacher')->where('status', 1)->count() ?></div>
+                                                                <div>Teacher</div>
+                                                            </div>
                                                         </div>
-                                                        <div class="col-md-12 col-lg-3">
-                                                            <div class="txt-primary"><?= \DB::table($schema . '.parent')->where('status', 1)->count() ?></div>
-                                                            <div>Parents</div>
-                                                        </div>
-                                                        <div class="col-md-12 col-lg-3">
-                                                            <div class="txt-primary"><?= \DB::table($schema . '.user')->where('status', 1)->count() ?></div>
-                                                            <div>Staff</div>
-                                                        </div>
-                                                        <div class="col-md-12 col-lg-3">
-                                                            <div class="txt-primary"><?= \DB::table($schema . '.teacher')->where('status', 1)->count() ?></div>
-                                                            <div>Teacher</div>
-                                                        </div>
-                                                    </div>
-                                                    <?php }?>
+                                                    <?php } ?>
                                                 </div>
                                             </div>
                                             <!-- social-profile card end -->
                                             <!-- Who to follow card start -->
-                                             <?php
-                                                    if($is_client==1){
-                                                    ?>
-                                            <div class="card">
-                                                <div class="card-header">
-                                                    <h5 class="card-header-text">Top USER Logins</h5>
-                                                </div>
-                                                <div class="card-block user-box">
-                                                    <?php
-                                                   
-                                                    foreach ($top_users as $log) {
-                                                        ?>
-                                                        <div class="media m-b-10">
-                                                            <a class="media-left" href="#!">
-                                                                <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
-                                                                <div class="live-status bg-danger"></div>
-                                                            </a>
-                                                            <div class="media-body">
-                                                                <div class="chat-header"><?= $log->name ?></div>
-                                                                <div class="text-muted social-designation"><?= $log->usertype ?></div>
+                                            <?php
+                                            if ($is_client == 1) {
+                                                ?>
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h5 class="card-header-text">Top USER Logins</h5>
+                                                    </div>
+                                                    <div class="card-block user-box">
+                                                        <?php
+                                                        foreach ($top_users as $log) {
+                                                            ?>
+                                                            <div class="media m-b-10">
+                                                                <a class="media-left" href="#!">
+                                                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
+                                                                    <div class="live-status bg-danger"></div>
+                                                                </a>
+                                                                <div class="media-body">
+                                                                    <div class="chat-header"><?= $log->name ?></div>
+                                                                    <div class="text-muted social-designation"><?= $log->usertype ?></div>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    <?php } ?>
+                                                        <?php } ?>
 
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <!-- Who to follow card end -->
-                                                    <?php }?>
+                                                <!-- Who to follow card end -->
+                                            <?php } ?>
                                         </div>
                                         <!-- Social timeline left end -->
                                     </div>
@@ -143,7 +142,7 @@
                                                     <div class="slide"></div>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link " data-toggle="tab" href="#friends" role="tab" aria-expanded="true">Friends</a>
+                                                    <a class="nav-link " data-toggle="tab" href="#friends" role="tab" aria-expanded="true">Staff Members</a>
                                                     <div class="slide"></div>
                                                 </li>
                                             </ul>
@@ -239,21 +238,24 @@
                                                                                 <div class="p-b-30"> <span class="f-14"><a href="#">What have been done</a></span></div>
                                                                                 <?php
                                                                                 $comments = $task->taskComments()->get();
-                                                                                if(count($comments)>0){
-                                                                                foreach ($comments as $comment) {
-                                                                                    ?>
-                                                                                    <div class="media m-b-20">
-                                                                                        <a class="media-left" href="#">
-                                                                                            <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
-                                                                                        </a>
-                                                                                        <div class="media-body b-b-muted social-client-description">
-                                                                                            <div class="chat-header"><?= $comment->user->name ?><span class="text-muted"><?= date('d M Y', strtotime($comment->created_at)) ?></span></div>
-                                                                                            <p class="text-muted"><?= $comment->content ?></p>
+                                                                                if (count($comments) > 0) {
+                                                                                    foreach ($comments as $comment) {
+                                                                                        ?>
+                                                                                        <div class="media m-b-20">
+                                                                                            <a class="media-left" href="#">
+                                                                                                <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
+                                                                                            </a>
+                                                                                            <div class="media-body b-b-muted social-client-description">
+                                                                                                <div class="chat-header"><?= $comment->user->name ?><span class="text-muted"><?= date('d M Y', strtotime($comment->created_at)) ?></span></div>
+                                                                                                <p class="text-muted"><?= $comment->content ?></p>
+                                                                                            </div>
                                                                                         </div>
-                                                                                    </div>
-                                                                              
-                                                        <?php } }?>
-  <div class="new_comment<?=$task->id?>"></div>
+
+                                                                                        <?php
+                                                                                    }
+                                                                                }
+                                                                                ?>
+                                                                                <div class="new_comment<?= $task->id ?>"></div>
                                                                                 <div class="media">
                                                                                     <a class="media-left" href="#">
                                                                                         <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-blank.jpg" alt="Generic placeholder image">
@@ -261,8 +263,11 @@
                                                                                     <div class="media-body">
                                                                                         <form class="">
                                                                                             <div class="">
-                                                                                                <textarea rows="5" cols="5" id="task_comment<?=$task->id?>" class="form-control" placeholder="Write Something here..."></textarea>
-                                                                                                <div class="text-right m-t-20"><a href="#" class="btn btn-primary waves-effect waves-light" onclick="return false" onmousedown="$.get('<?=url('customer/taskComment/null')?>',{content:$('#task_comment<?=$task->id?>').val(),task_id:<?=$task->id?>},function(data){$('.new_comment<?=$task->id?>').after(data);$('#task_comment<?=$task->id?>').val('') })">Post</a></div>
+                                                                                                <textarea rows="5" cols="5" id="task_comment<?= $task->id ?>" class="form-control" placeholder="Write Something here..."></textarea>
+                                                                                                <div class="text-right m-t-20"><a href="#" class="btn btn-primary waves-effect waves-light" onclick="return false" onmousedown="$.get('<?= url('customer/taskComment/null') ?>', {content: $('#task_comment<?= $task->id ?>').val(), task_id:<?= $task->id ?>}, function (data) {
+                                                                                                                $('.new_comment<?= $task->id ?>').after(data);
+                                                                                                                $('#task_comment<?= $task->id ?>').val('')
+                                                                                                            })">Post</a></div>
                                                                                             </div>
                                                                                         </form>
                                                                                     </div>
@@ -304,24 +309,24 @@
                                                                                         <th class="social-label b-none">Location</th>
                                                                                         <td class="social-user-name b-none text-muted"><?= $school->address ?></td>
                                                                                     </tr>
-                                                                                    <?php if($is_client==1){?>
-                                                                                    <tr>
-                                                                                        <th class="social-label b-none">Date On boarded</th>
-                                                                                        <td class="social-user-name b-none text-muted"><?= date('d M Y h:i', strtotime($school->created_at)) ?></td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <th class="social-label b-none">Contact Details</th>
-                                                                                        <td class="social-user-name b-none text-muted"><?= $school->phone ?></td>
-                                                                                    </tr>
-                                                                                    <tr>
-                                                                                        <th class="social-label b-none p-b-0">School Level</th>
-                                                                                        <td class="social-user-name b-none p-b-0 text-muted"><?php
-                                                                                            foreach ($levels as $level) {
-                                                                                                echo $level->name . ' - ' . $level->result_format . '<br/>';
-                                                                                            }
-                                                                                            ?></td>
-                                                                                    </tr>
-                                                                                    <?php }?>
+                                                                                    <?php if ($is_client == 1) { ?>
+                                                                                        <tr>
+                                                                                            <th class="social-label b-none">Date On boarded</th>
+                                                                                            <td class="social-user-name b-none text-muted"><?= date('d M Y h:i', strtotime($school->created_at)) ?></td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <th class="social-label b-none">Contact Details</th>
+                                                                                            <td class="social-user-name b-none text-muted"><?= $school->phone ?></td>
+                                                                                        </tr>
+                                                                                        <tr>
+                                                                                            <th class="social-label b-none p-b-0">School Level</th>
+                                                                                            <td class="social-user-name b-none p-b-0 text-muted"><?php
+                                                                                                foreach ($levels as $level) {
+                                                                                                    echo $level->name . ' - ' . $level->result_format . '<br/>';
+                                                                                                }
+                                                                                                ?></td>
+                                                                                        </tr>
+                                                                                    <?php } ?>
                                                                                 </tbody></table>
                                                                         </form>
                                                                     </div>
@@ -535,243 +540,34 @@
                                             <!-- Friends tab start -->
                                             <div class="tab-pane" id="friends" aria-expanded="false">
                                                 <div class="row">
-                                                    <div class="col-lg-12 col-xl-6">
-                                                        <div class="card">
-                                                            <span class="dropdown-toggle addon-btn text-muted f-right service-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" role="tooltip"></span>
-                                                            <div class="dropdown-menu dropdown-menu-right b-none services-list">
-                                                                <a class="dropdown-item" href="#">Remove tag</a>
-                                                                <a class="dropdown-item" href="#">Report Photo</a>
-                                                                <a class="dropdown-item" href="#">Hide From Timeline</a>
-                                                                <a class="dropdown-item" href="#">Blog User</a>
-                                                            </div>
-                                                            <div class="media bg-white d-flex p-10">
-                                                                <div class="media-left media-middle">
-                                                                    <a href="#">
-                                                                        <img class="media-object" src="<?= $root ?>assets/images/timeline/img2.png" alt="">
-                                                                    </a>
-                                                                </div>
-                                                                <div class="media-body friend-elipsis">
-                                                                    <div class="f-15 f-bold m-b-5">Josephin Doe</div>
-                                                                    <div class="text-muted social-designation">Softwear Engineer at phoenixcoded</div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12 col-xl-6">
-                                                        <div class="card">
-                                                            <div class="input-group wall-elips">
-                                                                <span class="dropdown-toggle addon-btn text-muted f-right service-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" role="tooltip"></span>
-                                                                <div class="dropdown-menu dropdown-menu-right b-none services-list">
-                                                                    <a class="dropdown-item" href="#">Remove tag</a>
-                                                                    <a class="dropdown-item" href="#">Report Photo</a>
-                                                                    <a class="dropdown-item" href="#">Hide From Timeline</a>
-                                                                    <a class="dropdown-item" href="#">Blog User</a>
-                                                                </div>
-                                                            </div>
-                                                            <div class="media bg-white d-flex p-10">
-                                                                <div class="media-left media-middle">
-                                                                    <a href="#">
-                                                                        <img class="media-object" src="<?= $root ?>assets/images/timeline/img2.png" alt="">
-                                                                    </a>
-                                                                </div>
-                                                                <div class="media-body friend-elipsis">
-                                                                    <div class="f-15 f-bold m-b-5">Josephin Doe</div>
-                                                                    <div class="text-muted social-designation">Softwear Engineer at phoenixcoded</div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12 col-xl-6">
-                                                        <div class="card">
-                                                            <div class="input-group wall-elips">
-                                                                <span class="dropdown-toggle addon-btn text-muted f-right service-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" role="tooltip"></span>
-                                                                <div class="dropdown-menu dropdown-menu-right b-none services-list">
-                                                                    <a class="dropdown-item" href="#">Remove tag</a>
-                                                                    <a class="dropdown-item" href="#">Report Photo</a>
-                                                                    <a class="dropdown-item" href="#">Hide From Timeline</a>
-                                                                    <a class="dropdown-item" href="#">Blog User</a>
-                                                                </div>
-                                                            </div>
-                                                            <div class="media bg-white d-flex p-10">
-                                                                <div class="media-left media-middle">
-                                                                    <a href="#">
-                                                                        <img class="media-object" src="<?= $root ?>assets/images/timeline/img2.png" alt="">
-                                                                    </a>
-                                                                </div>
-                                                                <div class="media-body friend-elipsis">
-                                                                    <div class="f-15 f-bold m-b-5">Josephin Doe</div>
-                                                                    <div class="text-muted social-designation">Softwear Engineer at phoenixcoded</div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12 col-xl-6">
-                                                        <div class="card">
-                                                            <div class="input-group wall-elips">
-                                                                <span class="dropdown-toggle addon-btn text-muted f-right service-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" role="tooltip"></span>
-                                                                <div class="dropdown-menu dropdown-menu-right b-none services-list">
-                                                                    <a class="dropdown-item" href="#">Remove tag</a>
-                                                                    <a class="dropdown-item" href="#">Report Photo</a>
-                                                                    <a class="dropdown-item" href="#">Hide From Timeline</a>
-                                                                    <a class="dropdown-item" href="#">Blog User</a>
-                                                                </div>
-                                                            </div>
-                                                            <div class="media bg-white d-flex p-10">
-                                                                <div class="media-left media-middle">
-                                                                    <a href="#">
-                                                                        <img class="media-object" src="<?= $root ?>assets/images/timeline/img2.png" alt="">
-                                                                    </a>
-                                                                </div>
-                                                                <div class="media-body friend-elipsis">
-                                                                    <div class="f-15 f-bold m-b-5">Josephin Doe</div>
-                                                                    <div class="text-muted social-designation">Softwear Engineer at phoenixcoded</div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12 col-xl-6">
-                                                        <div class="card">
-                                                            <div class="input-group wall-elips">
-                                                                <span class="dropdown-toggle addon-btn text-muted f-right service-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" role="tooltip"></span>
-                                                                <div class="dropdown-menu dropdown-menu-right b-none services-list">
-                                                                    <a class="dropdown-item" href="#">Remove tag</a>
-                                                                    <a class="dropdown-item" href="#">Report Photo</a>
-                                                                    <a class="dropdown-item" href="#">Hide From Timeline</a>
-                                                                    <a class="dropdown-item" href="#">Blog User</a>
-                                                                </div>
-                                                            </div>
-                                                            <div class="media bg-white d-flex p-10">
-                                                                <div class="media-left media-middle">
-                                                                    <a href="#">
-                                                                        <img class="media-object" src="<?= $root ?>assets/images/timeline/img2.png" alt="">
-                                                                    </a>
-                                                                </div>
-                                                                <div class="media-body friend-elipsis">
-                                                                    <div class="f-15 f-bold m-b-5">Josephin Doe</div>
-                                                                    <div class="text-muted social-designation">Softwear Engineer at phoenixcoded</div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12 col-xl-6">
-                                                        <div class="card">
-                                                            <div class="input-group wall-elips">
-                                                                <span class="dropdown-toggle addon-btn text-muted f-right service-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" role="tooltip"></span>
-                                                                <div class="dropdown-menu dropdown-menu-right b-none services-list">
-                                                                    <a class="dropdown-item" href="#">Remove tag</a>
-                                                                    <a class="dropdown-item" href="#">Report Photo</a>
-                                                                    <a class="dropdown-item" href="#">Hide From Timeline</a>
-                                                                    <a class="dropdown-item" href="#">Blog User</a>
-                                                                </div>
-                                                            </div>
-                                                            <div class="media bg-white d-flex p-10">
-                                                                <div class="media-left media-middle">
-                                                                    <a href="#">
-                                                                        <img class="media-object" src="<?= $root ?>assets/images/timeline/img2.png" alt="">
-                                                                    </a>
-                                                                </div>
-                                                                <div class="media-body friend-elipsis">
-                                                                    <div class="f-15 f-bold m-b-5">Josephin Doe</div>
-                                                                    <div class="text-muted social-designation">Softwear Engineer at phoenixcoded</div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12 col-xl-6">
-                                                        <div class="card">
-                                                            <div class="input-group wall-elips">
-                                                                <span class="dropdown-toggle addon-btn text-muted f-right service-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" role="tooltip"></span>
-                                                                <div class="dropdown-menu dropdown-menu-right b-none services-list">
-                                                                    <a class="dropdown-item" href="#">Remove tag</a>
-                                                                    <a class="dropdown-item" href="#">Report Photo</a>
-                                                                    <a class="dropdown-item" href="#">Hide From Timeline</a>
-                                                                    <a class="dropdown-item" href="#">Blog User</a>
-                                                                </div>
-                                                            </div>
-                                                            <div class="media bg-white d-flex p-10">
-                                                                <div class="media-left media-middle">
-                                                                    <a href="#">
-                                                                        <img class="media-object" src="<?= $root ?>assets/images/timeline/img2.png" alt="">
-                                                                    </a>
-                                                                </div>
-                                                                <div class="media-body friend-elipsis">
-                                                                    <div class="f-15 f-bold m-b-5">Josephin Doe</div>
-                                                                    <div class="text-muted social-designation">Softwear Engineer at phoenixcoded</div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12 col-xl-6">
-                                                        <div class="card">
-                                                            <div class="input-group wall-elips">
-                                                                <span class="dropdown-toggle addon-btn text-muted f-right service-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" role="tooltip"></span>
-                                                                <div class="dropdown-menu dropdown-menu-right b-none services-list">
-                                                                    <a class="dropdown-item" href="#">Remove tag</a>
-                                                                    <a class="dropdown-item" href="#">Report Photo</a>
-                                                                    <a class="dropdown-item" href="#">Hide From Timeline</a>
-                                                                    <a class="dropdown-item" href="#">Blog User</a>
-                                                                </div>
-                                                            </div>
-                                                            <div class="media bg-white d-flex p-10">
-                                                                <div class="media-left media-middle">
-                                                                    <a href="#">
-                                                                        <img class="media-object" src="<?= $root ?>assets/images/timeline/img2.png" alt="">
-                                                                    </a>
-                                                                </div>
-                                                                <div class="media-body friend-elipsis">
-                                                                    <div class="f-15 f-bold m-b-5">Josephin Doe</div>
-                                                                    <div class="text-muted social-designation">Softwear Engineer at phoenixcoded</div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12 col-xl-6">
-                                                        <div class="card">
-                                                            <div class="input-group wall-elips">
-                                                                <span class="dropdown-toggle addon-btn text-muted f-right service-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" role="tooltip"></span>
-                                                                <div class="dropdown-menu dropdown-menu-right b-none services-list">
-                                                                    <a class="dropdown-item" href="#">Remove tag</a>
-                                                                    <a class="dropdown-item" href="#">Report Photo</a>
-                                                                    <a class="dropdown-item" href="#">Hide From Timeline</a>
-                                                                    <a class="dropdown-item" href="#">Blog User</a>
-                                                                </div>
-                                                            </div>
-                                                            <div class="media bg-white d-flex p-10">
-                                                                <div class="media-left media-middle">
-                                                                    <a href="#">
-                                                                        <img class="media-object" src="<?= $root ?>assets/images/timeline/img2.png" alt="">
-                                                                    </a>
-                                                                </div>
-                                                                <div class="media-body friend-elipsis">
-                                                                    <div class="f-15 f-bold m-b-5">Josephin Doe</div>
-                                                                    <div class="text-muted social-designation">Softwear Engineer at phoenixcoded</div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12 col-xl-6">
-                                                        <div class="card">
-                                                            <div class="input-group wall-elips">
-                                                                <span class="dropdown-toggle addon-btn text-muted f-right service-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" role="tooltip"></span>
-                                                                <div class="dropdown-menu dropdown-menu-right b-none services-list">
-                                                                    <a class="dropdown-item" href="#">Remove tag</a>
-                                                                    <a class="dropdown-item" href="#">Report Photo</a>
-                                                                    <a class="dropdown-item" href="#">Hide From Timeline</a>
-                                                                    <a class="dropdown-item" href="#">Blog User</a>
-                                                                </div>
-                                                            </div>
-                                                            <div class="media bg-white d-flex p-10">
-                                                                <div class="media-left media-middle">
-                                                                    <a href="#">
-                                                                        <img class="media-object" src="<?= $root ?>assets/images/timeline/img2.png" alt="">
-                                                                    </a>
-                                                                </div>
-                                                                <div class="media-body friend-elipsis">
-                                                                    <div class="f-15 f-bold m-b-5">Josephin Doe</div>
-                                                                    <div class="text-muted social-designation">Softwear Engineer at phoenixcoded</div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                    <div class="card table-responsive">
+                                                        <table class="table dataTable">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Name</th>
+                                                                    <th>Phone</th>
+                                                                    <th>Email</th>
+                                                                    <th>Title</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <?php
+                                                                $users=DB::table($schema.'.user')->where('status',1)->get();
+                                                                foreach ($users as $user) {
+                                                                    
+                                                                
+                                                                ?>
+                                                                <tr>
+                                                                    <td></td>
+                                                                    <td><?=$user->name?></td>
+                                                                    <td><?=$user->phone?></td>
+                                                                    <td><?=$user->email?></td>
+                                                                    <td><?=$user->usertype?></td>
+                                                                </tr>
+                                                                <?php }?>
+                                                            </tbody>
+                                                        </table>
                                                     </div>
                                                 </div>
                                             </div>
