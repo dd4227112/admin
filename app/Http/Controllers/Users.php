@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Role;
+
 use Illuminate\Http\Request;
 use App\Model\User;
 use DB;
@@ -31,9 +31,8 @@ class Users extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        $roles = Role::where('created_by', Auth::user()->id)->get();
         $users = User::where('created_by', Auth::user()->id)->get();
-        return view('users.create', compact('roles', 'users'));
+        return view('users.create', compact('users'));
     }
 
     /**
@@ -54,10 +53,7 @@ class Users extends Controller {
         $user = new User(array_merge($request->all(), ['password' => bcrypt(request('email')), 'created_by' => Auth::user()->id]));
         $user->save();
         $this->sendEmailAndSms($request);
-        foreach ($request->input('roles') as $key => $value) {
-            $user->attachRole($value);
-        }
-
+ 
         return redirect('users/index')->with('success', 'User ' . $request['firstname'] . ' created successfully');
     }
 
@@ -98,10 +94,9 @@ class Users extends Controller {
     public function show() {
         $id = request()->segment(3);
         $this->data['user'] = User::find($id);
-        $roles = Role::join("role_user", "role_user.role_id", "=", "roles.id")
-                ->where("role_user.user_id", $id);
-        $this->data['user_permission'] = \App\Models\Permission::whereIn('id', \App\Models\PermissionRole::whereIn('role_id', $roles->get(['id']))->get(['permission_id']))->get(['id']);
-        $this->data['userRoles'] = $roles->get();
+
+        $this->data['user_permission'] = \App\Models\Permission::whereIn('id', \App\Models\PermissionRole::where('role_id', $this->data['user']->role_id)->get(['permission_id']))->get(['id']);
+     
         return view('users.show', $this->data);
     }
 

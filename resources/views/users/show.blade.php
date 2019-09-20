@@ -90,11 +90,9 @@
                                                     </tr>
                                                     <tr>
                                                         <td class="text-nowrap"> Roles</td>
-                                                        <td>  @if(!empty($userRoles))
-                                                            @foreach($userRoles as $v)
-                                                            <label class="label label-success">{{ $v->display_name }}</label>
-                                                            @endforeach
-                                                            @endif</td>
+                                                        <td>  
+                                                            <label class="label label-success">{{ $user->role->display_name }}</label>
+                                                           </td>
                                                     </tr>
                                                     <tr>
                                                         <td></td>
@@ -183,7 +181,7 @@
     permission = function () {
         $('.permission').click(function () {
             var id = $(this).val();
-            var role_id = '<?= $user->roles()->first()->id ?>';
+            var role_id = '<?= $user->role_id ?>';
             if (parseInt(id)) {
                 if (!this.checked) {
                     // It is not checked, show your div...

@@ -26,6 +26,14 @@ class Software extends Controller {
         }
     }
 
+    public function server() {
+        $this->data['file'] = '';
+        $view = 'software.code_editor';
+        if (view()->exists($view)) {
+            return view($view, $this->data);
+        }
+    }
+
     public function show($id, $sub = null) {
         if ($id == 'compareTable') {
             $this->data['data'] = $this->compareTable();
