@@ -66,7 +66,7 @@
                                                 <tbody>
                                                     <tr>
                                                         <td class="text-nowrap"> First Name</td>
-                                                        <td>  {{ $user->firstname }}</td>
+                                                        <td> <div class="edit" contenteditable="true" id='firstname'> {{ $user->firstname }}</div></td>
                                                     </tr>
                                                     <tr>
                                                         <td class="text-nowrap"> Last Name</td>

@@ -80,7 +80,7 @@
                             </ul>
                         </div>
                     @endif
-                    {!! Form::model($user, ['method' => 'PATCH','url' => ['users.update', $user->id]]) !!}
+                    {!! Form::model($user, ['method' => 'PATCH','url' => ['users/edit', $user->id]]) !!}
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
@@ -132,11 +132,16 @@
                             <div class="form-group">
                                 <strong>Role:</strong>
                                 <br/>
-                                @foreach($role as $value)
-                                    <label>{{ Form::checkbox('role[]', $value->id, in_array($value->id, $userRoles) ? true : false, array('class' => 'name')) }}
-                                        {{ $value->display_name }}</label>
-                                    <br/>
+                                <select name='role_id' class="form-group">
+                                <?php
+                                $roles=DB::table('roles')->get();
+                                ?>
+                                @foreach($roles as $value)
+                                
+                                <option value="{{$value->id}}">{{$value->display_name}} </option>
+                              
                                 @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 text-center">

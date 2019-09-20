@@ -137,28 +137,21 @@ class Users extends Controller {
     public function edit() {
         $id = request()->segment(3);
         $user = User::find($id);
-        $role = Role::get();
-        $userRoles = DB::table("role_user")->where("role_user.user_id", $id)
-                        ->pluck('role_user.role_id', 'role_user.role_id')->toArray();
+    
         if ($_POST) {
             $this->validate(request(), [
                 'firstname' => 'required|max:255',
                 'lastname' => 'required|max:255',
                 'phone' => 'required|max:255',
             ]);
+           
             $user = User::find($id)->update(request()->all());
-            DB::table("role_user")->where("role_user.user_id", $id)
-                    ->delete();
+           
 
-            foreach (request('role') as $key => $value) {
-                $user->attachRole($value);
-            }
-
-            return redirect()->route('users.index')
-                            ->with('success', 'User ' . request('firstname') . ' ' . request('lastname') . ' updated successfully');
+            return redirect('users/index')->with('success', 'User ' . request('firstname') . ' ' . request('lastname') . ' updated successfully');
         }
 
-        return view('users.edit', compact('user', 'role', 'userRoles'));
+        return view('users.edit', compact('user'));
     }
 
     /**
