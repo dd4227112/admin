@@ -38,6 +38,8 @@
                                                 <select class="form-control" name="title">
                                                     <option value="Mr">Mr</option>
                                                     <option value="Mr">Mrs</option>
+                                                    <option value="Sr">Sr</option>
+                                                    <option value="Fr">Fr</option>
                                                     <option value="Prof">Prof</option>
                                                 </select>
                                                 <input type="text" class="form-control" name="name" id="name" placeholder="Prospect Name">
