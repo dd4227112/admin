@@ -196,7 +196,7 @@ group by ownership');
                 break;
             case 'schools':
                 $sql = "select a.*, b.id as prospect_id, c.id as lead_id from admin.schools a  left join admin.prospects b on b.school_id=a.id left join admin.leads c on c.school_id=a.id where lower(a.ownership) <>'government'";
-                return $this->ajaxTable('schools', ['name', 'region', 'ward', 'district'], $sql);
+                return $this->ajaxTable('schools', ['a.name', 'a.region', 'a.ward', 'a.district'], $sql);
                 break;
             case 'prospects':
                 $sql = "select a.id, b.name, a.title||' '||a.name||' <br/> Email: '||a.email||' , phone: '||a.phone_number  as contact_name, c.name as person_in_charge,  b.region||' '||b.district||' '||b.ward as location, e.created_at as last_activity, e.date || ' at '||e.time as action_date, e.action||' : '|| e.activity as last_message from admin.prospects a join admin.schools b on a.school_id=b.id join admin.users c on c.id=a.user_id join admin.tasks e on e.id=a.task_id";
