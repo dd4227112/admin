@@ -36,6 +36,7 @@ foreach ($exam_reports as $report) {
 
 $invoices = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_invoices  group by schema_name');
 $invoice_status = [];
+$invoice_status_count=[];
 foreach ($invoices as $invoice) {
     $invoice_status[$invoice->schema_name] = $invoice->created_at;
     $invoice_status_count[$invoice->schema_name] = $invoice->count;
@@ -43,6 +44,7 @@ foreach ($invoices as $invoice) {
 
 $expenses = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_expense  group by schema_name');
 $expense_status = [];
+$expense_status_count=[];
 foreach ($expenses as $expense) {
     $expense_status[$expense->schema_name] = $expense->created_at;
     $expense_status_count[$expense->schema_name] = $expense->count;
