@@ -38,14 +38,14 @@ $invoices = DB::select('select distinct "schema_name", max(created_at) as create
 $invoice_status = [];
 foreach ($invoices as $invoice) {
     $invoice_status[$invoice->schema_name] = $invoice->created_at;
-    $invoice_status['count'] = $invoice->count;
+    $invoice_status_count[$invoice->schema_name] = $invoice->count;
 }
 
 $expenses = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_expense  group by schema_name');
 $expense_status = [];
 foreach ($expenses as $expense) {
     $expense_status[$expense->schema_name] = $expense->created_at;
-    $expense_status['count'] = $expense->count;
+    $expense_status_count[$expense->schema_name] = $expense->count;
 }
 
 $payments = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_payments  group by schema_name');
@@ -164,7 +164,7 @@ foreach ($payments as $payment) {
                                                     //classlevel
                                                     if (isset($invoice_status[$school->schema_name])) {
 
-                                                        echo '<b class="label label-success">' . $invoice_status['count'] . ' out of ' . $students . '</b><br/><b  class="label label-success">Last created: '.date('d M Y',strtotime($invoice_status[$school->schema_name])).'</b>';
+                                                        echo '<b class="label label-success">' . $invoice_status_count[$school->schema_name] . ' out of ' . $students . '</b><br/><b  class="label label-success">Last created: '.date('d M Y',strtotime($invoice_status[$school->schema_name])).'</b>';
                                                     } else {
                                                         $no_invoice++;
                                                         echo '<b class="label label-warning">No Invoice Created</b>';
@@ -180,7 +180,7 @@ foreach ($payments as $payment) {
                                                     //classlevel
                                                     if (isset($expense_status[$school->schema_name])) {
 
-                                                        echo '<b class="label label-success">' . $expense_status['count'] . ' trans</b><br/><b  class="label label-success">Last created: '.date('d M Y',strtotime($expense_status[$school->schema_name])).'</b>';
+                                                        echo '<b class="label label-success">' . $expense_status_count[$school->schema_name] . ' trans</b><br/><b  class="label label-success">Last created: '.date('d M Y',strtotime($expense_status[$school->schema_name])).'</b>';
                                                     } else {
                                                         $no_expense++;
                                                         echo '<b class="label label-warning">No Expense Recorded</b>';
