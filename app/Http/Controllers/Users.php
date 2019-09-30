@@ -32,7 +32,8 @@ class Users extends Controller {
      */
     public function create() {
         $users = User::where('created_by', Auth::user()->id)->get();
-        return view('users.create', compact('users'));
+        $roles=DB::table('roles')->get();
+        return view('users.create', compact('users','roles'));
     }
 
     /**
