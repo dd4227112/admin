@@ -482,7 +482,7 @@ function toast(message) {
                                                 class="icon-arrow-right"></i>Training</a>
                                         <ul class="tree-2">
 
-                                            <li><a href="<?= url('customer/guide') ?>l" data-i18n="nav.page_layout.vertical.header-fixed">User Guide</a></li>
+                                            <li><a href="<?= url('customer/guide') ?>" data-i18n="nav.page_layout.vertical.header-fixed">User Guide</a></li>
                                             <li><a href="<?= url('customer/faq') ?>" data-i18n="nav.page_layout.vertical.compact"> FAQ </a>
                                             </li>
                                             <li><a href="<?= url('customer/report') ?>" data-i18n="nav.page_layout.vertical.static-layout">Report </a></li>
@@ -494,9 +494,9 @@ function toast(message) {
                                                 class="icon-arrow-right"></i>Usage Analysis</a>
                                         <ul class="tree-2">
                                             <li><a href="<?= url('customer/modules') ?>" data-i18n="nav.page_layout.vertical.static-layout"> Modules </a></li>
-                                            <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.vertical.header-fixed">
+                                            <li><a href="<?= url('customer/logs') ?>" data-i18n="nav.page_layout.vertical.header-fixed">
                                                     User Logs</a></li>
-                                            <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.vertical.compact"> Page Logs </a>
+                                            <li><a href="<?= url('customer/pages') ?>" data-i18n="nav.page_layout.vertical.compact"> Page Logs </a>
                                             </li>
 
                                         </ul>
@@ -504,10 +504,10 @@ function toast(message) {
 
                                     <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Communications</a>
                                         <ul class="tree-2">
-                                            <li><a href="<?= url('customer/calls') ?>" target="_blank" data-i18n="nav.page_layout.horizontal.static-layout"> Call Logs</a></li>
-                                            <li><a href="<?= url('customer/emailsms') ?>" target="_blank" data-i18n="nav.page_layout.horizontal.static-layout"> SMS & Email Logs</a></li>
-                                            <li><a href="<?= url('customer/feedbacks') ?>" target="_blank" data-i18n="nav.page_layout.horizontal.fixed-layout">Customer Feedbacks </a></li>
-                                            <li><a href="<?= url('customer/update') ?>" target="_blank" data-i18n="nav.page_layout.horizontal.static-with-icon">ShuleSoft Updates </a></li>
+                                            <li><a href="<?= url('customer/calls') ?>"  data-i18n="nav.page_layout.horizontal.static-layout"> Call Logs</a></li>
+                                            <li><a href="<?= url('customer/emailsms') ?>" data-i18n="nav.page_layout.horizontal.static-layout"> SMS & Email Logs</a></li>
+                                            <li><a href="<?= url('customer/feedbacks/null') ?>"  data-i18n="nav.page_layout.horizontal.fixed-layout">Customer Feedbacks </a></li>
+                                            <li><a href="<?= url('customer/update') ?>" data-i18n="nav.page_layout.horizontal.static-with-icon">ShuleSoft Updates </a></li>
 
                                         </ul>
                                     </li>

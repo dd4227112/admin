@@ -39,9 +39,15 @@ class Customer extends Controller {
     function faq() {
         if ((int) request('id') > 0 && request('action') == 'delete') {
             DB::table('faq')->where('id', request('id'))->delete();
+            return redirect()->back()->with('success', 'success');
         }
+        if ($_POST) {
+            $id = DB::table('faq')->insertGetId(['question' => request('question'), 'answer' => request('answer'), 'created_by' => Auth::user()->id]);
+            echo $id > 0 ? 'Success' : ' Error, try again later';
+        }
+
         $this->data['faqs'] = DB::table('faq')->get();
-        return view('support.faq', $this->data);
+        return view('customer.faq', $this->data);
     }
 
     function setup() {
@@ -142,11 +148,16 @@ class Customer extends Controller {
         } else if (request()->segment(3) == 'edit') {
             $this->data['guide'] = \App\Model\Guide::find(request()->segment(4));
             $page = 'edit_guide';
+            if ($_POST) {
+                $request = request()->all();
+                \App\Model\Guide::find(request('guide_id'))->update($request);
+                return redirect('customer/guide');
+            }
         } else {
             $page = 'guide';
             $this->data['guides'] = \App\Model\Guide::all();
         }
-        return view('support.' . $page, $this->data);
+        return view('customer.' . $page, $this->data);
     }
 
     public function parents() {
@@ -160,9 +171,7 @@ class Customer extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function edit($id) {
-        $request = request()->all();
-        \App\Model\Guide::find(request('guide_id'))->update($request);
-        return redirect('support/guide');
+        
     }
 
     /**
@@ -182,23 +191,23 @@ class Customer extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function delete() {
-        //
+    public function report() {
+        return view('customer.training.report');
     }
 
     public function usage() {
-        return view('support/usage');
+        return view('customer.usage');
     }
 
     public function profile() {
         $school = $this->data['schema'] = request()->segment(3);
-        $is_client=0;
+        $is_client = 0;
         if ($school == 'school') {
             $id = request()->segment(4);
             $this->data['client_id'] = $id;
             $this->data['school'] = \collect(DB::select(' select name as sname, name, region , ward, district as address  from admin.schools where id=' . $id))->first();
         } else {
-            $is_client=1;
+            $is_client = 1;
             $this->data['school'] = DB::table($school . '.setting')->first();
             $this->data['levels'] = DB::table($school . '.classlevel')->get();
             $client = \App\Models\Client::where('username', $school)->first();
@@ -209,7 +218,7 @@ class Customer extends Controller {
             $this->data['client_id'] = $client->id;
             $this->data['top_users'] = DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
         }
-         $this->data['is_client']=$is_client;
+        $this->data['is_client'] = $is_client;
         if ($_POST) {
             $data = array_merge(request()->all(), ['user_id' => Auth::user()->id]);
             \App\Models\Task::create($data);
@@ -241,4 +250,30 @@ class Customer extends Controller {
         return view('customer/analysis', $this->data);
     }
 
+    public function logs() {
+        $this->data['start'] = request('start_date');
+        $this->data['end'] = request('end_date');
+        $this->data['schema'] = request('schema');
+        $this->data['user'] = request('usertype');
+        $this->data['schemas'] = (new \App\Http\Controllers\Software())->loadSchema();
+        $this->data['users'] = DB::table('admin.all_users')->distinct('usertype')->get(['usertype']);
+        $this->data['data'] = DB::select('select count(*) as total_logs,"schema_name"::text from admin.all_log group by "schema_name"::text order by count(*)');
+        return view('customer.logsummary', $this->data);
+    }
+
+     public function pages() {
+        $this->data['start'] = request('start_date');
+        $this->data['end'] = request('end_date');
+        $this->data['schema'] = request('schema');
+        $this->data['user'] = request('usertype');
+        $this->data['schemas'] = (new \App\Http\Controllers\Software())->loadSchema();
+        $this->data['users'] = DB::table('admin.all_users')->distinct('usertype')->get(['usertype']);
+        $this->data['data'] = DB::select('select count(*) as total_logs,"schema_name"::text from admin.all_log group by "schema_name"::text order by count(*)');
+        return view('customer.logsummary', $this->data);
+    }
+    
+    public function feedbacks() {
+        $feedbacks = \App\Model\Feedback::orderBy('id', 'desc')->paginate();
+        return view('customer.feedback', compact('feedbacks')); 
+    }
 }

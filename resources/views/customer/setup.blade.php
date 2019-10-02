@@ -20,6 +20,12 @@
   ● select distinct &quot;schema_name&quot; from admin.all_expense where extract (year from
   created_at)=&#39;2019&#39; -to
  */
+//DB::statement("select admin.join_all('classlevel','classlevel_id,name,level_numeric,school_level_id')");
+//$levels = DB::select('select distinct "schema_name" from admin.all_classlevel by schema_name');
+//$classlevel_status = [];
+//foreach ($levels as $level) {
+//    $classlevel_status[$level->schema_name] = $level->schema_name;
+//}
 ?>
 <!-- Sidebar inner chat end-->
 <!-- Main-body start -->
@@ -95,6 +101,7 @@
                                                         echo '<b class="label label-warning">Not Defined</b>';
                                                     }
                                                     ?>
+                                                    
                                                 </td>
                                                 <td>
                                                     <?php
