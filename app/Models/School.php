@@ -8,9 +8,11 @@ class School extends Model {
      * Generated
      */
 
-    protected $table = 'school';
-    protected $fillable = ['school_id', 'name', 'username'];
+    protected $table = 'schools';
+    protected $fillable = ['id', 'region', 'district','ward','ownership','type'];
 
-
+    public function users() {
+        return $this->hasManyThrough(\App\Models\UsersSchool::class,\App\Models\User::class);
+    }
 
 }

@@ -201,6 +201,7 @@ class Customer extends Controller {
 
     public function profile() {
         $school = $this->data['schema'] = request()->segment(3);
+        $this->data['shulesoft_users'] = \App\Models\User::all();
         $is_client = 0;
         if ($school == 'school') {
             $id = request()->segment(4);
@@ -220,6 +221,7 @@ class Customer extends Controller {
         }
         $this->data['is_client'] = $is_client;
         if ($_POST) {
+
             $data = array_merge(request()->all(), ['user_id' => Auth::user()->id]);
             \App\Models\Task::create($data);
             return redirect()->back();
@@ -228,13 +230,27 @@ class Customer extends Controller {
         return view('customer/profile', $this->data);
     }
 
+    public function allocate() {
+        $school = request('school');
+        $user_id = request('user_id');
+        $school_info = DB::table('schools')->where(DB::raw('lower(name)'), 'like', '%' . $school . '%');
+        count($school_info->first()) == 1 ? DB::table('users_schools')->insert(['school_id' => $school_info->first()->id, 'user_id' => $user_id, 'role_id' => 8]) : '';
+        $school_info->update(['schema_name'=> $school]);
+        echo 1;
+    }
+
     public function requirements() {
         $this->data['levels'] = [];
         return view('customer/analysis', $this->data);
     }
 
     public function modules() {
-        $this->data['schools'] = DB::select("SELECT distinct table_schema as schema_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','beta_testing','accounts','pg_catalog','constant','api','information_schema','public')");
+        $schemas = $this->data['schools'] = DB::select("SELECT distinct table_schema as schema_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','beta_testing','accounts','pg_catalog','constant','api','information_schema','public')");
+        $sch = [];
+        foreach ($schemas as $schema) {
+            array_push($sch, $schema->schema_name);
+        }
+        $this->data['dschools'] = \App\Models\School::whereIn('schema_name', $sch)->get();
         return view('customer.modules', $this->data);
     }
 
@@ -261,7 +277,7 @@ class Customer extends Controller {
         return view('customer.logsummary', $this->data);
     }
 
-     public function pages() {
+    public function pages() {
         $this->data['start'] = request('start_date');
         $this->data['end'] = request('end_date');
         $this->data['schema'] = request('schema');
@@ -271,9 +287,15 @@ class Customer extends Controller {
         $this->data['data'] = DB::select('select count(*) as total_logs,"schema_name"::text from admin.all_log group by "schema_name"::text order by count(*)');
         return view('customer.logsummary', $this->data);
     }
-    
+
     public function feedbacks() {
         $feedbacks = \App\Model\Feedback::orderBy('id', 'desc')->paginate();
-        return view('customer.feedback', compact('feedbacks')); 
+        return view('customer.feedback', compact('feedbacks'));
     }
+
+    public function sequence() {
+        $this->data['sequences'] = \App\Models\Sequence::all();
+        return view('customer.training.sequence', $this->data);
+    }
+
 }

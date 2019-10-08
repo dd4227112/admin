@@ -326,6 +326,30 @@
                                                                                                 }
                                                                                                 ?></td>
                                                                                         </tr>
+                                                                                        <tr>
+                                                                                            <th class="social-label b-none">Support Personnel </th>
+                                                                                            <td class="social-user-name b-none text-muted">
+                                                                                            <?php
+                                                                                                                                                                            $school_allocations=\collect(DB::select("select b.id from admin.users_schools a join admin.users b on b.id=a.user_id join admin.schools c on c.id=a.school_id where a.role_id=8 and a.status=1 and c.schema_name='".$schema."'"))->first();
+              
+                                                                                            ?>    <select class="form-control" id="support_id" name="support_id">
+                                                                                                    <?php
+                    
+                                                                                                    foreach ($shulesoft_users as $user) { ?>
+                                                                                                        <option value="<?= $user->id ?>" <?php 
+                                                                                                        if(count($school_allocations)==1 && $user->id==$school_allocations->id){
+                                                                                                            echo 'selected="selected"';
+                                                                                                        }else{
+                                                                                                            echo '';
+                                                                                                        }
+                                                                                                        ?>><?= $user->firstname . ' ' . $user->lastname ?></option>     
+                                                                                                    <?php }
+                                                                                                    ?>
+                                                                                                    </select>
+                                                                                                <input type="button" value="save" onmousedown="allocate($('#support_id').val())" class="btn btn-success btn-sm">
+                                                                                                   
+                                                                                            </td>
+                                                                                        </tr>
                                                                                     <?php } ?>
                                                                                 </tbody></table>
                                                                         </form>
@@ -553,19 +577,17 @@
                                                             </thead>
                                                             <tbody>
                                                                 <?php
-                                                                $users=DB::table($schema.'.user')->where('status',1)->get();
+                                                                $users = DB::table($schema . '.user')->where('status', 1)->get();
                                                                 foreach ($users as $user) {
-                                                                    
-                                                                
-                                                                ?>
-                                                                <tr>
-                                                                    <td></td>
-                                                                    <td><?=$user->name?></td>
-                                                                    <td><?=$user->phone?></td>
-                                                                    <td><?=$user->email?></td>
-                                                                    <td><?=$user->usertype?></td>
-                                                                </tr>
-                                                                <?php }?>
+                                                                    ?>
+                                                                    <tr>
+                                                                        <td></td>
+                                                                        <td><?= $user->name ?></td>
+                                                                        <td><?= $user->phone ?></td>
+                                                                        <td><?= $user->email ?></td>
+                                                                        <td><?= $user->usertype ?></td>
+                                                                    </tr>
+<?php } ?>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -585,4 +607,18 @@
         <!-- Page-body end -->
     </div>
 </div>
+<script type="text/javascript">
+    allocate = function (a) {
+        $.ajax({
+            url: '<?= url('customer/allocate/null') ?>',
+            data: {user_id:a,school:'<?= $schema?>'},
+            dataType: 'html',
+            success: function (data) {
+               if(data==1){
+         alert('success');          
+        }
+            }
+        });
+    }
+</script>
 @endsection

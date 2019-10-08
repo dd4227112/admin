@@ -7,7 +7,7 @@ use \App\Model\Api_invoice;
 use \App\Model\All_payment;
 use DB;
 
-class PaymentController extends Controller {
+class Payment extends Controller {
 
      public function __construct() {
         $this->middleware('auth');

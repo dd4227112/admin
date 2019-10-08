@@ -486,7 +486,7 @@ function toast(message) {
                                             <li><a href="<?= url('customer/faq') ?>" data-i18n="nav.page_layout.vertical.compact"> FAQ </a>
                                             </li>
                                             <li><a href="<?= url('customer/report') ?>" data-i18n="nav.page_layout.vertical.static-layout">Report </a></li>
-
+   <li><a href="<?= url('customer/sequence') ?>" data-i18n="nav.page_layout.vertical.static-layout">Sequence </a></li>
                                         </ul>
                                     </li>
 

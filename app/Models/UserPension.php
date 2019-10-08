@@ -12,8 +12,8 @@ class UserPension extends Model {
     protected $fillable = ['id', 'user_id', 'pension_id', 'created_by', 'checknumber'];
 
 
-    public function constant.pension() {
-        return $this->belongsTo(\App\Models\Constant.pension::class, 'pension_id', 'id');
+    public function pension() {
+        return $this->belongsTo(\App\Models\Pension::class, 'pension_id', 'id');
     }
 
     public function user() {

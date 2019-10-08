@@ -329,7 +329,8 @@ ORDER  BY conrelid::regclass::text, contype DESC";
 
     public function logsDelete() {
         $id = request('id');
-        \App\Models\ErrorLog::find($id)->delete();
+        $tag = \App\Models\ErrorLog::find($id);
+        count($tag) == 1 ? $tag->delete() : '';
         echo 1;
     }
 

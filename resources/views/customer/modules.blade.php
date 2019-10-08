@@ -57,6 +57,12 @@ foreach ($payments as $payment) {
     $payment_status[$payment->schema_name] = $payment->created_at;
     $payment_count[$payment->schema_name] = $payment->count;
 }
+
+$school_allocations=DB::select('select c.schema_name, c.name,b.firstname, b.lastname from admin.users_schools a join admin.users b on b.id=a.user_id join admin.schools c on c.id=a.school_id where a.role_id=8 and a.status=1 and c.schema_name is not null');
+$allocation = [];
+foreach ($school_allocations as $school_allocation) {
+    $allocation[$school_allocation->schema_name] = $school_allocation->firstname.' '.$school_allocation->lastname;
+}
 ?>
 <!-- Sidebar inner chat end-->
 <!-- Main-body start -->
@@ -107,6 +113,7 @@ foreach ($payments as $payment) {
                                     <thead>
                                         <tr>
                                             <th>School Name</th>
+                                            <td>Support Personnel</td>
                                             <td>Students</td>
                                             <th>Marks Entered</th>
                                             <th>Exams Published</th>
@@ -126,9 +133,18 @@ foreach ($payments as $payment) {
                                         $no_payment = 0;
                                         foreach ($schools as $school) {
                                             $students = DB::table($school->schema_name . '.student')->count();
+                                         
                                             ?>
                                             <tr>
-                                                <td><?= $school->schema_name ?></td>
+                                                <td><?=$school->schema_name?></td>
+                                                <td><?php
+                                                if(isset($allocation[$school->schema_name])){
+                                                    echo $allocation[$school->schema_name];
+                                                }else{
+                                                    echo '<b class="label label-warning">No Person Allocated</b>';
+                                                }
+                                                ?></td>
+                                               
                                                 <td><?php
                                                     if ($students == 0) {
                                                         echo 0;

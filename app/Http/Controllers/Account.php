@@ -48,14 +48,21 @@ class Account extends Controller {
             return redirect()->back()->with('success', 'success');
         }
 
-        $from = $this->data['from'] = request('from');
-        $to = $this->data['to'] = request('to');
-        $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
-        $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
-        $this->data['invoices'] = ($from != '' && $to != '') ?
-                Invoice::whereBetween('date', [$from_date, $to_date])->where('project_id', $project_id)->get() :
-                Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->get();
-        return view('account.invoice.index', $this->data);
+        if ($project_id == 'edit') {
+            $id = request()->segment(4);
+            $this->data['invoice']=Invoice::find($id);
+        
+            return view('account.invoice.edit', $this->data);
+        } else {
+            $from = $this->data['from'] = request('from');
+            $to = $this->data['to'] = request('to');
+            $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
+            $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
+            $this->data['invoices'] = ($from != '' && $to != '') ?
+                    Invoice::whereBetween('date', [$from_date, $to_date])->where('project_id', $project_id)->get() :
+                    Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->get();
+            return view('account.invoice.index', $this->data);
+        }
     }
 
     public function invoiceView() {
@@ -616,7 +623,5 @@ class Account extends Controller {
     public function report() {
         
     }
-
-   
 
 }

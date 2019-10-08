@@ -40,16 +40,17 @@ class Kernel extends ConsoleKernel {
         })->everyMinute();
 //
 //
-          $schedule->call(function () {
+        $schedule->call(function () {
             // remind parents to login in shulesoft and check their child performance
             $this->sendTodReminder();
         })->dailyAt('03:30'); // Eq to 06:30 AM 
-        
+
         $schedule->call(function () {
             // remind parents to login in shulesoft and check their child performance
             $this->sendNotice();
             $this->sendBirthdayWish();
             $this->sendTaskReminder();
+            $this->sendSequenceReminder();
         })->dailyAt('04:40'); // Eq to 07:40 AM 
 //
         $schedule->call(function() {
@@ -370,14 +371,14 @@ class Kernel extends ConsoleKernel {
 
     public function sendTodReminder() {
         $users = DB::select('select * from admin.teacher_on_duty');
-        $all_users=[];
-         foreach ($users as $user) {
-             array_push($all_users, $user->name);
-         }
+        $all_users = [];
+        foreach ($users as $user) {
+            array_push($all_users, $user->name);
+        }
         foreach ($users as $user) {
             unset($all_users[$user->name]);
             $message = 'Hello  ' . $user->name . ' ,'
-                    . 'Leo upo katika zamu ya Shule pamoja na '. implode(',', $all_users).'  . Kumbuka kuandika repoti yako ya siku katika account yako ya ShuleSoft kwa ajili ya kumbukumbu. Asante';
+                    . 'Leo upo katika zamu ya Shule pamoja na ' . implode(',', $all_users) . '  . Kumbuka kuandika repoti yako ya siku katika account yako ya ShuleSoft kwa ajili ya kumbukumbu. Asante';
 
             if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
                 DB::statement("insert into " . $user->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Ratiba Ya Zamu','" . $message . "')");
@@ -385,12 +386,25 @@ class Kernel extends ConsoleKernel {
             DB::statement("insert into " . $user->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
         }
     }
-    
-      public function sendTaskReminder() {
+
+    public function sendTaskReminder() {
         $users = DB::select('select a.activity,a.time,b.email,b.phone, b.name, c.name as client_name from admin.tasks a join admin.users b on a.user_id=b.id join admin.clients c on c.id=a.client_id where date::date=CURRENT_DATE');
         foreach ($users as $user) {
             $message = 'Hello  ' . $user->name . ' ,'
-                    . 'Activity to do: '.$user->activity.' for '.$user->client_name.'. Kumbuka kuifanyia kazi na kuandika kwenye status.  Asante';
+                    . 'Activity to do: ' . $user->activity . ' for ' . $user->client_name . '. Kumbuka kuifanyia kazi na kuandika kwenye status.  Asante';
+
+            if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
+                DB::statement("insert into public.email (email,subject,body) values ('" . $user->email . "', 'Ratiba Ya Zamu','" . $message . "')");
+            }
+            DB::statement("insert into public.sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
+        }
+    }
+
+    public function sendSequenceReminder() {
+        $users = DB::select('select a.activity,a.time,b.email,b.phone, b.name, c.name as client_name from admin.tasks a join admin.users b on a.user_id=b.id join admin.clients c on c.id=a.client_id where date::date=CURRENT_DATE');
+        foreach ($users as $user) {
+            $message = 'Hello  ' . $user->name . ' ,'
+                    . 'Activity to do: ' . $user->activity . ' for ' . $user->client_name . '. Kumbuka kuifanyia kazi na kuandika kwenye status.  Asante';
 
             if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
                 DB::statement("insert into public.email (email,subject,body) values ('" . $user->email . "', 'Ratiba Ya Zamu','" . $message . "')");
