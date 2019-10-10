@@ -221,6 +221,7 @@ foreach ($school_allocations as $school_allocation) {
                                     <tfoot>
                                         <tr>
                                             <th>School Name</th>
+                                            <th></th>
                                             <th><?= $no_students ?></th>
                                             <th><?= $no_marks ?></th>
                                             <th><?= $no_exams_published ?></th>

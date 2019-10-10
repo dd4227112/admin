@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
 use Illuminate\Http\Request;
 use App\Model\User;
 use DB;
@@ -32,8 +31,8 @@ class Users extends Controller {
      */
     public function create() {
         $users = User::where('created_by', Auth::user()->id)->get();
-        $roles=DB::table('roles')->get();
-        return view('users.create', compact('users','roles'));
+        $roles = DB::table('roles')->get();
+        return view('users.create', compact('users', 'roles'));
     }
 
     /**
@@ -54,7 +53,7 @@ class Users extends Controller {
         $user = new User(array_merge($request->all(), ['password' => bcrypt(request('email')), 'created_by' => Auth::user()->id]));
         $user->save();
         $this->sendEmailAndSms($request);
- 
+
         return redirect('users/index')->with('success', 'User ' . $request['firstname'] . ' created successfully');
     }
 
@@ -62,13 +61,14 @@ class Users extends Controller {
         $id = request()->segment(3);
         $pass = 'shulesoft_' . rand(32323, 443434344) . '';
         $user = User::find($id);
-        $user->update(['password'=> bcrypt($pass)]);
+        $user->update(['password' => bcrypt($pass)]);
         $content = 'Hello ' . $user->name . ' Your password has been updated by administrator. Kindly login  with username ' . $user->email . ' and password ' . $pass;
         $this->sendEmailAndSms($user, $content);
-         return redirect()->back()->with('success', 'Password sent successfully');
+        return redirect()->back()->with('success', 'Password sent successfully');
     }
 
-    public function sendEmailAndSms($request, $content = null) {
+    public function sendEmailAndSms($requests, $content = null) {
+        $request = (object) $requests;
         $message = $content == null ? 'Hello ' . $request->name . ' You have been added in ShuleSoft Administration panel. You can login for Administration of schools with username ' . $request->email . ' and password ' . $request->email : $content;
         \DB::table('public.sms')->insert([
             'body' => $message,
@@ -97,7 +97,7 @@ class Users extends Controller {
         $this->data['user'] = User::find($id);
 
         $this->data['user_permission'] = \App\Models\Permission::whereIn('id', \App\Models\PermissionRole::where('role_id', $this->data['user']->role_id)->get(['permission_id']))->get(['id']);
-     
+
         return view('users.show', $this->data);
     }
 
@@ -138,16 +138,16 @@ class Users extends Controller {
     public function edit() {
         $id = request()->segment(3);
         $user = User::find($id);
-    
+
         if ($_POST) {
             $this->validate(request(), [
                 'firstname' => 'required|max:255',
                 'lastname' => 'required|max:255',
                 'phone' => 'required|max:255',
             ]);
-           
+
             $user = User::find($id)->update(request()->all());
-           
+
 
             return redirect('users/index')->with('success', 'User ' . request('firstname') . ' ' . request('lastname') . ' updated successfully');
         }
