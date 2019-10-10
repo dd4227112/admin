@@ -51,4 +51,9 @@ class Analyse extends Controller {
         $this->data['association']=\App\Model\Association::first();
         return view('analyse.setting', $this->data); 
     }
+    
+    public function accounts() {
+         $this->data['association']=\App\Model\Association::first();
+        return view('analyse.accounts', $this->data);  
+    }
 }

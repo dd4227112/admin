@@ -22,7 +22,7 @@ class Controller extends BaseController {
         // return view('graph.bargraph', $this->data);
     }
 
-    public function ajaxTable($table, $columns, $custom_sql = null,$order_name=null) {
+    public function ajaxTable($table, $columns, $custom_sql = null, $order_name = null,$count=null) {
         ## Read value
         if (isset($_POST) && request()->ajax() == true) {
             $draw = $_POST['draw'];
@@ -48,23 +48,26 @@ class Controller extends BaseController {
 ## Total number of record with filtering
 ## Fetch records
             $columnName = strlen($columnName) < 1 ? '1' : $columnName;
+            $total_records = 0;
             if (strlen($custom_sql) < 2) {
                 // strlen($searchQuery); exit;
-                $sel = DB::select("select * from " . $table . " WHERE true " . $searchQuery);
+                $sel = \collect(DB::select("select count(*) as count from " . $table . " WHERE true " . $searchQuery))->first();
+                $total_records = $sel->count;
 
-                $empQuery = "select * from " . $table . " WHERE true " . $searchQuery . " order by \"" . $columnName . "\" " . $columnSortOrder . " offset  " . $row . " limit " . $rowperpage; 
+                $empQuery = "select * from " . $table . " WHERE true " . $searchQuery . " order by \"" . $columnName . "\" " . $columnSortOrder . " offset  " . $row . " limit " . $rowperpage;
             } else {
                 $empQuery = $custom_sql . " " . $searchQuery . " order by \"" . $columnName . "\" " . $columnSortOrder . " offset  " . $row . " limit " . $rowperpage;
-                $sel = DB::select($custom_sql);
+               
+                $total_records =$count==null ? count(DB::select($custom_sql)): $count;
             }
             $empRecords = DB::select($empQuery);
-          
+
 
 ## Response
             $response = array(
                 "draw" => intval($draw),
-                "iTotalRecords" => count($sel),
-                "iTotalDisplayRecords" => count($sel),
+                "iTotalRecords" => $total_records,
+                "iTotalDisplayRecords" => $total_records,
                 "aaData" => $empRecords
             );
 

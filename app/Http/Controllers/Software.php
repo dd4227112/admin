@@ -340,4 +340,11 @@ ORDER  BY conrelid::regclass::text, contype DESC";
         return view('software.custom_logs', $this->data);
     }
 
+    public function api() {
+        if (request('tag')) {
+            return $this->ajaxTable('api.requests', ['id', 'content', 'created_at']);
+        }
+        return view('software.api.requests');
+    }
+
 }

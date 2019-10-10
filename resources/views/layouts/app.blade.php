@@ -973,7 +973,7 @@ function toast(message) {
         @yield('footer')
     </body>
     <?php
-    if (request('type_id') != 'subject' && !preg_match('/sales/', url()->current()) && !preg_match('/logs/', url()->current())) {
+    if (request('type_id') != 'subject' && !preg_match('/sales/', url()->current()) && !preg_match('/logs/', url()->current()) && !preg_match('/api/', url()->current()) ) {
         ?>
         <script type="text/javascript">
 
