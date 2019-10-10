@@ -1,6 +1,12 @@
 @extends('layouts.app')
 @section('content')
-<?php $root = url('/') . '/public/' ?>
+<?php
+$root = url('/') . '/public/';
+
+function tagEdit($schema_name, $column, $value) {
+    return '<input class="text-muted" type="text" schema="' . $schema_name . '" id="' . $column . '" value="' . $value . '" onblur="edit_records(\'' . $column . '\', this.value, \'' . $schema_name . '\')"/><span id="status_' . $column.$schema_name . '"></span>';
+}
+?>
 <div class="page-wrapper">
     <div class="page-header">
         <div class="page-header-title">
@@ -71,7 +77,9 @@
                                                             <th>Paid Amount</th>
 
                                                             <th>Remained Amount</th>
-
+                                                            <th>Payment Status</th>
+                                                            <th>Payment Deadline</th>
+                                                            <th>Estimated Students</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </thead>
@@ -80,30 +88,47 @@
                                                         $total_students = 0;
                                                         $total_price = 0;
                                                         foreach ($schemas as $schema) {
+                                                            $setting = DB::table($schema->table_schema . '.setting')->first();
+                                                            if (count($setting) == 0) {
+                                                                continue;
+                                                            }
                                                             ?>
                                                             <tr>
                                                                 <td><?= $schema->table_schema ?></td>
 
                                                                 <td>   <?php
-                                                                    $setting = DB::table($schema->table_schema . '.setting')->first();
                                                                     $students = DB::table($schema->table_schema . '.student')->where('status', 1)->count();
                                                                     $total_students += $students;
                                                                     echo $students;
                                                                     ?>
                                                                 </td>
                                                                 <td>
+
                                                                     <?php
-                                                                    $price= count($setting)==1 ? $setting->price_per_student :0;
-                                                                    echo $price;
+                                                                    $price = count($setting) == 1 ? $setting->price_per_student : 0;
                                                                     $total_price += $price * $students;
+                                                                    echo tagEdit($schema->table_schema, 'price_per_student', $price);
                                                                     ?>
                                                                 </td>
                                                                 <td>
+                                                                    <?= tagEdit($schema->table_schema, 'total_paid_amount', $setting->total_paid_amount) ?>
+                                                                </td>
 
+                                                                <td>  
 
                                                                 </td>
 
-                                                                <td></td>
+
+                                                                <td> 
+                                                                    <?= tagEdit($schema->table_schema, 'payment_status', $setting->payment_status) ?>
+                                                                </td>
+                                                                <td> 
+                                                                    <?= tagEdit($schema->table_schema, 'payment_deadline_date', $setting->payment_deadline_date) ?> 
+                                                                </td>
+
+                                                                <td>
+                                                                    <?= tagEdit($schema->table_schema, 'estimated_students', $setting->estimated_students) ?>
+                                                                </td>
 
 
                                                                 <td ></td>
@@ -114,7 +139,7 @@
                                                         <tr>
                                                             <th>Total</th>
                                                             <th><?= $total_students ?></th>
-                                                            <th><?=$total_price?></th>
+                                                            <th><?= $total_price ?></th>
                                                             <th>Terms</th>
 
                                                             <th>Sections</th>
@@ -137,5 +162,12 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    edit_records = function (tag, val, schema) {
+        $.get('<?= url('customer/updateProfile/null') ?>', {schema: schema, table: 'setting', val: val, tag: tag, user_id: '1'}, function (data) {
+            $('#status_'+tag+schema).html(data);
+        });
+    };
+</script>
 @endsection
 

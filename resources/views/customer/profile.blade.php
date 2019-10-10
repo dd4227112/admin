@@ -120,6 +120,36 @@
 
                                                     </div>
                                                 </div>
+
+                                                <div class="card">
+                                                    <div class="card-header contact-user">
+                                                        <img class="img-circle" src="assets/images/user-profile/contact-user.jpg" alt="support manager">
+                                                        <h4>Angelica Ramos</h4>
+                                                    </div>
+
+                                                    <div class="card-block groups-contact">
+                                                        <h4>Training Reports</h4>
+                                                        <ul class="list-group">
+                                                            <li class="list-group-item justify-content-between">
+                                                                <a href="<?= url('customer/training/config/null?id=' . encrypt($schema)) ?>" target="_blank">Configuration</a>
+                                                                <a href="#" title="copy link"><span class="badge badge-default badge-pill">30</span></a>
+
+                                                            </li>
+                                                            <li class="list-group-item justify-content-between">
+                                                                <a href="<?= url('customer/training/account/null?id=' . encrypt($schema)) ?>" target="_blank"> Accounts</a>
+                                                                <span class="badge badge-default badge-pill">20</span>
+                                                            </li>
+                                                            <li class="list-group-item justify-content-between">
+                                                                <a href="<?= url('customer/training/exam/null?id=' . encrypt($schema)) ?>" target="_blank"> Exams</a>
+                                                                <span class="badge badge-default badge-pill">100</span>
+                                                            </li>
+                                                            <li class="list-group-item justify-content-between">
+                                                                Other Modules
+                                                                <span class="badge badge-default badge-pill">50</span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
                                                 <!-- Who to follow card end -->
                                             <?php } ?>
                                         </div>
@@ -265,9 +295,9 @@
                                                                                             <div class="">
                                                                                                 <textarea rows="5" cols="5" id="task_comment<?= $task->id ?>" class="form-control" placeholder="Write Something here..."></textarea>
                                                                                                 <div class="text-right m-t-20"><a href="#" class="btn btn-primary waves-effect waves-light" onclick="return false" onmousedown="$.get('<?= url('customer/taskComment/null') ?>', {content: $('#task_comment<?= $task->id ?>').val(), task_id:<?= $task->id ?>}, function (data) {
-                                                                                                                $('.new_comment<?= $task->id ?>').after(data);
-                                                                                                                $('#task_comment<?= $task->id ?>').val('')
-                                                                                                            })">Post</a></div>
+                                                                                                            $('.new_comment<?= $task->id ?>').after(data);
+                                                                                                            $('#task_comment<?= $task->id ?>').val('')
+                                                                                                        })">Post</a></div>
                                                                                             </div>
                                                                                         </form>
                                                                                     </div>
@@ -326,30 +356,7 @@
                                                                                                 }
                                                                                                 ?></td>
                                                                                         </tr>
-                                                                                        <tr>
-                                                                                            <th class="social-label b-none">Support Personnel </th>
-                                                                                            <td class="social-user-name b-none text-muted">
-                                                                                            <?php
-                                                                                                                                                                            $school_allocations=\collect(DB::select("select b.id from admin.users_schools a join admin.users b on b.id=a.user_id join admin.schools c on c.id=a.school_id where a.role_id=8 and a.status=1 and c.schema_name='".$schema."'"))->first();
-              
-                                                                                            ?>    <select class="form-control" id="support_id" name="support_id">
-                                                                                                    <?php
-                    
-                                                                                                    foreach ($shulesoft_users as $user) { ?>
-                                                                                                        <option value="<?= $user->id ?>" <?php 
-                                                                                                        if(count($school_allocations)==1 && $user->id==$school_allocations->id){
-                                                                                                            echo 'selected="selected"';
-                                                                                                        }else{
-                                                                                                            echo '';
-                                                                                                        }
-                                                                                                        ?>><?= $user->firstname . ' ' . $user->lastname ?></option>     
-                                                                                                    <?php }
-                                                                                                    ?>
-                                                                                                    </select>
-                                                                                                <input type="button" value="save" onmousedown="allocate($('#support_id').val())" class="btn btn-success btn-sm">
-                                                                                                   
-                                                                                            </td>
-                                                                                        </tr>
+
                                                                                     <?php } ?>
                                                                                 </tbody></table>
                                                                         </form>
@@ -406,7 +413,7 @@
                                                     <div class="col-sm-12">
                                                         <div class="card">
                                                             <div class="card-header">
-                                                                <h5 class="card-header-text">Contact Information</h5>
+                                                                <h5 class="card-header-text">School Allocation Information</h5>
                                                                 <button id="edit-Contact" type="button" class="btn btn-primary waves-effect waves-light f-right">
                                                                     <i class="icofont icofont-edit"></i>
                                                                 </button>
@@ -415,22 +422,74 @@
                                                                 <div id="contact-info" class="row">
                                                                     <div class="col-lg-6 col-md-12">
                                                                         <table class="table m-b-0">
-                                                                            <tbody><tr>
-                                                                                    <th class="social-label b-none p-t-0">Mobile Number</th>
-                                                                                    <td class="social-user-name b-none p-t-0 text-muted">eg. (0123) - 4567891</td>
+                                                                            <tbody>
+                                                                                <?php
+                                                                                if($school->school_id ==null){
+                                                                                ?>
+                                                                                <tr>
+                                                                                    <th class="social-label b-none">School Mapping </th>
+                                                                                    <td class="social-user-name b-none text-muted">
+                                                                                        
+                                                
+                                                                                          <div class="col-sm-12">
+                                                                                              <input class="form-control" id="school_id" name="school_id" type="text" style="width:18em">
+                                                                                                                               <span id="search_result"></span>
+ </div> 
+
+
+                                                                                    </td>
+                                                                                    <td class="social-user-name b-none text-muted">  Type at least 3 characters</td>
+                                                                                </tr>
+                                                                                <?php }else{?>
+                                                                                <tr>
+                                                                                    <th class="social-label b-none">Support Personnel </th>
+                                                                                    <td class="social-user-name b-none text-muted">
+                                                                                        <?php
+                                                                                        $school_allocations = \collect(DB::select("select b.id from admin.users_schools a join admin.users b on b.id=a.user_id join admin.schools c on c.id=a.school_id where a.role_id=8 and a.status=1 and c.schema_name='" . $schema . "'"))->first();
+                                                                                        ?>    <select class="form-control" id="support_id" name="support_id">
+                                                                                        <?php foreach ($shulesoft_users as $user) { ?>
+                                                                                                <option value="<?= $user->id ?>" <?php
+                                                                                                if (count($school_allocations) == 1 && $user->id == $school_allocations->id) {
+                                                                                                                                                            $support_person=$user->firstname . ' ' . $user->lastname;
+                                                                                                    echo 'selected="selected"';
+                                                                                                } else {
+                                                                                                    echo '';
+                                                                                                }
+                                                                                                ?>><?= $user->firstname . ' ' . $user->lastname ?></option>     
+                                                                                                    <?php }
+                                                                                                    ?>
+                                                                                        </select>
+
+
+                                                                                    </td>
+                                                                                    <td class="social-user-name b-none text-muted">   <input type="button" value="save" onmousedown="allocate($('#support_id').val(), 8)" class="btn btn-success btn-sm"></td>
                                                                                 </tr>
                                                                                 <tr>
-                                                                                    <th class="social-label b-none">Email Address</th>
-                                                                                    <td class="social-user-name b-none text-muted">test@gmail.com</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <th class="social-label b-none">Twitter</th>
-                                                                                    <td class="social-user-name b-none text-muted">@phonixcoded</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <th class="social-label b-none p-b-0">Skype</th>
-                                                                                    <td class="social-user-name b-none p-b-0 text-muted">@phonixcoded demo</td>
-                                                                                </tr>
+                                                                                    <th class="social-label b-none">Sales Personnel </th>
+                                                                                    <td class="social-user-name b-none text-muted">
+                                                              <?php
+                                                                                        $school_sales_allocations = \collect(DB::select("select b.id from admin.users_schools a join admin.users b on b.id=a.user_id join admin.schools c on c.id=a.school_id where a.role_id=3 and a.status=1 and c.schema_name='" . $schema . "'"))->first();
+                                                                                        ?>                            <select class="form-control" id="sales_id" name="sales_id">
+                                                                                            
+                                                                                            <?php foreach ($shulesoft_users as $user) { ?>
+                                                                                                <option value="<?= $user->id ?>" <?php
+                                                                                                if (count($school_sales_allocations) == 1 && $user->id == $school_sales_allocations->id) {
+                                                                                                    $sales_person=$user->firstname . ' ' . $user->lastname;
+                                                                                                    echo 'selected="selected"';
+                                                                                                } else {
+                                                                                                    echo '';
+                                                                                                }
+                                                                                                ?>><?= $user->firstname . ' ' . $user->lastname ?></option>     
+                                                                                                    <?php }
+                                                                                                    ?>
+                                                                                        </select>
+
+
+                                                                                    </td>
+                                                                                    <td class="social-user-name b-none text-muted">   <input type="button" value="save" onmousedown="allocate($('#sales_id').val(), 3)" class="btn btn-success btn-sm"></td>
+                                                                                </tr>    
+                                                                                <?php }?>
+
                                                                             </tbody></table>
                                                                     </div>
                                                                 </div>
@@ -587,7 +646,7 @@
                                                                         <td><?= $user->email ?></td>
                                                                         <td><?= $user->usertype ?></td>
                                                                     </tr>
-<?php } ?>
+                                                                <?php } ?>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -608,17 +667,29 @@
     </div>
 </div>
 <script type="text/javascript">
-    allocate = function (a) {
+    allocate = function (a, role_id) {
         $.ajax({
             url: '<?= url('customer/allocate/null') ?>',
-            data: {user_id:a,school:'<?= $schema?>'},
+            data: {user_id: a, school_id: '<?= $school->school_id ?>', role_id: role_id, schema: '<?= $schema ?>'},
             dataType: 'html',
             success: function (data) {
-               if(data==1){
-         alert('success');          
-        }
+                if (data == 1) {
+                    alert('success');
+                }
             }
         });
     }
+    $('#school_id').keyup(function () {
+        var val = $(this).val();
+        $.ajax({
+            url: '<?= url('customer/search/null') ?>',
+            data: {val: val, type: 'school', schema: '<?= $schema ?>'},
+            dataType: 'html',
+            success: function (data) {
+
+                $('#search_result').html(data);
+            }
+        });
+    })
 </script>
 @endsection

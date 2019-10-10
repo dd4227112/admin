@@ -231,11 +231,13 @@ class Customer extends Controller {
     }
 
     public function allocate() {
-        $school = request('school');
+        $school_id = request('school_id');
+        $schema=request('schema');
         $user_id = request('user_id');
-        $school_info = DB::table('schools')->where(DB::raw('lower(name)'), 'like', '%' . $school . '%');
-        count($school_info->first()) == 1 ? DB::table('users_schools')->insert(['school_id' => $school_info->first()->id, 'user_id' => $user_id, 'role_id' => 8]) : '';
-        $school_info->update(['schema_name'=> $school]);
+        $role_id = request('role_id');
+        $school_info = DB::table('schools')->where('id',$school_id);
+        count($school_info->first()) == 1 ? DB::table('users_schools')->insert(['school_id' =>$school_id, 'user_id' => $user_id, 'role_id' => $role_id]) : '';
+        $school_info->update(['schema_name' => $schema]);
         echo 1;
     }
 
@@ -296,6 +298,50 @@ class Customer extends Controller {
     public function sequence() {
         $this->data['sequences'] = \App\Models\Sequence::all();
         return view('customer.training.sequence', $this->data);
+    }
+
+    public function updateProfile() {
+        $schema = request('schema');
+        $tag = request('tag');
+        $table = request('table');
+        $user_id = request('user_id');
+        $value = request('val');
+        $column = $table == 'student' ? 'student_id' : $table . 'ID';
+        if ($table == 'bank') {
+            return $this->setBankParameters();
+        } else {
+            DB::table($schema . '.' . $table)->where($column, $user_id)->update([$tag => $value]);
+            if ($tag == 'institution_code') {
+                //update existing invoices
+                DB::statement('UPDATE ' . $schema . '.invoices SET "reference"=\'' . $value . '\'||"reference"');
+            }
+            echo '<b class="label label-success">success</b>';
+        }
+    }
+
+    public function training() {
+        $type = request()->segment(3);
+        $this->data['trainings'] = \App\Models\Training::all();
+        return view('customer.training.guide.' . $type, $this->data);
+    }
+
+    public function search() {
+        $val = request('val');
+        $schema=request('schema');
+        if (strlen($val) > 3) {
+            $schools = DB::select('select * from admin.schools where lower("name") like \'%' . strtolower($val) . '%\'');
+            foreach ($schools as $school) {
+
+               echo '<p><a href="' . url('customer/map/' .$schema.'/'. $school->id ). '">' . $school->name . '( '.$school->region.' )</a></p>';
+            }
+        }
+    }
+    
+    public function map() {
+        $schema=request()->segment(3);
+        $school_id= request()->segment(4);
+        DB::table($schema.'.setting')->update(['school_id'=>$school_id]);
+        return redirect()->back()->with('success','success');
     }
 
 }
