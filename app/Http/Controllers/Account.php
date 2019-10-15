@@ -50,8 +50,8 @@ class Account extends Controller {
 
         if ($project_id == 'edit') {
             $id = request()->segment(4);
-            $this->data['invoice']=Invoice::find($id);
-        
+            $this->data['invoice'] = Invoice::find($id);
+
             return view('account.invoice.edit', $this->data);
         } else {
             $from = $this->data['from'] = request('from');
@@ -354,24 +354,22 @@ class Account extends Controller {
     }
 
     public function transaction() {
-        if (can_access('view_expense')) {
-            $id = request()->segment(3);
-            if ((int) $id) {
-                $this->data['id'] = $id;
-                if ($_POST) {
-                    $to_date = request("to_date");
-                    $from_date = request("from_date");
-                } else {
-                    $from_date = date('d m Y');
-                    $to_date = date('d m Y');
-                }
-                $this->data['from_date'] = $from_date;
-                $this->data['to_date'] = $to_date;
-                $this->data['expenses'] = $this->getCategories_by_date($id, $from_date, $to_date);
+        $id = request()->segment(3);
+        $this->data['id'] = $id;
+        if ((int) $id) {
+
+            if ($_POST) {
+                $to_date = request("to_date");
+                $from_date = request("from_date");
+            } else {
+                $from_date = date('d m Y');
+                $to_date = date('d m Y');
             }
-        } else {
-            $this->data["subview"] = "error";
+            $this->data['from_date'] = $from_date;
+            $this->data['to_date'] = $to_date;
+            $this->data['expenses'] = $this->getCategories_by_date($id, $from_date, $to_date);
         }
+
         return view('account.transaction.expense', $this->data);
     }
 
@@ -401,8 +399,9 @@ class Account extends Controller {
 
     public function addTransaction() {
         $this->data['banks'] = \App\Models\BankAccount::all();
-        $this->data["category"] = DB::table('refer_expense')->whereIn('financial_category_id', [1])->get();
-        $id = request()->segment(3);
+         $id = request()->segment(3);
+        $this->data["category"] = DB::table('refer_expense')->whereIn('financial_category_id', [2, 3])->get();
+       
         $this->data['id'] = $id;
         $this->data['check_id'] = $id;
         $this->data['sub_id'] = request()->segment(4);
@@ -410,27 +409,27 @@ class Account extends Controller {
         $this->data["payment_types"] = \App\Models\PaymentType::all();
         $this->data['transaction_id'] = $transaction_id = time() . rand(10 * 45, 100 * 98);
         if ($_POST) {
-            dd(request()->all());
-            if ($id == 5) {
-                $this->rules_asset();
-            } else {
-                $this->rules();
-            }
+            //   dd(request()->all());
+//            if ($id == 5) {
+//                $this->rules_asset();
+//            } else {
+//                $this->rules();
+//            }
 
             $insert_id = 0;
             $depreciation = (float) request("depreciation") > 0 ? (float) request("depreciation") : (float) request("dep");
             // $type=request("type");
             if ($id == 2 || $id == 5) {
 
-                $amount = request("type") == 1 ? remove_comma(request("amount")) : -remove_comma(request("amount"));
+                $amount = request("type") == 1 ? (request("amount")) : -(request("amount"));
             } else {
 
-                $amount = remove_comma(request("amount"));
+                $amount = (request("amount"));
             }
 
             if ($id == !5) {
                 $refer_expense_id = request("expense");
-                $refer_expense_name = \App\Model\ReferExpense::find($refer_expense_id)->name;
+                $refer_expense_name = \App\Models\ReferExpense::find($refer_expense_id)->name;
                 if (strtolower($refer_expense_name) == 'depreciation') {
 
                     $this->session->set_flashdata('error', 'Sorry ! Depreciation is added through fixed assets');
@@ -439,10 +438,9 @@ class Account extends Controller {
             }
 
 
-
+            $payer_name = request('payer_name');
 
             $array = array(
-                "create_date" => date("Y-m-d"),
                 "date" => request('date'),
                 "note" => request("note"),
                 "ref_no" => request("transaction_id"),
@@ -452,14 +450,9 @@ class Account extends Controller {
                 "expenseyear" => date("Y"),
                 "expense" => request("note"),
                 "depreciation" => $depreciation,
-                'userID' => session('id'),
-                'uname' => session('username'),
-                'usertype' => session('usertype'),
-                'created_by' => $this->createdBy()
+                'user_id' => Auth::user()->id
             );
-
-
-            $payer_name = \collect(DB::select('select * FROM ' . set_schema_name() . session('table') . ' where "' . session('table') . 'ID"=\'' . session('id') . '\' '))->pluck('name')->first();
+           // dd(request()->all());
 
             if ($id == 4 || $id == 1) {
 
@@ -493,11 +486,11 @@ class Account extends Controller {
                     ]);
 
 
-                    $insert_id = DB::table('expense')->insertGetId($obj, "expenseID");
+                     DB::table('expense')->insert($obj);
                 }
 
-                $this->session->set_flashdata('success', $this->lang->line('menu_success'));
-                return redirect(base_url("expense/voucher/$insert_id/$id"));
+               // $this->session->set_flashdata('success', $this->lang->line('menu_success'));
+                return redirect(url("account/transaction/$id"))->with('success','success');
             } else if ($id == 5) {
 
                 $voucher_no = DB::table('current_assets')->max('voucher_no');
@@ -589,39 +582,95 @@ class Account extends Controller {
     }
 
     public function group() {
-        if (can_access('view_account_group')) {
 
-            $this->data['id'] = null;
-            $this->data['groups'] = \App\Model\AccountGroup::all();
-            $this->data["category"] = \App\Model\FinancialCategory::all();
-            $this->data["subview"] = "group/index";
-            $this->load->view('_layout_main', $this->data);
-        } else {
-            $this->data["subview"] = "error";
-            $this->load->view('_layout_main', $this->data);
-        }
+        $this->data['id'] = null;
+        $this->data['groups'] = \App\Models\AccountGroup::all();
+        $this->data["category"] = \App\Models\FinancialCategory::all();
         return view('account.group', $this->data);
     }
 
     public function chart() {
-        if (can_access('view_chart_of_account')) {
-            $id = clean_htmlentities(($this->uri->segment(3)));
-            $this->data['set'] = $id;
-            $this->data['id'] = $id;
-            $this->data["category"] = \App\Model\FinancialCategory::all();
-            $this->data['groups'] = \App\Model\AccountGroup::all();
-            $this->data['expenses'] = ReferExpense::all();
-            $this->data["subview"] = "expense/charts_of_accounts";
-            $this->load->view('_layout_main', $this->data);
-        } else {
-            $this->data["subview"] = "error";
-            $this->load->view('_layout_main', $this->data);
-        }
+
+        $this->data['set'] = 0;
+        $this->data['id'] = 0;
+        $this->data['expenses'] = ReferExpense::all();
+        $this->data["subview"] = "expense/charts_of_accounts";
+
         return view('account.charts', $this->data);
     }
 
     public function report() {
         
+    }
+
+    public function view_expense() {
+        $id = ((request()->segment(3)));
+        $refer_id = ((request()->segment(4)));
+        $bank_id = ((request()->segment(5)));
+        $academic_year_to = \App\Models\AccountYear::whereYear('start_date', date('Y'))->first();
+        $academic_year_from = \App\Models\AccountYear::orderBy('start_date', 'asc')->first();
+
+        $from_date = $academic_year_from->start_date;
+        $to_date = $academic_year_to->end_date;
+
+        $refer_expense = \App\Models\ReferExpense::find($id);
+
+        if ($_POST) {
+            if (request("to_date")) {
+                $d1 = request("to_date");
+                $to_date = $this->createDate($d1);
+            } else {
+                $to_date = request("to_date");
+            }
+            if (request("from_date")) {
+                $d2 = request("from_date");
+                $from_date = $this->createDate($d2);
+            } else {
+                $from_date = request("from_date");
+            }
+        }
+
+
+        if ($refer_id == 5) {
+            if (strtoupper($refer_expense->name) == 'CASH') {
+                $this->data['expenses'] = DB::SELECT('SELECT * from ' . set_schema_name() . ' bank_transactions WHERE  payment_type_id =1 and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . '');
+                $this->data['current_assets'] = DB::SELECT('SELECT * from ' . set_schema_name() . ' current_asset_transactions WHERE refer_expense_id=' . $id . ' and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . ' ');
+            }
+
+            if (strtoupper($refer_expense->name) == 'ACCOUNT RECEIVABLE') {
+
+                $this->data['expenses'] = array();
+                $this->data['current_assets'] = DB::SELECT('SELECT * from ' . set_schema_name() . ' current_asset_transactions WHERE refer_expense_id=' . $id . ' and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . ' ');
+                $this->data['fees'] = DB::select('select sum(a.balance + coalesce((c.amount-c.due_paid_amount),0)) as total_amount,b.name from ' . set_schema_name() . ' invoice_balances a join ' . set_schema_name() . ' student b on b.student_id=a.student_id LEFT JOIN ' . set_schema_name() . ' dues_balance c on c.student_id=b.student_id WHERE  a.balance <> 0.00 AND a."created_at" between \'' . $from_date . '\' AND \'' . $to_date . '\' group by b.name');
+                $this->data['bank_opening_balance'] = \collect(DB::select('select sum(coalesce(opening_balance,0)) as opening_balance from ' . set_schema_name() . ' bank_accounts'))->first();
+            } else if ((int) $bank_id) {
+                $this->data['expenses'] = DB::SELECT('SELECT transaction_id,date,amount,' . "'Bank'" . ' as payment_method , note from ' . set_schema_name() . ' bank_transactions WHERE bank_account_id=' . $bank_id . ' and payment_type_id <> 1 and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . 'order by date desc');
+
+                $this->data['current_assets'] = DB::SELECT('SELECT * from ' . set_schema_name() . ' current_asset_transactions WHERE refer_expense_id=' . $id . ' and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . 'order by date desc');
+            } else {
+                $this->data['expenses'] = array();
+                $this->data['current_assets'] = DB::SELECT('SELECT * from ' . set_schema_name() . ' current_asset_transactions WHERE refer_expense_id=' . $id . ' and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . ' ');
+            }
+        } else if (preg_match('/EC-1001/', $refer_expense->code) && $id = 4 && (int) $refer_expense->predefined > 0) {
+            $sql = 'select sum(b.employer_amount) as amount ,payment_date as date,\'' . $refer_expense->name . '\' as note,\' ' . $refer_expense->name . '\' as name, \'Payroll\' as payment_method,null as "expenseID",extract(month from payment_date)||\'\'||extract(year from payment_date) as ref_no, 1 AS predefined, null as id  from ' . set_schema_name() . 'salaries a join ' . set_schema_name() . 'salary_pensions b on a.id=b.salary_id where b.pension_id=' . $refer_expense->predefined . '  group by a.payment_date UNION ALL (SELECT a.amount, a.date, a.note, b.name, a.payment_method, a."expenseID", a.ref_no, null as predefined, b.id FROM ' . set_schema_name() . 'expense a JOIN ' . set_schema_name() . 'refer_expense b ON a.refer_expense_id=b.id WHERE b.id=' . $refer_expense->id . ' ORDER BY a.date DESC)';
+            $this->data['expenses'] = DB::SELECT($sql);
+        } else if (strtoupper($refer_expense->name) == 'DEPRECIATION') {
+
+            $this->data['expenses'] = DB::select('select coalesce(sum(b.open_balance::numeric * b.depreciation*(\'' . $to_date . '\'::date-a.date::date)/365),0) as open_balance,sum(amount-amount* a.depreciation *(\'' . $to_date . '\'::date-a.date::date)/365) as total,sum(amount* a.depreciation*(\'' . $to_date . '\'::date-a.date::date)/365) as amount, refer_expense_id,a.date,a.note,a.recipient,b.name,a."expenseID",b.predefined from ' . set_schema_name() . 'expense a join ' . set_schema_name() . 'refer_expense b  on b.id=a.refer_expense_id where b.financial_category_id=4 AND  a.date  <= \'' . $to_date . '\' group by a.refer_expense_id,b.open_balance,a.date,a.note,b.name,a."expenseID",b.predefined  ORDER BY a.date desc');
+            $this->data['depreciation'] = 1;
+        } else {
+
+            //$this->data['expenses'] = DB::SELECT('SELECT b.*,a.* FROM ' . set_schema_name() . 'expense a JOIN ' . set_schema_name() . 'refer_expense b ON a.refer_expense_id=b.id WHERE b.id=' . $id . ' and a."date" >= ' . "'$from_date'" . ' AND a."date" <= ' . "'$to_date'" . ' ');
+
+            $this->data['expenses'] = \App\Models\ReferExpense::where('refer_expense.id', $id)->JOIN('expense', 'expense.refer_expense_id', 'refer_expense.id')->where('expense.date', '>=', $from_date)->where('expense.date', '<=', $to_date)->get();
+        }
+        //$this->data['refer_id'] = $id;
+        $this->data['period'] = 1;
+        $this->data['predefined'] = $refer_expense->predefined;
+        $this->data['id'] = $refer_id;
+        $this->data['refer_id'] = $refer_id;
+        $this->data['refer_expense_name'] = $refer_expense->name;
+        return view("account.transaction.expense_category", $this->data);
     }
 
 }

@@ -12,7 +12,7 @@
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?=url('/')?>">
+                        <a href="<?= url('/') ?>">
                             <i class="icofont icofont-home"></i>
                         </a>
                     </li>
@@ -27,93 +27,86 @@
         <!-- Page-body start -->
         <div class="page-body">
             <div class="row">
-                  <div class="col-sm-12">
-                <div class="card">
-                    
-                    <div class="card-header">
-                <?php
-                //$usertype = session("usertype");
-                if (can_access('view_expense')) {
-                    ?>
-                    <h5 class="page-header">
+                <div class="col-sm-12">
+                    <div class="card">
 
-                        <?php if (can_access('add_expense')) { ?>
-                            <button class="btn-success btn" data-toggle="modal" data-target="#group"><span class="fa fa-plus"></span><?= __('add_group') ?></button>
-                        <?php } ?>
+                        <div class="card-header">
 
-                    </h5>
-                    <div class="alert alert-info">
-                        Groups to be displayed in the balance sheet </div>
-                    <div id="hide-table">
-                        <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
-                            <thead>
-                                <tr>
-                                    <th class="col-sm-1"><?= __('slno') ?></th>
-                                    <th class="col-sm-2"><?= __('group_name') ?></th>
-                                    <th class="col-sm-2"><?= __('financial_category') ?></th>
-                                    <th class="col-sm-2"><?= __('group_note') ?></th>
+                            <h5 class="page-header">
 
-                                    <?php if (can_access('edit_expense')) { ?>
-                                        <th class="col-sm-2"><?= __('action') ?></th>
-                                    <?php } ?>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $total_expense = 0;
-                                if (count($groups) > 0) {
-                                    $i = 1;
-                                    foreach ($groups as $group) {
-                                        ?>
+                                <?php if (can_access('add_expense')) { ?>
+                                    <button class="btn-success btn" data-toggle="modal" data-target="#group"><span class="fa fa-plus"></span><?= __('add_group') ?></button>
+                                <?php } ?>
+
+                            </h5>
+                            <div class="alert alert-info">
+                                Groups to be displayed in the balance sheet </div>
+                            <div id="hide-table">
+                                <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
+                                    <thead>
                                         <tr>
-                                            <td data-title="<?= __('slno') ?>">
-                                                <?php echo $i; ?>
-                                            </td>
-                                            <td data-title="<?= __('group_name') ?>">
-                                                <?php echo $group->name; ?>
-                                            </td>
-                                            <td data-title="<?= __('group_name') ?>">
-                                                <?php echo $group->financialCategory->name; ?>
-                                            </td>
+                                            <th class="col-sm-1"><?= __('slno') ?></th>
+                                            <th class="col-sm-2"><?= __('group_name') ?></th>
+                                            <th class="col-sm-2"><?= __('financial_category') ?></th>
+                                            <th class="col-sm-2"><?= __('group_note') ?></th>
 
-
-                                            <td data-title="<?= __('group_note') ?>">
-                                                <?php echo $group->note; ?>
-                                            </td>
-
-                                            <?php if (can_access('edit_expense')) { ?>
-
-                                                <td data-title="<?= __('action') ?>">
-                                                    <?php if ($group->predefined == 0) {
-                                                        echo btn_edit('group/edit/' . $group->id . '/', __('edit'));
-                                                        ?>
-                                                        <?php echo btn_delete('group/delete/' . $group->id . '/', __('delete'));
-                                                    } else {
-                                                        echo ' <i class="fa fa-question-circle" title="This cannot be deleted or edited"></i>';
-                                                    }
-                                                    ?></td>
-
-
-                                        <?php } ?>
-
+                                                <th class="col-sm-2"><?= __('action') ?></th>
+                                           
                                         </tr>
+                                    </thead>
+                                    <tbody>
                                         <?php
-                                        $i++;
-                                    }
-                                }
-                                ?>
-                            </tbody>
-                        </table>
-                    </div>
+                                        $total_expense = 0;
+                                        if (count($groups) > 0) {
+                                            $i = 1;
+                                            foreach ($groups as $group) {
+                                                ?>
+                                                <tr>
+                                                    <td data-title="<?= __('slno') ?>">
+                                                        <?php echo $i; ?>
+                                                    </td>
+                                                    <td data-title="<?= __('group_name') ?>">
+                                                        <?php echo $group->name; ?>
+                                                    </td>
+                                                    <td data-title="<?= __('group_name') ?>">
+                                                        <?php // echo $group->financialCategory->name; ?>
+                                                    </td>
 
-<?php } ?>
+
+                                                    <td data-title="<?= __('group_note') ?>">
+                                                        <?php echo $group->note; ?>
+                                                    </td>
+
+                                                 
+                                                        <td data-title="<?= __('action') ?>">
+
+                                                            <?php
+//                                                            echo '<a class="btn btn-info btn-sm" href="'.url('group/edit/' . $group->id . '/').'">edit</a>';
+                                                            ?>
+                                                            <?php
+//                                                            echo '<a  class="btn btn-danger btn-sm" href="'.url('group/delete/' . $group->id . '/').'">delete</a>';
+
+                                                            ?></td>
+
+
+                                                </tr>
+                                                <?php
+                                                $i++;
+                                            }
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
- </div>
-        </div> </div>
-      
+    </div> </div>
+
 <!-- Modal content start here -->
 <div class="modal fade" id="group">
     <div class="modal-dialog">
@@ -151,7 +144,7 @@
                             ?>
 
                             <span class="col-sm-4 control-label">
-<?php echo form_error($errors, 'category'); ?>
+                                <?php echo form_error($errors, 'category'); ?>
                             </span>   </div>
                     </div>
                     <div class="form-group">
@@ -169,7 +162,7 @@
                     <button type="button" style="margin-bottom:0px;" class="btn btn-default" data-dismiss="modal" ><?= __('close') ?></button>
                     <button type="button" onmousedown="createGroup()" class="btn btn-primary">Save</button>
                 </div>
-<?= csrf_field() ?>
+                <?= csrf_field() ?>
             </div>
         </form>
     </div>
@@ -201,3 +194,4 @@
         }
     }
 </script>
+@endsection

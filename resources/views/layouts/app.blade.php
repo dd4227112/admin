@@ -365,7 +365,7 @@ function toast(message) {
                                         <?php } ?>
                                         <li><a href="{{ route('logout') }}"
                                                onclick="event.preventDefault();
-                                                           document.getElementById('logout-form').submit();"><i class="ti-layout-sidebar-left"></i> Logout</a></li>
+                                                       document.getElementById('logout-form').submit();"><i class="ti-layout-sidebar-left"></i> Logout</a></li>
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                             {{ csrf_field() }}
                                         </form>
@@ -486,7 +486,7 @@ function toast(message) {
                                             <li><a href="<?= url('customer/faq') ?>" data-i18n="nav.page_layout.vertical.compact"> FAQ </a>
                                             </li>
                                             <li><a href="<?= url('customer/report') ?>" data-i18n="nav.page_layout.vertical.static-layout">Report </a></li>
-   <li><a href="<?= url('customer/sequence') ?>" data-i18n="nav.page_layout.vertical.static-layout">Sequence </a></li>
+                                            <li><a href="<?= url('customer/sequence') ?>" data-i18n="nav.page_layout.vertical.static-layout">Sequence </a></li>
                                         </ul>
                                     </li>
 
@@ -576,10 +576,12 @@ function toast(message) {
 
                                     <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Payment Integration</a>
                                         <ul class="tree-2" style="display: none;">
-                                            <li><a href="<?= url('software/api') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">API Requests</a></li>
-                                            <li><a href="<?= url('software/api/requests') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Transaction Reports</a></li>
+                                            <li><a href="<?= url('software/banksetup') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Bank Setup</a></li>
+
+
                                             <li><a href="<?= url('software/invoice/live') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Live Invoices</a></li>
                                             <li><a href="<?= url('software/invoice/uat') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Testing Invoices</a></li>
+                                            <li><a href="<?= url('software/api') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">API Requests</a></li>
 
 
                                         </ul>
@@ -973,87 +975,87 @@ function toast(message) {
         @yield('footer')
     </body>
     <?php
-    if (request('type_id') != 'subject' && !preg_match('/sales/', url()->current()) && !preg_match('/logs/', url()->current()) && !preg_match('/api/', url()->current()) ) {
+    if (request('type_id') != 'subject' && !preg_match('/sales/', url()->current()) && !preg_match('/logs/', url()->current()) && !preg_match('/api/', url()->current())) {
         ?>
         <script type="text/javascript">
 
-                                                       $(document).ready(function () {
-                                                           $('.dataTable').DataTable({
-                                                               dom: 'Bfrtip',
-                                                               responsive: false,
-                                                               paging: true,
-                                                               info: false,
-                                                               "pageLength": 10,
-                                                               buttons: [
-                                                                   {
-                                                                       text: 'PDF',
-                                                                       extend: 'pdfHtml5',
-                                                                       message: '',
-                                                                       orientation: 'landscape',
-                                                                       exportOptions: {
-                                                                           columns: ':visible'
-                                                                       },
-                                                                       customize: function (doc) {
-                                                                           doc.pageMargins = [10, 10, 10, 10];
-                                                                           doc.defaultStyle.fontSize = 7;
-                                                                           doc.styles.tableHeader.fontSize = 7;
-                                                                           doc.styles.title.fontSize = 9;
-                                                                           // Remove spaces around page title
-                                                                           doc.content[0].text = doc.content[0].text.trim();
-                                                                           // Create a footer
-                                                                           doc['footer'] = (function (page, pages) {
-                                                                               return {
-                                                                                   columns: [
-                                                                                       'www.shulesoft.com',
-                                                                                       {
-                                                                                           // This is the right column
-                                                                                           alignment: 'right',
-                                                                                           text: ['page ', {text: page.toString()}, ' of ', {text: pages.toString()}]
-                                                                                       }
-                                                                                   ],
-                                                                                   margin: [10, 0]
-                                                                               }
-                                                                           });
-                                                                           // Styling the table: create style object
-                                                                           var objLayout = {};
-                                                                           // Horizontal line thickness
-                                                                           objLayout['hLineWidth'] = function (i) {
-                                                                               return .5;
-                                                                           };
-                                                                           // Vertikal line thickness
-                                                                           objLayout['vLineWidth'] = function (i) {
-                                                                               return .5;
-                                                                           };
-                                                                           // Horizontal line color
-                                                                           objLayout['hLineColor'] = function (i) {
-                                                                               return '#aaa';
-                                                                           };
-                                                                           // Vertical line color
-                                                                           objLayout['vLineColor'] = function (i) {
-                                                                               return '#aaa';
-                                                                           };
-                                                                           // Left padding of the cell
-                                                                           objLayout['paddingLeft'] = function (i) {
-                                                                               return 4;
-                                                                           };
-                                                                           // Right padding of the cell
-                                                                           objLayout['paddingRight'] = function (i) {
-                                                                               return 4;
-                                                                           };
-                                                                           // Inject the object in the document
-                                                                           doc.content[1].layout = objLayout;
-                                                                       }
+                                                   $(document).ready(function () {
+                                                       $('.dataTable').DataTable({
+                                                           dom: 'Bfrtip',
+                                                           responsive: false,
+                                                           paging: true,
+                                                           info: false,
+                                                           "pageLength": 10,
+                                                           buttons: [
+                                                               {
+                                                                   text: 'PDF',
+                                                                   extend: 'pdfHtml5',
+                                                                   message: '',
+                                                                   orientation: 'landscape',
+                                                                   exportOptions: {
+                                                                       columns: ':visible'
                                                                    },
+                                                                   customize: function (doc) {
+                                                                       doc.pageMargins = [10, 10, 10, 10];
+                                                                       doc.defaultStyle.fontSize = 7;
+                                                                       doc.styles.tableHeader.fontSize = 7;
+                                                                       doc.styles.title.fontSize = 9;
+                                                                       // Remove spaces around page title
+                                                                       doc.content[0].text = doc.content[0].text.trim();
+                                                                       // Create a footer
+                                                                       doc['footer'] = (function (page, pages) {
+                                                                           return {
+                                                                               columns: [
+                                                                                   'www.shulesoft.com',
+                                                                                   {
+                                                                                       // This is the right column
+                                                                                       alignment: 'right',
+                                                                                       text: ['page ', {text: page.toString()}, ' of ', {text: pages.toString()}]
+                                                                                   }
+                                                                               ],
+                                                                               margin: [10, 0]
+                                                                           }
+                                                                       });
+                                                                       // Styling the table: create style object
+                                                                       var objLayout = {};
+                                                                       // Horizontal line thickness
+                                                                       objLayout['hLineWidth'] = function (i) {
+                                                                           return .5;
+                                                                       };
+                                                                       // Vertikal line thickness
+                                                                       objLayout['vLineWidth'] = function (i) {
+                                                                           return .5;
+                                                                       };
+                                                                       // Horizontal line color
+                                                                       objLayout['hLineColor'] = function (i) {
+                                                                           return '#aaa';
+                                                                       };
+                                                                       // Vertical line color
+                                                                       objLayout['vLineColor'] = function (i) {
+                                                                           return '#aaa';
+                                                                       };
+                                                                       // Left padding of the cell
+                                                                       objLayout['paddingLeft'] = function (i) {
+                                                                           return 4;
+                                                                       };
+                                                                       // Right padding of the cell
+                                                                       objLayout['paddingRight'] = function (i) {
+                                                                           return 4;
+                                                                       };
+                                                                       // Inject the object in the document
+                                                                       doc.content[1].layout = objLayout;
+                                                                   }
+                                                               },
 
-                                                                   {extend: 'excelHtml5', footer: true},
-                                                                   {extend: 'csvHtml5', customize: function (csv) {
-                                                                           return "ShuleSoft" + csv + "ShuleSoft";
-                                                                       }},
-                                                                   {extend: 'print', footer: true}
+                                                               {extend: 'excelHtml5', footer: true},
+                                                               {extend: 'csvHtml5', customize: function (csv) {
+                                                                       return "ShuleSoft" + csv + "ShuleSoft";
+                                                                   }},
+                                                               {extend: 'print', footer: true}
 
-                                                               ]
-                                                           });
+                                                           ]
                                                        });
+                                                   });
         </script>
     <?php } ?>
 </html>
