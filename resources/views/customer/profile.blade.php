@@ -205,10 +205,40 @@
                                                                                 <div class="row">
 
                                                                                     <div class="col-md-6">
+                                                                                        Task Type
+                                                                                        <select name="task_type_id"  class="form-control">
+                                                                                            <?php
+                                                                                            $types = DB::table('task_types')->get();
+                                                                                            foreach ($types as $type) {
+                                                                                                ?>
+                                                                                                <option value="<?= $type->id ?>"><?= $type->name ?></option>
+                                                                                            <?php } ?>
 
+                                                                                        </select>
+                                                                                    </div>
+                                                                                    <div class="col-md-6">
+                                                                                        Person Allocated to do
+                                                                                        <select name="to_user_id" class="form-control">
+                                                                                            <?php
+                                                                                            $staffs = DB::table('users')->where('status', 1)->get();
+                                                                                            foreach ($staffs as $staff) {
+                                                                                                ?>
+                                                                                                <option value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
+                                                                                            <?php } ?>
+
+                                                                                        </select>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <div class="row">
+
+                                                                                    <div class="col-md-6">
+                                                                                        Deadline Date
                                                                                         <input type="date" class="form-control" placeholder="Deadline" name="date">
                                                                                     </div>
                                                                                     <div class="col-md-6">
+                                                                                        Deadline Time
                                                                                         <input type="time" class="form-control" placeholder="Time" name="time">
                                                                                     </div>
                                                                                 </div>
@@ -230,7 +260,7 @@
                                                     </div>
                                                     <div class="col-md-12 timeline-dot">
                                                         <?php
-                                                        $tasks = \App\Models\Task::where('client_id', $client_id)->get();
+                                                        $tasks = \App\Models\Task::where('client_id', $client_id)->orderBy('created_at','desc')->get();
                                                         foreach ($tasks as $task) {
                                                             ?>
                                                             <div class="social-timelines p-relative o-hidden">
@@ -424,71 +454,71 @@
                                                                         <table class="table m-b-0">
                                                                             <tbody>
                                                                                 <?php
-                                                                                if($school->school_id ==null){
-                                                                                ?>
-                                                                                <tr>
-                                                                                    <th class="social-label b-none">School Mapping </th>
-                                                                                    <td class="social-user-name b-none text-muted">
-                                                                                        
-                                                
-                                                                                          <div class="col-sm-12">
-                                                                                              <input class="form-control" id="school_id" name="school_id" type="text" style="width:18em">
-                                                                                                                               <span id="search_result"></span>
- </div> 
+                                                                                if ($school->school_id == null) {
+                                                                                    ?>
+                                                                                    <tr>
+                                                                                        <th class="social-label b-none">School Mapping </th>
+                                                                                        <td class="social-user-name b-none text-muted">
 
 
-                                                                                    </td>
-                                                                                    <td class="social-user-name b-none text-muted">  Type at least 3 characters</td>
-                                                                                </tr>
-                                                                                <?php }else{?>
-                                                                                <tr>
-                                                                                    <th class="social-label b-none">Support Personnel </th>
-                                                                                    <td class="social-user-name b-none text-muted">
-                                                                                        <?php
-                                                                                        $school_allocations = \collect(DB::select("select b.id from admin.users_schools a join admin.users b on b.id=a.user_id join admin.schools c on c.id=a.school_id where a.role_id=8 and a.status=1 and c.schema_name='" . $schema . "'"))->first();
-                                                                                        ?>    <select class="form-control" id="support_id" name="support_id">
-                                                                                        <?php foreach ($shulesoft_users as $user) { ?>
-                                                                                                <option value="<?= $user->id ?>" <?php
-                                                                                                if (count($school_allocations) == 1 && $user->id == $school_allocations->id) {
-                                                                                                                                                            $support_person=$user->firstname . ' ' . $user->lastname;
-                                                                                                    echo 'selected="selected"';
-                                                                                                } else {
-                                                                                                    echo '';
-                                                                                                }
-                                                                                                ?>><?= $user->firstname . ' ' . $user->lastname ?></option>     
-                                                                                                    <?php }
-                                                                                                    ?>
-                                                                                        </select>
+                                                                                            <div class="col-sm-12">
+                                                                                                <input class="form-control" id="school_id" name="school_id" type="text" style="width:18em">
+                                                                                                <span id="search_result"></span>
+                                                                                            </div> 
 
 
-                                                                                    </td>
-                                                                                    <td class="social-user-name b-none text-muted">   <input type="button" value="save" onmousedown="allocate($('#support_id').val(), 8)" class="btn btn-success btn-sm"></td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <th class="social-label b-none">Sales Personnel </th>
-                                                                                    <td class="social-user-name b-none text-muted">
-                                                              <?php
-                                                                                        $school_sales_allocations = \collect(DB::select("select b.id from admin.users_schools a join admin.users b on b.id=a.user_id join admin.schools c on c.id=a.school_id where a.role_id=3 and a.status=1 and c.schema_name='" . $schema . "'"))->first();
-                                                                                        ?>                            <select class="form-control" id="sales_id" name="sales_id">
-                                                                                            
+                                                                                        </td>
+                                                                                        <td class="social-user-name b-none text-muted">  Type at least 3 characters</td>
+                                                                                    </tr>
+                                                                                <?php } else { ?>
+                                                                                    <tr>
+                                                                                        <th class="social-label b-none">Support Personnel </th>
+                                                                                        <td class="social-user-name b-none text-muted">
+                                                                                            <?php
+                                                                                            $school_allocations = \collect(DB::select("select b.id from admin.users_schools a join admin.users b on b.id=a.user_id join admin.schools c on c.id=a.school_id where a.role_id=8 and a.status=1 and c.schema_name='" . $schema . "'"))->first();
+                                                                                            ?>    <select class="form-control" id="support_id" name="support_id">
                                                                                             <?php foreach ($shulesoft_users as $user) { ?>
-                                                                                                <option value="<?= $user->id ?>" <?php
-                                                                                                if (count($school_sales_allocations) == 1 && $user->id == $school_sales_allocations->id) {
-                                                                                                    $sales_person=$user->firstname . ' ' . $user->lastname;
-                                                                                                    echo 'selected="selected"';
-                                                                                                } else {
-                                                                                                    echo '';
-                                                                                                }
-                                                                                                ?>><?= $user->firstname . ' ' . $user->lastname ?></option>     
-                                                                                                    <?php }
-                                                                                                    ?>
-                                                                                        </select>
+                                                                                                    <option value="<?= $user->id ?>" <?php
+                                                                                                    if (count($school_allocations) == 1 && $user->id == $school_allocations->id) {
+                                                                                                        $support_person = $user->firstname . ' ' . $user->lastname;
+                                                                                                        echo 'selected="selected"';
+                                                                                                    } else {
+                                                                                                        echo '';
+                                                                                                    }
+                                                                                                    ?>><?= $user->firstname . ' ' . $user->lastname ?></option>     
+                                                                                                        <?php }
+                                                                                                        ?>
+                                                                                            </select>
 
 
-                                                                                    </td>
-                                                                                    <td class="social-user-name b-none text-muted">   <input type="button" value="save" onmousedown="allocate($('#sales_id').val(), 3)" class="btn btn-success btn-sm"></td>
-                                                                                </tr>    
-                                                                                <?php }?>
+                                                                                        </td>
+                                                                                        <td class="social-user-name b-none text-muted">   <input type="button" value="save" onmousedown="allocate($('#support_id').val(), 8)" class="btn btn-success btn-sm"></td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <th class="social-label b-none">Sales Personnel </th>
+                                                                                        <td class="social-user-name b-none text-muted">
+                                                                                            <?php
+                                                                                            $school_sales_allocations = \collect(DB::select("select b.id from admin.users_schools a join admin.users b on b.id=a.user_id join admin.schools c on c.id=a.school_id where a.role_id=3 and a.status=1 and c.schema_name='" . $schema . "'"))->first();
+                                                                                            ?>                            <select class="form-control" id="sales_id" name="sales_id">
+
+                                                                                                <?php foreach ($shulesoft_users as $user) { ?>
+                                                                                                    <option value="<?= $user->id ?>" <?php
+                                                                                                    if (count($school_sales_allocations) == 1 && $user->id == $school_sales_allocations->id) {
+                                                                                                        $sales_person = $user->firstname . ' ' . $user->lastname;
+                                                                                                        echo 'selected="selected"';
+                                                                                                    } else {
+                                                                                                        echo '';
+                                                                                                    }
+                                                                                                    ?>><?= $user->firstname . ' ' . $user->lastname ?></option>     
+                                                                                                        <?php }
+                                                                                                        ?>
+                                                                                            </select>
+
+
+                                                                                        </td>
+                                                                                        <td class="social-user-name b-none text-muted">   <input type="button" value="save" onmousedown="allocate($('#sales_id').val(), 3)" class="btn btn-success btn-sm"></td>
+                                                                                    </tr>    
+                                                                                <?php } ?>
 
                                                                             </tbody></table>
                                                                     </div>

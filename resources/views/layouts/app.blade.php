@@ -18,7 +18,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
         <meta name="description" content="ShuleSoft Admin">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <meta name="keywords" content=", Flat ui, Admin , Responsive, Landing, Bootstrap, App, Template, Mobile, iOS, Android, apple, creative app">
+        <meta name="keywords" content="ShuleSoft, Admin , Admin Panel">
         <meta name="author" content="ShuleSoft">
         <!-- Favicon icon -->
         <link rel="icon" href="<?= $root ?>assets/images/favicon.ico" type="image/x-icon">

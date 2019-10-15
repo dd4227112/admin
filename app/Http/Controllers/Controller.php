@@ -22,7 +22,7 @@ class Controller extends BaseController {
         // return view('graph.bargraph', $this->data);
     }
 
-    public function ajaxTable($table, $columns, $custom_sql = null, $order_name = null,$count=null) {
+    public function ajaxTable($table, $columns, $custom_sql = null, $order_name = null, $count = null) {
         ## Read value
         if (isset($_POST) && request()->ajax() == true) {
             $draw = $_POST['draw'];
@@ -57,8 +57,8 @@ class Controller extends BaseController {
                 $empQuery = "select * from " . $table . " WHERE true " . $searchQuery . " order by \"" . $columnName . "\" " . $columnSortOrder . " offset  " . $row . " limit " . $rowperpage;
             } else {
                 $empQuery = $custom_sql . " " . $searchQuery . " order by \"" . $columnName . "\" " . $columnSortOrder . " offset  " . $row . " limit " . $rowperpage;
-               
-                $total_records =$count==null ? count(DB::select($custom_sql)): $count;
+
+                $total_records = $count == null ? count(DB::select($custom_sql)) : $count;
             }
             $empRecords = DB::select($empQuery);
 
@@ -73,6 +73,16 @@ class Controller extends BaseController {
 
             return json_encode($response);
         }
+    }
+
+    public function send_email($email, $subject, $message) {
+
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $obj = array('body' =>$message, 'subject' => $subject, 'email' => $email);
+            DB::table('public.email')->insert($obj);
+        }
+
+        return $this;
     }
 
 }

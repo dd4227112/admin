@@ -223,8 +223,19 @@ class Customer extends Controller {
         if ($_POST) {
 
             $data = array_merge(request()->all(), ['user_id' => Auth::user()->id]);
-            \App\Models\Task::create($data);
-            return redirect()->back();
+            $task=\App\Models\Task::create($data);
+            if((int) request('to_user_id') >0){
+                $user=\App\Models\User::find(request('to_user_id'));
+                $message='Hello '.$user->firstname.'<br/>'
+                        . 'A task has been allocated to you'
+                        . '<ul>'
+                        . '<li>Task: '.$task->activity.'</li>'
+                        . '<li>Type: '.$task->taskType->name.'</li>'
+                        . '<li>Deadline: '.$task->date.'</li>'
+                        . '</ul>';
+                $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+            }
+            return redirect()->back()->with('success', 'success');
         }
 
         return view('customer/profile', $this->data);
@@ -232,11 +243,11 @@ class Customer extends Controller {
 
     public function allocate() {
         $school_id = request('school_id');
-        $schema=request('schema');
+        $schema = request('schema');
         $user_id = request('user_id');
         $role_id = request('role_id');
-        $school_info = DB::table('schools')->where('id',$school_id);
-        count($school_info->first()) == 1 ? DB::table('users_schools')->insert(['school_id' =>$school_id, 'user_id' => $user_id, 'role_id' => $role_id]) : '';
+        $school_info = DB::table('schools')->where('id', $school_id);
+        count($school_info->first()) == 1 ? DB::table('users_schools')->insert(['school_id' => $school_id, 'user_id' => $user_id, 'role_id' => $role_id]) : '';
         $school_info->update(['schema_name' => $schema]);
         echo 1;
     }
@@ -327,21 +338,21 @@ class Customer extends Controller {
 
     public function search() {
         $val = request('val');
-        $schema=request('schema');
+        $schema = request('schema');
         if (strlen($val) > 3) {
             $schools = DB::select('select * from admin.schools where lower("name") like \'%' . strtolower($val) . '%\'');
             foreach ($schools as $school) {
 
-               echo '<p><a href="' . url('customer/map/' .$schema.'/'. $school->id ). '">' . $school->name . '( '.$school->region.' )</a></p>';
+                echo '<p><a href="' . url('customer/map/' . $schema . '/' . $school->id) . '">' . $school->name . '( ' . $school->region . ' )</a></p>';
             }
         }
     }
-    
+
     public function map() {
-        $schema=request()->segment(3);
-        $school_id= request()->segment(4);
-        DB::table($schema.'.setting')->update(['school_id'=>$school_id]);
-        return redirect()->back()->with('success','success');
+        $schema = request()->segment(3);
+        $school_id = request()->segment(4);
+        DB::table($schema . '.setting')->update(['school_id' => $school_id]);
+        return redirect()->back()->with('success', 'success');
     }
 
 }
