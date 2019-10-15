@@ -53,10 +53,10 @@
                             <div>
                                 <?php
                                 $day = date('Y-m-d');
-                                $trans_revenue = \collect(DB::select('select count(*)*152.54 as total from admin.all_payments where extract(year from created_at)='.date('Y').' and extract(month from created_at)='.date('m').'  and token is not null '))->first();
+                                $trans_revenue = \collect(DB::select('select count(*)*152.54 as total from admin.all_payments where extract(year from created_at)='.date('Y').'  and token is not null '))->first();
                                 ?>
                                 <h3>Tsh <?= $trans_revenue->total ?></h3>
-                                <p>Today total Transaction Fee 
+                                <p>Yearly total Transaction Fee 
                                     <span class="f-right text-success">
                                         <i class="icofont icofont-arrow-up"></i>
                                         34.52%
