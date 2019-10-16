@@ -12,7 +12,7 @@
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="index-2.html">
+                        <a href="#">
                             <i class="icofont icofont-home"></i>
                         </a>
                     </li>
@@ -36,7 +36,7 @@
                                     <div class="col-md-12">
                                         <!-- Social wallpaper start -->
                                         <div class="social-wallpaper">
-                                            <img src="<?= $root ?>assets/images/social/img1.jpg" class="img-fluid width-100" alt="">
+                                            <div class="mapouter"><div class="gmap_canvas"><iframe width="100%" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q=<?= $school->sname ?>&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a href="https://www.embedgooglemap.net/blog/nordvpn-coupon-code/">nordvpn coupon</a></div><style>.mapouter{position:relative;text-align:right;height:300px;width:100%;}.gmap_canvas {overflow:hidden;background:none!important;height:300px;width:100%;}</style></div>
                                             <div class="profile-hvr">
                                                 <i class="icofont icofont-ui-edit p-r-10"></i>
                                                 <i class="icofont icofont-ui-delete"></i>
@@ -60,7 +60,10 @@
                                             <!-- social-profile card start -->
                                             <div class="card">
                                                 <div class="social-profile">
-                                                    <img class="img-fluid width-100" src="<?= $root ?>assets/images/social/profile.jpg" alt="">
+                                                    <?php
+                                                    $image = strlen($school->photo) > 3 ? 'storage/uploads/images/' . $school->photo : 'storage/uploads/images/defualt.png';
+                                                    ?>
+                                                    <img class="img-fluid width-100" src="<?= $root ?>../../shulesoft_live/<?= $image ?>" alt="">
                                                     <div class="profile-hvr m-t-15">
                                                         <i class="icofont icofont-ui-edit p-r-10"></i>
                                                         <i class="icofont icofont-ui-delete"></i>
@@ -108,7 +111,11 @@
                                                             ?>
                                                             <div class="media m-b-10">
                                                                 <a class="media-left" href="#!">
-                                                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
+                                                                         <?php
+                                                    $user_image = 'storage/uploads/images/defualt.png';
+                                                    ?>
+                                                   
+                                                                    <img class="media-object img-circle" src="<?= $root ?>../../shulesoft_live/<?= $user_image ?>" alt="Generic placeholder image">
                                                                     <div class="live-status bg-danger"></div>
                                                                 </a>
                                                                 <div class="media-body">
@@ -122,10 +129,10 @@
                                                 </div>
 
                                                 <div class="card">
-                                                    <div class="card-header contact-user">
-                                                        <img class="img-circle" src="assets/images/user-profile/contact-user.jpg" alt="support manager">
-                                                        <h4>Angelica Ramos</h4>
-                                                    </div>
+                                                    <!--                                                    <div class="card-header contact-user">
+                                                                                                            <img class="img-circle" src="assets/images/user-profile/contact-user.jpg" alt="support manager">
+                                                                                                            <h4>Angelica Ramos</h4>
+                                                                                                        </div>-->
 
                                                     <div class="card-block groups-contact">
                                                         <h4>Training Reports</h4>
@@ -168,7 +175,7 @@
                                                     <div class="slide"></div>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" data-toggle="tab" href="#photos" role="tab" aria-expanded="false">Modules Usage</a>
+                                                    <a class="nav-link" data-toggle="tab" href="#photos" role="tab" aria-expanded="false"> Usage</a>
                                                     <div class="slide"></div>
                                                 </li>
                                                 <li class="nav-item">
@@ -260,7 +267,7 @@
                                                     </div>
                                                     <div class="col-md-12 timeline-dot">
                                                         <?php
-                                                        $tasks = \App\Models\Task::where('client_id', $client_id)->orderBy('created_at','desc')->get();
+                                                        $tasks = \App\Models\Task::where('client_id', $client_id)->orderBy('created_at', 'desc')->get();
                                                         foreach ($tasks as $task) {
                                                             ?>
                                                             <div class="social-timelines p-relative o-hidden">
@@ -620,29 +627,80 @@
                                                     <div class="row">
                                                         <!-- Gallery start -->
                                                         <div class="card-block">
-                                                            <div class="demo-gallery">
-                                                                <ul id="profile-lightgallery">
-                                                                    <li class="col-md-4 col-lg-2 col-sm-6 col-xs-12  p-3">
-                                                                        <a href="<?= $root ?>assets/images/light-box/l1.jpg" data-toggle="lightbox" data-title="A random title" data-footer="A custom footer text">
-                                                                            <img src="<?= $root ?>assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
-                                                                        </a>
-                                                                    </li>
-                                                                    <li class="col-md-4 col-lg-2 col-sm-6 col-xs-12  p-3">
-                                                                        <a href="<?= $root ?>assets/images/light-box/l1.jpg" data-toggle="lightbox" data-title="A random title" data-footer="A custom footer text">
-                                                                            <img src="<?= $root ?>assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
-                                                                        </a>
-                                                                    </li>
-                                                                    <li class="col-md-4 col-lg-2 col-sm-6 col-xs-12  p-3">
-                                                                        <a href="<?= $root ?>assets/images/light-box/l1.jpg" data-toggle="lightbox" data-title="A random title" data-footer="A custom footer text">
-                                                                            <img src="<?= $root ?>assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
-                                                                        </a>
-                                                                    </li>
-                                                                    <li class="col-md-4 col-lg-2 col-sm-6 col-xs-12  p-3">
-                                                                        <a href="<?= $root ?>assets/images/light-box/l1.jpg" data-toggle="lightbox" data-title="A random title" data-footer="A custom footer text">
-                                                                            <img src="<?= $root ?>assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
-                                                                        </a>
-                                                                    </li>
-                                                                </ul>
+                                                            <div class="card">
+                                                                <div class="title_left">
+                                                                    <br/>
+                                                                    <h3>System usage by month</h3>
+                                                                    <br/>
+                                                                </div>
+                                                                <script src="https://code.highcharts.com/highcharts.js"></script>
+                                                                <script src="https://code.highcharts.com/modules/data.js"></script>
+                                                                <script type="text/javascript">
+                                                                                        graph_disc = function () {
+                                                                                            Highcharts.chart('container', {
+                                                                                                chart: {
+                                                                                                    type: 'column'
+                                                                                                },
+                                                                                                title: {
+                                                                                                    text: "System usage by Month"
+                                                                                                },
+                                                                                                subtitle: {
+                                                                                                    text: ''
+                                                                                                },
+                                                                                                xAxis: {
+                                                                                                    type: 'category'
+                                                                                                },
+                                                                                                yAxis: {
+                                                                                                    title: {
+                                                                                                        text: 'Log Requests'
+                                                                                                    }
+
+                                                                                                },
+                                                                                                legend: {
+                                                                                                    enabled: false
+                                                                                                },
+                                                                                                plotOptions: {
+                                                                                                    series: {
+                                                                                                        borderWidth: 0,
+                                                                                                        dataLabels: {
+                                                                                                            enabled: true,
+                                                                                                            format: '{point.y:.1f}'
+                                                                                                        }
+                                                                                                    }
+                                                                                                },
+                                                                                                tooltip: {
+                                                                                                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                                                                                                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+                                                                                                },
+                                                                                                series: [{
+                                                                                                        name: 'Log Requests',
+                                                                                                        colorByPoint: true,
+                                                                                                        data: [
+<?php
+$logs = DB::select('select count(*), extract(month from created_at) as month from ' . $schema . '.log where user_id is not null and extract(year from created_at)=' . date('Y') . '  group by extract(month from created_at)');
+foreach ($logs as $log) {
+    $dateObj = DateTime::createFromFormat('!m', $log->month);
+    $month = $dateObj->format('F');
+    ?>
+                                                                                                                {
+                                                                                                                    name: '<?= ucwords($month) ?>',
+                                                                                                                    y: <?php
+    echo $log->count;
+    ?>,
+                                                                                                                    drilldown: ''
+                                                                                                                },
+    <?php
+}
+?>
+                                                                                                        ]
+                                                                                                    }]
+                                                                                            });
+                                                                                        }
+                                                                                        $(document).ready(graph_disc);
+                                                                </script>
+
+
+                                                                <div id="container" style="min-width: 70%;  height: 480px; margin: 0 auto"></div>
                                                             </div>
                                                         </div>
                                                     </div>
