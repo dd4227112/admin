@@ -63,7 +63,7 @@
                                                     <?php
                                                     $image = strlen($school->photo) > 3 ? 'storage/uploads/images/' . $school->photo : 'storage/uploads/images/defualt.png';
                                                     ?>
-                                                    <img class="img-fluid width-100" src="htts://demo.shulesoft.com/<?= $image ?>" alt="">
+                                                    <img class="img-fluid width-100" src="https://demo.shulesoft.com/<?= $image ?>" alt="">
                                                     <div class="profile-hvr m-t-15">
                                                         <i class="icofont icofont-ui-edit p-r-10"></i>
                                                         <i class="icofont icofont-ui-delete"></i>
@@ -115,7 +115,7 @@
                                                     $user_image = 'storage/uploads/images/defualt.png';
                                                     ?>
                                                    
-                                                                    <img class="media-object img-circle" src="htts://demo.shulesoft.com/<?= $user_image ?>" alt="Generic placeholder image">
+                                                                    <img class="media-object img-circle" src="https://demo.shulesoft.com/<?= $user_image ?>" alt="Generic placeholder image">
                                                                     <div class="live-status bg-danger"></div>
                                                                 </a>
                                                                 <div class="media-body">
