@@ -677,7 +677,7 @@
                                                                                                         colorByPoint: true,
                                                                                                         data: [
 <?php
-$logs = DB::select('select count(*), extract(month from created_at) as month from ' . $schema . '.log where user_id is not null and extract(year from created_at)=' . date('Y') . '  group by extract(month from created_at)');
+$logs = DB::select('select count(*), extract(month from created_at) as month from ' . $schema . '.log where user_id is not null and extract(year from created_at)=' . date('Y') . '  group by extract(month from created_at) order by extract(month from created_at) asc');
 foreach ($logs as $log) {
     $dateObj = DateTime::createFromFormat('!m', $log->month);
     $month = $dateObj->format('F');
