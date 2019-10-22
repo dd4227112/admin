@@ -19,4 +19,8 @@ class Guide extends Model
     public function createdBy() {
         return $this->belongsTo(\App\Model\User::class,'created_by','id');
     }
+    
+    public function guidePageVisit() {
+        return $this->hasMany(\App\Model\GuidePageVisit::class);
+    }
 }

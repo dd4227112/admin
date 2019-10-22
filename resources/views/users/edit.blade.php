@@ -1,9 +1,33 @@
 @extends('layouts.app')
-
 @section('content')
-    @include('users.style')
+
     <?php $root =url('/').'/public/' ?>
-    <div id="newUser">
+<div class="main-body">
+    <div class="page-wrapper">
+        <!-- Page-header start -->
+        <div class="page-header">
+            <div class="page-header-title">
+                <h4 class="box-title">Users </h4>
+                <span>Exams are defined only once for quick reference</span>
+            </div>
+            <div class="page-header-breadcrumb">
+                <ul class="breadcrumb-title">
+                    <li class="breadcrumb-item">
+                        <a href="<?= url('/') ?>">
+                            <i class="icofont icofont-home"></i>
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Exams</a>
+                    </li>
+                    <li class="breadcrumb-item"><a href="#!">Listing</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- Page-header end -->
+        <!-- Page-body start -->
+        <div class="page-body">
+            <div class="row">
         <div id="outer" class="container">
             <div id="wrapper" class="layout" style="background-color: #fff; margin-bottom: 40px;">
                 <div id="dpEditor" class="flex">
@@ -23,7 +47,7 @@
                                 <img src="{{$root.'images/loading.gif'}}" alt="">
                             </div>
 
-                            <img src='{{$root."images/$user->dp"}}' id="curDp" alt="">
+                            <img src='{{$root."images/$user->dp"}}' width="140" height="140" id="curDp" alt="">
                         </div>
                     </form>
 
@@ -42,7 +66,7 @@
                                 <h2>Edit User</h2>
                             </div>
                             <div class="pull-right">
-                                <a class="btn btn-primary" href="{{ route('users.index') }}"> Back</a>
+                                <a class="btn btn-primary" href="{{ url('users.index') }}"> Back</a>
                             </div>
                         </div>
                     </div>
@@ -56,7 +80,7 @@
                             </ul>
                         </div>
                     @endif
-                    {!! Form::model($user, ['method' => 'PATCH','route' => ['users.update', $user->id]]) !!}
+                    {!! Form::model($user, ['method' => 'PATCH','url' => ['users/edit', $user->id]]) !!}
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
@@ -108,11 +132,16 @@
                             <div class="form-group">
                                 <strong>Role:</strong>
                                 <br/>
-                                @foreach($role as $value)
-                                    <label>{{ Form::checkbox('role[]', $value->id, in_array($value->id, $userRoles) ? true : false, array('class' => 'name')) }}
-                                        {{ $value->display_name }}</label>
-                                    <br/>
+                                <select name='role_id' class="form-group">
+                                <?php
+                                $roles=DB::table('roles')->get();
+                                ?>
+                                @foreach($roles as $value)
+                                
+                                <option value="{{$value->id}}">{{$value->display_name}} </option>
+                              
                                 @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
@@ -125,7 +154,9 @@
             </div>
         </div>
     </div>
-
+        </div>
+    </div>
+</div>
     <script src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;key=AIzaSyBgc2zYiUzXGjZ277annFVhIXkrpXdOoXw"></script>
     <script src="{{$root.'/js/jquery.geocomplete.min.js'}}"></script>
     <script>
@@ -142,8 +173,6 @@
                     console.log("Multiple: " + results.length + " results found");
                 });
     </script>
-@endsection
-@content('footer')
 <script  src="<?= url('public') ?>/intlTelInput/js/intlTelInput.js"></script>
 <script  src="<?= url('public') ?>/js/customTelInput.js"></script>
   <script>

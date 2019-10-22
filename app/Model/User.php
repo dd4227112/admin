@@ -4,19 +4,18 @@ namespace App\Model;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Zizaco\Entrust\Traits\EntrustUserTrait;
 
-class User extends Authenticatable
-{
+class User extends Authenticatable {
+
     use Notifiable;
-    use EntrustUserTrait;
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','firstname','lastname','phone','created_by'
+        'name', 'email', 'password', 'firstname', 'lastname', 'phone', 'created_by', 'role_id'
     ];
 
     /**
@@ -29,20 +28,22 @@ class User extends Authenticatable
     ];
 
     public function name() {
-        return $this->attributes['firstname'].' '.$this->attributes['lastname'];
+        return $this->attributes['firstname'] . ' ' . $this->attributes['lastname'];
     }
-    public function location(){
+
+    public function location() {
         return $this->hasMany('App\Model\Location');
     }
 
-    public function location_str(){
-         $loc = $this->location()->first();
-         if(empty($loc))
-             return '';
+    public function location_str() {
+        $loc = $this->location()->first();
+        if (empty($loc))
+            return '';
         return $loc->long . ", " . $loc->lat;
     }
-    
-    public function roleUser() {
-        return $this->hasMany('\App\Model\Role_user');
+
+    public function role() {
+        return $this->belongsTo('App\Model\Role')->withDefault(['display_name'=>'unknown']);
     }
+
 }

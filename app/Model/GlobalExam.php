@@ -11,6 +11,14 @@ class GlobalExam extends Model
       protected $fillable = ['id', 'name', 'global_exam_definition_id','date', 'school_level_id'];
 
     public function globalExamDefinition() {
-        return $this->belongsTo('\App\Model\GlobalExamDefinition');
+        return $this->belongsTo('\App\Model\GlobalExamDefinition','global_exam_definition_id','id');
+    }
+    
+     public function schoolLevel() {
+        return $this->belongsTo('\App\Model\SchoolLevel','school_level_id','id');
+    }
+    
+    public function marks() {
+       return $this->hasMany(\App\Models\Mark::class);
     }
 }

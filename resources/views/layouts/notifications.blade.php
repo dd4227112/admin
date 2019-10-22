@@ -1,34 +1,56 @@
-@if ($errors->any())
-    <div class="alert alert-top alert-danger alert-dismissable margin5">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <strong>Error:</strong> Please check the form below for errors
-    </div>
-@endif
+@if ($errors->any() || Session::get('success') || Session::get('error') || Session::get('warning') || Session::get('info'))
+<?php $root = url('/') . '/public/' ?>
 
+<!-- notify js Fremwork -->
+<link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.css">
+<link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.brighttheme.css">
+<link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.buttons.css">
+<link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.history.css">
+<link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.mobile.css">
+<link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/pnotify/notify.css">
+
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.js"></script>
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.desktop.js"></script>
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.buttons.js"></script>
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.confirm.js"></script>
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.callbacks.js"></script>
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.animate.js"></script>
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.history.js"></script>
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.mobile.js"></script>
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.nonblock.js"></script>
+<script type="text/javascript" src="<?= $root ?>assets/pages/pnotify/notify.js"></script>
+
+<script type="text/javascript">
+
+    notify = function (title, message, type) {
+        new PNotify({
+            title: title,
+            text: message,
+            type: type,
+            hide: 'false',
+            icon: 'icofont icofont-info-circle'
+        });
+    }
+
+</script>
+@if ($errors->any())
+<script type="text/javascript">notify('Error', 'Please check the form below for errors', 'error');</script>
+@endif
 @if ($message = Session::get('success'))
-    <div class="alert alert-top alert-success alert-dismissable margin5">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <strong>Success:</strong> {{ $message }}
-    </div>
+<script type="text/javascript">notify('Success', '<?= $message ?>', 'success');</script>
 @endif
 
 @if ($message = Session::get('error'))
-    <div class="alert alert-top alert-danger alert-dismissable margin5">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <strong>Error:</strong> {!! $message !!}
-    </div>
+<script type="text/javascript">notify('Error', '<?= $message ?>', 'error');</script>
 @endif
 
 @if ($message = Session::get('warning'))
-    <div class="alert alert-top alert-warning alert-dismissable margin5">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <strong>Warning:</strong> {{ $message }}
-    </div>
+<script type="text/javascript">notify('Warning', '<?= $message ?>', 'warning');</script>
 @endif
 
 @if ($message = Session::get('info'))
-    <div class="alert alert-top alert-info alert-dismissable margin5">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <strong>Info:</strong> {{ $message }}
-    </div>
+<script type="text/javascript">notify('Info', '<?= $message ?>', 'default');</script>
+@endif
+
+
 @endif

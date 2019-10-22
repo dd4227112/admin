@@ -3,101 +3,50 @@
 function mailConfig() {
     
 }
-function getDivisionBySort($arr, $format) {
-    $sort = array();
-    foreach ($arr as $k => $v) {
-        $sort['subject_mark'][$k] = $v['subject_mark'];
-    }
-    array_multisort($sort['subject_mark'], SORT_DESC, $arr);
-    $i = 1;
-    $points = 0;
-    foreach ($arr as $key => $value) {
-        if ($value['is_counted_indivision'] == 1) {
-            $points += $value['point'];
-            if ($i == 3 && $format == 'ACSEE') {
-                break;
-            }
-            if ($i == 7 && $format == 'CSEE') {
-                break;
-            }
-            $i++;
-        }
-    }
-    $penalty = 0;
-    foreach ($arr as $key => $value) {
-        if ($value['penalty'] == 1 && $value['subject_mark'] < $value['pass_mark']) {
-            $penalty = 1;
-        }
-    }
-    if ($format == 'CSEE') {
-        $div = $i < 7 ? 'INC' : cseeDivision($points, $penalty);
-    } else {
-        $div = $i < 3 ? 'INC' : acseeDivision($points, $penalty);
-    }
 
-    return [$div, $points];
+function json_call($array = null) {
+    if (isset($_GET['callback']) === TRUE) {
+        header('Content-Type: text/javascript;');
+        header('Access-Control-Allow-Origin: http://client');
+        header('Access-Control-Max-Age: 3628800');
+        header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
+
+        return request('callback') . '(' . (json_encode($array)) . ')';
+    }
 }
 
-function cseeDivision($total_point, $penalty) {
-    if ($total_point >= 7 && $total_point <= 17 && $penalty == 0) {
-        $division = 'I';
-    } else if ($total_point >= 18 && $total_point <= 21 && $penalty == 0) {
-        $division = 'II';
-    } else if ($penalty == 1 && $total_point <= 25) {
-        $division = 'III';
-    } elseif ($total_point >= 18 && $total_point <= 25) {
-        $division = 'III';
-    } else if ($total_point >= 26 && $total_point <= 33) {
-        $division = 'IV';
-    } else if ($total_point >= 34 && $total_point <= 35) {
-        $division = '0';
-    } else {
-        $division = '0';
-    }
-    return $division;
+function money($amount, $decimal = 0) {
+    return number_format($amount, $decimal);
 }
 
-function acseeDivision($total_point, $penalty) {
-    if ($total_point >= 3 && $total_point <= 9 && $penalty == 0) {
-        $division = 'I';
-    } else if ($total_point >= 10 && $total_point <= 12 && $penalty == 0) {
-        $division = 'II';
-    } else if ($penalty == 1 && $total_point <= 12) {
-        $division = 'III';
-    } elseif ($total_point >= 13 && $total_point <= 17) {
-        $division = 'III';
-    } else if ($total_point >= 18 && $total_point <= 19) {
-        $division = 'IV';
-    } else if ($total_point >= 20 && $total_point <= 21) {
-        $division = '0';
-    } else {
-        $division = '0';
-    }
-    return $division;
-}
 function userAccessRole() {
     $user_id = \Auth::user()->id;
 
     if ((int) $user_id > 0) {
-        $user = \App\Model\User::find($user_id);
-        $permission = \App\Model\Permission_role::whereIn('role_id', $user->roleUser()->get(['role_id']))->get();
+        $user = \App\Model\User::find($user_id);  
+        $permission = \App\Models\PermissionRole::where('role_id', $user->role_id)->get();
+      
         $objet = array();
+      
         if (count($permission) > 0) {
             foreach ($permission as $perm) {
                 array_push($objet, $perm->permission->name);
             }
         }
-
+       
         return $objet;
     }
 }
+
 function form_error($errors, $tag) {
     if ($errors != null && $errors->has($tag)) {
         return $errors->first($tag);
     }
 }
+
 function can_access($permission) {
     $user_id = \Auth::user()->id;
+    
     if ((int) $user_id > 0) {
         $global = userAccessRole();
         return in_array($permission, $global) ? 1 : 0;
@@ -108,7 +57,7 @@ function createRoute() {
     $url = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
     $url_param = explode('/', $url);
 
-    $controller = isset($url_param[2]) && !empty($url_param[2]) ? $url_param[2].'Controller' : 'userController';
+    $controller = isset($url_param[2]) && !empty($url_param[2]) ? $url_param[2] . '' : 'analyse';
     $method = isset($url_param[3]) && !empty($url_param[3]) ? $url_param[3] : 'index';
     $view = $method == 'view' ? 'show' : $method;
 
@@ -118,6 +67,7 @@ function createRoute() {
 function timeAgo($datetime, $full = false) {
     return \Carbon\Carbon::createFromTimeStamp(strtotime($datetime))->diffForHumans();
 }
+
 /**
  * Drop-down Menu
  *

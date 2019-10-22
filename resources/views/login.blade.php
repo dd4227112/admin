@@ -1,150 +1,233 @@
-<!DOCTYPE html>  
+<?php $root = url('/') . '/public/' ?>
+<!DOCTYPE html>
 <html lang="en">
     <head>
-        <?php $root = url('/') . '/public/' ?>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="">
-        <meta name="author" content="">
-        <link rel="icon" type="image/png" sizes="16x16" href="<?= $root ?>images/ShuleSoft-TM.png">
         <title>ShuleSoft Admin Panel</title>
-        <!-- Bootstrap Core CSS -->
-        <link href="<?= $root ?>bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-        <!-- animation CSS -->
-        <link href="<?= $root ?>css/animate.css" rel="stylesheet">
-        <!-- Custom CSS -->
-        <link href="<?= $root ?>css/style.css" rel="stylesheet">
-        <!-- color CSS -->
-        <link href="<?= $root ?>css/colors/default.css" id="theme"  rel="stylesheet">
-        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- HTML5 Shim and Respond.js IE9 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
-            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-        <![endif]-->
+          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+          <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+          <![endif]-->
+        <!-- Meta -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="Phoenixcoded">
+        <meta name="keywords" content=", Flat ui, Admin , Responsive, Landing, Bootstrap, App, Template, Mobile, iOS, Android, apple, creative app">
+        <meta name="author" content="Phoenixcoded">
+        <!-- Favicon icon -->
+
+        <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+        <!-- Google font-->
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
+        <!-- Required Fremwork -->
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/bootstrap/dist/css/bootstrap.min.css">
+        <!-- themify-icons line icon -->
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/icon/themify-icons/themify-icons.css">
+        <!-- ico font -->
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/icon/icofont/css/icofont.css">
+        <!-- Style.css -->
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css?v=2">
 
     </head>
-    
-    <body>
-        <!-- Preloader -->
-       
-        <section id="wrapper" class="new-login-register">
-            <div class="lg-info-panel">
-                <div class="inner-panel">
 
-                    <div class="lg-content">
-                        <h2>ShuleSoft Admin Panel</h2>
-                        <p class="text-muted">Important area to generate and manage statistics, growth, analysis, and provide customer support. This system is for ShuleSoft staff, Marketing agencies, Partners, Investors and Shareholders</p>
+    <body class="fix-menu">
+        <section class="login p-fixed d-flex text-center bg-primary common-img-bg">
+            <!-- Container-fluid starts -->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <!-- Authentication card start -->
+                        <div class="login-card card-block auth-body">
+                            @include('layouts.notifications')
 
+                            <?php if (preg_match('/reset/i', url()->current())) { ?>
+
+                                <form class="md-float-material" role="form" method="POST" action="{{ route('password.email') }}">
+                                    {{ csrf_field() }}
+
+                                    <div class="text-center">
+                                        <img src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="logo.png" width="70" height="70">
+                                    </div>
+                                    <div class="auth-box">
+                                        <div class="row m-b-20">
+                                            <div class="col-md-12">
+                                                <h3 class="text-center">Reset Your Password </h3>
+
+                                            </div>
+                                        </div>
+                                        <p class="text-inverse b-b-default text-right">Back to <a href="<?= url('/') ?>">Login.</a></p>
+                                        <div class="input-group">
+                                            <input type="email" name="email" class="form-control" placeholder="Your Email Address"  value="{{ old('email') }}">
+                                          
+                                            @if ($errors->has('email'))
+                                            <br/> <br/>
+                                            <span class="help-block" style="color: red;">
+                                                <strong>{{ $errors->first('email') }}</strong>
+                                            </span>
+                                            @endif
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <button type="submit" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Reset and send me a new Password</button>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <p class="text-inverse text-left m-b-0">Credentials are only provided by Administrator</p>
+                                                <p class="text-inverse text-left"></p>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <img src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="small-logo.png" width="30" height="30">
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </form>
+                            <?php } else { ?>  
+                                <form class="md-float-material" id="loginform" method="POST" action="{{ route('login') }}" >
+                                    {{ csrf_field() }}
+
+                                    <div class="text-center">
+                                        <img src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="logo.png" width="70" height="70">
+                                    </div>
+                                    <div class="auth-box">
+                                        <div class="row m-b-20">
+                                            <div class="col-md-12">
+                                                <small style="color:black; text-align: center">ShuleSoft Administration Panel</small>
+                                                <h3 class="text-left txt-primary">Sign In</h3>
+                                            </div>
+                                        </div>
+                                        @if ($errors->has('password'))
+                                        <span class="help-block">
+                                            <strong class="alert alert-danger">{{ $errors->first('password') }}</strong>
+                                        </span>
+                                        @endif
+                                        @if ($errors->has('email'))
+                                        <span class="help-block">
+                                            <strong class="alert alert-danger">{{ $errors->first('email') }}</strong>
+                                        </span>
+                                        @endif
+                                        <hr/>
+                                        <div class="input-group ">
+                                            <input type="email" name="email" class="form-control" placeholder="Your Email Address" value="{{ old('email') }}">
+                                            <span class="md-line"></span>
+
+                                        </div>
+                                        <div class="input-group ">
+                                            <input type="password" name="password" class="form-control" placeholder="Password">
+                                            <span class="md-line"></span>
+
+                                        </div>
+
+
+                                        <div class="row m-t-25 text-left">
+                                            <div class="col-sm-7 col-xs-12">
+                                                <div class="checkbox-fade fade-in-primary">
+                                                    <label>
+                                                        <input type="checkbox" value="">
+                                                        <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                                                        <span class="text-inverse">Remember me</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-5 col-xs-12 forgot-phone text-right">
+                                                <a href="{{ route('password.request') }}"  class="text-right f-w-600 text-inverse"> Forgot Your Password?</a>
+                                            </div>
+                                        </div>
+                                        <div class="row m-t-30">
+                                            <div class="col-md-12">
+                                                <button type="submit" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Sign in</button>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <p class="text-inverse text-left m-b-0">Credentials are only provided by Administrator</p>
+                                                <p class="text-inverse text-left"></p>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <img src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="small-logo.png" width="30" height="30">
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </form>
+                                <!-- end of form -->
+                            <?php } ?>
+
+                        </div>
+                        <!-- Authentication card end -->
                     </div>
+                    <!-- end of col-sm-12 -->
                 </div>
-            </div> 
-            <div class="new-login-box">
-                <a href="javascript:void(0)">
-                    <img src="<?= $root ?>images/ShuleSoft-TM.png" width="50%" height="50%"></a>
-                <div class="white-box">
-                    <h3 class="box-title m-b-0">Sign In to Admin</h3>
-                    <small>Enter your details below</small>
-                    @include('layouts.notifications')
-                    <form class="form-horizontal new-lg-form" id="loginform" method="POST" action="{{ route('login') }}" >
-                        {{ csrf_field() }}
-
-                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }} m-t-20">
-                            <div class="col-xs-12">
-                                <label>Email Address</label>
-                                <input class="form-control" type="text" required=""  name="email" value="{{ old('email') }}" >
-                                @if ($errors->has('email'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('email') }}</strong>
-                                </span>
-                                @endif 
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-xs-12">
-                                <label>Password</label>
-                                <input class="form-control" type="password" required="" placeholder="Password" name="password">
-
-                                @if ($errors->has('password'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('password') }}</strong>
-                                </span>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-12">
-                                <div class="checkbox checkbox-info pull-left p-t-0">
-                                    <input id="checkbox-signup" type="checkbox">
-                                    <label for="checkbox-signup"> Remember me </label>
-                                </div>
-                                <a href="{{ route('password.request') }}"  class="text-dark pull-right"><i class="fa fa-lock m-r-5"></i> Forgot pwd?</a> </div>
-                        </div>
-                        <div class="form-group text-center m-t-20">
-                            <div class="col-xs-12">
-                                <button class="btn btn-info btn-lg btn-block btn-rounded text-uppercase waves-effect waves-light" type="submit">Log In</button>
-                            </div>
-                        </div>
-
-                        <div class="form-group m-b-0">
-                            <div class="col-sm-12 text-center">
-                                <p>Don't have an account? <a href="#" class="text-primary m-l-5" alt="default" data-toggle="modal" data-target="#myModal"><b>Contact Your Administrator</b></a></p>
-                            </div>
-
-                        </div>
-                    </form>
-                    <form class="form-horizontal" id="recoverform" action="https://wrappixel.com/ampleadmin/ampleadmin-html/ampleadmin-minimal/index.html">
-                        <div class="form-group ">
-                            <div class="col-xs-12">
-                                <h3>Recover Password</h3>
-                                <p class="text-muted">Enter your Email and instructions will be sent to you! </p>
-                            </div>
-                        </div>
-                        <div class="form-group ">
-                            <div class="col-xs-12">
-                                <input class="form-control" type="text" required="" placeholder="Email">
-                            </div>
-                        </div>
-                        <div class="form-group text-center m-t-20">
-                            <div class="col-xs-12">
-                                <button class="btn btn-primary btn-lg btn-block text-uppercase waves-effect waves-light" type="submit">Reset</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>            
-
-
-        </section>
-        <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title" id="myModalLabel">System Administrator</h4> </div>
-                    <div class="modal-body">
-                        <h4>To be able to login, your administrator needs to create an account for you</h4>
-                        <p>If you don't know your administrator, please call +255655406004 or +255 22278 0228. <br/>Thanks.</p>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-info waves-effect" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-                <!-- /.modal-content -->
+                <!-- end of row -->
             </div>
-            <!-- /.modal-dialog -->
+            <!-- end of container-fluid -->
+        </section>
+        <!-- Warning Section Starts -->
+        <!-- Older IE warning message -->
+        <!--[if lt IE 9]>
+        <div class="ie-warning">
+        <h1>Warning!!</h1>
+        <p>You are using an outdated version of Internet Explorer, please upgrade <br/>to any of the following web browsers to access this website.</p>
+        <div class="iew-container">
+        <ul class="iew-download">
+        <li>
+        <a href="http://www.google.com/chrome/">
+        <img src="assets/images/browser/chrome.png" alt="Chrome">
+        <div>Chrome</div>
+        </a>
+        </li>
+        <li>
+        <a href="https://www.mozilla.org/en-US/firefox/new/">
+        <img src="assets/images/browser/firefox.png" alt="Firefox">
+        <div>Firefox</div>
+        </a>
+        </li>
+        <li>
+        <a href="http://www.opera.com">
+        <img src="assets/images/browser/opera.png" alt="Opera">
+        <div>Opera</div>
+        </a>
+        </li>
+        <li>
+        <a href="https://www.apple.com/safari/">
+        <img src="assets/images/browser/safari.png" alt="Safari">
+        <div>Safari</div>
+        </a>
+        </li>
+        <li>
+        <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">
+        <img src="assets/images/browser/ie.png" alt="">
+        <div>IE (9 & above)</div>
+        </a>
+        </li>
+        </ul>
         </div>
-        <!-- jQuery -->
-        <script src="<?= $root ?>plugins/bower_components/jquery/dist/jquery.min.js"></script>
-        <!-- Bootstrap Core JavaScript -->
-        <script src="<?= $root ?>bootstrap/dist/js/bootstrap.min.js"></script>
-        <!--slimscroll JavaScript -->
-        <script src="<?= $root ?>js/jquery.slimscroll.js"></script>
-        <!-- Custom Theme JavaScript -->
-        <script src="<?= $root ?>js/custom.min.js"></script>
-        <!--Style Switcher -->
-
+        <p>Sorry for the inconvenience!</p>
+        </div>
+        <![endif]-->
+        <!-- Warning Section Ends -->
+        <!-- Required Jquery -->
+        <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="<?= $root ?>bower_components/tether/dist/js/tether.min.js"></script>
+        <script type="text/javascript" src="<?= $root ?>bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+        <!-- jquery slimscroll js -->
+        <script type="text/javascript" src="<?= $root ?>bower_components/jquery-slimscroll/jquery.slimscroll.js"></script>
+        <!-- modernizr js -->
+        <script type="text/javascript" src="<?= $root ?>bower_components/modernizr/modernizr.js"></script>
+        <script type="text/javascript" src="<?= $root ?>bower_components/modernizr/feature-detects/css-scrollbars.js"></script>
+        <!-- i18next.min.js -->
+        <script type="text/javascript" src="<?= $root ?>bower_components/i18next/i18next.min.js"></script>
+        <script type="text/javascript" src="<?= $root ?>bower_components/i18next-xhr-backend/i18nextXHRBackend.min.js"></script>
+        <script type="text/javascript" src="<?= $root ?>bower_components/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js"></script>
+        <script type="text/javascript" src="<?= $root ?>bower_components/jquery-i18next/jquery-i18next.min.js"></script>
+        <!-- Custom js -->
+        <script type="text/javascript" src="<?= $root ?>assets/js/script.js"></script>
     </body>
 </html>
+

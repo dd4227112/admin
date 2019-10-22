@@ -22,25 +22,23 @@
  */
 //**** We check if your server support php curl.....
 if (!function_exists('curl_init')) {
-   // die('KaribuSMS needs you to install first CURL PHP extension. If you use linux, '
-	   // . 'check it here http://goo.gl/FbtR9n');
+    // die('KaribuSMS needs you to install first CURL PHP extension. If you use linux, '
+    // . 'check it here http://goo.gl/FbtR9n');
 }
 
 //**** Check if JSON is enabled in your server
 if (!function_exists('json_decode')) {
-   // die('karibusms needs you to install first JSON PHP extension.');
+    // die('karibusms needs you to install first JSON PHP extension.');
 }
 
 class karibusms {
 
     private $HEADER = array(
-	'application/x-www-form-urlencoded'
+        'application/x-www-form-urlencoded'
     );
-    private $URL = 'http://karibusms.com/api';
+    private $URL = 'http://158.69.112.216:8282/api';
     private $name;
-
     public $API_KEY;
-
     public $API_SECRET;
 
     /**
@@ -52,14 +50,14 @@ class karibusms {
     public $karibuSMSpro = TRUE;
 
     public function __construct() {
-	if (!defined('API_KEY')) {
-	   // die('define first your API_KEY. To define, just write: '
-		//    . 'define("API_KEY","paste your api key here");');
-	}
-	if (!defined('API_SECRET')) {
-	   // die('define first your API_SECRET. To define, just write:'
-		  //  . ' define("API_SECRET","paste your secret key here");');
-	}
+        if (!defined('API_KEY')) {
+            // die('define first your API_KEY. To define, just write: '
+            //    . 'define("API_KEY","paste your api key here");');
+        }
+        if (!defined('API_SECRET')) {
+            // die('define first your API_SECRET. To define, just write:'
+            //  . ' define("API_SECRET","paste your secret key here");');
+        }
     }
 
     /**
@@ -72,7 +70,7 @@ class karibusms {
      * @return type
      */
     public function set_name($name) {
-	return $this->name = $name;
+        return $this->name = $name;
     }
 
     /**
@@ -80,18 +78,19 @@ class karibusms {
      * @return JSON object 
      */
     public function get_statistics() {
-	$param = array(
-	    'api_secret' => $this->API_SECRET,
-	    'api_key' => $this->API_KEY,
-	    'tag' => 'get_statistics'
-	);
-	return $this->curl($param);
+        $param = array(
+            'api_secret' => $this->API_SECRET,
+            'api_key' => $this->API_KEY,
+            'tag' => 'get_statistics'
+        );
+        return $this->curl($param);
     }
 
     public static function statistics() {
-	$karibu=new karibusms();
-	return $karibu->get_statistics();
+        $karibu = new karibusms();
+        return $karibu->get_statistics();
     }
+
     /**
      * 
      * @param date $start_date, Report start Date in YYYY-MM-DD format. 
@@ -104,14 +103,14 @@ class karibusms {
      *                               
      */
     public function get_report($start_date = '2016-05-17', $end_date = null) {
-	$param = array(
-	    'api_secret' => $this->API_SECRET,
-	    'api_key' => $this->API_KEY,
-	    'start_date' => $start_date,
-	    'end_date' => $end_date == null ? date('Y-m-d') : $end_date,
-	    'tag' => 'get_report'
-	);
-	return $this->curl($param);
+        $param = array(
+            'api_secret' => $this->API_SECRET,
+            'api_key' => $this->API_KEY,
+            'start_date' => $start_date,
+            'end_date' => $end_date == null ? date('Y-m-d') : $end_date,
+            'tag' => 'get_report'
+        );
+        return $this->curl($param);
     }
 
     /**
@@ -121,18 +120,37 @@ class karibusms {
      * @return message from Server
      * @example path $karibusms->send_sms(255714826458,25578658464,"Hello");
      */
-    public function send_sms($phone_number, $message) {
-	$pro = $this->karibuSMSpro == FALSE ? 0 : 1;
-	$name = $this->name == '' ? 0 : $this->name;
-	$fields = array(
-	    'phone_number' => $phone_number,
-	    'message' => $message,
-	    'api_secret' => $this->API_SECRET,
-	    'karibusmspro' => $pro,
-	    'name' => $name,
-	    'api_key' => $this->API_KEY
-	);
-	return $this->curl($fields);
+    public function send_sms($phone_number, $message,$sms_id=null) {
+        $pro = $this->karibuSMSpro == FALSE ? 0 : 1;
+        $name = $this->name == '' ? 0 : $this->name;
+        $fields = array(
+            'phone_number' => $phone_number,
+            'message' => $message,
+            'sms_id'=>$sms_id,
+            'api_secret' => $this->API_SECRET,
+            'karibusmspro' => $pro,
+            'name' => $name,
+            'api_key' => $this->API_KEY
+        );
+        return $this->curl($fields);
+    }
+
+    public function check_phone_status() {
+        $fields = array(
+            'api_secret' => $this->API_SECRET,
+            'tag' => 'get_phone_status',
+            'api_key' => $this->API_KEY
+        );
+        return $this->curl($fields);
+    }
+
+    public function pushSms() {
+        $fields = array(
+            'api_secret' => $this->API_SECRET,
+            'tag' => 'push_sms',
+            'api_key' => $this->API_KEY
+        );
+        return $this->curl($fields);
     }
 
     /**
@@ -141,9 +159,9 @@ class karibusms {
      * @return type
      */
     private function encryptApp($pure_string) {
-	$iv = "1234567812345678";
-	$data = openssl_encrypt($pure_string, 'aes-256-cbc', $this->API_KEY, OPENSSL_RAW_DATA, $iv);
-	return base64_encode($data);
+        $iv = "1234567812345678";
+        $data = openssl_encrypt($pure_string, 'aes-256-cbc', $this->API_KEY, OPENSSL_RAW_DATA, $iv);
+        return base64_encode($data);
     }
 
     /**
@@ -151,22 +169,22 @@ class karibusms {
      * @param type $fields
      */
     private function curl($fields) {
-	// Open connection
-	$ch = curl_init();
-	// Set the url, number of POST vars, POST data
+        // Open connection
+        $ch = curl_init();
+        // Set the url, number of POST vars, POST data
 
-	curl_setopt($ch, CURLOPT_URL, $this->URL);
-	curl_setopt($ch, CURLOPT_HTTPHEADER, $this->HEADER);
+        curl_setopt($ch, CURLOPT_URL, $this->URL);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->HEADER);
 
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-	curl_setopt($ch, CURLOPT_POST, TRUE);
-	curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
 
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-	$result = curl_exec($ch);
-	curl_close($ch);
-	return $result;
+        $result = curl_exec($ch);
+        curl_close($ch);
+        return $result;
     }
 
 }
