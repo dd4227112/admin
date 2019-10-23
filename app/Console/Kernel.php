@@ -400,16 +400,39 @@ class Kernel extends ConsoleKernel {
         }
     }
 
-    public function sendSequenceReminder() {
-        $users = DB::select('select a.activity,a.time,b.email,b.phone, b.name, c.name as client_name from admin.tasks a join admin.users b on a.user_id=b.id join admin.clients c on c.id=a.client_id where date::date=CURRENT_DATE');
-        foreach ($users as $user) {
-            $message = 'Hello  ' . $user->name . ' ,'
-                    . 'Activity to do: ' . $user->activity . ' for ' . $user->client_name . '. Kumbuka kuifanyia kazi na kuandika kwenye status.  Asante';
+    public function getCleanSms($replacements, $message) {
+        $patterns = array(
+            '/#name/i', '/#username/i', '/#email/i', '/#phone/i', '/#usertype/i'
+        );
+        $sms = preg_replace($patterns, $replacements, $message);
+        if (preg_match('/#/', $sms)) {
+            //try to replace that character
+            return preg_replace('/\#[a-zA-Z]+/i', '', $sms);
+        } else {
+            return $sms;
+        }
+    }
 
-            if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
-                DB::statement("insert into public.email (email,subject,body) values ('" . $user->email . "', 'Ratiba Ya Zamu','" . $message . "')");
+    public function sendSequenceReminder() {
+        $sequences = \App\Models\Sequence::all();
+        foreach ($sequences as $sequence) {
+            $users = DB::select("select a.name,a.username,a.email,a.phone,a.usertype,b.email_enabled,b.sms_enabled,a.schema_name,a.id,concat(c.firstname,' ',c.lastname ) as csr_name, c.phone as csr_phone from admin.all_users a,admin.all_setting b, admin.users c where b.schema_name=a.schema_name and b.account_manager_id=c.id and a.table not in ('parent','student') and a.id in (select user_id from admin.users_sequences a,admin.sequences
+b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date=CURRENT_DATE and b.interval=" . $sequence->interval . " )");
+            if (count($users) > 0) {
+                foreach ($users as $user) {
+                    $replacements = array(
+                        $user->name, $user->username, $user->email, $user->phone, $user->usertype
+                    );
+                    $message = $this->getCleanSms($replacements, $sequence->message). ''
+                            . '. Kwa Msaada Nipigie: '.$user->csr_name.' (Account Manager - '.$user->csr_phone.')';
+                    if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
+                        DB::statement("insert into ".$user->schema_name.".email (email,subject,body) values ('" . $user->email . "', '" . $sequence->title . "','" . $message . "')");
+                    }
+                    DB::statement("insert into public.sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
+                    DB::table('users_sequences')->insert(['user_id' => $user->id, 'table' => $user->table, 'sequence_id' => $sequence->id, 'schema_name' => $user->schema_name
+                    ]);
+                }
             }
-            DB::statement("insert into public.sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
         }
     }
 
