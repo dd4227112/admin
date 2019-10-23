@@ -181,8 +181,44 @@ class Customer extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id) {
-        //
+    public function update() {
+
+        $this->data['faqs'] = DB::table('faq')->get();
+        return view('customer.message.updates', $this->data);
+    }
+
+    public function createUpdate() {
+        if ($_POST) {
+            $this->validate(request(), [
+                'for' => 'required',
+                'message' => 'required',
+                'release_date' => 'date'
+            ]);
+            DB::table('admin.updates')->insert(array_merge(request()->except(['_token', '_wysihtml5_mode', 'for', 'subject']), ['for' => implode(',', request('for'))]));
+
+            $users = DB::table('all_users')->whereIn('usertype', request('for'))->get();
+            foreach ($users as $user) {
+                if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
+                    DB::table($user->schema_name . '.email')->insert(array(
+                        'email' => $user->email,
+                        'body' => str_replace('href="', 'href="' . $user->schema_name . '.shulesoft.com/', request('message')),
+                        'subject' => strlen(request('subject')) > 4 ? request('subject') : 'ShuleSoft Latest Updates: ' . request('release_date'),
+                        'user_id' => $user->id,
+                        'table' => $user->table
+                    ));
+                    DB::table('public.sms')->insert(array(
+                        'phone_number' => $user->phone,
+                        'body' => strip_tags(request('message')),
+                        'table' => $user->table,
+                        'user_id' => $user->id,
+                        'table' => $user->table
+                    ));
+                }
+            }
+            return redirect('customer/update')->with('success','success');
+        }
+        $this->data['usertypes'] = DB::select('select distinct usertype from admin.all_users');
+        return view('customer.message.add_updates', $this->data);
     }
 
     /**
@@ -223,15 +259,15 @@ class Customer extends Controller {
         if ($_POST) {
 
             $data = array_merge(request()->all(), ['user_id' => Auth::user()->id]);
-            $task=\App\Models\Task::create($data);
-            if((int) request('to_user_id') >0){
-                $user=\App\Models\User::find(request('to_user_id'));
-                $message='Hello '.$user->firstname.'<br/>'
+            $task = \App\Models\Task::create($data);
+            if ((int) request('to_user_id') > 0) {
+                $user = \App\Models\User::find(request('to_user_id'));
+                $message = 'Hello ' . $user->firstname . '<br/>'
                         . 'A task has been allocated to you'
                         . '<ul>'
-                        . '<li>Task: '.$task->activity.'</li>'
-                        . '<li>Type: '.$task->taskType->name.'</li>'
-                        . '<li>Deadline: '.$task->date.'</li>'
+                        . '<li>Task: ' . $task->activity . '</li>'
+                        . '<li>Type: ' . $task->taskType->name . '</li>'
+                        . '<li>Deadline: ' . $task->date . '</li>'
                         . '</ul>';
                 $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
             }
