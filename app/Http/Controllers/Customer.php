@@ -206,6 +206,7 @@ class Customer extends Controller {
                         'user_id' => $user->id,
                         'table' => $user->table
                     ));
+                                      
                     DB::table('public.sms')->insert(array(
                         'phone_number' => $user->phone,
                         'body' => strip_tags(request('message')),
