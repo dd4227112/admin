@@ -207,12 +207,11 @@ class Customer extends Controller {
                         'table' => $user->table
                     ));
                                       
-                    DB::table('public.sms')->insert(array(
+                    DB::table($user->schema_name . '.sms')->insert(array(
                         'phone_number' => $user->phone,
                         'body' => strip_tags(request('message')),
                         'table' => $user->table,
                         'user_id' => $user->id,
-                        'table' => $user->table
                     ));
                 }
             }
