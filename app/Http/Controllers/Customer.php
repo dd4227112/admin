@@ -206,15 +206,16 @@ class Customer extends Controller {
                         'user_id' => $user->id,
                         'table' => $user->table
                     ));
-                        dd($user->schema_name) ;             
+                }               
                     DB::table($user->schema_name . '.sms')->insert(array(
                         'phone_number' => $user->phone,
                         'body' => strip_tags(request('message')),
                         'table' => $user->table,
                         'user_id' => $user->id,
                     ));
-                }
+                
             }
+            
             return redirect('customer/update')->with('success','success');
         }
         $this->data['usertypes'] = DB::select('select distinct usertype from admin.all_users');
