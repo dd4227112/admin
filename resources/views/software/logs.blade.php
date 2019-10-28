@@ -1,11 +1,13 @@
 @extends('layouts.app')
 @section('content')
 
+<script type="text/javascript" src="<?=url('/public') ?>/assets/select2/select2.js"></script> 
+
 <div class="main-body">
     <div class="page-wrapper">
         <div class="page-header">
             <div class="page-header-title">
-                <h4>System Erros</h4>
+                <h4>System Errors</h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -113,7 +115,7 @@
                     <div class="form-group row col-lg-offset-6">
                         <label class="col-sm-4 col-form-label">Select School</label>
                         <div class="col-sm-4">
-                            <select name="select" class="form-control" id="schema_select">
+                            <select name="select" class="form-control select2" id="schema_select">
                                 <option value="0">Select</option>
                                 <?php
                                 $schemas = DB::select('select distinct "schema_name" from admin.error_logs');
@@ -188,6 +190,7 @@
                                             </thead>
                                             <tbody>
                                                 <?php
+                                                
                                                 if (isset($error_logs) && count($error_logs) > 0) {
                                                     ?>
                                                     @foreach($error_logs as $log)
@@ -354,5 +357,13 @@
         $('#log_summary').show();
         $('#custom_logs').hide();
     });
+    
+    
+    
+    $('#schema_select').select2({
+  placeholder: "Select a State",
+    allowClear: true
+});
+
 </script>
 @endsection

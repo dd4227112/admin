@@ -1,5 +1,12 @@
 <?php
 
+function base_url(){
+ 
+$root = url('/') . '/public/';
+   
+return $root;   
+}
+
 function mailConfig() {
     
 }
