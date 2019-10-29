@@ -156,13 +156,13 @@
                                         <table id="error_log_table" class="table table-striped table-bordered nowrap">
                                             <thead>
                                                 <tr>
-                                                    <th>#</th>
+                                                    <th>#</th>                                                
+                                                    <th>Date</th>
                                                     <th>Client Name</th>
                                                     <th>Error Message</th>
                                                     <th>File</th>
                                                     <th>url</th>
                                                     <th>Created By</th>
-                                                    <th>Date</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -289,12 +289,13 @@
             },
             "columns": [
                 {"data": "id"},
+                
+                {"data": "created_at"},
                 {"data": "schema_name"},
                 {"data": "error_message"},
                 {"data": "file"},
                 {"data": "url"},
                 {"data": "created_by"},
-                {"data": "created_at"},
                 {"data": ""}
             ],
             "columnDefs": [
@@ -302,8 +303,8 @@
                     "targets": 7,
                     "data": null,
                     "render": function (data, type, row, meta) {
-
-                        return '<a href="#" id="' + row.id + '" class="label label-danger dlt_log" onmousedown="delete_log(' + row.id + ')" onclick="return false">Delete</a>';
+                        
+                                           return '<a href="#" id="' + row.id + '" class="label label-danger dlt_log" onmousedown="delete_log(' + row.id + ')" onclick="return false">Delete</a>'+ '<a href="#" id="' + row.id + '" class="label label-info dlt_log" onmousedown="View_log(' + row.id + ')" onclick="return false">View</a>';
 
 
                     }
@@ -316,7 +317,12 @@
                 $(row).attr('id', 'log' + data.id);
             }
         });
-        delete_log = function (a) {
+        View_log = function (a) {
+       
+            window.location.href = "<?= url('software/Readlogs') ?>/" + a;
+        },
+  
+    delete_log = function (a) {
             $.ajax({
                 url: '<?= url('software/logsDelete') ?>/null',
                 method: 'get',
@@ -328,6 +334,7 @@
                 }
             });
         }
+        
     }
     );
     $('#schema_select').change(function () {

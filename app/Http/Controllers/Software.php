@@ -333,6 +333,16 @@ ORDER  BY conrelid::regclass::text, contype DESC";
         count($tag) == 1 ? $tag->delete() : '';
         echo 1;
     }
+    
+      public function Readlogs() {
+        $id = request()->segment(3);
+        $tag = \App\Models\ErrorLog::find($id);
+        
+       $this->data['error_message']= $tag->error_message.'<br>'.$tag->url.'<br>';
+        return view('customer.view', $this->data);
+       
+        //echo 1;
+    }
 
     public function logsView() {
         $type = request('type');
