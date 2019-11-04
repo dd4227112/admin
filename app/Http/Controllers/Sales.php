@@ -221,6 +221,11 @@ group by ownership');
                 $sql = "select  * from admin.all_reply_sms where opened=1";
                 return $this->ajaxTable('error_logs', ['from', 'message', 'table', 'user_id', 'sent_timestamp', 'created_at', 'schema_name'], $sql);
                 break;
+            
+            case 'requirements':
+                 $sql = "select b.id, b.activity,b.created_at,a.name,c.firstname  from admin.clients a join admin.tasks b on a.id=b.client_id join admin.users c on c.id=b.to_user_id ";
+                  return $this->ajaxTable('tasks', ['activity','name','firstname','created_at'],$sql);
+                break;
             default:
                 break;
         }

@@ -25,6 +25,8 @@ class Software extends Controller {
             return view($view, $this->data);
         }
     }
+    
+    
 
     public function server() {
         $this->data['file'] = '';
@@ -326,6 +328,15 @@ ORDER  BY conrelid::regclass::text, contype DESC";
         $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1 '))->first();
         return view('software.logs', $this->data);
     }
+    
+     public function CustomerRequirement() {
+        $schema = request()->segment(3);
+        $where = strlen($schema) > 3 ? ' where "schema_name"=\'' . $schema . '\' ' : '';
+        $this->data['error_logs'] = DB::select('select * from admin.error_logs ' . $where);
+        $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1 '))->first();
+        return view('software.customer_requirement', $this->data);
+    } 
+    
 
     public function logsDelete() {
         $id = request('id');
@@ -340,8 +351,7 @@ ORDER  BY conrelid::regclass::text, contype DESC";
     
       public function Readlogs() {
         $id = request()->segment(3);
-        $tag = \App\Models\ErrorLog::find($id);
-        
+        $tag = \App\Models\ErrorLog::find($id);       
        $this->data['error_message']= $tag->error_message.'<br>'.$tag->url.'<br>';
         return view('customer.view', $this->data);
        

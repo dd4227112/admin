@@ -270,7 +270,7 @@
                                                         $tasks = \App\Models\Task::where('client_id', $client_id)->orderBy('created_at', 'desc')->get();
                                                         foreach ($tasks as $task) {
                                                             ?>
-                                                            <div class="social-timelines p-relative o-hidden">
+                                                            <div class="social-timelines p-relative o-hidden" id="removetag<?=$task->id?>">
                                                                 <div class="row timeline-right p-t-35">
                                                                     <div class="col-xs-2 col-sm-1">
                                                                         <div class="social-timelines-left">
@@ -281,7 +281,7 @@
                                                                         <div class="card m-0">
                                                                             <span class="dropdown-toggle addon-btn text-muted f-right service-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" role="tooltip"></span>
                                                                             <div class="dropdown-menu dropdown-menu-right b-none services-list">
-                                                                                <a class="dropdown-item" href="#">Remove tag</a>
+                                                                                <a class="dropdown-item" href="#" onmousedown="removeTag(<?=$task->id?>)">Remove tag</a>
                                                                                 <a class="dropdown-item" href="#">Report Photo</a>
                                                                                 <a class="dropdown-item" href="#">Hide From Timeline</a>
                                                                                 <a class="dropdown-item" href="#">Blog User</a>
@@ -778,6 +778,19 @@ foreach ($logs as $log) {
                 $('#search_result').html(data);
             }
         });
-    })
+    });
+    
+        removeTag = function (a) {
+            $.ajax({
+                url: '<?= url('customer/removeTag') ?>/null',
+                method: 'get',
+                data: {id: a},
+                success: function (data) {
+                    if (data == '1') {
+                        $('#removetag' + a).fadeOut();
+                    }
+                }
+            });
+        }
 </script>
 @endsection
