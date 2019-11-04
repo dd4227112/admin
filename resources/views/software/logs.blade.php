@@ -174,7 +174,7 @@
                             <div class="tab-pane" id="profile3" role="tabpanel" aria-expanded="false">
                                 <div class="card-block">
                                     <div class="dt-responsive table-responsive">
-                                        <table id="simpletable" class="table table-striped table-bordered nowrap">
+                                        <table id="simpletable_resolved_errors" class="table table-striped table-bordered nowrap">
                                             <thead>
                                                 <tr>
                                                     <th>Client Name</th>
@@ -182,28 +182,11 @@
                                                     <th>File</th>
                                                     <th>url</th>
                                                     <th>Created By</th>
-                                                    <th>Date</th>
-                                                    <th>Action</th>
+                                                    <th>Resolved Date</th>
+                                                    <th>Resolved By</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                <?php
-                                                if (isset($error_logs) && count($error_logs) > 0) {
-                                                    ?>
-                                                    @foreach($error_logs as $log)
 
-                                                    <tr>
-                                                        <td>{{$log->schema_name}}</td>
-                                                        <td>{{$log->error_message}}</td>
-                                                        <td>{{$log->file}}</td>
-                                                        <td>{{$log->url}}</td>
-                                                        <td>ID: {{$log->created_by}}, Table: {{$log->created_by_table}}</td>
-                                                        <td>{{$log->created_at}}</td>
-                                                        <td></td>
-                                                    </tr>
-                                                    @endforeach
-                                                <?php } ?>
-                                            </tbody>
                                             <tfoot>
                                                 <tr>
                                                     <th>Client Name</th>
@@ -211,8 +194,8 @@
                                                     <th>File</th>
                                                     <th>url</th>
                                                     <th>Created By</th>
-                                                    <th>Date</th>
-                                                    <th>Action</th>
+                                                    <th>Resolved Date</th>
+                                                    <th>Resolved By</th>
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -307,7 +290,7 @@
 
                 }
             ],
-                    
+
             rowCallback: function (row, data) {
                 //$(row).addClass('selectRow');
                 $(row).attr('id', 'log' + data.id);
@@ -353,6 +336,29 @@
         $(this).hide();
         $('#log_summary').show();
         $('#custom_logs').hide();
+    });
+    $(document).ready(function () {
+        var table = $('#simpletable_resolved_errors').DataTable({
+            "processing": true,
+            "serverSide": true,
+            'serverMethod': 'post',
+            'ajax': {
+                'url': "<?= url('sales/show/null?page=errors_resolved') ?>"
+            },
+            "columns": [
+                {"data": "schema_name"},
+                {"data": "error_message"},
+                {"data": "file"},
+                {"data": "url"},
+                {"data": "created_by"},
+                {"data": "deleted_at"},
+                {"data": "resolved_by"}
+            ],
+
+            rowCallback: function (row, data) {
+                $(row).attr('id', 'log' + data.id);
+            }
+        });
     });
 </script>
 @endsection
