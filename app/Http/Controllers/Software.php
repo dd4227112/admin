@@ -341,7 +341,11 @@ ORDER  BY conrelid::regclass::text, contype DESC";
     public function logsDelete() {
         $id = request('id');
         $tag = \App\Models\ErrorLog::find($id);
-        count($tag) == 1 ? $tag->delete() : '';
+        if (count($tag) == 1) {
+            $tag->deleted_by = \Auth::user()->id;
+            $tag->save();
+            $tag->delete();
+        }
         echo 1;
     }
     
@@ -378,12 +382,12 @@ ORDER  BY conrelid::regclass::text, contype DESC";
     }
 
     public function setBankParameters() {
-        $check = DB::table(request('schema').'.bank_accounts_integrations')->where('bank_account_id', request('bank_id'));
+        $check = DB::table(request('schema') . '.bank_accounts_integrations')->where('bank_account_id', request('bank_id'));
         if (count($check->first()) == 1) {
             $check->update([request('tag') => request('val')]);
             echo 'Records updated successfully';
         } else {
-            DB::table(request('schema').'.bank_accounts_integrations')->insert([
+            DB::table(request('schema') . '.bank_accounts_integrations')->insert([
                 'bank_account_id' => request('bank_id'),
                 request('tag') => request('val')
             ]);
@@ -409,4 +413,5 @@ ORDER  BY conrelid::regclass::text, contype DESC";
             echo 'Records updated successfully ';
         }
     }
+
 }

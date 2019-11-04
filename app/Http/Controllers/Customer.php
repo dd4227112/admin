@@ -17,16 +17,13 @@ class Customer extends Controller {
      *
      * @return void
      */
-    
-   public $patterns = array(
+    public $patterns = array(
         '/#name/i', '/#username/i', '/#default_password/i', '/#email/i', '/#phone/i', '/#role/i', '/#student_name/i', '/#invoice/i', '/#balance/i'
-    );   
+    );
+
     public function __construct() {
         $this->middleware('auth');
     }
-    
-    
-    
 
     /**
      * Display a listing of the resource.
@@ -205,12 +202,12 @@ class Customer extends Controller {
 
             $users = DB::table('all_users')->whereIn('usertype', request('for'))->get();
             foreach ($users as $user) {
-                
-          $replacements = array(
+
+                $replacements = array(
                     $user->name
-                );       
-          $sms = $this->getCleanSms($replacements, strip_tags(request('message')));       
-                
+                );
+                $sms = $this->getCleanSms($replacements, strip_tags(request('message')));
+
                 if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
                     DB::table($user->schema_name . '.email')->insert(array(
                         'email' => $user->email,
@@ -219,23 +216,22 @@ class Customer extends Controller {
                         'user_id' => $user->id,
                         'table' => $user->table
                     ));
-                }               
-                    DB::table($user->schema_name . '.sms')->insert(array(
-                        'phone_number' => $user->phone,
-                        'body' => $sms,
-                        'table' => $user->table,
-                        'user_id' => $user->id,
-                    ));
-                
+                }
+                DB::table($user->schema_name . '.sms')->insert(array(
+                    'phone_number' => $user->phone,
+                    'body' => $sms,
+                    'table' => $user->table,
+                    'user_id' => $user->id,
+                ));
             }
-            
-            return redirect('customer/update')->with('success','success');
+
+            return redirect('customer/update')->with('success', 'success');
         }
         $this->data['usertypes'] = DB::select('select distinct usertype from admin.all_users');
         return view('customer.message.add_updates', $this->data);
     }
-    
-     public function getCleanSms($replacements, $message) {
+
+    public function getCleanSms($replacements, $message) {
 
         $sms = preg_replace($this->patterns, $replacements, $message);
         if (preg_match('/#/', $sms)) {
@@ -244,8 +240,7 @@ class Customer extends Controller {
         } else {
             return $sms;
         }
-    }   
-    
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -346,8 +341,12 @@ class Customer extends Controller {
     }
 
     public function calls() {
-        $this->data['levels'] = [];
-        return view('customer/analysis', $this->data);
+        $schema = request()->segment(3);
+        $where = strlen($schema) > 3 ? ' where "schema_name"=\'' . $schema . '\' ' : '';
+        $this->data['call_logs'] = DB::select('select * from admin.calls ' . $where);
+        $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.calls  group by "schema_name" order by count desc limit 1 '))->first();
+        $this->data['schools_connected'] = DB::select('select count(*), "table" from admin.calls  group by "table" order by "table"');
+        return view('customer.call.index', $this->data);
     }
 
     public function logs() {
@@ -424,6 +423,49 @@ class Customer extends Controller {
         $school_id = request()->segment(4);
         DB::table($schema . '.setting')->update(['school_id' => $school_id]);
         return redirect()->back()->with('success', 'success');
+    }
+
+    public function emailsms() {
+        $schema = request()->segment(3);
+        $where = strlen($schema) > 3 ? ' where "schema_name"=\'' . $schema . '\' ' : '';
+        $this->data['sms_logs'] = DB::select('select * from admin.all_reply_sms ' . $where);
+        $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.all_reply_sms  group by "schema_name" order by count desc limit 1 '))->first();
+        $this->data['user_groups'] = DB::select('select count(*), "table" from admin.all_reply_sms  group by "table" order by "table"');
+        return view('customer.message.incoming_sms', $this->data);
+    }
+
+    public function epayments() {
+        $schema = request()->segment(3);
+        $where = strlen($schema) > 3 ? ' and "schema_name"=\'' . $schema . '\' ' : '';
+        $this->data['epayment_logs'] = DB::select('select * from admin.all_payments where token is not null ' . $where);
+        $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.all_payments where token is not null  group by "schema_name" order by count desc limit 1 '))->first();
+        $this->data['schools_connected'] = \collect(DB::select('select count(*) as count from admin.all_setting where payment_integrated=1 '))->first()->count;
+        return view('customer.epayment.index', $this->data);
+    }
+
+    public function addCall() {
+        $this->data['create'] = [];
+        if ($_POST) {
+            $table = request('source');
+            $phone = validate_phone_number(request('phone'));
+            if (!is_array($phone)) {
+                return redirect()->back()->with('error', 'This phone number is not valid ');
+            }
+            $object = [
+                'name' => request('name'),
+                'number' => $phone[1],
+                'type' => request('type'),
+                'time' => request('date'),
+                'schema_name' => request('schema_name'),
+                'table' => in_array(strtolower($table), ['parent', 'teacher', 'student', 'setting', 'user']) ? strtolower($table) : '',
+                'created_by' => \Auth::user()->id,
+                'about' => request('about'),
+                'source' => request('source')
+            ];
+            DB::table('calls')->insert($object);
+           return redirect('customer/calls')->with('success', 'Call Recorded Successfully ');
+        }
+        return view('customer.call.create', $this->data);
     }
 
 }

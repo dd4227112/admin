@@ -207,7 +207,19 @@ group by ownership');
                 return $this->ajaxTable('all_setting', ['sname', 'phone', 'address', 'email', 'payment_integrated', 'created_at']);
                 break;
             case 'errors':
-                  return $this->ajaxTable('error_logs', ['file', 'error_message', 'route', 'url', 'error_instance', 'created_at','schema_name']);
+                $sql = "select * from admin.error_logs where deleted_at is null";
+                return $this->ajaxTable('error_logs', ['file', 'error_message', 'route', 'url', 'error_instance', 'created_at', 'schema_name'], $sql);
+                break;
+            case 'errors_resolved':
+                $sql = "select a.*,b.name as resolved_by from admin.error_logs a left join admin.users b on b.id=a.deleted_by where deleted_at is not null";
+                return $this->ajaxTable('error_logs', ['file', 'error_message', 'route', 'url', 'error_instance', 'created_at', 'schema_name'], $sql);
+                break;
+            case 'sms_reply_logs':
+                return $this->ajaxTable('all_reply_sms', ['from', 'message', 'table', 'user_id', 'sent_timestamp', 'created_at', 'schema_name']);
+                break;
+             case 'opened_sms':
+                $sql = "select  * from admin.all_reply_sms where opened=1";
+                return $this->ajaxTable('error_logs', ['from', 'message', 'table', 'user_id', 'sent_timestamp', 'created_at', 'schema_name'], $sql);
                 break;
             
             case 'requirements':

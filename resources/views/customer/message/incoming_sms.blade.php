@@ -7,7 +7,7 @@
     <div class="page-wrapper">
         <div class="page-header">
             <div class="page-header-title">
-                <h4>System Errors</h4>
+                <h4>SMS received</h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -18,7 +18,7 @@
                     </li>
                     <li class="breadcrumb-item"><a href="#!">Dashboard</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Error Logs</a>
+                    <li class="breadcrumb-item"><a href="#!">Incoming SMS</a>
                     </li>
                 </ul>
             </div>
@@ -29,7 +29,7 @@
                 <div class="card table-card widget-danger-card col-lg-6">
                     <div class="card-footer">
                         <div class="task-list-table">
-                            <p class="task-due"><strong>School with highest Error Logs : </strong><strong class="label label-danger"><?= count($danger_schema) == 1 ? $danger_schema->schema_name : '' ?></strong></p>
+                            <p class="task-due"><strong>School with highest SMS logs: </strong><strong class="label label-danger"><?= count($danger_schema) == 1 ? $danger_schema->schema_name : '' ?></strong></p>
                         </div>
                         <div class="task-board m-0">
                             <a href="#" class="btn btn-info btn-mini b-none" title="view"><i class="icofont icofont-eye-alt m-0"></i></a>
@@ -45,13 +45,13 @@
                 <div class="col-md-6 col-xl-3">
                     <div class="card client-blocks dark-primary-border">
                         <div class="card-block">
-                            <h5>All Errors</h5>
+                            <h5>All SMS Received</h5>
                             <ul>
                                 <li>
                                     <i class="icofont icofont-document-folder"></i>
                                 </li>
                                 <li class="text-right">
-                                    <?= count($error_logs) ?>
+                                    <?= count($sms_logs) ?>
                                 </li>
                             </ul>
                         </div>
@@ -59,56 +59,25 @@
                 </div>
                 <!-- Documents card end -->
                 <!-- New clients card start -->
-                <div class="col-md-6 col-xl-3">
-                    <div class="card client-blocks warning-border">
-                        <div class="card-block">
-                            <h5>Database Errors</h5>
-                            <ul>
-                                <li>
-                                    <i class="icofont icofont-ui-user-group text-warning"></i>
-                                </li>
-                                <li class="text-right text-warning">
-
-                                </li>
-                            </ul>
+                <?php
+                foreach ($user_groups as $group) {
+                    ?>
+                    <div class="col-md-6 col-xl-3">
+                        <div class="card client-blocks warning-border">
+                            <div class="card-block">
+                                <h5><?= $group->table == '' ? 'Unknown group' : $group->table ?></h5>
+                                <ul>
+                                    <li>
+                                        <i class="icofont icofont-ui-user-group text-warning"></i>
+                                    </li>
+                                    <li class="text-right text-warning">
+                                        <?= $group->count ?>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- New clients card end -->
-                <!-- New files card start -->
-                <div class="col-md-6 col-xl-3">
-                    <div class="card client-blocks danger-border">
-                        <div class="card-block">
-                            <h5>Fatal Errors </h5>
-                            <ul>
-                                <li>
-                                    <i class="icofont icofont-files text-danger"></i>
-                                </li>
-                                <li class="text-right text-danger">
-
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- New files card end -->
-                <!-- Open Project card start -->
-                <div class="col-md-6 col-xl-3">
-                    <div class="card client-blocks">
-                        <div class="card-block">
-                            <h5>Resolved Errors</h5>
-                            <ul>
-                                <li>
-                                    <i class="icofont icofont-ui-folder text-primary"></i>
-                                </li>
-                                <li class="text-right text-primary">
-
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                <?php } ?>
 
                 <!-- Open Project card end -->
                 <div class="col-md-12 col-xl-12">
@@ -118,7 +87,7 @@
                             <select name="select" class="form-control select2" id="schema_select">
                                 <option value="0">Select</option>
                                 <?php
-                                $schemas = DB::select('select distinct "schema_name" from admin.error_logs');
+                                $schemas = DB::select('select distinct "schema_name" from admin.all_reply_sms');
                                 foreach ($schemas as $schema) {
                                     ?>
                                     <option value="<?= $schema->schema_name ?>"><?= $schema->schema_name ?></option>
@@ -134,12 +103,12 @@
                         <ul class="nav nav-tabs md-tabs" role="tablist">
                             <li class="nav-item complete">
                                 <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true">
-                                    <strong>( <?= count($error_logs) ?>)</strong> Errors
+                                    <strong>( <?= count($sms_logs) ?>)</strong> SMS
                                 </a>
                                 <div class="slide"></div>
                             </li>
                             <li class="nav-item complete">
-                                <a class="nav-link" data-toggle="tab" href="#profile3" role="tab" aria-expanded="false">Resolved</a>
+                                <a class="nav-link" data-toggle="tab" href="#profile3" role="tab" aria-expanded="false">Read SMS</a>
                                 <div class="slide"></div>
                             </li>
                             <li class="nav-item complete">
@@ -153,20 +122,29 @@
 
                                 <div class="card-block">
                                     <div class="dt-responsive table-responsive">
-                                        <table id="error_log_table" class="table table-striped table-bordered nowrap">
+                                        <table id="sms_log_table" class="table table-striped table-bordered nowrap">
                                             <thead>
                                                 <tr>
                                                     <th>#</th>                                                
                                                     <th>Date</th>
-                                                    <th>Client Name</th>
-                                                    <th>Error Message</th>
-                                                    <th>File</th>
-                                                    <th>url</th>
-                                                    <th>Created By</th>
+                                                    <th>From</th>
+                                                    <th>Message</th>
+                                                    <th>Group</th>
+                                                    <th>School</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
-
+                                            <tfoot>
+                                                <tr>
+                                                    <th>#</th>                                                
+                                                    <th>Date</th>
+                                                    <th>From</th>
+                                                    <th>Message</th>
+                                                    <th>Group</th>
+                                                    <th>School</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </tfoot>
                                         </table>
                                     </div>
                                 </div>
@@ -176,28 +154,26 @@
                             <div class="tab-pane" id="profile3" role="tabpanel" aria-expanded="false">
                                 <div class="card-block">
                                     <div class="dt-responsive table-responsive">
-                                        <table id="simpletable_resolved_errors" class="table table-striped table-bordered nowrap">
+                                        <table id="simpletable_read_sms" class="table table-striped table-bordered nowrap">
                                             <thead>
                                                 <tr>
-                                                    <th>Client Name</th>
-                                                    <th>Error Message</th>
-                                                    <th>File</th>
-                                                    <th>url</th>
-                                                    <th>Created By</th>
-                                                    <th>Resolved Date</th>
-                                                    <th>Resolved By</th>
+                                                    <th>#</th>                                                
+                                                    <th>Date</th>
+                                                    <th>From</th>
+                                                    <th>Message</th>
+                                                    <th>Group</th>
+                                                    <th>School</th>
                                                 </tr>
                                             </thead>
 
                                             <tfoot>
                                                 <tr>
-                                                    <th>Client Name</th>
-                                                    <th>Error Message</th>
-                                                    <th>File</th>
-                                                    <th>url</th>
-                                                    <th>Created By</th>
-                                                    <th>Resolved Date</th>
-                                                    <th>Resolved By</th>
+                                                    <th>#</th>                                                
+                                                    <th>Date</th>
+                                                    <th>From</th>
+                                                    <th>Message</th>
+                                                    <th>Group</th>
+                                                    <th>School</th>
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -226,14 +202,14 @@
                                                             </thead>
                                                             <tbody>
                                                                 <?php
-                                                                $sql = 'select error_instance,count(*) from admin.error_logs group by error_instance';
+                                                                $sql = 'select "schema_name",count(*) from admin.all_reply_sms group by "schema_name"';
                                                                 $logs = DB::select($sql);
                                                                 foreach ($logs as $log) {
                                                                     ?>
                                                                     <tr>
                                                                         <td>
 
-                                                                            <span class="table-msg"><?= $log->error_instance ?></span>
+                                                                            <span class="table-msg"><?= $log->schema_name ?></span>
                                                                         </td>
                                                                         <td><?= $log->count ?></td>
                                                                         <td> <a href="#" onmousedown='getErrorPage("<?= $log->count ?>")' onclick="return false" class="btn btn-sm btn-warning btn-outline-warning waves-effect md-trigger">View</a></td>
@@ -262,31 +238,29 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        var table = $('#error_log_table').DataTable({
+        var table = $('#sms_log_table').DataTable({
             "processing": true,
             "serverSide": true,
             'serverMethod': 'post',
             'ajax': {
-                'url': "<?= url('sales/show/null?page=errors') ?>"
+                'url': "<?= url('sales/show/null?page=sms_reply_logs') ?>"
             },
             "columns": [
-
                 {"data": "id"},
                 {"data": "created_at"},
+                {"data": "from"},
+                {"data": "message"},
+                {"data": "table"},
                 {"data": "schema_name"},
-                {"data": "error_message"},
-                {"data": "file"},
-                {"data": "url"},
-                {"data": "created_by"},
                 {"data": ""}
             ],
             "columnDefs": [
                 {
-                    "targets": 7,
+                    "targets": 6,
                     "data": null,
                     "render": function (data, type, row, meta) {
 
-                        return '<a href="#" id="' + row.id + '" class="label label-danger dlt_log" onmousedown="delete_log(' + row.id + ')" onclick="return false">Delete</a>' + '<a href="#" id="' + row.id + '" class="label label-info dlt_log" onmousedown="View_log(' + row.id + ')" onclick="return false">View</a>';
+                        return '<a href="#" id="' + row.id + '" class="label label-danger dlt_log" onmousedown="delete_log(' + row.id + ')" onclick="return false">Delete</a>';
 
 
                     }
@@ -347,21 +321,20 @@
     });
 
     $(document).ready(function () {
-        var table = $('#simpletable_resolved_errors').DataTable({
+        var table = $('#simpletable_read_sms').DataTable({
             "processing": true,
             "serverSide": true,
             'serverMethod': 'post',
             'ajax': {
-                'url': "<?= url('sales/show/null?page=errors_resolved') ?>"
+                'url': "<?= url('sales/show/null?page=opened_sms') ?>"
             },
             "columns": [
-                {"data": "schema_name"},
-                {"data": "error_message"},
-                {"data": "file"},
-                {"data": "url"},
-                {"data": "created_by"},
-                {"data": "deleted_at"},
-                {"data": "resolved_by"}
+                {"data": "id"},
+                {"data": "created_at"},
+                {"data": "from"},
+                {"data": "message"},
+                {"data": "table"},
+                {"data": "schema_name"}
             ],
 
             rowCallback: function (row, data) {
