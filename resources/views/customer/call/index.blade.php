@@ -7,7 +7,7 @@
     <div class="page-wrapper">
         <div class="page-header">
             <div class="page-header-title">
-                <h4>e-Payment Summary</h4>
+                <h4>Calls Summary</h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -18,7 +18,7 @@
                     </li>
                     <li class="breadcrumb-item"><a href="#!">Dashboard</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">e-Payments </a>
+                    <li class="breadcrumb-item"><a href="#!">Calls </a>
                     </li>
                 </ul>
             </div>
@@ -29,7 +29,7 @@
                 <div class="card table-card widget-danger-card col-lg-6">
                     <div class="card-footer">
                         <div class="task-list-table">
-                            <p class="task-due"><strong>School with highest e-payments: </strong><strong class="label label-danger"><?= count($danger_schema) == 1 ? $danger_schema->schema_name : '' ?></strong></p>
+                            <p class="task-due"><strong>School with highest calls: </strong><strong class="label label-danger"><?= count($danger_schema) == 1 ? $danger_schema->schema_name : '' ?></strong></p>
                         </div>
                         <div class="task-board m-0">
                             <a href="#" class="btn btn-info btn-mini b-none" title="view"><i class="icofont icofont-eye-alt m-0"></i></a>
@@ -45,13 +45,13 @@
                 <div class="col-md-6 col-xl-3">
                     <div class="card client-blocks dark-primary-border">
                         <div class="card-block">
-                            <h5>School Connected with NMB</h5>
+                            <h5>Total Calls</h5>
                             <ul>
                                 <li>
                                     <i class="icofont icofont-document-folder"></i>
                                 </li>
                                 <li class="text-right">
-                                    <?= $schools_connected ?>
+                                    <?= DB::table('admin.calls')->count() ?>
                                 </li>
                             </ul>
                         </div>
@@ -59,23 +59,28 @@
                 </div>
                 <!-- Documents card end -->
                 <!-- New clients card start -->
-
-                <div class="col-md-6 col-xl-3">
-                    <div class="card client-blocks warning-border">
-                        <div class="card-block">
-                            <h5>Schools with Other Banks</h5>
-                            <ul>
-                                <li>
-                                    <i class="icofont icofont-ui-user-group text-warning"></i>
-                                </li>
-                                <li class="text-right text-warning">
-                                    <?= DB::table('admin.all_setting')->count() - $schools_connected ?>
-                                </li>
-                            </ul>
+                <?php
+                $call_types = \DB::select('select count(*), type from admin.calls group by type order by type');
+                foreach ($call_types as $call) {
+                    ?>
+                    <div class="col-md-6 col-xl-3">
+                        <div class="card client-blocks warning-border">
+                            <div class="card-block">
+                                <h5> <?= $call->type ?></h5>
+                                <ul>
+                                    <li>
+                                        <i class="icofont icofont-ui-user-group text-warning"></i>
+                                    </li>
+                                    <li class="text-right text-warning">
+                                        <?= $call->count ?>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </div>
+                <?php } ?>
 
+                <p> &nbsp; &nbsp; <a href="<?=url('customer/addCall')?>" class="btn btn-success btn-sm">Add Call Summary</a></p>
 
                 <!-- Open Project card end -->
                 <div class="col-md-12 col-xl-12">
@@ -85,7 +90,7 @@
                             <select name="select" class="form-control select2" id="schema_select">
                                 <option value="0">Select</option>
                                 <?php
-                                $schemas = DB::select('select distinct "schema_name" from admin.all_payments where token is not null');
+                                $schemas = DB::select('select distinct "schema_name" from admin.calls');
                                 foreach ($schemas as $schema) {
                                     ?>
                                     <option value="<?= $schema->schema_name ?>"><?= $schema->schema_name ?></option>
@@ -101,17 +106,13 @@
                         <ul class="nav nav-tabs md-tabs" role="tablist">
                             <li class="nav-item complete">
                                 <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true">
-                                    <strong>( <?= count($epayment_logs) ?>)</strong> Payments Logs Summary
+                                    <strong>( <?= count($call_logs) ?>)</strong> Calls Logs Summary
                                 </a>
                                 <div class="slide"></div>
                             </li>
 
                             <li class="nav-item complete">
                                 <a class="nav-link" data-toggle="tab" href="#messages3" role="tab" aria-expanded="false">Summary</a>
-                                <div class="slide"></div>
-                            </li>
-                            <li class="nav-item complete">
-                                <a class="nav-link" data-toggle="tab" href="#messages4" role="tab" aria-expanded="false">All schools connected</a>
                                 <div class="slide"></div>
                             </li>
 
@@ -130,7 +131,7 @@
                                                     type: 'column'
                                                 },
                                                 title: {
-                                                    text: "e-Payments done per year <?= date('Y') ?>"
+                                                    text: "Calls done per year <?= date('Y') ?>"
                                                 },
                                                 subtitle: {
                                                     text: ''
@@ -140,7 +141,7 @@
                                                 },
                                                 yAxis: {
                                                     title: {
-                                                        text: 'No of Payments'
+                                                        text: 'No of Calls'
                                                     }
 
                                                 },
@@ -166,7 +167,10 @@
                                                         data: [
 <?php
 $where = strlen(request()->segment(3)) > 3 ? ' and "schema_name"=\'' . request()->segment(3) . '\'' : '';
-$epayments = \DB::select('select count(*),extract(month from created_at) as month from admin.all_payments where token is not null and extract(year from created_at)=' . date('Y') . $where . ' group by extract(month from created_at) order by extract(month from created_at) asc');
+$time_convert = "to_timestamp(time, 'yy-mm-dd HH24:MI:SS.MS')";
+$epayments = \DB::select('select count(*),extract(month from ' . $time_convert . ') as month from admin.calls where  
+extract(year from ' . $time_convert . ')='.date('Y').' group by extract(month from ' . $time_convert . ')
+order by extract(month from ' . $time_convert . ') asc');
 foreach ($epayments as $epayment) {
     $monthNum = $epayment->month;
     $dateObj = \DateTime::createFromFormat('!m', $monthNum);
@@ -218,7 +222,7 @@ foreach ($epayments as $epayment) {
                                                             </thead>
                                                             <tbody>
                                                                 <?php
-                                                                $sql = 'select "schema_name",count(*) from admin.all_payments where token is not null group by "schema_name"';
+                                                                $sql = 'select "schema_name",count(*) from admin.calls group by "schema_name"';
                                                                 $logs = DB::select($sql);
                                                                 foreach ($logs as $log) {
                                                                     ?>
@@ -228,56 +232,6 @@ foreach ($epayments as $epayment) {
                                                                             <span class="table-msg"><?= $log->schema_name ?></span>
                                                                         </td>
                                                                         <td><?= $log->count ?></td>
-                                                                        <td></td>
-                                                                    </tr>
-                                                                <?php }
-                                                                ?>
-
-                                                            </tbody>
-                                                        </table>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="tab-pane" id="messages4" role="tabpanel" aria-expanded="false">
-                                <a href="#" class="btn btn-sm btn-success" id="show_summary" style="display: none">Show Summary</a>
-                                <div id="custom_logs"></div>
-                                <div class="email-card p-0" id="log_summary">
-                                    <div class="card-block">
-
-                                        <div class="mail-body-content">
-                                            <div class="card">
-
-
-                                                <div class="card-block table-border-style">
-                                                    <div class="table-responsive analytic-table">
-                                                        
-                                                        <table class="table">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>School Name</th>
-                                                                    <th>Location</th>
-                                                                    <th>Action</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <?php
-                                                                $sql2 = 'select * from admin.all_setting where payment_integrated=1';
-                                                                $schools = DB::select($sql2);
-                                                                foreach ($schools as $school) {
-                                                                    ?>
-                                                                    <tr>
-                                                                        <td>
-
-                                                                            <span class="table-msg"><?= $school->schema_name ?></span>
-                                                                        </td>
-                                                                        <td><?= $school->address ?></td>
                                                                         <td></td>
                                                                     </tr>
                                                                 <?php }
