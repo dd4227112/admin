@@ -1,11 +1,13 @@
 @extends('layouts.app')
 @section('content')
 
+<script type="text/javascript" src="<?= url('/public') ?>/assets/select2/select2.js"></script> 
+
 <div class="main-body">
     <div class="page-wrapper">
         <div class="page-header">
             <div class="page-header-title">
-                <h4>System Erros</h4>
+                <h4>System Errors</h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -113,7 +115,7 @@
                     <div class="form-group row col-lg-offset-6">
                         <label class="col-sm-4 col-form-label">Select School</label>
                         <div class="col-sm-4">
-                            <select name="select" class="form-control" id="schema_select">
+                            <select name="select" class="form-control select2" id="schema_select">
                                 <option value="0">Select</option>
                                 <?php
                                 $schemas = DB::select('select distinct "schema_name" from admin.error_logs');
@@ -154,13 +156,13 @@
                                         <table id="error_log_table" class="table table-striped table-bordered nowrap">
                                             <thead>
                                                 <tr>
-                                                    <th>#</th>
+                                                    <th>#</th>                                                
+                                                    <th>Date</th>
                                                     <th>Client Name</th>
                                                     <th>Error Message</th>
                                                     <th>File</th>
                                                     <th>url</th>
                                                     <th>Created By</th>
-                                                    <th>Date</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -269,12 +271,13 @@
             },
             "columns": [
                 {"data": "id"},
+
+                {"data": "created_at"},
                 {"data": "schema_name"},
                 {"data": "error_message"},
                 {"data": "file"},
                 {"data": "url"},
                 {"data": "created_by"},
-                {"data": "created_at"},
                 {"data": ""}
             ],
             "columnDefs": [
@@ -283,7 +286,7 @@
                     "data": null,
                     "render": function (data, type, row, meta) {
 
-                        return '<a href="#" id="' + row.id + '" class="label label-danger dlt_log" onmousedown="delete_log(' + row.id + ')" onclick="return false">Delete</a>';
+                        return '<a href="#" id="' + row.id + '" class="label label-danger dlt_log" onmousedown="delete_log(' + row.id + ')" onclick="return false">Delete</a>' + '<a href="#" id="' + row.id + '" class="label label-info dlt_log" onmousedown="View_log(' + row.id + ')" onclick="return false">View</a>';
 
 
                     }
@@ -296,18 +299,23 @@
                 $(row).attr('id', 'log' + data.id);
             }
         });
-        delete_log = function (a) {
-            $.ajax({
-                url: '<?= url('software/logsDelete') ?>/null',
-                method: 'get',
-                data: {id: a},
-                success: function (data) {
-                    if (data == '1') {
-                        $('#log' + a).fadeOut();
-                    }
+        View_log = function (a) {
+
+            window.location.href = "<?= url('software/Readlogs') ?>/" + a;
+        },
+                delete_log = function (a) {
+                    $.ajax({
+                        url: '<?= url('software/logsDelete') ?>/null',
+                        method: 'get',
+                        data: {id: a},
+                        success: function (data) {
+                            if (data == '1') {
+                                $('#log' + a).fadeOut();
+                            }
+                        }
+                    });
                 }
-            });
-        }
+
     }
     );
     $('#schema_select').change(function () {
@@ -337,6 +345,7 @@
         $('#log_summary').show();
         $('#custom_logs').hide();
     });
+
     $(document).ready(function () {
         var table = $('#simpletable_resolved_errors').DataTable({
             "processing": true,
@@ -359,6 +368,12 @@
                 $(row).attr('id', 'log' + data.id);
             }
         });
+    });
+
+
+    $('#schema_select').select2({
+        placeholder: "Select a State",
+        allowClear: true
     });
 </script>
 @endsection

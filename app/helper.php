@@ -1,5 +1,12 @@
 <?php
 
+function base_url(){
+ 
+$root = url('/') . '/public/';
+   
+return $root;   
+}
+
 function mailConfig() {
     
 }
@@ -126,6 +133,8 @@ if (!function_exists('form_dropdown')) {
     }
 
 }
+
+
 
 /**
  * 

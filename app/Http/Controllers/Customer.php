@@ -17,9 +17,16 @@ class Customer extends Controller {
      *
      * @return void
      */
+    
+   public $patterns = array(
+        '/#name/i', '/#username/i', '/#default_password/i', '/#email/i', '/#phone/i', '/#role/i', '/#student_name/i', '/#invoice/i', '/#balance/i'
+    );   
     public function __construct() {
         $this->middleware('auth');
     }
+    
+    
+    
 
     /**
      * Display a listing of the resource.
@@ -198,28 +205,47 @@ class Customer extends Controller {
 
             $users = DB::table('all_users')->whereIn('usertype', request('for'))->get();
             foreach ($users as $user) {
+                
+          $replacements = array(
+                    $user->name
+                );       
+          $sms = $this->getCleanSms($replacements, strip_tags(request('message')));       
+                
                 if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
                     DB::table($user->schema_name . '.email')->insert(array(
                         'email' => $user->email,
-                        'body' => str_replace('href="', 'href="' . $user->schema_name . '.shulesoft.com/', request('message')),
+                        'body' => str_replace('href="', 'href="' . $user->schema_name . '.shulesoft.com/', $sms),
                         'subject' => strlen(request('subject')) > 4 ? request('subject') : 'ShuleSoft Latest Updates: ' . request('release_date'),
                         'user_id' => $user->id,
                         'table' => $user->table
                     ));
-                    DB::table('public.sms')->insert(array(
+                }               
+                    DB::table($user->schema_name . '.sms')->insert(array(
                         'phone_number' => $user->phone,
-                        'body' => strip_tags(request('message')),
+                        'body' => $sms,
                         'table' => $user->table,
                         'user_id' => $user->id,
-                        'table' => $user->table
                     ));
-                }
+                
             }
+            
             return redirect('customer/update')->with('success','success');
         }
         $this->data['usertypes'] = DB::select('select distinct usertype from admin.all_users');
         return view('customer.message.add_updates', $this->data);
     }
+    
+     public function getCleanSms($replacements, $message) {
+
+        $sms = preg_replace($this->patterns, $replacements, $message);
+        if (preg_match('/#/', $sms)) {
+            //try to replace that character
+            return preg_replace('/\#[a-zA-Z]+/i', '', $sms);
+        } else {
+            return $sms;
+        }
+    }   
+    
 
     /**
      * Remove the specified resource from storage.
