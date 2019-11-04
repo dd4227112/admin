@@ -156,27 +156,19 @@
                                     <div class="table-responsive dt-responsive">
                                         <div class="card-header">
                                             <div class="panel-body">
-                                                <div class="alert alert-info">This will be a one invoice with multiple users within a certain organization. You need to upload excel file with list of applicants who will be paid by this invoice. </div>
-                                                <p>Sample Excel Format. </p>
-                                                <img src="<?= url('public/images/sample_excel.jpg') ?>"/>
+                                                <div class="alert alert-info">Kindly export call logs from Call History Software available in mobile phone and upload it here</div>
+                                                <!--<p>Sample Excel Format. </p>-->
+                                                <!--<img src="<?= url('public/images/sample_excel.jpg') ?>"/>-->
                                                 <br/>
                                                 <div class=" form">
                                                     <br/>
-                                                    <form class="cmxform form-horizontal " id="commentForm" method="post" action="<?= url('invoice') ?>" enctype="multipart/form-data">
+                                                    <form class="cmxform form-horizontal " id="commentForm" method="post" action="<?= url('customer/addCall') ?>" enctype="multipart/form-data">
 
 
-
-                                                        <div class="form-group ">
-                                                            <label for="price" class="control-label col-lg-3">Price Per User</label>
-                                                            <div class="col-lg-6">
-
-                                                                <input class="form-control " id="number" type="text" name="amount" value="">
-                                                            </div>
-                                                        </div>
                                                         <div class="form-group ">
                                                             <label for="cname" class="control-label col-lg-3">Choose Excel File (required)</label>
                                                             <div class="col-lg-6">
-                                                                <input class=" form-control" id="cname" name="file" type="file" required="">
+                                                                <input class=" form-control" id="cname" name="file" type="file" required="" accept=".xls,.xlsx,.csv">
                                                             </div>
                                                         </div>
 
@@ -184,7 +176,7 @@
                                                         <div class="form-group">
                                                             <div class="col-lg-offset-3 col-lg-6">
                                                                 <?= csrf_field() ?>
-                                                                <button class="btn btn-primary" type="submit">Upload to Create Invoice</button>
+                                                                <button class="btn btn-primary" type="submit">Upload Call Logs</button>
                                                             </div>
                                                         </div>
                                                     </form>

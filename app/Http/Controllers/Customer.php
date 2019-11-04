@@ -436,7 +436,47 @@ class Customer extends Controller {
 
     public function addCall() {
         $this->data['create'] = [];
-        if ($_POST) {
+        if (request('file')) {
+            $path = request()->file('file')->getRealPath();
+            $data = Excel::load($path, function($reader) {
+                        
+                    })->get();
+            $insert_data = [];
+            if (!empty($data) && $data->count()) {
+
+                foreach ($data->toArray() as $key => $value) {
+/**
+ * add these filters
+ * 
+ * 1. ensure no duplicates are recorded
+ * 2. ensure you match phone number with what is in the system and update according
+ * 
+ * all those will be done with updated query outise for each
+ */
+                    if (!empty($value) && isset($value['number'])) {
+                        $obj = (object) $value;
+                        $phone = validate_phone_number($obj->number);
+                        if (!is_array($phone)) {
+                            continue;
+                        }
+                        $object = [
+                            'name' => $obj->name,
+                            'number' => $phone[1],
+                            'type' => $obj->call_type,
+                            'time' => $obj->time,
+                            'duration' => $obj->durationseconds,
+                            'created_by' => \Auth::user()->id,
+                            'about' => request('about'),
+                        ];
+                        array_push($insert_data, $object);
+                    }
+                }
+                if (!empty($insert_data)) {
+                    DB::table('calls')->insert($insert_data);
+                    return back()->with('success', 'Insert Record successfully.');
+                }
+            }
+        } else if ($_POST) {
             $table = request('source');
             $phone = validate_phone_number(request('phone'));
             if (!is_array($phone)) {
@@ -454,7 +494,7 @@ class Customer extends Controller {
                 'source' => request('source')
             ];
             DB::table('calls')->insert($object);
-           return redirect('customer/calls')->with('success', 'Call Recorded Successfully ');
+            return redirect('customer/calls')->with('success', 'Call Recorded Successfully ');
         }
         return view('customer.call.create', $this->data);
     }
