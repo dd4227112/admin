@@ -417,4 +417,21 @@ class Customer extends Controller {
         return redirect()->back()->with('success', 'success');
     }
 
+    public function emailsms(){
+            $schema = request()->segment(3);
+        $where = strlen($schema) > 3 ? ' where "schema_name"=\'' . $schema . '\' ' : '';
+        $this->data['sms_logs'] = DB::select('select * from admin.all_reply_sms ' . $where);
+        $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.all_reply_sms  group by "schema_name" order by count desc limit 1 '))->first();
+         $this->data['user_groups'] = DB::select('select count(*), "table" from admin.all_reply_sms  group by "table" order by "table"');
+        return view('customer.message.incoming_sms', $this->data);
+    }
+    
+    public function epayments() {
+        $schema = request()->segment(3);
+        $where = strlen($schema) > 3 ? ' and "schema_name"=\'' . $schema . '\' ' : '';
+        $this->data['epayment_logs'] = DB::select('select * from admin.all_payments where token is not null ' . $where);
+        $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.all_payments where token is not null  group by "schema_name" order by count desc limit 1 '))->first();
+         $this->data['schools_connected'] = DB::select('select count(*), "table" from admin.all_reply_sms  group by "table" order by "table"');
+        return view('customer.epayment.index', $this->data);  
+    }
 }

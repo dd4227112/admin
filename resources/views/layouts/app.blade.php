@@ -48,17 +48,17 @@
 
         <!-- Style.css -->
         <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css">
-        
+
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2.css">
-        
+
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2-bootstrap.css">
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css">       
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
 
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script>
@@ -375,7 +375,7 @@ function toast(message) {
                                         <?php } ?>
                                         <li><a href="{{ route('logout') }}"
                                                onclick="event.preventDefault();
-                                                       document.getElementById('logout-form').submit();"><i class="ti-layout-sidebar-left"></i> Logout</a></li>
+                                                           document.getElementById('logout-form').submit();"><i class="ti-layout-sidebar-left"></i> Logout</a></li>
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                             {{ csrf_field() }}
                                         </form>
@@ -507,6 +507,8 @@ function toast(message) {
                                             <li><a href="<?= url('customer/logs') ?>" data-i18n="nav.page_layout.vertical.header-fixed">
                                                     User Logs</a></li>
                                             <li><a href="<?= url('customer/pages') ?>" data-i18n="nav.page_layout.vertical.compact"> Page Logs </a>
+                                            </li>
+                                            <li><a href="<?= url('customer/epayments') ?>" data-i18n="nav.page_layout.vertical.compact"> e-payments </a>
                                             </li>
 
                                         </ul>
@@ -963,22 +965,22 @@ function toast(message) {
         <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/amchart/js/serial.js"></script>
         <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/amchart/js/light.js"></script>
         <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/amchart/js/custom-amchart.js"></script>
-        
 
-        
+
+
         <!-- i18next.min.js -->
         <script type="text/javascript" src="<?= $root ?>bower_components/i18next/i18next.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/i18next-xhr-backend/i18nextXHRBackend.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery-i18next/jquery-i18next.min.js"></script>
-        
-        
-    
 
 
 
 
-       
+
+
+
+
         <!-- Custom js -->
         <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/custom-dashboard.js?v=3"></script>
         <script type="text/javascript" src="<?= $root ?>assets/js/script.js?v=2"></script>
@@ -996,7 +998,7 @@ function toast(message) {
         @yield('footer')
     </body>
     <?php
-    if (request('type_id') != 'subject' && !preg_match('/sales/', url()->current()) && !preg_match('/logs/', url()->current()) && !preg_match('/api/', url()->current())) {
+    if (request('type_id') != 'subject' && !preg_match('/emailsms/', url()->current()) && !preg_match('/sales/', url()->current()) && !preg_match('/logs/', url()->current()) && !preg_match('/api/', url()->current())) {
         ?>
         <script type="text/javascript">
 
