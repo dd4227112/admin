@@ -209,6 +209,11 @@ group by ownership');
             case 'errors':
                   return $this->ajaxTable('error_logs', ['file', 'error_message', 'route', 'url', 'error_instance', 'created_at','schema_name']);
                 break;
+            
+            case 'requirements':
+                 $sql = "select b.id, b.activity,b.created_at,a.name,c.firstname  from admin.clients a join admin.tasks b on a.id=b.client_id join admin.users c on c.id=b.to_user_id ";
+                  return $this->ajaxTable('tasks', ['activity','name','firstname','created_at'],$sql);
+                break;
             default:
                 break;
         }

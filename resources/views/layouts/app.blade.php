@@ -599,6 +599,7 @@ function toast(message) {
 
                                     <li><a href="<?= url('software/server') ?>" data-i18n="nav.basic-components.button">Server Administration</a></li>
                                     <li><a href="<?= url('software/logs') ?>" data-i18n="nav.basic-components.box-shadow">Error Logs</a></li>
+                                    <li><a href="<?= url('software/CustomerRequirement') ?>" data-i18n="nav.basic-components.button">Customer Requirement</a></li>
                                     <li><a href="<?= url('software/pmp') ?>" data-i18n="nav.basic-components.collapse–accordion">Project Management</a></li>
 
                                 </ul>

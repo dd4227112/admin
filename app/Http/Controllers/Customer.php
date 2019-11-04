@@ -264,6 +264,7 @@ class Customer extends Controller {
     public function profile() {
         $school = $this->data['schema'] = request()->segment(3);
         $this->data['shulesoft_users'] = \App\Models\User::all();
+       
         $is_client = 0;
         if ($school == 'school') {
             $id = request()->segment(4);
@@ -279,11 +280,12 @@ class Customer extends Controller {
                 $client = \App\Models\Client::create(['name' => $this->data['school']->sname, 'email' => $this->data['school']->email, 'phone' => $this->data['school']->phone, 'address' => $this->data['school']->address, 'username' => $school]);
             }
             $this->data['client_id'] = $client->id;
+            
             $this->data['top_users'] = DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
         }
         $this->data['is_client'] = $is_client;
         if ($_POST) {
-
+          
             $data = array_merge(request()->all(), ['user_id' => Auth::user()->id]);
             $task = \App\Models\Task::create($data);
             if ((int) request('to_user_id') > 0) {
@@ -301,6 +303,13 @@ class Customer extends Controller {
         }
 
         return view('customer/profile', $this->data);
+    }
+    
+     public function removeTag() {
+        $id = request('id');
+        $tag = \App\Models\Task::find($id);
+        count($tag) == 1 ? $tag->delete() : '';
+        echo 1;
     }
 
     public function allocate() {
@@ -320,7 +329,7 @@ class Customer extends Controller {
     }
 
     public function modules() {
-        $schemas = $this->data['schools'] = DB::select("SELECT distinct table_schema as schema_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','beta_testing','accounts','pg_catalog','constant','api','information_schema','public')");
+        $schemas = $this->data['schools'] = DB::select("SELECT distinct table_schema as schema_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public')");
         $sch = [];
         foreach ($schemas as $schema) {
             array_push($sch, $schema->schema_name);

@@ -288,8 +288,7 @@
                 'url': "<?= url('sales/show/null?page=errors') ?>"
             },
             "columns": [
-                {"data": "id"},
-                
+                {"data": "id"},               
                 {"data": "created_at"},
                 {"data": "schema_name"},
                 {"data": "error_message"},
