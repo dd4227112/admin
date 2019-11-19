@@ -111,7 +111,7 @@ class Background extends Controller {
     }
 
     public function updateInvoice() {
-        $invoices = DB::select('select * from api.invoices where sync=1 and amount >0 and payment_integrated=1 order by random() limit 200');
+        $invoices = DB::select('select * from api.invoices where sync=1 and amount >0 and payment_integrated=1');
         if (count($invoices) > 0) {
             foreach ($invoices as $invoice) {
                 $token = $this->getToken($invoice);
@@ -206,5 +206,23 @@ class Background extends Controller {
         $uq_names = array_unique($names);
         return implode(',', $uq_names);
     }
+    private function curlServer($fields, $url) {
+// Open connection
+        $ch = curl_init();
+// Set the url, number of POST vars, POST data
 
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'application/x-www-form-urlencoded'
+        ));
+
+        curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+        return $result;
+    }
 }
