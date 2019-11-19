@@ -7,7 +7,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use DB;
 
-class BackgroundController extends Controller {
+class Background extends Controller {
 
     /**
      * Create a new controller instance.
