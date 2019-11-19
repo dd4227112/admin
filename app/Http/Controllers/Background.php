@@ -15,7 +15,7 @@ class Background extends Controller {
      * @return void
      */
     public function __construct() {
-        $this->middleware('auth');
+       // $this->middleware('auth');
     }
 
     /**
@@ -111,6 +111,7 @@ class Background extends Controller {
     }
 
     public function updateInvoice() {
+        exit;
         $invoices = DB::select('select * from api.invoices where sync=1 and amount >0 and payment_integrated=1 order by random() limit 200');
         if (count($invoices) > 0) {
             foreach ($invoices as $invoice) {
