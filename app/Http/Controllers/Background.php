@@ -111,7 +111,6 @@ class Background extends Controller {
     }
 
     public function updateInvoice() {
-        exit;
         $invoices = DB::select('select * from api.invoices where sync=1 and amount >0 and payment_integrated=1 order by random() limit 200');
         if (count($invoices) > 0) {
             foreach ($invoices as $invoice) {
@@ -141,6 +140,7 @@ class Background extends Controller {
                     }
                     $curl = $this->curlServer($fields, $url);
                     $result = json_decode($curl);
+                    print_r($result);
                     if (($result->status == 1 && strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
 //update invoice no
                         DB::table($invoice->schema_name . '.invoices')
