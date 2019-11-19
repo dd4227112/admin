@@ -537,11 +537,11 @@ function toast(message) {
                                     <li><a href="<?= url('sales/index') ?>" data-i18n="nav.navigate.navbar">Sales Materials</a>
                                     </li>
 
-                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Sales Reports</a>
+                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Sales </a>
                                         <ul class="tree-2" style="display: none;">
                                             <li><a href="<?= url('sales/school') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Schools</a></li>
                                             <li><a href="<?= url('sales/prospect') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Prospects</a></li>
-                                            <li><a href="<?= url('sales/lead') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Leads</a></li>
+                                            <li><a href="<?= url('sales/lead') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Engagements</a></li>
                                             <li><a href="<?= url('sales/customer') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Customers</a></li>
 
 
