@@ -36,7 +36,7 @@ class karibusms {
     private $HEADER = array(
         'application/x-www-form-urlencoded'
     );
-    private $URL = 'http://158.69.112.216:8282/api';
+    private $URL = 'http://51.77.212.234:8282/api';
     private $name;
     public $API_KEY;
     public $API_SECRET;
