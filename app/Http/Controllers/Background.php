@@ -205,7 +205,7 @@ class Background extends Controller {
         $uq_names = array_unique($names);
         return implode(',', $uq_names);
     }
-    private function curlServer($fields, $url) {
+    public function curlServer($fields, $url) {
 // Open connection
         $ch = curl_init();
 // Set the url, number of POST vars, POST data
