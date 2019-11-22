@@ -446,11 +446,20 @@ ORDER  BY conrelid::regclass::text, contype DESC";
                         'https://wip.mpayafrica.com/v2/' . $push_status : 'https://api.mpayafrica.co.tz/v2/' . $push_status;
                 $curl = $background->curlServer($fields, $url);
                 $this->data['returns'] = json_decode($curl);
-            }else{
-                echo 'invalid token'; exit;
+            } else {
+                echo 'invalid token';
+                exit;
             }
         }
         return view('software.api.reconciliation', $this->data);
+    }
+
+    public function syncMissingPayments() {
+        $background = new \App\Http\Controllers\Background();
+        $url = 'http://51.77.212.234:8081/api/init';
+        $fields = json_decode(urldecode(request('data')));
+        $curl = $background->curlServer($fields, $url);
+        return $curl;
     }
 
 }
