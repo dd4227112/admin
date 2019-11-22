@@ -66,7 +66,7 @@
                                     </div>
                                 </form>
                             </div>
-                         
+
                             <div class="table-responsive dt-responsive "> 
                                 <table id="api_requests" class="table table-striped dataTable table-bordered nowrap">
                                     <thead>
@@ -91,23 +91,33 @@
                                                 $trans = (object) $data;
                                                 $i = 1;
                                                 foreach ($trans as $tran) {
+
+                                                    $check = DB::table(request('schema_name') . '.payments')->where('receipt', $tran->receipt)->first();
                                                     ?>
                                                     <tr>
                                                         <td><?= $i ?></td>
-                                                        <td><?=$tran->customer_name?></td>
-                                                        <td><?=$tran->reference?></td>
-                                                        <td><?=$tran->timestamp?></td>
-                                                        <td><?= number_format($tran->amount)?></td>
-                                                        <td><?=$tran->receipt?></td>
-                                                        <td><?=$tran->channel?></td>
-                                                        <td><?=$tran->account_number?></td>
-                                                        <td><?=$tran->token?></td>
-                                                        <td>Action</td>
+                                                        <td><?= $tran->customer_name ?></td>
+                                                        <td><?= $tran->reference ?></td>
+                                                        <td><?= $tran->timestamp ?></td>
+                                                        <td><?= number_format($tran->amount) ?></td>
+                                                        <td><?= $tran->receipt ?></td>
+                                                        <td><?= $tran->channel ?></td>
+                                                        <td><?= $tran->account_number ?></td>
+                                                        <td><?= $tran->token ?></td>
+                                                        <td>
+                                                            <?php
+                                                            if (count($check) == 0) {
+                                                                ?>
+                                                            <a href="<?= url('software/syncMissingPayments/null?data=' . urlencode(json_encode($tran))) ?>">Sync</a>
+                                                            <?php } ?>
+                                                        </td>
                                                     </tr>
-                                                    <?php $i++;
+                                                    <?php
+                                                    $i++;
                                                 }
                                             }
-                                        } ?>
+                                        }
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>
