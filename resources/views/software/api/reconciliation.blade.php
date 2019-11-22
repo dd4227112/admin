@@ -92,7 +92,7 @@
                                                 $i = 1;
                                                 foreach ($trans as $tran) {
 
-                                                    $check = DB::table(request('schema_name') . '.payments')->where('receipt', $tran->receipt)->first();
+                                                    $check = DB::table(request('schema_name') . '.payments')->where('transaction_id', $tran->receipt)->first();
                                                     ?>
                                                     <tr>
                                                         <td><?= $i ?></td>
