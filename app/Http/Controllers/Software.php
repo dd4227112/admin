@@ -25,8 +25,6 @@ class Software extends Controller {
             return view($view, $this->data);
         }
     }
-    
-    
 
     public function server() {
         $this->data['file'] = '';
@@ -328,15 +326,14 @@ ORDER  BY conrelid::regclass::text, contype DESC";
         $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1 '))->first();
         return view('software.logs', $this->data);
     }
-    
-     public function CustomerRequirement() {
+
+    public function CustomerRequirement() {
         $schema = request()->segment(3);
         $where = strlen($schema) > 3 ? ' where "schema_name"=\'' . $schema . '\' ' : '';
         $this->data['error_logs'] = DB::select('select * from admin.error_logs ' . $where);
         $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1 '))->first();
         return view('software.customer_requirement', $this->data);
-    } 
-    
+    }
 
     public function logsDelete() {
         $id = request('id');
@@ -348,13 +345,13 @@ ORDER  BY conrelid::regclass::text, contype DESC";
         }
         echo 1;
     }
-    
-      public function Readlogs() {
+
+    public function Readlogs() {
         $id = request()->segment(3);
-        $tag = \App\Models\ErrorLog::find($id);       
-       $this->data['error_message']= $tag->error_message.'<br>'.$tag->url.'<br>';
+        $tag = \App\Models\ErrorLog::find($id);
+        $this->data['error_message'] = $tag->error_message . '<br>' . $tag->url . '<br>';
         return view('customer.view', $this->data);
-       
+
         //echo 1;
     }
 
@@ -412,6 +409,48 @@ ORDER  BY conrelid::regclass::text, contype DESC";
             }
             echo 'Records updated successfully ';
         }
+    }
+
+    public function invoice($id) {
+        if ((int) $id > 0) {
+            $this->data['data'] = 1;
+            $this->data['results'] = \App\Model\Api_invoice::where('id', $id)
+                            ->where('schema_name', request('p'))->get();
+            return view('home.invoice_search', $this->data);
+        } else {
+            $this->data['results'] = DB::select("select * from api.invoices where lower(\"reference\") in (select lower(content->>'invoice') from admin.logs where content->>'invoice' is not null)");
+            return view('invoice.searched', $this->data);
+//        }else {
+//        
+//            $sql = 'SELECT * FROM (SELECT * FROM public.crosstab(\'select "schema_name"::text,"table",count(*) from admin.all_users where status=1  group by "schema_name"::text,"table" order by 1,2\', \'select distinct "table"::text from admin.all_users order by 1\') AS final_result("schema_name" text,"parent" text,"setting" text, "student" text, "teacher" text, "user" text) ) a where schema_name=\'' . $id . "'";
+//            $this->data['user'] = \collect(\DB::select($sql))->first();
+//            $this->data['school'] = $setting = \DB::table($id . '.setting')->first();
+//            return view('invoice.show', $this->data);
+        }
+    }
+
+    public function reconciliation() {
+        $this->data['returns'] = [];
+        if ($_POST) {
+            $schema = request('schema_name');
+            $invoice = DB::table('api.invoices')->where('schema_name', $schema)->first();
+            $background = new \App\Http\Controllers\Background();
+            $token = $background->getToken($invoice);
+            if (strlen($token) > 4) {
+                $fields = array(
+                    "reconcile_date" => date('d-m-Y', strtotime(request('date'))),
+                    "token" => $token
+                );
+                $push_status = 'reconcilliation';
+                $url = $invoice->schema_name == 'beta_testing' ?
+                        'https://wip.mpayafrica.com/v2/' . $push_status : 'https://api.mpayafrica.co.tz/v2/' . $push_status;
+                $curl = $this->curlServer($fields, $url);
+                $this->data['returns'] = json_decode($curl);
+            }else{
+                echo 'invalid token'; exit;
+            }
+        }
+        return view('software.api.reconciliation', $this->data);
     }
 
 }

@@ -140,7 +140,6 @@ class Background extends Controller {
                     }
                     $curl = $this->curlServer($fields, $url);
                     $result = json_decode($curl);
-                    print_r($result);
                     if (($result->status == 1 && strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
 //update invoice no
                         DB::table($invoice->schema_name . '.invoices')
