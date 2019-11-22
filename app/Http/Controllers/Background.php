@@ -205,7 +205,7 @@ class Background extends Controller {
         $uq_names = array_unique($names);
         return implode(',', $uq_names);
     }
-    public function curlServer($fields, $url) {
+    public function curlServer($fields, $url,$type=null) {
 // Open connection
         $ch = curl_init();
 // Set the url, number of POST vars, POST data
@@ -216,7 +216,8 @@ class Background extends Controller {
         ));
 
         curl_setopt($ch, CURLOPT_POST, TRUE);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+        $data=$type==null ? json_encode($fields) : $fields;
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
