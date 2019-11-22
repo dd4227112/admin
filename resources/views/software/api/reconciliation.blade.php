@@ -60,15 +60,13 @@
                                     <div class="form-group row col-lg-offset-6">
                                         <label class="col-sm-4 col-form-label"></label>
                                         <div class="col-sm-4">
-                                            <?= csrf_field()?>
+                                            <?= csrf_field() ?>
                                             <input type="submit" name="submit" class="form-control btn btn-success"/>
                                         </div>
                                     </div>
                                 </form>
                             </div>
-                            <?php
-                            print_r($returns);
-                            ?>
+                         
                             <div class="table-responsive dt-responsive "> 
                                 <table id="api_requests" class="table table-striped dataTable table-bordered nowrap">
                                     <thead>
@@ -85,6 +83,32 @@
                                             <th>Action</th>
                                         </tr>
                                     </thead>
+                                    <tbody>
+                                        <?php
+                                        if (isset($returns) && count($returns) > 0) {
+                                            $data = $returns->transactions;
+                                            if (count($data) > 0) {
+                                                $trans = (object) $data;
+                                                $i = 1;
+                                                foreach ($trans as $tran) {
+                                                    ?>
+                                                    <tr>
+                                                        <td><?= $i ?></td>
+                                                        <td><?=$tran->customer_name?></td>
+                                                        <td><?=$tran->reference?></td>
+                                                        <td><?=$tran->timestamp?></td>
+                                                        <td><?= number_format($tran->amount)?></td>
+                                                        <td><?=$tran->receipt?></td>
+                                                        <td><?=$tran->channel?></td>
+                                                        <td><?=$tran->account_number?></td>
+                                                        <td><?=$tran->token?></td>
+                                                        <td>Action</td>
+                                                    </tr>
+                                                    <?php $i++;
+                                                }
+                                            }
+                                        } ?>
+                                    </tbody>
                                 </table>
                             </div>
                         </div> </div>
@@ -93,59 +117,59 @@
 </div>
 
 <script type="text/javascript">
-//    $(document).ready(function () {
-//        var table = $('#api_requests').DataTable({
-//            "processing": true,
-//            "serverSide": true,
-//            'serverMethod': 'post',
-//            'ajax': {
-//                'url': "<?= url('software/api/null?tag=get') ?>"
-//            },
-//            "columns": [
-//                {"data": "id"},
-//                {"data": "content"},
-//                {"data": "created_at"},
-//                {"data": ""}
-//            ],
-//            "columnDefs": [
-//                {
-//                    "targets": 3,
-//                    "data": null,
-//                    "render": function (data, type, row, meta) {
-//
-//                        return '<a href="#" id="' + row.id + '" class="label label-danger dlt_log" onmousedown="delete_log(' + row.id + ')" onclick="return false">Delete</a>';
-//
-//
-//                    }
-//
-//                }
-//            ],
-//
-//            rowCallback: function (row, data) {
-//                //$(row).addClass('selectRow');
-//                $(row).attr('id', 'log' + data.id);
-//            }
-//        });
-//        delete_log = function (a) {
-//            $.ajax({
-//                url: '<?= url('software/logsDelete') ?>/null',
-//                method: 'get',
-//                data: {id: a},
-//                success: function (data) {
-//                    if (data == '1') {
-//                        $('#log' + a).fadeOut();
-//                    }
-//                }
-//            });
-//        }
-//    }
-//    );
-//    $('#schema_select').change(function () {
-//        var schema = $(this).val();
-//        if (schema == 0) {
-//            return false;
-//        } else {
-//            window.location.href = "<?= url('software/logs') ?>/" + schema;
+    //    $(document).ready(function () {
+    //        var table = $('#api_requests').DataTable({
+    //            "processing": true,
+    //            "serverSide": true,
+    //            'serverMethod': 'post',
+    //            'ajax': {
+    //                'url': "<?= url('software/api/null?tag=get') ?>"
+    //            },
+    //            "columns": [
+    //                {"data": "id"},
+    //                {"data": "content"},
+    //                {"data": "created_at"},
+    //                {"data": ""}
+    //            ],
+    //            "columnDefs": [
+    //                {
+    //                    "targets": 3,
+    //                    "data": null,
+    //                    "render": function (data, type, row, meta) {
+    //
+    //                        return '<a href="#" id="' + row.id + '" class="label label-danger dlt_log" onmousedown="delete_log(' + row.id + ')" onclick="return false">Delete</a>';
+    //
+    //
+    //                    }
+    //
+    //                }
+    //            ],
+    //
+    //            rowCallback: function (row, data) {
+    //                //$(row).addClass('selectRow');
+    //                $(row).attr('id', 'log' + data.id);
+    //            }
+    //        });
+    //        delete_log = function (a) {
+    //            $.ajax({
+    //                url: '<?= url('software/logsDelete') ?>/null',
+    //                method: 'get',
+    //                data: {id: a},
+    //                success: function (data) {
+    //                    if (data == '1') {
+    //                        $('#log' + a).fadeOut();
+    //                    }
+    //                }
+    //            });
+    //        }
+    //    }
+    //    );
+    //    $('#schema_select').change(function () {
+    //        var schema = $(this).val();
+    //        if (schema == 0) {
+    //            return false;
+    //        } else {
+    //            window.location.href = "<?= url('software/logs') ?>/" + schema;
 //        }
 //    });
 
