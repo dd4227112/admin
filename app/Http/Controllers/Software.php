@@ -444,7 +444,7 @@ ORDER  BY conrelid::regclass::text, contype DESC";
                 $push_status = 'reconcilliation';
                 $url = $invoice->schema_name == 'beta_testing' ?
                         'https://wip.mpayafrica.com/v2/' . $push_status : 'https://api.mpayafrica.co.tz/v2/' . $push_status;
-                $curl = $this->curlServer($fields, $url);
+                $curl = $background->curlServer($fields, $url);
                 $this->data['returns'] = json_decode($curl);
             }else{
                 echo 'invalid token'; exit;
