@@ -12,6 +12,23 @@ class User extends Model {
     protected $table = 'users';
     protected $fillable = ['id', 'firstname', 'middlename', 'lastname', 'email', 'password', 'rolename', 'type', 'name', 'remember_token', 'dp', 'phone', 'town', 'created_by', 'photo'];
 
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
+
+    public function name() {
+        return $this->attributes['firstname'] . ' ' . $this->attributes['lastname'];
+    }
+
+    public function location() {
+        return $this->hasMany('App\Model\Location');
+    }
+
     public function deductions() {
         return $this->belongsToMany(\App\Models\Deduction::class, 'user_deductions', 'user_id', 'deduction_id');
     }
@@ -60,4 +77,11 @@ class User extends Model {
         return $this->hasManyThrough(\App\Models\Role::class, \App\Models\RoleUser::class, 'user_id', 'role_id');
     }
 
+    public function usersSchools() {
+        return $this->hasMany(\App\Model\UsersSchool::class);
+    }
+
+     public function tasks() {
+        return $this->hasMany(\App\Models\Task::class);
+    }
 }

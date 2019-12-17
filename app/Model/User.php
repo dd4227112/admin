@@ -43,7 +43,11 @@ class User extends Authenticatable {
     }
 
     public function role() {
-        return $this->belongsTo('App\Model\Role')->withDefault(['display_name'=>'unknown']);
+        return $this->belongsTo('App\Model\Role')->withDefault(['display_name' => 'unknown']);
+    }
+
+    public function usersSchools() {
+        return $this->hasMany(\App\Model\UsersSchool::class);
     }
 
 }
