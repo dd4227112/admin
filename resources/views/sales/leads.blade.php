@@ -31,33 +31,37 @@
                         <div class="card-block">
 
                             <div class="row">
-                              
+
                                 <div class="col-md-12 col-xl-4">
                                     <div class="card counter-card-1">
-                                        <div class="card-block-big">
-                                            <div>
-                                                <h3><?= count($demo_requests) ?></h3>
-                                                <p>Demo Requests</p>
-                                                <div class="progress ">
-                                                    <div class="progress-bar progress-bar-striped progress-xs progress-bar-pink" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <a href="<?= url('sales/prospect/demo') ?>">
+                                            <div class="card-block-big">
+                                                <div>
+                                                    <h3><?= count($demo_requests) ?></h3>
+                                                    <p>Demo Requests</p>
+                                                    <div class="progress ">
+                                                        <div class="progress-bar progress-bar-striped progress-xs progress-bar-pink" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
                                                 </div>
+                                                <i class="icofont icofont-comment"></i>
                                             </div>
-                                            <i class="icofont icofont-comment"></i>
-                                        </div>
+                                        </a>
                                     </div>
                                 </div>
-                            <div class="col-md-12 col-xl-4">
+                                <div class="col-md-12 col-xl-4">
                                     <div class="card counter-card-1">
-                                        <div class="card-block-big">
-                                            <div>
-                                                <h3><?= count($join_requests) ?></h3>
-                                                <p>Website Requests</p>
-                                                <div class="progress ">
-                                                    <div class="progress-bar progress-bar-striped progress-xs progress-bar-pink" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <a href="<?= url('sales/prospect/join') ?>">
+                                            <div class="card-block-big">
+                                                <div>
+                                                    <h3><?= count($join_requests) ?></h3>
+                                                    <p>Join Requests</p>
+                                                    <div class="progress ">
+                                                        <div class="progress-bar progress-bar-striped progress-xs progress-bar-pink" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
                                                 </div>
+                                                <i class="icofont icofont-comment"></i>
                                             </div>
-                                            <i class="icofont icofont-comment"></i>
-                                        </div>
+                                        </a>
                                     </div>
                                 </div>
 
@@ -145,8 +149,8 @@
                     "data": null,
                     "render": function (data, type, row, meta) {
 
-                       // return '<a href="#" class="label label-warning">Prospect </a>';
-                       return '';
+                        // return '<a href="#" class="label label-warning">Prospect </a>';
+                        return '';
 
                     }
 

@@ -41,7 +41,7 @@ class Sales extends Controller {
     public function prospect() {
         $this->data['demo_requests'] = DB::table('website_demo_requests')->get();
         $this->data['join_requests'] = DB::table('website_join_shulesoft')->get();
-        $page = request()->segment(3);
+        $this->data['page']=$page = request()->segment(3);
         if ($page == 'add') {
             $id = request()->segment(4);
             if ($_POST) {
@@ -67,6 +67,10 @@ class Sales extends Controller {
             $id = request()->segment(4);
             DB::table('prospects')->where('id', $id)->delete();
             return redirect('sales/prospect')->with('success', 'Success');
+        }else if($page=='demo'){
+            
+        }else if($page=='join'){
+            
         }
         return view('sales.prospects', $this->data);
     }
