@@ -244,7 +244,7 @@ class Message extends Controller {
 
     public function sendEmail() {
         //loop through schema names and push emails
-        $this->emails = DB::select('select * from public.all_email limit 8');
+        $this->emails = DB::select('select * from public.all_email limit 10');
         if (!empty($this->emails)) {
             foreach ($this->emails as $message) {
                 if (filter_var($message->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $message->email)) {
@@ -275,7 +275,7 @@ class Message extends Controller {
                     DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
                 }
 //$this->updateEmailConfig();
-                sleep(5);
+                sleep(2);
             }
         }
     }
