@@ -213,7 +213,7 @@ $staffs = DB::table('users')->where('status', 1)->get();
                                                                         if ($a == 0) {
                                                                             ?>
                                                                             <select name="sales_id" class="allocate form-control">
-                                                                                  <option></option>
+                                                                                <option></option>
                                                                                 <?php
                                                                                 foreach ($staffs as $staff) {
                                                                                     ?>
@@ -326,8 +326,8 @@ $staffs = DB::table('users')->where('status', 1)->get();
                                         <h6>
                                             <b>User Allocation Summary</b>
                                         </h6>
-                                        <div class="mail-body-content">
-                                            <table class="table">
+                                        <div class="table-responsive dt-responsive">
+                                            <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
 
                                                 <thead>
                                                     <tr>
@@ -350,15 +350,17 @@ $staffs = DB::table('users')->where('status', 1)->get();
                                                             <td><?= $user->firstname . ' ' . $user->lastname ?></td>
                                                             <td><?= $schools->count() ?></td>
                                                             <td>
-                                                                <?php
-                                                                $active = 0;
-                                                                $not_active = 0;
-                                                                foreach ($schools->get() as $school) {
-                                                                    echo $school->school->schema_name . ',';
-                                                                    $active = getActiveStatus($school->school->schema_name) == 1 ? $active + 1 : $active;
-                                                                    $not_active = getActiveStatus($school->school->schema_name) == 0 ? $not_active + 1 : $not_active;
-                                                                }
-                                                                ?> 
+                                                                <p style="max-width: 50%">
+                                                                    <?php
+                                                                    $active = 0;
+                                                                    $not_active = 0;
+                                                                    foreach ($schools->get() as $school) {
+                                                                        echo $school->school->schema_name . ',';
+                                                                        $active = getActiveStatus($school->school->schema_name) == 1 ? $active + 1 : $active;
+                                                                        $not_active = getActiveStatus($school->school->schema_name) == 0 ? $not_active + 1 : $not_active;
+                                                                    }
+                                                                    ?> 
+                                                                </p>
                                                             </td>
                                                             <td><?= $active ?></td>
                                                             <td><?= $not_active ?></td>
