@@ -259,7 +259,7 @@ class Customer extends Controller {
     public function profile() {
         $school = $this->data['schema'] = request()->segment(3);
         $this->data['shulesoft_users'] = \App\Models\User::all();
-       
+
         $is_client = 0;
         if ($school == 'school') {
             $id = request()->segment(4);
@@ -275,12 +275,12 @@ class Customer extends Controller {
                 $client = \App\Models\Client::create(['name' => $this->data['school']->sname, 'email' => $this->data['school']->email, 'phone' => $this->data['school']->phone, 'address' => $this->data['school']->address, 'username' => $school]);
             }
             $this->data['client_id'] = $client->id;
-            
+
             $this->data['top_users'] = DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
         }
         $this->data['is_client'] = $is_client;
         if ($_POST) {
-          
+
             $data = array_merge(request()->all(), ['user_id' => Auth::user()->id]);
             $task = \App\Models\Task::create($data);
             if ((int) request('to_user_id') > 0) {
@@ -299,8 +299,8 @@ class Customer extends Controller {
 
         return view('customer/profile', $this->data);
     }
-    
-     public function removeTag() {
+
+    public function removeTag() {
         $id = request('id');
         $tag = \App\Models\Task::find($id);
         count($tag) == 1 ? $tag->delete() : '';
@@ -312,9 +312,14 @@ class Customer extends Controller {
         $schema = request('schema');
         $user_id = request('user_id');
         $role_id = request('role_id');
+        if ((int) $school_id == 0) {
+            $sch = DB::table('admin.all_setting')->where('schema_name', $schema)->first();
+            $school_id = (int) ($sch->school_id) > 0 ? $sch->school_id : DB::table('schools')->where('name', 'ilike', '%'.substr($schema, 0, 4).'%')->first()->id;
+        }
         $school_info = DB::table('schools')->where('id', $school_id);
         count($school_info->first()) == 1 ? DB::table('users_schools')->insert(['school_id' => $school_id, 'user_id' => $user_id, 'role_id' => $role_id]) : '';
         $school_info->update(['schema_name' => $schema]);
+
         echo 1;
     }
 
@@ -454,14 +459,14 @@ class Customer extends Controller {
             if (!empty($data) && $data->count()) {
 
                 foreach ($data->toArray() as $key => $value) {
-/**
- * add these filters
- * 
- * 1. ensure no duplicates are recorded
- * 2. ensure you match phone number with what is in the system and update according
- * 
- * all those will be done with updated query outise for each
- */
+                    /**
+                     * add these filters
+                     * 
+                     * 1. ensure no duplicates are recorded
+                     * 2. ensure you match phone number with what is in the system and update according
+                     * 
+                     * all those will be done with updated query outise for each
+                     */
                     if (!empty($value) && isset($value['number'])) {
                         $obj = (object) $value;
                         $phone = validate_phone_number($obj->number);
