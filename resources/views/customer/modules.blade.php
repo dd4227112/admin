@@ -149,12 +149,7 @@ $staffs = DB::table('users')->where('status', 1)->get();
                                                         <tr>
                                                             <th>School Name</th>
                                                             <td>Support Personnel</td>
-                                                            <?php
-                                                            if (Auth::user()->id == 2) {
-                                                                ?>
-                                                                <td>Allocate Support</td>
-                                                                <td>Allocate Sales</td>
-                                                            <?php } ?>
+                                                           
                                                             <td>Students</td>
                                                             <th>Marks Entered</th>
                                                             <th>Exams Published</th>
@@ -188,43 +183,7 @@ $staffs = DB::table('users')->where('status', 1)->get();
                                                                         echo '<b class="label label-warning">No Person Allocated</b>';
                                                                     }
                                                                     ?></td>
-                                                                <?php
-                                                                if (Auth::user()->id == 2) {
-                                                                    ?>
-                                                                    <td>
-                                                                        <?php
-                                                                        if ($a == 0) {
-                                                                            ?>
-                                                                            <select name="support_id" class="allocate form-control" >
-                                                                                <option></option>
-                                                                                <?php
-                                                                                foreach ($staffs as $staff) {
-                                                                                    ?>
-                                                                                    <option user_id="<?= $staff->id ?>" role_id="8" schema="<?= $school->schema_name ?>" school_id="" value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
-                                                                                <?php } ?>
-
-                                                                            </select>
-                                                                            <span class="status<?= $staff->id ?>8"></span>
-                                                                        <?php } ?>
-                                                                    </td>
-
-                                                                    <td>
-                                                                        <?php
-                                                                        if ($a == 0) {
-                                                                            ?>
-                                                                            <select name="sales_id" class="allocate form-control">
-                                                                                <option></option>
-                                                                                <?php
-                                                                                foreach ($staffs as $staff) {
-                                                                                    ?>
-                                                                                    <option user_id="<?= $staff->id ?>" role_id="3" schema="<?= $school->schema_name ?>" school_id="" value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
-                                                                                <?php } ?>
-
-                                                                            </select>
-                                                                            <span class="status<?= $staff->id ?>3"></span>
-                                                                        <?php } ?>
-                                                                    </td>
-                                                                <?php } ?>
+                                                              
 
                                                                 <td><?php
                                                                     if ($students == 0) {
