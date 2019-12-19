@@ -196,6 +196,7 @@ $staffs = DB::table('users')->where('status', 1)->get();
                                                                         if ($a == 0) {
                                                                             ?>
                                                                             <select name="support_id" class="allocate form-control" >
+                                                                                <option></option>
                                                                                 <?php
                                                                                 foreach ($staffs as $staff) {
                                                                                     ?>
@@ -212,6 +213,7 @@ $staffs = DB::table('users')->where('status', 1)->get();
                                                                         if ($a == 0) {
                                                                             ?>
                                                                             <select name="sales_id" class="allocate form-control">
+                                                                                  <option></option>
                                                                                 <?php
                                                                                 foreach ($staffs as $staff) {
                                                                                     ?>
