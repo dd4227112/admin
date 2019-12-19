@@ -87,6 +87,8 @@ function getActiveStatus($schema_name) {
         return 0;
     }
 }
+
+$staffs = DB::table('users')->where('status', 1)->get();
 ?>
 <!-- Sidebar inner chat end-->
 <!-- Main-body start -->
@@ -147,6 +149,12 @@ function getActiveStatus($schema_name) {
                                                         <tr>
                                                             <th>School Name</th>
                                                             <td>Support Personnel</td>
+                                                            <?php
+                                                            if (Auth::user()->id == 2) {
+                                                                ?>
+                                                                <td>Allocate Support</td>
+                                                                <td>Allocate Sales</td>
+                                                            <?php } ?>
                                                             <td>Students</td>
                                                             <th>Marks Entered</th>
                                                             <th>Exams Published</th>
@@ -164,7 +172,9 @@ function getActiveStatus($schema_name) {
                                                         $no_invoice = 0;
                                                         $no_expense = 0;
                                                         $no_payment = 0;
+                                                        $a = 1;
                                                         foreach ($schools as $school) {
+
                                                             $students = DB::table($school->schema_name . '.student')->count();
                                                             ?>
                                                             <tr>
@@ -172,10 +182,47 @@ function getActiveStatus($schema_name) {
                                                                 <td><?php
                                                                     if (isset($allocation[$school->schema_name])) {
                                                                         echo $allocation[$school->schema_name];
+                                                                        $a = 1;
                                                                     } else {
+                                                                        $a = 0;
                                                                         echo '<b class="label label-warning">No Person Allocated</b>';
                                                                     }
                                                                     ?></td>
+                                                                <?php
+                                                                if (Auth::user()->id == 2) {
+                                                                    ?>
+                                                                    <td>
+                                                                        <?php
+                                                                        if ($a == 0) {
+                                                                            ?>
+                                                                            <select name="support_id" class="allocate form-control" >
+                                                                                <?php
+                                                                                foreach ($staffs as $staff) {
+                                                                                    ?>
+                                                                                    <option user_id="<?= $staff->id ?>" role_id="8" schema="<?= $school->schema_name ?>" school_id="" value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
+                                                                                <?php } ?>
+
+                                                                            </select>
+                                                                            <span class="status<?= $staff->id ?>8"></span>
+                                                                        <?php } ?>
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <?php
+                                                                        if ($a == 0) {
+                                                                            ?>
+                                                                            <select name="sales_id" class="allocate form-control">
+                                                                                <?php
+                                                                                foreach ($staffs as $staff) {
+                                                                                    ?>
+                                                                                    <option user_id="<?= $staff->id ?>" role_id="3" schema="<?= $school->schema_name ?>" school_id="" value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
+                                                                                <?php } ?>
+
+                                                                            </select>
+                                                                            <span class="status<?= $staff->id ?>3"></span>
+                                                                        <?php } ?>
+                                                                    </td>
+                                                                <?php } ?>
 
                                                                 <td><?php
                                                                     if ($students == 0) {
@@ -311,8 +358,8 @@ function getActiveStatus($schema_name) {
                                                                 }
                                                                 ?> 
                                                             </td>
-                                                            <td><?=$active?></td>
-                                                            <td><?=$not_active?></td>
+                                                            <td><?= $active ?></td>
+                                                            <td><?= $not_active ?></td>
                                                             <td><?= $user->tasks()->count() ?></td>
 
                                                             <td>Action</td>
@@ -353,6 +400,37 @@ function getActiveStatus($schema_name) {
     <?php $root = url('/') . '/public/' ?>
 
     <script type="text/javascript">
+        allocate = function () {
+            $('.allocate').change(function () {
+                var user_id = $('option:selected', this).attr('user_id');
+                var school_id = $('option:selected', this).attr('school_id');
+                var role_id = $('option:selected', this).attr('role_id');
+                var schema = $('option:selected', this).attr('schema');
+                $.ajax({
+                    url: '<?= url('customer/allocate/null') ?>',
+                    data: {user_id: user_id, school_id: school_id, role_id: role_id, schema: schema},
+                    dataType: 'html',
+                    success: function (data) {
+                        alert('success');
+                        $('.status' + user_id + '' + role_id).html('<b class="label label-success">success</b>');
+
+                    }
+                });
+            });
+        }
+        $('#school_id').keyup(function () {
+            var val = $(this).val();
+            $.ajax({
+                url: '<?= url('customer/search/null') ?>',
+                data: {val: val, type: 'school', schema: ''},
+                dataType: 'html',
+                success: function (data) {
+
+                    $('#search_result').html(data);
+                }
+            });
+        });
+
 
         get_statistic = function () {
             // var data = getData();
@@ -395,5 +473,6 @@ function getActiveStatus($schema_name) {
             });
         }
         $(document).ready(get_statistic);
+        $(document).ready(allocate);
     </script>
     @endsection
