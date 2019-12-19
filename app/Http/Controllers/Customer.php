@@ -314,10 +314,18 @@ class Customer extends Controller {
         $role_id = request('role_id');
         if ((int) $school_id == 0) {
             $sch = DB::table('admin.all_setting')->where('schema_name', $schema)->first();
-            $school_id = (int) ($sch->school_id) > 0 ? $sch->school_id : DB::table('schools')->where('name', 'ilike', '%'.substr($schema, 0, 4).'%')->first()->id;
+            $school_id = (int) ($sch->school_id) > 0 ? $sch->school_id : DB::table('schools')->where('name', 'ilike', '%' . substr($schema, 0, 4) . '%')->first()->id;
         }
         $school_info = DB::table('schools')->where('id', $school_id);
-        count($school_info->first()) == 1 ? DB::table('users_schools')->insert(['school_id' => $school_id, 'user_id' => $user_id, 'role_id' => $role_id]) : '';
+        if (count($school_info->first()) == 1) {
+            $check = DB::table('users_schools')->where('school_id', $school_id)->where('role_id', $role_id);
+            if ((int) $check->count() > 0) {
+                $check->update(['user_id' => $user_id]);
+            } else {
+                DB::table('users_schools')->insert(['school_id' => $school_id, 'user_id' => $user_id, 'role_id' => $role_id]);
+            }
+        }
+
         $school_info->update(['schema_name' => $schema]);
 
         echo 1;
