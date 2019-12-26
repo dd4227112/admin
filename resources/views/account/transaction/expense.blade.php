@@ -70,7 +70,7 @@
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Start Date</label>
                                         <div class="col-md-9 col-sm-9 col-xs-12">
                                             <?php echo form_error($errors, 'from_date'); ?>
-                                            <input type="date" required="true" class="form-control calendar" id="from_date" name="from_date" value="<?= old('from_date') ?>" >
+                                            <input type="date" required="true" class="form-control calendar" id="from_date" name="from_date" value="<?= old('from_date',$from_date) ?>" >
                                         </div>
                                     </div>
                                 </div>
@@ -81,7 +81,7 @@
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">End Date</label>
                                         <div class="col-md-9 col-sm-9 col-xs-12">
                                             <?php echo form_error($errors, 'to_date'); ?>
-                                            <input type="date" required="true" class="form-control calendar" id="to_date" name="to_date" value="<?= old('to_date') ?>" >
+                                            <input type="date" required="true" class="form-control calendar" id="to_date" name="to_date" value="<?= old('to_date',$to_date) ?>" >
                                         </div>
                                     </div>
                                 </div>                     
