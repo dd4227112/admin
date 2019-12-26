@@ -8,6 +8,7 @@ use \App\Models\Project;
 use \App\Models\InvoiceFee;
 use Illuminate\Validation\Rule;
 use \App\Models\ReferExpense;
+use \App\Models\Expense;
 use DB;
 use Auth;
 
@@ -362,7 +363,7 @@ class Account extends Controller {
                 $to_date = request("to_date");
                 $from_date = request("from_date");
             } else {
-                $from_date = date('Y-m-d');
+                $from_date = date('Y-01-01');
                 $to_date = date('Y-m-d');
             }
             $this->data['from_date'] = $from_date;
@@ -374,21 +375,22 @@ class Account extends Controller {
     }
 
     public function getCategories_by_date($id, $from_date, $to_date) {
+        $ids=Expense::where('date','>=',$from_date)->where('date','<=',$to_date)->get(['refer_expense_id']);
         switch ($id) {
             case 1:
-                $result = ReferExpense::where('financial_category_id', 4)->get();
+                $result = ReferExpense::where('financial_category_id', 4)->whereIn('id',$ids)->get();
                 break;
             case 2:
-                $result = ReferExpense::where('financial_category_id', 6)->get();
+                $result = ReferExpense::where('financial_category_id', 6)->whereIn('id',$ids)->get();
                 break;
             case 3:
-                $result = ReferExpense::where('financial_category_id', 7)->get();
+                $result = ReferExpense::where('financial_category_id', 7)->whereIn('id',$ids)->get();
                 break;
             case 4:
-                $result = ReferExpense::whereIn('financial_category_id', [2, 3])->get();
+                $result = ReferExpense::whereIn('financial_category_id', [2, 3])->whereIn('id',$ids)->get();
                 break;
             case 5:
-                $result = ReferExpense::where('financial_category_id', 5)->get();
+                $result = ReferExpense::where('financial_category_id', 5)->whereIn('id',$ids)->get();
                 break;
             default:
                 $result = array();
