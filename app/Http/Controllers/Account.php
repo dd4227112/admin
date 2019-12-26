@@ -375,22 +375,22 @@ class Account extends Controller {
     }
 
     public function getCategories_by_date($id, $from_date, $to_date) {
-        $ids=Expense::where('date','>=',$from_date)->where('date','<=',$to_date)->get(['refer_expense_id']);
+        $ids = Expense::where('date', '>=', $from_date)->where('date', '<=', $to_date)->get(['refer_expense_id']);
         switch ($id) {
             case 1:
-                $result = ReferExpense::where('financial_category_id', 4)->whereIn('id',$ids)->get();
+                $result = ReferExpense::where('financial_category_id', 4)->whereIn('id', $ids)->get();
                 break;
             case 2:
-                $result = ReferExpense::where('financial_category_id', 6)->whereIn('id',$ids)->get();
+                $result = ReferExpense::where('financial_category_id', 6)->whereIn('id', $ids)->get();
                 break;
             case 3:
-                $result = ReferExpense::where('financial_category_id', 7)->whereIn('id',$ids)->get();
+                $result = ReferExpense::where('financial_category_id', 7)->whereIn('id', $ids)->get();
                 break;
             case 4:
-                $result = ReferExpense::whereIn('financial_category_id', [2, 3])->whereIn('id',$ids)->get();
+                $result = ReferExpense::whereIn('financial_category_id', [2, 3])->whereIn('id', $ids)->get();
                 break;
             case 5:
-                $result = ReferExpense::where('financial_category_id', 5)->whereIn('id',$ids)->get();
+                $result = ReferExpense::where('financial_category_id', 5)->whereIn('id', $ids)->get();
                 break;
             default:
                 $result = array();
@@ -401,9 +401,9 @@ class Account extends Controller {
 
     public function addTransaction() {
         $this->data['banks'] = \App\Models\BankAccount::all();
-         $id = request()->segment(3);
+        $id = request()->segment(3);
         $this->data["category"] = DB::table('refer_expense')->whereIn('financial_category_id', [2, 3])->get();
-       
+
         $this->data['id'] = $id;
         $this->data['check_id'] = $id;
         $this->data['sub_id'] = request()->segment(4);
@@ -454,7 +454,7 @@ class Account extends Controller {
                 "depreciation" => $depreciation,
                 'user_id' => Auth::user()->id
             );
-          //dd(request()->all());
+            //dd(request()->all());
 
             if ($id == 4 || $id == 1) {
 
@@ -488,11 +488,11 @@ class Account extends Controller {
                     ]);
 
 
-                     DB::table('expense')->insert($obj);
+                    DB::table('expense')->insert($obj);
                 }
 
-               // $this->session->set_flashdata('success', $this->lang->line('menu_success'));
-                return redirect(url("account/transaction/$id"))->with('success','success');
+                // $this->session->set_flashdata('success', $this->lang->line('menu_success'));
+                return redirect(url("account/transaction/$id"))->with('success', 'success');
             } else if ($id == 5) {
 
                 $voucher_no = DB::table('current_assets')->max('voucher_no');
@@ -602,10 +602,10 @@ class Account extends Controller {
     }
 
     public function report() {
-         $this->data['set'] = 0;
+        $this->data['set'] = 0;
         $this->data['id'] = 0;
         $this->data['expenses'] = ReferExpense::all();
-        return view('account.report.index', $this->data); 
+        return view('account.report.index', $this->data);
     }
 
     public function view_expense() {
@@ -676,6 +676,60 @@ class Account extends Controller {
         $this->data['refer_id'] = $refer_id;
         $this->data['refer_expense_name'] = $refer_expense->name;
         return view("account.transaction.expense_category", $this->data);
+    }
+
+    public function editExpense($id) {
+
+        $this->data['expense'] = \App\Models\Expense::where('id', $id)->first();
+        $this->data['id'] = 4;
+        $this->data['check_id'] = $id;
+        $this->data["category"] = DB::table('refer_expense')->whereIn('financial_category_id', [2, 3])->get();
+        //dd($this->data['expense']);
+        if ($this->data['expense']) {
+            if ($_POST) {
+                $refer_expense_id = $this->data['expense']->refer_expense_id;
+
+                if ($id == 2) {
+
+                    $amount = request("type") == 1 ? request("amount") : -request("amount");
+                } else {
+
+                    $amount = request("amount");
+                }
+
+                $array = array(
+                    "date" => date("Y-m-d", strtotime(request("date"))),
+                    "amount" => $amount,
+                    "transaction_id" => request("transaction_id"),
+                    "note" => request("note"),
+                    "payment_type_id" => request("payment_type_id"),
+                    "ref_no" => request("transaction_id"),
+                    'recipient'=>request('recipient')
+                );
+               
+                $this->data['expense']->update($array);
+                return redirect(url("account/view_expense/$refer_expense_id/$id"))->with('success','success');
+            } else {
+                return view("account.transaction.edit", $this->data);
+            }
+        } else {
+            $this->data["subview"] = "error";
+            $this->load->view('_layout_main', $this->data);
+        }
+    }
+
+    public function expense() {
+
+        $id = request()->segment(3);
+        $this->data['check_id'] = $expense_id = request()->segment(4);
+        $this->data['sub_id'] = request()->segment(4);
+        $this->data["payment_types"] = \App\Models\PaymentType::all();
+        $this->data['banks'] = \App\Models\BankAccount::all();
+        if ($id == 'edit') {
+            return $this->editExpense($expense_id);
+        } else {
+            echo 'page not found';
+        }
     }
 
 }

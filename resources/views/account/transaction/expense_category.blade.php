@@ -6,8 +6,8 @@
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4>Company Projects/Services</h4>
-                <span>List of Services and Projects</span>
+                <h4>Company Transactions</h4>
+                <span>List of company transactions by date</span>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -18,7 +18,7 @@
                     </li>
                     <li class="breadcrumb-item"><a href="#!">Accounts</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Projects</a>
+                    <li class="breadcrumb-item"><a href="#!">Transactions</a>
                     </li>
                 </ul>
             </div>
@@ -32,7 +32,7 @@
                             <div class="box-header">
                                 <h3 class="box-title"><i class="fa icon-expense"></i> <?php
                                     if ($id == 4) {
-                                        echo __('panel_title');
+                                        echo 'Company Expense';
                                     } elseif ($id == 1) {
                                         echo "Fixed Assets";
                                     } else if ($id == 2) {
@@ -209,11 +209,11 @@
 
                                                                             if ((int) $expense->predefined == 0) {
                                                                                 ?>
-                                                                                <?php echo '<a class="btn btn-sm btn-info" href="'.url('account/expense/edit/' . $expense->expenseID . '/' . $id).'">edit</a>'; ?>
-                                                                                <?php echo '<a class="btn btn-sm btn-danger" href="'.url('expense/delete/' . $expense->expenseID . '/' . $id).'">delete</a>'; ?>
+                                                                                <?php echo '<a class="btn btn-sm btn-info" href="'.url('account/expense/edit/' . $expense->id . '/' . $id).'">edit</a>'; ?>
+                                                                                <?php echo '<a class="btn btn-sm btn-danger" href="'.url('expense/delete/' . $expense->id . '/' . $id).'">delete</a>'; ?>
 
 
-                                                                                <?php echo '<a class="btn btn-sm btn-warning" href="'.url('expense/voucher/' . $expense->expenseID . '/' . $id).'">Payment Voucher</a>'; ?>
+                                                                                <?php echo '<a class="btn btn-sm btn-warning" href="'.url('expense/voucher/' . $expense->id . '/' . $id).'">Payment Voucher</a>'; ?>
                                                                                 <?php
                                                                             }
                                                                         }
