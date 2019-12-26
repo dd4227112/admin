@@ -63,42 +63,41 @@
 
 
 
+                        <div class="col-sm-12 ">
+                            <form style="" class="form-horizontal" role="form" method="post"> 
+                                <div class="col-md-5">
+                                    <div class="form-group row">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Start Date</label>
+                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                            <?php echo form_error($errors, 'from_date'); ?>
+                                            <input type="date" required="true" class="form-control calendar" id="from_date" name="from_date" value="<?= old('from_date') ?>" >
+                                        </div>
+                                    </div>
+                                </div>
 
-                        <!--                        <div class="col-sm-12">
-                                                    <form style="" class="form-horizontal" role="form" method="post"> 
-                                                        <div class="col-md-5">
-                                                            <div class="form-group">
-                                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Start Date</label>
-                                                                <div class="col-md-9 col-sm-9 col-xs-12">
-                        <?php echo form_error($errors, 'from_date'); ?>
-                                                                    <input type="text" required="true" class="form-control calendar" id="from_date" name="from_date" value="<?= old('from_date') ?>" >
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                        
-                        
-                                                        <div class="col-md-5">
-                                                            <div class="form-group">
-                                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">End Date</label>
-                                                                <div class="col-md-9 col-sm-9 col-xs-12">
-                        <?php echo form_error($errors, 'to_date'); ?>
-                                                                    <input type="text" required="true" class="form-control calendar" id="to_date" name="to_date" value="<?= old('to_date') ?>" >
-                                                                </div>
-                                                            </div>
-                                                        </div>                     
-                        
-                        
-                                                        <div class="col-md-2">
-                                                            <div class="form-group">
-                        
-                                                                <div class="col-md-9 col-sm-9 col-xs-12">
-                                                                    <input type="submit" class="btn btn-success" value="Submit" >
-                                                                </div>
-                                                            </div>
-                                                        </div> 
-                        <?= csrf_field() ?>
-                                                    </form>
-                                                </div>             -->
+
+                                <div class="col-md-5">
+                                    <div class="form-group row">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">End Date</label>
+                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                            <?php echo form_error($errors, 'to_date'); ?>
+                                            <input type="date" required="true" class="form-control calendar" id="to_date" name="to_date" value="<?= old('to_date') ?>" >
+                                        </div>
+                                    </div>
+                                </div>                     
+
+
+                                <div class="col-md-2">
+                                    <div class="form-group">
+
+                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                            <input type="submit" class="btn btn-success" value="Submit" >
+                                        </div>
+                                    </div>
+                                </div> 
+                                <?= csrf_field() ?>
+                            </form>
+                        </div>            
 
 
                         <div class="table-responsive dt-responsive "> 
@@ -121,7 +120,7 @@
                                     <?php
                                     $total_expense = 0;
                                     $i = 1;
-                                    $refer_ids=[];
+                                    $refer_ids = [];
                                     if (count($expenses) > 0) {
 
 
@@ -161,7 +160,7 @@
                                                         $new_account = new \App\Http\Controllers\expense();
                                                         if (strtoupper($expense->name) == 'CASH') {
                                                             $total_cash_transaction = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_cash from bank_transactions WHERE  payment_type_id =1 and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . ' '))->first();
-                                                          
+
                                                             $total_current_assets_cash = $new_account->getCashtransactions($from_date, $to_date, 1);
                                                             $total_amount = $total_cash_transaction->total_cash + $total_current_assets_cash->amount;
                                                         } elseif (strtoupper($expense->name) == 'ACCOUNT RECEIVABLE') {
@@ -244,13 +243,13 @@
 
                             </table>
                         </div>
-<div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-block">
-                            <div id="container"></div>
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-block">
+                                    <div id="container"></div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
                         <script type="text/javascript" src="<?= url('/') . '/public/' ?>bower_components/jquery/dist/jquery.min.js"></script>
 
                         <script src="<?= url('/public') ?>/code/highcharts.js"></script>
@@ -267,8 +266,7 @@
                             </thead>
                             <tbody>
                                 <?php
-                                                                   
-                                $sql='select sum(amount) as total,extract(month from date) as month from admin.expense where extract(year from date)='.date('Y').' and refer_expense_id in ('.implode($refer_ids,',').') group by month order by month';
+                                $sql = 'select sum(amount) as total,extract(month from date) as month from admin.expense where extract(year from date)=' . date('Y', strtotime($to_date)) . ' and refer_expense_id in (' . implode($refer_ids, ',') . ') group by month order by month';
                                 $logs = DB::select($sql);
                                 foreach ($logs as $log) {
                                     $monthNum = $log->month;
@@ -298,7 +296,7 @@
             type: 'column'
         },
         title: {
-            text: 'Expense Per Month in <?=date('Y')?>'
+            text: 'Expense Per Month in <?=date('Y', strtotime($to_date)) ?>'
         },
         yAxis: {
             allowDecimals: false,
