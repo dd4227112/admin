@@ -84,10 +84,10 @@
 
 
                                                     foreach ($users as $user) {
-                                                        $uarray[$user->id] = $user->name();
+                                                        $uarray[$user->name()] = $user->name();
                                                     }
                                                 }
-                                                echo form_dropdown("user_id", $uarray, old("user_id"), "id='user_id' class='form-control select2'");
+                                                echo form_dropdown("recipient", $uarray, old("recipient"), "id='recipient' class='form-control select2'");
                                                 ?>
                                             </div>
 
