@@ -362,8 +362,8 @@ class Account extends Controller {
                 $to_date = request("to_date");
                 $from_date = request("from_date");
             } else {
-                $from_date = date('d m Y');
-                $to_date = date('d m Y');
+                $from_date = date('Y-m-d');
+                $to_date = date('Y-m-d');
             }
             $this->data['from_date'] = $from_date;
             $this->data['to_date'] = $to_date;
