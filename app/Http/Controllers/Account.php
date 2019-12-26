@@ -452,7 +452,7 @@ class Account extends Controller {
                 "depreciation" => $depreciation,
                 'user_id' => Auth::user()->id
             );
-           // dd(request()->all());
+          //dd(request()->all());
 
             if ($id == 4 || $id == 1) {
 
@@ -462,7 +462,7 @@ class Account extends Controller {
                 if (request('user_in_shulesoft') == 1) {
 
                     $user_request = explode(',', request('user_id'));
-                    $user = \App\Model\User::where('id', $user_request[0])->where('table', $user_request[1])->first();
+                    $user = \App\Models\User::where('id', $user_request[0])->first();
 
                     $obj = array_merge($array, [
                         'recipient' => $user->name,
@@ -474,7 +474,7 @@ class Account extends Controller {
 
 
 
-                    $insert_id = DB::table('expense')->insertGetId($obj, "expenseID");
+                    $insert_id = DB::table('expense')->insertGetId($obj);
                 } else {
 
                     $obj = array_merge($array, [
@@ -600,7 +600,10 @@ class Account extends Controller {
     }
 
     public function report() {
-        
+         $this->data['set'] = 0;
+        $this->data['id'] = 0;
+        $this->data['expenses'] = ReferExpense::all();
+        return view('account.report.index', $this->data); 
     }
 
     public function view_expense() {
