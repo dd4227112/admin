@@ -160,13 +160,13 @@
                                                     } else if ($id == 5) {
                                                         $new_account = new \App\Http\Controllers\expense();
                                                         if (strtoupper($expense->name) == 'CASH') {
-                                                            $total_cash_transaction = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_cash from ' . set_schema_name() . ' bank_transactions WHERE  payment_type_id =1 and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . ' '))->first();
-                                                            //$total_current_assets= \collect(DB::SELECT('SELECT sum(caolesce(amount,0)) as total_current from '.set_schema_name(). ' current_asset_transactions WHERE refer_expense_id='.$expense->id.'and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . ' '))->first();
+                                                            $total_cash_transaction = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_cash from bank_transactions WHERE  payment_type_id =1 and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . ' '))->first();
+                                                          
                                                             $total_current_assets_cash = $new_account->getCashtransactions($from_date, $to_date, 1);
                                                             $total_amount = $total_cash_transaction->total_cash + $total_current_assets_cash->amount;
                                                         } elseif (strtoupper($expense->name) == 'ACCOUNT RECEIVABLE') {
 
-                                                            $bank_opening_balance = \collect(DB::select('select sum(coalesce(opening_balance,0)) as opening_balance from ' . set_schema_name() . ' bank_accounts'))->first()->opening_balance;
+                                                            $bank_opening_balance = \collect(DB::select('select sum(coalesce(opening_balance,0)) as opening_balance from bank_accounts'))->first()->opening_balance;
 
                                                             $total_receivable = $new_account->getgeneralFeeTotal($from_date, $to_date);
                                                             $total_paid = $new_account->getTotalFeePaidTotal($from_date, $to_date);
@@ -174,9 +174,9 @@
 
                                                             $total_amount = $due_amount + $total_receivable - $total_paid + $bank_opening_balance;
                                                         } else {
-                                                            $total_bank = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_bank from ' . set_schema_name() . ' bank_transactions WHERE bank_account_id=' . $expense->predefined . ' and payment_type_id <> 1 and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . ''))->first();
+                                                            $total_bank = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_bank from  bank_transactions WHERE bank_account_id=' . $expense->predefined . ' and payment_type_id <> 1 and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . ''))->first();
 
-                                                            $total_current_assets = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_current from ' . set_schema_name() . ' current_asset_transactions WHERE refer_expense_id=' . $expense->id . '  and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . ''))->first();
+                                                            $total_current_assets = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_current from current_asset_transactions WHERE refer_expense_id=' . $expense->id . '  and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . ''))->first();
 
 
                                                             $total_amount = $total_bank->total_bank + $total_current_assets->total_current;
@@ -185,7 +185,7 @@
                                                         echo money($total_amount);
                                                     } elseif (strtoupper($expense->name) == 'DEPRECIATION') {
 
-                                                        $total_depreciation = \collect(DB::select('select sum(amount* a.depreciation*(\'' . $to_date . '\'::date-a.date::date)/365) as deprec,COALESCE(sum(b.open_balance::numeric * b.depreciation*(\'' . $to_date . '\'::date-a.date::date)/365),0) as open_balance from ' . set_schema_name() . 'expense a join ' . set_schema_name() . 'refer_expense b  on b.id=a.refer_expense_id where b.financial_category_id=4 AND a.date  <= \'' . $to_date . '\''))->first();
+                                                        $total_depreciation = \collect(DB::select('select sum(amount* a.depreciation*(\'' . $to_date . '\'::date-a.date::date)/365) as deprec,COALESCE(sum(b.open_balance::numeric * b.depreciation*(\'' . $to_date . '\'::date-a.date::date)/365),0) as open_balance from expense a join refer_expense b  on b.id=a.refer_expense_id where b.financial_category_id=4 AND a.date  <= \'' . $to_date . '\''))->first();
 
                                                         $total_amount = $total_depreciation->deprec;
                                                         //$open_balance=$total_depreciation->open_balance;
