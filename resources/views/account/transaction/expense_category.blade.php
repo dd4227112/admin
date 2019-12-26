@@ -123,12 +123,12 @@
                                                             <th class="col-sm-2">Name</th>
 
 
-                                                            <th class="col-sm-2"><?= __('expense_date') ?></th>
+                                                            <th class="col-sm-2"><?= __('Expense Date') ?></th>
 
 
-                                                            <th class="col-sm-1"><?= __('expense_amount') ?></th>                               
+                                                            <th class="col-sm-1"><?= __('Expense Amount') ?></th>                               
 
-                                                            <th class="col-sm-2"><?= __('expense_note') ?></th>
+                                                            <th class="col-sm-2"><?= __('Expense Note') ?></th>
 
                                                             <?php if (isset($depreciation)) { ?>
 
@@ -137,11 +137,11 @@
 
                                                             <?php } else { ?>
 
-                                                                <th class="col-sm-2"><?= __('payment_method') ?></th>       
+                                                                <th class="col-sm-2"><?= __('Payment Method') ?></th>       
                                                             <?php } ?>
 
-                                                            <th class="col-sm-2"><?= __('ref_no') ?></th>
-                                                            <th class="col-sm-2"><?= __('action') ?></th>
+                                                            <th class="col-sm-2"><?= __('Reference') ?></th>
+                                                            <th class="col-sm-2"><?= __('Action') ?></th>
 
 
                                                         </tr>
@@ -166,16 +166,16 @@
                                                                         <?php echo isset($expense->recipient) ? $expense->recipient : ''; ?>
                                                                     </td>
 
-                                                                    <td data-title="<?= __('expense_date') ?>">
+                                                                    <td data-title="<?= __('Expense Date') ?>">
                                                                         <?php echo date("d M Y", strtotime($expense->date)); ?>
                                                                     </td>
 
-                                                                    <td data-title="<?= __('expense_amount') ?>">
+                                                                    <td data-title="<?= __('Expense Amount') ?>">
                                                                         <?php echo money($expense->amount); ?>
                                                                     </td>
 
 
-                                                                    <td data-title="<?= __('expense_note') ?>">
+                                                                    <td data-title="<?= __('Expense Note') ?>">
                                                                         <?php echo $expense->note; ?>
                                                                     </td>
 
@@ -186,12 +186,12 @@
 
                                                                     <?php } else { ?>
 
-                                                                        <td data-title="<?= __('payment_method') ?>">
+                                                                        <td data-title="<?= __('Payment Method') ?>">
                                                                             <?php echo isset($expense->paymentType->name) ? $expense->paymentType->name : ''; ?>
                                                                         </td>        
                                                                     <?php } ?>
 
-                                                                    <td data-title="<?= __('ref_no') ?>">
+                                                                    <td data-title="<?= __('Reference') ?>">
                                                                         <?php
                                                                         if (isset($expense->transaction_id)) {
                                                                             echo $expense->transaction_id;
@@ -209,7 +209,7 @@
 
                                                                             if ((int) $expense->predefined == 0) {
                                                                                 ?>
-                                                                                <?php echo '<a class="btn btn-sm btn-info" href="'.url('expense/edit/' . $expense->expenseID . '/' . $id).'">edit</a>'; ?>
+                                                                                <?php echo '<a class="btn btn-sm btn-info" href="'.url('account/expense/edit/' . $expense->expenseID . '/' . $id).'">edit</a>'; ?>
                                                                                 <?php echo '<a class="btn btn-sm btn-danger" href="'.url('expense/delete/' . $expense->expenseID . '/' . $id).'">delete</a>'; ?>
 
 
@@ -351,10 +351,10 @@
                                                     </tbody>
                                                     <tfoot>
                                                         <tr>
-                                                            <td>Total /td>
+                                                            <td>Total </td>
+                                                            <td></td>
                                                             <td></td>
                                                             <td><?= money($total_expense) . '/=' ?></td>
-                                                            <td></td>
                                                             <td></td>
                                                             <td></td>
                                                             <td></td>
@@ -379,7 +379,7 @@
                                                         <tr>
                                                             <td width="50%">
                                                                 <?php
-                                                                echo __('expense_total') . " : ";
+                                                                echo __('Total') . " : ";
                                                                 ?>
                                                             </td>
                                                             <td style="width:50%;padding-left:10px">

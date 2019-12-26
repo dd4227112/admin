@@ -27,30 +27,30 @@
             <!-- form start -->
             <div class="page-body">
                 <div class="card">
-                  
+
                     <div class="col-sm-12">
-  <br/><h5 class="box-title"><i class="fa icon-expense"></i>
-                        <?php
-                        $global_id = $id;
-                        $name = '';
-                        if ($id == 4) {
-                            echo 'Company Expenses';
-                        } elseif ($id == 1) {
-                            echo "Fixed Assets";
-                            $name = 'Fixed Assets';
-                        } else if ($id == 2) {
-                            echo "Liabilities";
-                            $name = 'Liabilities';
-                        } else if ($id == 3) {
-                            echo "Capital Management";
-                            $name = 'Capital Management';
-                        } else if ($id == 5) {
-                            echo 'Current Assets';
-                            $name = 'Current Assets';
-                        }
-                        ?>
-                    </h5>
-                    <br/><br/>
+                        <br/><h5 class="box-title"><i class="fa icon-expense"></i>
+                            <?php
+                            $global_id = $id;
+                            $name = '';
+                            if ($id == 4) {
+                                echo 'Company Expenses';
+                            } elseif ($id == 1) {
+                                echo "Fixed Assets";
+                                $name = 'Fixed Assets';
+                            } else if ($id == 2) {
+                                echo "Liabilities";
+                                $name = 'Liabilities';
+                            } else if ($id == 3) {
+                                echo "Capital Management";
+                                $name = 'Capital Management';
+                            } else if ($id == 5) {
+                                echo 'Current Assets';
+                                $name = 'Current Assets';
+                            }
+                            ?>
+                        </h5>
+                        <br/><br/>
 
                         <h5 class="page-header">
 
@@ -64,56 +64,56 @@
 
 
 
-<!--                        <div class="col-sm-12">
-                            <form style="" class="form-horizontal" role="form" method="post"> 
-                                <div class="col-md-5">
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Start Date</label>
-                                        <div class="col-md-9 col-sm-9 col-xs-12">
-                                            <?php echo form_error($errors, 'from_date'); ?>
-                                            <input type="text" required="true" class="form-control calendar" id="from_date" name="from_date" value="<?= old('from_date') ?>" >
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div class="col-md-5">
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">End Date</label>
-                                        <div class="col-md-9 col-sm-9 col-xs-12">
-                                            <?php echo form_error($errors, 'to_date'); ?>
-                                            <input type="text" required="true" class="form-control calendar" id="to_date" name="to_date" value="<?= old('to_date') ?>" >
-                                        </div>
-                                    </div>
-                                </div>                     
-
-
-                                <div class="col-md-2">
-                                    <div class="form-group">
-
-                                        <div class="col-md-9 col-sm-9 col-xs-12">
-                                            <input type="submit" class="btn btn-success" value="Submit" >
-                                        </div>
-                                    </div>
-                                </div> 
-                                <?= csrf_field() ?>
-                            </form>
-                        </div>             -->
+                        <!--                        <div class="col-sm-12">
+                                                    <form style="" class="form-horizontal" role="form" method="post"> 
+                                                        <div class="col-md-5">
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Start Date</label>
+                                                                <div class="col-md-9 col-sm-9 col-xs-12">
+                        <?php echo form_error($errors, 'from_date'); ?>
+                                                                    <input type="text" required="true" class="form-control calendar" id="from_date" name="from_date" value="<?= old('from_date') ?>" >
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                        
+                        
+                                                        <div class="col-md-5">
+                                                            <div class="form-group">
+                                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">End Date</label>
+                                                                <div class="col-md-9 col-sm-9 col-xs-12">
+                        <?php echo form_error($errors, 'to_date'); ?>
+                                                                    <input type="text" required="true" class="form-control calendar" id="to_date" name="to_date" value="<?= old('to_date') ?>" >
+                                                                </div>
+                                                            </div>
+                                                        </div>                     
+                        
+                        
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                        
+                                                                <div class="col-md-9 col-sm-9 col-xs-12">
+                                                                    <input type="submit" class="btn btn-success" value="Submit" >
+                                                                </div>
+                                                            </div>
+                                                        </div> 
+                        <?= csrf_field() ?>
+                                                    </form>
+                                                </div>             -->
 
 
                         <div class="table-responsive dt-responsive "> 
                             <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
                                 <thead>
                                     <tr>
-                                        <th class="col-sm-1"><?= __('slno') ?></th>
-                                        <th class="col-sm-1"><?= __('code') ?></th>
-                                        <th class="col-sm-2"><?= __('expense_expense') ?></th>
-                                        <th class="col-sm-2"><?= __('category') ?></th>
-                                        <th class="col-sm-2"><?= __('group_name') ?></th>
-                                        <th class="col-sm-2"><?= __('sum') ?></th>
+                                        <th class="col-sm-1">#</th>
+                                        <th class="col-sm-1">Code</th>
+                                        <th class="col-sm-2">Name</th>
+                                        <th class="col-sm-2">Category</th>
+                                        <th class="col-sm-2">Group</th>
+                                        <th class="col-sm-2">Sum</th>
                                         <th class="col-sm-2">Open Balance</th>
-                                        <th class="col-sm-2"><?= __('expense_note') ?></th>
-                                        <th class="col-sm-2"><?= __('action') ?></th>
+                                        <th class="col-sm-2">Note</th>
+                                        <th class="col-sm-2">Action</th>
 
                                     </tr>
                                 </thead>
@@ -121,10 +121,12 @@
                                     <?php
                                     $total_expense = 0;
                                     $i = 1;
+                                    $refer_ids=[];
                                     if (count($expenses) > 0) {
 
 
                                         foreach ($expenses as $expense) {
+                                            array_push($refer_ids, $expense->id);
                                             ?>
                                             <tr>
                                                 <td data-title="<?= __('slno') ?>">
@@ -148,12 +150,13 @@
                                                     <?php
                                                     if ($id == 2 && $expense->name == 'Unearned Revenue') {
 
-                                                        $unearned = \App\Model\AdvancePayment::sum('amount') - \App\Model\AdvancePaymentsInvoicesFeesInstallment::sum('amount');
-                                                        echo money($unearned);
+                                                        $total_amount = $unearned = \App\Model\AdvancePayment::sum('amount') - \App\Model\AdvancePaymentsInvoicesFeesInstallment::sum('amount');
+                                                        echo money($total_amount);
                                                     } else if (preg_match('/EC-1001/', $expense->code) && $id = 4 && isset($expense->predefined) && (int) $expense->predefined > 0) {
                                                         //this is employer contribution, so lets check the code
                                                         $pension = \App\Model\SalaryPension::where('pension_id', $expense->predefined)->sum('employer_amount');
-                                                        echo money($pension + $expense->expenses()->sum('amount'));
+                                                        $total_amount = $pension + $expense->expenses()->sum('amount');
+                                                        echo money($total_amount);
                                                     } else if ($id == 5) {
                                                         $new_account = new \App\Http\Controllers\expense();
                                                         if (strtoupper($expense->name) == 'CASH') {
@@ -190,8 +193,11 @@
 
                                                         echo money($total_amount);
                                                     } else {
-                                                        echo count($expense->expenses()->get()) > 0 ? money($expense->expenses()->sum('amount')) : '';
+                                                        $total_amount = count($expense->expenses()->get()) > 0 ? money($expense->expenses()->sum('amount')) : '';
+                                                        echo $total_amount;
                                                     }
+
+                                                    $total_expense = (float) $total_expense + (float) str_replace(',', null, $total_amount);
                                                     ?>
                                                 </td>
 
@@ -227,11 +233,56 @@
 
 
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="5">TOTAL</td>
+                                        <td><?= money($total_expense) ?></td>
+                                        <td colspan="3"></td>
+
+                                    </tr>
+                                </tfoot>
 
                             </table>
                         </div>
+<div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-block">
+                            <div id="container"></div>
+                        </div>
+                    </div>
+                </div>
+                        <script type="text/javascript" src="<?= url('/') . '/public/' ?>bower_components/jquery/dist/jquery.min.js"></script>
 
-
+                        <script src="<?= url('/public') ?>/code/highcharts.js"></script>
+                        <script src="<?= url('/public') ?>/code/modules/exporting.js"></script>
+                        <script src="<?= url('/public') ?>/code/modules/export-data.js"></script>
+                        <script src="<?= url('/public') ?>/code/modules/series-label.js"></script>
+                        <script src="<?= url('/public') ?>/code/modules/data.js"></script>
+                        <table id="users_table" style="display:none">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Amount (Tsh)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                                                   
+                                $sql='select sum(amount) as total,extract(month from date) as month from admin.expense where extract(year from date)='.date('Y').' and refer_expense_id in ('.implode($refer_ids,',').') group by month order by month';
+                                $logs = DB::select($sql);
+                                foreach ($logs as $log) {
+                                    $monthNum = $log->month;
+                                    $dateObj = DateTime::createFromFormat('!m', $monthNum);
+                                    $monthName = $dateObj->format('F'); // March
+                                    ?>
+                                    <tr>
+                                        <th><?= $monthName ?></th>
+                                        <td><?= $log->total ?></td>
+                                    </tr>
+                                <?php }
+                                ?> 
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -239,6 +290,29 @@
     </div>
 </div>
 <script type="text/javascript">
+    Highcharts.chart('container', {
+        data: {
+            table: 'users_table'
+        },
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Expense Per Month in <?=date('Y')?>'
+        },
+        yAxis: {
+            allowDecimals: false,
+            title: {
+                text: 'Amounts (Tsh)'
+            }
+        },
+        tooltip: {
+            formatter: function () {
+                return '<b>' + this.series.name + '</b><br/>' +
+                        this.point.y + ' ' + this.point.name.toLowerCase();
+            }
+        }
+    });
     $('.calendar').on('click', function (e) {
         e.preventDefault();
         $(this).attr("autocomplete", "off");
