@@ -539,13 +539,13 @@
         <thead>
             <tr>
                 <th></th>
-                <th>Log Requests</th>
+                <th>User Feedback</th>
             </tr>
         </thead>
         <tbody>
             <?php
-            $logs = DB::select('select count(*),extract(month from created_at) as month from admin.all_log 
-where extract(year from created_at)=2019 group by month order by month');
+            $logs = DB::select('select count(*),extract(month from created_at) as month from constant.feedback 
+where extract(year from created_at)='.date('Y').' group by month order by month');
             foreach ($logs as $log) {
                 $monthNum = $log->month;
                 $dateObj = DateTime::createFromFormat('!m', $monthNum);
@@ -570,12 +570,12 @@ where extract(year from created_at)=2019 group by month order by month');
                 type: 'column'
             },
             title: {
-                text: 'Log Requests Per Month'
+                text: 'User Feedback Per Month'
             },
             yAxis: {
                 allowDecimals: false,
                 title: {
-                    text: 'Log Requests'
+                    text: 'User Feedback'
                 }
             },
             tooltip: {
