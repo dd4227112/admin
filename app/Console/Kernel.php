@@ -46,22 +46,22 @@ class Kernel extends ConsoleKernel {
         })->dailyAt('03:30'); // Eq to 06:30 AM 
 
         $schedule->call(function () {
-            // remind parents to login in shulesoft and check their child performance
+           
             $this->sendNotice();
             $this->sendBirthdayWish();
             $this->sendTaskReminder();
             $this->sendSequenceReminder();
         })->dailyAt('04:40'); // Eq to 07:40 AM 
 //
-        $schedule->call(function() {
-            //send login reminder to parents in all schema
-            $this->sendLoginReminder();
-        })->fridays()->at('9:00');
+//        $schedule->call(function() {
+//            //send login reminder to parents in all schema
+//            $this->sendLoginReminder();
+//        })->fridays()->at('9:00');
 //
-        $schedule->call(function() {
-            //send login reminder to parents in all schema
-            //$this->notifyUsersDailyReports();
-        })->weekly()->weekdays()->at('13:00');
+//        $schedule->call(function() {
+//            //send login reminder to parents in all schema
+//            //$this->notifyUsersDailyReports();
+//        })->weekly()->weekdays()->at('13:00');
 //
         $schedule->call(function () {
             // send Birdthday 
@@ -411,7 +411,7 @@ class Kernel extends ConsoleKernel {
     }
 
     public function sendTodReminder() {
-        $users = DB::select('select * from admin.teacher_on_duty');
+        $users = DB::select('select * from admin.all_teacher_on_duty');
         $all_users = [];
         foreach ($users as $user) {
             array_push($all_users, $user->name);
@@ -432,10 +432,10 @@ class Kernel extends ConsoleKernel {
         $users = DB::select('select a.activity,a.time,b.email,b.phone, b.name, c.name as client_name from admin.tasks a join admin.users b on a.user_id=b.id join admin.clients c on c.id=a.client_id where date::date=CURRENT_DATE');
         foreach ($users as $user) {
             $message = 'Hello  ' . $user->name . ' ,'
-                    . 'Activity to do: ' . $user->activity . ' for ' . $user->client_name . '. Kumbuka kuifanyia kazi na kuandika kwenye status.  Asante';
+                    . 'Activity to do: ' . $user->activity . ' for ' . $user->client_name . '. Kindly remember to write all activities in respective profile.  Thanks';
 
-            if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
-                DB::statement("insert into public.email (email,subject,body) values ('" . $user->email . "', 'Ratiba Ya Zamu','" . $message . "')");
+            if (filter_var($user->email, FILTER_VALIDATE_EMAIL)) {
+                DB::statement("insert into public.email (email,subject,body) values ('" . $user->email . "', 'Todays Tasks','" . $message . "')");
             }
             DB::statement("insert into public.sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
         }
@@ -504,7 +504,7 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
     }
 
     public function sendBirthdayWish() {
-        $schemas = (new \App\Http\Controllers\DatabaseController())->loadSchema();
+        $schemas = (new \App\Http\Controllers\Software())->loadSchema();
         foreach ($schemas as $schema) {
             if (!in_array($schema->table_schema, array('public', 'api', 'admin'))) {
                 //Remind parents,class and section teachers to wish their students
@@ -530,7 +530,7 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
     }
 
     public function sendReportReminder() {
-        $schemas = (new \App\Http\Controllers\DatabaseController())->loadSchema();
+        $schemas = (new \App\Http\Controllers\Software())->loadSchema();
         foreach ($schemas as $schema) {
             if (!in_array($schema->table_schema, array('public', 'api', 'admin', 'kisaraweljs', 'laureatemikocheni', 'laureatembezi', 'lifewaylighschools', 'montessori', 'sullivanprovost', 'ubungomodern', 'whiteangles', 'atlasschools'))) {
 //parents
@@ -542,7 +542,7 @@ select 'Hello '|| p.name|| ', matokeo yote ya '||c.name||'  hupatikana kwenye Sh
     }
 
     public function sendLoginReminder() {
-        $schemas = (new \App\Http\Controllers\DatabaseController())->loadSchema();
+        $schemas = (new \App\Http\Controllers\Software())->loadSchema();
         foreach ($schemas as $schema) {
             if (!in_array($schema->table_schema, array('public', 'api', 'admin'))) {
                 // $this->parentsExamLoginReminder($schema);
