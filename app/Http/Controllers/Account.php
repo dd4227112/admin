@@ -597,7 +597,44 @@ class Account extends Controller {
         $this->data['id'] = 0;
         $this->data['expenses'] = ReferExpense::all();
         $this->data["subview"] = "expense/charts_of_accounts";
+        $this->data["category"] = \App\Models\FinancialCategory::all();
+        $this->data['groups'] = \App\Models\AccountGroup::all();
+        if($_POST){
+            
+            
+          
+            $this->validate(request(), [
+                "subcategory" => "required|regex:/(^([a-zA-Z,. ]+)(\d+)?$)/u",
+                "code" => "regex:/(^[ A-Za-z0-9_@.#&+-]*$)/u|required|iunique:refer_expense,code," . $id,
+                'financial_category_id' => 'numeric|min:1'
+                    ], $this->custom_validation_message);
+            $obj = [
+                'name' => request('subcategory'),
+                "financial_category_id" => request('financial_category_id'),
+            ];
 
+            if ((int) request("group") > 0) {
+                $account_group_id = request("group");
+                // $account_group_id = request("group") > 0 ? request("group") : DB::table('account_groups')->insertGetId($obj);
+
+            } else {
+                $check = DB::table('account_groups')->where($obj)->first();
+                $account_group_id = count($check)>0 ? $check->id : DB::table('account_groups')->insertGetId($obj);
+            }
+            $array = array(
+                "name" => trim(request("subcategory")),
+                "financial_category_id" => request('financial_category_id'),
+                "note" => request("note"),
+                "account_group_id" => $account_group_id,
+                'code' => request('code') == '' ? $this->createCode() : request('code'),
+                'open_balance' => (float) request('open_balance') > 0 ? (float) request('open_balance') : 0,
+                "status" => "$id"
+            );
+
+            ReferExpense::create($array);
+            $this->session->set_flashdata('success', $this->lang->line('menu_success'));
+            return redirect()->back()->with('success','success');
+        }
         return view('account.charts', $this->data);
     }
 
@@ -704,11 +741,11 @@ class Account extends Controller {
                     "note" => request("note"),
                     "payment_type_id" => request("payment_type_id"),
                     "ref_no" => request("transaction_id"),
-                    'recipient'=>request('recipient')
+                    'recipient' => request('recipient')
                 );
-               
+
                 $this->data['expense']->update($array);
-                return redirect(url("account/view_expense/$refer_expense_id/$id"))->with('success','success');
+                return redirect(url("account/view_expense/$refer_expense_id/$id"))->with('success', 'success');
             } else {
                 return view("account.transaction.edit", $this->data);
             }

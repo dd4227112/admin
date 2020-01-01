@@ -15,7 +15,7 @@ class Background extends Controller {
      * @return void
      */
     public function __construct() {
-       // $this->middleware('auth');
+        // $this->middleware('auth');
     }
 
     /**
@@ -205,7 +205,8 @@ class Background extends Controller {
         $uq_names = array_unique($names);
         return implode(',', $uq_names);
     }
-    public function curlServer($fields, $url,$type=null) {
+
+    public function curlServer($fields, $url, $type = null) {
 // Open connection
         $ch = curl_init();
 // Set the url, number of POST vars, POST data
@@ -216,7 +217,7 @@ class Background extends Controller {
         ));
 
         curl_setopt($ch, CURLOPT_POST, TRUE);
-        $data=$type==null ? json_encode($fields) : $fields;
+        $data = $type == null ? json_encode($fields) : $fields;
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -225,4 +226,18 @@ class Background extends Controller {
         curl_close($ch);
         return $result;
     }
+
+    public function createAcademicYear() {
+        DB::select("select * from admin.join_all('academic_year','id,name,class_level_id,created_at,updated_at,start_date,end_date')");
+        $years = DB::select('select distinct a.class_level_id,a."schema_name" from admin.all_academic_year a join admin.all_classlevel b on 
+(a.class_level_id =b.classlevel_id and a."schema_name"=b."schema_name")
+where b.school_level_id in (1,2,3) and a.name <>\''.date('Y').'\' order by a."schema_name"');
+        foreach ($years as $year) {
+            $academic_year_id = DB::table($year->schema_name . '.academic_year')->insertGetId(array('name' => date('Y'), 'class_level_id' => $year->class_level_id, 'start_date' => date('Y-01-01'), 'end_date' => date('Y-12-31')));
+
+            DB::table($year->schema_name . 'semester')->insert(array('name' => 'Term One', 'class_level_id' => $year->class_level_id, 'academic_year_id' => $academic_year_id, 'start_date' => date('Y-01-01'), 'end_date' => date('Y-06-30'), 'study_days' => 92));
+            DB::table($year->schema_name . 'semester')->insert(array('name' => 'Term Two', 'class_level_id' => $year->class_level_id, 'academic_year_id' => $academic_year_id, 'start_date' => date('Y-07-01'), 'end_date' => date('Y-12-31'), 'study_days' => 92));
+        }
+    }
+
 }
