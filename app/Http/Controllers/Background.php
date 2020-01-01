@@ -235,8 +235,8 @@ where b.school_level_id in (1,2,3) and a.name <>\''.date('Y').'\' order by a."sc
         foreach ($years as $year) {
             $academic_year_id = DB::table($year->schema_name . '.academic_year')->insertGetId(array('name' => date('Y'), 'class_level_id' => $year->class_level_id, 'start_date' => date('Y-01-01'), 'end_date' => date('Y-12-31')));
 
-            DB::table($year->schema_name . 'semester')->insert(array('name' => 'Term One', 'class_level_id' => $year->class_level_id, 'academic_year_id' => $academic_year_id, 'start_date' => date('Y-01-01'), 'end_date' => date('Y-06-30'), 'study_days' => 92));
-            DB::table($year->schema_name . 'semester')->insert(array('name' => 'Term Two', 'class_level_id' => $year->class_level_id, 'academic_year_id' => $academic_year_id, 'start_date' => date('Y-07-01'), 'end_date' => date('Y-12-31'), 'study_days' => 92));
+            DB::table($year->schema_name . '.semester')->insert(array('name' => 'Term One', 'class_level_id' => $year->class_level_id, 'academic_year_id' => $academic_year_id, 'start_date' => date('Y-01-01'), 'end_date' => date('Y-06-30'), 'study_days' => 92));
+            DB::table($year->schema_name . '.semester')->insert(array('name' => 'Term Two', 'class_level_id' => $year->class_level_id, 'academic_year_id' => $academic_year_id, 'start_date' => date('Y-07-01'), 'end_date' => date('Y-12-31'), 'study_days' => 92));
         }
     }
 
