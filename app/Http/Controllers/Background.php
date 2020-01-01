@@ -227,11 +227,15 @@ class Background extends Controller {
         return $result;
     }
 
+    /*     * This sql exclude school with defined academic year. If a school has got a primary and nursery level and only one level has created new academic year, this query will skip creation of new acdemic year
+     * 
+     */
+
     public function createAcademicYear() {
         DB::select("select * from admin.join_all('academic_year','id,name,class_level_id,created_at,updated_at,start_date,end_date')");
         $years = DB::select('select distinct a.class_level_id,a."schema_name" from admin.all_academic_year a join admin.all_classlevel b on 
 (a.class_level_id =b.classlevel_id and a."schema_name"=b."schema_name")
-where b.school_level_id in (1,2,3) and a.name <>\''.date('Y').'\' order by a."schema_name"');
+where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_name" from admin.all_academic_year where name=\'' . date('Y') . '\') order by a."schema_name"');
         foreach ($years as $year) {
             $academic_year_id = DB::table($year->schema_name . '.academic_year')->insertGetId(array('name' => date('Y'), 'class_level_id' => $year->class_level_id, 'start_date' => date('Y-01-01'), 'end_date' => date('Y-12-31')));
 
