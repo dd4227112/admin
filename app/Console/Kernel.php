@@ -46,7 +46,7 @@ class Kernel extends ConsoleKernel {
         })->dailyAt('03:30'); // Eq to 06:30 AM 
 
         $schedule->call(function () {
-           
+
             $this->sendNotice();
             $this->sendBirthdayWish();
             $this->sendTaskReminder();
@@ -109,25 +109,27 @@ class Kernel extends ConsoleKernel {
     }
 
     public function sendReminder($schedule) {
-        $users = DB::table($schedule->schema_name . '.users')->whereIn('id', explode(',', $schedule->user_id))->where('role_id', $schedule->role_id)->get();
+        if (count(explode(',', $schedule->user_id)) > 0) {
+            $users = DB::table($schedule->schema_name . '.users')->whereIn('id', explode(',', $schedule->user_id))->where('role_id', $schedule->role_id)->get();
 
-        $check_payment_pattern = (preg_match('/#balance/i', $schedule->message) || preg_match('/#invoice/i', $schedule->message)) ? 1 : 0;
-        foreach ($users as $user) {
-            $payment_pattern = $check_payment_pattern == 1 ? $this->checkPaymentPattern($user, $schedule->schema_name) : [];
-            $patterns = array(
-                '/#name/i', '/#username/i', '/#balance/i', '/#student_name/i', '/#invoice/i'
-            );
-            $replacements = count($payment_pattern) > 0 ? array(
-                $user->name, $user->username, $payment_pattern[0], $payment_pattern[1], $payment_pattern[2]) : array($user->name, $user->username, 0, 0, 0
-            );
-            $body = preg_replace($patterns, $replacements, $schedule->message);
-            if ($schedule->type == 2) { //email
-                $this->saveEmail($schedule->schema_name, $user->email, $body, $user->id, $schedule->title);
-            } else if ($schedule->type == 1) {
-                $this->saveSms($schedule->schema_name, $user->phone, $body, $user->id);
-            } else {
-                $this->saveSms($schedule->schema_name, $user->phone, $body, $user->id);
-                $this->saveEmail($schedule->schema_name, $user->email, $body, $user->id, $schedule->title);
+            $check_payment_pattern = (preg_match('/#balance/i', $schedule->message) || preg_match('/#invoice/i', $schedule->message)) ? 1 : 0;
+            foreach ($users as $user) {
+                $payment_pattern = $check_payment_pattern == 1 ? $this->checkPaymentPattern($user, $schedule->schema_name) : [];
+                $patterns = array(
+                    '/#name/i', '/#username/i', '/#balance/i', '/#student_name/i', '/#invoice/i'
+                );
+                $replacements = count($payment_pattern) > 0 ? array(
+                    $user->name, $user->username, $payment_pattern[0], $payment_pattern[1], $payment_pattern[2]) : array($user->name, $user->username, 0, 0, 0
+                );
+                $body = preg_replace($patterns, $replacements, $schedule->message);
+                if ($schedule->type == 2) { //email
+                    $this->saveEmail($schedule->schema_name, $user->email, $body, $user->id, $schedule->title);
+                } else if ($schedule->type == 1) {
+                    $this->saveSms($schedule->schema_name, $user->phone, $body, $user->id);
+                } else {
+                    $this->saveSms($schedule->schema_name, $user->phone, $body, $user->id);
+                    $this->saveEmail($schedule->schema_name, $user->email, $body, $user->id, $schedule->title);
+                }
             }
         }
     }
@@ -184,7 +186,7 @@ class Kernel extends ConsoleKernel {
     }
 
     public function syncInvoice() {
-        $invoices = DB::select("select * from api.invoices where sync=0 and prefix <>'' and amount >0 and payment_integrated=1 order by random() limit 15");
+        $invoices = DB::select("select * from api.invoices where sync=0 and prefix <>'SASA04' and amount >0 and payment_integrated=1 order by random() limit 15");
         if (count($invoices) > 0) {
             foreach ($invoices as $invoice) {
                 $token = $this->getToken($invoice);
@@ -464,10 +466,10 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
                     $replacements = array(
                         $user->name, $user->username, $user->email, $user->phone, $user->usertype
                     );
-                    $message = $this->getCleanSms($replacements, $sequence->message). ''
-                            . '. Kwa Msaada Nipigie: '.$user->csr_name.' (Account Manager - '.$user->csr_phone.')';
+                    $message = $this->getCleanSms($replacements, $sequence->message) . ''
+                            . '. Kwa Msaada Nipigie: ' . $user->csr_name . ' (Account Manager - ' . $user->csr_phone . ')';
                     if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
-                        DB::statement("insert into ".$user->schema_name.".email (email,subject,body) values ('" . $user->email . "', '" . $sequence->title . "','" . $message . "')");
+                        DB::statement("insert into " . $user->schema_name . ".email (email,subject,body) values ('" . $user->email . "', '" . $sequence->title . "','" . $message . "')");
                     }
                     DB::statement("insert into public.sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
                     DB::table('users_sequences')->insert(['user_id' => $user->id, 'table' => $user->table, 'sequence_id' => $sequence->id, 'schema_name' => $user->schema_name
@@ -497,7 +499,7 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
                     if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
                         DB::statement("insert into " . $notice->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Calender Reminder : " . $notice->title . "','" . $message . "')");
                     }
-                    DB::statement("insert into " . $notice->schema_name . ".sms (phone_number,body,type,sms_keys_id) values ('" . $user->phone . "','" . $message . "',0,".$user->sms_keys_id." )");
+                    DB::statement("insert into " . $notice->schema_name . ".sms (phone_number,body,type,sms_keys_id) values ('" . $user->phone . "','" . $message . "',0," . $user->sms_keys_id . " )");
                 }
             }
         }
