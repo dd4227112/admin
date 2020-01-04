@@ -184,7 +184,7 @@ class Kernel extends ConsoleKernel {
     }
 
     public function syncInvoice() {
-        $invoices = DB::select('select * from api.invoices where sync=0 and amount >0 and payment_integrated=1 order by random() limit 15');
+        $invoices = DB::select("select * from api.invoices where sync=0 and prefix <>'' and amount >0 and payment_integrated=1 order by random() limit 15");
         if (count($invoices) > 0) {
             foreach ($invoices as $invoice) {
                 $token = $this->getToken($invoice);
