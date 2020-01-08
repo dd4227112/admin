@@ -149,7 +149,12 @@ $staffs = DB::table('users')->where('status', 1)->get();
                                                         <tr>
                                                             <th>School Name</th>
                                                             <td>Support Personnel</td>
-                                                           
+                                                            <?php
+                                                            if (in_array(Auth::user()->id,[2,7])) {
+                                                                ?>
+                                                                <td>Allocate Support</td>
+                                                                <td>Allocate Sales</td>
+                                                            <?php } ?>
                                                             <td>Students</td>
                                                             <th>Marks Entered</th>
                                                             <th>Exams Published</th>
@@ -177,13 +182,48 @@ $staffs = DB::table('users')->where('status', 1)->get();
                                                                 <td><?php
                                                                     if (isset($allocation[$school->schema_name])) {
                                                                         echo $allocation[$school->schema_name];
-                                                                        $a = 1;
+                                                                        //$a = 1;
+                                                                         $a = 0;
                                                                     } else {
                                                                         $a = 0;
                                                                         echo '<b class="label label-warning">No Person Allocated</b>';
                                                                     }
                                                                     ?></td>
-                                                              
+                                                                <?php
+                                                               if (in_array(Auth::user()->id,[2,7])) {
+                                                                    ?>
+                                                                    <td>
+                                                                        <?php
+                                                                        if ($a == 0) {
+                                                                            ?>
+                                                                            <select name="support_id" class="allocate" >
+                                                                                <?php
+                                                                                foreach ($staffs as $staff) {
+                                                                                    ?>
+                                                                                    <option user_id="<?= $staff->id ?>" role_id="8" schema="<?= $school->schema_name ?>" school_id="" value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
+                                                                                <?php } ?>
+
+                                                                            </select>
+                                                                            <span id="status_result_8_<?=$school->schema_name?>"></span>
+                                                                        <?php } ?>
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <?php
+                                                                        if ($a == 0) {
+                                                                            ?>
+                                                                            <select name="sales_id" class="allocate">
+                                                                                <?php
+                                                                                foreach ($staffs as $staff) {
+                                                                                    ?>
+                                                                                    <option user_id="<?= $staff->id ?>" role_id="3" schema="<?= $school->schema_name ?>" school_id="" value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
+                                                                                <?php } ?>
+
+                                                                            </select>
+                                                                            <span id="status_result_3_<?=$school->schema_name ?>"></span>
+                                                                        <?php } ?>
+                                                                    </td>
+                                                                <?php } ?>
 
                                                                 <td><?php
                                                                     if ($students == 0) {
@@ -285,8 +325,8 @@ $staffs = DB::table('users')->where('status', 1)->get();
                                         <h6>
                                             <b>User Allocation Summary</b>
                                         </h6>
-                                        <div class="table-responsive dt-responsive">
-                                            <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
+                                        <div class="mail-body-content">
+                                            <table class="table">
 
                                                 <thead>
                                                     <tr>
@@ -309,17 +349,15 @@ $staffs = DB::table('users')->where('status', 1)->get();
                                                             <td><?= $user->firstname . ' ' . $user->lastname ?></td>
                                                             <td><?= $schools->count() ?></td>
                                                             <td>
-                                                                <p style="max-width: 50%">
-                                                                    <?php
-                                                                    $active = 0;
-                                                                    $not_active = 0;
-                                                                    foreach ($schools->get() as $school) {
-                                                                        echo $school->school->schema_name . ',';
-                                                                        $active = getActiveStatus($school->school->schema_name) == 1 ? $active + 1 : $active;
-                                                                        $not_active = getActiveStatus($school->school->schema_name) == 0 ? $not_active + 1 : $not_active;
-                                                                    }
-                                                                    ?> 
-                                                                </p>
+                                                                <?php
+                                                                $active = 0;
+                                                                $not_active = 0;
+                                                                foreach ($schools->get() as $school) {
+                                                                    echo $school->school->schema_name . ',';
+                                                                    $active = getActiveStatus($school->school->schema_name) == 1 ? $active + 1 : $active;
+                                                                    $not_active = getActiveStatus($school->school->schema_name) == 0 ? $not_active + 1 : $not_active;
+                                                                }
+                                                                ?> 
                                                             </td>
                                                             <td><?= $active ?></td>
                                                             <td><?= $not_active ?></td>
@@ -374,8 +412,8 @@ $staffs = DB::table('users')->where('status', 1)->get();
                     data: {user_id: user_id, school_id: school_id, role_id: role_id, schema: schema},
                     dataType: 'html',
                     success: function (data) {
-                        alert('success');
-                        $('.status' + user_id + '' + role_id).html('<b class="label label-success">success</b>');
+                       /// alert('success',data);
+                        $('#status_result_' + role_id+'_'+schema).html('<b class="label label-success">success</b>');
 
                     }
                 });
