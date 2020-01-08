@@ -314,7 +314,12 @@ class Customer extends Controller {
         $role_id = request('role_id');
         if ((int) $school_id == 0) {
             $sch = DB::table('admin.all_setting')->where('schema_name', $schema)->first();
-            $school_id = (int) ($sch->school_id) > 0 ? $sch->school_id : DB::table('schools')->where('name', 'ilike', '%' . substr($schema, 0, 4) . '%')->first()->id;
+            $obj = DB::table('schools')->where('name', 'ilike', '%' . substr($schema, 0, 4) . '%')->first();
+            $school_id = count($sch) == 1 ? $sch->school_id : count($obj) == 1 ? $obj->id : '';
+        }
+        if ((int) $school_id == 0) {
+            //this school does not exists, try to add it in a list of schols
+            $school_id = DB::table('schools')->insertGetId(['name' => $schema, 'ownership' => 'Non-Government', 'schema_name' => $schema]);
         }
         $school_info = DB::table('schools')->where('id', $school_id);
         if (count($school_info->first()) == 1) {
@@ -324,6 +329,7 @@ class Customer extends Controller {
             } else {
                 DB::table('users_schools')->insert(['school_id' => $school_id, 'user_id' => $user_id, 'role_id' => $role_id]);
             }
+            DB::table($schema . '.setting')->update(['school_id' => $school_id]);
         }
 
         $school_info->update(['schema_name' => $schema]);
