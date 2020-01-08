@@ -310,7 +310,7 @@ function toast(message) {
                                             <?php
                                             foreach ($tasks as $task) {
                                                 ?>
-                                                <li>
+                                            <li style="cursor:pointer"; onclick="window.location.href='<?=url('customer/profile/'.$task->username)?>'">
                                                     <div class="media">
                                                         <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Generic placeholder image">
                                                         <div class="media-body">
