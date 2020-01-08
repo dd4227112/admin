@@ -203,4 +203,12 @@ class Users extends Controller {
         }
     }
 
+    public function applicant() {
+        
+    }
+
+    public function template() {
+        
+    }
+
 }

@@ -293,55 +293,42 @@ function toast(message) {
                                         </li>
                                     </ul>
                                 </li>
-                                <?php if (false) { ?>
+                                <?php
+                                if (true) {
+                                    $tasks = \App\Models\Task::where('to_user_id', Auth::user()->id)->where('date', '>=', date('Y-m-d'))->get();
+                                    ?>
                                     <li class="header-notification">
                                         <a href="#!">
                                             <i class="ti-bell"></i>
-                                            <span class="badge">5</span>
+                                            <span class="badge"><?= count($tasks) ?></span>
                                         </a>
                                         <ul class="show-notification">
                                             <li>
                                                 <h6>Notifications</h6>
                                                 <label class="label label-danger">New</label>
                                             </li>
-                                            <li>
-                                                <div class="media">
-                                                    <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Generic placeholder image">
-                                                    <div class="media-body">
-                                                        <h5 class="notification-user">John Doe</h5>
-                                                        <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
-                                                        <span class="notification-time">30 minutes ago</span>
+                                            <?php
+                                            foreach ($tasks as $task) {
+                                                ?>
+                                                <li>
+                                                    <div class="media">
+                                                        <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Generic placeholder image">
+                                                        <div class="media-body">
+                                                            <h5 class="notification-user">Client: <?= $task->client->name ?></h5>
+                                                            <p class="notification-msg"><?= $task->activity ?></p>
+                                                            <span class="notification-time"><?= date('d M Y', strtotime($task->date)) ?></span>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="media">
-                                                    <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Generic placeholder image">
-                                                    <div class="media-body">
-                                                        <h5 class="notification-user">Joseph William</h5>
-                                                        <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
-                                                        <span class="notification-time">30 minutes ago</span>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="media">
-                                                    <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Generic placeholder image">
-                                                    <div class="media-body">
-                                                        <h5 class="notification-user">Sara Soudein</h5>
-                                                        <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
-                                                        <span class="notification-time">30 minutes ago</span>
-                                                    </div>
-                                                </div>
-                                            </li>
+                                                </li>
+                                            <?php } ?>
                                         </ul>
                                     </li>
-                                    <li class="header-notification">
-                                        <a href="#!" class="displayChatbox">
-                                            <i class="ti-comments"></i>
-                                            <span class="badge">9</span>
-                                        </a>
-                                    </li>
+                                    <!--                                    <li class="header-notification">
+                                                                            <a href="#!" class="displayChatbox">
+                                                                                <i class="ti-comments"></i>
+                                                                                <span class="badge">9</span>
+                                                                            </a>
+                                                                        </li>-->
                                 <?php } ?>
                                 <li class="user-profile header-notification">
                                     <a href="#!">
@@ -644,12 +631,19 @@ function toast(message) {
                             </li>
                         <?php } ?>
                         <?php if (can_access('manage_users')) { ?>
-                            <li class="nav-item single-item">
-                                <a href="<?= url('users/index') ?>">
-                                    <i class="ti-layers-alt"></i>
-                                    <span data-i18n="nav.sticky-notes.main"> Users</span>
+                            <li class="nav-item">
+                                <a href="#!">
+                                    <i class="ti-gift "></i>
+                                    <span data-i18n="nav.extra-components.main">Human Resources</span>
                                 </a>
+                                <ul class="tree-1">
+                                    <li><a href="<?= url('users/index') ?>" data-i18n="nav.extra-components.session-timeout">Users</a></li>
+                                    <li><a href="<?= url('users/applicant') ?>" data-i18n="nav.extra-components.session-idle-timeout">Applicants</a>
+                                    </li>
+                                    <li><a href="<?= url('users/template') ?>" data-i18n="nav.extra-components.offline">Forms & Templates</a></li>
+                                </ul>
                             </li>
+
                             <?php
                         }
                         ?>
