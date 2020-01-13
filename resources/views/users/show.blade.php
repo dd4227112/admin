@@ -40,11 +40,11 @@ foreach ($user_permission as $permis) {
                         <div class="col-md-12 col-xl-4">
                             <div class="card counter-card-1">
                                 <div class="card-block-big">
-                                   <div class="media-left">
-                                            <a href="#" class="profile-image">
-                                                <img class="user-img img-circle" src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image">
-                                            </a>
-                                        </div>
+                                    <div class="media-left">
+                                        <a href="#" class="profile-image">
+                                            <img class="user-img img-circle" src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image">
+                                        </a>
+                                    </div>
                                     <i class="icofont icofont-comment"></i>
                                 </div>
                             </div>
@@ -53,7 +53,7 @@ foreach ($user_permission as $permis) {
                             <div class="card counter-card-2">
                                 <div class="card-block-big">
                                     <div>
-                                        <h3>Tsh <?= number_format($user->salary)?></h3>
+                                        <h3>Tsh <?= number_format($user->salary) ?></h3>
                                         <p>Basic Salary
                                             <span class="f-right text-success">
                                                 <i class="icofont icofont-arrow-up"></i>
@@ -76,7 +76,7 @@ foreach ($user_permission as $permis) {
                                         <p>This Month Bonus
                                             <span class="f-right text-default">
                                                 <i class="icofont icofont-arrow-up"></i>
-                                               Based on performance
+                                                Based on performance
                                             </span></p>
                                         <div class="progress ">
                                             <div class="progress-bar progress-bar-striped progress-xs progress-bar-default" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
@@ -99,22 +99,26 @@ foreach ($user_permission as $permis) {
                                 <a class="nav-link active" data-toggle="tab" href="#personal" role="tab">Personal Info</a>
                                 <div class="slide"></div>
                             </li>
-<!--                            <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#binfo" role="tab">User's Services</a>
-                                <div class="slide"></div>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#contacts" role="tab">User's Contacts</a>
-                                <div class="slide"></div>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#review" role="tab">Reviews</a>
-                                <div class="slide"></div>
-                            </li>-->
-                            <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#permissions" role="tab">Permissions</a>
-                                <div class="slide"></div>
-                            </li>
+                            <!--                            <li class="nav-item">
+                                                            <a class="nav-link" data-toggle="tab" href="#binfo" role="tab">User's Services</a>
+                                                            <div class="slide"></div>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="nav-link" data-toggle="tab" href="#contacts" role="tab">User's Contacts</a>
+                                                            <div class="slide"></div>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="nav-link" data-toggle="tab" href="#review" role="tab">Reviews</a>
+                                                            <div class="slide"></div>
+                                                        </li>-->
+                            <?php
+                            if ($user->id == 2) {
+                                ?>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#permissions" role="tab">Permissions</a>
+                                    <div class="slide"></div>
+                                </li>
+                            <?php } ?>
                         </ul>
                     </div>
                     <!-- tab header end -->
@@ -126,9 +130,13 @@ foreach ($user_permission as $permis) {
                             <div class="card">
                                 <div class="card-header">
                                     <h5 class="card-header-text">About Me</h5>
-                                    <a id="edit-btn" href="<?=url('users/edit/'.$user->id)?>" class="btn btn-sm btn-primary waves-effect waves-light f-right">
-                                        <i class="icofont icofont-edit"></i>
-                                    </a>
+                                    <?php
+                                    if ($user->id == 2) {
+                                        ?>
+                                        <a id="edit-btn" href="<?= url('users/edit/' . $user->id) ?>" class="btn btn-sm btn-primary waves-effect waves-light f-right">
+                                            <i class="icofont icofont-edit"></i>
+                                        </a>
+                                    <?php } ?>
                                 </div>
                                 <div class="card-block">
                                     <div class="view-info">
@@ -357,7 +365,7 @@ foreach ($user_permission as $permis) {
                                         </div>
                                         <div class="card-block user-desc">
                                             <div class="view-desc">
-                                                <p><?=$user->about?></p>
+                                                <p><?= $user->about ?></p>
                                             </div>
                                             <div class="edit-desc" style="display: none;">
                                                 <div class="col-md-12">
