@@ -10,7 +10,7 @@ class User extends Model {
      * Generated
      */
     protected $table = 'users';
-    protected $fillable = ['id', 'firstname', 'middlename', 'lastname', 'email', 'password', 'rolename', 'type', 'name', 'remember_token', 'dp', 'phone', 'town', 'created_by', 'photo'];
+    protected $fillable = ['id', 'firstname', 'middlename', 'lastname', 'email', 'password', 'rolename', 'type', 'name', 'remember_token', 'dp', 'phone', 'town', 'created_by', 'photo','about','salary','sex','skills','marital'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -83,5 +83,8 @@ class User extends Model {
 
      public function tasks() {
         return $this->hasMany(\App\Models\Task::class);
+    }
+      public function role() {
+        return $this->belongsTo('App\Model\Role')->withDefault(['display_name' => 'unknown']);
     }
 }

@@ -338,17 +338,18 @@ function toast(message) {
                                     </a>
 
                                     <ul class="show-notification profile-notification">
+                                        <li>
+                                                <a href="<?=url('users/show/'.Auth::user()->id)?>">
+                                                    <i class="ti-user"></i> Profile
+                                                </a>
+                                            </li>
                                         <?php if (false) { ?>
                                             <li>
                                                 <a href="#!">
                                                     <i class="ti-settings"></i> Settings
                                                 </a>
                                             </li>
-                                            <li>
-                                                <a href="user-profile.html">
-                                                    <i class="ti-user"></i> Profile
-                                                </a>
-                                            </li>
+                                            
                                             <li>
                                                 <a href="email-inbox.html">
                                                     <i class="ti-email"></i> My Messages

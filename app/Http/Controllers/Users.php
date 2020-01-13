@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Model\User;
+use App\Models\User;
 use DB;
 use Intervention\Image\ImageManagerStatic as Image;
 use Auth;
@@ -93,7 +93,7 @@ class Users extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function show() {
-        $id = request()->segment(3);
+        $id = (int)request()->segment(3) ==0 ? Auth::user()->id :request()->segment(3) ;
         $this->data['user'] = User::find($id);
 
         $this->data['user_permission'] = \App\Models\Permission::whereIn('id', \App\Models\PermissionRole::where('role_id', $this->data['user']->role_id)->get(['permission_id']))->get(['id']);
@@ -145,7 +145,6 @@ class Users extends Controller {
                 'lastname' => 'required|max:255',
                 'phone' => 'required|max:255',
             ]);
-
             $user = User::find($id)->update(request()->all());
 
 
