@@ -196,7 +196,8 @@ class Kernel extends ConsoleKernel {
                         "student_name" => $invoice->student_name,
                         "student_id" => $invoice->student_id,
                         "amount" => $invoice->amount,
-                        "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
+                       // "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
+                        "type" =>ucfirst($invoice->schema_name).' School Fees',
                         "code" => "10",
                         "callback_url" => "http://51.77.212.234:8081/api/init",
                         "token" => $token
@@ -237,7 +238,8 @@ class Kernel extends ConsoleKernel {
                         "student_name" => $invoice->student_name,
                         "student_id" => $invoice->student_id,
                         "amount" => $invoice->amount,
-                        "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
+                      //  "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
+                         "type" =>ucfirst($invoice->schema_name).' School Fees',
                         "code" => "10",
                         "callback_url" => "http://51.77.212.234:8081/api/init",
                         "token" => $token
