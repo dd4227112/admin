@@ -140,17 +140,56 @@ $staffs = DB::table('users')->where('status', 1)->get();
                                     <span>This part shows which modules are actively used by school and which areas we need to focus to help schools.</span>
                                     <div class="steamline">
 
+                                        <p align='right'>  <button type="button" id="notify_schools" style="display:none" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#large-Modal">Send Message</button></p>
+                                        <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Send Notification</h4>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                    <form action="#" method="post">
+                                                        <div class="modal-body">
+                                                            <span>
+                                                                Send notification to selected schools</span>
 
+                                                            <div class="form-group">
+                                                                <textarea class="form-control" placeholder="Compose message" name="message"></textarea>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <div class="row">
+                                                                    <p> Send As - 
+                                                                        <input type="checkbox" placeholder="Deadline" name="sms">SMS
+                                                                        <input type="checkbox" placeholder="Deadline" name="email">Email </p>
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-primary waves-effect waves-light ">Send</button>
+                                                            <input type="hidden" id='schools_mapped' name="schools" value=""/>
+                                                        </div>
+
+                                                        <?= csrf_field() ?>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="card-block">
 
                                             <div class="table-responsive dt-responsive">
                                                 <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                                                     <thead>
                                                         <tr>
+                                                            <th><input type="checkbox"  name="all" id="toggle_all"> </th>
                                                             <th>School Name</th>
                                                             <td>Support Personnel</td>
                                                             <?php
-                                                            if (in_array(Auth::user()->id,[2,7])) {
+                                                            if (in_array(Auth::user()->id, [2, 7])) {
                                                                 ?>
                                                                 <td>Allocate Support</td>
                                                                 <td>Allocate Sales</td>
@@ -178,26 +217,29 @@ $staffs = DB::table('users')->where('status', 1)->get();
                                                             $students = DB::table($school->schema_name . '.student')->count();
                                                             ?>
                                                             <tr>
+                                                                <td>
+                                                                    <input type="checkbox"  class="check" name="select[]" value="<?= $school->schema_name ?>">
+                                                                </td>
                                                                 <td><?= $school->schema_name ?></td>
                                                                 <td><?php
                                                                     if (isset($allocation[$school->schema_name])) {
                                                                         echo $allocation[$school->schema_name];
                                                                         //$a = 1;
-                                                                         $a = 0;
+                                                                        $a = 0;
                                                                     } else {
                                                                         $a = 0;
                                                                         echo '<b class="label label-warning">No Person Allocated</b>';
                                                                     }
                                                                     ?></td>
                                                                 <?php
-                                                               if (in_array(Auth::user()->id,[2,7])) {
+                                                                if (in_array(Auth::user()->id, [2, 7])) {
                                                                     ?>
                                                                     <td>
                                                                         <?php
                                                                         if ($a == 0) {
                                                                             ?>
-                                                                        <select name="support_id" class="allocate" >
-                                                                            <option></option>
+                                                                            <select name="support_id" class="allocate" >
+                                                                                <option></option>
                                                                                 <?php
                                                                                 foreach ($staffs as $staff) {
                                                                                     ?>
@@ -205,7 +247,7 @@ $staffs = DB::table('users')->where('status', 1)->get();
                                                                                 <?php } ?>
 
                                                                             </select>
-                                                                            <span id="status_result_8_<?=$school->schema_name?>"></span>
+                                                                            <span id="status_result_8_<?= $school->schema_name ?>"></span>
                                                                         <?php } ?>
                                                                     </td>
 
@@ -214,7 +256,7 @@ $staffs = DB::table('users')->where('status', 1)->get();
                                                                         if ($a == 0) {
                                                                             ?>
                                                                             <select name="sales_id" class="allocate">
-                                                                                 <option></option>
+                                                                                <option></option>
                                                                                 <?php
                                                                                 foreach ($staffs as $staff) {
                                                                                     ?>
@@ -222,7 +264,7 @@ $staffs = DB::table('users')->where('status', 1)->get();
                                                                                 <?php } ?>
 
                                                                             </select>
-                                                                            <span id="status_result_3_<?=$school->schema_name ?>"></span>
+                                                                            <span id="status_result_3_<?= $school->schema_name ?>"></span>
                                                                         <?php } ?>
                                                                     </td>
                                                                 <?php } ?>
@@ -345,25 +387,25 @@ $staffs = DB::table('users')->where('status', 1)->get();
                                                     <?php
                                                     $users = \App\Models\User::where('role_id', 8)->get();
                                                     foreach ($users as $user) {
-                                                        $schools = $user->usersSchools()->where('role_id', 8);
+                                                        //$schools = $user->usersSchools()->where('role_id', 8);
                                                         ?>
                                                         <tr>
-                                                            <td><?= $user->firstname . ' ' . $user->lastname ?></td>
-                                                            <td><?= $schools->count() ?></td>
+                                                            <td><?php //$user->firstname . ' ' . $user->lastname   ?></td>
+                                                            <td><?php // $schools->count()   ?></td>
                                                             <td>
                                                                 <?php
                                                                 $active = 0;
                                                                 $not_active = 0;
-                                                                foreach ($schools->get() as $school) {
-                                                                    echo $school->school->schema_name . ',';
-                                                                    $active = getActiveStatus($school->school->schema_name) == 1 ? $active + 1 : $active;
-                                                                    $not_active = getActiveStatus($school->school->schema_name) == 0 ? $not_active + 1 : $not_active;
-                                                                }
+//                                                                foreach ($schools->get() as $school) {
+//                                                                    echo $school->school->schema_name . ',';
+//                                                                    $active = getActiveStatus($school->school->schema_name) == 1 ? $active + 1 : $active;
+//                                                                    $not_active = getActiveStatus($school->school->schema_name) == 0 ? $not_active + 1 : $not_active;
+//                                                                }
                                                                 ?> 
                                                             </td>
                                                             <td><?= $active ?></td>
                                                             <td><?= $not_active ?></td>
-                                                            <td><?= $user->tasks()->count() ?></td>
+                                                            <td><?php // $user->tasks()->count()   ?></td>
 
                                                             <td>Action</td>
                                                         </tr>
@@ -414,8 +456,8 @@ $staffs = DB::table('users')->where('status', 1)->get();
                     data: {user_id: user_id, school_id: school_id, role_id: role_id, schema: schema},
                     dataType: 'html',
                     success: function (data) {
-                       /// alert('success',data);
-                        $('#status_result_' + role_id+'_'+schema).html('<b class="label label-success">success</b>');
+                        /// alert('success',data);
+                        $('#status_result_' + role_id + '_' + schema).html('<b class="label label-success">success</b>');
 
                     }
                 });
@@ -475,7 +517,67 @@ $staffs = DB::table('users')->where('status', 1)->get();
 
             });
         }
+        search_checked = function () {
+
+
+
+            $('.check').click(function () {
+                var value = $(this).val();
+                var status = $(this).is(':checked');
+                //uncheck "select all", if one of the listed checkbox item is unchecked
+                if (false == $(this).prop("checked")) { //if this item is unchecked
+                    $("#toggle_all").prop('checked', false); //change "select all" checked status to false
+                    $('#delete_all_invoices').hide();
+
+                }
+                //check "select all" if all checkbox items are checked
+
+                if ($('.check:checked').length == $('.check').length) {
+                    $("#toggle_all").prop('checked', true);
+                    $('#notify_schools').hide();
+                    $('#notify_schools').show();
+
+                } else if ($('.check:checked').length != null) {
+                    $('#notify_schools').show();
+                }
+
+                if (status === true) {
+                    //var text = $('#row' + value).html();
+                    $('#search_checked_table').show();
+                    
+                    var ex = $('#schools_mapped').val();
+                    console.log(ex);
+                    var param = ex.split(",");
+                    param.push(value);
+                    $('#schools_mapped').val(param.join(","));
+                    console.log(param);
+
+                } else {
+
+                    var ex = $('.link').attr('tags');
+                    var url = '<?= base_url('invoices/delete_class_invoice/?ids=') ?>';
+                    var param = ex.split(",");
+                    param = jQuery.grep(param, function (val) {
+                        return val != value;
+                    });
+                    var arr = param;
+
+                    var result = arr.filter(function (elem) {
+                        return elem != value;
+                    });
+                    console.log(result);
+                    $('#schools_mapped').val(result.join(","));
+                    $('#delete_all_invoices').attr('tags', result.join(","));
+                    $('#delete_all_invoices').attr('href', url + result.join(","));
+                    $('#delete_selected_invoices').attr('tags', result.join(","));
+                    $('#delete_selected_invoices').attr('href', url + result.join(","));
+
+                    $('#s_table' + value).remove();
+                }
+            });
+        }
         $(document).ready(get_statistic);
         $(document).ready(allocate);
+        $(document).ready(search_checked);
     </script>
     @endsection

@@ -348,6 +348,38 @@ class Customer extends Controller {
         foreach ($schemas as $schema) {
             array_push($sch, $schema->schema_name);
         }
+        if ($_POST) {
+            $schools = trim(rtrim(request('schools'), ','), ',');
+            $message = request('message');
+            $usr = request('usertype');
+            $usr_type = '';
+            $schema_name=''; 
+            foreach (explode(',',$schools) as $val) {
+                $schema_name .= "'" . $val . "',";
+            }
+            $schema=trim(rtrim($schema_name, ','), ',');
+            if (count($usr) > 0) {
+                foreach ($usr as $val) {
+                    $usr_type .= "'" . $val . "',";
+                }
+                $type = rtrim($usr_type, ',');
+                $in_array = " AND usertype IN (" . $type . ")";
+            } else {
+                $in_array = '';
+            }
+            $patterns = array(
+                '/#name/i', '/#username/i'
+            );
+            $replacements = array(
+                "'||name||'", "'||username||'"
+            );
+            $sms = preg_replace($patterns, $replacements, $message);
+
+            $sql = "insert into public.sms (body,user_id,type,phone_number) select '{$sms}',id,'0',phone from admin.all_users WHERE schema_name::text IN ($schema) AND usertype !='Student' {$in_array} AND  phone is not NULL  AND \"table\" !='student' ";
+            DB::statement($sql);
+            $email_sql = "insert into public.email (subject,body,user_id,email) select 'ShuleSoft Notification', '{$sms}',id,email from admin.all_users WHERE schema_name::text IN ($schema) AND usertype !='Student' {$in_array} AND  phone is not NULL  AND \"table\" !='student' ";
+            DB::statement($email_sql);
+        }
         $this->data['dschools'] = \App\Models\School::whereIn('schema_name', $sch)->get();
         return view('customer.modules', $this->data);
     }
