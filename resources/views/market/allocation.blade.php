@@ -148,11 +148,11 @@
                     "targets": 8,
                     "data": null,
                     "render": function (data, type, row, meta) {
-//                        if (row.prospect_id == null) {
-//                            return '<a href="<?= url('sales/prospect/add/') ?>/' + row.id + '" class="label label-warning">Prospect </a>';
-//                        }else{
+                       if (row.schema_name != null) {
+                            return '<a href="<?= url('customer/profile') ?>/' + row.schema_name + '" class="label label-warning">Already Customer</a>';
+                        }else{
                         return '<a href="<?= url('sales/') ?>/profile/' + row.id + '" class="label label-primary">View</a>';
-                        // }
+                       }
 
                     }
 
