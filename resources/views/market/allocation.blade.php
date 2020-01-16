@@ -53,21 +53,6 @@
                                     $i++;
                                 }
                                 ?>
-
-                                <div class="col-md-6 col-xl-4">
-                                    <div class="card counter-card-3">
-                                        <div class="card-block-big">
-                                            <div>
-                                                <h3>0</h3>
-                                                <p>Nursery</p>
-                                                <div class="progress ">
-                                                    <div class="progress-bar progress-bar-striped progress-xs progress-bar-default" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-                                                </div>
-                                            </div>
-                                            <i class="icofont icofont-upload"></i>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                         <div class="row">
