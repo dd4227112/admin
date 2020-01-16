@@ -210,4 +210,8 @@ class Users extends Controller {
         
     }
 
+    public function notification() {
+        $this->data['tasks'] = \App\Models\Task::where('to_user_id', Auth::user()->id)->orderBy('date', 'desc')->get();
+        return view('users.notification', $this->data);
+    }
 }
