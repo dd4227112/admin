@@ -323,11 +323,11 @@ class Customer extends Controller {
         }
         $school_info = DB::table('schools')->where('id', $school_id);
         if (count($school_info->first()) == 1) {
-            $check = DB::table('users_schools')->where('school_id', $school_id)->where('role_id', $role_id);
+            $check = DB::table('users_schools')->where('schema_name', $schema)->where('role_id', $role_id);
             if ((int) $check->count() > 0) {
                 $check->update(['user_id' => $user_id]);
             } else {
-                DB::table('users_schools')->insert(['school_id' => $school_id, 'user_id' => $user_id, 'role_id' => $role_id]);
+                DB::table('users_schools')->insert(['school_id' => $school_id, 'user_id' => $user_id, 'role_id' => $role_id,'schema_name'=>$schema]);
             }
             DB::table($schema . '.setting')->update(['school_id' => $school_id]);
         }
