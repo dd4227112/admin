@@ -280,7 +280,7 @@ group by ownership');
                 ]);
                 return redirect()->back()->with('success', 'user recorded successfully');
             } else {
-                $data = array_merge(request()->all(), ['user_id' => Auth::user()->id]);
+                $data = array_merge(request()->all(), ['user_id' => Auth::user()->id ,'school_id' => request('client_id')]);
                 \App\Models\Task::create($data);
                 \App\Models\UsersSchool::create([
                     'user_id' => Auth::user()->id, 'school_id' => request('client_id'), 'role_id' => Auth::user()->role->id, 'status' => 1,

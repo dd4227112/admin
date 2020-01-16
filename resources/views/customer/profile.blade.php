@@ -289,7 +289,7 @@
                                                                             <div class="card-block post-timelines">
 
                                                                                 <div class="social-time text-muted">
-                                                                                    <?= date("d M Y", strtotime($task->date)) ?>
+                                                                                    <?= date("d M Y", strtotime($task->created_at)) ?>
                                                                                 </div>
                                                                             </div>
 
