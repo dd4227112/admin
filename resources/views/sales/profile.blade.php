@@ -294,7 +294,7 @@
                                                 </div>
                                                 <div class="col-md-12 timeline-dot">
                                                     <?php
-                                                    $tasks = \App\Models\Task::where('client_id', $school->id)->orderBy('created_at', 'desc')->get();
+                                                    $tasks = \App\Models\Task::where('client_id', $school->id)->orderBy('created_at', 'desc')->where('school_id', $school->id)->get();
                                                     foreach ($tasks as $task) {
                                                         ?>
                                                         <div class="social-timelines p-relative o-hidden" id="removetag<?= $task->id ?>">
