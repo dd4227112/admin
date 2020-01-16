@@ -72,6 +72,7 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             // sync invoices 
             $this->syncInvoice();
+            $this->updateInvoice();
         })->everyMinute();
         $schedule->call(function () {
             $this->checkSchedule();
@@ -228,7 +229,7 @@ class Kernel extends ConsoleKernel {
     }
 
     public function updateInvoice() {
-        $invoices = DB::select('select * from api.invoices where sync=1 and amount >0 and payment_integrated=1 order by random() limit 200');
+        $invoices = DB::select('select * from api.invoices where sync=2 and amount >0 and payment_integrated=1 order by random() limit 200');
         if (count($invoices) > 0) {
             foreach ($invoices as $invoice) {
                 $token = $this->getToken($invoice);

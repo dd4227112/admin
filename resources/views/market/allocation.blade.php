@@ -133,11 +133,11 @@
                     "targets": 7,
                     "data": null,
                     "render": function (data, type, row, meta) {
-                        if (row.prospect_id == null) {
-                            return '<a href="<?= url('sales/prospect/add/') ?>/' + row.id + '" class="label label-warning">Prospect </a>';
-                        }else{
-                            return '<a href="<?= url('customer/profile/') ?>/school/' + row.id + '" class="label label-primary">View</a>';
-                        }
+//                        if (row.prospect_id == null) {
+//                            return '<a href="<?= url('sales/prospect/add/') ?>/' + row.id + '" class="label label-warning">Prospect </a>';
+//                        }else{
+                            return '<a href="<?= url('sales/') ?>/profile/' + row.id + '" class="label label-primary">View</a>';
+                       // }
 
                     }
 

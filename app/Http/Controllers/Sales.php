@@ -105,10 +105,6 @@ class Sales extends Controller {
         return view('market.legal');
     }
 
-    function profile() {
-        return view('sales.profile');
-    }
-
     public function school() {
         $this->data['school_types'] = DB::select("select type, count(*) from admin.schools where ownership='Non-Government' group by type,ownership");
         $this->data['ownerships'] = DB::select('select ownership, COUNT(*) as count, 
@@ -266,4 +262,9 @@ group by ownership');
         //
     }
 
+    public function profile() {
+        $id=request()->segment(3);
+        $this->data['school']=\App\Model\School::find($id);
+        return view('sales.profile', $this->data);
+    }
 }
