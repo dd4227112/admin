@@ -71,12 +71,25 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class="col-lg-3"></div>
+                            <div class="col-lg-6">
+                                <p align="center">
+                                    <?php
+                                    $demo=DB::table('admin.website_demo_requests')->count();
+                                    $join=DB::table('admin.website_join_shulesoft')->count();
+                                    ?>
+                                    <a href="<?=url('sales/prospect/demo')?>"> <button class="btn btn-success btn-skew"> Demo Requests <span class="badge badge-danger"><?=$demo?></span></button></a>
+                                    <a href="<?=url('sales/prospect/join')?>"> <button class="btn btn-info btn-skew">Join Requests <span class="badge badge-danger"><?=$join?></span></button></a>
+                                </p></div>
+                            <div class="col-lg-3"></div>
+                        </div>
+                        <div class="row">
                             <div class="col-lg-12">
                                 <div class="white-box">
                                     <h3 class="box-title">List of Schools</h3>
                                     <div class="row">
                                         <div class="col-lg-4"></div>
-                                        <div class="col-lg-4">
+                                        <div class="col-lg-4 row">
 
                                         </div>
                                         <div class="col-lg-4"></div>
@@ -91,7 +104,8 @@
                                                     <th>District</th>
                                                     <th>Ward</th>
                                                     <th>Type</th>
-                                                    <th>Ownership</th>
+                                                    <th>Use NMB</th>
+                                                    <th>Students</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -125,19 +139,20 @@
                 {"data": "district"},
                 {"data": "ward"},
                 {"data": "type"},
-                {"data": "ownership"},
+                {"data": "nmb_branch"},
+                {"data": "students"},
                 {"data": ""}
             ],
             "columnDefs": [
                 {
-                    "targets": 7,
+                    "targets": 8,
                     "data": null,
                     "render": function (data, type, row, meta) {
 //                        if (row.prospect_id == null) {
 //                            return '<a href="<?= url('sales/prospect/add/') ?>/' + row.id + '" class="label label-warning">Prospect </a>';
 //                        }else{
-                            return '<a href="<?= url('sales/') ?>/profile/' + row.id + '" class="label label-primary">View</a>';
-                       // }
+                        return '<a href="<?= url('sales/') ?>/profile/' + row.id + '" class="label label-primary">View</a>';
+                        // }
 
                     }
 

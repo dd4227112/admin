@@ -9,10 +9,13 @@ class School extends Model {
      */
 
     protected $table = 'schools';
-    protected $fillable = ['id', 'region', 'district','ward','ownership','type'];
+    protected $fillable = ['id', 'region', 'district','ward','ownership','type','students','nmb_branch'];
 
     public function users() {
         return $this->hasManyThrough(\App\Models\UsersSchool::class,\App\Models\User::class);
     }
 
+    public function contacts() {
+        return $this->hasMany(\App\Models\SchoolContact::class);
+    }
 }
