@@ -91,6 +91,7 @@
                                                     <th>Type</th>
                                                     <th>Use NMB</th>
                                                     <th>Students</th>
+                                                    <th>Activities</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -126,11 +127,12 @@
                 {"data": "type"},
                 {"data": "nmb_branch"},
                 {"data": "students"},
+                {"data": "activities"},
                 {"data": ""}
             ],
             "columnDefs": [
                 {
-                    "targets": 8,
+                    "targets": 9,
                     "data": null,
                     "render": function (data, type, row, meta) {
                        if (row.schema_name != null) {

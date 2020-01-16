@@ -87,7 +87,6 @@
                                 <div class="col-lg-12">
                                     <?php
                                     if ($page == 'demo') {
-                                      
                                         ?>
                                         <div class="white-box">
                                             <h3 class="box-title">Demo Requests Report</h3>
@@ -115,11 +114,11 @@
                                                     </thead>
                                                     <tbody>
                                                         <?php
-                                                        $i=1;
+                                                        $i = 1;
                                                         foreach ($demo_requests as $request) {
                                                             ?>
                                                             <tr>
-                                                                <td><?=$i?></td>
+                                                                <td><?= $i ?></td>
                                                                 <td><?= $request->school_name ?></td>
                                                                 <td><?= $request->school_location ?></td>
                                                                 <td><?= $request->contact_name ?></td>
@@ -129,13 +128,18 @@
                                                                 <td><?= date('d M Y h:i:s', strtotime($request->created_at)) ?></td>
                                                                 <td>Action</td>
                                                             </tr>
-                                                        <?php $i++; } ?>
+                                                            <?php $i++;
+                                                        } ?>
                                                     </tbody>
                                                 </table>
+                                                  <script type="text/javascript">
+                                            $(document).ready(function () {
+                                                $('.table').DataTable();
+                                            });
+                                        </script>
                                             </div>
                                         </div> 
-                                    <?php } else if ($page == 'join') { 
-                                       
+                                    <?php } else if ($page == 'join') {
                                         ?>
                                         <div class="white-box">
                                             <h3 class="box-title">Prospects Report</h3>
@@ -147,7 +151,7 @@
                                                 <div class="col-lg-4"></div>
                                             </div>
                                             <div class="table-responsive">
-                                              <table id="list_of_leads"  class="display nowrap table">
+                                                <table id="list_of_leads"  class="display nowrap table dataTable">
                                                     <thead>
                                                         <tr>
                                                             <th>#</th>
@@ -163,11 +167,11 @@
                                                     </thead>
                                                     <tbody>
                                                         <?php
-                                                        $i=1;
+                                                        $i = 1;
                                                         foreach ($join_requests as $request) {
                                                             ?>
                                                             <tr>
-                                                                <td><?=$i?></td>
+                                                                <td><?= $i ?></td>
                                                                 <td><?= $request->school_name ?></td>
                                                                 <td><?= $request->school_address ?></td>
                                                                 <td><?= $request->contact_name ?></td>
@@ -177,11 +181,17 @@
                                                                 <td><?= date('d M Y h:i:s', strtotime($request->created_at)) ?></td>
                                                                 <td>Action</td>
                                                             </tr>
-                                                        <?php $i++; } ?>
+                                                            <?php $i++;
+                                                        } ?>
                                                     </tbody>
                                                 </table>
                                             </div>
-                                        </div> 
+                                        </div>
+                                        <script type="text/javascript">
+                                            $(document).ready(function () {
+                                                $('.dataTable').DataTable();
+                                            });
+                                        </script>
                                     <?php } else {
                                         ?>
                                         <div class="white-box">
@@ -214,44 +224,44 @@
                                                 </table>
                                             </div>
                                         </div>
-                                    <script type="text/javascript">
-    $(document).ready(function () {
-        var table = $('#list_of_leads').DataTable({
-            "processing": true,
-            "serverSide": true,
-            'serverMethod': 'post',
-            'ajax': {
-                'url': "<?= url('sales/show/null?page=prospects') ?>"
-            },
-            "columns": [
-                {"data": "id"},
-                {"data": "name"},
-                {"data": "contact_name"},
-                {"data": "location"},
-                {"data": "person_in_charge"},
-                {"data": "last_activity"},
-                {"data": "action_date"},
-                {"data": "last_message"},
-                {"data": ""}
-            ],
-            "columnDefs": [
-                {
-                    "targets": 8,
-                    "data": null,
-                    "render": function (data, type, row, meta) {
+                                        <script type="text/javascript">
+                                            $(document).ready(function () {
+                                                var table = $('#list_of_leads').DataTable({
+                                                    "processing": true,
+                                                    "serverSide": true,
+                                                    'serverMethod': 'post',
+                                                    'ajax': {
+                                                        'url': "<?= url('sales/show/null?page=prospects') ?>"
+                                                    },
+                                                    "columns": [
+                                                        {"data": "id"},
+                                                        {"data": "name"},
+                                                        {"data": "contact_name"},
+                                                        {"data": "location"},
+                                                        {"data": "person_in_charge"},
+                                                        {"data": "last_activity"},
+                                                        {"data": "action_date"},
+                                                        {"data": "last_message"},
+                                                        {"data": ""}
+                                                    ],
+                                                    "columnDefs": [
+                                                        {
+                                                            "targets": 8,
+                                                            "data": null,
+                                                            "render": function (data, type, row, meta) {
 
-                        return '<a href="<?= url('sales/prospect/delete/') ?>/' + row.id + '" class="label label-danger">Delete </a>';
+                                                                return '<a href="<?= url('sales/prospect/delete/') ?>/' + row.id + '" class="label label-danger">Delete </a>';
 
 
-                    }
+                                                            }
 
-                }
-            ]
-        });
+                                                        }
+                                                    ]
+                                                });
 
-    }
-    );
-</script>
+                                            }
+                                            );
+                                        </script>
                                     <?php } ?>
                                 </div>
                             </div>

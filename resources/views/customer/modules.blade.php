@@ -58,7 +58,7 @@ foreach ($payments as $payment) {
     $payment_count[$payment->schema_name] = $payment->count;
 }
 
-$school_allocations = DB::select('select c.schema_name, c.name,b.firstname, b.lastname from admin.users_schools a join admin.users b on b.id=a.user_id join admin.schools c on c.id=a.school_id where a.role_id=8 and a.status=1 and c.schema_name is not null');
+$school_allocations = DB::select('select a.schema_name, c.sname,b.firstname, b.lastname from admin.users_schools a join admin.users b on b.id=a.user_id join admin.all_setting c on c."schema_name"=a."schema_name" where a.role_id=8 and a.status=1 and c.schema_name is not null');
 $allocation = [];
 $users_allocation = [];
 foreach ($school_allocations as $school_allocation) {
@@ -387,25 +387,25 @@ $staffs = DB::table('users')->where('status', 1)->get();
                                                     <?php
                                                     $users = \App\Models\User::where('role_id', 8)->get();
                                                     foreach ($users as $user) {
-                                                        //$schools = $user->usersSchools()->where('role_id', 8);
+                                                        $schools = $user->usersSchools()->where('role_id', 8);
                                                         ?>
                                                         <tr>
-                                                            <td><?php //$user->firstname . ' ' . $user->lastname   ?></td>
-                                                            <td><?php // $schools->count()   ?></td>
+                                                            <td><?=$user->firstname . ' ' . $user->lastname   ?></td>
+                                                            <td><?=$schools->count()   ?></td>
                                                             <td>
                                                                 <?php
                                                                 $active = 0;
                                                                 $not_active = 0;
-//                                                                foreach ($schools->get() as $school) {
-//                                                                    echo $school->school->schema_name . ',';
-//                                                                    $active = getActiveStatus($school->school->schema_name) == 1 ? $active + 1 : $active;
-//                                                                    $not_active = getActiveStatus($school->school->schema_name) == 0 ? $not_active + 1 : $not_active;
-//                                                                }
+                                                                foreach ($schools->get() as $school) {
+                                                                    echo $school->school->schema_name . ',';
+                                                                    $active = getActiveStatus($school->school->schema_name) == 1 ? $active + 1 : $active;
+                                                                    $not_active = getActiveStatus($school->school->schema_name) == 0 ? $not_active + 1 : $not_active;
+                                                                }
                                                                 ?> 
                                                             </td>
                                                             <td><?= $active ?></td>
                                                             <td><?= $not_active ?></td>
-                                                            <td><?php // $user->tasks()->count()   ?></td>
+                                                            <td><?= $user->tasks()->count()   ?></td>
 
                                                             <td>Action</td>
                                                         </tr>

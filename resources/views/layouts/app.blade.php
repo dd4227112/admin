@@ -321,6 +321,10 @@ function toast(message) {
                                                     </div>
                                                 </li>
                                             <?php } ?>
+                                                <li>
+                                                
+                                                    <a href="<?=url('users/notification')?>"><label class="label label-warning">View All</label></a>
+                                            </li>
                                         </ul>
                                     </li>
                                     <!--                                    <li class="header-notification">
@@ -997,6 +1001,7 @@ function toast(message) {
         @yield('footer')
     </body>
     <?php
+   
     if (request('type_id') != 'subject' && !preg_match('/emailsms/', url()->current()) && !preg_match('/sales/', url()->current()) && !preg_match('/logs/', url()->current()) && !preg_match('/api/', url()->current())) {
         ?>
         <script type="text/javascript">
