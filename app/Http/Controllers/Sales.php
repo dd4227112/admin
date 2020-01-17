@@ -33,14 +33,14 @@ class Sales extends Controller {
     }
 
     function lead() {
-        $this->data['demo_requests'] = DB::table('website_demo_requests')->get();
-        $this->data['join_requests'] = DB::table('website_join_shulesoft')->get();
+        $this->data['demo_requests'] = DB::table('website_demo_requests')->where('status', 0)->get();
+        $this->data['join_requests'] = DB::table('website_join_shulesoft')->where('status', 0)->get();
         return view('sales.leads', $this->data);
     }
 
     public function prospect() {
-        $this->data['demo_requests'] = DB::table('website_demo_requests')->get();
-        $this->data['join_requests'] = DB::table('website_join_shulesoft')->get();
+        $this->data['demo_requests'] = DB::table('website_demo_requests')->where('status', 0)->get();
+        $this->data['join_requests'] = DB::table('website_join_shulesoft')->where('status', 0)->get();
         $this->data['page'] = $page = request()->segment(3);
         if ($page == 'add') {
             $id = request()->segment(4);
@@ -268,7 +268,7 @@ group by ownership');
         if ($_POST) {
             if ((int) request('add_sale') == 1) {
                 \App\Models\School::find(request('client_id'))->update(request()->all());
-                 return redirect()->back()->with('success', 'School record updated successfully');
+                return redirect()->back()->with('success', 'School record updated successfully');
             } else if ((int) request('add_user') == 1) {
                 \App\Models\SchoolContact::create([
                     'name' => request('name'),
@@ -280,8 +280,8 @@ group by ownership');
                 ]);
                 return redirect()->back()->with('success', 'user recorded successfully');
             } else {
-                $data = array_merge(request()->all(), ['user_id' => Auth::user()->id ,'school_id' => request('client_id')]);
-               
+                $data = array_merge(request()->all(), ['user_id' => Auth::user()->id, 'school_id' => request('client_id')]);
+
                 \App\Models\Task::create($data);
                 \App\Models\UsersSchool::create([
                     'user_id' => Auth::user()->id, 'school_id' => request('client_id'), 'role_id' => Auth::user()->role->id, 'status' => 1,
@@ -296,6 +296,26 @@ group by ownership');
         $id = request('school_id');
         \App\Models\School::find($id)->update(['students' => request('no')]);
         echo 'success';
+    }
+
+    public function request() {
+        $type = request()->segment(3);
+        $source = request()->segment(4);
+        $id = request()->segment(5);
+        $table = $source == 'demo' ? 'website_demo_requests' : 'website_join_shulesoft';
+        $status = $type == 'attend' ? 1 : 3;
+        $info = DB::table($table)->where('id', $id);
+        $record = $info->first();
+        $info->update(['status' => $status]);
+        if ((int) $record->school_id > 0) {
+            $data = ['user_id' => Auth::user()->id, 'school_id' => $record->school_id, 'task_type_id' => 6, 'next_action' => 'closed', 'activity' => 'School has been attended and closed'];
+            $contact = \App\Models\SchoolContact::where('school_id', $record->school_id)->where('phone', $record->phone)->first();
+            if (count($contact) == 0) {
+                \App\Models\SchoolContact::create(['name' => $record->contact_name, 'school_id' => $record->school_id, 'email' => $record->contact_email, 'phone' => $record->contact_phone, 'user_id' => Auth::user()->id, 'title' => $record->contact_title]);
+            }
+            \App\Models\Task::create($data);
+        }
+        return redirect()->back()->with('success', 'success');
     }
 
 }
