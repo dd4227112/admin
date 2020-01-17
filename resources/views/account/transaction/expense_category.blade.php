@@ -64,7 +64,7 @@
                                         <div>
                                             <h5 class="page-header">
 
-                                                <a class="btn btn-success" href="<?php echo url('expense/add/' . $id . '/' . $refer_id . '') ?>">
+                                                <a class="btn btn-success" href="<?php echo url('account/addTransaction/4/' . $refer_id . '') ?>">
                                                     <i class="fa fa-plus"></i> 
                                                     Add New Expense
                                                 </a>
@@ -187,7 +187,7 @@
                                                                     <?php } else { ?>
 
                                                                         <td data-title="<?= __('Payment Method') ?>">
-                                                                            <?php echo isset($expense->paymentType->name) ? $expense->paymentType->name : ''; ?>
+                                                                            <?php echo  $expense->payment_method; ?>
                                                                         </td>        
                                                                     <?php } ?>
 
@@ -210,10 +210,10 @@
                                                                             if ((int) $expense->predefined == 0) {
                                                                                 ?>
                                                                                 <?php echo '<a class="btn btn-sm btn-info" href="'.url('account/expense/edit/' . $expense->id . '/' . $id).'">edit</a>'; ?>
-                                                                                <?php echo '<a class="btn btn-sm btn-danger" href="'.url('expense/delete/' . $expense->id . '/' . $id).'">delete</a>'; ?>
+                                                                                <?php echo '<a class="btn btn-sm btn-danger" href="'.url('account/expense/delete/' . $expense->id . '/' . $id).'">delete</a>'; ?>
 
 
-                                                                                <?php echo '<a class="btn btn-sm btn-warning" href="'.url('expense/voucher/' . $expense->id . '/' . $id).'">Payment Voucher</a>'; ?>
+                                                                                <?php //echo '<a class="btn btn-sm btn-warning" href="'.url('account/expense/voucher/' . $expense->id . '/' . $id).'">Payment Voucher</a>'; ?>
                                                                                 <?php
                                                                             }
                                                                         }
@@ -276,7 +276,7 @@
                                                                         <td data-title="<?= __('action') ?>">
 
                                                                             <?php echo  '<a class="btn btn-sm" href="'.url('expense/delete/' . $current_asset->id . '/' . $id).'">delete</a>' ?>
-                                                                            <?php echo '<a class="btn btn-sm" href="'.url('expense/voucher/' . $current_asset->id . '/' . $id).'">Payment Voucher</a>'; ?>
+                                                                            <?php //echo '<a class="btn btn-sm" href="'.url('expense/voucher/' . $current_asset->id . '/' . $id).'">Payment Voucher</a>'; ?>
 
 
 
