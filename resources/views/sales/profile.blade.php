@@ -162,9 +162,12 @@
                                                                                 <option value="director">Director/Owner</option>
                                                                                 <option value="manager">School Manager</option>                      
                                                                                 <option value="head teacher">Head Teacher</option>
+                                                                                                                                                <option value="Second Master/Mistress">Second Master/Mistress</option>
                                                                                 <option value="academic master">Academic Master</option>
+                                                                                 <option value="teacher">Normal Teacher</option>
                                                                                 <option value="Accountant">Accountant</option>
-                                                                                <option value="teacher">Normal Teacher</option>
+                                                                                <option value="Other Staff">Other Non Teaching Staff</option>
+                                                                               
 
                                                                             </select>
                                                                         </div>
