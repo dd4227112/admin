@@ -376,6 +376,7 @@ class Account extends Controller {
 
     public function getCategories_by_date($id, $from_date, $to_date) {
         $ids = Expense::where('date', '>=', $from_date)->where('date', '<=', $to_date)->get(['refer_expense_id']);
+        $ids = count($ids) == 0 ? Expense::get(['refer_expense_id']) : $ids;
         switch ($id) {
             case 1:
                 $result = ReferExpense::where('financial_category_id', 4)->whereIn('id', $ids)->get();
@@ -434,12 +435,15 @@ class Account extends Controller {
                 $refer_expense_name = \App\Models\ReferExpense::find($refer_expense_id)->name;
                 if (strtolower($refer_expense_name) == 'depreciation') {
 
-                    $this->session->set_flashdata('error', 'Sorry ! Depreciation is added through fixed assets');
-                    return redirect()->back();
+                    return redirect()->back()->with('error', 'Sorry ! Depreciation is added through fixed assets');;
                 }
             }
 
+            $transaction = \App\Models\Expense::where('transaction_id', request("transaction_id"))->count();
+            if ($transaction > 0) {
 
+                return redirect()->back()->with('error', 'Sorry ! Transaction ID already exists');
+            }
             $payer_name = request('payer_name');
 
             $array = array(
@@ -564,15 +568,11 @@ class Account extends Controller {
                     'amount' => request('amount'),
                 ]);
 
-                $insert_id = DB::table('expense')->insertGetId($obj, "expenseID");
+                $insert_id = DB::table('expense')->insertGetId($obj);
 
 
-                if ($insert_id > 0) {
-                    $this->session->set_flashdata('success', $this->lang->line('menu_success'));
-                } else {
-                    $this->session->set_flashdata('error', 'There Is error in adding new expense');
-                }
-                return redirect(base_url("expense/index/$id"));
+                $type = (int) $insert_id ? 'success' : 'error';
+                return redirect()->with($type, $type);
             }
         }
         return view('account.transaction.create_trans', $this->data);
@@ -599,10 +599,10 @@ class Account extends Controller {
         $this->data["subview"] = "expense/charts_of_accounts";
         $this->data["category"] = \App\Models\FinancialCategory::all();
         $this->data['groups'] = \App\Models\AccountGroup::all();
-        if($_POST){
-            
-            
-          
+        if ($_POST) {
+
+
+
             $this->validate(request(), [
                 "subcategory" => "required|regex:/(^([a-zA-Z,. ]+)(\d+)?$)/u",
                 "code" => "regex:/(^[ A-Za-z0-9_@.#&+-]*$)/u|required|iunique:refer_expense,code," . $id,
@@ -616,10 +616,9 @@ class Account extends Controller {
             if ((int) request("group") > 0) {
                 $account_group_id = request("group");
                 // $account_group_id = request("group") > 0 ? request("group") : DB::table('account_groups')->insertGetId($obj);
-
             } else {
                 $check = DB::table('account_groups')->where($obj)->first();
-                $account_group_id = count($check)>0 ? $check->id : DB::table('account_groups')->insertGetId($obj);
+                $account_group_id = count($check) > 0 ? $check->id : DB::table('account_groups')->insertGetId($obj);
             }
             $array = array(
                 "name" => trim(request("subcategory")),
@@ -633,7 +632,7 @@ class Account extends Controller {
 
             ReferExpense::create($array);
             $this->session->set_flashdata('success', $this->lang->line('menu_success'));
-            return redirect()->back()->with('success','success');
+            return redirect()->back()->with('success', 'success');
         }
         return view('account.charts', $this->data);
     }
@@ -649,11 +648,10 @@ class Account extends Controller {
         $id = ((request()->segment(3)));
         $refer_id = ((request()->segment(4)));
         $bank_id = ((request()->segment(5)));
-        $academic_year_to = \App\Models\AccountYear::whereYear('start_date', date('Y'))->first();
-        $academic_year_from = \App\Models\AccountYear::orderBy('start_date', 'asc')->first();
-
-        $from_date = $academic_year_from->start_date;
-        $to_date = $academic_year_to->end_date;
+        $year = \App\Models\AccountYear::where('name', date('Y'))->first();
+        $account_year = count($year) == 0 ? \App\Models\AccountYear::create(['name' => date('Y'), 'status' => 1, 'start_date' => date('Y-01-01'), 'end_date' => date('Y-12-31')]) : $year;
+        $from_date = $account_year->start_date;
+        $to_date = $account_year->end_date;
 
         $refer_expense = \App\Models\ReferExpense::find($id);
 
@@ -704,7 +702,8 @@ class Account extends Controller {
 
             //$this->data['expenses'] = DB::SELECT('SELECT b.*,a.* FROM ' . set_schema_name() . 'expense a JOIN ' . set_schema_name() . 'refer_expense b ON a.refer_expense_id=b.id WHERE b.id=' . $id . ' and a."date" >= ' . "'$from_date'" . ' AND a."date" <= ' . "'$to_date'" . ' ');
 
-            $this->data['expenses'] = \App\Models\ReferExpense::where('refer_expense.id', $id)->JOIN('expense', 'expense.refer_expense_id', 'refer_expense.id')->where('expense.date', '>=', $from_date)->where('expense.date', '<=', $to_date)->get();
+            $this->data['expenses'] = \App\Models\ReferExpense::where('refer_expense.id', $id)->join('expense', 'expense.refer_expense_id', 'refer_expense.id')->select('payment_types.name as payment_method', 'expense.recipient as recipient', 'expense.date', 'expense.amount', 'expense.note', 'expense.transaction_id', 'expense.id', 'refer_expense.predefined')->leftJoin('payment_types', 'payment_types.id', 'expense.payment_type_id')->where('expense.date', '>=', $from_date)->where('expense.date', '<=', $to_date)->get();
+            // dd($this->data['expenses']);
         }
         //$this->data['refer_id'] = $id;
         $this->data['period'] = 1;
@@ -764,9 +763,26 @@ class Account extends Controller {
         $this->data['banks'] = \App\Models\BankAccount::all();
         if ($id == 'edit') {
             return $this->editExpense($expense_id);
+        } else if ($id == 'delete') {
+            \App\Models\Expense::find($expense_id)->delete();
+            return redirect()->back()->with('success', 'success');
+        } else if ($id == 'voucher') {
+           // return $this->voucher();
         } else {
             echo 'page not found';
         }
+    }
+
+    public function voucher() {
+        $id = clean_htmlentities(($this->uri->segment(3)));
+        $cat_id = clean_htmlentities(($this->uri->segment(4)));
+        if ($cat_id == 5) {
+            $this->data['voucher'] = \collect(DB::SELECT('SELECT * from ' . set_schema_name() . ' current_assets WHERE id=' . $id . ''))->first();
+        } else {
+            $this->data['voucher'] = \App\Model\Expense::find($id);
+        }
+
+        return view('expense.voucher.voucher', $this->data);
     }
 
 }
