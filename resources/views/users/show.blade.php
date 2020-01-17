@@ -112,7 +112,7 @@ foreach ($user_permission as $permis) {
                                                             <div class="slide"></div>
                                                         </li>-->
                             <?php
-                            if ($user->id == 2) {
+                            if (Auth::user()->id == 2) {
                                 ?>
                                 <li class="nav-item">
                                     <a class="nav-link" data-toggle="tab" href="#permissions" role="tab">Permissions</a>
