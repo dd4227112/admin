@@ -126,17 +126,21 @@
                                                                 <td><?= $request->contact_email ?></td>
                                                                 <td><?= $request->message ?></td>
                                                                 <td><?= date('d M Y h:i:s', strtotime($request->created_at)) ?></td>
-                                                                <td>Action</td>
+                                                                <td>
+                                                                    <a href="<?= url('sales/request/attend/demo/' . $request->id) ?>" class="btn btn-success btn-sm">Attended Already</a>
+                                                                    <a href="<?= url('sales/request/delete/demo/' . $request->id) ?>" class="btn btn-danger btn-sm">Delete</a>
+                                                                </td>
                                                             </tr>
                                                             <?php $i++;
-                                                        } ?>
+                                                        }
+                                                        ?>
                                                     </tbody>
                                                 </table>
-                                                  <script type="text/javascript">
-                                            $(document).ready(function () {
-                                                $('.table').DataTable();
-                                            });
-                                        </script>
+                                                <script type="text/javascript">
+                                                    $(document).ready(function () {
+                                                        $('.table').DataTable();
+                                                    });
+                                                </script>
                                             </div>
                                         </div> 
                                     <?php } else if ($page == 'join') {
@@ -179,10 +183,12 @@
                                                                 <td><?= $request->contact_email ?></td>
                                                                 <td><?= $request->message ?></td>
                                                                 <td><?= date('d M Y h:i:s', strtotime($request->created_at)) ?></td>
-                                                                <td>Action</td>
+                                                                <td>            <a href="<?= url('sales/request/join/demo/' . $request->id) ?>" class="btn btn-success btn-sm">Attended Already</a>
+                                                                    <a href="<?= url('sales/request/delete/join/' . $request->id) ?>" class="btn btn-danger btn-sm">Delete</a></td>
                                                             </tr>
                                                             <?php $i++;
-                                                        } ?>
+                                                        }
+                                                        ?>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -192,8 +198,8 @@
                                                 $('.dataTable').DataTable();
                                             });
                                         </script>
-                                    <?php } else {
-                                        ?>
+<?php } else {
+    ?>
                                         <div class="white-box">
                                             <h3 class="box-title">Prospects Report</h3>
                                             <div class="row">
@@ -262,7 +268,7 @@
                                             }
                                             );
                                         </script>
-                                    <?php } ?>
+<?php } ?>
                                 </div>
                             </div>
                         </div>
