@@ -13,7 +13,7 @@ class AccountGroup extends Model {
 
 
     public function financialCategory() {
-        return $this->belongsTo(\App\Models\FinancialCategory::class, 'financial_category_id', 'id');
+        return $this->belongsTo(\App\Models\FinancialCategory::class, 'financial_category_id', 'id')->withDefault(['name'=>'Not Defined']);
     }
 
     public function referExpenses() {
