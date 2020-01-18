@@ -44,7 +44,7 @@
                                         <th class="col-sm-1"><?= __('slno') ?></th>
                                         <th class="col-sm-1"><?= __('Account code') ?></th>
                                         <th class="col-sm-2"><?= __('Account name') ?></th>
-                                        <th class="col-sm-2"><?= __('Account type') ?></th>
+                                        <th class="col-sm-2"><?= __('Financial Category') ?></th>
                                         <th class="col-sm-2" ><?= __('Account group') ?></th>
                                         <th class="col-sm-2"><?= __('Expense note') ?></th>
                                         <th class="col-sm-2"><?= __('action') ?></th>
@@ -63,36 +63,33 @@
                                                     <?php echo $i; ?>
                                                 </td>
                                                 <td data-title="<?= __('expense_code') ?>">
-                                                    <?php echo $expense->code; ?>
+                                                    <p id="code<?=$expense->id?>"><?php echo $expense->code; ?></p>
                                                 </td>
                                                 <td data-title="<?= __('expense_expense') ?>">
-                                                    <?php echo $expense->name; ?>
+                                                    <p id="name<?=$expense->id?>"><?php echo $expense->name; ?></p>
                                                 </td>
                                                 <td data-title="<?= __('account_type') ?>">
                                                     <?php
-                                                    foreach ($expense->financialCategory()->get() as $cat) {
+                                                   echo $expense->financialCategory->name;
 
-                                                        echo $cat->name;
-                                                    }
                                                     ?>
                                                 </td>
                                                 <td data-title="<?= __('account_group') ?>">
                                                     <?php
-                                                    foreach ($expense->accountGroup()->get() as $group) {
-                                                        echo $group->name;
-                                                    }
+                                                    echo $expense->accountGroup->name;
+                                                       
                                                     ?>
                                                 </td>
 
                                                 <td data-title="<?= __('expense_note') ?>">
-                                                    <?php echo $expense->note; ?>
+                                                    <p id="note<?=$expense->id?>"><?php echo $expense->note; ?></p>
                                                 </td>
 
                                                 <td data-title="<?= __('action') ?>">
 
                                                     <?php
                                                     if ($expense->predefined == 0) {
-                                                        echo '<a class="btn btn-info btn-sm" href="' . url('account/chart/edit/' . $expense->id . '/' . $id) . '">edit</a>';
+                                                        echo '<a class="btn btn-info btn-sm" href="#" data-toggle="modal" data-target="#large-Modal"  onmousedown="fill_form('.$expense->id.')">edit</a>';
                                                         ?>
                                                         <?php
                                                         echo '<a class="btn btn-danger btn-sm" href="' . url('account/chart/delete/' . $expense->id . '/' . $id) . '">delete</a>';
@@ -143,7 +140,7 @@
                                 <?= __("Account Code") ?> <span class="red">*</span>
                             </label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control" id="subcategory" required="true" 
+                                <input type="text" class="form-control" id="code" required="true" 
                                        placeholder="E.g AB-123" name="code" value="<?= old('code') ?>" >
                             </div>
                             <span class="col-sm-4 control-label">
@@ -155,7 +152,7 @@
                                 <?= __("Account Name") ?> <span class="red">*</span>
                             </label>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control" id="subcategory" required="true" 
+                                <input type="text" class="form-control" id="chart_name" required="true" 
                                        placeholder="E.g <?php
                                        if ($set == 1) {
                                            echo "Office Chairs";
@@ -214,7 +211,8 @@
                                     ?>
 
                                 </select>
-                            </div> <span class="col-sm-2 small"><a href="<?= base_url("group/index") ?>">Create New</a></span >
+                            </div>
+ 
                             <div class="info col-lg-offset-2 blockquote-reverse"><i class="fa fa-question-circle"></i> If you skip to select a group, system will automatically add this chart name into a group</div>
                             <span class="col-sm-2 small"></span>
                         </div>
@@ -236,10 +234,39 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                <input type="hidden" value="" name="expense_id" id="expense_id"/>
                 <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
             </div>
              </form>
         </div>
     </div>
 </div>
+<script type="text/javascript">
+
+    function fill_form(id) {
+        $('#code').val($('#code'+id).text());
+       $('#chart_name').val($('#name'+id).text());
+        $('#note').text($('#note'+id).text());
+        $('#expense_id').val(id);
+       
+    }
+    $('#financial_category_id').change(function () {	
+        var financial_category_id = $(this).val();
+	
+	 if (financial_category_id ==='0') {
+          
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: "<?= url('account/checkCategory') ?>",
+                data: {"financial_category_id": financial_category_id },
+                dataType: "html",
+                success: function (data) {
+                       $('#account_group_id').html(data);
+                    
+                }
+            });
+        }
+    });
+</script>
 @endsection

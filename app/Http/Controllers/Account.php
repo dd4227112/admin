@@ -435,7 +435,8 @@ class Account extends Controller {
                 $refer_expense_name = \App\Models\ReferExpense::find($refer_expense_id)->name;
                 if (strtolower($refer_expense_name) == 'depreciation') {
 
-                    return redirect()->back()->with('error', 'Sorry ! Depreciation is added through fixed assets');;
+                    return redirect()->back()->with('error', 'Sorry ! Depreciation is added through fixed assets');
+                    ;
                 }
             }
 
@@ -588,6 +589,20 @@ class Account extends Controller {
         $this->data['id'] = null;
         $this->data['groups'] = \App\Models\AccountGroup::all();
         $this->data["category"] = \App\Models\FinancialCategory::all();
+        $tag = request()->segment(3);
+        $id = request()->segment(4);
+        if ($tag == 'delete') {
+            \App\Models\AccountGroup::find($id)->delete();
+            return redirect()->back()->with('success', 'success');
+        } else if ($tag == 'edit') {
+            
+        }
+        if ($_POST) {
+            (int) request('group_id') == 0 ?
+                            \App\Models\AccountGroup::create(request()->all()) :
+                            \App\Models\AccountGroup::find(request('group_id'))->update(request()->all());
+            return redirect()->back()->with('success', 'success');
+        }
         return view('account.group', $this->data);
     }
 
@@ -599,15 +614,18 @@ class Account extends Controller {
         $this->data["subview"] = "expense/charts_of_accounts";
         $this->data["category"] = \App\Models\FinancialCategory::all();
         $this->data['groups'] = \App\Models\AccountGroup::all();
+        $tag = request()->segment(3);
+        $id = request()->segment(4);
+        if ($tag == 'delete') {
+            ReferExpense::find($id)->delete();
+            return redirect()->back()->with('success', 'success');
+        }
         if ($_POST) {
-
-
-
             $this->validate(request(), [
                 "subcategory" => "required|regex:/(^([a-zA-Z,. ]+)(\d+)?$)/u",
-                "code" => "regex:/(^[ A-Za-z0-9_@.#&+-]*$)/u|required|iunique:refer_expense,code," . $id,
+                "code" =>(int) request('expense_id') == 0 ? "regex:/(^[ A-Za-z0-9_@.#&+-]*$)/u|required|unique:refer_expense,code":'required',
                 'financial_category_id' => 'numeric|min:1'
-                    ], $this->custom_validation_message);
+            ]);
             $obj = [
                 'name' => request('subcategory'),
                 "financial_category_id" => request('financial_category_id'),
@@ -627,16 +645,25 @@ class Account extends Controller {
                 "account_group_id" => $account_group_id,
                 'code' => request('code') == '' ? $this->createCode() : request('code'),
                 'open_balance' => (float) request('open_balance') > 0 ? (float) request('open_balance') : 0,
-                "status" => "$id"
+                "status" => 1
             );
 
-            ReferExpense::create($array);
-            $this->session->set_flashdata('success', $this->lang->line('menu_success'));
+            (int) request('expense_id') == 0 ? ReferExpense::create($array) :
+                            ReferExpense::find(request('expense_id'))->update($array);
             return redirect()->back()->with('success', 'success');
         }
         return view('account.charts', $this->data);
     }
-
+   public function checkCategory() {
+            $group_id = request('financial_category_id');
+            $groups = \App\Models\AccountGroup::where('financial_category_id', $group_id)->get();
+            echo '<select  name="account_group_id" class="form-control">';
+            echo '<option  value=""></option>';
+            foreach ($groups as $group) {
+                echo '<option  value="' . $group->id . '">' . $group->name . '</option>';
+            }
+            echo '</select>';
+    }
     public function report() {
         $this->data['set'] = 0;
         $this->data['id'] = 0;
@@ -767,7 +794,7 @@ class Account extends Controller {
             \App\Models\Expense::find($expense_id)->delete();
             return redirect()->back()->with('success', 'success');
         } else if ($id == 'voucher') {
-           // return $this->voucher();
+            // return $this->voucher();
         } else {
             echo 'page not found';
         }
