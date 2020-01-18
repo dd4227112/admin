@@ -631,8 +631,8 @@ class Account extends Controller {
                 "financial_category_id" => request('financial_category_id'),
             ];
 
-            if ((int) request("group") > 0) {
-                $account_group_id = request("group");
+            if ((int) request("account_group_id") > 0) {
+                $account_group_id = request("account_group_id");
                 // $account_group_id = request("group") > 0 ? request("group") : DB::table('account_groups')->insertGetId($obj);
             } else {
                 $check = DB::table('account_groups')->where($obj)->first();
