@@ -16,7 +16,7 @@ class Task extends Model {
     protected $fillable = ['id', 'client_id', 'activity', 'date', 'time', 'user_id', 'priority', 'created_at', 'updated_at', 'task_type_id', 'to_user_id','school_id'];
 
     public function user() {
-        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name'=>'Not allocated']);
     }
 
     public function client() {
@@ -32,7 +32,7 @@ class Task extends Model {
     }
 
     public function taskType() {
-        return $this->belongsTo(\App\Models\TaskType::class, 'task_type_id', 'id');
+        return $this->belongsTo(\App\Models\TaskType::class, 'task_type_id', 'id')->withDefault(['name'=>'Not allocated']);
     }
 
 }
