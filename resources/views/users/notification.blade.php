@@ -55,7 +55,7 @@
                                                     <div class="timeline-details">
                                                         <a href="#"> <i class="icofont icofont-ui-calendar"></i><span><?= date('d M Y', strtotime($task->created_at)) ?></span> </a>
                                                         <a href="#">
-                                                            <i class="icofont icofont-ui-user"></i><span><?= $task->user->name ?><</span>
+                                                            <i class="icofont icofont-ui-user"></i><span><?= $task->user->name ?></span>
                                                         </a>
                                                         <p class="m-t-20"><?= $task->activity ?>.</p>
                                                     </div>
