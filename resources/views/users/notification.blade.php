@@ -60,7 +60,7 @@
                                                         <p class="m-t-20"><?= $task->activity ?>.</p>
                                                     </div>
                                                 </div>
-                                                <span class="cd-date"><?= date('d M Y', strtotime($task->date)) ?></span>
+                                                <span class="cd-date"><?=isset($task->date) ? date('d M Y', strtotime($task->date)):'' ?></span>
                                                 <span class="cd-details"> <?= $task->taskType->name ?></span>
                                             </div>
                                             <!-- cd-timeline-content -->
