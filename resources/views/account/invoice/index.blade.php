@@ -58,6 +58,21 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="form-group row col-lg-offset-6">
+                                <label class="col-sm-4 col-form-label">Select Year</label>
+                                <div class="col-sm-4">
+                                    <select name="select" class="form-control" id="year_select">
+                                        <option value="0">Select</option>
+                                        <?php
+                                        $years = \App\Models\AccountYear::all();
+                                        foreach ($years as $year) {
+                                            ?>
+                                            <option value="<?= $year->id ?>"><?= $year->name ?></option>
+                                        <?php }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-block">
                             <div class="dt-responsive table-responsive">
@@ -127,10 +142,19 @@
 <script type="text/javascript">
     $('#schema_select').change(function () {
         var schema = $(this).val();
-        if (schema == 0) {
+        if (schema == 0 || schema==1) {
             return false;
         } else {
             window.location.href = "<?= url('account/invoice') ?>/" + schema;
+        }
+    });
+      $('#year_select').change(function () {
+        var year = $(this).val();
+        var project=$('#schema_select').val();
+        if (year == 0) {
+            return false;
+        } else {
+            window.location.href = "<?= url('account/invoice') ?>/" + project+'/'+year;
         }
     });
 </script>

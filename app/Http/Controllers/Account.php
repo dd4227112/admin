@@ -37,6 +37,7 @@ class Account extends Controller {
     public function invoice() {
         $this->data['budget'] = [];
         $project_id = request()->segment(3);
+        $account_year_id = request()->segment(4);
         if ((int) $project_id == 1) {
             //create shulesoft invoices
             //check in client table if all schools with students and have generated reports are registered
@@ -55,13 +56,14 @@ class Account extends Controller {
 
             return view('account.invoice.edit', $this->data);
         } else {
+
             $from = $this->data['from'] = request('from');
             $to = $this->data['to'] = request('to');
             $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
             $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
             $this->data['invoices'] = ($from != '' && $to != '') ?
                     Invoice::whereBetween('date', [$from_date, $to_date])->where('project_id', $project_id)->get() :
-                    Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->get();
+                    Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->get();
             return view('account.invoice.index', $this->data);
         }
     }
@@ -73,13 +75,25 @@ class Account extends Controller {
     }
 
     private function getShuleSoftInvoice() {
-        $nonclients = \DB::select('select distinct a."schema_name",b.name,b.sname,b.phone,b.email,b.address,(select count(*) from admin.all_student where "schema_name"=a."schema_name") as total_students from admin.all_exam_report a join admin.all_setting b on a."schema_name"=b."schema_name" where a."schema_name" not in (select username from admin.clients)');
+        $account_year_id = request()->segment(4);
+        $year = \App\Models\AccountYear::find($account_year_id);
+        $nonclients = \DB::select('select  a."schema_name",a.name,a.sname,a.phone,a.email,a.address,(select count(*) from admin.all_student where "schema_name"=a."schema_name" and status=1 and created_at::date <=\'' . date('Y-m-d', strtotime($year->end_date)) . '\') as total_students,a.price_per_student,b.id as client_id from admin.all_setting a left join admin.clients b on b."username"=a."schema_name"');
         foreach ($nonclients as $client) {
-            $client_record = \App\Models\Client::create(['name' => $client->sname, 'email' => $client->email, 'phone' => $client->phone, 'address' => $client->address, 'username' => $client->schema_name]);
-            $reference = 'SASA11' . date('Y') . $client_record->id;
-            $invoice = Invoice::create(['reference' => $reference, 'client_id' => $client_record->id, 'date' => 'now()', 'year' => date('Y'), 'sync', 'user_id' => Auth::user()->id]);
-            $amount = $client->total_students * 1000;
-            \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1]);
+            if ((int) $client->client_id > 0) {
+
+                $invoice_status = Invoice::where('client_id', $client->client_id)->where('account_year_id', $account_year_id)->first();
+                $reference = 'SASA11' . $year->name . $client->client_id;
+                $invoice = count($invoice_status) == 1 ? $invoice_status : Invoice::create(['reference' => $reference, 'client_id' => $client->client_id, 'date' => 'now()', 'year' => date('Y'), 'user_id' => Auth::user()->id, 'account_year_id' => $account_year_id,'due_date'=>date('Y-m-d', strtotime('+ 30 days'))]);
+                $amount = $client->total_students * $client->price_per_student;
+                (int) \App\Models\InvoiceFee::where('invoice_id', $invoice->id)->count() > 0 ?
+                                \App\Models\InvoiceFee::where('invoice_id', $invoice->id)->update(['amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee For ' . $client->total_students . ' Students ', 'quantity' => $client->total_students, 'unit_price' => $client->price_per_student]) : \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee For ' . $client->total_students . ' Students ', 'quantity' => $client->total_students, 'unit_price' => $client->price_per_student]);
+            } else {
+                $client_record = \App\Models\Client::create(['name' => $client->sname, 'email' => $client->email, 'phone' => $client->phone, 'address' => $client->address, 'username' => $client->schema_name]);
+                $reference = 'SASA11' . $year->name . $client_record->id;
+                $invoice = Invoice::create(['reference' => $reference, 'client_id' => $client_record->id, 'date' => 'now()', 'year' => date('Y'), 'user_id' => Auth::user()->id, 'account_year_id' => $account_year_id,'due_date'=>date('Y-m-d', strtotime('+ 30 days'))]);
+                $amount = $client->total_students * $client->price_per_student;
+                \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee For ' . $client->total_students . ' Students ', 'quantity' => $client->total_students, 'unit_price' => $client->price_per_student]);
+            }
         }
     }
 
@@ -184,7 +198,9 @@ class Account extends Controller {
         }
         return view('account.client.create', $this->data);
     }
-
+    public function payment() {
+        
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -195,8 +211,6 @@ class Account extends Controller {
 
         $invoice = Invoice::where("number", request('number'))->first();
         if (count($invoice) > 0) {
-
-
 // This is when a bank return payment status to us
 //save it in the database
             $this->validate(request(), ['amount' => 'required|numeric', 'transaction_id' => 'required']);
@@ -623,7 +637,7 @@ class Account extends Controller {
         if ($_POST) {
             $this->validate(request(), [
                 "subcategory" => "required|regex:/(^([a-zA-Z,. ]+)(\d+)?$)/u",
-                "code" =>(int) request('expense_id') == 0 ? "regex:/(^[ A-Za-z0-9_@.#&+-]*$)/u|required|unique:refer_expense,code":'required',
+                "code" => (int) request('expense_id') == 0 ? "regex:/(^[ A-Za-z0-9_@.#&+-]*$)/u|required|unique:refer_expense,code" : 'required',
                 'financial_category_id' => 'numeric|min:1'
             ]);
             $obj = [
@@ -654,16 +668,18 @@ class Account extends Controller {
         }
         return view('account.charts', $this->data);
     }
-   public function checkCategory() {
-            $group_id = request('financial_category_id');
-            $groups = \App\Models\AccountGroup::where('financial_category_id', $group_id)->get();
-            echo '<select  name="account_group_id" class="form-control">';
-            echo '<option  value=""></option>';
-            foreach ($groups as $group) {
-                echo '<option  value="' . $group->id . '">' . $group->name . '</option>';
-            }
-            echo '</select>';
+
+    public function checkCategory() {
+        $group_id = request('financial_category_id');
+        $groups = \App\Models\AccountGroup::where('financial_category_id', $group_id)->get();
+        echo '<select  name="account_group_id" class="form-control">';
+        echo '<option  value=""></option>';
+        foreach ($groups as $group) {
+            echo '<option  value="' . $group->id . '">' . $group->name . '</option>';
+        }
+        echo '</select>';
     }
+
     public function report() {
         $this->data['set'] = 0;
         $this->data['id'] = 0;
