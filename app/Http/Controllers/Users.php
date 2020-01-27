@@ -203,7 +203,8 @@ class Users extends Controller {
     }
 
     public function applicant() {
-        
+          $this->data['budget'] = [];
+        return view('users.applicant', $this->data);
     }
 
     public function template() {
