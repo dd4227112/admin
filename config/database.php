@@ -59,7 +59,7 @@ return [
             'port' =>5432,
             'database' => 'shulesoft_2017',
             'username' => 'postgres',
-            'password' =>'JesusShuleSoft2017',
+            'password' =>'Jesus_ShuleSoft@2020_',
             'charset' => 'utf8',
             'prefix' => '',
             'schema' =>'admin',
