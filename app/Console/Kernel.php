@@ -462,7 +462,7 @@ class Kernel extends ConsoleKernel {
     public function sendSequenceReminder() {
         $sequences = \App\Models\Sequence::all();
         foreach ($sequences as $sequence) {
-            $users = DB::select("select a.name,a.username,a.email,a.phone,a.usertype,b.email_enabled,b.sms_enabled,a.schema_name,a.id,concat(c.firstname,' ',c.lastname ) as csr_name, c.phone as csr_phone from admin.all_users a,admin.all_setting b, admin.users c where b.schema_name=a.schema_name and b.account_manager_id=c.id and a.status=1 and a.table not in ('parent','student') and a.id in (select user_id from admin.users_sequences a,admin.sequences
+            $users = DB::select("select a.name,a.username,a.email,a.phone,a.usertype,a.schema_name,a.id,concat(c.firstname,' ',c.lastname ) as csr_name, c.phone as csr_phone from admin.all_users a,admin.users_schools b, admin.users c where b.schema_name=a.schema_name and b.user_id=c.id and a.status=1 and c.status=1 and b.role_id=8 and a.table not in ('parent','student','teacher') and a.id in (select user_id from admin.users_sequences a,admin.sequences
 b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date=CURRENT_DATE and b.interval=" . $sequence->interval . " )");
             if (count($users) > 0) {
                 foreach ($users as $user) {
@@ -490,7 +490,7 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
 //$class_ids = (explode(',', preg_replace('/{/', '', preg_replace('/}/', '', $notice->class_id))));
             $to_roll_ids = preg_replace('/{/', '', preg_replace('/}/', '', $notice->to_roll_id));
 
-            $users = $to_roll_ids == 0 ? DB::select("select *,(select id as sms_keys_id from " . $notice->table_schema . ".sms_keys limit 1 ) from admin.all_users where schema_name::text='" . $notice->schema_name . "'") : DB::select('select *,(select id as sms_keys_id from ' . $notice->table_schema . '.sms_keys limit 1 ) from admin.all_users where role_id IN (' . $to_roll_ids . ' ) and schema_name::text=\'' . $notice->schema_name . '\'  ');
+            $users = $to_roll_ids == 0 ? DB::select("select *,(select id as sms_keys_id from " . $notice->table_schema . ".sms_keys limit 1 ) from admin.all_users where schema_name::text='" . $notice->schema_name . "'") : DB::select('select *,(select id as sms_keys_id from ' . $notice->schema_name . '.sms_keys limit 1 ) from admin.all_users where role_id IN (' . $to_roll_ids . ' ) and schema_name::text=\'' . $notice->schema_name . '\'  ');
             if (count($users) > 0) {
                 foreach ($users as $user) {
 

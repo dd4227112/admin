@@ -264,6 +264,9 @@ group by ownership');
 
     public function profile() {
         $id = request()->segment(3);
+        if ((int) $id == 0) {
+            return false;
+        }
         $this->data['school'] = \App\Models\School::find($id);
         if ($_POST) {
             if ((int) request('add_sale') == 1) {
