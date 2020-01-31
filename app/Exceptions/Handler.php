@@ -44,7 +44,7 @@ class Handler extends ExceptionHandler {
             'created_by' => session('id'),
             'created_by_table' => session('table')
         ];
-        if (!preg_match('/framework/src/Illuminate/Auth/AuthManager.php/i', @$e->getTrace()[0]['file']) || !preg_match('/ValidatesRequests.php/i', @$e->getTrace()[0]['file']) || !preg_match('/Router.php/i', @$e->getTrace()[0]['file'])) {
+        if (!preg_match('/ValidatesRequests.php/i', @$e->getTrace()[0]['file']) || !preg_match('/Router.php/i', @$e->getTrace()[0]['file'])) {
             DB::table('admin.error_logs')->insert($object);
         }
     }
