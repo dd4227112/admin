@@ -10,9 +10,10 @@ use Auth;
 
 class Message extends Controller {
 
-     public function __construct() {
+    public function __construct() {
         $this->middleware('auth');
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -229,7 +230,7 @@ class Message extends Controller {
                         $karibusms->API_SECRET = $sms->api_secret;
                         $karibusms->set_name(strtoupper($sms->schema_name));
                         $karibusms->karibuSMSpro = $sms->type;
-                        $result = (object) json_decode($karibusms->send_sms($sms->phone_number, strtoupper($schema) . ': ' . $sms->body . '. https://' . $link . 'shulesoft.com',$sms->schema_name.$sms->sms_id));
+                        $result = (object) json_decode($karibusms->send_sms($sms->phone_number, strtoupper($schema) . ': ' . $sms->body . '. https://' . $link . 'shulesoft.com', $sms->schema_name . $sms->sms_id));
                         if (is_object($result) && isset($result->success) && $result->success == 1) {
                             DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 1, 'return_code' => json_encode($result), 'updated_at' => 'now()']);
                         } else {
@@ -347,12 +348,12 @@ Kind regards,';
 
     //this is the temporaly function to sync sms uploaded manually
     public function syncSms() {
-        $contents = DB::table('admin.phone_sms')->where('published',0)->limit(20)->get();
+        $contents = DB::table('admin.phone_sms')->where('published', 0)->limit(20)->get();
         foreach ($contents as $content) {
 
             $check_phone = validate_phone_number($content->address);
 
-            if (!in_array($check_phone[1], array('+255714825469', '100', '+255652160360', '+255753867887')) && count($check_phone) == 2 && $content->type=='Inbox') {
+            if (!in_array($check_phone[1], array('+255714825469', '100', '+255652160360', '+255753867887')) && count($check_phone) == 2 && $content->type == 'Inbox') {
                 $phone = $check_phone[1];
                 $array = array(
                     'secret' => time(),
@@ -360,7 +361,7 @@ Kind regards,';
                     'message_id' => $content->slot,
                     'message' => $content->body,
                     'sent_timestamp' => strtotime($content->date),
-                    'sent_to' =>$content->slot,
+                    'sent_to' => $content->slot,
                     'device_id' => '3234223',
                 );
 
@@ -378,9 +379,10 @@ Kind regards,';
                     DB::table('reply_sms')->insert($array);
                 }
             }
-            $content->update(['published'=>1]);
+            $content->update(['published' => 1]);
         }
     }
+
     public function getCleanSms($replacements, $message) {
         $patterns = array(
             '/#name/i', '/#username/i', '/#email/i', '/#phone/i', '/#usertype/i'
@@ -407,13 +409,24 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
                     $message = $this->getCleanSms($replacements, $sequence->message) . ''
                             . '. Kwa Msaada Nipigie: ' . $user->csr_name . ' (Account Manager - ' . $user->csr_phone . ')';
                     if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
-                        DB::statement("insert into " . $user->schema_name . ".email (email,subject,body) values ('" . $user->email . "', '" . $sequence->title . "','" . $message . "')");
+                        DB::table($user->schema_name . ".email")->insert([
+                            'email' => $user->email,
+                            'subject' => $sequence->title,
+                            'body' => $message
+                        ]);
+                        //DB::statement("insert into " . $user->schema_name . ".email (email,subject,body) values ('" . $user->email . "', '" . $sequence->title . "','" . $message . "')");
                     }
-                    DB::statement("insert into public.sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
+                    DB::table('public.sms')->insert([
+                        'phone_number' => $user->phone,
+                        'body' => $message,
+                        'type' => 0
+                    ]);
+                    // DB::statement("insert into public.sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
                     DB::table('users_sequences')->insert(['user_id' => $user->id, 'table' => $user->table, 'sequence_id' => $sequence->id, 'schema_name' => $user->schema_name
                     ]);
                 }
             }
         }
     }
+
 }
