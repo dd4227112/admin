@@ -321,8 +321,9 @@ ORDER  BY conrelid::regclass::text, contype DESC";
 
     public function logs() {
         $schema = request()->segment(3);
-        $where = strlen($schema) > 3 ? ' where "schema_name"=\'' . $schema . '\' ' : '';
-        $this->data['error_logs'] = DB::select('select * from admin.error_logs ' . $where);
+        $time='1 day';
+        $where = strlen($schema) > 3 ? ' where "schema_name"=\'' . $schema . '\'  and created_at > now() - interval  \''.$time.'\'  ': ' where created_at > now() - interval  \''.$time.'\' ';
+        $this->data['error_logs'] = DB::select('select * from admin.error_logs ' . $where);   
         $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1 '))->first();
         return view('software.logs', $this->data);
     }

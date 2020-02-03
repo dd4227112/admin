@@ -287,7 +287,7 @@
             "columns": [
                 {"data": "id"},
                 {"data": "schema_name"},
-                {"data": "error_message"},
+                    {"data": "error_message"},
                 {"data": "file"},
                 {"data": "url"},
                 {"data": "created_by"},

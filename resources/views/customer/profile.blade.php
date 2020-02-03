@@ -81,15 +81,17 @@
                                                                 <div>Students</div>
                                                             </div>
                                                             <div class="col-md-12 col-lg-3">
-                                                                <div class="txt-primary"><?= \DB::table($schema . '.parent')->where('status', 1)->count() ?></div>
+                                            <div class="txt-primary"><?= \DB::table($schema . '.parent')->where('status', 1)->count() ?></div>
                                                                 <div>Parents</div>
                                                             </div>
+                                                            
                                                             <div class="col-md-12 col-lg-3">
                                                                 <div class="txt-primary"><?= \DB::table($schema . '.user')->where('status', 1)->count() ?></div>
                                                                 <div>Staff</div>
                                                             </div>
+                                                            
                                                             <div class="col-md-12 col-lg-3">
-                                                                <div class="txt-primary"><?= \DB::table($schema . '.teacher')->where('status', 1)->count() ?></div>
+                                              <div class="txt-primary"><?= \DB::table($schema . '.teacher')->where('status', 1)->count() ?></div>
                                                                 <div>Teacher</div>
                                                             </div>
                                                         </div>
@@ -468,16 +470,16 @@
                                                                                         <td class="social-user-name b-none text-muted">
 
 
-                                                                                            <div class="col-sm-12">
-                                                                                                <input class="form-control" id="school_id" name="school_id" type="text" style="width:18em">
+            
+                                                                                                <input class="form-control" id="school_id" name="school_id" type="text" style="width:18em" placeholder="Click here to Map">
                                                                                                 <span id="search_result"></span>
-                                                                                            </div> 
+                                                                                          
 
 
                                                                                         </td>
                                                                                         <td class="social-user-name b-none text-muted">  Type at least 3 characters</td>
                                                                                     </tr>
-                                                                                <?php } else { ?>
+                                                                                <?php } ?>
                                                                                     <tr>
                                                                                         <th class="social-label b-none">Support Personnel </th>
                                                                                         <td class="social-user-name b-none text-muted">
@@ -525,7 +527,7 @@
                                                                                         </td>
                                                                                         <td class="social-user-name b-none text-muted">   <input type="button" value="save" onmousedown="allocate($('#sales_id').val(), 3)" class="btn btn-success btn-sm"></td>
                                                                                     </tr>    
-                                                                                <?php } ?>
+                                                                               
 
                                                                             </tbody></table>
                                                                     </div>
@@ -619,6 +621,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                          
                                             <!-- About tab end -->
                                             <!-- Photos tab start -->
                                             <div class="tab-pane" id="photos" aria-expanded="false">
@@ -767,7 +770,7 @@ foreach ($logs as $log) {
             }
         });
     }
-    $('#school_id').keyup(function () {
+    $('#school_id').click(function () {
         var val = $(this).val();
         $.ajax({
             url: '<?= url('customer/search/null') ?>',
