@@ -42,6 +42,7 @@
         outline: none;
         cursor: inherit;
     }
+
 </style>
 <div class="main-body">
     <div class="page-wrapper">
@@ -200,7 +201,7 @@
 
                                                             <td>ShuleSoft</td>
                                                             <td >
-                                                                <div > 
+                                                                <div style="line-height:2;"> 
                                                                     ShuleSoft Charges for (
 
                                                                     <?= $schema ?>shulesoft.com). Charges cover
