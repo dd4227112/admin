@@ -446,6 +446,7 @@ class Kernel extends ConsoleKernel {
         }
     }
 
+
     public function getCleanSms($replacements, $message) {
         $patterns = array(
             '/#name/i', '/#username/i', '/#email/i', '/#phone/i', '/#usertype/i'
@@ -472,9 +473,19 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
                     $message = $this->getCleanSms($replacements, $sequence->message) . ''
                             . '. Kwa Msaada Nipigie: ' . $user->csr_name . ' (Account Manager - ' . $user->csr_phone . ')';
                     if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
-                        DB::statement("insert into " . $user->schema_name . ".email (email,subject,body) values ('" . $user->email . "', '" . $sequence->title . "','" . $message . "')");
+                        DB::table($user->schema_name . ".email")->insert([
+                            'email' => $user->email,
+                            'subject' => $sequence->title,
+                            'body' => $message
+                        ]);
+                        //DB::statement("insert into " . $user->schema_name . ".email (email,subject,body) values ('" . $user->email . "', '" . $sequence->title . "','" . $message . "')");
                     }
-                    DB::statement("insert into public.sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
+                    DB::table('public.sms')->insert([
+                        'phone_number' => $user->phone,
+                        'body' => $message,
+                        'type' => 0
+                    ]);
+                    // DB::statement("insert into public.sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
                     DB::table('users_sequences')->insert(['user_id' => $user->id, 'table' => $user->table, 'sequence_id' => $sequence->id, 'schema_name' => $user->schema_name
                     ]);
                 }

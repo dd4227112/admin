@@ -131,7 +131,7 @@ function tagEdit($schema_name, $column, $value) {
                                                                 </td>
 
 
-                                                                <td ></td>
+                                                                <td >                    <a href="<?= url('account/invoiceView/' .$schema->table_schema) ?>" class="btn btn-sm btn-success">View</a></td>
                                                             </tr>
                                                         <?php } ?>
                                                     </tbody>
