@@ -327,7 +327,7 @@ class Customer extends Controller {
             if ((int) $check->count() > 0) {
                 $check->update(['user_id' => $user_id]);
             } else {
-                DB::table('users_schools')->insert(['school_id' => $school_id, 'user_id' => $user_id, 'role_id' => $role_id,'schema_name'=>$schema]);
+                DB::table('users_schools')->insert(['school_id' => $school_id, 'user_id' => $user_id, 'role_id' => $role_id, 'schema_name' => $schema]);
             }
             DB::table($schema . '.setting')->update(['school_id' => $school_id]);
         }
@@ -353,11 +353,11 @@ class Customer extends Controller {
             $message = request('message');
             $usr = request('usertype');
             $usr_type = '';
-            $schema_name=''; 
-            foreach (explode(',',$schools) as $val) {
+            $schema_name = '';
+            foreach (explode(',', $schools) as $val) {
                 $schema_name .= "'" . $val . "',";
             }
-            $schema=trim(rtrim($schema_name, ','), ',');
+            $schema = trim(rtrim($schema_name, ','), ',');
             if (count($usr) > 0) {
                 foreach ($usr as $val) {
                     $usr_type .= "'" . $val . "',";
@@ -375,7 +375,7 @@ class Customer extends Controller {
             );
             $sms = preg_replace($patterns, $replacements, $message);
 
-           $sql = "insert into public.sms (body,user_id,type,phone_number) select '{$sms}',id,'0',phone from admin.all_users WHERE schema_name::text IN ($schema) AND usertype !='Student' {$in_array} AND  phone is not NULL  AND \"table\" !='student' ";
+            $sql = "insert into public.sms (body,user_id,type,phone_number) select '{$sms}',id,'0',phone from admin.all_users WHERE schema_name::text IN ($schema) AND usertype !='Student' {$in_array} AND  phone is not NULL  AND \"table\" !='student' ";
             DB::statement($sql);
             $email_sql = "insert into public.email (subject,body,user_id,email) select 'ShuleSoft Notification', '{$sms}',id,email from admin.all_users WHERE schema_name::text IN ($schema) AND usertype !='Student' {$in_array} AND  phone is not NULL  AND \"table\" !='student' ";
             DB::statement($email_sql);
@@ -442,7 +442,8 @@ class Customer extends Controller {
         if ($table == 'bank') {
             return $this->setBankParameters();
         } else {
-            DB::table($schema . '.' . $table)->where($column, $user_id)->update([$tag => $value]);
+            $table == 'setting' ? DB::table($schema . '.' . $table)->update([$tag => $value]) :
+                            DB::table($schema . '.' . $table)->where($column, $user_id)->update([$tag => $value]);
             if ($tag == 'institution_code') {
                 //update existing invoices
                 DB::statement('UPDATE ' . $schema . '.invoices SET "reference"=\'' . $value . '\'||"reference"');
