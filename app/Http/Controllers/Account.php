@@ -69,9 +69,23 @@ class Account extends Controller {
     }
 
     public function invoiceView() {
-        $invoice_id = (int) request()->segment(3);
-        $this->data['invoice'] = Invoice::find($invoice_id);
-        return view('account.invoice.single', $this->data);
+        $invoice_id = $this->data['schema']=request()->segment(3);
+        $this->data['set']=1;
+        if((int) $invoice_id>0){
+            $this->data['invoice'] = Invoice::find($invoice_id);  
+        }else{
+            $client=\App\Models\Client::where('username',$invoice_id)->first();
+            $this->data['siteinfos']=DB::table($invoice_id.'.setting')->first();
+            $this->data['students']=DB::table($invoice_id.'.student')->where('status',1)->count();
+            if(count($client)==1){
+                $this->data['invoice'] = Invoice::where('client_id',$client->id)->first();  
+            }else{
+                  $this->data['invoice'] = [];
+            }
+        }
+      
+        return view('account.invoice.shulesoft', $this->data);
+        ///return view('account.invoice.single', $this->data);
     }
 
     private function getShuleSoftInvoice() {

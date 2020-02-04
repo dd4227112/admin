@@ -29,9 +29,5 @@ if (createRoute() != NULL) {
         Route::any('/{controller?}/{method?}/{param1?}/{param2?}/{param3?}/{param4?}/{param5?}/{param6?}/{param7?}', createRoute());
     } else if ($route[0] == 'LoginController') {
         
-    } else {
-         $this->data['users'] = DB::select('select count(*), usertype from all_users group by usertype');
-        // $this->data['log_graph'] = $this->createBarGraph();
-        return view('analyse.index', $this->data);
     }
 }
