@@ -150,8 +150,8 @@
                                                     <strong>INETS COMPANY LIMITED</strong>
                                                     <br/>TIN 122-866-750
                                                     <br/>P.o Box 33287 Dar es Salaam
-                                                    <br/>2nd Floor,
-                                                    <br/>Block NO. 576, Mbezi Beach Bagamoyo Road
+                                                    <br/>2nd Floor,Block NO. 576
+                                                    <br/>Mbezi Beach Bagamoyo Road
                                                     <br/>Mobile no: +255 655 406 004
                                                     <br/>Telephone: +255 22 278 0228                                                      </address>
                                             </div>
