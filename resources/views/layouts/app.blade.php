@@ -310,7 +310,7 @@ function toast(message) {
                                             <?php
                                             foreach ($tasks as $task) {
                                                 ?>
-                                            <li >
+                                                <li >
                                                     <div class="media">
                                                         <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Generic placeholder image">
                                                         <div class="media-body">
@@ -321,9 +321,9 @@ function toast(message) {
                                                     </div>
                                                 </li>
                                             <?php } ?>
-                                                <li>
-                                                
-                                                    <a href="<?=url('users/notification')?>"><label class="label label-warning">View All</label></a>
+                                            <li>
+
+                                                <a href="<?= url('users/notification') ?>"><label class="label label-warning">View All</label></a>
                                             </li>
                                         </ul>
                                     </li>
@@ -343,17 +343,17 @@ function toast(message) {
 
                                     <ul class="show-notification profile-notification">
                                         <li>
-                                                <a href="<?=url('users/show/'.Auth::user()->id)?>">
-                                                    <i class="ti-user"></i> Profile
-                                                </a>
-                                            </li>
+                                            <a href="<?= url('users/show/' . Auth::user()->id) ?>">
+                                                <i class="ti-user"></i> Profile
+                                            </a>
+                                        </li>
                                         <?php if (false) { ?>
                                             <li>
                                                 <a href="#!">
                                                     <i class="ti-settings"></i> Settings
                                                 </a>
                                             </li>
-                                            
+
                                             <li>
                                                 <a href="email-inbox.html">
                                                     <i class="ti-email"></i> My Messages
@@ -367,7 +367,7 @@ function toast(message) {
                                         <?php } ?>
                                         <li><a href="{{ route('logout') }}"
                                                onclick="event.preventDefault();
-                                                           document.getElementById('logout-form').submit();"><i class="ti-layout-sidebar-left"></i> Logout</a></li>
+                                                       document.getElementById('logout-form').submit();"><i class="ti-layout-sidebar-left"></i> Logout</a></li>
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                             {{ csrf_field() }}
                                         </form>
@@ -529,20 +529,20 @@ function toast(message) {
                                     <li>
                                         <a href="<?= url('sales/index') ?>" data-i18n="nav.navigate.navbar">Sales Materials</a>
                                     </li>
-<li>
+                                    <li>
                                         <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">Schools</a>
                                     </li>
-<!--                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Sales </a>
-                                        <ul class="tree-2" style="display: none;">
-                                            <li><a href="<?= url('sales/school') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Schools</a></li>
-                                            <li><a href="<?= url('sales/prospect') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Prospects</a></li>
-                                            <li><a href="<?= url('sales/lead') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Engagements</a></li>
-                                            <li><a href="<?= url('sales/customer') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Customers</a></li>
-
-
-
-                                        </ul>
-                                    </li>-->
+                                    <!--                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Sales </a>
+                                                                            <ul class="tree-2" style="display: none;">
+                                                                                <li><a href="<?= url('sales/school') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Schools</a></li>
+                                                                                <li><a href="<?= url('sales/prospect') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Prospects</a></li>
+                                                                                <li><a href="<?= url('sales/lead') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Engagements</a></li>
+                                                                                <li><a href="<?= url('sales/customer') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Customers</a></li>
+                                    
+                                    
+                                    
+                                                                            </ul>
+                                                                        </li>-->
 
                                 </ul>
                             </li>
@@ -637,6 +637,16 @@ function toast(message) {
                                     </li>
                                 </ul>
                             </li>
+                        <?php } ?>
+                        <?php if (can_access('manage_expenses')) { ?>
+                            <li class="nav-item single-item has-class">
+                                <a href="<?= url('account/transaction/4') ?>">
+                                    <i class="ti-view-grid"></i>
+                                    <span data-i18n="nav.widget.main"> Expenses</span>
+                                    <label class="label label-danger menu-caption">+</label>
+                                </a>
+                            </li>
+
                         <?php } ?>
                         <?php if (can_access('manage_users')) { ?>
                             <li class="nav-item">
@@ -1001,7 +1011,6 @@ function toast(message) {
         @yield('footer')
     </body>
     <?php
-   
     if (request('type_id') != 'subject' && !preg_match('/emailsms/', url()->current()) && !preg_match('/sales/', url()->current()) && !preg_match('/logs/', url()->current()) && !preg_match('/api/', url()->current())) {
         ?>
         <script type="text/javascript">
