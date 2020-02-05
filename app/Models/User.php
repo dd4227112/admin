@@ -10,7 +10,7 @@ class User extends Model {
      * Generated
      */
     protected $table = 'users';
-    protected $fillable = ['id', 'firstname', 'middlename', 'lastname', 'email', 'password', 'rolename', 'type', 'name', 'remember_token', 'dp', 'phone', 'town', 'created_by', 'photo','about','salary','sex','skills','marital'];
+    protected $fillable = ['id', 'firstname', 'middlename', 'lastname', 'email', 'password', 'role_id', 'type', 'name', 'remember_token', 'dp', 'phone', 'town', 'created_by', 'photo','about','salary','sex','skills','marital'];
 
     /**
      * The attributes that should be hidden for arrays.
