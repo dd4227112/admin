@@ -50,7 +50,7 @@ class Kernel extends ConsoleKernel {
             $this->sendNotice();
             $this->sendBirthdayWish();
             $this->sendTaskReminder();
-            $this->sendSequenceReminder();
+           // $this->sendSequenceReminder();
         })->dailyAt('04:40'); // Eq to 07:40 AM 
 //
 //        $schedule->call(function() {
@@ -79,7 +79,7 @@ class Kernel extends ConsoleKernel {
         })->everyMinute();
 
         $schedule->call(function () {
-            (new HomeController())->createTodayReport();
+          //  (new HomeController())->createTodayReport();
         })->dailyAt('14:50'); // Eq to 17:50 h 
     }
 
