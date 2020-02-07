@@ -244,4 +244,23 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
         }
     }
 
+    public function officeDailyReport() {
+        $users=\App\Models\User::where('status',1)->get();
+        foreach ($users as $user) {
+            $tasks=DB::select("select b.name, count(a.*) from admin.tasks a join admin.task_types b on b.id=a.task_type_id where a.created_at::date=CURRENT_DATE AND user_id=".$user->id." group by b.name");
+            $tr='';
+            foreach ($tasks as $task) {
+               $tr.='<tr><td>'.$task->name.'</td><td>'.$task->count.'</td></tr>'; 
+            }
+            $message=''
+                    . '<h2>Todays Report</h2>'
+                    . '<p>This report specify what you have done today and it is used by management to evaluate your performance and contribution to the company</p>'
+                    . '<table><thead><tr><th>Activity Name</th><th>Number of Activities</th></tr></thead><tbody>'.$tr.'</tbody></table>';
+            DB::table('public.email')->insert([
+                'subject'=> date('Y M d').' Report',
+                'body'=>$message,
+                'email'=>$user->email
+            ]);
+        }
+    }
 }
