@@ -450,7 +450,7 @@ foreach ($user_permission as $permis) {
                                                                             </div>
                                                                         </div>
 
-
+<h4 class="sub-title">School: <?=$task->client->name?></h4>
                                                                         <div class="card-block">
                                                                             <div class="timeline-details">
                                                                                 <div class="chat-header"><?= $task->user->name ?></div>
