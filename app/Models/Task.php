@@ -13,7 +13,7 @@ class Task extends Model {
 
     //put your code here
     protected $table = 'tasks';
-    protected $dateFormat = 'Y-m-d H:i';
+  
     protected $fillable = ['id', 'client_id', 'activity', 'date', 'time', 'user_id', 'priority', 'created_at', 'updated_at', 'task_type_id', 'to_user_id','school_id'];
 
     public function user() {
