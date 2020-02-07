@@ -6,6 +6,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Http\Controllers\Message;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Background;
 use DB;
 
 class Kernel extends ConsoleKernel {
@@ -80,6 +81,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
           //  (new HomeController())->createTodayReport();
+            (new Background())->officeDailyReport();
         })->dailyAt('14:50'); // Eq to 17:50 h 
     }
 
