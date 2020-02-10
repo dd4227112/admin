@@ -8,7 +8,7 @@ class PaymentType extends Model {
      * Generated
      */
 
-    protected $table = 'payment_types';
+    protected $table = 'constant.payment_types';
     protected $fillable = ['id', 'name'];
 
 
