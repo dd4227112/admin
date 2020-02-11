@@ -69,23 +69,25 @@ class Account extends Controller {
     }
 
     public function invoiceView() {
-        $invoice_id = $this->data['schema']=request()->segment(3);
-        $this->data['set']=1;
-        if((int) $invoice_id>0){
-            $this->data['invoice'] = Invoice::find($invoice_id);  
-        }else{
-            $client=\App\Models\Client::where('username',$invoice_id)->first();
-            $this->data['siteinfos']=DB::table($invoice_id.'.setting')->first();
-            $this->data['students']=DB::table($invoice_id.'.student')->where('status',1)->count();
-            if(count($client)==1){
-                $this->data['invoice'] = Invoice::where('client_id',$client->id)->first();  
-            }else{
-                  $this->data['invoice'] = [];
+        $invoice_id = $this->data['schema'] = request()->segment(3);
+        $this->data['set'] = 1;
+        if ((int) $invoice_id > 0) {
+            $this->data['invoice'] = Invoice::find($invoice_id);
+            return view('account.invoice.single', $this->data);
+        } else {
+            $client = \App\Models\Client::where('username', $invoice_id)->first();
+            $this->data['siteinfos'] = DB::table($invoice_id . '.setting')->first();
+            $this->data['students'] = DB::table($invoice_id . '.student')->where('status', 1)->count();
+            if (count($client) == 1) {
+                $this->data['invoice'] = Invoice::where('client_id', $client->id)->first();
+            } else {
+                $this->data['invoice'] = [];
             }
+            return view('account.invoice.shulesoft', $this->data);
         }
-      
-        return view('account.invoice.shulesoft', $this->data);
-        ///return view('account.invoice.single', $this->data);
+
+
+        ///
     }
 
     private function getShuleSoftInvoice() {
@@ -97,14 +99,14 @@ class Account extends Controller {
 
                 $invoice_status = Invoice::where('client_id', $client->client_id)->where('account_year_id', $account_year_id)->first();
                 $reference = 'SASA11' . $year->name . $client->client_id;
-                $invoice = count($invoice_status) == 1 ? $invoice_status : Invoice::create(['reference' => $reference, 'client_id' => $client->client_id, 'date' => 'now()', 'year' => date('Y'), 'user_id' => Auth::user()->id, 'account_year_id' => $account_year_id,'due_date'=>date('Y-m-d', strtotime('+ 30 days'))]);
+                $invoice = count($invoice_status) == 1 ? $invoice_status : Invoice::create(['reference' => $reference, 'client_id' => $client->client_id, 'date' => 'now()', 'year' => date('Y'), 'user_id' => Auth::user()->id, 'account_year_id' => $account_year_id, 'due_date' => date('Y-m-d', strtotime('+ 30 days'))]);
                 $amount = $client->total_students * $client->price_per_student;
                 (int) \App\Models\InvoiceFee::where('invoice_id', $invoice->id)->count() > 0 ?
                                 \App\Models\InvoiceFee::where('invoice_id', $invoice->id)->update(['amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee For ' . $client->total_students . ' Students ', 'quantity' => $client->total_students, 'unit_price' => $client->price_per_student]) : \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee For ' . $client->total_students . ' Students ', 'quantity' => $client->total_students, 'unit_price' => $client->price_per_student]);
             } else {
                 $client_record = \App\Models\Client::create(['name' => $client->sname, 'email' => $client->email, 'phone' => $client->phone, 'address' => $client->address, 'username' => $client->schema_name]);
                 $reference = 'SASA11' . $year->name . $client_record->id;
-                $invoice = Invoice::create(['reference' => $reference, 'client_id' => $client_record->id, 'date' => 'now()', 'year' => date('Y'), 'user_id' => Auth::user()->id, 'account_year_id' => $account_year_id,'due_date'=>date('Y-m-d', strtotime('+ 30 days'))]);
+                $invoice = Invoice::create(['reference' => $reference, 'client_id' => $client_record->id, 'date' => 'now()', 'year' => date('Y'), 'user_id' => Auth::user()->id, 'account_year_id' => $account_year_id, 'due_date' => date('Y-m-d', strtotime('+ 30 days'))]);
                 $amount = $client->total_students * $client->price_per_student;
                 \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee For ' . $client->total_students . ' Students ', 'quantity' => $client->total_students, 'unit_price' => $client->price_per_student]);
             }
@@ -212,74 +214,86 @@ class Account extends Controller {
         }
         return view('account.client.create', $this->data);
     }
+
     public function payment() {
-        
+        $id = request()->segment(3);
+        $this->data['invoice'] = Invoice::find($id);
+        $this->data["payment_types"] = \App\Models\PaymentType::all();
+        $this->data['banks'] = \App\Models\BankAccount::all();
+        if ($_POST) {
+            return $this->addPayment($id);
+        }
+        return view('account.invoice.payment', $this->data);
     }
+
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function addPayment() {
+    public function addPayment($id) {
 
-        $invoice = Invoice::where("number", request('number'))->first();
+        $invoice = Invoice::find($id);
         if (count($invoice) > 0) {
 // This is when a bank return payment status to us
 //save it in the database
-            $this->validate(request(), ['amount' => 'required|numeric', 'transaction_id' => 'required']);
-            if (in_array(request('paymentType'), ['BANK', 'MPESA'])) {
-                $payments = Payment::where('transaction_id', request('transaction_id'))->first();
-                if (count($payments) > 0) {
-                    $data = array(
-                        'status' => 1,
-                        'success' => 0,
-                        'reference' => $invoice->number,
-                        'description' => 'Transaction ID has been used already to commit transaction'
-                    );
-                    die(json_encode($data));
-                }
+            $this->validate(request(), ['amount' => 'required|numeric', 'payment_type' => 'required']);
+            $transaction_id = (int) request('transaction_id') == 0 ? time() : request('transaction_id');
+            $payments = \App\Models\Payment::where('transaction_id', $transaction_id)->first();
+            if (count($payments) > 0) {
+                $data = array(
+                    'status' => 1,
+                    'success' => 0,
+                    'reference' => $invoice->reference,
+                    'description' => 'Transaction ID has been used already to commit transaction'
+                );
+                die(json_encode($data));
             }
+
             $mobile_transaction_id = request('mobile_transaction_id');
-            if (request('amount') > $invoice->invoiceFee()->sum('amount')) {
+            if (request('amount') > $invoice->invoiceFees()->sum('amount')) {
                 return redirect()->back()->with('error', 'Payment not accepted. Amount paid is greater than amount required');
             }
-            $payment = $this->acceptPayment(request('amount'), $invoice->id, request('method'), request('transaction_id'), $mobile_transaction_id, request('name'), request('account_number'), request('transaction_time'), request('token'));
+            $payment_type = \App\Models\PaymentType::find(request('payment_type'));
+            $payment = $this->acceptPayment(request('amount'), $invoice->id, $payment_type->name, $transaction_id, $mobile_transaction_id, request('name'), request('bank_account_id'), request('transaction_time'), request('token'), $invoice->client_id);
         }
-        $this->sendNotification($invoice);
+        // $this->sendNotification($invoice);
         return redirect('account/invoice')->with('success', json_decode($payment)->description);
     }
 
-    public function acceptPayment($amount, $invoice_id, $payment_method, $receipt, $mobile_transaction_id, $customer_name, $account_number, $timestamp, $token) {
+    public function acceptPayment($amount, $invoice_id, $payment_method, $receipt, $mobile_transaction_id, $customer_name, $bank_account_id, $timestamp, $token, $client_id) {
 
-        $financial_id = count($this->api_info) == 1 ? $this->api_info->financial_entity_id : \App\Model\Financial_entity::where('name', request('method'))->first()->id;
-
+        //$financial_id = count($this->api_info) == 1 ? $this->api_info->financial_entity_id : \App\Model\Financial_entity::where('name', request('method'))->first()->id;
         $payment_array = array(
+            'client_id' => $client_id,
             "invoice_id" => $invoice_id,
             "amount" => $amount,
             "method" => $payment_method,
             "transaction_id" => $receipt,
             "mobile_transaction_id" => $mobile_transaction_id,
-            'account_number' => $account_number,
+            'bank_account_id' => $bank_account_id,
             'note' => $customer_name,
             'transaction_time' => $timestamp,
             'token' => $token,
-            'financial_entity_id' => $financial_id,
+            // 'financial_entity_id' => $financial_id,
             //special case for CRDB payments only
-            'checksum' => $this->request_value('checksum'),
-            'payment_type' => $this->request_value('paymentType'),
-            'amount_type' => $this->request_value('amountType'),
-            'currency' => $this->request_value('currency')
+            'checksum' => request('checksum'),
+            'payment_type' => request('paymentType'),
+            'amount_type' => request('amountType'),
+            'currency' => request('currency')
         );
 
         $payment_id = DB::table('payments')->insertGetId($payment_array);
-        $invoice_fee_ids = \App\Model\Invoice_fee::where('invoice_id', $invoice_id)->get();
+        $invoice_fee = \App\Models\InvoiceFee::where('invoice_id', $invoice_id);
         $status = 1;
+
+        $invoice_fee_ids = $invoice_fee->get();
         foreach ($invoice_fee_ids as $invoice_fee_data) {
             if ($invoice_fee_data->status <> 1 && $amount > 0) {
                 if ($amount >= $invoice_fee_data->amount) {
                     $status = 1;
-                    Invoice_fees_payment::create([
+                    \App\Models\InvoiceFeesPayment::create([
                         'invoice_fee_id' => $invoice_fee_data->id,
                         'payment_id' => $payment_id,
                         'paid_amount' => $invoice_fee_data->amount,
@@ -289,7 +303,7 @@ class Account extends Controller {
                 } else {
                     //amount is less than invoice paid amount
                     $status = 2;
-                    Invoice_fees_payment::create([
+                    \App\Models\InvoiceFeesPayment::create([
                         'invoice_fee_id' => $invoice_fee_data->id,
                         'payment_id' => $payment_id,
                         'paid_amount' => $amount,
@@ -301,8 +315,25 @@ class Account extends Controller {
         }
         $invoice = Invoice::find($invoice_id);
         $invoice->update(['status' => $status]);
-        $amount > 0 ? \App\Model\Wallet::create(['user_id' => $invoice->user_id, 'amount' => $amount, 'invoice_id' => $invoice_id, 'status' => 1]) : '';
-        return $this->paymentBalance($payment_id, $status);
+        $budget_rations = DB::table('budget_ratios')->where('project_id', $invoice_fee->first()->project_id)->get();
+        foreach ($budget_rations as $ratio) {
+            DB::table('payments_budget_ratios')->insert([
+                'budget_ratio_id' => $ratio->id,
+                'payment_id' => $payment_id,
+                'amount' => $ratio->percent * request('amount')/100
+            ]);
+        }
+        if ($status == 1) {
+            //amount has been paid correctly to more than one id so the returned id should be changed.
+            return json_encode(array('control' => 1, 'description' => 'Invoice fully paid', 'payment_id' => $payment_id));
+        } else if ($status == 2) {
+            return json_encode(array('control' => 2, 'description' => 'Invoice partially paid', 'payment_id' => $payment_id));
+        } else {
+            return json_encode(array('control' => 3, 'description' => 'Invoice is paid amount more than invoiced amount', 'payment_id' => $payment_id));
+        }
+        // $amount > 0 ? \App\Model\Wallet::create(['user_id' => $invoice->user_id, 'amount' => $amount, 'invoice_id' => $invoice_id, 'status' => 1]) : '';
+        // return $this->paymentBalance($payment_id, $status);
+        return redirect(url('invoiceView/' . $invoice->id))->with('success', 'success');
     }
 
     public function paymentBalance($payment_id, $status) {
