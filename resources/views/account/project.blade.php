@@ -51,6 +51,7 @@
                                             <th>#</th>
                                             <th>Project Name</th>
                                             <th>Total Amount</th>
+                                            <th>Collected Amount</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -58,24 +59,33 @@
                                         $total_amount = 0;
                                         $total_paid = 0;
                                         $total_unpaid = 0;
+                                        $total_collected=0;
                                         $i = 1;
                                         ?>
                                         @foreach($projects as $project)
 
                                         <tr>
-                                            <td><?=$i?></td>
+                                            <td><?= $i ?></td>
                                             <td>{{$project->name}}</td>
-                                            <td>{{$total_amount+=$project->invoiceFees()->sum('amount')}}</td>
+                                            <td>{{number_format($project->invoiceFees()->sum('amount'))}}</td>
+                                            <?php
+                                            $paid=\App\Models\InvoiceFeesPayment::whereIn('invoice_fee_id',$project->invoiceFees()->get(['id']))->join('payments','payments.id','invoice_fees_payments.payment_id')->sum('amount');
+                                            ?>
+                                            <td>{{number_format($paid)}}</td>
                                         </tr>
-                                        <?php $i++; ?>
+                                        <?php 
+                                        $total_amount += $project->invoiceFees()->sum('amount');
+                                        $total_collected +=$paid;
+                                        $i++; ?>
                                         @endforeach
                                     </tbody>
                                     <tfoot>
                                         <tr>
                                             <td  colspan="2">Total</td>
-                                     
 
-                                            <td><?=$total_amount?></td>
+
+                                            <td><?= number_format($total_amount) ?></td>
+                                            <td><?= number_format($total_collected) ?></td>
                                         </tr>
                                     </tfoot>
                                 </table>
