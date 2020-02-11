@@ -20,4 +20,7 @@ class Project extends Model {
         return $this->hasMany(\App\Models\Client::class, 'client_id', 'id');
     }
 
+     public function invoiceFeesPayments() {
+        return $this->hasManyThrough(\App\Models\InvoiceFeesPayment::class,\App\Models\InvoiceFee::class);
+    }
 }
