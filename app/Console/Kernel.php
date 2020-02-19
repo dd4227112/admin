@@ -113,7 +113,8 @@ class Kernel extends ConsoleKernel {
 
     public function sendReminder($schedule) {
         if (count(explode(',', $schedule->user_id)) > 0) {
-            $users = DB::table($schedule->schema_name . '.users')->whereIn('id', explode(',', $schedule->user_id))->where('role_id', $schedule->role_id)->get();
+        $users = DB::table($schedule->schema_name . '.users')->whereIn('id', explode(',', $schedule->user_id))->where('role_id', $schedule->role_id)->where('status','1')->get();
+           // $users = DB::table($schedule->schema_name . '.users')->whereIn('id', explode(',', $schedule->user_id))->where('role_id', $schedule->role_id)->get();
 
             $check_payment_pattern = (preg_match('/#balance/i', $schedule->message) || preg_match('/#invoice/i', $schedule->message)) ? 1 : 0;
             foreach ($users as $user) {
