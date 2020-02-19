@@ -382,6 +382,7 @@ ORDER  BY conrelid::regclass::text, contype DESC";
         $check = DB::table(request('schema') . '.bank_accounts_integrations')->where('bank_account_id', request('bank_id'));
         if (count($check->first()) == 1) {
             $check->update([request('tag') => request('val')]);
+             DB::statement('UPDATE ' . $schema . '.invoices SET "reference"=\'' . $value . '\'||"reference"');
             echo 'Records updated successfully';
         } else {
             DB::table(request('schema') . '.bank_accounts_integrations')->insert([
