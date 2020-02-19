@@ -383,6 +383,7 @@ ORDER  BY conrelid::regclass::text, contype DESC";
         if (count($check->first()) == 1) {
             $check->update([request('tag') => request('val')]);
              DB::statement('UPDATE ' . request('schema') . '.invoices SET "reference"=\'' . request('val') . '\'||"reference"');
+             DB::statement('UPDATE ' . request('schema') . '.setting SET "payment_integrated"=1');
             echo 'Records updated successfully';
         } else {
             DB::table(request('schema') . '.bank_accounts_integrations')->insert([
