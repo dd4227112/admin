@@ -312,7 +312,7 @@ group by ownership');
         $info->update(['status' => $status]);
         if ((int) $record->school_id > 0) {
             $data = ['user_id' => Auth::user()->id, 'school_id' => $record->school_id, 'task_type_id' => 6, 'next_action' => 'closed', 'activity' => 'School has been attended and closed'];
-            $contact = \App\Models\SchoolContact::where('school_id', $record->school_id)->where('phone', $record->phone)->first();
+            $contact = \App\Models\SchoolContact::where('school_id', $record->school_id)->where('phone', $record->contact_phone)->first();
             if (count($contact) == 0) {
                 \App\Models\SchoolContact::create(['name' => $record->contact_name, 'school_id' => $record->school_id, 'email' => $record->contact_email, 'phone' => $record->contact_phone, 'user_id' => Auth::user()->id, 'title' => $record->contact_title]);
             }
