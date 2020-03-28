@@ -129,8 +129,8 @@
                                                                 <td><?= $request->message ?></td>
                                                                 <td><?= date('d M Y h:i:s', strtotime($request->created_at)) ?></td>
                                                                 <td>
-                                                                    <a href="<?= url('sales/request/attend/' .request()->segment(5).'/'. $request->id) ?>" class="btn btn-success btn-sm">Attended Already</a>
-                                                                    <a href="<?= url('sales/request/delete/' .request()->segment(5).'/'. $request->id) ?>" class="btn btn-danger btn-sm">Delete</a>
+                                                                    <a href="<?= url('sales/request/attend/demo/' . $request->id) ?>" class="btn btn-success btn-sm">Attended Already</a>
+                                                                    <a href="<?= url('sales/request/delete/demo/' . $request->id) ?>" class="btn btn-danger btn-sm">Delete</a>
                                                                 </td>
                                                             </tr>
                                                             <?php $i++;
@@ -185,7 +185,7 @@
                                                                 <td><?= $request->contact_email ?></td>
                                                                 <td><?= $request->message ?></td>
                                                                 <td><?= date('d M Y h:i:s', strtotime($request->created_at)) ?></td>
-                                                                <td>            <a href="<?= url('sales/request/join/demo/' . $request->id) ?>" class="btn btn-success btn-sm">Attended Already</a>
+                                                                <td>            <a href="<?= url('sales/request/attend/join/' . $request->id) ?>" class="btn btn-success btn-sm">Attended Already</a>
                                                                     <a href="<?= url('sales/request/delete/join/' . $request->id) ?>" class="btn btn-danger btn-sm">Delete</a></td>
                                                             </tr>
                                                             <?php $i++;
