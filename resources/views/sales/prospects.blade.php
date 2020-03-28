@@ -116,6 +116,8 @@
                                                         <?php
                                                         $i = 1;
                                                         foreach ($demo_requests as $request) {
+                                                            
+                                                            $link=request()->segment(4)=='demo';
                                                             ?>
                                                             <tr>
                                                                 <td><?= $i ?></td>
@@ -127,8 +129,8 @@
                                                                 <td><?= $request->message ?></td>
                                                                 <td><?= date('d M Y h:i:s', strtotime($request->created_at)) ?></td>
                                                                 <td>
-                                                                    <a href="<?= url('sales/request/attend/demo/' . $request->id) ?>" class="btn btn-success btn-sm">Attended Already</a>
-                                                                    <a href="<?= url('sales/request/delete/demo/' . $request->id) ?>" class="btn btn-danger btn-sm">Delete</a>
+                                                                    <a href="<?= url('sales/request/attend/' .request()->segment(5).'/'. $request->id) ?>" class="btn btn-success btn-sm">Attended Already</a>
+                                                                    <a href="<?= url('sales/request/delete/' .request()->segment(5).'/'. $request->id) ?>" class="btn btn-danger btn-sm">Delete</a>
                                                                 </td>
                                                             </tr>
                                                             <?php $i++;
