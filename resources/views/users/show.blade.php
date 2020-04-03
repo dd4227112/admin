@@ -50,45 +50,90 @@ foreach ($user_permission as $permis) {
                             </div>
                         </div>
                         <?php
-                        if(Auth::user()->role->name !='NMB'){
-                        ?>
-                        <div class="col-md-6 col-xl-4">
-                            <div class="card counter-card-2">
-                                <div class="card-block-big">
-                                    <div>
-                                        <h3>Tsh <?= number_format($user->salary) ?></h3>
-                                        <p>Basic Salary
-                                            <span class="f-right text-success">
-                                                <i class="icofont icofont-arrow-up"></i>
-                                                increase every 3 months
-                                            </span>
-                                        </p>
-                                        <div class="progress ">
-                                            <div class="progress-bar progress-bar-striped progress-xs progress-bar-success" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                        if (Auth::user()->role->name != 'NMB') {
+                            ?>
+                            <div class="col-md-6 col-xl-4">
+                                <div class="card counter-card-2">
+                                    <div class="card-block-big">
+                                        <div>
+                                            <h3>Tsh <?= number_format($user->salary) ?></h3>
+                                            <p>Basic Salary
+                                                <span class="f-right text-success">
+                                                    <i class="icofont icofont-arrow-up"></i>
+                                                    increase every 3 months
+                                                </span>
+                                            </p>
+                                            <div class="progress ">
+                                                <div class="progress-bar progress-bar-striped progress-xs progress-bar-success" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
                                         </div>
+                                        <i class="icofont icofont-coffee-mug"></i>
                                     </div>
-                                    <i class="icofont icofont-coffee-mug"></i>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-6 col-xl-4">
-                            <div class="card counter-card-3">
-                                <div class="card-block-big">
-                                    <div>
-                                        <h3>Tsh 0/=</h3>
-                                        <p>This Month Bonus
-                                            <span class="f-right text-default">
-                                                <i class="icofont icofont-arrow-up"></i>
-                                                Based on performance
-                                            </span></p>
-                                        <div class="progress ">
-                                            <div class="progress-bar progress-bar-striped progress-xs progress-bar-default" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="col-md-6 col-xl-4">
+                                <div class="card counter-card-3">
+                                    <div class="card-block-big">
+                                        <div>
+                                            <h3>Tsh 0/=</h3>
+                                            <p>This Month Bonus
+                                                <span class="f-right text-default">
+                                                    <i class="icofont icofont-arrow-up"></i>
+                                                    Based on performance
+                                                </span></p>
+                                            <div class="progress ">
+                                                <div class="progress-bar progress-bar-striped progress-xs progress-bar-default" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
                                         </div>
+                                        <i class="icofont icofont-upload"></i>
                                     </div>
-                                    <i class="icofont icofont-upload"></i>
                                 </div>
                             </div>
-                        </div>
+                        <?php } else { ?>
+                            <div class="col-md-6 col-xl-4">
+                                <div class="card counter-card-2">
+                                    <div class="card-block-big">
+                                        <div>
+                                            <h3><?php
+                                                $no = DB::table('admin.nmb_schools')->count();
+                                                echo $no;
+                                                ?></h3>
+                                            <p>Total Schools with NMB
+                                                <span class="f-right text-success">
+                                                    <i class="icofont icofont-arrow-up"></i>
+
+                                                </span>
+                                            </p>
+                                            <div class="progress ">
+                                                <div class="progress-bar progress-bar-striped progress-xs progress-bar-success" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                        <i class="icofont icofont-coffee-mug"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-xl-4">
+                                <div class="card counter-card-3">
+                                    <div class="card-block-big">
+                                        <div>
+                                            <h3>
+                                                <?php
+                                                $b= \collect(\DB::select('select count(distinct branch) as count from admin.nmb_schools'))->first();
+                                                echo $b->count;
+                                                ?></h3>
+                                            <p>Branches with Schools
+                                                <span class="f-right text-default">
+                                                    <i class="icofont icofont-arrow-up"></i>
+                                                    
+                                                </span></p>
+                                            <div class="progress ">
+                                                <div class="progress-bar progress-bar-striped progress-xs progress-bar-default" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                        <i class="icofont icofont-upload"></i>
+                                    </div>
+                                </div>
+                            </div>
                         <?php } ?>
                     </div>
                 </div>
@@ -336,26 +381,26 @@ foreach ($user_permission as $permis) {
                                         <!-- end of row -->
                                     </div>
                                     <!-- end of edit-info -->
-                                     <?php
-                            if (Auth::user()->id == 2) {
-                                ?>
-                                    <form class="form-horizontal form-material" method="post" action="<?= url('user/changePhoto/' . $user->id) ?>" enctype="multipart/form-data">
+                                    <?php
+                                    if (Auth::user()->id == 2) {
+                                        ?>
+                                        <form class="form-horizontal form-material" method="post" action="<?= url('user/changePhoto/' . $user->id) ?>" enctype="multipart/form-data">
 
-                                        <div class="form-group">
-                                            <label class="col-md-12">Photo</label>
-                                            <div class="col-md-12">
-                                                <input type="file" name="photo" accept=".png,.jpg,.jpeg,.gif" class="form-control form-control-line">
+                                            <div class="form-group">
+                                                <label class="col-md-12">Photo</label>
+                                                <div class="col-md-12">
+                                                    <input type="file" name="photo" accept=".png,.jpg,.jpeg,.gif" class="form-control form-control-line">
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <?= csrf_field() ?>
-                                                <button class="btn btn-success">Update Profile</button>
+                                            <div class="form-group">
+                                                <div class="col-sm-12">
+                                                    <?= csrf_field() ?>
+                                                    <button class="btn btn-success">Update Profile</button>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </form>
-                            <?php } ?>
+                                        </form>
+                                    <?php } ?>
                                 </div>
                                 <!-- end of card-block -->
                             </div>
@@ -432,84 +477,84 @@ foreach ($user_permission as $permis) {
                                 </div>
                                 <div class="card-block">
                                     <?php
-                                                    $tasks = \App\Models\Task::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
-                                                    foreach ($tasks as $task) {
-                                                        ?>
-                                                        <div class="social-timelines p-relative o-hidden" id="removetag<?= $task->id ?>">
-                                                            <div class="row timeline-right p-t-35">
-                                                                <div class="col-xs-2 col-sm-1">
-                                                                    <div class="social-timelines-left">
-                                                                        <img class="img-circle timeline-icon" src="<?= $root ?>assets/images/avatar-2.png" alt="">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-xs-10 col-sm-11 p-l-5 p-b-35">
-                                                                    <div class="card m-0">
-                                                                        <span class="dropdown-toggle addon-btn text-muted f-right service-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" role="tooltip"></span>
-<!--                                                                        <div class="dropdown-menu dropdown-menu-right b-none services-list">
-                                                                            <a class="dropdown-item" href="#" onmousedown="removeTag(<?= $task->id ?>)">Remove tag</a>
-                                                                            <a class="dropdown-item" href="#">Report Photo</a>
-                                                                            <a class="dropdown-item" href="#">Hide From Timeline</a>
-                                                                            <a class="dropdown-item" href="#">Blog User</a>
-                                                                        </div>-->
-                                                                        <div class="card-block post-timelines">
+                                    $tasks = \App\Models\Task::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+                                    foreach ($tasks as $task) {
+                                        ?>
+                                        <div class="social-timelines p-relative o-hidden" id="removetag<?= $task->id ?>">
+                                            <div class="row timeline-right p-t-35">
+                                                <div class="col-xs-2 col-sm-1">
+                                                    <div class="social-timelines-left">
+                                                        <img class="img-circle timeline-icon" src="<?= $root ?>assets/images/avatar-2.png" alt="">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-10 col-sm-11 p-l-5 p-b-35">
+                                                    <div class="card m-0">
+                                                        <span class="dropdown-toggle addon-btn text-muted f-right service-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" role="tooltip"></span>
+                                                        <!--                                                                        <div class="dropdown-menu dropdown-menu-right b-none services-list">
+                                                                                                                                    <a class="dropdown-item" href="#" onmousedown="removeTag(<?= $task->id ?>)">Remove tag</a>
+                                                                                                                                    <a class="dropdown-item" href="#">Report Photo</a>
+                                                                                                                                    <a class="dropdown-item" href="#">Hide From Timeline</a>
+                                                                                                                                    <a class="dropdown-item" href="#">Blog User</a>
+                                                                                                                                </div>-->
+                                                        <div class="card-block post-timelines">
 
-                                                                            <div class="social-time text-muted">
-                                                                                <?php // date("d M Y", strtotime($task->created_at)) ?>
-                                                                            </div>
-                                                                        </div>
+                                                            <div class="social-time text-muted">
+                                                                <?php // date("d M Y", strtotime($task->created_at)) ?>
+                                                            </div>
+                                                        </div>
 
-<h4 class="sub-title">School: <?=$task->client->name?></h4>
-                                                                        <div class="card-block">
-                                                                            <div class="timeline-details">
-                                                                                <div class="chat-header"><?= $task->user->name ?></div>
-                                                                                <p class="text-muted"><?= $task->activity ?></p>
-                                                                            </div>
-                                                                        </div>
+                                                        <h4 class="sub-title">School: <?= $task->client->name ?></h4>
+                                                        <div class="card-block">
+                                                            <div class="timeline-details">
+                                                                <div class="chat-header"><?= $task->user->name ?></div>
+                                                                <p class="text-muted"><?= $task->activity ?></p>
+                                                            </div>
+                                                        </div>
 
-                                                                        <div class="card-block user-box">
-                                                                            <div class="p-b-30"> <span class="f-14"><a href="#">Comments</a></span></div>
-                                                                            <?php
-                                                                            $comments = $task->taskComments()->get();
-                                                                            if (count($comments) > 0) {
-                                                                                foreach ($comments as $comment) {
-                                                                                    ?>
-                                                                                    <div class="media m-b-20">
-                                                                                        <a class="media-left" href="#">
-                                                                                            <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
-                                                                                        </a>
-                                                                                        <div class="media-body b-b-muted social-client-description">
-                                                                                            <div class="chat-header"><?= $comment->user->name ?><span class="text-muted"><?php echo date('d M Y', strtotime($comment->created_at)) ?></span></div>
-                                                                                            <p class="text-muted"><?= $comment->content ?></p>
-                                                                                        </div>
-                                                                                    </div>
-
-                                                                                    <?php
-                                                                                }
-                                                                            }
-                                                                            ?>
-                                                                            <div class="new_comment<?= $task->id ?>"></div>
-                                                                            <div class="media">
-                                                                                <a class="media-left" href="#">
-                                                                                    <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-blank.jpg" alt="Generic placeholder image">
-                                                                                </a>
-                                                                                <div class="media-body">
-                                                                                    <form class="">
-                                                                                        <div class="">
-                                                                                            <textarea rows="5" cols="5" id="task_comment<?= $task->id ?>" class="form-control" placeholder="Write Something here..."></textarea>
-                                                                                            <div class="text-right m-t-20"><a href="#" class="btn btn-primary waves-effect waves-light" onclick="return false" onmousedown="$.get('<?= url('customer/taskComment/null') ?>', {content: $('#task_comment<?= $task->id ?>').val(), task_id:<?= $task->id ?>}, function (data) {
-                                                                                                            $('.new_comment<?= $task->id ?>').after(data);
-                                                                                                            $('#task_comment<?= $task->id ?>').val('')
-                                                                                                        })">Post</a></div>
-                                                                                        </div>
-                                                                                    </form>
-                                                                                </div>
-                                                                            </div>
+                                                        <div class="card-block user-box">
+                                                            <div class="p-b-30"> <span class="f-14"><a href="#">Comments</a></span></div>
+                                                            <?php
+                                                            $comments = $task->taskComments()->get();
+                                                            if (count($comments) > 0) {
+                                                                foreach ($comments as $comment) {
+                                                                    ?>
+                                                                    <div class="media m-b-20">
+                                                                        <a class="media-left" href="#">
+                                                                            <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
+                                                                        </a>
+                                                                        <div class="media-body b-b-muted social-client-description">
+                                                                            <div class="chat-header"><?= $comment->user->name ?><span class="text-muted"><?php echo date('d M Y', strtotime($comment->created_at)) ?></span></div>
+                                                                            <p class="text-muted"><?= $comment->content ?></p>
                                                                         </div>
                                                                     </div>
+
+                                                                    <?php
+                                                                }
+                                                            }
+                                                            ?>
+                                                            <div class="new_comment<?= $task->id ?>"></div>
+                                                            <div class="media">
+                                                                <a class="media-left" href="#">
+                                                                    <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-blank.jpg" alt="Generic placeholder image">
+                                                                </a>
+                                                                <div class="media-body">
+                                                                    <form class="">
+                                                                        <div class="">
+                                                                            <textarea rows="5" cols="5" id="task_comment<?= $task->id ?>" class="form-control" placeholder="Write Something here..."></textarea>
+                                                                            <div class="text-right m-t-20"><a href="#" class="btn btn-primary waves-effect waves-light" onclick="return false" onmousedown="$.get('<?= url('customer/taskComment/null') ?>', {content: $('#task_comment<?= $task->id ?>').val(), task_id:<?= $task->id ?>}, function (data) {
+                                                                                        $('.new_comment<?= $task->id ?>').after(data);
+                                                                                        $('#task_comment<?= $task->id ?>').val('')
+                                                                                    })">Post</a></div>
+                                                                        </div>
+                                                                    </form>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    <?php } ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php } ?>
 
                                 </div>
                             </div>
