@@ -65,7 +65,7 @@
                                                 <div class="progress ">
                                                     <div class="progress-bar progress-bar-striped progress-xs progress-bar-success" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
                                                 </div>
-                                                <small><?= $nmb_schools ?> Use NMB, <?= $use_shulesoft ?> use ShuleSoft, <?= $nmb_schools ?> use NMB & ShuleSoft</small>
+                                                <small><?= $nmb_schools ?> Use NMB, <?= $use_shulesoft ?> use ShuleSoft, <?= $nmb_shulesoft_schools ?> use NMB & ShuleSoft</small>
                                             </div>
                                             <i class="icofont icofont-comment"></i>
                                         </div>

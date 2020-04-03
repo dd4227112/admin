@@ -108,7 +108,7 @@ class Sales extends Controller {
     public function school() {
         $this->data['use_shulesoft']=DB::table('admin.all_setting')->count()-5;
         $this->data['nmb_schools']=DB::table('admin.nmb_schools')->count();
-        $this->data['nmb_schools']= \collect(DB::select("select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22"))->first()->count;
+        $this->data['nmb_shulesoft_schools']= \collect(DB::select("select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22"))->first()->count;
         $this->data['school_types'] = DB::select("select type, count(*) from admin.schools where ownership='Non-Government' group by type,ownership");
         $this->data['ownerships'] = DB::select('select ownership, COUNT(*) as count, 
 SUM(COUNT(*)) over() as total_schools, 
