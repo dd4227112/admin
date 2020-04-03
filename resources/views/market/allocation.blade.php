@@ -117,7 +117,7 @@
                                                     <th>District</th>
                                                     <th>Ward</th>
                                                     <th>Type</th>
-                                                    <th>Use NMB</th>
+                                                    <!--<th>Use NMB</th>-->
                                                     <th>Students</th>
                                                     <th>Activities</th>
                                                     <th>Action</th>
@@ -153,14 +153,14 @@
                 {"data": "district"},
                 {"data": "ward"},
                 {"data": "type"},
-                {"data": "nmb_branch"},
+//                {"data": "nmb_branch"},
                 {"data": "students"},
                 {"data": "activities"},
                 {"data": ""}
             ],
             "columnDefs": [
                 {
-                    "targets": 9,
+                    "targets": 8,
                     "data": null,
                     "render": function (data, type, row, meta) {
                         if (row.schema_name != null) {
