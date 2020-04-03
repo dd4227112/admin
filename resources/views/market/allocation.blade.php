@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+
 <div class="main-body">
     <div class="page-wrapper">
         <!-- Page-header start -->
@@ -33,7 +34,7 @@
                             <div class="row">
                                 <?php
                                 $i = 1;
-                                $total=0;
+                                $total = 0;
                                 foreach ($school_types as $type) {
                                     ?>
                                     <div class="col-md-12 col-xl-4">
@@ -51,7 +52,7 @@
                                         </div>
                                     </div>
                                     <?php
-                                    $total+=$type->count;
+                                    $total += $type->count;
                                     $i++;
                                 }
                                 ?>
@@ -59,12 +60,12 @@
                                     <div class="card counter-card-<?= $i ?>">
                                         <div class="card-block-big">
                                             <div>
-                                                <h3><?=$total?></h3>
+                                                <h3><?= $total ?></h3>
                                                 <p>Total</p>
                                                 <div class="progress ">
                                                     <div class="progress-bar progress-bar-striped progress-xs progress-bar-success" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
                                                 </div>
-                                                <small><?=$nmb_schools?> Use NMB, <?=$use_shulesoft?> use ShuleSoft, <?=$nmb_schools?> use NMB & ShuleSoft</small>
+                                                <small><?= $nmb_schools ?> Use NMB, <?= $use_shulesoft ?> use ShuleSoft, <?= $nmb_schools ?> use NMB & ShuleSoft</small>
                                             </div>
                                             <i class="icofont icofont-comment"></i>
                                         </div>
@@ -76,21 +77,17 @@
                             <div class="col-lg-3"></div>
                             <div class="col-lg-6">
                                 <?php
-                                if(can_access('manage_customers')){
-                                ?>
-                               <p align="center">
-                                <?php
-
-                                // $demo=DB::table('admin.website_demo_requests')->count();
-                                // $join=DB::table('admin.website_join_shulesoft')->count();
-                                function selected($id) {
-                                    return request()->segment(3) == $id ? 'selected' : '';
-                                }
-                                ?>
-                                    <a href="<?= url('sales/prospect/demo') ?>"> <button class="btn btn-success btn-skew"> Demo Requests <span class="badge badge-danger"><?php //echo $demo    ?></span></button></a>
-                                    <a href="<?= url('sales/prospect/join') ?>"> <button class="btn btn-info btn-skew">Join Requests <span class="badge badge-danger"><?php // echo $join    ?></span></button></a>
-                                </p>
-                                <?php }?>
+                                if (can_access('manage_customers')) {
+                                    ?>
+                                    <p align="center">
+                                        <?php
+                                        // $demo=DB::table('admin.website_demo_requests')->count();
+                                        // $join=DB::table('admin.website_join_shulesoft')->count();
+                                        ?>
+                                        <a href="<?= url('sales/prospect/demo') ?>"> <button class="btn btn-success btn-skew"> Demo Requests <span class="badge badge-danger"><?php //echo $demo    ?></span></button></a>
+                                        <a href="<?= url('sales/prospect/join') ?>"> <button class="btn btn-info btn-skew">Join Requests <span class="badge badge-danger"><?php // echo $join     ?></span></button></a>
+                                    </p>
+                                <?php } ?>
                                 <select class="form-control" id="school_selector">
                                     <option value="1" <?= selected(1) ?>>All Schools</option>
                                     <option value="2" <?= selected(2) ?>>Use ShuleSoft Only</option>
