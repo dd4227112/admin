@@ -226,8 +226,8 @@ class Users extends Controller {
             $tr .= '<tr><td>' . $task->name . '</td><td>' . $task->count . '</td></tr>';
         }
         $message = ''
-                . '<h2>Todays Report</h2>'
-                . '<p>This report specify what you have done today and it is used by management to evaluate your performance and contribution to the company</p>'
+                . '<h5>Report From '.$from.' To '.$to.'</h5>'
+                . '<p></p>'
                 . '<table class="table"><thead><tr><th>Activity Name</th><th>Number of Activities</th></tr></thead><tbody>' . $tr . '</tbody></table>';
         echo $message;
     }
