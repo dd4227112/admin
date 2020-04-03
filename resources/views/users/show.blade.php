@@ -49,6 +49,9 @@ foreach ($user_permission as $permis) {
                                 </div>
                             </div>
                         </div>
+                        <?php
+                        if(Auth::user()->role->name !='NMB'){
+                        ?>
                         <div class="col-md-6 col-xl-4">
                             <div class="card counter-card-2">
                                 <div class="card-block-big">
@@ -86,6 +89,7 @@ foreach ($user_permission as $permis) {
                                 </div>
                             </div>
                         </div>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
@@ -126,7 +130,7 @@ foreach ($user_permission as $permis) {
                             <!-- personal card start -->
                             <div class="card">
                                 <div class="card-header">
-                                    <h5 class="card-header-text">About Me</h5>
+                                    <h5 class="card-header-text">About</h5>
                                     <?php
                                     if ($user->id == 2) {
                                         ?>
@@ -332,6 +336,9 @@ foreach ($user_permission as $permis) {
                                         <!-- end of row -->
                                     </div>
                                     <!-- end of edit-info -->
+                                     <?php
+                            if (Auth::user()->id == 2) {
+                                ?>
                                     <form class="form-horizontal form-material" method="post" action="<?= url('user/changePhoto/' . $user->id) ?>" enctype="multipart/form-data">
 
                                         <div class="form-group">
@@ -348,6 +355,7 @@ foreach ($user_permission as $permis) {
                                             </div>
                                         </div>
                                     </form>
+                            <?php } ?>
                                 </div>
                                 <!-- end of card-block -->
                             </div>
