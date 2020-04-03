@@ -17,7 +17,7 @@
                     </li>
                     <li class="breadcrumb-item"><a href="#!">Sales</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Schools</a>
+                    <li class="breadcrumb-item"><a href="#!">Report</a>
                     </li>
                 </ul>
             </div>
@@ -33,6 +33,7 @@
                             <div class="row">
                                 <?php
                                 $i = 1;
+                                $total=0;
                                 foreach ($school_types as $type) {
                                     ?>
                                     <div class="col-md-12 col-xl-4">
@@ -50,22 +51,52 @@
                                         </div>
                                     </div>
                                     <?php
+                                    $total+=$type->count;
                                     $i++;
                                 }
                                 ?>
+                                <div class="col-md-12 col-xl-4">
+                                    <div class="card counter-card-<?= $i ?>">
+                                        <div class="card-block-big">
+                                            <div>
+                                                <h3><?=$total?></h3>
+                                                <p>Total</p>
+                                                <div class="progress ">
+                                                    <div class="progress-bar progress-bar-striped progress-xs progress-bar-success" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <small><?=$nmb_schools?> Use NMB, <?=$use_shulesoft?> use ShuleSoft, <?=$nmb_schools?> use NMB & ShuleSoft</small>
+                                            </div>
+                                            <i class="icofont icofont-comment"></i>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-lg-3"></div>
                             <div class="col-lg-6">
-                                <p align="center">
-                                    <?php
-                                    $demo=DB::table('admin.website_demo_requests')->count();
-                                    $join=DB::table('admin.website_join_shulesoft')->count();
-                                    ?>
-                                    <a href="<?=url('sales/prospect/demo')?>"> <button class="btn btn-success btn-skew"> Demo Requests <span class="badge badge-danger"><?=$demo?></span></button></a>
-                                    <a href="<?=url('sales/prospect/join')?>"> <button class="btn btn-info btn-skew">Join Requests <span class="badge badge-danger"><?=$join?></span></button></a>
-                                </p></div>
+                                <?php
+                                if(can_access('manage_customers')){
+                                ?>
+                               <p align="center">
+                                <?php
+
+                                // $demo=DB::table('admin.website_demo_requests')->count();
+                                // $join=DB::table('admin.website_join_shulesoft')->count();
+                                function selected($id) {
+                                    return request()->segment(3) == $id ? 'selected' : '';
+                                }
+                                ?>
+                                    <a href="<?= url('sales/prospect/demo') ?>"> <button class="btn btn-success btn-skew"> Demo Requests <span class="badge badge-danger"><?php //echo $demo    ?></span></button></a>
+                                    <a href="<?= url('sales/prospect/join') ?>"> <button class="btn btn-info btn-skew">Join Requests <span class="badge badge-danger"><?php // echo $join    ?></span></button></a>
+                                </p>
+                                <?php }?>
+                                <select class="form-control" id="school_selector">
+                                    <option value="1" <?= selected(1) ?>>All Schools</option>
+                                    <option value="2" <?= selected(2) ?>>Use ShuleSoft Only</option>
+                                    <option value="3"<?= selected(3) ?>>Sales On Progress</option>
+                                </select>
+                            </div>
                             <div class="col-lg-3"></div>
                         </div>
                         <div class="row">
@@ -116,7 +147,7 @@
             "serverSide": true,
             'serverMethod': 'post',
             'ajax': {
-                'url': "<?= url('sales/show/null?page=schools') ?>"
+                'url': "<?= url('sales/show/null?page=schools&type=' . request()->segment(3)) ?>"
             },
             "columns": [
                 {"data": "id"},
@@ -135,11 +166,11 @@
                     "targets": 9,
                     "data": null,
                     "render": function (data, type, row, meta) {
-                       if (row.schema_name != null) {
+                        if (row.schema_name != null) {
                             return '<a href="<?= url('customer/profile') ?>/' + row.schema_name + '" class="label label-warning">Already Customer</a>';
-                        }else{
-                        return '<a href="<?= url('sales/') ?>/profile/' + row.id + '" class="label label-primary">View</a>';
-                       }
+                        } else {
+                            return '<a href="<?= url('sales/') ?>/profile/' + row.id + '" class="label label-primary">View</a>';
+                        }
 
                     }
 
@@ -150,7 +181,13 @@
 
     }
     );
-
+    school_selector = function () {
+        $('#school_selector').change(function () {
+            var val = $(this).val();
+            window.location.href = '<?= url('sales/school') ?>/' + val;
+        })
+    }
+    $(document).ready(school_selector);
 </script>
 
 @endsection
