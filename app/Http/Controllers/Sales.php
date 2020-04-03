@@ -106,6 +106,9 @@ class Sales extends Controller {
     }
 
     public function school() {
+        $this->data['use_shulesoft']=DB::table('admin.all_setting')->count()-5;
+        $this->data['nmb_schools']=DB::table('admin.schools')->whereNotNull('account_number')->count();
+        $this->data['nmb_schools']= \collect(DB::select("select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22"))->first()->count;
         $this->data['school_types'] = DB::select("select type, count(*) from admin.schools where ownership='Non-Government' group by type,ownership");
         $this->data['ownerships'] = DB::select('select ownership, COUNT(*) as count, 
 SUM(COUNT(*)) over() as total_schools, 
@@ -195,7 +198,13 @@ group by ownership');
                 return $this->ajaxTable('schools', ['b.name'], $sql);
                 break;
             case 'schools':
-                $sql = "select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a   where lower(a.ownership) <>'government'";
+                if ((int) request('type') == 3) {
+                    $sql = "select * from (select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a   where lower(a.ownership) <>'government') a where activities >0";
+                } else if ((int) request('type') == 2) {
+                   $sql = "select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a   where lower(a.ownership) <>'government' and a.id in (select school_id from admin.all_setting)"; 
+                } else {
+                    $sql = "select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a   where lower(a.ownership) <>'government'";
+                }
                 return $this->ajaxTable('schools', ['a.name', 'a.region', 'a.ward', 'a.district'], $sql);
                 break;
             case 'prospects':

@@ -139,21 +139,21 @@
                                                         <ul class="list-group">
                                                             <li class="list-group-item justify-content-between">
                                                                 <a href="<?= url('customer/training/config/null?id=' . encrypt($schema)) ?>" target="_blank">Configuration</a>
-                                                                <a href="#" title="copy link"><span class="badge badge-default badge-pill">30</span></a>
+                                                                <a href="#" title="copy link"><span class="badge badge-default badge-pill">&></span></a>
 
                                                             </li>
                                                             <li class="list-group-item justify-content-between">
                                                                 <a href="<?= url('customer/training/account/null?id=' . encrypt($schema)) ?>" target="_blank"> Accounts</a>
-                                                                <span class="badge badge-default badge-pill">20</span>
+                                                                <span class="badge badge-default badge-pill">&></span>
                                                             </li>
                                                             <li class="list-group-item justify-content-between">
                                                                 <a href="<?= url('customer/training/exam/null?id=' . encrypt($schema)) ?>" target="_blank"> Exams</a>
-                                                                <span class="badge badge-default badge-pill">100</span>
+                                                                <span class="badge badge-default badge-pill">&></span>
                                                             </li>
-                                                            <li class="list-group-item justify-content-between">
+<!--                                                            <li class="list-group-item justify-content-between">
                                                                 Other Modules
                                                                 <span class="badge badge-default badge-pill">50</span>
-                                                            </li>
+                                                            </li>-->
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -347,8 +347,7 @@
                                                         <?php } ?>
                                                     </div>
                                                 </div>
-                                                <div class="f-30 text-muted text-center">2014</div>
-
+                                          
                                             </div>
                                             <!-- Timeline tab end -->
                                             <!-- About tab start -->
@@ -555,7 +554,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-sm-12">
+<!--                                                    <div class="col-sm-12">
                                                         <div class="card">
                                                             <div class="card-header">
                                                                 <h5 class="card-header-text">Work</h5>
@@ -616,7 +615,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div>-->
                                                 </div>
                                             </div>
                                             <!-- About tab end -->
