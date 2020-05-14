@@ -72,8 +72,8 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
             // sync invoices 
-            $this->syncInvoice();
-            $this->updateInvoice();
+           // $this->syncInvoice();
+            //$this->updateInvoice();
         })->everyMinute();
         $schedule->call(function () {
             $this->checkSchedule();
@@ -139,6 +139,31 @@ class Kernel extends ConsoleKernel {
     }
 
     public function checkSchedule() {
+         $messages = DB::select("select \"messageID\",attach,attach_file_name,schema_name from admin.all_message where attach is not null and attach_file_name  not like '%amazon%' limit 100");
+        foreach ($messages as $message) {
+            $file = '/usr/share/nginx/html/shulesoft_live/storage/uploads/attach/' . $message->attach_file_name;
+            if (file_exists($file)) {
+                $path = \Storage::disk('s3')->put('attach', $file);
+                $url = \Storage::disk('s3')->url($path);
+                DB::table($message->schema_name .'.files')->insert([
+                    'mime' => basename($file),
+                    'name' => basename($file),
+                    'display_name' => basename($file),
+                    'user_id' => session('id'),
+                    'table' => session('table'),
+                    'size' => filesize($file),
+                    'caption' => basename($file),
+                    'path' => $url
+                ]);
+                if (strlen($url) > 5) {
+                    DB::table($message->schema_name . '.message')->where('messageID', $message->messageID)->update(['attach_file_name' => $url]);
+                    echo $message->schema_name . ' Files ' . $file . ' transferred to ' . $url . '<br/>';
+                    unlink($file);
+                }
+            } else {
+                echo 'file ' . $file . ' does not exists<br/>';
+            }
+        }
         $schedules = DB::table('admin.all_reminders')->get();
         $current_time = date('H:i', strtotime(date('H:i')) + (60 * 60 * 3 - 60 * 2)); // plus +3 GMT hours to match with Tanzania time
         //   $current_time = date('H:i');

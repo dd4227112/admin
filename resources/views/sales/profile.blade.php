@@ -36,7 +36,7 @@
                                 <div class="col-md-12">
                                     <!-- Social wallpaper start -->
                                     <div class="social-wallpaper">
-                                        <img src="<?= $root ?>assets/images/social/shulesoft.jpg" class="img-fluid width-100" alt="">
+                                        <img src="<?= $root ?><?=url('/')?>/public/assets/images/social/shulesoft.jpg" class="img-fluid width-100" alt="">
                                         <div class="profile-hvr">
                                             <i class="icofont icofont-ui-edit p-r-10"></i>
                                             <i class="icofont icofont-ui-delete"></i>
@@ -60,7 +60,7 @@
                                         <!-- social-profile card start -->
                                         <div class="card">
                                             <div class="social-profile">
-                                                <img class="img-fluid width-100" src="assets/images/social/profile.jpg" alt="">
+                                                <img class="img-fluid width-100" src="<?=url('/')?>/public/assets/images/social/profile.jpg" alt="">
                                                 <div class="profile-hvr m-t-15">
                                                     <i class="icofont icofont-ui-edit p-r-10"></i>
                                                     <i class="icofont icofont-ui-delete"></i>
@@ -113,7 +113,7 @@
                                                     ?>
                                                     <div class="media m-b-10">
                                                         <a class="media-left" href="#!">
-                                                            <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
+                                                            <img class="media-object img-circle" src="<?= $root ?><?=url('/')?>/public/assets/images/avatar-1.png" alt="Generic placeholder image">
                                                             <div class="live-status bg-danger"></div>
                                                         </a>
                                                         <div class="media-body">
@@ -304,7 +304,7 @@
                                                             <div class="row timeline-right p-t-35">
                                                                 <div class="col-xs-2 col-sm-1">
                                                                     <div class="social-timelines-left">
-                                                                        <img class="img-circle timeline-icon" src="<?= $root ?>assets/images/avatar-2.png" alt="">
+                                                                        <img class="img-circle timeline-icon" src="<?= $root ?><?=url('/')?>/public/assets/images/avatar-2.png" alt="">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-xs-10 col-sm-11 p-l-5 p-b-35">
@@ -340,7 +340,7 @@
                                                                                     ?>
                                                                                     <div class="media m-b-20">
                                                                                         <a class="media-left" href="#">
-                                                                                            <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
+                                                                                            <img class="media-object img-circle m-r-20" src="<?= $root ?><?=url('/')?>/public/assets/images/avatar-1.png" alt="Generic placeholder image">
                                                                                         </a>
                                                                                         <div class="media-body b-b-muted social-client-description">
                                                                                             <div class="chat-header"><?= $comment->user->name ?><span class="text-muted"><?= date('d M Y', strtotime($comment->created_at)) ?></span></div>
@@ -355,7 +355,7 @@
                                                                             <div class="new_comment<?= $task->id ?>"></div>
                                                                             <div class="media">
                                                                                 <a class="media-left" href="#">
-                                                                                    <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-blank.jpg" alt="Generic placeholder image">
+                                                                                    <img class="media-object img-circle m-r-20" src="<?= $root ?><?=url('/')?>/public/assets/images/avatar-blank.jpg" alt="Generic placeholder image">
                                                                                 </a>
                                                                                 <div class="media-body">
                                                                                     <form class="">
@@ -495,23 +495,23 @@
                                                         <div class="demo-gallery">
                                                             <ul id="profile-lightgallery">
                                                                 <li class="col-md-4 col-lg-2 col-sm-6 col-xs-12  p-3">
-                                                                    <a href="assets/images/light-box/l1.jpg" data-toggle="lightbox" data-title="A random title" data-footer="A custom footer text">
-                                                                        <img src="assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
+                                                                    <a href="<?=url('/')?>/public/assets/images/light-box/l1.jpg" data-toggle="lightbox" data-title="A random title" data-footer="A custom footer text">
+                                                                        <img src="<?=url('/')?>/public/assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
                                                                     </a>
                                                                 </li>
                                                                 <li class="col-md-4 col-lg-2 col-sm-6 col-xs-12  p-3">
-                                                                    <a href="assets/images/light-box/l1.jpg" data-toggle="lightbox" data-title="A random title" data-footer="A custom footer text">
-                                                                        <img src="assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
+                                                                    <a href="<?=url('/')?>/public/assets/images/light-box/l1.jpg" data-toggle="lightbox" data-title="A random title" data-footer="A custom footer text">
+                                                                        <img src="<?=url('/')?>/public/assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
                                                                     </a>
                                                                 </li>
                                                                 <li class="col-md-4 col-lg-2 col-sm-6 col-xs-12  p-3">
-                                                                    <a href="assets/images/light-box/l1.jpg" data-toggle="lightbox" data-title="A random title" data-footer="A custom footer text">
-                                                                        <img src="assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
+                                                                    <a href="<?=url('/')?>/public/assets/images/light-box/l1.jpg" data-toggle="lightbox" data-title="A random title" data-footer="A custom footer text">
+                                                                        <img src="<?=url('/')?>/public/assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
                                                                     </a>
                                                                 </li>
                                                                 <li class="col-md-4 col-lg-2 col-sm-6 col-xs-12  p-3">
-                                                                    <a href="assets/images/light-box/l1.jpg" data-toggle="lightbox" data-title="A random title" data-footer="A custom footer text">
-                                                                        <img src="assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
+                                                                    <a href="<?=url('/')?>/public/assets/images/light-box/l1.jpg" data-toggle="lightbox" data-title="A random title" data-footer="A custom footer text">
+                                                                        <img src="<?=url('/')?>/public/assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
                                                                     </a>
                                                                 </li>
                                                             </ul>
@@ -537,7 +537,7 @@
                                                         <div class="media bg-white d-flex p-10">
                                                             <div class="media-left media-middle">
                                                                 <a href="#">
-                                                                    <img class="media-object" src="assets/images/timeline/img2.png" alt="">
+                                                                    <img class="media-object" src="<?=url('/')?>/public/assets/images/timeline/img2.png" alt="">
                                                                 </a>
                                                             </div>
                                                             <div class="media-body friend-elipsis">
@@ -561,7 +561,7 @@
                                                         <div class="media bg-white d-flex p-10">
                                                             <div class="media-left media-middle">
                                                                 <a href="#">
-                                                                    <img class="media-object" src="assets/images/timeline/img2.png" alt="">
+                                                                    <img class="media-object" src="<?=url('/')?>/public/assets/images/timeline/img2.png" alt="">
                                                                 </a>
                                                             </div>
                                                             <div class="media-body friend-elipsis">
@@ -585,7 +585,7 @@
                                                         <div class="media bg-white d-flex p-10">
                                                             <div class="media-left media-middle">
                                                                 <a href="#">
-                                                                    <img class="media-object" src="assets/images/timeline/img2.png" alt="">
+                                                                    <img class="media-object" src="<?=url('/')?>/public/assets/images/timeline/img2.png" alt="">
                                                                 </a>
                                                             </div>
                                                             <div class="media-body friend-elipsis">
@@ -609,7 +609,7 @@
                                                         <div class="media bg-white d-flex p-10">
                                                             <div class="media-left media-middle">
                                                                 <a href="#">
-                                                                    <img class="media-object" src="assets/images/timeline/img2.png" alt="">
+                                                                    <img class="media-object" src="<?=url('/')?>/public/assets/images/timeline/img2.png" alt="">
                                                                 </a>
                                                             </div>
                                                             <div class="media-body friend-elipsis">
@@ -633,7 +633,7 @@
                                                         <div class="media bg-white d-flex p-10">
                                                             <div class="media-left media-middle">
                                                                 <a href="#">
-                                                                    <img class="media-object" src="assets/images/timeline/img2.png" alt="">
+                                                                    <img class="media-object" src="<?=url('/')?>/public/assets/images/timeline/img2.png" alt="">
                                                                 </a>
                                                             </div>
                                                             <div class="media-body friend-elipsis">
@@ -657,7 +657,7 @@
                                                         <div class="media bg-white d-flex p-10">
                                                             <div class="media-left media-middle">
                                                                 <a href="#">
-                                                                    <img class="media-object" src="assets/images/timeline/img2.png" alt="">
+                                                                    <img class="media-object" src="<?=url('/')?>/public/assets/images/timeline/img2.png" alt="">
                                                                 </a>
                                                             </div>
                                                             <div class="media-body friend-elipsis">
@@ -681,7 +681,7 @@
                                                         <div class="media bg-white d-flex p-10">
                                                             <div class="media-left media-middle">
                                                                 <a href="#">
-                                                                    <img class="media-object" src="assets/images/timeline/img2.png" alt="">
+                                                                    <img class="media-object" src="<?=url('/')?>/public/assets/images/timeline/img2.png" alt="">
                                                                 </a>
                                                             </div>
                                                             <div class="media-body friend-elipsis">
@@ -705,7 +705,7 @@
                                                         <div class="media bg-white d-flex p-10">
                                                             <div class="media-left media-middle">
                                                                 <a href="#">
-                                                                    <img class="media-object" src="assets/images/timeline/img2.png" alt="">
+                                                                    <img class="media-object" src="<?=url('/')?>/public/assets/images/timeline/img2.png" alt="">
                                                                 </a>
                                                             </div>
                                                             <div class="media-body friend-elipsis">
@@ -729,7 +729,7 @@
                                                         <div class="media bg-white d-flex p-10">
                                                             <div class="media-left media-middle">
                                                                 <a href="#">
-                                                                    <img class="media-object" src="assets/images/timeline/img2.png" alt="">
+                                                                    <img class="media-object" src="<?=url('/')?>/public/assets/images/timeline/img2.png" alt="">
                                                                 </a>
                                                             </div>
                                                             <div class="media-body friend-elipsis">
@@ -753,7 +753,7 @@
                                                         <div class="media bg-white d-flex p-10">
                                                             <div class="media-left media-middle">
                                                                 <a href="#">
-                                                                    <img class="media-object" src="assets/images/timeline/img2.png" alt="">
+                                                                    <img class="media-object" src="<?=url('/')?>/public/assets/images/timeline/img2.png" alt="">
                                                                 </a>
                                                             </div>
                                                             <div class="media-body friend-elipsis">
