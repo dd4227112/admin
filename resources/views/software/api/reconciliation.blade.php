@@ -42,7 +42,7 @@
                                             <select name="schema_name" class="form-control select2" id="payment_schema">
                                                 <option value="0">Select</option>
                                                 <?php
-                                                $schemas = DB::select('select distinct "schema_name" from api.invoices where payment_integrated=1');
+                                                $schemas = DB::select('select distinct "schema_name" from admin.all_setting  where payment_integrated=1');
                                                 foreach ($schemas as $schema) {
                                                     ?>
                                                     <option value="<?= $schema->schema_name ?>"><?= $schema->schema_name ?></option>
