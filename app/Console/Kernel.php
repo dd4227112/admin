@@ -51,7 +51,7 @@ class Kernel extends ConsoleKernel {
             $this->sendNotice();
             $this->sendBirthdayWish();
             $this->sendTaskReminder();
-           // $this->sendSequenceReminder();
+            // $this->sendSequenceReminder();
         })->dailyAt('04:40'); // Eq to 07:40 AM 
 //
 //        $schedule->call(function() {
@@ -72,7 +72,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
             // sync invoices 
-           // $this->syncInvoice();
+            $this->syncInvoice();
             //$this->updateInvoice();
         })->everyMinute();
         $schedule->call(function () {
@@ -80,7 +80,7 @@ class Kernel extends ConsoleKernel {
         })->everyMinute();
 
         $schedule->call(function () {
-          //  (new HomeController())->createTodayReport();
+            //  (new HomeController())->createTodayReport();
             (new Background())->officeDailyReport();
         })->dailyAt('14:50'); // Eq to 17:50 h 
     }
@@ -139,13 +139,13 @@ class Kernel extends ConsoleKernel {
     }
 
     public function checkSchedule() {
-         $messages = DB::select("select \"messageID\",attach,attach_file_name,schema_name from admin.all_message where attach is not null and attach_file_name  not like '%amazon%' limit 100");
+        $messages = DB::select("select \"messageID\",attach,attach_file_name,schema_name from admin.all_message where attach is not null and attach_file_name  not like '%amazon%' limit 100");
         foreach ($messages as $message) {
             $file = '/usr/share/nginx/html/shulesoft_live/storage/uploads/attach/' . $message->attach_file_name;
             if (file_exists($file)) {
                 $path = \Storage::disk('s3')->put('attach', $file);
                 $url = \Storage::disk('s3')->url($path);
-                DB::table($message->schema_name .'.files')->insert([
+                DB::table($message->schema_name . '.files')->insert([
                     'mime' => basename($file),
                     'name' => basename($file),
                     'display_name' => basename($file),
@@ -215,7 +215,7 @@ class Kernel extends ConsoleKernel {
     }
 
     public function syncInvoice() {
-        $invoices = DB::select("select * from api.invoices where sync=0  and amount >0 and payment_integrated=1 order by random() limit 15");
+        $invoices = DB::select("select * from admin.all_digital_invoices where sync=0  and amount >0 and reference like '%TZ%' and schema_name <>'beta_testing' order by random() limit 15");
         if (count($invoices) > 0) {
             foreach ($invoices as $invoice) {
                 $token = $this->getToken($invoice);
@@ -225,8 +225,8 @@ class Kernel extends ConsoleKernel {
                         "student_name" => $invoice->student_name,
                         "student_id" => $invoice->student_id,
                         "amount" => $invoice->amount,
-                       // "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
-                        "type" =>ucfirst($invoice->schema_name).' School Fees',
+                        // "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
+                        "type" => ucfirst($invoice->schema_name) . ' Digital Learning Fee',
                         "code" => "10",
                         "callback_url" => "http://51.77.212.234:8081/api/init",
                         "token" => $token
@@ -249,6 +249,17 @@ class Kernel extends ConsoleKernel {
 //update invoice no
                         DB::table($invoice->schema_name . '.invoices')
                                 ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status]);
+
+                        $users = DB::table($invoice->schema_name . '.parent')->whereIn('parentID', DB::table('student_parents')->where('student_id', $invoice->student_id)->get(['parent_id']))->get();
+                        foreach ($users as $user) {
+                            $message = 'Hello ' . $user->name . ','
+                                    . 'Control Namba ya '.$invoice->student_name.', malipo ya mafunzo mtandaoni ni ' . $invoice->reference . '.'
+                                    . 'Unaweza lipa sasa kupitia mitandao ya simu (888999) au njia nyingine za bank ulizo elekezwa na shule. Asante';
+                            if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
+                                DB::statement("insert into " . $invoice->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Ratiba Ya Zamu','" . $message . "')");
+                            }
+                            DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
+                        }
                     }
                     DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
                 }
@@ -267,8 +278,8 @@ class Kernel extends ConsoleKernel {
                         "student_name" => $invoice->student_name,
                         "student_id" => $invoice->student_id,
                         "amount" => $invoice->amount,
-                      //  "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
-                         "type" =>ucfirst($invoice->schema_name).' School Fees',
+                        //  "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
+                        "type" => ucfirst($invoice->schema_name) . ' School Fees',
                         "code" => "10",
                         "callback_url" => "http://51.77.212.234:8081/api/init",
                         "token" => $token
@@ -474,7 +485,6 @@ class Kernel extends ConsoleKernel {
         }
     }
 
-
     public function getCleanSms($replacements, $message) {
         $patterns = array(
             '/#name/i', '/#username/i', '/#email/i', '/#phone/i', '/#usertype/i'
@@ -565,10 +575,10 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
                 DB::statement($sql_for_teachers);
 
                 //send notification to administrators
-                $sql_to_admin="insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")"
-                       ."select 'Hello '||s.sname||', leo ni birthday ya '||(select string_agg(a.name, ',') from " . $schema->table_schema . ".student a WHERE   DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) 
+                $sql_to_admin = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")"
+                        . "select 'Hello '||s.sname||', leo ni birthday ya '||(select string_agg(a.name, ',') from " . $schema->table_schema . ".student a WHERE   DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) 
                     AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE))||' katika shule yako. Ingia katika account yako ya ShuleSoft kujua zaidi na uwatakie heri ya kuzaliwa. Asante', s.phone,0,0,1,'setting' from " . $schema->table_schema . ".student a join " . $schema->table_schema . ".setting s on true  group by s.sname,s.phone";
-              // DB::statement($sql_to_admin);
+                // DB::statement($sql_to_admin);
             }
         }
     }
