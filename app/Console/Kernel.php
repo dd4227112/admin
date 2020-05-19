@@ -214,7 +214,7 @@ class Kernel extends ConsoleKernel {
     }
 
     public function syncInvoice() {
-        $invoices = DB::select("select * from admin.all_digital_invoices where sync=0  and amount >0 and reference like '%TZ%' and schema_name <>'beta_testing' order by random() limit 15");
+        $invoices = DB::select("select * from admin.all_digital_invoices where sync=0  and amount >0 and schema_name <>'beta_testing' order by random() limit 5");
         if (count($invoices) > 0) {
             foreach ($invoices as $invoice) {
                 $token = $this->getToken($invoice);
@@ -267,7 +267,7 @@ class Kernel extends ConsoleKernel {
     }
 
     public function updateInvoice() {
-        $invoices = DB::select('select * from api.invoices where sync=2 and amount >0 and payment_integrated=1 order by random() limit 200');
+        $invoices = DB::select('select * from api.invoices where sync=2 and amount >0 order by random() limit 10');
         if (count($invoices) > 0) {
             foreach ($invoices as $invoice) {
                 $token = $this->getToken($invoice);
