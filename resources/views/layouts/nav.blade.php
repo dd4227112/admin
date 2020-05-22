@@ -22,6 +22,7 @@
 
                 <li class="active"> <a href="#" class="waves-effect"><i class="mdi mdi-av-timer fa-fw" data-icon="v"></i> <span class="hide-menu"> Dashboard <span class="fa arrow"></span> </span></a>
                     <ul class="nav nav-second-level">
+                       
                         <?php if (can_access('view_users')) { ?>
                             <li> 
                                 <a href="<?= url('/home') ?>" class="">
