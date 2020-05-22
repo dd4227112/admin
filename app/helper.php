@@ -1,16 +1,5 @@
 <?php
 
-function base_url() {
-
-    $root = url('/') . '/public/';
-
-    return $root;
-}
-
-function selected($id) {
-    return request()->segment(3) == $id ? 'selected' : '';
-}
-
 function mailConfig() {
     
 }
@@ -34,17 +23,17 @@ function userAccessRole() {
     $user_id = \Auth::user()->id;
 
     if ((int) $user_id > 0) {
-        $user = \App\Model\User::find($user_id);
+        $user = \App\Model\User::find($user_id);  
         $permission = \App\Models\PermissionRole::where('role_id', $user->role_id)->get();
-
+      
         $objet = array();
-
+      
         if (count($permission) > 0) {
             foreach ($permission as $perm) {
                 array_push($objet, $perm->permission->name);
             }
         }
-
+       
         return $objet;
     }
 }
@@ -57,7 +46,7 @@ function form_error($errors, $tag) {
 
 function can_access($permission) {
     $user_id = \Auth::user()->id;
-
+    
     if ((int) $user_id > 0) {
         $global = userAccessRole();
         return in_array($permission, $global) ? 1 : 0;
@@ -68,8 +57,8 @@ function createRoute() {
     $url = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
     $url_param = explode('/', $url);
 
-    $controller = isset($url_param[1]) && !empty($url_param[1]) ? $url_param[1] . '' : 'analyse';
-    $method = isset($url_param[2]) && !empty($url_param[2]) ? $url_param[2] : 'index';
+    $controller = isset($url_param[2]) && !empty($url_param[2]) ? $url_param[2] . '' : 'analyse';
+    $method = isset($url_param[3]) && !empty($url_param[3]) ? $url_param[3] : 'index';
     $view = $method == 'view' ? 'show' : $method;
 
     return in_array($controller, array('public', 'storage')) ? NULL : ucfirst($controller) . '@' . $view;
@@ -77,66 +66,6 @@ function createRoute() {
 
 function timeAgo($datetime, $full = false) {
     return \Carbon\Carbon::createFromTimeStamp(strtotime($datetime))->diffForHumans();
-}
-
-function number_to_words($number) {
-    if (($number < 0) || ($number > 999999999)) {
-        return "$number";
-    }
-
-    $Gn = floor($number / 1000000);  /* Millions (giga) */
-    $number -= $Gn * 1000000;
-    $kn = floor($number / 1000);     /* Thousands (kilo) */
-    $number -= $kn * 1000;
-    $Hn = floor($number / 100);      /* Hundreds (hecto) */
-    $number -= $Hn * 100;
-    $Dn = floor($number / 10);       /* Tens (deca) */
-    $n = $number % 10; /* Ones */
-
-    $res = "";
-
-    if ($Gn) {
-        $res .= number_to_words($Gn) . " Million";
-    }
-
-    if ($kn) {
-        $res .= (empty($res) ? "" : " ") .
-                number_to_words($kn) . " Thousand";
-    }
-
-    if ($Hn) {
-        $res .= (empty($res) ? "" : " ") .
-                number_to_words($Hn) . " Hundred";
-    }
-
-    $ones = array("", "One", "Two", "Three", "Four", "Five", "Six",
-        "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen",
-        "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eightteen",
-        "Nineteen");
-    $tens = array("", "", "Twenty", "Thirty", "Fourty", "Fifty", "Sixty",
-        "Seventy", "Eighty", "Ninety");
-
-    if ($Dn || $n) {
-        if (!empty($res)) {
-            $res .= " and ";
-        }
-
-        if ($Dn < 2) {
-            $res .= $ones[$Dn * 10 + $n];
-        } else {
-            $res .= $tens[$Dn];
-
-            if ($n) {
-                $res .= "-" . $ones[$n];
-            }
-        }
-    }
-
-    if (empty($res)) {
-        $res = "zero";
-    }
-
-    return $res;
 }
 
 /**
@@ -197,6 +126,8 @@ if (!function_exists('form_dropdown')) {
     }
 
 }
+
+
 
 /**
  * 
