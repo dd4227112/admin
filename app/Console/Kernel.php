@@ -219,7 +219,7 @@ class Kernel extends ConsoleKernel {
      */
     public function syncInvoice() {
         //$invoices = DB::select("select * from admin.all_digital_invoices where sync=0  and amount >0 and schema_name  in ('rightwayschools')  order by random() limit 10");
-        $invoices = DB::select("select *,'rightwayschools' as schema_name from rightwayschools.digital_invoices where sync=0  and amount >0  order by random() limit 10");
+        $invoices = DB::select("select *,'rightwayschools' as schema_name from rightwayschools.digital_invoices where sync=0  and amount >0  and reference like '%TZ%' order by random() limit 10");
         if (count($invoices) > 0) {
             foreach ($invoices as $invoice) {
                 $token = $this->getToken($invoice);
@@ -251,7 +251,7 @@ class Kernel extends ConsoleKernel {
                     $curl = $this->curlServer($fields, $url);
                     $result = json_decode($curl);
                     echo $result->description;
-                    if (($result->status == 1 && strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
+                    if ((strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
 //update invoice no
                         DB::table($invoice->schema_name . '.invoices')
                                 ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status]);
