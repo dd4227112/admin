@@ -213,8 +213,11 @@ class Kernel extends ConsoleKernel {
         return implode(',', $uq_names);
     }
 
+    /**
+     * Temporarily only allows digital invoice but must support both
+     */
     public function syncInvoice() {
-        $invoices = DB::select("select * from admin.all_digital_invoices where sync=0  and amount >0 and schema_name not in ('beta_testing')  order by random() limit 5");
+        $invoices = DB::select("select * from admin.all_digital_invoices where sync=0  and amount >0 and schema_name  in ('rightwayschools')  order by random() limit 5");
         if (count($invoices) > 0) {
             foreach ($invoices as $invoice) {
                 $token = $this->getToken($invoice);
