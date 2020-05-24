@@ -218,7 +218,7 @@ class Kernel extends ConsoleKernel {
      */
     public function syncInvoice() {
         //$invoices = DB::select("select * from admin.all_digital_invoices where sync=0  and amount >0 and schema_name  in ('rightwayschools')  order by random() limit 10");
-        $invoices = DB::select("select *,'rightwayschools' as schema_name from rightwayschools.digital_invoices where sync=0  and amount >0  and reference like '%TZ%' order by random() limit 10");
+        $invoices = DB::select("select *,'rightwayschools' as schema_name from rightwayschools.digital_invoices where sync=0  and amount >0  and reference like '%TZ%' order by random() limit 20");
         if (count($invoices) > 0) {
             foreach ($invoices as $invoice) {
                 $token = $this->getToken($invoice);
@@ -234,7 +234,7 @@ class Kernel extends ConsoleKernel {
                         "callback_url" => "http://51.77.212.234:8081/api/init",
                         "token" => $token
                     );
-                    echo 'invoice payload';
+                    
                     // $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
                     $push_status = 'invoice_submission';
                     if ($invoice->schema_name == 'beta_testing') {
