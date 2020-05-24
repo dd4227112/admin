@@ -214,12 +214,18 @@ class Kernel extends ConsoleKernel {
         return implode(',', $uq_names);
     }
 
+    public function syncInvoice() {
+        $invoices = DB::select("select distinct schema_name from admin.all_bank_accounts_integrations where invoice_prefix in (select prefix from admin.all_invoices where reference like '%TZ%' AND schema_name not in ('public','accounts','beta_testing')  and sync=0)");
+        foreach ($invoices as $invoice) {
+            $this->syncInvoicePerSchool($invoice->schema_name);
+        }
+    }
     /**
      * Temporarily only allows digital invoice but must support both
      */
-    public function syncInvoice() {
-        //$invoices = DB::select("select * from admin.all_digital_invoices where sync=0  and amount >0 and schema_name  in ('rightwayschools')  order by random() limit 10");
-        $invoices = DB::select("select *,'rightwayschools' as schema_name from rightwayschools.digital_invoices where sync=0  and amount >0  and reference like '%TZ%' order by random() limit 30");
+    public function syncInvoicePerSchool($schema='') {
+        
+        $invoices = DB::select("select *,'".$schema."' as schema_name from ".$schema.".digital_invoices where sync=0  and amount >0  and reference like '%TZ%' order by random() limit 10");
         if (count($invoices) > 0) {
             foreach ($invoices as $invoice) {
                 $token = $this->getToken($invoice);
