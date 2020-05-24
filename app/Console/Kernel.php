@@ -214,7 +214,7 @@ class Kernel extends ConsoleKernel {
     }
 
     public function syncInvoice() {
-        $invoices = DB::select("select * from admin.all_digital_invoices where sync=0  and amount >0 and schema_name <>'beta_testing' order by random() limit 5");
+        $invoices = DB::select("select * from admin.all_digital_invoices where sync=0  and amount >0 and schema_name not in ('beta_testing','rightwayschools')  order by random() limit 3");
         if (count($invoices) > 0) {
             foreach ($invoices as $invoice) {
                 $token = $this->getToken($invoice);
@@ -252,10 +252,10 @@ class Kernel extends ConsoleKernel {
                         $users = DB::table($invoice->schema_name . '.parent')->whereIn('parentID', DB::table('student_parents')->where('student_id', $invoice->student_id)->get(['parent_id']))->get();
                         foreach ($users as $user) {
                             $message = 'Hello ' . $user->name . ','
-                                    . 'Control Namba ya '.$invoice->student_name.', malipo ya mafunzo mtandaoni ni ' . $invoice->reference . '.'
+                                    . 'Control Namba ya '.$invoice->student_name.', kwa malipo ya mafunzo mtandaoni ni ' . $invoice->reference . '.'
                                     . 'Unaweza lipa sasa kupitia mitandao ya simu (888999) au njia nyingine za bank ulizo elekezwa na shule. Asante';
                             if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
-                                DB::statement("insert into " . $invoice->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Ratiba Ya Zamu','" . $message . "')");
+                                DB::statement("insert into " . $invoice->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Control Number Ya Malipo ya Online','" . $message . "')");
                             }
                             DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
                         }
