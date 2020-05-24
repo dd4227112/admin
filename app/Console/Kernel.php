@@ -234,6 +234,7 @@ class Kernel extends ConsoleKernel {
                         "callback_url" => "http://51.77.212.234:8081/api/init",
                         "token" => $token
                     );
+                    echo 'invoice payload';
                     // $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
                     $push_status = 'invoice_submission';
                     if ($invoice->schema_name == 'beta_testing') {
@@ -248,6 +249,7 @@ class Kernel extends ConsoleKernel {
                     }
                     $curl = $this->curlServer($fields, $url);
                     $result = json_decode($curl);
+                    echo $result->description;
                     if (($result->status == 1 && strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
 //update invoice no
                         DB::table($invoice->schema_name . '.invoices')
