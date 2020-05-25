@@ -58,10 +58,9 @@ return [
             'host' => '127.0.0.1',
             'port' =>5432,
 
-            'database' => 'shulei',
+            'database' => 'shule',
             'username' => 'postgres',
             'password' =>'Doxazed_1',
-
             'charset' => 'utf8',
             'prefix' => '',
             'schema' =>'admin',

@@ -479,7 +479,9 @@ function toast(message) {
                                 </a>
                                 <ul class="tree-1">
                                     <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.bottom-menu">System Setup</a></li>
-                                    <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.bottom-menu">Phone Calls</a></li>
+                                    <li>
+                                        <a href="<?= url('Phone_call/index') ?>" data-i18n="nav.navigate.navbar">phone Calls</a>
+                                    </li>
 
                                     <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
                                                 class="icon-arrow-right"></i>Training</a>
@@ -529,11 +531,9 @@ function toast(message) {
                                 </a>
                                 <ul class="tree-1">
                                     <li>
-                                        <a href="<?= url('sales/index') ?>" data-i18n="nav.navigate.navbar">Visitors</a>
+                                        <a href="<?= url('Visitor/index') ?>" data-i18n="nav.navigate.navbar">Visitors</a>
                                     </li>
-                                    <li>
-                                        <a href="<?= url('Phone_call/index') ?>" data-i18n="nav.navigate.navbar">phone Calls</a>
-                                    </li>
+                                   
                                     
                                 
 
