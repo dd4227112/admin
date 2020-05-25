@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'driver' => 'smtp',
+    'driver' =>'ses',
 
     /*
     |--------------------------------------------------------------------------
@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'host' =>'mail.shulesoft.com',
+    'host' =>'smtp.gmail.com',
 
     /*
     |--------------------------------------------------------------------------
@@ -56,8 +56,8 @@ return [
     */
 
     'from' => [
-        'address' => 'noreply@shulesoft.com',
-        'name' => 'ShuleSoft -School Management System',
+        'address' => 'support@shulesoft.com',
+        'name' =>'ShuleSoft',
     ],
 
     /*
@@ -71,7 +71,7 @@ return [
     |
     */
 
-    'encryption' => null,
+    'encryption' =>'tls',
 
     /*
     |--------------------------------------------------------------------------
@@ -84,9 +84,9 @@ return [
     |
     */
 
-    'username' => 'noreply@shulesoft.com',
+    'username' =>'shulesoft2@gmail.com',
 
-    'password' =>'k8y*&*YHIU(&*(((_)+_#%$$777$HGHGgu',
+    'password' =>'JesusIsLord2017_',
 
     /*
     |--------------------------------------------------------------------------

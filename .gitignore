@@ -1,4 +1,7 @@
 /storage
+/public/admin3
+/public/AdminLTE
+/public/admin5
 /storage/*.key
 /vendor
 /.vagrant

@@ -32,26 +32,29 @@ class Handler extends ExceptionHandler {
      * @return void
      */
     function createLog($e) {
-        //if (!preg_match('/Router.php/',$e->getTrace()[0]['file'])) {
-        $line = @$e->getTrace()[0]['line'];
-        $err = "<br/><hr/><ul>\n";
-        $err .= "\t<li>date time " . date('Y-M-d H:m', time()) . "</li>\n";
-        $err .= "\t<li>error msg: [" . $e->getCode() . '] ' . $e->getMessage() . ' on line ' . $line . ' of file ' . @$e->getTrace()[0]['file'] . "</li>\n";
-        $err .= "\t<li>Controller route: " . url()->current() . "</li>\n";
-        $err .= "\t<li>Error from which host: " . gethostname() . "</li>\n";
-        $err .= "</ul>\n\n";
-
-        $filename = str_replace('-', '_', date('Y-M-d')) . '.html';
-        error_log($err, 3, dirname(__FILE__) . "/../../storage/logs/" . $filename);
-        $this->sendLog($err);
+         $line = @$e->getTrace()[0]['line'];
+        $object = [
+            'error_message' => $e->getMessage() . ' on line ' . $line . ' of file ' . @$e->getTrace()[0]['file'],
+            'file' => @$e->getTrace()[0]['file'],
+            'route' => createRoute(),
+            "url" => url()->current(),
+            'error_instance' => get_class($e),
+            'request' => json_encode(request()->all()),
+            "schema_name" => 'admin',
+            'created_by' => session('id'),
+            'created_by_table' => session('table')
+        ];
+        if (!preg_match('/ValidatesRequests.php/i', @$e->getTrace()[0]['file']) || !preg_match('/Router.php/i', @$e->getTrace()[0]['file'])) {
+            DB::table('admin.error_logs')->insert($object);
+        }
     }
 
     public function sendLog($err) {
-        return DB::table("public.email")->insert(array(
-                    'body' => $err,
-                    'subject' => 'Error Occurred at Admin Panel ',
-                    'email' => 'inetscompany@gmail.com')
-        );
+//        return DB::table("public.email")->insert(array(
+//                    'body' => $err,
+//                    'subject' => 'Error Occurred at Admin Panel ',
+//                    'email' => 'inetscompany@gmail.com')
+//        );
     }
 
     /**
@@ -63,7 +66,7 @@ class Handler extends ExceptionHandler {
      * @return void
      */
     public function report(Exception $exception) {
-    
+        $this->createLog($exception);
         parent::report($exception);
     }
 
@@ -78,6 +81,7 @@ class Handler extends ExceptionHandler {
         if ($exception instanceof \Illuminate\Session\TokenMismatchException) {
             return redirect()->back()->with('info', 'Your session expired, please login below to continue');
         }
+        $this->createLog($exception);
         return parent::render($request, $exception);
     }
 

@@ -19,12 +19,11 @@ return [
         'secret' => env('MAILGUN_SECRET'),
     ],
 
-    'ses' => [
-        'key' => env('SES_KEY'),
-        'secret' => env('SES_SECRET'),
-        'region' => 'us-east-1',
+ 'ses' => [
+        'key' => 'AKIAIALYMWHQGU3OTFQQ',
+        'secret' => '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',
+        'region' => 'us-west-2',
     ],
-
     'sparkpost' => [
         'secret' => env('SPARKPOST_SECRET'),
     ],

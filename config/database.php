@@ -57,9 +57,11 @@ return [
             'driver' => 'pgsql',
             'host' => '127.0.0.1',
             'port' =>5432,
-            'database' => 'shulesoft_2017',
+
+            'database' => 'shulei',
             'username' => 'postgres',
-            'password' =>'JesusShuleSoft2017',
+            'password' =>'Doxazed_1',
+
             'charset' => 'utf8',
             'prefix' => '',
             'schema' =>'admin',

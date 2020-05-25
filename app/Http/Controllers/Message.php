@@ -10,6 +10,10 @@ use Auth;
 
 class Message extends Controller {
 
+    public function __construct() {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -211,11 +215,11 @@ class Message extends Controller {
     }
 
     public function sendSms() {
-        //get all connected phones first
+        //get all connected phones first, we use parallel approach to implement this
         $phones_connected = DB::select('select distinct api_key from public.all_sms');
         if (count($phones_connected) > 0) {
             foreach ($phones_connected as $phone) {
-                $messages = DB::select('select * from public.all_sms where api_key=\'' . $phone->api_key . '\' order by priority desc, sms_id asc limit 8');
+                $messages = DB::select('select * from public.all_sms where api_key=\'' . $phone->api_key . '\' order by priority desc, sms_id asc limit 100');
                 if (!empty($messages)) {
                     foreach ($messages as $sms) {
                         $schema = strtoupper($sms->schema_name) == 'PUBLIC' ?
@@ -226,7 +230,7 @@ class Message extends Controller {
                         $karibusms->API_SECRET = $sms->api_secret;
                         $karibusms->set_name(strtoupper($sms->schema_name));
                         $karibusms->karibuSMSpro = $sms->type;
-                        $result = (object) json_decode($karibusms->send_sms($sms->phone_number, strtoupper($schema) . ': ' . $sms->body . '. https://' . $link . 'shulesoft.com'));
+                        $result = (object) json_decode($karibusms->send_sms($sms->phone_number, strtoupper($schema) . ': ' . $sms->body . '. https://' . $link . 'shulesoft.com', $sms->schema_name . $sms->sms_id));
                         if (is_object($result) && isset($result->success) && $result->success == 1) {
                             DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 1, 'return_code' => json_encode($result), 'updated_at' => 'now()']);
                         } else {
@@ -241,17 +245,18 @@ class Message extends Controller {
 
     public function sendEmail() {
         //loop through schema names and push emails
-        $this->emails = DB::select('select * from public.all_email limit 8');
-        if (!empty($this->emails)) {
+        $this->emails = DB::select('select * from public.all_email limit 10');
+        if (count($this->emails)>0) {
             foreach ($this->emails as $message) {
                 if (filter_var($message->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $message->email)) {
                     try {
                         $link = strtoupper($message->schema_name) == 'PUBLIC' ? 'demo.' : $message->schema_name . '.';
                         $data = ['content' => $message->body, 'link' => $link, 'photo' => $message->photo, 'sitename' => $message->sitename, 'name' => ''];
-                        \Mail::send('email.default', $data, function ($m) use ($message) {
+                        $mail=\Mail::send('email.default', $data, function ($m) use ($message) {
                             $m->from('noreply@shulesoft.com', $message->sitename);
                             $m->to($message->email)->subject($message->subject);
                         });
+
                         if (count(\Mail::failures()) > 0) {
                             DB::update('update ' . $message->schema_name . '.email set status=0 WHERE email_id=' . $message->email_id);
                         } else {
@@ -269,10 +274,10 @@ class Message extends Controller {
                 } else {
 //skip all emails with ShuleSoft title
 //skip all invalid emails
-                    DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
+                 DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
                 }
 //$this->updateEmailConfig();
-                sleep(5);
+                sleep(2);
             }
         }
     }
@@ -344,12 +349,12 @@ Kind regards,';
 
     //this is the temporaly function to sync sms uploaded manually
     public function syncSms() {
-        $contents = DB::table('admin.phone_sms')->where('published',0)->limit(20)->get();
+        $contents = DB::table('admin.phone_sms')->where('published', 0)->limit(20)->get();
         foreach ($contents as $content) {
 
             $check_phone = validate_phone_number($content->address);
 
-            if (!in_array($check_phone[1], array('+255714825469', '100', '+255652160360', '+255753867887')) && count($check_phone) == 2 && $content->type=='Inbox') {
+            if (!in_array($check_phone[1], array('+255714825469', '100', '+255652160360', '+255753867887')) && count($check_phone) == 2 && $content->type == 'Inbox') {
                 $phone = $check_phone[1];
                 $array = array(
                     'secret' => time(),
@@ -357,7 +362,7 @@ Kind regards,';
                     'message_id' => $content->slot,
                     'message' => $content->body,
                     'sent_timestamp' => strtotime($content->date),
-                    'sent_to' =>$content->slot,
+                    'sent_to' => $content->slot,
                     'device_id' => '3234223',
                 );
 
@@ -375,8 +380,9 @@ Kind regards,';
                     DB::table('reply_sms')->insert($array);
                 }
             }
-            $content->update(['published'=>1]);
+            $content->update(['published' => 1]);
         }
     }
+
 
 }

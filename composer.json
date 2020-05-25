@@ -7,18 +7,21 @@
     "require": {
         "php": ">=5.6.4",
         "awobaz/compoships": "^1.0",
+        "aws/aws-sdk-php": "^3.129",
+        "guzzlehttp/guzzle": "^6.5",
+        "intervention/image": "^2.4",
+        "laracademy/generators": "^1.5",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
-        "intervention/image": "^2.4",
         "pragmarx/tracker": "^3.3",
         "zizaco/entrust": "5.2.x-dev"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
-        "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~5.7",
+        "laravelcollective/html": "~5.0",
         "maatwebsite/excel": "~2.1.0",
-        "laravelcollective/html": "~5.0"
+        "mockery/mockery": "0.9.*",
+        "phpunit/phpunit": "~5.7"
     },
     "autoload": {
         "classmap": [
@@ -28,10 +31,10 @@
             "App\\": "app/"
         },
         "files":
-        [
-            "app/library/karibusms/karibusms.php",
-            "app/helper.php"
-        ]
+                [
+                    "app/library/karibusms/karibusms.php",
+                    "app/helper.php"
+                ]
     },
     "autoload-dev": {
         "psr-4": {
