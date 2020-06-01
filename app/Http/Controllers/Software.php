@@ -461,7 +461,8 @@ ORDER  BY conrelid::regclass::text, contype DESC";
         $url = 'http://51.77.212.234:8081/api/init';
         $fields = json_decode(urldecode(request('data')));
         $curl = $background->curlServer($fields, $url,'row');
-        return $curl;
+       // return $curl;
+        return redirect()->back()->with('success',$curl);
     }
 
 }
