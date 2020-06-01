@@ -131,7 +131,6 @@
         $.ajax({
             url: a,
             method: 'get',
-            data: {null},
             success: function (data) {
                $('#sync_status').html(data).addClass('alert alert-success');
             }
