@@ -66,7 +66,7 @@
                                     </div>
                                 </form>
                             </div>
-
+                            <div id="sync_status"></div>
                             <div class="table-responsive dt-responsive "> 
                                 <table id="api_requests" class="table table-striped dataTable table-bordered nowrap">
                                     <thead>
@@ -108,7 +108,7 @@
                                                             <?php
                                                             if (count($check) == 0) {
                                                                 ?>
-                                                            <a href="<?= url('software/syncMissingPayments/null?data=' . urlencode(json_encode($tran))) ?>">Sync</a>
+                                                            <a href="#" onmousedown="reconcile('<?= url('software/syncMissingPayments/null?data=' . urlencode(json_encode($tran))) ?>')">Sync</a>
                                                             <?php } ?>
                                                         </td>
                                                     </tr>
@@ -127,6 +127,16 @@
 </div>
 
 <script type="text/javascript">
+    reconcile = function (a) {
+        $.ajax({
+            url: a,
+            method: 'get',
+            data: {null},
+            success: function (data) {
+               $('#sync_status').html(data).addClass('alert alert-success');
+            }
+        });
+    }
     //    $(document).ready(function () {
     //        var table = $('#api_requests').DataTable({
     //            "processing": true,
