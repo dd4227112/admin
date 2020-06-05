@@ -108,7 +108,7 @@
                                                             <?php
                                                             if (count($check) == 0) {
                                                                 ?>
-                                                            <a href="#" onmousedown="reconcile('<?= url('software/syncMissingPayments/null?data=' . urlencode(json_encode($tran))) ?>')">Sync</a>
+                                                            <a href="#" onclick="return false" onmousedown="reconcile('<?= url('software/syncMissingPayments/null?data=' . urlencode(json_encode($tran))) ?>')">Sync</a>
                                                             <?php } ?>
                                                         </td>
                                                     </tr>
@@ -133,6 +133,7 @@
             method: 'get',
             success: function (data) {
                $('#sync_status').html(data).addClass('alert alert-success');
+             
             }
         });
     }
