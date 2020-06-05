@@ -37,6 +37,7 @@ class Kernel extends ConsoleKernel {
         })->everyMinute();
 
         $schedule->call(function () {
+            $this->curlServer(['action' => 'payment'], 'http://51.77.212.234:8081/api/curl');
             (new Message())->sendEmail();
         })->everyMinute();
 //
@@ -220,12 +221,13 @@ class Kernel extends ConsoleKernel {
             $this->syncInvoicePerSchool($invoice->schema_name);
         }
     }
+
     /**
      * Temporarily only allows digital invoice but must support both
      */
-    public function syncInvoicePerSchool($schema='') {
-        
-        $invoices = DB::select("select *,'".$schema."' as schema_name from ".$schema.".digital_invoices where sync=0  and amount >0  and reference like '%TZ%' order by random() limit 10");
+    public function syncInvoicePerSchool($schema = '') {
+
+        $invoices = DB::select("select *,'" . $schema . "' as schema_name from " . $schema . ".digital_invoices where sync=0  and amount >0  and reference like '%TZ%' order by random() limit 10");
         if (count($invoices) > 0) {
             foreach ($invoices as $invoice) {
                 $token = $this->getToken($invoice);
@@ -241,7 +243,7 @@ class Kernel extends ConsoleKernel {
                         "callback_url" => "http://51.77.212.234:8081/api/init",
                         "token" => $token
                     );
-                    
+
                     // $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
                     $push_status = 'invoice_submission';
                     if ($invoice->schema_name == 'beta_testing') {
@@ -265,7 +267,7 @@ class Kernel extends ConsoleKernel {
                         $users = DB::table($invoice->schema_name . '.parent')->whereIn('parentID', DB::table('student_parents')->where('student_id', $invoice->student_id)->get(['parent_id']))->get();
                         foreach ($users as $user) {
                             $message = 'Hello ' . $user->name . ','
-                                    . 'Control Namba ya '.$invoice->student_name.', kwa malipo ya mafunzo mtandaoni ni ' . $invoice->reference . '.'
+                                    . 'Control Namba ya ' . $invoice->student_name . ', kwa malipo ya mafunzo mtandaoni ni ' . $invoice->reference . '.'
                                     . 'Unaweza lipa sasa kupitia mitandao ya simu (888999) au njia nyingine za bank ulizo elekezwa na shule. Asante';
                             if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
                                 DB::statement("insert into " . $invoice->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Control Number Ya Malipo ya Online','" . $message . "')");
