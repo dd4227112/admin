@@ -9,6 +9,7 @@ use \App\Models\InvoiceFee;
 use Illuminate\Validation\Rule;
 use \App\Models\ReferExpense;
 use \App\Models\Expense;
+use Excel;
 use DB;
 use Auth;
 
@@ -378,26 +379,27 @@ class Account extends Controller {
     }
 
     public function revenue() {
-        if (can_access('view_revenue')) {
-            $id = request()->segment(3);
-            $this->data['id'] = $id;
-            if ((int) $id) {
-                if ($_POST) {
-                    $this->data['revenues'] = \App\Models\Revenue::where('refer_expense_id', $id)->where('date', '>=', request('from_date'))->where('date', '<=', request('to_date'))->get();
-                } else {
-
-                    $this->data['revenues'] = \App\Models\Revenue::where('refer_expense_id', $id)->get();
-                }
-                $this->data["subview"] = "revenue/index";
+        //  if (can_access('view_revenue')) {
+        $id = request()->segment(3);
+        $this->data['id'] = $id;
+        if ((int) $id) {
+            if ($_POST) {
+                $this->data['revenues'] = \App\Models\Revenue::where('refer_expense_id', $id)->where('date', '>=', request('from_date'))->where('date', '<=', request('to_date'))->get();
             } else {
-                $this->data['id'] = null;
-                $this->data['revenues'] = \App\Models\Revenue::all();
-                $this->data['expenses'] = \App\Models\ReferExpense::whereIn('financial_category_id', [1])->get();
 
-                $this->data["subview"] = "revenue/index_main";
+                $this->data['revenues'] = \App\Models\Revenue::where('refer_expense_id', $id)->get();
             }
-            return view('account.transaction.revenue', $this->data);
+            $this->data["subview"] = "revenue/index";
+        } else {
+            $this->data['id'] = null;
+            $this->data['revenues'] = \App\Models\Revenue::all();
+            $this->data['expenses'] = \App\Models\ReferExpense::whereIn('financial_category_id', [1])->get();
+
+            $this->data["subview"] = "revenue/index_main";
         }
+        //dd($this->data);
+        return view('account.transaction.revenue', $this->data);
+        //  }
     }
 
     public function revenueAdd() {
@@ -406,18 +408,16 @@ class Account extends Controller {
         $this->data['banks'] = \App\Models\BankAccount::all();
         $this->data["category"] = DB::table('refer_expense')->whereIn('financial_category_id', [1])->get();
         if ($_POST) {
-            $this->validate(request(), [
-                'phone' => 'required|unique:clients,phone',
-                'name' => 'required|string',
-                'address' => 'required|string',
-                'project_ids' => 'required',
-                'email' => 'required|email|unique:clients,email']
-            );
-            $client = \App\Models\Client::create(request()->all());
-            foreach (request('project_ids') as $project_id) {
-                \App\Models\ClientProject::create(['project_id' => $project_id, 'client_id' => $client->id]);
-            }
-            return redirect(url('account/client'))->with('success', 'success');
+//            $this->validate(request(), [
+//                'payer_phone' => 'required',
+//                'payer_name' => 'required',
+//                'refer_expense_id' => 'required']
+//            );
+//            
+
+            \App\Models\Revenue::create(array_merge(['user_id' => (int) request('user_id')], request()->except('user_id')));
+
+            return redirect(url('account/revenue'))->with('success', 'success');
         }
         return view('account.transaction.create', $this->data);
     }
@@ -443,23 +443,23 @@ class Account extends Controller {
     }
 
     public function getCategories_by_date($id, $from_date, $to_date) {
-        $ids = Expense::where('date', '>=', $from_date)->where('date', '<=', $to_date)->get(['refer_expense_id']);
-        $ids = count($ids) == 0 ? Expense::get(['refer_expense_id']) : $ids;
+        $ids_ = Expense::where('date', '>=', $from_date)->where('date', '<=', $to_date)->get(['refer_expense_id']);
+        $ids = count($ids_) == 0 ? Expense::get(['refer_expense_id']) : $ids_;
         switch ($id) {
             case 1:
-                $result = ReferExpense::where('financial_category_id', 4)->whereIn('id', $ids)->get();
+                $result = ReferExpense::where('financial_category_id', 4)->get();
                 break;
             case 2:
-                $result = ReferExpense::where('financial_category_id', 6)->whereIn('id', $ids)->get();
+                $result = ReferExpense::where('financial_category_id', 6)->get();
                 break;
             case 3:
-                $result = ReferExpense::where('financial_category_id', 7)->whereIn('id', $ids)->get();
+                $result = ReferExpense::where('financial_category_id', 7)->get();
                 break;
             case 4:
-                $result = ReferExpense::whereIn('financial_category_id', [2, 3])->whereIn('id', $ids)->get();
+                $result = ReferExpense::whereIn('financial_category_id', [2, 3])->get();
                 break;
             case 5:
-                $result = ReferExpense::where('financial_category_id', 5)->whereIn('id', $ids)->get();
+                $result = ReferExpense::where('financial_category_id', 5)->get();
                 break;
             default:
                 $result = array();
@@ -880,6 +880,67 @@ class Account extends Controller {
         }
 
         return view('expense.voucher.voucher', $this->data);
+    }
+
+    public function payment_history() {
+        $this->data['voucher'] = [];
+        return view('account.report.payment_history', $this->data);
+    }
+
+    public function uploadRevenue() {
+
+        if ($_POST) {
+            $address = request()->file('file');
+            $results = Excel::load($address)->all();
+            //once we upload excel, register students and marks in mark_info table
+
+            foreach ($results as $value) {
+                $in_data = [
+                    'created_by_id' => Auth::user()->id,
+                    'amount' => $value['amount'],
+                    'payment_method' => $value['payment_method'],
+                    'transaction_id' => $value['reference_number'],
+                    'date' => $value['date'],
+                    'note' => $value['note']
+                ];
+                if ((int) $value['user_in_shulesoft'] == 1) {
+
+                    $user = \App\Model\User::where('name', 'ilike', '%' . $value['payer_name'] . '%')->first();
+                    if (count($user) == 1) {
+                        $data = array_merge($in_data, [
+                            'payer_name' => $user->name,
+                            'user_id' => $user->id,
+                            'user_table' => $user->table,
+                            'payer_email' => $user->email,
+                            'payer_phone' => $user->phone
+                        ]);
+                    } else {
+                        $user = Auth::user();
+                        $data = array_merge($in_data, [
+                            'payer_name' => $user->firstname.' '.$user->lastname,
+                            'user_id' => $user->id,
+                            'payer_email' => $user->email,
+                            'payer_phone' => $user->phone
+                        ]);
+                    }
+                } else {
+                    $data = [
+                        'payer_name' => $value['payer_name'],
+                        'payer_phone' => $value['payer_phone'],
+                        'payer_email' => $value['payer_email'],
+                        'created_by_id' => session('id'),
+                        'amount' => $value['amount'],
+                        'payment_method' => $value['payment_method'],
+                        'transaction_id' => $value['reference_number'],
+                        'date' => $value['date'],
+                        'note' => $value['note']
+                    ];
+                }
+
+                \App\Models\Revenue::create($data);
+            }
+            return redirect('account/revenue')->with('success', 'success');
+        }
     }
 
 }
