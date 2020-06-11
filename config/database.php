@@ -55,7 +55,7 @@ return [
 
         'pgsql' => [
             'driver' => 'pgsql',
-            'host' => '127.0.0.1',
+            'host' => '51.91.251.252',
             'port' =>5432,
             'database' => 'shulesoft_2017',
             'username' => 'postgres',
