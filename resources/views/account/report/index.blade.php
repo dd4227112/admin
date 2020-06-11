@@ -82,18 +82,18 @@
                                                     <tbody>
                                                         <tr>
                                                             <td></td>
-                                                            <td class="text-left">     <a href=" <?php echo url('invoices/payment_history') ?>">Invoice Payment</a></td>
+                                                            <td class="text-left">     <a href=" <?php echo url('account/payment_history') ?>">Invoice Payment</a></td>
 
                                                         </tr>
                                                         <tr>
                                                             <td></td>
                                                             <td class="text-left">
-                                                                <a href=" <?php echo url('revenue/index'); ?>">non_invoiced_revenue</a></td>
+                                                                <a href=" <?php echo url('account/index'); ?>">non_invoiced_revenue</a></td>
 
                                                         </tr>
                                                         <tr>
                                                             <td></td>
-                                                            <td class="text-left"><a href="<?php echo url('invoices/wallet'); ?>">Advanced Payment</a></td>
+                                                            <td class="text-left"><a href="<?php echo url('account/wallet'); ?>">Advanced Payment</a></td>
 
                                                         </tr>
 
