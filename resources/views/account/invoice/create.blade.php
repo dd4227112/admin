@@ -54,7 +54,7 @@
                                     <div class="panel-body">
                                         <div id="error_area"></div>
                                         <div class=" form">
-                                            <form class="cmxform form-horizontal " id="commentForm" method="post" action="<?= url('account/createInvoice') ?>">
+                                            <form class="cmxform form-horizontal " id="commentForm1" method="post" action="<?= url('account/createInvoice') ?>">
                                                 <div class="form-group ">
                                                     <label for="type" class="control-label col-lg-3">Project</label>
                                                     <div class="col-lg-6">
@@ -169,7 +169,7 @@
                                                 <br/>
                                                 <div class=" form">
                                                     <br/>
-                                                    <form class="cmxform form-horizontal " id="commentForm" method="post" action="<?= url('invoice') ?>" enctype="multipart/form-data">
+                                                    <form class="cmxform form-horizontal " id="commentForm2" method="post" action="<?= url('invoice') ?>" enctype="multipart/form-data">
                                                         <div class="form-group ">
                                                             <label for="type" class="control-label col-lg-3">Employer</label>
                                                             <div class="col-lg-6">
@@ -193,7 +193,7 @@
                                                         <div class="form-group ">
                                                             <label for="cname" class="control-label col-lg-3">Choose Excel File (required)</label>
                                                             <div class="col-lg-6">
-                                                                <input class=" form-control" id="cname" name="file" type="file" required="">
+                                                                <input class=" form-control" id="fname" name="file" type="file" required="">
                                                             </div>
                                                         </div>
 
@@ -245,7 +245,7 @@
                             <div class="form-group ">
                                 <label for="cname" class="control-label col-lg-3">Abbreviation</label>
                                 <div class="col-lg-6">
-                                    <input class=" form-control" id="cname" name="abbreviation"  type="text" required="">
+                                    <input class=" form-control" id="abbrname" name="abbreviation"  type="text" required="">
                                 </div>
                             </div>
                             <div class="form-group " style="display: none;">
@@ -410,16 +410,14 @@
             });
             //alert(JSON.stringify(ary));
             $.ajax({
-                type: 'get',
+                type: 'POST',
                 url: "<?= url('account/createInvoice') ?>/null",
                 data: {date: date, client_id: client_id, noexcel: 1, users: ary, project_id: project_id,force_new:force_new},
                 dataType: "html",
                 success: function (data) {
-                    if(data=='1'){
-                       window.location.href="<?=url('account/invoice')?>";
-                    }else{
-                    $('#table_error_area').html(data);    
-        }
+                
+                       window.location.href="<?=url('account/invoice')?>/"+project_id;
+        
                 }
             });
         });

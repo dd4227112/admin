@@ -36,7 +36,7 @@ class Account extends Controller {
 
     public function invoice() {
         $this->data['budget'] = [];
-        $project_id = request()->segment(3);
+        $project_id = $this->data['project_id'] = request()->segment(3);
         $account_year_id = request()->segment(4);
         if ((int) $project_id == 1) {
             //create shulesoft invoices
@@ -56,14 +56,23 @@ class Account extends Controller {
 
             return view('account.invoice.edit', $this->data);
         } else {
+            switch ($project_id) {
+                case 4:
 
-            $from = $this->data['from'] = request('from');
-            $to = $this->data['to'] = request('to');
-            $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
-            $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
-            $this->data['invoices'] = ($from != '' && $to != '') ?
-                    Invoice::whereBetween('date', [$from_date, $to_date])->where('project_id', $project_id)->get() :
-                    Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->get();
+                    $this->data['invoices'] = DB::connection('karibusms')->table('payment')->get();
+                    break;
+
+                default:
+                    $from = $this->data['from'] = request('from');
+                    $to = $this->data['to'] = request('to');
+                    $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
+                    $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
+                    $this->data['invoices'] = ($from != '' && $to != '') ?
+                            Invoice::whereBetween('date', [$from_date, $to_date])->where('project_id', $project_id)->get() :
+                            Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->get();
+                    break;
+            }
+
             return view('account.invoice.index', $this->data);
         }
     }
@@ -320,7 +329,7 @@ class Account extends Controller {
             DB::table('payments_budget_ratios')->insert([
                 'budget_ratio_id' => $ratio->id,
                 'payment_id' => $payment_id,
-                'amount' => $ratio->percent * request('amount')/100
+                'amount' => $ratio->percent * request('amount') / 100
             ]);
         }
         if ($status == 1) {
