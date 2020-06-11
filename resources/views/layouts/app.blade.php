@@ -639,13 +639,13 @@ function toast(message) {
                             </li>
                         <?php } ?>
                         <?php if (can_access('manage_expenses')) { ?>
-                            <li class="nav-item single-item has-class">
+<!--                            <li class="nav-item single-item has-class">
                                 <a href="<?= url('account/transaction/4') ?>">
                                     <i class="ti-view-grid"></i>
                                     <span data-i18n="nav.widget.main"> Expenses</span>
                                     <label class="label label-danger menu-caption">+</label>
                                 </a>
-                            </li>
+                            </li>-->
 
                         <?php } ?>
                         <?php if (can_access('manage_users')) { ?>

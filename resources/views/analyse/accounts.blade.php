@@ -31,8 +31,9 @@
                                 <?php
                                 $total_revenue = DB::table('revenues')->whereYear('created_at', date('Y'))->sum('amount');
                                 $total_payments = DB::table('payments')->whereYear('created_at', date('Y'))->sum('amount');
+                                                 $total_sms_payments = DB::connection('karibusms')->table('payment')->whereYear('time', date('Y'))->sum('amount');
                                 ?>
-                                <h3>Tsh <?= number_format($total_revenue + $total_payments) ?></h3>
+                                <h3>Tsh <?= number_format($total_revenue + $total_payments+$total_sms_payments) ?></h3>
                                 <p>Revenue Collected This Year
                                     <span class="f-right text-primary">
                                         <i class="icofont icofont-arrow-up"></i>
