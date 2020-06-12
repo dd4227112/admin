@@ -75,7 +75,7 @@
                                                             <?php echo $revenue->payer_name; ?>
                                                         </td>
                                                         <td data-title="<?= __('expense') ?>">
-                                                            <?php echo $revenue->name; ?>
+                                                            <?php echo $revenue->referExpense->name; ?>
                                                         </td>
                                                         <td data-title="<?= __('expense_date') ?>">
                                                             <?php echo date("d M Y", strtotime($revenue->date)); ?>
@@ -94,7 +94,7 @@
                                                             </td>
                                                         <?php } else { ?>
                                                             <td data-title="<?= __('expense_note') ?>">
-                                                                <?php echo $revenue->note; ?>
+                                                                <?php echo wordwrap($revenue->note,20); ?>
                                                             </td>
                                                         <?php } ?>
 

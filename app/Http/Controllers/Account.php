@@ -893,19 +893,34 @@ class Account extends Controller {
             $address = request()->file('file');
             $results = Excel::load($address)->all();
             //once we upload excel, register students and marks in mark_info table
-
+            $status = '';
             foreach ($results as $value) {
+              
+                $refer_expense = \App\Models\ReferExpense::where('name', $value['revenue_name'])->first();
+                if (count($refer_expense) == 0) {
+                    $status .= '<p class="alert alert-danger">Revenue not defined. This expense name <b>' . $value['expense_name'] . '</b> must be defined first in charts of account. This record skipped to be uploaded</p>';
+                    continue;
+                }
+                $check_unique=\App\Models\Revenue::where('transaction_id', $value['transaction_id'])->first();
+                if(count($check_unique)==1){
+                     $status .= '<p class="alert alert-danger">This transaction ID <b>' . $value['transaction_id'] . '</b> already being used. Information skipped</p>';
+                    continue; 
+                }
+                $bank = \App\Models\BankAccount::where('number', $value['account_number'])->first();
+
                 $in_data = [
                     'created_by_id' => Auth::user()->id,
                     'amount' => $value['amount'],
                     'payment_method' => $value['payment_method'],
-                    'transaction_id' => $value['reference_number'],
+                    'transaction_id' => $value['transaction_id'],
+                    "refer_expense_id" => $refer_expense->id,
+                    "bank_account_id" => count($bank) == 1 ? $bank->id : NULL,
                     'date' => $value['date'],
                     'note' => $value['note']
                 ];
                 if ((int) $value['user_in_shulesoft'] == 1) {
 
-                    $user = \App\Model\User::where('name', 'ilike', '%' . $value['payer_name'] . '%')->first();
+                    $user = \App\Models\User::where('name', 'ilike', '%' . $value['payer_name'] . '%')->first();
                     if (count($user) == 1) {
                         $data = array_merge($in_data, [
                             'payer_name' => $user->name,
@@ -917,7 +932,7 @@ class Account extends Controller {
                     } else {
                         $user = Auth::user();
                         $data = array_merge($in_data, [
-                            'payer_name' => $user->firstname.' '.$user->lastname,
+                            'payer_name' => $user->firstname . ' ' . $user->lastname,
                             'user_id' => $user->id,
                             'payer_email' => $user->email,
                             'payer_phone' => $user->phone
@@ -930,8 +945,10 @@ class Account extends Controller {
                         'payer_email' => $value['payer_email'],
                         'created_by_id' => session('id'),
                         'amount' => $value['amount'],
+                        "refer_expense_id" => $refer_expense->id,
+                        "bank_account_id" => count($bank) == 1 ? $bank->id : NULL,
                         'payment_method' => $value['payment_method'],
-                        'transaction_id' => $value['reference_number'],
+                        'transaction_id' => $value['transaction_id'],
                         'date' => $value['date'],
                         'note' => $value['note']
                     ];
@@ -939,7 +956,7 @@ class Account extends Controller {
 
                 \App\Models\Revenue::create($data);
             }
-            return redirect('account/revenue')->with('success', 'success');
+            return redirect('account/revenue')->with('success', $status);
         }
     }
 

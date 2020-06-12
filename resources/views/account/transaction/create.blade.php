@@ -164,7 +164,7 @@
                                                     </label>
                                                     <div class="col-sm-6">
 
-                                                        <input type="number" class="form-control" id="amount" name="amount" value="<?= old('amount') ?>" required="true">
+                                                        <input type="text" class="form-control" id="amount" name="amount" value="<?= old('amount') ?>" required="true">
                                                     </div>
                                                     <span class="col-sm-4 control-label">
                                                         <?php echo form_error($errors, 'amount'); ?>
@@ -232,7 +232,7 @@
                                                             <input type="text" placeholder="Enter ref number/cheque number" class="form-control" id="ref_no" name="transaction_id" value="<?= old('transaction_id', time()) ?>">
                                                         </div>
                                                         <span class="col-sm-4 control-label">
-                                                            <span id="ref_no_status"></span>
+                                                            <!--<span id="ref_no_status"></span>-->
                                                             <?php echo form_error($errors, 'transaction_id'); ?>
                                                         </span>
                                                     </div>
