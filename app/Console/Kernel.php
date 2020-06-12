@@ -243,8 +243,8 @@ class Kernel extends ConsoleKernel {
                         "token" => $token
                     );
                     
-                    // $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
-                    $push_status = 'invoice_submission';
+                    $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
+                    //$push_status = 'invoice_submission';
                     if ($invoice->schema_name == 'beta_testing') {
                         //testing invoice
                         $setting = DB::table('beta_testing.setting')->first();
@@ -297,8 +297,8 @@ class Kernel extends ConsoleKernel {
                         "callback_url" => "http://51.77.212.234:8081/api/init",
                         "token" => $token
                     );
-                    // $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
-                    $push_status = 'invoice_update';
+                    $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
+                   // $push_status = 'invoice_update';
                     if ($invoice->schema_name == 'beta_testing') {
                         //testing invoice
                         $setting = DB::table('beta_testing.setting')->first();
