@@ -382,6 +382,7 @@ class Account extends Controller {
         //  if (can_access('view_revenue')) {
         $id = request()->segment(3);
         $this->data['id'] = $id;
+        $page='index';
         if ((int) $id) {
             if ($_POST) {
                 $this->data['revenues'] = \App\Models\Revenue::where('refer_expense_id', $id)->where('date', '>=', request('from_date'))->where('date', '<=', request('to_date'))->get();
@@ -389,16 +390,13 @@ class Account extends Controller {
 
                 $this->data['revenues'] = \App\Models\Revenue::where('refer_expense_id', $id)->get();
             }
-            $this->data["subview"] = "revenue/index";
+            $page='revenue';
         } else {
             $this->data['id'] = null;
             $this->data['revenues'] = \App\Models\Revenue::all();
             $this->data['expenses'] = \App\Models\ReferExpense::whereIn('financial_category_id', [1])->get();
-
-            $this->data["subview"] = "revenue/index_main";
         }
-        //dd($this->data);
-        return view('account.transaction.revenue', $this->data);
+        return view('account.transaction.'.$page, $this->data);
         //  }
     }
 
@@ -895,16 +893,16 @@ class Account extends Controller {
             //once we upload excel, register students and marks in mark_info table
             $status = '';
             foreach ($results as $value) {
-              
+
                 $refer_expense = \App\Models\ReferExpense::where('name', $value['revenue_name'])->first();
                 if (count($refer_expense) == 0) {
-                    $status .= '<p class="alert alert-danger">Revenue not defined. This expense name <b>' . $value['expense_name'] . '</b> must be defined first in charts of account. This record skipped to be uploaded</p>';
-                    continue;
+                    $status .= '<p class="alert alert-danger">Revenue not defined. This expense name <b>' . $value['revenue_name'] . '</b> must be defined first in charts of account. This record skipped to be uploaded</p>';
+                   continue;
                 }
                 $check_unique=\App\Models\Revenue::where('transaction_id', $value['transaction_id'])->first();
                 if(count($check_unique)==1){
                      $status .= '<p class="alert alert-danger">This transaction ID <b>' . $value['transaction_id'] . '</b> already being used. Information skipped</p>';
-                    continue; 
+                  continue; 
                 }
                 $bank = \App\Models\BankAccount::where('number', $value['account_number'])->first();
 
@@ -915,9 +913,10 @@ class Account extends Controller {
                     'transaction_id' => $value['transaction_id'],
                     "refer_expense_id" => $refer_expense->id,
                     "bank_account_id" => count($bank) == 1 ? $bank->id : NULL,
-                    'date' => $value['date'],
+                    'date' => date("Y-m-d", strtotime($value['date'])),
                     'note' => $value['note']
                 ];
+//                dd($in_data);
                 if ((int) $value['user_in_shulesoft'] == 1) {
 
                     $user = \App\Models\User::where('name', 'ilike', '%' . $value['payer_name'] . '%')->first();
@@ -949,7 +948,7 @@ class Account extends Controller {
                         "bank_account_id" => count($bank) == 1 ? $bank->id : NULL,
                         'payment_method' => $value['payment_method'],
                         'transaction_id' => $value['transaction_id'],
-                        'date' => $value['date'],
+                        'date' =>  date("Y-m-d", strtotime($value['date'])),
                         'note' => $value['note']
                     ];
                 }
