@@ -299,7 +299,7 @@ class Account extends Controller {
             // 'financial_entity_id' => $financial_id,
             //special case for CRDB payments only
             'checksum' => request('checksum'),
-            'payment_type' => request('paymentType'),
+            'payment_type_id' => request('payment_type'),
             'amount_type' => request('amountType'),
             'currency' => request('currency')
         );
