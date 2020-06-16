@@ -96,7 +96,7 @@
                                             $total_amount = 0;
                                             $total_paid = 0;
                                             $total_sms = 0;
-                                            $i = 1;
+                                            $x = 1;
                                             foreach ($invoices as $invoice) {
 
                                                 $amount = $invoice->amount;
@@ -109,7 +109,8 @@
 
 
                                                 <tr>
-                                                    <td><?= $invoice->client_id ?></td>
+                                                    <td><?= $x ?></td>
+                                                    <td><?= $invoice->name ?></td>
                                                     <td><?= $invoice->invoice ?></td>
                                                     <td><?= money($amount) ?></td>
                                                     <td><?= money($paid) ?></td>
@@ -122,7 +123,7 @@
                                                         <a href="<?= url('account/invoice/edit/' . $invoice->payment_id) ?>" class="btn btn-sm btn-primary">Edit</a>-->
                                                         <!--<a href="<?= url('account/invoice/delete/' . $invoice->payment_id) ?>" class="btn btn-sm btn-danger">Delete</a></td>-->
                                                 </tr>
-                                            <?php } ?>
+                                            <?php $x++; } ?>
                                         </tbody>
                                         <tfoot>
                                             <tr>
