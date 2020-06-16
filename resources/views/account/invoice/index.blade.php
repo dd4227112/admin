@@ -80,6 +80,7 @@
                                     <table id="invoice_table" class="table table-striped table-bordered nowrap dataTable">
                                         <thead>
                                             <tr>
+                                                 <th>#</th>
                                                 <th>Client Name</th>
                                                 <th>Reference #</th>
                                                 <th>Amount</th>
