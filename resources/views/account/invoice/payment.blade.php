@@ -29,12 +29,24 @@
                 <div class="col-sm-12">
                     <!-- Zero config.table start -->
                     <div class="card">
-                        <div class="card-header">
-                            <h5>Invoices</h5>
-                            <br/>
-                            <p><?=$invoice->client->name?></p>
-                        </div>
-
+                 
+        <div class="card tab-card">
+                        <ul class="nav nav-tabs md-tabs" role="tablist">
+                            <li class="nav-item complete">
+                                <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true">
+                                    <strong>Single Invoice Payment</strong> 
+                                </a>
+                                <div class="slide"></div>
+                            </li>
+                            <li class="nav-item complete">
+                                <a class="nav-link" data-toggle="tab" href="#profile3" role="tab" aria-expanded="false">Upload  Invoice Payments From Excel</a>
+                                <div class="slide"></div>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                             <div class="tab-pane active" id="home3" role="tabpanel" aria-expanded="true">
+                                 <br/>
+                                 <br/>
                         <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
                             <div class='form-group row' >
                                 <label for="amount" class="col-sm-2 control-label">
@@ -60,7 +72,30 @@
                                 </span>
                             </div>
 
+<!--                            This part is added to assist in reporting, it needs to be removed in the future to enable proper arrangement of data and avoid duplicates-->
+<div class='form-group row' >
+                                                    <label for="expense" class="col-sm-2 control-label">
+                                                        <?= __("Fee Type") ?><span class="red">*</span>
+                                                    </label>
+                                                    <div class="col-sm-6">
+                                                        <?php
+                                                        $array = array('0' => __("select expense"));
+                                                        if (!empty($category)) {
+                                                            foreach ($category as $categ) {
+                                                                $array[$categ->id] = $categ->name;
+                                                            }
+                                                        }
+                                                        echo form_dropdown("refer_expense_id", $array, old("refer_expense_id"), "id='refer_expense_id' class='form-control'");
+                                                        ?>
+                                                        <?php if (count($category) > 0) { ?>
 
+                                                        <?php } ?>
+                                                    </div>
+                                                    <!--<span class="col-sm-2 small"><a href="<?= url("expense/financial_category") ?>">Create New</a></span>-->
+                                                    <span class="col-sm-4 control-label">
+                                                        <?php echo form_error($errors, 'refer_expense_id'); ?>
+                                                    </span>
+                                                </div>
 
                             <div class='form-group row' >
                                 <label for="payment_method" class="col-sm-2 control-label">
@@ -195,6 +230,47 @@
 
     <?= csrf_field() ?>
 </form>
+                             </div>
+                            <div class="tab-pane" id="profile3" role="tabpanel" aria-expanded="false">
+                                <div class="card-block">
+
+                                    <div class="table-responsive dt-responsive">
+                                        <div class="card-header">
+                                            <div class="panel-body">
+                                                <div class="alert alert-info">If customer already exists in the system, just write customer email address, and if that customer has got an invoice arlready, then write invoice number correctly </div>
+                                                <p>Sample Excel Format. </p>
+                                                <img src="<?= url('storage/uploads/images/payments.JPG') ?>" width="80%"/>
+                                                <br/>
+                                                <div class=" form">
+                                                    <br/>
+                                                    <form class="cmxform form-horizontal " id="commentForm2" method="post" action="<?= url('account/uploadPayments') ?>" enctype="multipart/form-data">
+                                                    
+
+                                                        <div class="form-group ">
+                                                            <label for="cname" class="control-label col-lg-3">Choose Excel File (required)</label>
+                                                            <div class="col-lg-6">
+                                                                <input class=" form-control" id="fname" name="file" type="file" required="">
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="form-group">
+                                                            <div class="col-lg-offset-3 col-lg-6">
+                                                                <?= csrf_field() ?>
+                                                                <button class="btn btn-primary" type="submit">Upload Payments</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                             </div>
 
 <!-- start: PAGE HEADER -->
 </div>
