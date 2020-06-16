@@ -128,7 +128,7 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <td colspan="2">Total</td>
+                                                <td colspan="3">Total</td>
                                                 <td><?= money($total_amount) ?></td>
                                                 <td><?= money($total_paid) ?></td>
                                                 <td><?= $total_sms ?></td>
