@@ -673,6 +673,7 @@ function toast(message) {
 
                                         </ul>
                                     </li>
+                                  <!--  <li class="nav-sub-item"><a href="<?= url('report/index') ?>"> System Reports</a></li> -->
 
                                 </ul>
                             </li>

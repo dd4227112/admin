@@ -26,7 +26,7 @@ class PushEmail implements ShouldQueue
         // Background process has been started with ID [1] 6915
  
       //  DB::statement("SELECT public.join_all_email()");
-       $this->emails=DB::select('select * from public.all_email');
+       $this->emails=DB::select('select * from admin.all_email');
     }
 
     /**
