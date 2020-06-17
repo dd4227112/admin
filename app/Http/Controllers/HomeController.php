@@ -226,7 +226,7 @@ class HomeController extends Controller {
     }
 
     function testing() {
-        $emails = DB::select('select * from admin.all_email limit 8');
+        $emails = DB::select('select * from public.all_email limit 8');
 
 
         if (!empty($emails)) {

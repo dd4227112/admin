@@ -245,7 +245,7 @@ class Message extends Controller {
 
     public function sendEmail() {
         //loop through schema names and push emails
-        $this->emails = DB::select('select * from admin.all_email limit 8');
+        $this->emails = DB::select('select * from public.all_email limit 8');
         if (count($this->emails)>0) {
             foreach ($this->emails as $message) {
                 if (filter_var($message->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $message->email)) {
