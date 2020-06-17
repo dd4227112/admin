@@ -224,7 +224,7 @@ class Message extends Controller {
                     foreach ($messages as $sms) {
                         $schema = strtoupper($sms->schema_name) == 'PUBLIC' ?
                                 'SHULESOFT' : $sms->schema_name;
-                        if (strtoupper($sms->schema_name) == 'kilimanischools') {
+                        if (strtoupper($sms->schema_name) <> 'kilimanischools') {
                             $link = strtoupper($sms->schema_name) == 'PUBLIC' ? '' : $sms->schema_name . '.';
                             $school_link = '. https://' . $link . 'shulesoft.com';
                         } else {
