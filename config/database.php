@@ -12,7 +12,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION'),
+    'default' => 'pgsql',
 
     /*
     |--------------------------------------------------------------------------
@@ -55,14 +55,15 @@ return [
 
         'pgsql' => [
             'driver' => 'pgsql',
-            'host' => env('DB_HOST'),
-            'port' => env('DB_PORT'),
-            'database' => env('DB_DATABASE'),
-            'username' => env('DB_USERNAME'),
-            'password' => env('DB_PASSWORD'),
+            'host' => '127.0.0.1',
+            'port' =>5432,
+
+            'database' => 'shule',
+            'username' => 'postgres',
+            'password' =>'Doxazed_1',
             'charset' => 'utf8',
             'prefix' => '',
-            'schema' => 'admin',
+            'schema' =>'admin',
             'sslmode' => 'prefer',
         ],
 

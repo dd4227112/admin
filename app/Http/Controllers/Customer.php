@@ -17,6 +17,10 @@ class Customer extends Controller {
      *
      * @return void
      */
+    public $patterns = array(
+        '/#name/i', '/#username/i', '/#default_password/i', '/#email/i', '/#phone/i', '/#role/i', '/#student_name/i', '/#invoice/i', '/#balance/i'
+    );
+
     public function __construct() {
         $this->middleware('auth');
     }
@@ -198,27 +202,44 @@ class Customer extends Controller {
 
             $users = DB::table('all_users')->whereIn('usertype', request('for'))->get();
             foreach ($users as $user) {
+
+                $replacements = array(
+                    $user->name
+                );
+                $sms = $this->getCleanSms($replacements, strip_tags(request('message')));
+
                 if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
                     DB::table($user->schema_name . '.email')->insert(array(
                         'email' => $user->email,
-                        'body' => str_replace('href="', 'href="' . $user->schema_name . '.shulesoft.com/', request('message')),
+                        'body' => str_replace('href="', 'href="' . $user->schema_name . '.shulesoft.com/', $sms),
                         'subject' => strlen(request('subject')) > 4 ? request('subject') : 'ShuleSoft Latest Updates: ' . request('release_date'),
                         'user_id' => $user->id,
                         'table' => $user->table
                     ));
-                                      
-                    DB::table($user->schema_name . '.sms')->insert(array(
-                        'phone_number' => $user->phone,
-                        'body' => strip_tags(request('message')),
-                        'table' => $user->table,
-                        'user_id' => $user->id,
-                    ));
                 }
+                DB::table($user->schema_name . '.sms')->insert(array(
+                    'phone_number' => $user->phone,
+                    'body' => $sms,
+                    'table' => $user->table,
+                    'user_id' => $user->id,
+                ));
             }
-            return redirect('customer/update')->with('success','success');
+
+            return redirect('customer/update')->with('success', 'success');
         }
         $this->data['usertypes'] = DB::select('select distinct usertype from admin.all_users');
         return view('customer.message.add_updates', $this->data);
+    }
+
+    public function getCleanSms($replacements, $message) {
+
+        $sms = preg_replace($this->patterns, $replacements, $message);
+        if (preg_match('/#/', $sms)) {
+            //try to replace that character
+            return preg_replace('/\#[a-zA-Z]+/i', '', $sms);
+        } else {
+            return $sms;
+        }
     }
 
     /**
@@ -238,6 +259,7 @@ class Customer extends Controller {
     public function profile() {
         $school = $this->data['schema'] = request()->segment(3);
         $this->data['shulesoft_users'] = \App\Models\User::all();
+
         $is_client = 0;
         if ($school == 'school') {
             $id = request()->segment(4);
@@ -255,6 +277,7 @@ class Customer extends Controller {
                 
             }
             $this->data['client_id'] = $client->id;
+
             $this->data['top_users'] = DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
         }
         $this->data['is_client'] = $is_client;
@@ -278,14 +301,40 @@ class Customer extends Controller {
         return view('customer/profile', $this->data);
     }
 
+    public function removeTag() {
+        $id = request('id');
+        $tag = \App\Models\Task::find($id);
+        count($tag) == 1 ? $tag->delete() : '';
+        echo 1;
+    }
+
     public function allocate() {
         $school_id = request('school_id');
         $schema = request('schema');
         $user_id = request('user_id');
         $role_id = request('role_id');
+        if ((int) $school_id == 0) {
+            $sch = DB::table('admin.all_setting')->where('schema_name', $schema)->first();
+            $obj = DB::table('schools')->where('name', 'ilike', '%' . substr($schema, 0, 4) . '%')->first();
+            $school_id = count($sch) == 1 ? $sch->school_id : count($obj) == 1 ? $obj->id : '';
+        }
+        if ((int) $school_id == 0) {
+            //this school does not exists, try to add it in a list of schols
+            $school_id = DB::table('schools')->insertGetId(['name' => $schema, 'ownership' => 'Non-Government', 'schema_name' => $schema]);
+        }
         $school_info = DB::table('schools')->where('id', $school_id);
-        count($school_info->first()) == 1 ? DB::table('users_schools')->insert(['school_id' => $school_id, 'user_id' => $user_id, 'role_id' => $role_id]) : '';
+        if (count($school_info->first()) == 1) {
+            $check = DB::table('users_schools')->where('schema_name', $schema)->where('role_id', $role_id);
+            if ((int) $check->count() > 0) {
+                $check->update(['user_id' => $user_id]);
+            } else {
+                DB::table('users_schools')->insert(['school_id' => $school_id, 'user_id' => $user_id, 'role_id' => $role_id, 'schema_name' => $schema]);
+            }
+            DB::table($schema . '.setting')->update(['school_id' => $school_id]);
+        }
+
         $school_info->update(['schema_name' => $schema]);
+
         echo 1;
     }
 
@@ -295,10 +344,42 @@ class Customer extends Controller {
     }
 
     public function modules() {
-        $schemas = $this->data['schools'] = DB::select("SELECT distinct table_schema as schema_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','beta_testing','accounts','pg_catalog','constant','api','information_schema','public')");
+        $schemas = $this->data['schools'] = DB::select("SELECT distinct table_schema as schema_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public')");
         $sch = [];
         foreach ($schemas as $schema) {
             array_push($sch, $schema->schema_name);
+        }
+        if ($_POST) {
+            $schools = trim(rtrim(request('schools'), ','), ',');
+            $message = request('message');
+            $usr = request('usertype');
+            $usr_type = '';
+            $schema_name = '';
+            foreach (explode(',', $schools) as $val) {
+                $schema_name .= "'" . $val . "',";
+            }
+            $schema = trim(rtrim($schema_name, ','), ',');
+            if (count($usr) > 0) {
+                foreach ($usr as $val) {
+                    $usr_type .= "'" . $val . "',";
+                }
+                $type = rtrim($usr_type, ',');
+                $in_array = " AND usertype IN (" . $type . ")";
+            } else {
+                $in_array = '';
+            }
+            $patterns = array(
+                '/#name/i', '/#username/i'
+            );
+            $replacements = array(
+                "'||name||'", "'||username||'"
+            );
+            $sms = preg_replace($patterns, $replacements, $message);
+
+            $sql = "insert into public.sms (body,user_id,type,phone_number) select '{$sms}',id,'0',phone from admin.all_users WHERE schema_name::text IN ($schema) AND usertype !='Student' {$in_array} AND  phone is not NULL  AND \"table\" !='student' ";
+            DB::statement($sql);
+            $email_sql = "insert into public.email (subject,body,user_id,email) select 'ShuleSoft Notification', '{$sms}',id,email from admin.all_users WHERE schema_name::text IN ($schema) AND usertype !='Student' {$in_array} AND  phone is not NULL  AND \"table\" !='student' ";
+            DB::statement($email_sql);
         }
         $this->data['dschools'] = \App\Models\School::whereIn('schema_name', $sch)->get();
         return view('customer.modules', $this->data);
@@ -312,8 +393,12 @@ class Customer extends Controller {
     }
 
     public function calls() {
-        $this->data['levels'] = [];
-        return view('customer/analysis', $this->data);
+        $schema = request()->segment(3);
+        $where = strlen($schema) > 3 ? ' where "schema_name"=\'' . $schema . '\' ' : '';
+        $this->data['call_logs'] = DB::select('select * from admin.calls ' . $where);
+        $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.calls  group by "schema_name" order by count desc limit 1 '))->first();
+        $this->data['schools_connected'] = DB::select('select count(*), "table" from admin.calls  group by "table" order by "table"');
+        return view('customer.call.index', $this->data);
     }
 
     public function logs() {
@@ -358,7 +443,8 @@ class Customer extends Controller {
         if ($table == 'bank') {
             return $this->setBankParameters();
         } else {
-            DB::table($schema . '.' . $table)->where($column, $user_id)->update([$tag => $value]);
+            $table == 'setting' ? DB::table($schema . '.' . $table)->update([$tag => $value]) :
+                            DB::table($schema . '.' . $table)->where($column, $user_id)->update([$tag => $value]);
             if ($tag == 'institution_code') {
                 //update existing invoices
                 DB::statement('UPDATE ' . $schema . '.invoices SET "reference"=\'' . $value . '\'||"reference"');
@@ -395,6 +481,89 @@ class Customer extends Controller {
         $school_id = request()->segment(4);
         DB::table($schema . '.setting')->update(['school_id' => $school_id]);
         return redirect()->back()->with('success', 'success');
+    }
+
+    public function emailsms() {
+        $schema = request()->segment(3);
+        $where = strlen($schema) > 3 ? ' where "schema_name"=\'' . $schema . '\' ' : '';
+        $this->data['sms_logs'] = DB::select('select * from admin.all_reply_sms ' . $where);
+        $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.all_reply_sms  group by "schema_name" order by count desc limit 1 '))->first();
+        $this->data['user_groups'] = DB::select('select count(*), "table" from admin.all_reply_sms  group by "table" order by "table"');
+        return view('customer.message.incoming_sms', $this->data);
+    }
+
+    public function epayments() {
+        $schema = request()->segment(3);
+        $where = strlen($schema) > 3 ? ' and "schema_name"=\'' . $schema . '\' ' : '';
+        $this->data['epayment_logs'] = DB::select('select * from admin.all_payments where token is not null ' . $where);
+        $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.all_payments where token is not null  group by "schema_name" order by count desc limit 1 '))->first();
+        $this->data['schools_connected'] = \collect(DB::select('select count(*) as count from admin.all_setting where payment_integrated=1 '))->first()->count;
+        return view('customer.epayment.index', $this->data);
+    }
+
+    public function addCall() {
+        $this->data['create'] = [];
+        if (request('file')) {
+            $path = request()->file('file')->getRealPath();
+            $data = Excel::load($path, function($reader) {
+                        
+                    })->get();
+            $insert_data = [];
+            if (!empty($data) && $data->count()) {
+
+                foreach ($data->toArray() as $key => $value) {
+                    /**
+                     * add these filters
+                     * 
+                     * 1. ensure no duplicates are recorded
+                     * 2. ensure you match phone number with what is in the system and update according
+                     * 
+                     * all those will be done with updated query outise for each
+                     */
+                    if (!empty($value) && isset($value['number'])) {
+                        $obj = (object) $value;
+                        $phone = validate_phone_number($obj->number);
+                        if (!is_array($phone)) {
+                            continue;
+                        }
+                        $object = [
+                            'name' => $obj->name,
+                            'number' => $phone[1],
+                            'type' => $obj->call_type,
+                            'time' => $obj->time,
+                            'duration' => $obj->durationseconds,
+                            'created_by' => \Auth::user()->id,
+                            'about' => request('about'),
+                        ];
+                        array_push($insert_data, $object);
+                    }
+                }
+                if (!empty($insert_data)) {
+                    DB::table('calls')->insert($insert_data);
+                    return back()->with('success', 'Insert Record successfully.');
+                }
+            }
+        } else if ($_POST) {
+            $table = request('source');
+            $phone = validate_phone_number(request('phone'));
+            if (!is_array($phone)) {
+                return redirect()->back()->with('error', 'This phone number is not valid ');
+            }
+            $object = [
+                'name' => request('name'),
+                'number' => $phone[1],
+                'type' => request('type'),
+                'time' => request('date'),
+                'schema_name' => request('schema_name'),
+                'table' => in_array(strtolower($table), ['parent', 'teacher', 'student', 'setting', 'user']) ? strtolower($table) : '',
+                'created_by' => \Auth::user()->id,
+                'about' => request('about'),
+                'source' => request('source')
+            ];
+            DB::table('calls')->insert($object);
+            return redirect('customer/calls')->with('success', 'Call Recorded Successfully ');
+        }
+        return view('customer.call.create', $this->data);
     }
 
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Model\User;
+use App\Models\User;
 use DB;
 use Intervention\Image\ImageManagerStatic as Image;
 use Auth;
@@ -93,7 +93,7 @@ class Users extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function show() {
-        $id = request()->segment(3);
+        $id = (int) request()->segment(3) == 0 ? Auth::user()->id : request()->segment(3);
         $this->data['user'] = User::find($id);
 
         $this->data['user_permission'] = \App\Models\Permission::whereIn('id', \App\Models\PermissionRole::where('role_id', $this->data['user']->role_id)->get(['permission_id']))->get(['id']);
@@ -145,7 +145,6 @@ class Users extends Controller {
                 'lastname' => 'required|max:255',
                 'phone' => 'required|max:255',
             ]);
-
             $user = User::find($id)->update(request()->all());
 
 
@@ -201,6 +200,36 @@ class Users extends Controller {
             \App\Model\User::where('id', request()->segment(3))->update(['photo' => $filename]);
             return redirect()->back();
         }
+    }
+
+    public function applicant() {
+        $this->data['budget'] = [];
+        return view('users.applicant', $this->data);
+    }
+
+    public function template() {
+        
+    }
+
+    public function notification() {
+        $this->data['tasks'] = \App\Models\Task::where('to_user_id', Auth::user()->id)->orWhere('user_id', Auth::user()->id)->orderBy('date', 'desc')->get();
+        return view('users.notification', $this->data);
+    }
+
+    public function report() {
+        $from = request('from');
+        $to = request('to');
+        $user_id = request('user_id');
+        $tasks = DB::select("select b.name, count(a.*) from admin.tasks a join admin.task_types b on b.id=a.task_type_id where  a.user_id=" . $user_id . " and a.created_at between '".date('Y-m-d', strtotime($from))."' AND '".date('Y-m-d', strtotime($to))."'  group by b.name");
+        $tr = '';
+        foreach ($tasks as $task) {
+            $tr .= '<tr><td>' . $task->name . '</td><td>' . $task->count . '</td></tr>';
+        }
+        $message = ''
+                . '<h5>Report From '.$from.' To '.$to.'</h5>'
+                . '<p></p>'
+                . '<table class="table"><thead><tr><th>Activity Name</th><th>Number of Activities</th></tr></thead><tbody>' . $tr . '</tbody></table>';
+        echo $message;
     }
 
 }

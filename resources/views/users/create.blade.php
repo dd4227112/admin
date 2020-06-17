@@ -122,20 +122,4 @@
 </div>
 @endsection
 
-<script  src="<?= url('public') ?>/intlTelInput/js/intlTelInput.js"></script>
-<script  src="<?= url('public') ?>/js/customTelInput.js"></script>
-  <script>
-            $(document).ready(function () {
-                $(".phoneNumber").intlTelInput();
-            });
-            $('.phoneNumber').blur(function () {
-                if ($('.phoneNumber').intlTelInput('isValidNumber')) {
-                    $("#phone").val($(".phoneNumber").intlTelInput("getNumber"));
 
-                } else {
-                    $("#phone").val('');
-
-
-                }
-            });
-        </script>

@@ -1,4 +1,6 @@
-<?php namespace App\Models;
+<?php
+
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -7,10 +9,8 @@ class Invoice extends Model {
     /**
      * Generated
      */
-
     protected $table = 'invoices';
-    protected $fillable = ['id', 'reference', 'client_id', 'title', 'optional_name', 'date', 'status', 'year', 'active', 'sync', 'return_message', 'push_status', 'note', 'type', 'currency', 'user_id','due_date'];
-
+    protected $fillable = ['id', 'reference', 'client_id', 'title', 'optional_name', 'date', 'status', 'year', 'active', 'sync', 'return_message', 'push_status', 'note', 'type', 'currency', 'user_id', 'due_date', 'account_year_id'];
 
     public function client() {
         return $this->belongsTo(\App\Models\Client::class, 'client_id', 'id');
@@ -28,5 +28,8 @@ class Invoice extends Model {
         return $this->hasMany(\App\Models\Payment::class, 'invoice_id', 'id');
     }
 
+    public function accountYear() {
+        return $this->belongsTo(\App\Models\AccountYear::class, 'account_year_id', 'id');
+    }
 
 }

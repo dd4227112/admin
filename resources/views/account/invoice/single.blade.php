@@ -55,7 +55,7 @@
                                             <span class=" pull-right">
                                                 <div class="tab-pane">
                                                     <div style="">
-                                                        <?php if ($invoice->status <> 1) { ?>  <a href="<?= url('payment/add?id=' . $invoice->id) ?>" class="btn btn-danger btn-sm"><i class="fa fa-money"></i> Add Payment </a>
+                                                        <?php if ($invoice->status <> 1) { ?>  <a href="<?= url('account/payment/' . $invoice->id) ?>" class="btn btn-danger btn-sm"><i class="fa fa-money"></i> Add Payment </a>
                                                         <?php } ?>
                                                         <a href="#" onmousedown="print_page()" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Print </a>
                                                     </div>

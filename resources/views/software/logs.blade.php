@@ -1,11 +1,13 @@
 @extends('layouts.app')
 @section('content')
 
+<script type="text/javascript" src="<?= url('/public') ?>/assets/select2/select2.js"></script> 
+
 <div class="main-body">
     <div class="page-wrapper">
         <div class="page-header">
             <div class="page-header-title">
-                <h4>System Erros</h4>
+                <h4>System Errors</h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -113,7 +115,7 @@
                     <div class="form-group row col-lg-offset-6">
                         <label class="col-sm-4 col-form-label">Select School</label>
                         <div class="col-sm-4">
-                            <select name="select" class="form-control" id="schema_select">
+                            <select name="select" class="form-control select2" id="schema_select">
                                 <option value="0">Select</option>
                                 <?php
                                 $schemas = DB::select('select distinct "schema_name" from admin.error_logs');
@@ -154,13 +156,13 @@
                                         <table id="error_log_table" class="table table-striped table-bordered nowrap">
                                             <thead>
                                                 <tr>
-                                                    <th>#</th>
+                                                    <th>#</th>                                                
+                                                    <th>Date</th>
                                                     <th>Client Name</th>
                                                     <th>Error Message</th>
                                                     <th>File</th>
                                                     <th>url</th>
                                                     <th>Created By</th>
-                                                    <th>Date</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -174,7 +176,7 @@
                             <div class="tab-pane" id="profile3" role="tabpanel" aria-expanded="false">
                                 <div class="card-block">
                                     <div class="dt-responsive table-responsive">
-                                        <table id="simpletable" class="table table-striped table-bordered nowrap">
+                                        <table id="simpletable_resolved_errors" class="table table-striped table-bordered nowrap">
                                             <thead>
                                                 <tr>
                                                     <th>Client Name</th>
@@ -182,28 +184,11 @@
                                                     <th>File</th>
                                                     <th>url</th>
                                                     <th>Created By</th>
-                                                    <th>Date</th>
-                                                    <th>Action</th>
+                                                    <th>Resolved Date</th>
+                                                    <th>Resolved By</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                <?php
-                                                if (isset($error_logs) && count($error_logs) > 0) {
-                                                    ?>
-                                                    @foreach($error_logs as $log)
 
-                                                    <tr>
-                                                        <td>{{$log->schema_name}}</td>
-                                                        <td>{{$log->error_message}}</td>
-                                                        <td>{{$log->file}}</td>
-                                                        <td>{{$log->url}}</td>
-                                                        <td>ID: {{$log->created_by}}, Table: {{$log->created_by_table}}</td>
-                                                        <td>{{$log->created_at}}</td>
-                                                        <td></td>
-                                                    </tr>
-                                                    @endforeach
-                                                <?php } ?>
-                                            </tbody>
                                             <tfoot>
                                                 <tr>
                                                     <th>Client Name</th>
@@ -211,8 +196,8 @@
                                                     <th>File</th>
                                                     <th>url</th>
                                                     <th>Created By</th>
-                                                    <th>Date</th>
-                                                    <th>Action</th>
+                                                    <th>Resolved Date</th>
+                                                    <th>Resolved By</th>
                                                 </tr>
                                             </tfoot>
                                         </table>
@@ -285,13 +270,14 @@
                 'url': "<?= url('sales/show/null?page=errors') ?>"
             },
             "columns": [
+
                 {"data": "id"},
+                {"data": "created_at"},
                 {"data": "schema_name"},
                     {"data": "error_message"},
                 {"data": "file"},
                 {"data": "url"},
                 {"data": "created_by"},
-                {"data": "created_at"},
                 {"data": ""}
             ],
             "columnDefs": [
@@ -300,31 +286,36 @@
                     "data": null,
                     "render": function (data, type, row, meta) {
 
-                        return '<a href="#" id="' + row.id + '" class="label label-danger dlt_log" onmousedown="delete_log(' + row.id + ')" onclick="return false">Delete</a>';
+                        return '<a href="#" id="' + row.id + '" class="label label-danger dlt_log" onmousedown="delete_log(' + row.id + ')" onclick="return false">Delete</a>' + '<a href="#" id="' + row.id + '" class="label label-info dlt_log" onmousedown="View_log(' + row.id + ')" onclick="return false">View</a>';
 
 
                     }
 
                 }
             ],
-                    
+
             rowCallback: function (row, data) {
                 //$(row).addClass('selectRow');
                 $(row).attr('id', 'log' + data.id);
             }
         });
-        delete_log = function (a) {
-            $.ajax({
-                url: '<?= url('software/logsDelete') ?>/null',
-                method: 'get',
-                data: {id: a},
-                success: function (data) {
-                    if (data == '1') {
-                        $('#log' + a).fadeOut();
-                    }
+        View_log = function (a) {
+
+            window.location.href = "<?= url('software/Readlogs') ?>/" + a;
+        },
+                delete_log = function (a) {
+                    $.ajax({
+                        url: '<?= url('software/logsDelete') ?>/null',
+                        method: 'get',
+                        data: {id: a},
+                        success: function (data) {
+                            if (data == '1') {
+                                $('#log' + a).fadeOut();
+                            }
+                        }
+                    });
                 }
-            });
-        }
+
     }
     );
     $('#schema_select').change(function () {
@@ -353,6 +344,36 @@
         $(this).hide();
         $('#log_summary').show();
         $('#custom_logs').hide();
+    });
+
+    $(document).ready(function () {
+        var table = $('#simpletable_resolved_errors').DataTable({
+            "processing": true,
+            "serverSide": true,
+            'serverMethod': 'post',
+            'ajax': {
+                'url': "<?= url('sales/show/null?page=errors_resolved') ?>"
+            },
+            "columns": [
+                {"data": "schema_name"},
+                {"data": "error_message"},
+                {"data": "file"},
+                {"data": "url"},
+                {"data": "created_by"},
+                {"data": "deleted_at"},
+                {"data": "resolved_by"}
+            ],
+
+            rowCallback: function (row, data) {
+                $(row).attr('id', 'log' + data.id);
+            }
+        });
+    });
+
+
+    $('#schema_select').select2({
+        placeholder: "Select a State",
+        allowClear: true
     });
 </script>
 @endsection

@@ -141,21 +141,21 @@
                                                         <ul class="list-group">
                                                             <li class="list-group-item justify-content-between">
                                                                 <a href="<?= url('customer/training/config/null?id=' . encrypt($schema)) ?>" target="_blank">Configuration</a>
-                                                                <a href="#" title="copy link"><span class="badge badge-default badge-pill">30</span></a>
+                                                                <a href="#" title="copy link"><span class="badge badge-default badge-pill">&></span></a>
 
                                                             </li>
                                                             <li class="list-group-item justify-content-between">
                                                                 <a href="<?= url('customer/training/account/null?id=' . encrypt($schema)) ?>" target="_blank"> Accounts</a>
-                                                                <span class="badge badge-default badge-pill">20</span>
+                                                                <span class="badge badge-default badge-pill">&></span>
                                                             </li>
                                                             <li class="list-group-item justify-content-between">
                                                                 <a href="<?= url('customer/training/exam/null?id=' . encrypt($schema)) ?>" target="_blank"> Exams</a>
-                                                                <span class="badge badge-default badge-pill">100</span>
+                                                                <span class="badge badge-default badge-pill">&></span>
                                                             </li>
-                                                            <li class="list-group-item justify-content-between">
+<!--                                                            <li class="list-group-item justify-content-between">
                                                                 Other Modules
                                                                 <span class="badge badge-default badge-pill">50</span>
-                                                            </li>
+                                                            </li>-->
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -217,7 +217,7 @@
                                                                                         Task Type
                                                                                         <select name="task_type_id"  class="form-control">
                                                                                             <?php
-                                                                                            $types = DB::table('task_types')->get();
+                                                                                            $types = DB::table('task_types')->whereNull('department')->get();
                                                                                             foreach ($types as $type) {
                                                                                                 ?>
                                                                                                 <option value="<?= $type->id ?>"><?= $type->name ?></option>
@@ -272,7 +272,7 @@
                                                         $tasks = \App\Models\Task::where('client_id', $client_id)->orderBy('created_at', 'desc')->get();
                                                         foreach ($tasks as $task) {
                                                             ?>
-                                                            <div class="social-timelines p-relative o-hidden">
+                                                            <div class="social-timelines p-relative o-hidden" id="removetag<?=$task->id?>">
                                                                 <div class="row timeline-right p-t-35">
                                                                     <div class="col-xs-2 col-sm-1">
                                                                         <div class="social-timelines-left">
@@ -283,7 +283,7 @@
                                                                         <div class="card m-0">
                                                                             <span class="dropdown-toggle addon-btn text-muted f-right service-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" role="tooltip"></span>
                                                                             <div class="dropdown-menu dropdown-menu-right b-none services-list">
-                                                                                <a class="dropdown-item" href="#">Remove tag</a>
+                                                                                <a class="dropdown-item" href="#" onmousedown="removeTag(<?=$task->id?>)">Remove tag</a>
                                                                                 <a class="dropdown-item" href="#">Report Photo</a>
                                                                                 <a class="dropdown-item" href="#">Hide From Timeline</a>
                                                                                 <a class="dropdown-item" href="#">Blog User</a>
@@ -291,7 +291,7 @@
                                                                             <div class="card-block post-timelines">
 
                                                                                 <div class="social-time text-muted">
-                                                                                    <?= date("d M Y", strtotime($task->date)) ?>
+                                                                                    <?= date("d M Y", strtotime($task->created_at)) ?>
                                                                                 </div>
                                                                             </div>
 
@@ -349,8 +349,7 @@
                                                         <?php } ?>
                                                     </div>
                                                 </div>
-                                                <div class="f-30 text-muted text-center">2014</div>
-
+                                          
                                             </div>
                                             <!-- Timeline tab end -->
                                             <!-- About tab start -->
@@ -557,7 +556,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-sm-12">
+<!--                                                    <div class="col-sm-12">
                                                         <div class="card">
                                                             <div class="card-header">
                                                                 <h5 class="card-header-text">Work</h5>
@@ -618,7 +617,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div>-->
                                                 </div>
                                             </div>
                                           
@@ -781,6 +780,19 @@ foreach ($logs as $log) {
                 $('#search_result').html(data);
             }
         });
-    })
+    });
+    
+        removeTag = function (a) {
+            $.ajax({
+                url: '<?= url('customer/removeTag') ?>/null',
+                method: 'get',
+                data: {id: a},
+                success: function (data) {
+                    if (data == '1') {
+                        $('#removetag' + a).fadeOut();
+                    }
+                }
+            });
+        }
 </script>
 @endsection

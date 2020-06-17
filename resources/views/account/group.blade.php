@@ -34,9 +34,9 @@
 
                             <h5 class="page-header">
 
-                                <?php if (can_access('add_expense')) { ?>
-                                    <button class="btn-success btn" data-toggle="modal" data-target="#group"><span class="fa fa-plus"></span><?= __('add_group') ?></button>
-                                <?php } ?>
+                              
+                                <button class="btn-success btn" data-toggle="modal" data-target="#group" onmousedown="$('#group_id').val('')"><span class="fa fa-plus"></span>Add New Group</button>
+                           
 
                             </h5>
                             <div class="alert alert-info">
@@ -45,12 +45,12 @@
                                 <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
                                     <thead>
                                         <tr>
-                                            <th class="col-sm-1"><?= __('slno') ?></th>
-                                            <th class="col-sm-2"><?= __('group_name') ?></th>
-                                            <th class="col-sm-2"><?= __('financial_category') ?></th>
-                                            <th class="col-sm-2"><?= __('group_note') ?></th>
+                                            <th class="col-sm-1">#</th>
+                                            <th class="col-sm-2">Group Name</th>
+                                            <th class="col-sm-2">Financial Category</th>
+                                            <th class="col-sm-2">Note</th>
 
-                                                <th class="col-sm-2"><?= __('action') ?></th>
+                                                <th class="col-sm-2">Action</th>
                                            
                                         </tr>
                                     </thead>
@@ -66,25 +66,26 @@
                                                         <?php echo $i; ?>
                                                     </td>
                                                     <td data-title="<?= __('group_name') ?>">
-                                                        <?php echo $group->name; ?>
+                                                        <p id="name<?=$group->id?>"><?php echo $group->name; ?></p>
                                                     </td>
                                                     <td data-title="<?= __('group_name') ?>">
-                                                        <?php // echo $group->financialCategory->name; ?>
+                                                        <?php  echo $group->financialCategory->name; ?>
+                                                        <span id="fin_id<?=$group->id?>" style="display:none"><?=$group->financial_category_id?></span>
                                                     </td>
 
 
                                                     <td data-title="<?= __('group_note') ?>">
-                                                        <?php echo $group->note; ?>
+                                                        <span id="note<?=$group->id?>"><?php echo $group->note; ?></span>
                                                     </td>
 
                                                  
                                                         <td data-title="<?= __('action') ?>">
 
                                                             <?php
-//                                                            echo '<a class="btn btn-info btn-sm" href="'.url('group/edit/' . $group->id . '/').'">edit</a>';
+                                                           echo '<a class="btn btn-info btn-sm" data-toggle="modal" data-target="#group" href="#" onmousedown="fill_form('.$group->id.')">edit</a>';
                                                             ?>
                                                             <?php
-//                                                            echo '<a  class="btn btn-danger btn-sm" href="'.url('group/delete/' . $group->id . '/').'">delete</a>';
+                                                            echo '<a  class="btn btn-danger btn-sm" href="'.url('account/group/delete/' . $group->id . '/').'">delete</a>';
 
                                                             ?></td>
 
@@ -120,19 +121,19 @@
 
                 <div class="modal-body">
 
-                    <div class="form-group">
+                    <div class="form-group row">
 
-                        <div class="col-sm-6">
+                        <div class="col-sm-12">
 
                             <label class="control-label required">Name of Group</label>
-                            <input type="text" id="ember12" name="value" class="form-control col-md-4 ember-text-field text-left ember-view">
+                            <input type="text" id="group_name" name="name" class="form-control  ember-text-field text-left ember-view">
 
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
 
-                        <div class="col-sm-6">
-                            <label class="control-label required">Account Type</label>
+                        <div class="col-sm-12">
+                            <label class="control-label required">Financial Category Type</label>
                             <?php
                             $array = array('0' => 'Select Type');
                             foreach ($category as $categ) {
@@ -143,14 +144,12 @@
                             echo form_dropdown("financial_category_id", $array, old("financial_category_id"), "id='financial_category_id' class='form-control' name='category'");
                             ?>
 
-                            <span class="col-sm-4 control-label">
-                                <?php echo form_error($errors, 'category'); ?>
-                            </span>   </div>
+                             </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-sm-8">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
                             <label class="control-label required">Notes</label>
-                            <textarea name="note" placeholder="Max 500 characters" id="ember125" class="form-control ember-text-area ember-view"></textarea>
+                            <textarea name="note" placeholder="Max 500 characters" id="group_note" class="form-control ember-text-area ember-view"></textarea>
                         </div>
                     </div>
 
@@ -160,7 +159,8 @@
 
                 <div class="modal-footer">
                     <button type="button" style="margin-bottom:0px;" class="btn btn-default" data-dismiss="modal" ><?= __('close') ?></button>
-                    <button type="button" onmousedown="createGroup()" class="btn btn-primary">Save</button>
+                    <input type="hidden" value="" name="group_id" id="group_id"/>
+                    <button type="submit"  class="btn btn-primary">Save</button>
                 </div>
                 <?= csrf_field() ?>
             </div>
@@ -171,27 +171,12 @@
 <!-- Modal content End here -->
 <script type="text/javascript">
 
-    function createGroup() {
-        var val = $('#ember12').val();
-        var note = $('#ember125').val();
-        var financial_category_id = $('#financial_category_id').val();
-        if (val === '') {
-            swal('Warning', 'Please fill correct group name', 'error');
-        }
-        if (financial_category_id == 0) {
-            swal('Warning', 'Please select a correct financial category', 'error');
-        }
-        if (financial_category_id !== '' && val !== '') {
-            $.ajax({
-                type: 'GET',
-                url: "<?= url('group/add/null') ?>",
-                data: {"val": val, note: note, "financial_category_id": financial_category_id},
-                dataType: "html",
-                success: function (obj) {
-                    swal('success', obj);
-                }
-            });
-        }
+    function fill_form(id) {
+        $('#group_name').val($('#name'+id).text());
+        var fin_id = $('#fin_id'+id).text();
+        $('#group_note').text($('#note'+id).text());
+        $('#group_id').val(id);
+       
     }
 </script>
 @endsection

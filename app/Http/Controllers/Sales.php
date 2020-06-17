@@ -33,15 +33,15 @@ class Sales extends Controller {
     }
 
     function lead() {
-        $this->data['demo_requests'] = DB::table('website_demo_requests')->get();
-        $this->data['join_requests'] = DB::table('website_join_shulesoft')->get();
+        $this->data['demo_requests'] = DB::table('website_demo_requests')->where('status', 0)->get();
+        $this->data['join_requests'] = DB::table('website_join_shulesoft')->where('status', 0)->get();
         return view('sales.leads', $this->data);
     }
 
     public function prospect() {
-        $this->data['demo_requests'] = DB::table('website_demo_requests')->get();
-        $this->data['join_requests'] = DB::table('website_join_shulesoft')->get();
-        $page = request()->segment(3);
+        $this->data['demo_requests'] = DB::table('website_demo_requests')->where('status', 0)->get();
+        $this->data['join_requests'] = DB::table('website_join_shulesoft')->where('status', 0)->get();
+        $this->data['page'] = $page = request()->segment(3);
         if ($page == 'add') {
             $id = request()->segment(4);
             if ($_POST) {
@@ -67,6 +67,10 @@ class Sales extends Controller {
             $id = request()->segment(4);
             DB::table('prospects')->where('id', $id)->delete();
             return redirect('sales/prospect')->with('success', 'Success');
+        } else if ($page == 'demo') {
+            
+        } else if ($page == 'join') {
+            
         }
         return view('sales.prospects', $this->data);
     }
@@ -101,11 +105,10 @@ class Sales extends Controller {
         return view('market.legal');
     }
 
-    function profile() {
-        return view('sales.profile');
-    }
-
     public function school() {
+        $this->data['use_shulesoft']=DB::table('admin.all_setting')->count()-5;
+        $this->data['nmb_schools']=DB::table('admin.nmb_schools')->count();
+        $this->data['nmb_shulesoft_schools']= \collect(DB::select("select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22"))->first()->count;
         $this->data['school_types'] = DB::select("select type, count(*) from admin.schools where ownership='Non-Government' group by type,ownership");
         $this->data['ownerships'] = DB::select('select ownership, COUNT(*) as count, 
 SUM(COUNT(*)) over() as total_schools, 
@@ -195,7 +198,13 @@ group by ownership');
                 return $this->ajaxTable('schools', ['b.name'], $sql);
                 break;
             case 'schools':
-                $sql = "select a.*, b.id as prospect_id, c.id as lead_id from admin.schools a  left join admin.prospects b on b.school_id=a.id left join admin.leads c on c.school_id=a.id where lower(a.ownership) <>'government'";
+                if ((int) request('type') == 3) {
+                    $sql = "select * from (select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a   where lower(a.ownership) <>'government') a where activities >0";
+                } else if ((int) request('type') == 2) {
+                   $sql = "select a.*, (select count(*) from admin.tasks where client_id in (select id from admin.clients where username in (select schema_name from admin.all_setting where school_id=a.id))) as activities from admin.schools a   where lower(a.ownership) <>'government' and a.id in (select school_id from admin.all_setting)"; 
+                } else {
+                    $sql = "select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a   where lower(a.ownership) <>'government'";
+                }
                 return $this->ajaxTable('schools', ['a.name', 'a.region', 'a.ward', 'a.district'], $sql);
                 break;
             case 'prospects':
@@ -207,7 +216,24 @@ group by ownership');
                 return $this->ajaxTable('all_setting', ['sname', 'phone', 'address', 'email', 'payment_integrated', 'created_at']);
                 break;
             case 'errors':
-                  return $this->ajaxTable('error_logs', ['file', 'error_message', 'route', 'url', 'error_instance', 'created_at','schema_name']);
+                $sql = "select * from admin.error_logs where deleted_at is null";
+                return $this->ajaxTable('error_logs', ['file', 'error_message', 'route', 'url', 'error_instance', 'created_at', 'schema_name'], $sql);
+                break;
+            case 'errors_resolved':
+                $sql = "select a.*,b.name as resolved_by from admin.error_logs a left join admin.users b on b.id=a.deleted_by where deleted_at is not null";
+                return $this->ajaxTable('error_logs', ['file', 'error_message', 'route', 'url', 'error_instance', 'created_at', 'schema_name'], $sql);
+                break;
+            case 'sms_reply_logs':
+                return $this->ajaxTable('all_reply_sms', ['from', 'message', 'table', 'user_id', 'sent_timestamp', 'created_at', 'schema_name']);
+                break;
+            case 'opened_sms':
+                $sql = "select  * from admin.all_reply_sms where opened=1";
+                return $this->ajaxTable('error_logs', ['from', 'message', 'table', 'user_id', 'sent_timestamp', 'created_at', 'schema_name'], $sql);
+                break;
+
+            case 'requirements':
+                $sql = "select b.id, b.activity,b.created_at,a.name,c.firstname  from admin.clients a join admin.tasks b on a.id=b.client_id join admin.users c on c.id=b.to_user_id ";
+                return $this->ajaxTable('tasks', ['activity', 'name', 'firstname', 'created_at'], $sql);
                 break;
             default:
                 break;
@@ -243,6 +269,65 @@ group by ownership');
      */
     public function destroy($id) {
         //
+    }
+
+    public function profile() {
+        $id = request()->segment(3);
+        if ((int) $id == 0) {
+            return false;
+        }
+        $this->data['school'] = \App\Models\School::find($id);
+        if ($_POST) {
+            if ((int) request('add_sale') == 1) {
+                \App\Models\School::find(request('client_id'))->update(request()->all());
+                return redirect()->back()->with('success', 'School record updated successfully');
+            } else if ((int) request('add_user') == 1) {
+                \App\Models\SchoolContact::create([
+                    'name' => request('name'),
+                    'email' => request('email'),
+                    'phone' => request('phone'),
+                    'school_id' => request('school_id'),
+                    'user_id' => Auth::user()->id,
+                    'title' => request('title')
+                ]);
+                return redirect()->back()->with('success', 'user recorded successfully');
+            } else {
+                $data = array_merge(request()->all(), ['user_id' => Auth::user()->id, 'school_id' => request('client_id')]);
+
+                \App\Models\Task::create($data);
+                \App\Models\UsersSchool::create([
+                    'user_id' => Auth::user()->id, 'school_id' => request('client_id'), 'role_id' => Auth::user()->role->id, 'status' => 1,
+                ]);
+                return redirect()->back()->with('success', 'Report added successfully');
+            }
+        }
+        return view('sales.profile', $this->data);
+    }
+
+    public function updateStudent() {
+        $id = request('school_id');
+        \App\Models\School::find($id)->update(['students' => request('no')]);
+        echo 'success';
+    }
+
+    public function request() {
+        $type = request()->segment(3);
+        $source = request()->segment(4);
+        $id = request()->segment(5);
+        $table = $source == 'demo' ? 'website_demo_requests' : 'website_join_shulesoft';
+        $status = $type == 'attend' ? 1 : 3;
+        $info = DB::table($table)->where('id', $id);
+        $record = $info->first();
+        $info->update(['status' => $status]);
+        if ((int) $record->school_id > 0) {
+            $data = ['user_id' => Auth::user()->id, 'school_id' => $record->school_id, 'task_type_id' => 6, 'next_action' => 'closed', 'activity' => 'School has been attended and closed'];
+            $contact = \App\Models\SchoolContact::where('school_id', $record->school_id)->where('phone', $record->contact_phone)->first();
+            if (count($contact) == 0) {
+                \App\Models\SchoolContact::create(['name' => $record->contact_name, 'school_id' => $record->school_id, 'email' => $record->contact_email, 'phone' => $record->contact_phone, 'user_id' => Auth::user()->id, 'title' => $record->contact_title]);
+            }
+            \App\Models\Task::create($data);
+        }
+        return redirect()->back()->with('success', 'success');
     }
 
 }

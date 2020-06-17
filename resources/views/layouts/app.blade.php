@@ -49,6 +49,16 @@
         <!-- Style.css -->
         <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css">
 
+        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2.css">
+
+        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2-bootstrap.css">
+        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css">       
+
+<link href="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.css" rel="stylesheet">
+
+
+
+
 
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script>
@@ -283,55 +293,46 @@ function toast(message) {
                                         </li>
                                     </ul>
                                 </li>
-                                <?php if (false) { ?>
+                                <?php
+                                if (true) {
+                                    $tasks = \App\Models\Task::where('to_user_id', Auth::user()->id)->where('date', '>=', date('Y-m-d'))->get();
+                                    ?>
                                     <li class="header-notification">
                                         <a href="#!">
                                             <i class="ti-bell"></i>
-                                            <span class="badge">5</span>
+                                            <span class="badge"><?= count($tasks) ?></span>
                                         </a>
                                         <ul class="show-notification">
                                             <li>
                                                 <h6>Notifications</h6>
                                                 <label class="label label-danger">New</label>
                                             </li>
-                                            <li>
-                                                <div class="media">
-                                                    <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Generic placeholder image">
-                                                    <div class="media-body">
-                                                        <h5 class="notification-user">John Doe</h5>
-                                                        <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
-                                                        <span class="notification-time">30 minutes ago</span>
+                                            <?php
+                                            foreach ($tasks as $task) {
+                                                ?>
+                                                <li >
+                                                    <div class="media">
+                                                        <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Generic placeholder image">
+                                                        <div class="media-body">
+                                                            <h5 class="notification-user">Client: <?= $task->client->name ?></h5>
+                                                            <p class="notification-msg"><?= $task->activity ?></p>
+                                                            <span class="notification-time"><?= date('d M Y', strtotime($task->date)) ?></span>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </li>
+                                                </li>
+                                            <?php } ?>
                                             <li>
-                                                <div class="media">
-                                                    <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Generic placeholder image">
-                                                    <div class="media-body">
-                                                        <h5 class="notification-user">Joseph William</h5>
-                                                        <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
-                                                        <span class="notification-time">30 minutes ago</span>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="media">
-                                                    <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Generic placeholder image">
-                                                    <div class="media-body">
-                                                        <h5 class="notification-user">Sara Soudein</h5>
-                                                        <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
-                                                        <span class="notification-time">30 minutes ago</span>
-                                                    </div>
-                                                </div>
+
+                                                <a href="<?= url('users/notification') ?>"><label class="label label-warning">View All</label></a>
                                             </li>
                                         </ul>
                                     </li>
-                                    <li class="header-notification">
-                                        <a href="#!" class="displayChatbox">
-                                            <i class="ti-comments"></i>
-                                            <span class="badge">9</span>
-                                        </a>
-                                    </li>
+                                    <!--                                    <li class="header-notification">
+                                                                            <a href="#!" class="displayChatbox">
+                                                                                <i class="ti-comments"></i>
+                                                                                <span class="badge">9</span>
+                                                                            </a>
+                                                                        </li>-->
                                 <?php } ?>
                                 <li class="user-profile header-notification">
                                     <a href="#!">
@@ -341,17 +342,18 @@ function toast(message) {
                                     </a>
 
                                     <ul class="show-notification profile-notification">
+                                        <li>
+                                            <a href="<?= url('users/show/' . Auth::user()->id) ?>">
+                                                <i class="ti-user"></i> Profile
+                                            </a>
+                                        </li>
                                         <?php if (false) { ?>
                                             <li>
                                                 <a href="#!">
                                                     <i class="ti-settings"></i> Settings
                                                 </a>
                                             </li>
-                                            <li>
-                                                <a href="user-profile.html">
-                                                    <i class="ti-user"></i> Profile
-                                                </a>
-                                            </li>
+
                                             <li>
                                                 <a href="email-inbox.html">
                                                     <i class="ti-email"></i> My Messages
@@ -477,6 +479,9 @@ function toast(message) {
                                 </a>
                                 <ul class="tree-1">
                                     <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.bottom-menu">System Setup</a></li>
+                                    <li>
+                                        <a href="<?= url('Phone_call/index') ?>" data-i18n="nav.navigate.navbar">phone Calls</a>
+                                    </li>
 
                                     <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
                                                 class="icon-arrow-right"></i>Training</a>
@@ -498,6 +503,8 @@ function toast(message) {
                                                     User Logs</a></li>
                                             <li><a href="<?= url('customer/pages') ?>" data-i18n="nav.page_layout.vertical.compact"> Page Logs </a>
                                             </li>
+                                            <li><a href="<?= url('customer/epayments') ?>" data-i18n="nav.page_layout.vertical.compact"> e-payments </a>
+                                            </li>
 
                                         </ul>
                                     </li>
@@ -515,6 +522,26 @@ function toast(message) {
                                 </ul>
                             </li>
                         <?php } ?>
+                            
+                            
+           <li class="nav-item">
+                                <a href="#!">
+                                    <i class="ti-layout-cta-right"></i>
+                                    <span data-i18n="nav.navigate.main">Office Administrator</span>
+                                </a>
+                                <ul class="tree-1">
+                                    <li>
+                                        <a href="<?= url('Visitor/index') ?>" data-i18n="nav.navigate.navbar">Visitors</a>
+                                    </li>
+                                   
+                                    
+                                
+
+                                </ul>
+                            </li>                  
+                            
+                            
+                            
                         <?php if (can_access('manage_sales')) { ?>
                             <li class="nav-item">
                                 <a href="#!">
@@ -522,20 +549,13 @@ function toast(message) {
                                     <span data-i18n="nav.navigate.main">Sales</span>
                                 </a>
                                 <ul class="tree-1">
-                                    <li><a href="<?= url('sales/index') ?>" data-i18n="nav.navigate.navbar">Sales Materials</a>
+                                    <li>
+                                        <a href="<?= url('sales/index') ?>" data-i18n="nav.navigate.navbar">Sales Materials</a>
                                     </li>
-
-                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Sales Reports</a>
-                                        <ul class="tree-2" style="display: none;">
-                                            <li><a href="<?= url('sales/school') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Schools</a></li>
-                                            <li><a href="<?= url('sales/prospect') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Prospects</a></li>
-                                            <li><a href="<?= url('sales/lead') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Leads</a></li>
-                                            <li><a href="<?= url('sales/customer') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Customers</a></li>
-
-
-
-                                        </ul>
+                                    <li>
+                                        <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">Schools</a>
                                     </li>
+                                
 
                                 </ul>
                             </li>
@@ -583,12 +603,13 @@ function toast(message) {
                                             <li><a href="<?= url('software/invoice/uat') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Testing Invoices</a></li>
                                             <li><a href="<?= url('software/api') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">API Requests</a></li>
 
-
+                                            <li><a href="<?= url('software/reconciliation') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Reconciliation</a></li>
                                         </ul>
                                     </li>
 
                                     <li><a href="<?= url('software/server') ?>" data-i18n="nav.basic-components.button">Server Administration</a></li>
                                     <li><a href="<?= url('software/logs') ?>" data-i18n="nav.basic-components.box-shadow">Error Logs</a></li>
+                                    <li><a href="<?= url('software/CustomerRequirement') ?>" data-i18n="nav.basic-components.button">Customer Requirement</a></li>
                                     <li><a href="<?= url('software/pmp') ?>" data-i18n="nav.basic-components.collapse–accordion">Project Management</a></li>
 
                                 </ul>
@@ -630,13 +651,30 @@ function toast(message) {
                                 </ul>
                             </li>
                         <?php } ?>
-                        <?php if (can_access('manage_users')) { ?>
-                            <li class="nav-item single-item">
-                                <a href="<?= url('users/index') ?>">
-                                    <i class="ti-layers-alt"></i>
-                                    <span data-i18n="nav.sticky-notes.main"> Users</span>
+                        <?php if (can_access('manage_expenses')) { ?>
+                            <li class="nav-item single-item has-class">
+                                <a href="<?= url('account/transaction/4') ?>">
+                                    <i class="ti-view-grid"></i>
+                                    <span data-i18n="nav.widget.main"> Expenses</span>
+                                    <label class="label label-danger menu-caption">+</label>
                                 </a>
                             </li>
+
+                        <?php } ?>
+                        <?php if (can_access('manage_users')) { ?>
+                            <li class="nav-item">
+                                <a href="#!">
+                                    <i class="ti-gift "></i>
+                                    <span data-i18n="nav.extra-components.main">Human Resources</span>
+                                </a>
+                                <ul class="tree-1">
+                                    <li><a href="<?= url('users/index') ?>" data-i18n="nav.extra-components.session-timeout">Users</a></li>
+                                    <li><a href="<?= url('users/applicant') ?>" data-i18n="nav.extra-components.session-idle-timeout">Applicants</a>
+                                    </li>
+                                    <li><a href="<?= url('users/template') ?>" data-i18n="nav.extra-components.offline">Forms & Templates</a></li>
+                                </ul>
+                            </li>
+
                             <?php
                         }
                         ?>
@@ -954,12 +992,26 @@ function toast(message) {
         <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/amchart/js/serial.js"></script>
         <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/amchart/js/light.js"></script>
         <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/amchart/js/custom-amchart.js"></script>
+
+
+
         <!-- i18next.min.js -->
         <script type="text/javascript" src="<?= $root ?>bower_components/i18next/i18next.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/i18next-xhr-backend/i18nextXHRBackend.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery-i18next/jquery-i18next.min.js"></script>
+
+
+
+
+
+
+
+
         <!-- Custom js -->
+   <script src="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.js"></script>  
+   
+        
         <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/custom-dashboard.js?v=3"></script>
         <script type="text/javascript" src="<?= $root ?>assets/js/script.js?v=2"></script>
 
@@ -976,7 +1028,7 @@ function toast(message) {
         @yield('footer')
     </body>
     <?php
-    if (request('type_id') != 'subject' && !preg_match('/sales/', url()->current()) && !preg_match('/logs/', url()->current()) && !preg_match('/api/', url()->current())) {
+    if (request('type_id') != 'subject' && !preg_match('/emailsms/', url()->current()) && !preg_match('/sales/', url()->current()) && !preg_match('/logs/', url()->current()) && !preg_match('/api/', url()->current())) {
         ?>
         <script type="text/javascript">
 
@@ -1057,6 +1109,15 @@ function toast(message) {
                                                            ]
                                                        });
                                                    });
+                                                   
+                                                   
+                                                   
+                                                   
+           $('.clockpicker').clockpicker({
+            donetext: 'Done'
+         }).find('input').change(function () {
+            console.log(this.value);
+        });
         </script>
     <?php } ?>
 </html>

@@ -9,7 +9,7 @@ class Expense extends Model {
      */
 
     protected $table = 'expense';
-    protected $fillable = ['id', 'date', 'expense', 'user_id', 'expenseyear', 'note', 'is_depreciation', 'amount', 'depreciation', 'refer_expense_id', 'ref_no', 'payment_method', 'bank_account_id', 'transaction_id', 'reconciled', 'file', 'voucher_no', 'payer_name', 'recipient'];
+    protected $fillable = ['id', 'date', 'expense', 'user_id', 'expenseyear', 'note', 'is_depreciation', 'amount', 'depreciation', 'refer_expense_id', 'ref_no', 'payment_method', 'bank_account_id', 'transaction_id', 'reconciled', 'file', 'voucher_no', 'payer_name', 'recipient','payment_type_id'];
 
 
     public function user() {
@@ -24,5 +24,8 @@ class Expense extends Model {
         return $this->belongsTo(\App\Models\BankAccount::class, 'bank_account_id', 'id');
     }
 
+     public function paymentType() {
+        return $this->belongsTo(\App\Models\PaymentType::class, 'payment_type_id', 'id');
+    }
 
 }

@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+
 <div class="main-body">
     <div class="page-wrapper">
         <!-- Page-header start -->
@@ -17,7 +18,7 @@
                     </li>
                     <li class="breadcrumb-item"><a href="#!">Sales</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Schools</a>
+                    <li class="breadcrumb-item"><a href="#!">Report</a>
                     </li>
                 </ul>
             </div>
@@ -33,6 +34,7 @@
                             <div class="row">
                                 <?php
                                 $i = 1;
+                                $total = 0;
                                 foreach ($school_types as $type) {
                                     ?>
                                     <div class="col-md-12 col-xl-4">
@@ -50,25 +52,49 @@
                                         </div>
                                     </div>
                                     <?php
+                                    $total += $type->count;
                                     $i++;
                                 }
                                 ?>
-
-                                <div class="col-md-6 col-xl-4">
-                                    <div class="card counter-card-3">
+                                <div class="col-md-12 col-xl-4">
+                                    <div class="card counter-card-<?= $i ?>">
                                         <div class="card-block-big">
                                             <div>
-                                                <h3>0</h3>
-                                                <p>Nursery</p>
+                                                <h3><?= $total ?></h3>
+                                                <p>Total</p>
                                                 <div class="progress ">
-                                                    <div class="progress-bar progress-bar-striped progress-xs progress-bar-default" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    <div class="progress-bar progress-bar-striped progress-xs progress-bar-success" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
                                                 </div>
+                                                <small><?= $nmb_schools ?> Use NMB, <?= $use_shulesoft ?> use ShuleSoft, <?= $nmb_shulesoft_schools ?> use NMB & ShuleSoft</small>
                                             </div>
-                                            <i class="icofont icofont-upload"></i>
+                                            <i class="icofont icofont-comment"></i>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-3"></div>
+                            <div class="col-lg-6">
+                                <?php
+                                if (can_access('manage_customers')) {
+                                    ?>
+                                    <p align="center">
+                                        <?php
+                                        // $demo=DB::table('admin.website_demo_requests')->count();
+                                        // $join=DB::table('admin.website_join_shulesoft')->count();
+                                        ?>
+                                        <a href="<?= url('sales/prospect/demo') ?>"> <button class="btn btn-success btn-skew"> Demo Requests <span class="badge badge-danger"><?php //echo $demo    ?></span></button></a>
+                                        <a href="<?= url('sales/prospect/join') ?>"> <button class="btn btn-info btn-skew">Join Requests <span class="badge badge-danger"><?php // echo $join     ?></span></button></a>
+                                    </p>
+                                <?php } ?>
+                                <select class="form-control" id="school_selector">
+                                    <option value="1" <?= selected(1) ?>>All Schools</option>
+                                    <option value="2" <?= selected(2) ?>>Use ShuleSoft Only</option>
+                                    <option value="3"<?= selected(3) ?>>Sales On Progress</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3"></div>
                         </div>
                         <div class="row">
                             <div class="col-lg-12">
@@ -76,7 +102,7 @@
                                     <h3 class="box-title">List of Schools</h3>
                                     <div class="row">
                                         <div class="col-lg-4"></div>
-                                        <div class="col-lg-4">
+                                        <div class="col-lg-4 row">
 
                                         </div>
                                         <div class="col-lg-4"></div>
@@ -91,7 +117,9 @@
                                                     <th>District</th>
                                                     <th>Ward</th>
                                                     <th>Type</th>
-                                                    <th>Ownership</th>
+                                                    <!--<th>Use NMB</th>-->
+                                                    <th>Students</th>
+                                                    <th>Activities</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -116,7 +144,7 @@
             "serverSide": true,
             'serverMethod': 'post',
             'ajax': {
-                'url': "<?= url('sales/show/null?page=schools') ?>"
+                'url': "<?= url('sales/show/null?page=schools&type=' . request()->segment(3)) ?>"
             },
             "columns": [
                 {"data": "id"},
@@ -125,18 +153,20 @@
                 {"data": "district"},
                 {"data": "ward"},
                 {"data": "type"},
-                {"data": "ownership"},
+//                {"data": "nmb_branch"},
+                {"data": "students"},
+                {"data": "activities"},
                 {"data": ""}
             ],
             "columnDefs": [
                 {
-                    "targets": 7,
+                    "targets": 8,
                     "data": null,
                     "render": function (data, type, row, meta) {
-                        if (row.prospect_id == null) {
-                            return '<a href="<?= url('sales/prospect/add/') ?>/' + row.id + '" class="label label-warning">Prospect </a>';
-                        }else{
-                            return '<a href="<?= url('customer/profile/') ?>/school/' + row.id + '" class="label label-primary">View</a>';
+                        if (row.schema_name != null) {
+                            return '<a href="<?= url('customer/profile') ?>/' + row.schema_name + '" class="label label-warning">Already Customer</a>';
+                        } else {
+                            return '<a href="<?= url('sales/') ?>/profile/' + row.id + '" class="label label-primary">View</a>';
                         }
 
                     }
@@ -148,7 +178,13 @@
 
     }
     );
-
+    school_selector = function () {
+        $('#school_selector').change(function () {
+            var val = $(this).val();
+            window.location.href = '<?= url('sales/school') ?>/' + val;
+        })
+    }
+    $(document).ready(school_selector);
 </script>
 
 @endsection
