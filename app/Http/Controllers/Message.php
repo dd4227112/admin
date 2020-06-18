@@ -224,11 +224,13 @@ class Message extends Controller {
                     foreach ($messages as $sms) {
                         $schema = strtoupper($sms->schema_name) == 'PUBLIC' ?
                                 'SHULESOFT' : $sms->schema_name;
-                        if (strtolower($sms->schema_name) <> 'kilimanischools') {
+                        if ((int) $sms->type == 1) {
+                            $school_link = '';
+                            $start_link = '';
+                        } else {
                             $link = strtoupper($sms->schema_name) == 'PUBLIC' ? '' : $sms->schema_name . '.';
                             $school_link = '. https://' . $link . 'shulesoft.com';
-                        } else {
-                            $school_link = '';
+                            $start_link = strtoupper($schema);
                         }
 
                         $karibusms = new \karibusms();
@@ -236,7 +238,7 @@ class Message extends Controller {
                         $karibusms->API_SECRET = $sms->api_secret;
                         $karibusms->set_name(strtoupper($sms->schema_name));
                         $karibusms->karibuSMSpro = $sms->type;
-                        $result = (object) json_decode($karibusms->send_sms($sms->phone_number, strtoupper($schema) . ': ' . $sms->body . $school_link, $sms->schema_name . $sms->sms_id));
+                        $result = (object) json_decode($karibusms->send_sms($sms->phone_number, $start_link . ': ' . $sms->body . $school_link, $sms->schema_name . $sms->sms_id));
                         if (is_object($result) && isset($result->success) && $result->success == 1) {
                             DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 1, 'return_code' => json_encode($result), 'updated_at' => 'now()']);
                         } else {
