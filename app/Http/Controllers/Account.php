@@ -999,7 +999,7 @@ class Account extends Controller {
                 if ((int) $check <> 1) {
                     return redirect()->back()->with('error', $check);
                 }
-                $refer_expense = \App\Models\ReferExpense::where('name', $value['expense_name'])->first();
+                $refer_expense = \App\Models\ReferExpense::where(DB::raw('lower(name)'), strtolower($value['expense_name']))->first();
                 if (count($refer_expense) == 0) {
                     $status .= '<p class="alert alert-danger">Revenue not defined. This expense name <b>' . $value['revenue_name'] . '</b> must be defined first in charts of account. This record skipped to be uploaded</p>';
                     continue;
