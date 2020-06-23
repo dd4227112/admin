@@ -115,12 +115,11 @@ class Account extends Controller {
                 $invoice_status = Invoice::where('client_id', $client->client_id)->where('account_year_id', $account_year_id)->first();
                 $reference = 'SASA11' . $year->name . $client->client_id;
                 $invoice = count($invoice_status) == 1 ? $invoice_status : Invoice::create(['reference' => $reference, 'client_id' => $client->client_id, 'date' => 'now()', 'year' => date('Y'), 'user_id' => Auth::user()->id, 'account_year_id' => $account_year_id, 'due_date' => date('Y-m-d', strtotime('+ 30 days'))]);
-                
+
                 $amount = $client->total_students * $client->price_per_student;
                 (int) \App\Models\InvoiceFee::where('invoice_id', $invoice->id)->count() > 0 ?
-                                \App\Models\InvoiceFee::where('invoice_id', $invoice->id)->update(['amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee For ' . $client->total_students . ' Students ', 'quantity' => $client->total_students, 'unit_price' => $client->price_per_student])
-                        :
-                    \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee For ' . $client->total_students . ' Students ', 'quantity' => $client->total_students, 'unit_price' => $client->price_per_student]);
+                                \App\Models\InvoiceFee::where('invoice_id', $invoice->id)->update(['amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee For ' . $client->total_students . ' Students ', 'quantity' => $client->total_students, 'unit_price' => $client->price_per_student]) :
+                                \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee For ' . $client->total_students . ' Students ', 'quantity' => $client->total_students, 'unit_price' => $client->price_per_student]);
             } else {
                 $client_record = \App\Models\Client::create(['name' => $client->sname, 'email' => $client->email, 'phone' => $client->phone, 'address' => $client->address, 'username' => $client->schema_name]);
                 $reference = 'SASA11' . $year->name . $client_record->id;
@@ -919,7 +918,10 @@ class Account extends Controller {
             //once we upload excel, register students and marks in mark_info table
             $status = '';
             foreach ($results as $value) {
-
+                $check = $this->checkKeysExists($value, ['amount', 'transaction_id', 'account_number', 'payment_method', 'revenue_name', 'date']);
+                if ((int) $check <> 1) {
+                    return redirect()->back()->with('error', $check);
+                }
                 $refer_expense = \App\Models\ReferExpense::where('name', $value['revenue_name'])->first();
                 if (count($refer_expense) == 0) {
                     $status .= '<p class="alert alert-danger">Revenue not defined. This expense name <b>' . $value['revenue_name'] . '</b> must be defined first in charts of account. This record skipped to be uploaded</p>';
@@ -980,6 +982,83 @@ class Account extends Controller {
                 }
 
                 \App\Models\Revenue::create($data);
+            }
+            return redirect('account/revenue')->with('success', $status);
+        }
+    }
+
+    public function uploadExpense() {
+
+        if ($_POST) {
+            $address = request()->file('file');
+            $results = Excel::load($address)->all();
+            //once we upload excel, register students and marks in mark_info table
+            $status = '';
+            foreach ($results as $value) {
+                $check = $this->checkKeysExists($value, ['amount', 'transaction_id', 'account_number', 'payment_method', 'expense_name', 'date','user_in_shulesoft','payer_name']);
+                if ((int) $check <> 1) {
+                    return redirect()->back()->with('error', $check);
+                }
+                $refer_expense = \App\Models\ReferExpense::where('name', $value['expense_name'])->first();
+                if (count($refer_expense) == 0) {
+                    $status .= '<p class="alert alert-danger">Revenue not defined. This expense name <b>' . $value['revenue_name'] . '</b> must be defined first in charts of account. This record skipped to be uploaded</p>';
+                    continue;
+                }
+                $check_unique = \App\Models\Expense::where('transaction_id', $value['transaction_id'])->first();
+                if (count($check_unique) == 1) {
+                    $status .= '<p class="alert alert-danger">This transaction ID <b>' . $value['transaction_id'] . '</b> already being used. Information skipped</p>';
+                    continue;
+                }
+                $bank = \App\Models\BankAccount::where('number', $value['account_number'])->first();
+
+                $in_data = [
+                    'created_by_id' => Auth::user()->id,
+                    'amount' => $value['amount'],
+                    'payment_method' => $value['payment_method'],
+                    'transaction_id' => $value['transaction_id'],
+                    "refer_expense_id" => $refer_expense->id,
+                    "bank_account_id" => count($bank) == 1 ? $bank->id : NULL,
+                    'date' => date("Y-m-d", strtotime($value['date'])),
+                    'note' => $value['note']
+                ];
+//                dd($in_data);
+                if ((int) $value['user_in_shulesoft'] == 1) {
+
+                    $user = \App\Models\User::where('name', 'ilike', '%' . $value['payer_name'] . '%')->first();
+                    if (count($user) == 1) {
+                        $data = array_merge($in_data, [
+                            'payer_name' => $user->name,
+                            'user_id' => $user->id,
+                            'user_table' => $user->table,
+                            'payer_email' => $user->email,
+                            'payer_phone' => $user->phone
+                        ]);
+                    } else {
+                        $user = Auth::user();
+                        $data = array_merge($in_data, [
+                            'payer_name' => $user->firstname . ' ' . $user->lastname,
+                            'user_id' => $user->id,
+                            'payer_email' => $user->email,
+                            'payer_phone' => $user->phone
+                        ]);
+                    }
+                } else {
+                    $data = [
+                        'payer_name' => $value['payer_name'],
+                        'payer_phone' => $value['payer_phone'],
+                        'payer_email' => $value['payer_email'],
+                        'created_by_id' => session('id'),
+                        'amount' => $value['amount'],
+                        "refer_expense_id" => $refer_expense->id,
+                        "bank_account_id" => count($bank) == 1 ? $bank->id : NULL,
+                        'payment_method' => $value['payment_method'],
+                        'transaction_id' => $value['transaction_id'],
+                        'date' => date("Y-m-d", strtotime($value['date'])),
+                        'note' => $value['note']
+                    ];
+                }
+
+                \App\Models\Expense::create($data);
             }
             return redirect('account/revenue')->with('success', $status);
         }
