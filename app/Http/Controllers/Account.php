@@ -1067,7 +1067,7 @@ class Account extends Controller {
 
                 \App\Models\Expense::create($data);
             }
-            return redirect('account/revenue')->with('success', $status);
+            return redirect('account/transaction/4')->with('success', $status);
         }
     }
 
