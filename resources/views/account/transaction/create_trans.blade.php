@@ -50,7 +50,27 @@
                                 <i class="icofont icofont-refresh"></i>
                             </div>
                         </div>
+<div class="card tab-card">
+                        <ul class="nav nav-tabs md-tabs" role="tablist">
+                            <li class="nav-item complete">
+                                <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true">
+                                    <strong>Create Single Transaction</strong> 
+                                </a>
+                                <div class="slide"></div>
+                            </li>
+                            <li class="nav-item complete">
+                                <a class="nav-link" data-toggle="tab" href="#profile3" role="tab" aria-expanded="false">Import Expenses From an Excel</a>
+                                <div class="slide"></div>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="home3" role="tabpanel" aria-expanded="true">
+                                <div class="card-block">
 
+                                    <header class="panel-heading">
+                                        Add Expense
+
+                                    </header>
                         <div class="card-block">
                             <form class="form-horizontal" role="form" method="post">
 
@@ -312,7 +332,52 @@
                                 <?= csrf_field() ?>
                             </form>
                         </div>
+        </div>
+                            </div>
+                            <div class="tab-pane" id="profile3" role="tabpanel" aria-expanded="false">
+                                <div class="card-block">
 
+                                    <div class="table-responsive dt-responsive">
+                                        <div class="card-header">
+                                            <div class="panel-body">
+                                                <div class="alert alert-info">Use the exactly ShuleSoft template as provided : Excel should contains these keys at the top :'amount', 'transaction_id', 'account_number', 'payment_method', 'expense_name', 'date','user_in_shulesoft','payer_name'</div>
+                                                <!--<p>Sample Excel Format. </p>-->
+                                                <!--<img src="<?= url('public/images/sample_excel.jpg') ?>"/>-->
+                                                <br/>
+                                                <div class=" form">
+<!--                                                    <br/>
+                                                    <p><?= __("file") ?> 
+                                                        <a href="<?= url('storage/uploads/sample/sample_students_upload.xlsx') ?>"><i class="fa fa-2x fa-cloud-download"></i></a></p>-->
+                                                    <form id="demo-form2" action="<?= url('account/uploadExpense') ?>" class="form-horizontal" method="POST"
+                                                          enctype="multipart/form-data">
+
+                                                        <div class="form-group">
+
+                                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                                <input id="file" name="file" type="file" required="required" accept=".xls,.xlsx,.csv,.odt">
+                                                            </div>
+                                                        </div>
+                                                        <div class="ln_solid"></div>
+                                                        <div class="form-group">
+                                                            <div class="col-md-4 col-sm-4 col-xs-12 col-md-offset-2">
+                                                                <button type="submit" id="add_revenue" class="btn btn-primary btn-block"><?= __("submit") ?></button>
+                                                            </div>
+                                                        </div>
+
+                                                        <?= csrf_field() ?>
+                                                    </form>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
 
 
                     </div>

@@ -36,12 +36,12 @@
                         <ul class="nav nav-tabs md-tabs" role="tablist">
                             <li class="nav-item complete">
                                 <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true">
-                                    <strong>Create Single Invoice</strong> 
+                                    <strong>Create Single Transaction</strong> 
                                 </a>
                                 <div class="slide"></div>
                             </li>
                             <li class="nav-item complete">
-                                <a class="nav-link" data-toggle="tab" href="#profile3" role="tab" aria-expanded="false">Create Invoice From Excel</a>
+                                <a class="nav-link" data-toggle="tab" href="#profile3" role="tab" aria-expanded="false">Import Revenue From an Excel</a>
                                 <div class="slide"></div>
                             </li>
                         </ul>
@@ -50,7 +50,7 @@
                                 <div class="card-block">
 
                                     <header class="panel-heading">
-                                        Create Reference number For Single User
+                                        Add Revenue
 
                                     </header>
                                     <div class="panel-body">
@@ -282,7 +282,7 @@
                                     <div class="table-responsive dt-responsive">
                                         <div class="card-header">
                                             <div class="panel-body">
-                                                <div class="alert alert-info">Use the exactly ShuleSoft template as provided </div>
+                                                <div class="alert alert-info">Use the exactly ShuleSoft template as provided : Excel should contains these keys at the top :'amount', 'transaction_id', 'account_number', 'payment_method', 'revenue_name', 'date'</div>
                                                 <!--<p>Sample Excel Format. </p>-->
                                                 <!--<img src="<?= url('public/images/sample_excel.jpg') ?>"/>-->
                                                 <br/>
