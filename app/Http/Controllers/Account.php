@@ -995,7 +995,7 @@ class Account extends Controller {
             //once we upload excel, register students and marks in mark_info table
             $status = '';
             foreach ($results as $value) {
-                $check = $this->checkKeysExists($value, ['amount', 'transaction_id', 'account_number', 'payment_method', 'expense_name', 'date','user_in_shulesoft','payer_name']);
+                $check = $this->checkKeysExists($value, ['amount', 'transaction_id', 'account_number', 'payment_method', 'expense_name', 'date', 'user_in_shulesoft', 'payer_name']);
                 if ((int) $check <> 1) {
                     return redirect()->back()->with('error', $check);
                 }
@@ -1019,7 +1019,10 @@ class Account extends Controller {
                     "refer_expense_id" => $refer_expense->id,
                     "bank_account_id" => count($bank) == 1 ? $bank->id : NULL,
                     'date' => date("Y-m-d", strtotime($value['date'])),
-                    'note' => $value['note']
+                    'note' => $value['note'],
+                    'ref_no'=> $value['transaction_id'],
+                    "expenseyear" => date("Y", strtotime($value['date'])),
+                    "expense" => $value['note'],
                 ];
 //                dd($in_data);
                 if ((int) $value['user_in_shulesoft'] == 1) {
@@ -1043,6 +1046,7 @@ class Account extends Controller {
                         ]);
                     }
                 } else {
+
                     $data = [
                         'payer_name' => $value['payer_name'],
                         'payer_phone' => $value['payer_phone'],
@@ -1053,7 +1057,10 @@ class Account extends Controller {
                         "bank_account_id" => count($bank) == 1 ? $bank->id : NULL,
                         'payment_method' => $value['payment_method'],
                         'transaction_id' => $value['transaction_id'],
+                        'ref_no'=> $value['transaction_id'],
                         'date' => date("Y-m-d", strtotime($value['date'])),
+                        "expenseyear" => date("Y", strtotime($value['date'])),
+                        "expense" => $value['note'],
                         'note' => $value['note']
                     ];
                 }
