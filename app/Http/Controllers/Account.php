@@ -768,7 +768,7 @@ class Account extends Controller {
         $id = ((request()->segment(3)));
         $refer_id = ((request()->segment(4)));
         $bank_id = ((request()->segment(5)));
-        $year = \App\Models\AccountYear::where('name', date('Y'))->first();
+        $year = \App\Models\AccountYear::orderBy('start_date', 'asc')->first();
         $account_year = count($year) == 0 ? \App\Models\AccountYear::create(['name' => date('Y'), 'status' => 1, 'start_date' => date('Y-01-01'), 'end_date' => date('Y-12-31')]) : $year;
         $from_date = $account_year->start_date;
         $to_date = $account_year->end_date;
