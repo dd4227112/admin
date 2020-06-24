@@ -297,20 +297,20 @@ class Account extends Controller {
             'token' => $token,
             // 'financial_entity_id' => $financial_id,
             //special case for CRDB payments only
-            'checksum' => request('checksum'),
-            'payment_type_id' => request('payment_type'),
-            'amount_type' => request('amountType'),
-            'currency' => request('currency')
+//            'checksum' => request('checksum'),
+//            'payment_type_id' => request('payment_type'),
+//            'amount_type' => request('amountType'),
+//            'currency' => request('currency')
         );
 
-        $payment_id = DB::table('payments')->insertGetId($payment_array);
-        $client = DB::table('clients')->where('id', $client_id)->first();
+        $payment_id = DB::table('admin.payments')->insertGetId($payment_array);
+        $client = DB::table('admin.clients')->where('id', $client_id)->first();
 
         $data = [
             'payer_name' => $client->name,
             'payer_phone' => $client->phone,
             'payer_email' => $client->name,
-            'created_by_id' => session('id'),
+            'created_by_id' => $payment_id,
             'amount' => $amount,
             "refer_expense_id" => $refer_expense_id,
             "bank_account_id" => $bank_account_id,
@@ -368,7 +368,7 @@ class Account extends Controller {
         }
         // $amount > 0 ? \App\Model\Wallet::create(['user_id' => $invoice->user_id, 'amount' => $amount, 'invoice_id' => $invoice_id, 'status' => 1]) : '';
         // return $this->paymentBalance($payment_id, $status);
-        return redirect(url('invoiceView/' . $invoice->id))->with('success', 'success');
+        //return redirect(url('invoiceView/' . $invoice->id))->with('success', 'success');
     }
 
     public function paymentBalance($payment_id, $status) {
@@ -1097,7 +1097,7 @@ class Account extends Controller {
                 if ((int) $check <> 1) {
                     return redirect()->back()->with('error', $check);
                 }
-                $invoice = Invoice::where('reference', $value['invoice'])->first();
+                $invoice = Invoice::where(DB::raw('lower(reference)'), strtolower($value['invoice']))->first();
                 if (count($invoice) == 0) {
                     //create invoice
 
