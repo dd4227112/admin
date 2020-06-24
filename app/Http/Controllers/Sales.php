@@ -239,7 +239,7 @@ group by ownership');
                 $sql = "select a.id,b.name, a.amount, a.method,a.created_at,a.transaction_id, d.name as bank_name,'Client Payment' as payment_type from admin.payments a join admin.clients b on b.id=a.client_id left join admin.bank_accounts c on c.id=a.bank_account_id left join constant.refer_banks d on d.id=c.refer_bank_id
 union all
 select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.transaction_id, d.name as bank_name, 'Revenue' as payment_type from admin.revenues a left join admin.bank_accounts c on c.id=a.bank_account_id left join constant.refer_banks d on d.id=c.refer_bank_id ";
-                return $this->ajaxTable('payments', ['a.id', 'amount', 'a.created_at'], $sql);
+                return $this->ajaxTable('payments', ['a.id', 'amount','b.name','bank_name','a.method', 'a.created_at'], $sql);
                 break;
             default:
                 break;
