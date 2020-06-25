@@ -37,7 +37,7 @@ class Kernel extends ConsoleKernel {
         })->everyMinute();
 
         $schedule->call(function () {
-               $this->curlServer(['action'=>'payment'], 'http://51.77.212.234:8081/api/cron');
+            $this->curlServer(['action' => 'payment'], 'http://51.77.212.234:8081/api/cron');
             (new Message())->sendEmail();
         })->everyMinute();
 //
@@ -221,47 +221,64 @@ class Kernel extends ConsoleKernel {
             $this->syncInvoicePerSchool($invoice->schema_name);
         }
     }
+
     /**
      * Temporarily only allows digital invoice but must support both
      */
-    public function syncInvoicePerSchool($schema='') {
-        
-        $invoices = DB::select("select b.id, b.student_id, b.status, b.reference, b.prefix,b.date,b.sync,b.return_message,b.push_status,b.academic_year_id,b.created_at, b.updated_at, a.amount, c.name as student_name, '".$schema."' as schema_name  from  ".$schema.".invoices b join ".$schema.".student c on c.student_id=b.student_id join ( select sum(balance) as amount, a.invoice_id from ".$schema.".invoice_balances a group by a.invoice_id ) a on a.invoice_id=b.id where  a.amount >0  and b.sync <>1 order by random() limit 15");
+    public function syncInvoicePerSchool($schema = '') {
+
+        $invoices = DB::select("select b.id, b.student_id, b.status, b.reference, b.prefix,b.date,b.sync,b.return_message,b.push_status,b.academic_year_id,b.created_at, b.updated_at, a.amount, c.name as student_name, '" . $schema . "' as schema_name, (select sub_invoice from  " . $schema . ".setting limit 1) as sub_invoice   from  " . $schema . ".invoices b join " . $schema . ".student c on c.student_id=b.student_id join ( select sum(balance) as amount, a.invoice_id from " . $schema . ".invoice_balances a group by a.invoice_id ) a on a.invoice_id=b.id where  a.amount >0  and b.sync <>1 order by random() limit 15");
         if (count($invoices) > 0) {
             foreach ($invoices as $invoice) {
-                $token = $this->getToken($invoice);
-                if (strlen($token) > 4) {
-                    $fields = array(
-                        "reference" => trim($invoice->reference),
-                        "student_name" => $invoice->student_name,
-                        "student_id" => $invoice->student_id,
-                        "amount" => $invoice->amount,
-                        // "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
-                        "type" => ucfirst($invoice->schema_name) . ' Digital Learning Fee',
-                        "code" => "10",
-                        "callback_url" => "http://51.77.212.234:8081/api/init",
-                        "token" => $token
-                    );
-                    
-                    $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
-                    //$push_status = 'invoice_submission';
-                    if ($invoice->schema_name == 'beta_testing') {
-                        //testing invoice
-                        $setting = DB::table('beta_testing.setting')->first();
 
-                        $url = 'https://wip.mpayafrica.com/v2/' . $push_status;
-                    } else {
-                        //live invoice
-                        $setting = DB::table($invoice->schema_name . '.setting')->first();
-                        $url = 'https://api.mpayafrica.co.tz/v2/' . $push_status;
+                if ($invoice->sub_invoice == 1) {
+                    $sub_invoices = DB::select("select b.id, b.student_id, b.reference||'A'||a.fee_id, b.prefix,b.date,b.sync,b.return_message,b.push_status,b.academic_year_id,b.created_at, b.updated_at, a.balance as amount, c.name  from  " . $schema . ".invoices b join " . $schema . ".student c on c.student_id=b.student_id join " . $schema . ".invoice_balances a on a.invoice_id=b.id  where b.id=" . $invoice->id);
+                    
+                    foreach ($sub_invoices as $sub_invoice) {
+                        $this->pushInvoice($sub_invoice);
                     }
-                    $curl = $this->curlServer($fields, $url);
-                    $result = json_decode($curl);
-                    echo $result->description;
-                    if ((strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
+                }else{
+                    $this->pushInvoice($invoice);
+                }
+            }
+        }
+    }
+
+    public function pushInvoice($invoice) {
+
+        $token = $this->getToken($invoice);
+        if (strlen($token) > 4) {
+            $fields = array(
+                "reference" => trim($invoice->reference),
+                "student_name" => $invoice->student_name,
+                "student_id" => $invoice->student_id,
+                "amount" => $invoice->amount,
+                // "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
+                "type" => ucfirst($invoice->schema_name) . '  school fee',
+                "code" => "10",
+                "callback_url" => "http://51.77.212.234:8081/api/init",
+                "token" => $token
+            );
+
+            $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
+            //$push_status = 'invoice_submission';
+            if ($invoice->schema_name == 'beta_testing') {
+                //testing invoice
+                $setting = DB::table('beta_testing.setting')->first();
+
+                $url = 'https://wip.mpayafrica.com/v2/' . $push_status;
+            } else {
+                //live invoice
+                $setting = DB::table($invoice->schema_name . '.setting')->first();
+                $url = 'https://api.mpayafrica.co.tz/v2/' . $push_status;
+            }
+            $curl = $this->curlServer($fields, $url);
+            $result = json_decode($curl);
+            echo $result->description;
+            if ((strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
 //update invoice no
-                        DB::table($invoice->schema_name . '.invoices')
-                                ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status]);
+                DB::table($invoice->schema_name . '.invoices')
+                        ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status]);
 
 //                        $users = DB::table($invoice->schema_name . '.parent')->whereIn('parentID', DB::table('student_parents')->where('student_id', $invoice->student_id)->get(['parent_id']))->get();
 //                        foreach ($users as $user) {
@@ -273,10 +290,8 @@ class Kernel extends ConsoleKernel {
 //                            }
 //                            DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
 //                        }
-                    }
-                    DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
-                }
             }
+            DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
         }
     }
 
@@ -298,7 +313,7 @@ class Kernel extends ConsoleKernel {
                         "token" => $token
                     );
                     $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
-                   // $push_status = 'invoice_update';
+                    // $push_status = 'invoice_update';
                     if ($invoice->schema_name == 'beta_testing') {
                         //testing invoice
                         $setting = DB::table('beta_testing.setting')->first();
