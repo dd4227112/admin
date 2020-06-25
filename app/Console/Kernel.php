@@ -215,17 +215,17 @@ class Kernel extends ConsoleKernel {
     }
 
     public function syncInvoice() {
-//        $invoices = DB::select("select distinct schema_name from admin.all_bank_accounts_integrations where invoice_prefix in (select prefix from admin.all_invoices where reference like '%TZ%' AND schema_name not in ('public','accounts','beta_testing')  and sync=0)");
-//        foreach ($invoices as $invoice) {
-//            $this->syncInvoicePerSchool($invoice->schema_name);
-//        }
-//    }
-//    /**
-//     * Temporarily only allows digital invoice but must support both
-//     */
-//    public function syncInvoicePerSchool($schema='') {
-     
-        $invoices = DB::select("select * from api.invoices where  amount >0  and sync <>1 order by random() limit 10");
+        $invoices = DB::select("select distinct schema_name from admin.all_bank_accounts_integrations where invoice_prefix in (select prefix from admin.all_invoices where schema_name not in ('public','accounts','beta_testing')  and sync=0)");
+        foreach ($invoices as $invoice) {
+            $this->syncInvoicePerSchool($invoice->schema_name);
+        }
+    }
+    /**
+     * Temporarily only allows digital invoice but must support both
+     */
+    public function syncInvoicePerSchool($schema='') {
+        
+        $invoices = DB::select("select b.id, b.student_id, b.reference, b.prefix,b.date,b.sync,b.return_message,b.push_status,b.academic_year_id,b.created_at, b.updated_at, a.amount, c.name  from  ".$schema.".invoices b join ".$schema.".student c on c.student_id=b.student_id join ( select sum(balance) as amount, a.invoice_id from ".$schema.".invoice_balances a group by a.invoice_id ) a on a.invoice_id=b.id where  a.amount >0  and b.sync <>1 order by random() limit 15");
         if (count($invoices) > 0) {
             foreach ($invoices as $invoice) {
                 $token = $this->getToken($invoice);
@@ -262,16 +262,16 @@ class Kernel extends ConsoleKernel {
                         DB::table($invoice->schema_name . '.invoices')
                                 ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status]);
 
-                        $users = DB::table($invoice->schema_name . '.parent')->whereIn('parentID', DB::table('student_parents')->where('student_id', $invoice->student_id)->get(['parent_id']))->get();
-                        foreach ($users as $user) {
-                            $message = 'Hello ' . $user->name . ','
-                                    . 'Control Namba ya '.$invoice->student_name.', kwa malipo ya mafunzo mtandaoni ni ' . $invoice->reference . '.'
-                                    . 'Unaweza lipa sasa kupitia mitandao ya simu (888999) au njia nyingine za bank ulizo elekezwa na shule. Asante';
-                            if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
-                                DB::statement("insert into " . $invoice->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Control Number Ya Malipo ya Online','" . $message . "')");
-                            }
-                            DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
-                        }
+//                        $users = DB::table($invoice->schema_name . '.parent')->whereIn('parentID', DB::table('student_parents')->where('student_id', $invoice->student_id)->get(['parent_id']))->get();
+//                        foreach ($users as $user) {
+//                            $message = 'Hello ' . $user->name . ','
+//                                    . 'Control Namba ya '.$invoice->student_name.', kwa malipo ya mafunzo mtandaoni ni ' . $invoice->reference . '.'
+//                                    . 'Unaweza lipa sasa kupitia mitandao ya simu (888999) au njia nyingine za bank ulizo elekezwa na shule. Asante';
+//                            if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
+//                                DB::statement("insert into " . $invoice->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Control Number Ya Malipo ya Online','" . $message . "')");
+//                            }
+//                            DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
+//                        }
                     }
                     DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
                 }
