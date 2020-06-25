@@ -176,9 +176,9 @@ function tagEdit($schema_name, $column, $value) {
 
     $('input[type="checkbox"]').click(function () {
         if ($(this).prop("checked") == true) {
-            window.location.href = '<?= url('') ?>/null?skip=1';
+            window.location.href = '<?= url('/account/projection') ?>/null?skip=1';
         } else if ($(this).prop("checked") == false) {
-            window.location.href = '<?= url('') ?>/null?skip=0';
+            window.location.href = '<?= url('/account/projection') ?>/null?skip=0';
         }
     })
 </script>
