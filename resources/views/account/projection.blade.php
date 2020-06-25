@@ -70,7 +70,7 @@ function tagEdit($schema_name, $column, $value) {
                                     </div>
                                     <div class="tab-pane" id="profile7" role="tabpanel">
                                         <div class="card-block">
-                                            <input type="checkbox" id="skip_field" onmousedown="skip_field()"/>
+                                            <input type="checkbox" <?=(int) request('skip')==1 ?'checked':''?> id="skip_field" onmousedown="skip_field()"/> Hide Inputs Fields
                                             <div class="table-responsive dt-responsive">
                                                 <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                                                     <thead>
