@@ -225,7 +225,7 @@ class Kernel extends ConsoleKernel {
      */
     public function syncInvoicePerSchool($schema='') {
         
-        $invoices = DB::select("select b.id, b.student_id, b.reference, b.prefix,b.date,b.sync,b.return_message,b.push_status,b.academic_year_id,b.created_at, b.updated_at, a.amount, c.name, '".$schema."' as schema_name  from  ".$schema.".invoices b join ".$schema.".student c on c.student_id=b.student_id join ( select sum(balance) as amount, a.invoice_id from ".$schema.".invoice_balances a group by a.invoice_id ) a on a.invoice_id=b.id where  a.amount >0  and b.sync <>1 order by random() limit 15");
+        $invoices = DB::select("select b.id, b.student_id, b.reference, b.prefix,b.date,b.sync,b.return_message,b.push_status,b.academic_year_id,b.created_at, b.updated_at, a.amount, c.name as student_name, '".$schema."' as schema_name  from  ".$schema.".invoices b join ".$schema.".student c on c.student_id=b.student_id join ( select sum(balance) as amount, a.invoice_id from ".$schema.".invoice_balances a group by a.invoice_id ) a on a.invoice_id=b.id where  a.amount >0  and b.sync <>1 order by random() limit 15");
         if (count($invoices) > 0) {
             foreach ($invoices as $invoice) {
                 $token = $this->getToken($invoice);
