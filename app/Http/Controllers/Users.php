@@ -232,4 +232,8 @@ class Users extends Controller {
         echo $message;
     }
 
+      public function tasks() {
+              $this->data['budget'] = [];
+        return view('users.tasks', $this->data);
+    }
 }

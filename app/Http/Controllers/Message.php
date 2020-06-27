@@ -405,7 +405,12 @@ Kind regards,';
             $karibusms->API_KEY = $sms->api_key;
             $karibusms->API_SECRET = $sms->api_secret;
             $result = (object) json_decode($karibusms->check_phone_status());
-            print_r($result);
+            
+            $last_online=$result->last_online;
+            $minutes = abs(strtotime($last_online) - time()) / 60;
+            if((int) $minutes >30){
+                echo 'More than 30min the device is offline';
+            }
         }
     }
 
