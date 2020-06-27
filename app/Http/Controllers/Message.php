@@ -243,7 +243,13 @@ class Message extends Controller {
                             DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 1, 'return_code' => json_encode($result), 'updated_at' => 'now()']);
                         } else {
 //stop retrying
-                            DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 1, 'return_code' => json_encode($result), 'updated_at' => 'now()']);
+                            if (preg_match('/Insufficient/i', $result->message)) {
+                                //This user try to send sms with bulk SMS but he does not have enough credit
+                                //lets resend these sms with normal phone
+                                DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 0, 'type' => 0, 'return_code' => json_encode(array_merge($result, ['action' => 'Message will be resent via phone SMS'])), 'updated_at' => 'now()']);
+                            } else {
+                                DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 1, 'return_code' => json_encode($result), 'updated_at' => 'now()']);
+                            }
                         }
                     }
                 }
@@ -392,4 +398,7 @@ Kind regards,';
         }
     }
 
+    public function checkPhoneStatus() {
+         $phones_connected = DB::select('select distinct api_key from public.all_sms');
+    }
 }
