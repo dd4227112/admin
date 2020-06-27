@@ -398,6 +398,15 @@ Kind regards,';
     }
 
     public function checkPhoneStatus() {
-         $phones_connected = DB::select('select distinct api_key from public.all_sms');
+        $phones_connected = DB::select('select * from admin.all_sms_keys');
+        foreach ($phones_connected as $sms) {
+            check_phone_status;
+            $karibusms = new \karibusms();
+            $karibusms->API_KEY = $sms->api_key;
+            $karibusms->API_SECRET = $sms->api_secret;
+            $result = (object) json_decode($karibusms->check_phone_status());
+            print_r($result);
+        }
     }
+
 }
