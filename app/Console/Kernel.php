@@ -33,10 +33,12 @@ class Kernel extends ConsoleKernel {
         $schedule->command('inspire')
                 ->hourly();
         $schedule->call(function () {
-            (new Message())->checkPhoneStatus();
             (new Message())->sendSms();
         })->everyMinute();
 
+         $schedule->call(function () {
+            (new Message())->checkPhoneStatus();
+        })->everyFiveMinutes();
         $schedule->call(function () {
             $this->curlServer(['action' => 'payment'], 'http://51.77.212.234:8081/api/cron');
             (new Message())->sendEmail();

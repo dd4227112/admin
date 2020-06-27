@@ -547,6 +547,20 @@ function toast(message) {
                                 </ul>
                             </li>
                         <?php } ?>
+                              <?php if (can_access('manage_marketing')) { ?>
+                            <li class="nav-item">
+                                <a href="<?=url('users/tasks')?>">
+                                    <i class="ti-gift "></i>
+                                    <span data-i18n="nav.extra-components.main">Tasks Management</span>
+                                </a>
+                                <!--                        <ul class="tree-1">
+                                                            <li><a href="session-timeout.html" data-i18n="nav.extra-components.session-timeout">Session Timeout</a></li>
+                                                            <li><a href="session-idle-timeout.html" data-i18n="nav.extra-components.session-idle-timeout">Session Idle Timeout</a>
+                                                            </li>
+                                                            <li><a href="offline.html" data-i18n="nav.extra-components.offline">Offline</a></li>
+                                                        </ul>-->
+                            </li>
+                        <?php } ?>
                         <?php if (can_access('manage_marketing')) { ?>
                             <li class="nav-item">
                                 <a href="#!">
