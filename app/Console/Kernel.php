@@ -33,7 +33,7 @@ class Kernel extends ConsoleKernel {
         $schedule->command('inspire')
                 ->hourly();
         $schedule->call(function () {
-            (new Message())->checkPhoneStatus();
+            //(new Message())->checkPhoneStatus();
             (new Message())->sendSms();
         })->everyMinute();
 
