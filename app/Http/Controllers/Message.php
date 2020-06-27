@@ -401,7 +401,6 @@ Kind regards,';
     public function checkPhoneStatus() {
         $phones_connected = DB::select('select * from admin.all_sms_keys');
         foreach ($phones_connected as $sms) {
-            check_phone_status;
             $karibusms = new \karibusms();
             $karibusms->API_KEY = $sms->api_key;
             $karibusms->API_SECRET = $sms->api_secret;
