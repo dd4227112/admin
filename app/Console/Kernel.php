@@ -34,6 +34,7 @@ class Kernel extends ConsoleKernel {
                 ->hourly();
         $schedule->call(function () {
             (new Message())->sendSms();
+            (new Message())->sendSms();
         })->everyMinute();
 
         $schedule->call(function () {
