@@ -295,8 +295,8 @@ class Account extends Controller {
             'note' => $customer_name,
             'transaction_time' => $timestamp,
             'token' => $token,
-            // 'financial_entity_id' => $financial_id,
-            //special case for CRDB payments only
+                // 'financial_entity_id' => $financial_id,
+                //special case for CRDB payments only
 //            'checksum' => request('checksum'),
 //            'payment_type_id' => request('payment_type'),
 //            'amount_type' => request('amountType'),
@@ -546,31 +546,29 @@ class Account extends Controller {
                 "transaction_id" => request("transaction_id"),
                 "refer_expense_id" => request("expense"),
                 "expenseyear" => date("Y"),
+                'expense_subcategories_id' => request('expense_subcategories_id'),
                 "expense" => request("note"),
                 "depreciation" => $depreciation,
-                'user_id' => Auth::user()->id
+                'user_id' => Auth::user()->id,
+                "bank_account_id" => request("bank_account_id"),
+                "amount" => $amount,
             );
-            //dd(request()->all());
+
 
             if ($id == 4 || $id == 1) {
 
                 $voucher_no = DB::table('expense')->max('voucher_no');
 
 
-                if (request('user_in_shulesoft') == 1) {
+                if ((int) request('user_in_shulesoft') == 1) {
 
-                    $user_request = explode(',', request('user_id'));
-                    $user = \App\Models\User::where('id', $user_request[0])->first();
+                    $user = \App\Models\User::find(request('user_id'));
 
                     $obj = array_merge($array, [
-                        'recipient' => $user->name,
+                        'recipient' => $user->firstname.' '.$user->lastname,
                         'voucher_no' => $voucher_no + 1,
                         'payer_name' => $payer_name,
-                        "amount" => $amount,
-                        "bank_account_id" => request("bank_account_id"),
                     ]);
-
-
 
                     $insert_id = DB::table('expense')->insertGetId($obj);
                 } else {
@@ -579,8 +577,6 @@ class Account extends Controller {
                         'recipient' => request('payer_name'),
                         'voucher_no' => $voucher_no + 1,
                         'payer_name' => $payer_name,
-                        "amount" => $amount,
-                        "bank_account_id" => request("bank_account_id"),
                     ]);
 
 
@@ -771,7 +767,7 @@ class Account extends Controller {
         $year = \App\Models\AccountYear::orderBy('start_date', 'asc')->first();
         $account_year = count($year) == 0 ? \App\Models\AccountYear::create(['name' => date('Y'), 'status' => 1, 'start_date' => date('Y-01-01'), 'end_date' => date('Y-12-31')]) : $year;
         $from_date = $account_year->start_date;
-        $to_date =date('Y-m-d');
+        $to_date = date('Y-m-d');
 
         $refer_expense = \App\Models\ReferExpense::find($id);
 
@@ -1020,7 +1016,7 @@ class Account extends Controller {
                     "bank_account_id" => count($bank) == 1 ? $bank->id : NULL,
                     'date' => date("Y-m-d", strtotime($value['date'])),
                     'note' => $value['note'],
-                    'ref_no'=> $value['transaction_id'],
+                    'ref_no' => $value['transaction_id'],
                     "expenseyear" => date("Y", strtotime($value['date'])),
                     "expense" => $value['note'],
                 ];
@@ -1057,7 +1053,7 @@ class Account extends Controller {
                         "bank_account_id" => count($bank) == 1 ? $bank->id : NULL,
                         'payment_method' => $value['payment_method'],
                         'transaction_id' => $value['transaction_id'],
-                        'ref_no'=> $value['transaction_id'],
+                        'ref_no' => $value['transaction_id'],
                         'date' => date("Y-m-d", strtotime($value['date'])),
                         "expenseyear" => date("Y", strtotime($value['date'])),
                         "expense" => $value['note'],
