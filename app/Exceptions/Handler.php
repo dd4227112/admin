@@ -32,7 +32,7 @@ class Handler extends ExceptionHandler {
      * @return void
      */
     function createLog($e) {
-         $line = @$e->getTrace()[0]['line'];
+        $line = @$e->getTrace()[0]['line'];
         $object = [
             'error_message' => $e->getMessage() . ' on line ' . $line . ' of file ' . @$e->getTrace()[0]['file'],
             'file' => @$e->getTrace()[0]['file'],
@@ -45,8 +45,24 @@ class Handler extends ExceptionHandler {
             'created_by_table' => session('table')
         ];
         if (!preg_match('/ValidatesRequests.php/i', @$e->getTrace()[0]['file']) || !preg_match('/Router.php/i', @$e->getTrace()[0]['file'])) {
-            DB::table('admin.error_logs')->insert($object);
+           // DB::table('admin.error_logs')->insert($object);
         }
+
+        $line = @$e->getTrace()[0]['line'];
+        $err = "<br/><hr/><ul>\n";
+        $err .= "\t<li>date time " . date('Y-M-d H:m', time()) . "</li>\n";
+        $err .= "\t<li>Made By: " . session('id') . "</li>\n";
+        $err .= "\t<li>usertype " . session('usertype') . "</li>\n";
+        $err .= "\t<li>error msg: [" . $e->getCode() . '] ' . $e->getMessage() . ' on line ' . $line . ' of file ' . @$e->getTrace()[0]['file'] . "</li>\n";
+        $err .= "\t<li>url: " . url()->current() . "</li>\n";
+        $err .= "\t<li>Controller route: " . createRoute() . "</li>\n";
+        $err .= "\t<li>Error from which host: " . gethostname() . "</li>\n";
+        $err .= "\t<li>Error from username: " . session('username') . "</li>\n";
+        $err .= "</ul>\n\n";
+
+        $filename ='admin_' . str_replace('-', '_', date('Y-M-d')) . '.html';
+
+        error_log($err, 3, dirname(__FILE__) . "/../../storage/logs/" . $filename);
     }
 
     public function sendLog($err) {

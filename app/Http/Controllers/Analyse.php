@@ -27,6 +27,7 @@ class Analyse extends Controller {
 //       created_at < date_trunc('week', CURRENT_TIMESTAMP)
 //      )"))->first()->aggregate;
         //$this->data['log_graph'] = $this->createBarGraph();
+       
         return view('analyse.index', $this->data);
     }
 
