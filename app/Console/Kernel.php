@@ -36,15 +36,16 @@ class Kernel extends ConsoleKernel {
             (new Message())->sendSms();
         })->everyMinute();
 
-         $schedule->call(function () {
+        $schedule->call(function () {
             (new Message())->checkPhoneStatus();
         })->everyFiveMinutes();
         $schedule->call(function () {
             $this->curlServer(['action' => 'payment'], 'http://51.77.212.234:8081/api/cron');
             (new Message())->sendEmail();
         })->everyMinute();
-//
-//
+        $schedule->call(function () {
+            (new Message())->karibusmsEmails();
+        })->everyMinute();
         $schedule->call(function () {
             // remind parents to login in shulesoft and check their child performance
             $this->sendTodReminder();
@@ -117,8 +118,8 @@ class Kernel extends ConsoleKernel {
 
     public function sendReminder($schedule) {
         if (count(explode(',', $schedule->user_id)) > 0) {
-        $users = DB::table($schedule->schema_name . '.users')->whereIn('id', explode(',', $schedule->user_id))->where('role_id', $schedule->role_id)->where('status','1')->get();
-           // $users = DB::table($schedule->schema_name . '.users')->whereIn('id', explode(',', $schedule->user_id))->where('role_id', $schedule->role_id)->get();
+            $users = DB::table($schedule->schema_name . '.users')->whereIn('id', explode(',', $schedule->user_id))->where('role_id', $schedule->role_id)->where('status', '1')->get();
+            // $users = DB::table($schedule->schema_name . '.users')->whereIn('id', explode(',', $schedule->user_id))->where('role_id', $schedule->role_id)->get();
 
             $check_payment_pattern = (preg_match('/#balance/i', $schedule->message) || preg_match('/#invoice/i', $schedule->message)) ? 1 : 0;
             foreach ($users as $user) {
@@ -236,11 +237,11 @@ class Kernel extends ConsoleKernel {
 
                 if ($invoice->sub_invoice == 1) {
                     $sub_invoices = DB::select("select b.id, b.student_id, b.reference||'EA'||a.fee_id as reference, b.prefix,b.date,b.sync,b.return_message,b.push_status,b.academic_year_id,b.created_at, b.updated_at, a.balance as amount, c.name  from  " . $schema . ".invoices b join " . $schema . ".student c on c.student_id=b.student_id join " . $schema . ".invoice_balances a on a.invoice_id=b.id  where b.id=" . $invoice->id);
-                    
+
                     foreach ($sub_invoices as $sub_invoice) {
                         $this->pushInvoice($sub_invoice);
                     }
-                }else{
+                } else {
                     $this->pushInvoice($invoice);
                 }
             }
@@ -593,9 +594,11 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
         foreach ($schemas as $schema) {
             if (!in_array($schema->table_schema, array('public', 'api', 'admin'))) {
                 //Remind parents,class and section teachers to wish their students
-                $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\",sms_keys_id)"
-                        . "select 'Hello '|| c.name|| ', tunapenda kumtakia '||a.name||' heri ya siku yake ya kuzaliwa katika tarehe kama ya leo. Mungu ampe afya tele, maisha marefu, baraka na mafanikio.  Kama hajaziliwa tarehe kama ya leo, tuambie tubadili tarehe zake ziwe sahihi. Ubarikiwe',c.phone, 0,0, c.\"parentID\",'parent', (select id from " . $schema->table_schema . ".sms_keys limit 1 )  FROM " . $schema->table_schema . ".student a join " . $schema->table_schema . ".student_parents b on b.student_id=a.\"student_id\" JOIN " . $schema->table_schema . ".parent c on c.\"parentID\"=b.parent_id WHERE a.status=1 and  
-                    DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) AND a.status = 1 
+
+                $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")"
+                        . "select 'Hello '|| c.name|| ', tunapenda kumtakia '||a.name||' heri ya siku yake ya kuzaliwa katika tarehe kama ya leo. Mungu ampe afya tele, maisha marefu, baraka na mafanikio.  Kama hajaziliwa tarehe kama ya leo, tuambie tubadili tarehe zake ziwe sahihi. Ubarikiwe',c.phone, 0,0, c.\"parentID\",'parent'  FROM " . $schema->table_schema . ".student a join " . $schema->table_schema . ".student_parents b on b.student_id=a.\"student_id\" JOIN " . $schema->table_schema . ".parent c on c.\"parentID\"=b.parent_id WHERE 
+                    DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) AND a.status = 1  
+
                     AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE)";
                 DB::statement($sql);
 

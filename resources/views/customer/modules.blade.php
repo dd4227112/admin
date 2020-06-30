@@ -555,7 +555,7 @@ $staffs = DB::table('users')->where('status', 1)->get();
                 } else {
 
                     var ex = $('.link').attr('tags');
-                    var url = '<?= base_url('invoices/delete_class_invoice/?ids=') ?>';
+                    var url = '<?= url('invoices/delete_class_invoice/?ids=') ?>';
                     var param = ex.split(",");
                     param = jQuery.grep(param, function (val) {
                         return val != value;

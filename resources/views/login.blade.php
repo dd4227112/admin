@@ -58,6 +58,7 @@
                                             </div>
                                         </div>
                                         <p class="text-inverse b-b-default text-right">Back to <a href="<?= url('/') ?>">Login.</a></p>
+   
                                         <div class="input-group">
                                             <input type="email" name="email" class="form-control" placeholder="Your Email Address"  value="{{ old('email') }}">
                                           

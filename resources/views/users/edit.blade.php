@@ -232,14 +232,14 @@
                                         <div class="form-group">
                                             <strong>Skills:</strong>
 
-                                            <textarea name="skills" class="form-control"></textarea>
+                                            <textarea name="skills" class="form-control">{{$user->skills}}</textarea>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group ">
                                             <strong>About:</strong>
 
-                                            <textarea name="about" class="form-control"></textarea>
+                                            <textarea name="about"  class="form-control">{{$user->about}}</textarea>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12">

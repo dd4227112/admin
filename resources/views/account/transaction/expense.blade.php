@@ -52,7 +52,7 @@
                         </h5>
                         <br/><br/>
 
-                        <h5 class="page-header">
+                        <h5 class="page-header"  style="float: right;">
 
                             <a class="btn btn-success" href="<?php echo url('account/addTransaction/' . $id . '') ?>">
                                 <i class="fa fa-plus"></i> 
@@ -87,11 +87,11 @@
                                 </div>                     
 
 
-                                <div class="col-md-2">
-                                    <div class="form-group">
-
-                                        <div class="col-md-9 col-sm-9 col-xs-12">
-                                            <input type="submit" class="btn btn-success" value="Submit" >
+                                <div class="col-md-5">
+                                    <div class="form-group row">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12"></label>
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                            <input type="submit" class="btn btn-success" value="Submit"  style="float: right;">
                                         </div>
                                     </div>
                                 </div> 

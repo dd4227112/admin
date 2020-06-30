@@ -5,8 +5,6 @@
  * @package  Laravel
  * @author   Taylor Otwell <taylor@laravel.com>
  */
-ini_set('display_errors',1);
-error_reporting(-1);
 $uri = urldecode(
     parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)
 );
