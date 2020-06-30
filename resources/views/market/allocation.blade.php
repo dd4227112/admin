@@ -89,9 +89,9 @@
                                     </p>
                                 <?php } ?>
                                 <select class="form-control" id="school_selector">
-                                    <option value="1" <?= selected(1) ?>>All Schools</option>
-                                    <option value="2" <?= selected(2) ?>>Use ShuleSoft Only</option>
-                                    <option value="3"<?= selected(3) ?>>Sales On Progress</option>
+                                    <option value="1" <?php // selected(1) ?>>All Schools</option>
+                                    <option value="2" <?php // selected(2) ?>>Use ShuleSoft Only</option>
+                                    <option value="3"<?php // selected(3) ?>>Sales On Progress</option>
                                 </select>
                             </div>
                             <div class="col-lg-3"></div>

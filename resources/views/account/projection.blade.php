@@ -4,7 +4,12 @@
 $root = url('/') . '/public/';
 
 function tagEdit($schema_name, $column, $value) {
-    return '<input class="text-muted" type="text" schema="' . $schema_name . '" id="' . $column . '" value="' . $value . '" onblur="edit_records(\'' . $column . '\', this.value, \'' . $schema_name . '\')"/><span id="status_' . $column.$schema_name . '"></span>';
+    if ((int) request('skip') == 1) {
+        $return = $value;
+    } else {
+        $return = '<input class="text-muted" type="text" schema="' . $schema_name . '" id="' . $column . '" value="' . $value . '" onblur="edit_records(\'' . $column . '\', this.value, \'' . $schema_name . '\')"/><span id="status_' . $column . $schema_name . '"></span>';
+    }
+    return $return;
 }
 ?>
 <div class="page-wrapper">
@@ -65,7 +70,7 @@ function tagEdit($schema_name, $column, $value) {
                                     </div>
                                     <div class="tab-pane" id="profile7" role="tabpanel">
                                         <div class="card-block">
-
+                                            <input type="checkbox" <?=(int) request('skip')==1 ?'checked':''?> id="skip_field" onmousedown="skip_field()"/> Hide Inputs Fields
                                             <div class="table-responsive dt-responsive">
                                                 <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                                                     <thead>
@@ -131,7 +136,7 @@ function tagEdit($schema_name, $column, $value) {
                                                                 </td>
 
 
-                                                                <td >                    <a href="<?= url('account/invoiceView/' .$schema->table_schema) ?>" class="btn btn-sm btn-success">View</a></td>
+                                                                <td >                    <a href="<?= url('account/invoiceView/' . $schema->table_schema) ?>" class="btn btn-sm btn-success">View</a></td>
                                                             </tr>
                                                         <?php } ?>
                                                     </tbody>
@@ -165,9 +170,17 @@ function tagEdit($schema_name, $column, $value) {
 <script type="text/javascript">
     edit_records = function (tag, val, schema) {
         $.get('<?= url('customer/updateProfile/null') ?>', {schema: schema, table: 'setting', val: val, tag: tag, user_id: '1'}, function (data) {
-            $('#status_'+tag+schema).html(data);
+            $('#status_' + tag + schema).html(data);
         });
     };
+
+    $('input[type="checkbox"]').click(function () {
+        if ($(this).prop("checked") == true) {
+            window.location.href = '<?= url('/account/projection') ?>/null?skip=1';
+        } else if ($(this).prop("checked") == false) {
+            window.location.href = '<?= url('/account/projection') ?>/null?skip=0';
+        }
+    })
 </script>
 @endsection
 

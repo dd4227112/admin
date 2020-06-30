@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<?php $root = url('/') . '/public/' ?>
+<?php  $root = url('/') . '/public/' ?>
 <div class="page-wrapper">
     <div class="page-header">
         <div class="page-header-title">
@@ -20,7 +20,7 @@
             </ul>
         </div>
     </div>
-    <?php if (can_access('manage_users')) { ?>
+    <?php   if (can_access('manage_users')) { ?>
         <div class="page-body">
             <div class="row">
                 <div class="col-md-12 col-xl-4">
@@ -543,7 +543,7 @@
             </tr>
         </thead>
         <tbody>
-            <?php
+            <?php 
             $logs = DB::select('select count(*),extract(month from created_at) as month from constant.feedback 
 where extract(year from created_at)='.date('Y').' group by month order by month');
             foreach ($logs as $log) {

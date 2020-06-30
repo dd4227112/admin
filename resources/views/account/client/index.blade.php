@@ -53,6 +53,7 @@
                                             <th>Client Name</th>
                                             <th>Email</th>
                                             <th>Phone</th>
+                                            <th>Created Time</th>
                                             <th>Address</th>
                                             <th>Total Amount</th>
                                             <th>Action</th>
@@ -72,21 +73,23 @@
                                             <td>{{$client->name}}</td>
                                             <td>{{$client->email}}</td>
                                             <td>{{$client->phone}}</td>
+                                            <td>{{$client->created_at}}</td>
                                             <td>{{$client->address}}</td>
-                                            <td>{{$total_amount+=$client->payments()->sum('amount')}}</td>
+                                            <td>{{number_format($client->payments()->sum('amount'))}}</td>
                                             <td>    
                                                 <a href="<?= url('account/client/edit/' . $client->id) ?>" class="btn btn-sm btn-primary">Edit</a>
                                                 <a href="<?= url('account/client/delete/' . $client->id) ?>" class="btn btn-sm btn-danger">Delete</a></td>
                                         </tr>
-                                        <?php $i++; ?>
+                                        <?php $i++; $total_amount+=$client->payments()->sum('amount'); ?>
                                         @endforeach
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <td  colspan="2">Total</td>
+                                            <td  colspan="6">Total</td>
 
 
-                                            <td><?= $total_amount ?></td>
+                                            <td><?= number_format($total_amount) ?></td>
+                                            <td></td>
                                         </tr>
                                     </tfoot>
                                 </table>

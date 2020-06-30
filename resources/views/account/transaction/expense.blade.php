@@ -157,28 +157,32 @@
                                                         $total_amount = $pension + $expense->expenses()->sum('amount');
                                                         echo money($total_amount);
                                                     } else if ($id == 5) {
-                                                        $new_account = new \App\Http\Controllers\expense();
+                                                     //   $new_account = new \App\Http\Controllers\expense();
                                                         if (strtoupper($expense->name) == 'CASH') {
-                                                            $total_cash_transaction = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_cash from bank_transactions WHERE  payment_type_id =1 and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . ' '))->first();
+                                                           // $total_cash_transaction = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_cash from bank_transactions WHERE  payment_type_id =1 and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . ' '))->first();
 
-                                                            $total_current_assets_cash = $new_account->getCashtransactions($from_date, $to_date, 1);
-                                                            $total_amount = $total_cash_transaction->total_cash + $total_current_assets_cash->amount;
+                                                          //  $total_current_assets_cash = $new_account->getCashtransactions($from_date, $to_date, 1);
+                                                          //  $total_amount = $total_cash_transaction->total_cash + $total_current_assets_cash->amount;
+                                                            $total_amount=0;
                                                         } elseif (strtoupper($expense->name) == 'ACCOUNT RECEIVABLE') {
 
                                                             $bank_opening_balance = \collect(DB::select('select sum(coalesce(opening_balance,0)) as opening_balance from bank_accounts'))->first()->opening_balance;
 
-                                                            $total_receivable = $new_account->getgeneralFeeTotal($from_date, $to_date);
-                                                            $total_paid = $new_account->getTotalFeePaidTotal($from_date, $to_date);
+//                                                            $total_receivable = $new_account->getgeneralFeeTotal($from_date, $to_date);
+//                                                            $total_paid = $new_account->getTotalFeePaidTotal($from_date, $to_date);
+                                                            $total_receivable=0;
+                                                            $total_paid = 0;
                                                             $due_amount = \App\Model\DueAmount::all()->sum('amount');
 
                                                             $total_amount = $due_amount + $total_receivable - $total_paid + $bank_opening_balance;
                                                         } else {
-                                                            $total_bank = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_bank from  bank_transactions WHERE bank_account_id=' . $expense->predefined . ' and payment_type_id <> 1 and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . ''))->first();
+                                                           // $total_bank = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_bank from  bank_transactions WHERE bank_account_id=' . $expense->predefined . ' and payment_type_id <> 1 and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . ''))->first();
 
-                                                            $total_current_assets = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_current from current_asset_transactions WHERE refer_expense_id=' . $expense->id . '  and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . ''))->first();
+                                                            //$total_current_assets = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_current from current_asset_transactions WHERE refer_expense_id=' . $expense->id . '  and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . ''))->first();
 
 
-                                                            $total_amount = $total_bank->total_bank + $total_current_assets->total_current;
+                                                           // $total_amount = $total_bank->total_bank + $total_current_assets->total_current;
+                                                            $total_amount=0;
                                                         }
 
                                                         echo money($total_amount);

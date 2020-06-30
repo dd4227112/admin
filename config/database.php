@@ -67,6 +67,20 @@ return [
             'sslmode' => 'prefer',
         ],
 
+        'karibusms' => [
+             'driver' => 'pgsql',
+            'url' => ':erb',
+            'host' => 'localhost',
+            'port' => '5432',
+            'database' => 'erb',
+            'username' => 'postgres',
+            'password' => 'newpassword',
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'schema' => 'karibusms',
+            'sslmode' => 'prefer',
+        ],
     ],
 
     /*

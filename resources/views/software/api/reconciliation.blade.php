@@ -42,7 +42,7 @@
                                             <select name="schema_name" class="form-control select2" id="payment_schema">
                                                 <option value="0">Select</option>
                                                 <?php
-                                                $schemas = DB::select('select distinct "schema_name" from api.invoices where payment_integrated=1');
+                                                $schemas = DB::select('select distinct "schema_name" from admin.all_setting  where payment_integrated=1');
                                                 foreach ($schemas as $schema) {
                                                     ?>
                                                     <option value="<?= $schema->schema_name ?>"><?= $schema->schema_name ?></option>
@@ -66,7 +66,7 @@
                                     </div>
                                 </form>
                             </div>
-
+                            <div id="sync_status"></div>
                             <div class="table-responsive dt-responsive "> 
                                 <table id="api_requests" class="table table-striped dataTable table-bordered nowrap">
                                     <thead>
@@ -86,34 +86,38 @@
                                     <tbody>
                                         <?php
                                         if (isset($returns) && count($returns) > 0) {
-                                            $data = $returns->transactions;
-                                            if (count($data) > 0) {
-                                                $trans = (object) $data;
-                                                $i = 1;
-                                                foreach ($trans as $tran) {
+                                            foreach ($returns as $return) {
 
-                                                    $check = DB::table(request('schema_name') . '.payments')->where('transaction_id', $tran->receipt)->first();
-                                                    ?>
-                                                    <tr>
-                                                        <td><?= $i ?></td>
-                                                        <td><?= $tran->customer_name ?></td>
-                                                        <td><?= $tran->reference ?></td>
-                                                        <td><?= $tran->timestamp ?></td>
-                                                        <td><?= number_format($tran->amount) ?></td>
-                                                        <td><?= $tran->receipt ?></td>
-                                                        <td><?= $tran->channel ?></td>
-                                                        <td><?= $tran->account_number ?></td>
-                                                        <td><?= $tran->token ?></td>
-                                                        <td>
-                                                            <?php
-                                                            if (count($check) == 0) {
-                                                                ?>
-                                                            <a href="<?= url('software/syncMissingPayments/null?data=' . urlencode(json_encode($tran))) ?>">Sync</a>
-                                                            <?php } ?>
-                                                        </td>
-                                                    </tr>
-                                                    <?php
-                                                    $i++;
+
+                                                $data = $return->transactions;
+                                                if (count($data) > 0) {
+                                                    $trans = (object) $data;
+                                                    $i = 1;
+                                                    foreach ($trans as $tran) {
+
+                                                        $check = DB::table(request('schema_name') . '.payments')->where('transaction_id', $tran->receipt)->first();
+                                                        ?>
+                                                        <tr>
+                                                            <td><?= $i ?></td>
+                                                            <td><?= $tran->customer_name ?></td>
+                                                            <td><?= $tran->reference ?></td>
+                                                            <td><?= $tran->timestamp ?></td>
+                                                            <td><?= number_format($tran->amount) ?></td>
+                                                            <td><?= $tran->receipt ?></td>
+                                                            <td><?= $tran->channel ?></td>
+                                                            <td><?= $tran->account_number ?></td>
+                                                            <td><?= $tran->token ?></td>
+                                                            <td>
+                                                                <?php
+                                                                if (count($check) == 0) {
+                                                                    ?>
+                                                                    <a href="#" onclick="return false" onmousedown="reconcile('<?= url('software/syncMissingPayments/null?data=' . urlencode(json_encode($tran))) ?>')">Sync</a>
+                                                                <?php } ?>
+                                                            </td>
+                                                        </tr>
+                                                        <?php
+                                                        $i++;
+                                                    }
                                                 }
                                             }
                                         }
@@ -127,6 +131,16 @@
 </div>
 
 <script type="text/javascript">
+    reconcile = function (a) {
+        $.ajax({
+            url: a,
+            method: 'get',
+            success: function (data) {
+                $('#sync_status').html(data).addClass('alert alert-success');
+
+            }
+        });
+    }
     //    $(document).ready(function () {
     //        var table = $('#api_requests').DataTable({
     //            "processing": true,

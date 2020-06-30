@@ -322,9 +322,17 @@ ORDER  BY conrelid::regclass::text, contype DESC";
     public function logs() {
         $schema = request()->segment(3);
 
-        $time='1 day';
-        $where = strlen($schema) > 3 ? ' where "schema_name"=\'' . $schema . '\'  and created_at > now() - interval  \''.$time.'\'  ': ' where created_at > now() - interval  \''.$time.'\' ';
-        $this->data['error_logs'] = DB::select('select * from admin.error_logs ' . $where);   
+        $where = strlen($schema) > 3 ? ' where deleted_at is null and "schema_name"=\'' . $schema . '\' ' : ' where deleted_at is null';
+        $this->data['error_logs'] = DB::select('select * from admin.error_logs ' . $where . ' ');
+        $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1 '))->first();
+        return view('software.logs', $this->data);
+    }
+
+    public function customer_requirement() {
+        $schema = request()->segment(3);
+        $time = '1 day';
+        $where = strlen($schema) > 3 ? ' where "schema_name"=\'' . $schema . '\'  and created_at > now() - interval  \'' . $time . '\'  ' : ' where created_at > now() - interval  \'' . $time . '\' ';
+        $this->data['error_logs'] = DB::select('select * from admin.error_logs ' . $where);
         $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1 '))->first();
         return view('software.customer_requirement', $this->data);
     }
@@ -376,8 +384,8 @@ ORDER  BY conrelid::regclass::text, contype DESC";
         $check = DB::table(request('schema') . '.bank_accounts_integrations')->where('bank_account_id', request('bank_id'));
         if (count($check->first()) == 1) {
             $check->update([request('tag') => request('val')]);
-             DB::statement('UPDATE ' . request('schema') . '.invoices SET "reference"=\'' . request('val') . '\'||"id", prefix=\'' . request('val') . '\'');
-             DB::statement('UPDATE ' . request('schema') . '.setting SET "payment_integrated"=1');
+            DB::statement('UPDATE ' . request('schema') . '.invoices SET "reference"=\'' . request('val') . '\'||"id", prefix=\'' . request('val') . '\'');
+            DB::statement('UPDATE ' . request('schema') . '.setting SET "payment_integrated"=1');
             echo 'Records updated successfully';
         } else {
             DB::table(request('schema') . '.bank_accounts_integrations')->insert([
@@ -429,23 +437,29 @@ ORDER  BY conrelid::regclass::text, contype DESC";
         $this->data['returns'] = [];
         if ($_POST) {
             $schema = request('schema_name');
-            $invoice = DB::table('api.invoices')->where('schema_name', $schema)->first();
+            $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where "schema_name"=\''.$schema.'\'');
+            $returns = [];
             $background = new \App\Http\Controllers\Background();
-            $token = $background->getToken($invoice);
-            if (strlen($token) > 4) {
-                $fields = array(
-                    "reconcile_date" => date('d-m-Y', strtotime(request('date'))),
-                    "token" => $token
-                );
-                $push_status = 'reconcilliation';
-                $url = $invoice->schema_name == 'beta_testing' ?
-                        'https://wip.mpayafrica.com/v2/' . $push_status : 'https://api.mpayafrica.co.tz/v2/' . $push_status;
-                $curl = $background->curlServer($fields, $url);
-                $this->data['returns'] = json_decode($curl);
-            } else {
-                echo 'invalid token';
-                exit;
+            foreach ($invoices as $invoice) {
+
+                $token = $background->getToken($invoice);
+                if (strlen($token) > 4) {
+                    $fields = array(
+                        "reconcile_date" => date('d-m-Y', strtotime(request('date'))),
+                        "token" => $token
+                    );
+                    $push_status = 'reconcilliation';
+                    $url = $invoice->schema_name == 'beta_testing' ?
+                            'https://wip.mpayafrica.com/v2/' . $push_status : 'https://api.mpayafrica.co.tz/v2/' . $push_status;
+                    $curl = $background->curlServer($fields, $url);
+                    array_push($returns, json_decode($curl));
+                  //  json_decode($curl);
+                } else {
+                    echo 'invalid token';
+                    exit;
+                }
             }
+            $this->data['returns'] =$returns; 
         }
         return view('software.api.reconciliation', $this->data);
     }
@@ -454,8 +468,9 @@ ORDER  BY conrelid::regclass::text, contype DESC";
         $background = new \App\Http\Controllers\Background();
         $url = 'http://51.77.212.234:8081/api/init';
         $fields = json_decode(urldecode(request('data')));
-        $curl = $background->curlServer($fields, $url,'row');
+        $curl = $background->curlServer($fields, $url, 'row');
         return $curl;
+        // return redirect()->back()->with('success',$curl);
     }
 
 }

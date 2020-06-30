@@ -12,16 +12,16 @@
  */
 
 
-$bad_url = ['acme-challenge', 'rss', 'index.php', 'errors', 'phpR', 'apple-touch', 'assetlinks', '.php','public','.tff','.jpg',''];
+$bad_url = ['acme-challenge', 'rss', 'index.php', 'errors', 'phpR', 'apple-touch', 'assetlinks', '.php','public','.tff','.jpg'];
 foreach ($bad_url as $value) {
     if (preg_match('/' . $value . '/', url()->current())) {
-       /// exit;
+        exit;
     }
 }
-
-Route::group(['middleware' => ['guest']], function() {
-    Auth::routes();
-});
+ Auth::routes();
+//Route::group(['middleware' => ['guest']], function() {
+//    Auth::routes();
+//});
 
 //dd(createRoute());
 if (createRoute() != NULL) {
@@ -36,3 +36,7 @@ if (createRoute() != NULL) {
         
     }
 }
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
