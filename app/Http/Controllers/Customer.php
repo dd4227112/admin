@@ -258,6 +258,7 @@ class Customer extends Controller {
 
     public function profile() {
         $school = $this->data['schema'] = request()->segment(3);
+        $id = request()->segment(4);
         $this->data['shulesoft_users'] = \App\Models\User::all();
 
         $is_client = 0;
@@ -296,10 +297,29 @@ class Customer extends Controller {
                         . '</ul>';
                 $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
             }
-            return redirect()->back()->with('success', 'success');
+            return redirect('customer/profile/'.$school)->with('success', 'success');
         }
-        return view('customer/profile', $this->data);
+        if((int)$id>0){
+        return view('customer/addtask', $this->data);
+        }else{
+            return view('customer/profile', $this->data);
+        }
     }
+
+    public function addTask() {
+        $module_id = request('module_id');
+        if ((int) $module_id > 0) {
+            $array = ['module_id' => request('module_id'), 'task_id' => request('task_id')];
+            
+            $check_unique = \App\Models\ModuleTask::where($array);
+            if (count($check_unique->first()) == 0) {
+                \App\Models\ModuleTask::create($array);
+            }
+            echo "success";
+        }
+      
+    }
+
 
     public function removeTag() {
         $id = request('id');

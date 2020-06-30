@@ -147,14 +147,14 @@
                                         <div class="form-group row">
                                             <strong>Skills:</strong>
 
-                                            <textarea name="skills" class="form-control"></textarea>
+                                            <textarea name="skills" class="form-control">{{$user->skills}}</textarea>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group row">
                                             <strong>About:</strong>
 
-                                            <textarea name="about" class="form-control"></textarea>
+                                            <textarea name="about"  class="form-control">{{$user->about}}</textarea>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12 text-center">
