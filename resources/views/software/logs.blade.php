@@ -274,7 +274,7 @@
                 {"data": "id"},
                 {"data": "created_at"},
                 {"data": "schema_name"},
-                {"data": "error_message"},
+                    {"data": "error_message"},
                 {"data": "file"},
                 {"data": "url"},
                 {"data": "created_by"},

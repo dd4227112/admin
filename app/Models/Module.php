@@ -9,8 +9,7 @@ class Module extends Model {
      */
 
     protected $table = 'modules';
-    protected $fillable = ['id', 'name', 'submodule'];
-
+    protected $fillable = ['id', 'name', 'created_at'];
 
 
 }
