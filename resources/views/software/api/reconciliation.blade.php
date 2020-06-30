@@ -86,34 +86,38 @@
                                     <tbody>
                                         <?php
                                         if (isset($returns) && count($returns) > 0) {
-                                            $data = $returns->transactions;
-                                            if (count($data) > 0) {
-                                                $trans = (object) $data;
-                                                $i = 1;
-                                                foreach ($trans as $tran) {
+                                            foreach ($returns as $return) {
 
-                                                    $check = DB::table(request('schema_name') . '.payments')->where('transaction_id', $tran->receipt)->first();
-                                                    ?>
-                                                    <tr>
-                                                        <td><?= $i ?></td>
-                                                        <td><?= $tran->customer_name ?></td>
-                                                        <td><?= $tran->reference ?></td>
-                                                        <td><?= $tran->timestamp ?></td>
-                                                        <td><?= number_format($tran->amount) ?></td>
-                                                        <td><?= $tran->receipt ?></td>
-                                                        <td><?= $tran->channel ?></td>
-                                                        <td><?= $tran->account_number ?></td>
-                                                        <td><?= $tran->token ?></td>
-                                                        <td>
-                                                            <?php
-                                                            if (count($check) == 0) {
-                                                                ?>
-                                                            <a href="#" onclick="return false" onmousedown="reconcile('<?= url('software/syncMissingPayments/null?data=' . urlencode(json_encode($tran))) ?>')">Sync</a>
-                                                            <?php } ?>
-                                                        </td>
-                                                    </tr>
-                                                    <?php
-                                                    $i++;
+
+                                                $data = $return->transactions;
+                                                if (count($data) > 0) {
+                                                    $trans = (object) $data;
+                                                    $i = 1;
+                                                    foreach ($trans as $tran) {
+
+                                                        $check = DB::table(request('schema_name') . '.payments')->where('transaction_id', $tran->receipt)->first();
+                                                        ?>
+                                                        <tr>
+                                                            <td><?= $i ?></td>
+                                                            <td><?= $tran->customer_name ?></td>
+                                                            <td><?= $tran->reference ?></td>
+                                                            <td><?= $tran->timestamp ?></td>
+                                                            <td><?= number_format($tran->amount) ?></td>
+                                                            <td><?= $tran->receipt ?></td>
+                                                            <td><?= $tran->channel ?></td>
+                                                            <td><?= $tran->account_number ?></td>
+                                                            <td><?= $tran->token ?></td>
+                                                            <td>
+                                                                <?php
+                                                                if (count($check) == 0) {
+                                                                    ?>
+                                                                    <a href="#" onclick="return false" onmousedown="reconcile('<?= url('software/syncMissingPayments/null?data=' . urlencode(json_encode($tran))) ?>')">Sync</a>
+                                                                <?php } ?>
+                                                            </td>
+                                                        </tr>
+                                                        <?php
+                                                        $i++;
+                                                    }
                                                 }
                                             }
                                         }
@@ -132,8 +136,8 @@
             url: a,
             method: 'get',
             success: function (data) {
-               $('#sync_status').html(data).addClass('alert alert-success');
-             
+                $('#sync_status').html(data).addClass('alert alert-success');
+
             }
         });
     }
