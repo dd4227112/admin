@@ -437,7 +437,7 @@ ORDER  BY conrelid::regclass::text, contype DESC";
         $this->data['returns'] = [];
         if ($_POST) {
             $schema = request('schema_name');
-            $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations "schema_name"=\''.$schema.'\'');
+            $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where "schema_name"=\''.$schema.'\'');
             $returns = [];
             $background = new \App\Http\Controllers\Background();
             foreach ($invoices as $invoice) {
