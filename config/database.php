@@ -67,18 +67,19 @@ return [
         ],
 
         'karibusms' => [
-             'driver' => 'pgsql',
-            'url' => ':erb',
-            'host' => 'localhost',
-            'port' => '5432',
-            'database' => 'erb',
+           'database' =>'other_app',
             'username' => 'postgres',
-            'password' => 'newpassword',
+            'password' =>'Jesus_ShuleSoft@2020_',
             'charset' => 'utf8',
             'prefix' => '',
+            'schema' => 'new_karibusms',
+            'driver' => 'pgsql',
+            'url' => ':other_app',
+            'host' =>  'localhost',
+            'port' => '5432',
             'prefix_indexes' => true,
-            'schema' => 'karibusms',
             'sslmode' => 'prefer',
+         
         ],
     ],
 
