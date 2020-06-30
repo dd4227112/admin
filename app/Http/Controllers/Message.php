@@ -259,17 +259,18 @@ class Message extends Controller {
 
     public function sendEmail() {
         //loop through schema names and push emails
-        $this->emails = DB::select('select * from public.all_email limit 10');
-        if (!empty($this->emails)) {
+        $this->emails = DB::select('select * from public.all_email limit 8');
+        if (count($this->emails)>0) {
             foreach ($this->emails as $message) {
                 if (filter_var($message->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $message->email)) {
                     try {
                         $link = strtoupper($message->schema_name) == 'PUBLIC' ? 'demo.' : $message->schema_name . '.';
                         $data = ['content' => $message->body, 'link' => $link, 'photo' => $message->photo, 'sitename' => $message->sitename, 'name' => ''];
-                        \Mail::send('email.default', $data, function ($m) use ($message) {
+                        $mail=\Mail::send('email.default', $data, function ($m) use ($message) {
                             $m->from('noreply@shulesoft.com', $message->sitename);
                             $m->to($message->email)->subject($message->subject);
                         });
+
                         if (count(\Mail::failures()) > 0) {
                             DB::update('update ' . $message->schema_name . '.email set status=0 WHERE email_id=' . $message->email_id);
                         } else {
@@ -287,7 +288,7 @@ class Message extends Controller {
                 } else {
 //skip all emails with ShuleSoft title
 //skip all invalid emails
-                    DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
+                 DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
                 }
 //$this->updateEmailConfig();
                 sleep(2);

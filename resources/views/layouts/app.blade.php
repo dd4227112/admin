@@ -54,7 +54,7 @@
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2-bootstrap.css">
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css">       
 
-
+<link href="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.css" rel="stylesheet">
 
 
 
@@ -479,6 +479,9 @@ function toast(message) {
                                 </a>
                                 <ul class="tree-1">
                                     <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.bottom-menu">System Setup</a></li>
+                                    <li>
+                                        <a href="<?= url('Phone_call/index') ?>" data-i18n="nav.navigate.navbar">phone Calls</a>
+                                    </li>
 
                                     <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
                                                 class="icon-arrow-right"></i>Training</a>
@@ -519,6 +522,26 @@ function toast(message) {
                                 </ul>
                             </li>
                         <?php } ?>
+                            
+                            
+           <li class="nav-item">
+                                <a href="#!">
+                                    <i class="ti-layout-cta-right"></i>
+                                    <span data-i18n="nav.navigate.main">Office Administrator</span>
+                                </a>
+                                <ul class="tree-1">
+                                    <li>
+                                        <a href="<?= url('Visitor/index') ?>" data-i18n="nav.navigate.navbar">Visitors</a>
+                                    </li>
+                                   
+                                    
+                                
+
+                                </ul>
+                            </li>                  
+                            
+                            
+                            
                         <?php if (can_access('manage_sales')) { ?>
                             <li class="nav-item">
                                 <a href="#!">
@@ -532,17 +555,7 @@ function toast(message) {
                                     <li>
                                         <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">Schools</a>
                                     </li>
-                                    <!--                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Sales </a>
-                                                                            <ul class="tree-2" style="display: none;">
-                                                                                <li><a href="<?= url('sales/school') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Schools</a></li>
-                                                                                <li><a href="<?= url('sales/prospect') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Prospects</a></li>
-                                                                                <li><a href="<?= url('sales/lead') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Engagements</a></li>
-                                                                                <li><a href="<?= url('sales/customer') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Customers</a></li>
-                                    
-                                    
-                                    
-                                                                            </ul>
-                                                                        </li>-->
+                                
 
                                 </ul>
                             </li>
@@ -712,6 +725,7 @@ function toast(message) {
 
                                         </ul>
                                     </li>
+                                  <!--  <li class="nav-sub-item"><a href="<?= url('report/index') ?>"> System Reports</a></li> -->
 
                                 </ul>
                             </li>
@@ -1009,6 +1023,9 @@ function toast(message) {
 
 
         <!-- Custom js -->
+   <script src="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.js"></script>  
+   
+        
         <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/custom-dashboard.js?v=3"></script>
         <script type="text/javascript" src="<?= $root ?>assets/js/script.js?v=2"></script>
 
@@ -1106,6 +1123,15 @@ function toast(message) {
                                                            ]
                                                        });
                                                    });
+                                                   
+                                                   
+                                                   
+                                                   
+           $('.clockpicker').clockpicker({
+            donetext: 'Done'
+         }).find('input').change(function () {
+            console.log(this.value);
+        });
         </script>
     <?php } ?>
 </html>

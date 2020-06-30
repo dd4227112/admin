@@ -32,10 +32,9 @@
 
                                 <div class="x_content">
 
-                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="row">
+                                <div class="col-md-4 col-xs-12">
 
-                                        <ul class="stats-overview">
-                                            <li>
                                                 <table class="data table no-margin">
                                                     <thead>
                                                         <tr>
@@ -69,8 +68,8 @@
 
                                                     </tbody>
                                                 </table>
-                                            </li>
-                                            <li>
+                                            </div>
+                                            <div class="col-md-4 col-xs-12" style="border-right: 1px solid gray; border-left: 1px solid gray">
                                                 <table class="data table no-margin">
                                                     <thead>
                                                         <tr>
@@ -97,12 +96,10 @@
 
                                                         </tr>
 
-
-
                                                     </tbody>
                                                 </table>
-                                            </li>
-                                            <li class="hidden-phone">
+                                            </div>
+                                            <div class="col-md-4 col-xs-12 hidden-phone">
                                                 <table class="data table  no-margin">
                                                     <thead>
                                                         <tr>
@@ -136,8 +133,7 @@
                                                         </tr>
                                                     </tbody>
                                                 </table>
-                                            </li>
-                                        </ul>
+                                            <div>
                                         <br>
 
                                         <!--<div id="mainb" style="height:350px;"></div>-->
