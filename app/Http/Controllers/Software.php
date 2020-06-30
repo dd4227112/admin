@@ -452,7 +452,7 @@ ORDER  BY conrelid::regclass::text, contype DESC";
                     $url = $invoice->schema_name == 'beta_testing' ?
                             'https://wip.mpayafrica.com/v2/' . $push_status : 'https://api.mpayafrica.co.tz/v2/' . $push_status;
                     $curl = $background->curlServer($fields, $url);
-                    array_push($returns, json_decode($curl));
+                    array_merge($returns, json_decode($curl));
                   //  json_decode($curl);
                 } else {
                     echo 'invalid token';
