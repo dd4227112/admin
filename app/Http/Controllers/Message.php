@@ -246,7 +246,7 @@ class Message extends Controller {
                             if (preg_match('/Insufficient/i', $result->message)) {
                                 //This user try to send sms with bulk SMS but he does not have enough credit
                                 //lets resend these sms with normal phone
-                                DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 0, 'type' => 0, 'return_code' => json_encode(array_merge((array)$result, ['action' => 'Message will be resent via phone SMS'])), 'updated_at' => 'now()']);
+                                DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 0, 'type' => 0, 'return_code' => json_encode(array_merge((array) $result, ['action' => 'Message will be resent via phone SMS'])), 'updated_at' => 'now()']);
                             } else {
                                 DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 1, 'return_code' => json_encode($result), 'updated_at' => 'now()']);
                             }
@@ -260,16 +260,16 @@ class Message extends Controller {
     public function sendEmail() {
         //loop through schema names and push emails
         $this->emails = DB::select('select * from public.all_email limit 8');
-        if (count($this->emails)>0) {
+        if (count($this->emails) > 0) {
             foreach ($this->emails as $message) {
                 if (filter_var($message->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $message->email)) {
                     try {
                         $link = strtoupper($message->schema_name) == 'PUBLIC' ? 'demo.' : $message->schema_name . '.';
                         $data = ['content' => $message->body, 'link' => $link, 'photo' => $message->photo, 'sitename' => $message->sitename, 'name' => ''];
-                        $mail=\Mail::send('email.default', $data, function ($m) use ($message) {
-                            $m->from('noreply@shulesoft.com', $message->sitename);
-                            $m->to($message->email)->subject($message->subject);
-                        });
+                        $mail = \Mail::send('email.default', $data, function ($m) use ($message) {
+                                    $m->from('noreply@shulesoft.com', $message->sitename);
+                                    $m->to($message->email)->subject($message->subject);
+                                });
 
                         if (count(\Mail::failures()) > 0) {
                             DB::update('update ' . $message->schema_name . '.email set status=0 WHERE email_id=' . $message->email_id);
@@ -288,7 +288,37 @@ class Message extends Controller {
                 } else {
 //skip all emails with ShuleSoft title
 //skip all invalid emails
-                 DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
+                    DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
+                }
+//$this->updateEmailConfig();
+                sleep(2);
+            }
+        }
+    }
+
+    public function karibusmsEmails() {
+        $this->emails = DB::connection('karibusms')->select('select * from emails where status=0 limit 8');
+        if (count($this->emails) > 0) {
+            foreach ($this->emails as $message) {
+                if (filter_var($message->email, FILTER_VALIDATE_EMAIL)) {
+                    try {
+                        $link = 'www.karibusms.com';
+                        $data = ['content' => $message->content, 'link' => $link, 'name' => ''];
+                        \Mail::send('email.karibusms', $data, function ($m) use ($message) {
+                            $m->from('noreply@shulesoft.com', 'karibuSMS');
+                            $m->to($message->email)->subject($message->subject);
+                        });
+
+                        if (count(\Mail::failures()) > 0) {
+                            DB::connection('karibusms')->statement('update emails set status=0 WHERE id=' . $message->id);
+                        } else {
+
+                            DB::connection('karibusms')->statement('update emails set status=1 WHERE id=' . $message->id);
+                        }
+                    } catch (\Exception $e) {
+
+                        echo 'something is not right' . $e->getMessage();
+                    }
                 }
 //$this->updateEmailConfig();
                 sleep(2);
@@ -405,10 +435,10 @@ Kind regards,';
             $karibusms->API_KEY = $sms->api_key;
             $karibusms->API_SECRET = $sms->api_secret;
             $result = (object) json_decode($karibusms->check_phone_status());
-            
-            $last_online=$result->last_online;
+
+            $last_online = $result->last_online;
             $minutes = abs(strtotime($last_online) - time()) / 60;
-            if((int) $minutes >30){
+            if ((int) $minutes > 30) {
                 echo 'More than 30min the device is offline';
             }
         }

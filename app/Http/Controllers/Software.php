@@ -437,23 +437,29 @@ ORDER  BY conrelid::regclass::text, contype DESC";
         $this->data['returns'] = [];
         if ($_POST) {
             $schema = request('schema_name');
-            $invoice = DB::table('api.invoices')->where('schema_name', $schema)->first();
+            $invoices = DB::table('admin.all_bank_accounts_integrations')->where('schema_name', $schema)->get();
+            $returns = [];
             $background = new \App\Http\Controllers\Background();
-            $token = $background->getToken($invoice);
-            if (strlen($token) > 4) {
-                $fields = array(
-                    "reconcile_date" => date('d-m-Y', strtotime(request('date'))),
-                    "token" => $token
-                );
-                $push_status = 'reconcilliation';
-                $url = $invoice->schema_name == 'beta_testing' ?
-                        'https://wip.mpayafrica.com/v2/' . $push_status : 'https://api.mpayafrica.co.tz/v2/' . $push_status;
-                $curl = $background->curlServer($fields, $url);
-                $this->data['returns'] = json_decode($curl);
-            } else {
-                echo 'invalid token';
-                exit;
+            foreach ($invoices as $invoice) {
+
+                $token = $background->getToken($invoice);
+                if (strlen($token) > 4) {
+                    $fields = array(
+                        "reconcile_date" => date('d-m-Y', strtotime(request('date'))),
+                        "token" => $token
+                    );
+                    $push_status = 'reconcilliation';
+                    $url = $invoice->schema_name == 'beta_testing' ?
+                            'https://wip.mpayafrica.com/v2/' . $push_status : 'https://api.mpayafrica.co.tz/v2/' . $push_status;
+                    $curl = $background->curlServer($fields, $url);
+                    array_push($returns, json_decode($curl));
+                  //  json_decode($curl);
+                } else {
+                    echo 'invalid token';
+                    exit;
+                }
             }
+            $this->data['returns'] =$returns; 
         }
         return view('software.api.reconciliation', $this->data);
     }
