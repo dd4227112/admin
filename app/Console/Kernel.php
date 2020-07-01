@@ -252,7 +252,7 @@ class Kernel extends ConsoleKernel {
 
     public function pushInvoice($invoice) {
        
-        $token = $this->getToken($invoice);
+       echo $token = $this->getToken($invoice);
         if (strlen($token) > 4) {
             $fields = array(
                 "reference" => trim($invoice->reference),
