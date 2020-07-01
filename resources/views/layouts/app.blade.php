@@ -63,29 +63,7 @@
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script>
 
-        <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
-        <!-- Google font-->
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
-        <!-- Required Fremwork -->
-        <link rel="stylesheet" type="text/css" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
-        <!-- themify icon -->
-        <link rel="stylesheet" type="text/css" href="assets/icon/themify-icons/themify-icons.css">
-        <!-- ico font -->
-        <link rel="stylesheet" type="text/css" href="assets/icon/icofont/css/icofont.css">
-        <!-- flag icon framework css -->
-        <link rel="stylesheet" type="text/css" href="assets/pages/flag-icon/flag-icon.min.css">
-        <!-- Menu-Search css -->
-        <link rel="stylesheet" type="text/css" href="assets/pages/menu-search/css/component.css">
-        <!-- Horizontal-Timeline css -->
-        <link rel="stylesheet" type="text/css" href="assets/pages/dashboard/horizontal-timeline/css/style.css">
-        <!-- amchart css -->
-        <link rel="stylesheet" type="text/css" href="assets/pages/dashboard/amchart/css/amchart.css">
-        <!-- flag icon framework css -->
-        <link rel="stylesheet" type="text/css" href="assets/pages/flag-icon/flag-icon.min.css">
-        <!-- Style.css -->
-        <link rel="stylesheet" type="text/css" href="assets/css/style.css">
-        <!--color css-->
-        <link rel="stylesheet" type="text/css" href="assets/css/color/color-1.css" id="color"/>
+
         <script type="text/javascript">
 ajax_setup = function () {
     $.ajaxSetup({
@@ -166,7 +144,7 @@ function toast(message) {
                             if (strlen(request('token')) < 4) {
                                 ?>
                                 <li>
-                                    <input type="search" name="search" id="input_search" style="height: 81%;"/>
+
                                     <a class="main-search morphsearch-search" href="#">
                                         <!-- themify icon -->
                                         <i class="ti-search"></i>
@@ -406,44 +384,54 @@ function toast(message) {
                             </ul>
                             <!-- search -->
                         <?php } ?>
+                        <script>
+                            search_inputs = function () {
+                                $('#search_inputs').keyup(function () {
+                                    var val=$(this).val();
+//                                    if(val.lenght >1){
+                                    $.ajax({
+                                        type: "post",
+                                        url: "<?=url('analyse/search')?>",
+                                        data: "q=" + val,
+                                        dataType:'JSON',
+                                        success: function (data) {
+                                            console.log(data);
+                                     $('#search_people').html(data.people);
+                                     $('#search_schools').html(data.schools);
+                                     $('#search_activities').html(data.activities);
+                                                                             }
+                                    });
+//                                    }else{
+//                                     $('#search_people').html('');
+//                                     $('#search_schools').html('');
+//                                     $('#search_activities').html('');
+//                                    }
+                                })
+                            }
+                            $(document).ready(search_inputs);
+                        </script>
                         <div id="morphsearch" class="morphsearch">
                             <form class="morphsearch-form">
-                                <input class="morphsearch-input" type="search" placeholder="Search..." />
+                                <input class="morphsearch-input" id="search_inputs" type="search" placeholder="Search..." />
                                 <button class="morphsearch-submit" type="submit">Search</button>
                             </form>
                             <div class="morphsearch-content">
                                 <div class="dummy-column">
-                                    <h2>People</h2>
-                                    <a class="dummy-media-object" href="#!">
-                                        <img class="round" src="http://0.gravatar.com/avatar/81b58502541f9445253f30497e53c280?s=50&amp;d=identicon&amp;r=G" alt="Sara Soueidan" />
-                                        <h3>Sara Soueidan</h3>
-                                    </a>
-                                    <a class="dummy-media-object" href="#!">
-                                        <img class="round" src="http://1.gravatar.com/avatar/9bc7250110c667cd35c0826059b81b75?s=50&amp;d=identicon&amp;r=G" alt="Shaun Dona" />
-                                        <h3>Shaun Dona</h3>
-                                    </a>
+                                    <h2>Invoices</h2>
+                                    <span id="search_people"></span>
+                                 
+                               
                                 </div>
                                 <div class="dummy-column">
-                                    <h2>Popular</h2>
-                                    <a class="dummy-media-object" href="#!">
-                                        <img src="<?= $root ?>assets/images/avatar-1.png" alt="PagePreloadingEffect" />
-                                        <h3>Page Preloading Effect</h3>
-                                    </a>
-                                    <a class="dummy-media-object" href="#!">
-                                        <img src="<?= $root ?>assets/images/avatar-1.png" alt="DraggableDualViewSlideshow" />
-                                        <h3>Draggable Dual-View Slideshow</h3>
-                                    </a>
+                                    <h2>Schools</h2>
+                                    <span id="search_schools"></span>
+                                   
+                                 
                                 </div>
                                 <div class="dummy-column">
-                                    <h2>Recent</h2>
-                                    <a class="dummy-media-object" href="#!">
-                                        <img src="<?= $root ?>assets/images/avatar-1.png" alt="TooltipStylesInspiration" />
-                                        <h3>Tooltip Styles Inspiration</h3>
-                                    </a>
-                                    <a class="dummy-media-object" href="#!">
-                                        <img src="<?= $root ?>assets/images/avatar-1.png" alt="NotificationStyles" />
-                                        <h3>Notification Styles Inspiration</h3>
-                                    </a>
+                                    <h2>Activity</h2>
+                                   <span id="search_activities"></span>
+                                
                                 </div>
                             </div>
                             <!-- /morphsearch-content -->
@@ -1056,7 +1044,7 @@ function toast(message) {
 
 
         <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/custom-dashboard.js?v=3"></script>
-        <script type="text/javascript" src="<?= $root ?>assets/js/script.js?v=2"></script>
+        <script type="text/javascript" src="<?= $root ?>assets/js/script.js?v=3"></script>
 
         <script src="<?= $root ?>bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
         <script src="<?= $root ?>bower_components/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
@@ -1075,92 +1063,92 @@ function toast(message) {
         ?>
         <script type="text/javascript">
 
-                                                   $(document).ready(function () {
-                                                       $('.dataTable').DataTable({
-                                                           dom: 'Bfrtip',
-                                                           responsive: false,
-                                                           paging: true,
-                                                           info: false,
-                                                           "pageLength": 10,
-                                                           buttons: [
-                                                               {
-                                                                   text: 'PDF',
-                                                                   extend: 'pdfHtml5',
-                                                                   message: '',
-                                                                   orientation: 'landscape',
-                                                                   exportOptions: {
-                                                                       columns: ':visible'
-                                                                   },
-                                                                   customize: function (doc) {
-                                                                       doc.pageMargins = [10, 10, 10, 10];
-                                                                       doc.defaultStyle.fontSize = 7;
-                                                                       doc.styles.tableHeader.fontSize = 7;
-                                                                       doc.styles.title.fontSize = 9;
-                                                                       // Remove spaces around page title
-                                                                       doc.content[0].text = doc.content[0].text.trim();
-                                                                       // Create a footer
-                                                                       doc['footer'] = (function (page, pages) {
-                                                                           return {
-                                                                               columns: [
-                                                                                   'www.shulesoft.com',
-                                                                                   {
-                                                                                       // This is the right column
-                                                                                       alignment: 'right',
-                                                                                       text: ['page ', {text: page.toString()}, ' of ', {text: pages.toString()}]
-                                                                                   }
-                                                                               ],
-                                                                               margin: [10, 0]
-                                                                           }
-                                                                       });
-                                                                       // Styling the table: create style object
-                                                                       var objLayout = {};
-                                                                       // Horizontal line thickness
-                                                                       objLayout['hLineWidth'] = function (i) {
-                                                                           return .5;
-                                                                       };
-                                                                       // Vertikal line thickness
-                                                                       objLayout['vLineWidth'] = function (i) {
-                                                                           return .5;
-                                                                       };
-                                                                       // Horizontal line color
-                                                                       objLayout['hLineColor'] = function (i) {
-                                                                           return '#aaa';
-                                                                       };
-                                                                       // Vertical line color
-                                                                       objLayout['vLineColor'] = function (i) {
-                                                                           return '#aaa';
-                                                                       };
-                                                                       // Left padding of the cell
-                                                                       objLayout['paddingLeft'] = function (i) {
-                                                                           return 4;
-                                                                       };
-                                                                       // Right padding of the cell
-                                                                       objLayout['paddingRight'] = function (i) {
-                                                                           return 4;
-                                                                       };
-                                                                       // Inject the object in the document
-                                                                       doc.content[1].layout = objLayout;
-                                                                   }
-                                                               },
+                                $(document).ready(function () {
+                                    $('.dataTable').DataTable({
+                                        dom: 'Bfrtip',
+                                        responsive: false,
+                                        paging: true,
+                                        info: false,
+                                        "pageLength": 10,
+                                        buttons: [
+                                            {
+                                                text: 'PDF',
+                                                extend: 'pdfHtml5',
+                                                message: '',
+                                                orientation: 'landscape',
+                                                exportOptions: {
+                                                    columns: ':visible'
+                                                },
+                                                customize: function (doc) {
+                                                    doc.pageMargins = [10, 10, 10, 10];
+                                                    doc.defaultStyle.fontSize = 7;
+                                                    doc.styles.tableHeader.fontSize = 7;
+                                                    doc.styles.title.fontSize = 9;
+                                                    // Remove spaces around page title
+                                                    doc.content[0].text = doc.content[0].text.trim();
+                                                    // Create a footer
+                                                    doc['footer'] = (function (page, pages) {
+                                                        return {
+                                                            columns: [
+                                                                'www.shulesoft.com',
+                                                                {
+                                                                    // This is the right column
+                                                                    alignment: 'right',
+                                                                    text: ['page ', {text: page.toString()}, ' of ', {text: pages.toString()}]
+                                                                }
+                                                            ],
+                                                            margin: [10, 0]
+                                                        }
+                                                    });
+                                                    // Styling the table: create style object
+                                                    var objLayout = {};
+                                                    // Horizontal line thickness
+                                                    objLayout['hLineWidth'] = function (i) {
+                                                        return .5;
+                                                    };
+                                                    // Vertikal line thickness
+                                                    objLayout['vLineWidth'] = function (i) {
+                                                        return .5;
+                                                    };
+                                                    // Horizontal line color
+                                                    objLayout['hLineColor'] = function (i) {
+                                                        return '#aaa';
+                                                    };
+                                                    // Vertical line color
+                                                    objLayout['vLineColor'] = function (i) {
+                                                        return '#aaa';
+                                                    };
+                                                    // Left padding of the cell
+                                                    objLayout['paddingLeft'] = function (i) {
+                                                        return 4;
+                                                    };
+                                                    // Right padding of the cell
+                                                    objLayout['paddingRight'] = function (i) {
+                                                        return 4;
+                                                    };
+                                                    // Inject the object in the document
+                                                    doc.content[1].layout = objLayout;
+                                                }
+                                            },
 
-                                                               {extend: 'excelHtml5', footer: true},
-                                                               {extend: 'csvHtml5', customize: function (csv) {
-                                                                       return "ShuleSoft" + csv + "ShuleSoft";
-                                                                   }},
-                                                               {extend: 'print', footer: true}
+                                            {extend: 'excelHtml5', footer: true},
+                                            {extend: 'csvHtml5', customize: function (csv) {
+                                                    return "ShuleSoft" + csv + "ShuleSoft";
+                                                }},
+                                            {extend: 'print', footer: true}
 
-                                                           ]
-                                                       });
-                                                   });
-
-
+                                        ]
+                                    });
+                                });
 
 
-                                                   $('.clockpicker').clockpicker({
-                                                       donetext: 'Done'
-                                                   }).find('input').change(function () {
-                                                       console.log(this.value);
-                                                   });
+
+
+                                $('.clockpicker').clockpicker({
+                                    donetext: 'Done'
+                                }).find('input').change(function () {
+                                    console.log(this.value);
+                                });
         </script>
     <?php } ?>
 </html>
