@@ -43,7 +43,7 @@
                                     <?php
                                     foreach ($tasks as $task) {
                                         ?>
-                                        <div class="cd-timeline-block">
+                                    <div class="cd-timeline-block" id="tasks<?=$task->id?>">
                                             <div class="cd-timeline-icon bg-primary">
                                                 <i class="icofont icofont-ui-file"></i>
                                             </div>
@@ -53,7 +53,7 @@
                                                 <div class="card-block">
                                                     <h6>Client: <?= $task->client->name ?></h6>
                                                     <div class="timeline-details">
-                                                        <a href="#"> <i class="icofont icofont-ui-calendar"></i><span><?= date('d M Y', strtotime($task->created_at)) ?></span> </a>
+                                                        <a href="#"> <i class="icofont icofont-ui-calendar"></i><span><?php // date('d M Y', strtotime($task->created_at)) ?></span> </a>
                                                         <a href="#">
                                                             <i class="icofont icofont-ui-user"></i><span><?= $task->user->name ?></span>
                                                         </a>

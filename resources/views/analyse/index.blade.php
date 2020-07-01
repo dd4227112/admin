@@ -171,13 +171,19 @@
                     </div>
                     <!-- widget-success-card end -->
                 </div>
-                <div class="col-lg-12">
+                 <div class="col-lg-12">
                     <div class="card">
+                        <div class="card-header">
+                            <button class="btn btn-primary btn-sm">Week</button>
+                            <button class="btn btn-primary btn-sm">Month</button>
+                            <button class="btn btn-primary btn-sm">Year</button>
+                        </div>
                         <div class="card-block">
-                            <div id="container"></div>
+                           <div id="container2"></div>
                         </div>
                     </div>
                 </div>
+               
 
                 <div class="col-lg-4">
                     <div class="row">
@@ -305,13 +311,13 @@
                 </div>
                 <div class="col-lg-8">
                     <div class="card">
-                        <div class="card-header">
+<!--                        <div class="card-header">
                             <button class="btn btn-primary btn-sm">Week</button>
                             <button class="btn btn-primary btn-sm">Month</button>
                             <button class="btn btn-primary btn-sm">Year</button>
-                        </div>
+                        </div>-->
                         <div class="card-block">
-                            <div id="morris-extra-area"></div>
+                           <div id="container"></div>
                         </div>
                     </div>
                 </div>
@@ -559,7 +565,30 @@ where extract(year from created_at)='.date('Y').' group by month order by month'
             ?> 
         </tbody>
     </table>
-
+  <table id="users_sales" style="display:none">
+        <thead>
+            <tr>
+                <th></th>
+                <th>User Feedback</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php 
+            $new_schools = DB::select('select count(*),extract(month from created_at) as month from admin.all_setting 
+where extract(year from created_at)='.date('Y').' group by month order by month');
+            foreach ($new_schools as $new_school) {
+                $monthNum = $new_school->month;
+                $dateObj = DateTime::createFromFormat('!m', $monthNum);
+                $monthName = $dateObj->format('F'); // March
+                ?>
+                <tr>
+                    <th><?= $monthName ?></th>
+                    <td><?= $new_school->count ?></td>
+                </tr>
+            <?php }
+            ?> 
+        </tbody>
+    </table>
 
     <script type="text/javascript">
         Highcharts.chart('container', {
@@ -586,6 +615,29 @@ where extract(year from created_at)='.date('Y').' group by month order by month'
             }
         });
 
+ Highcharts.chart('container2', {
+            data: {
+                table: 'users_sales'
+            },
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'No of Sales Per Month of <?=date('Y')?>'
+            },
+            yAxis: {
+                allowDecimals: false,
+                title: {
+                    text: 'No of new onboarded school'
+                }
+            },
+            tooltip: {
+                formatter: function () {
+                    return '<b>' + this.series.name + '</b><br/>' +
+                            this.point.y + ' ' + this.point.name.toLowerCase();
+                }
+            }
+        });
         dashboard_summary = function () {
             $.ajax({
                 url: '<?= url('analyse/summary/null') ?>',
