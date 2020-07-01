@@ -170,7 +170,7 @@
                                             <div class="col-sm-4 invoice-col">
                                                 <p class=" well-sm "> &nbsp;</p>
                                                 <address>
-                                                    <b>Invoice #<?= $invoice->reference ?></b>
+                                                    <b>Invoice #<?php // $invoice->reference ?></b>
                                                     <br>
                                                     <b>Date:</b> <?= date('d M Y', strtotime('-30 day', strtotime($siteinfos->payment_deadline_date))); ?>
                                                     <br>
