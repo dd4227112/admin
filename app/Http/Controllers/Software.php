@@ -472,5 +472,11 @@ ORDER  BY conrelid::regclass::text, contype DESC";
         return $curl;
         // return redirect()->back()->with('success',$curl);
     }
+    
+    
+    public function template() {
+          $this->data['faqs'] = [];
+        return view('software.index', $this->data);
+    }
 
 }
