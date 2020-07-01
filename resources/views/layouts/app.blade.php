@@ -387,19 +387,19 @@ function toast(message) {
                         <script>
                             search_inputs = function () {
                                 $('#search_inputs').keyup(function () {
-                                    var val=$(this).val();
+                                    var val = $(this).val();
 //                                    if(val.lenght >1){
                                     $.ajax({
                                         type: "post",
-                                        url: "<?=url('analyse/search')?>",
+                                        url: "<?= url('analyse/search') ?>",
                                         data: "q=" + val,
-                                        dataType:'JSON',
+                                        dataType: 'JSON',
                                         success: function (data) {
                                             console.log(data);
-                                     $('#search_people').html(data.people);
-                                     $('#search_schools').html(data.schools);
-                                     $('#search_activities').html(data.activities);
-                                                                             }
+                                            $('#search_people').html(data.people);
+                                            $('#search_schools').html(data.schools);
+                                            $('#search_activities').html(data.activities);
+                                        }
                                     });
 //                                    }else{
 //                                     $('#search_people').html('');
@@ -419,19 +419,19 @@ function toast(message) {
                                 <div class="dummy-column">
                                     <h2>Invoices</h2>
                                     <span id="search_people"></span>
-                                 
-                               
+
+
                                 </div>
                                 <div class="dummy-column">
                                     <h2>Schools</h2>
                                     <span id="search_schools"></span>
-                                   
-                                 
+
+
                                 </div>
                                 <div class="dummy-column">
                                     <h2>Activity</h2>
-                                   <span id="search_activities"></span>
-                                
+                                    <span id="search_activities"></span>
+
                                 </div>
                             </div>
                             <!-- /morphsearch-content -->
@@ -767,16 +767,20 @@ function toast(message) {
                                 </div>
                             </div>
                             <div class="main-friend-list">
-                                <div class="media userlist-box" data-id="1" data-status="online" data-username="Josephin Doe" data-toggle="tooltip" data-placement="left" title="Josephin Doe">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Josephin Doe</div>
+                                <?php
+                                foreach ($users as $user) {
+                                    ?>
+                                    <div class="media userlist-box" data-id="1" data-status="online" data-username="<?= $user->firstname . ' ' . $user->lastname ?>" data-toggle="tooltip" data-placement="left" title="<?= $user->firstname . ' ' . $user->lastname ?>">
+                                        <a class="media-left" href="#!">
+                                            <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="<?= $user->firstname . ' ' . $user->lastname ?>">
+                                            <div class="live-status bg-success"></div>
+                                        </a>
+                                        <div class="media-body">
+                                            <div class="f-13 chat-header"><?= $user->firstname . ' ' . $user->lastname ?></div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="media userlist-box" data-id="2" data-status="online" data-username="Lary Doe" data-toggle="tooltip" data-placement="left" title="Lary Doe">
+    <?php } ?>
+<!--                                <div class="media userlist-box" data-id="2" data-status="online" data-username="Lary Doe" data-toggle="tooltip" data-placement="left" title="Lary Doe">
                                     <a class="media-left" href="#!">
                                         <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u1.jpg" alt="Generic placeholder image">
                                         <div class="live-status bg-success"></div>
@@ -784,124 +788,8 @@ function toast(message) {
                                     <div class="media-body">
                                         <div class="f-13 chat-header">Lary Doe</div>
                                     </div>
-                                </div>
-                                <div class="media userlist-box" data-id="3" data-status="online" data-username="Alice" data-toggle="tooltip" data-placement="left" title="Alice">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-2.png" alt="Generic placeholder image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Alice</div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box" data-id="4" data-status="online" data-username="Alia" data-toggle="tooltip" data-placement="left" title="Alia">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u2.jpg" alt="Generic placeholder image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Alia</div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box" data-id="5" data-status="online" data-username="Suzen" data-toggle="tooltip" data-placement="left" title="Suzen">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u3.jpg" alt="Generic placeholder image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Suzen</div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box" data-id="6" data-status="offline" data-username="Michael Scofield" data-toggle="tooltip" data-placement="left" title="Michael Scofield">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-3.png" alt="Generic placeholder image">
-                                        <div class="live-status bg-danger"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Michael Scofield</div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box" data-id="7" data-status="online" data-username="Irina Shayk" data-toggle="tooltip" data-placement="left" title="Irina Shayk">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-4.png" alt="Generic placeholder image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Irina Shayk</div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box" data-id="8" data-status="offline" data-username="Sara Tancredi" data-toggle="tooltip" data-placement="left" title="Sara Tancredi">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-5.png" alt="Generic placeholder image">
-                                        <div class="live-status bg-danger"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Sara Tancredi</div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box" data-id="9" data-status="online" data-username="Samon" data-toggle="tooltip" data-placement="left" title="Samon">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Samon</div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box" data-id="10" data-status="online" data-username="Daizy Mendize" data-toggle="tooltip" data-placement="left" title="Daizy Mendize">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u3.jpg" alt="Generic placeholder image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Daizy Mendize</div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box" data-id="11" data-status="offline" data-username="Loren Scofield" data-toggle="tooltip" data-placement="left" title="Loren Scofield">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-3.png" alt="Generic placeholder image">
-                                        <div class="live-status bg-danger"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Loren Scofield</div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box" data-id="12" data-status="online" data-username="Shayk" data-toggle="tooltip" data-placement="left" title="Shayk">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-4.png" alt="Generic placeholder image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Shayk</div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box" data-id="13" data-status="offline" data-username="Sara" data-toggle="tooltip" data-placement="left" title="Sara">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u3.jpg" alt="Generic placeholder image">
-                                        <div class="live-status bg-danger"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Sara</div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box" data-id="14" data-status="online" data-username="Doe" data-toggle="tooltip" data-placement="left" title="Doe">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Doe</div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box" data-id="15" data-status="online" data-username="Lary" data-toggle="tooltip" data-placement="left" title="Lary">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u1.jpg" alt="Generic placeholder image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Lary</div>
-                                    </div>
-                                </div>
+                                </div>-->
+                            
                             </div>
                         </div>
                     </div>
@@ -911,10 +799,10 @@ function toast(message) {
             <div class="showChat_inner">
                 <div class="media chat-inner-header">
                     <a class="back_chatBox">
-                        <i class="icofont icofont-rounded-left"></i> Josephin Doe
+                        <i class="icofont icofont-rounded-left"></i> Information Hidden
                     </a>
                 </div>
-                <div class="media chat-messages">
+<!--                <div class="media chat-messages">
                     <a class="media-left photo-table" href="#!">
                         <img class="media-object img-circle m-t-5" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
                     </a>
@@ -924,8 +812,8 @@ function toast(message) {
                             <p class="chat-time">8:20 a.m.</p>
                         </div>
                     </div>
-                </div>
-                <div class="media chat-messages">
+                </div>-->
+<!--                <div class="media chat-messages">
                     <div class="media-body chat-menu-reply">
                         <div class="">
                             <p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
@@ -937,19 +825,19 @@ function toast(message) {
                             <img class="media-object img-circle m-t-5" src="<?= $root ?>assets/images/avatar-2.png" alt="Generic placeholder image">
                         </a>
                     </div>
-                </div>
-                <div class="chat-reply-box p-b-20">
+                </div>-->
+<!--                <div class="chat-reply-box p-b-20">
                     <div class="right-icon-control">
                         <input type="text" class="form-control search-text" placeholder="Share Your Thoughts">
                         <div class="form-icon">
                             <i class="icofont icofont-paper-plane"></i>
                         </div>
                     </div>
-                </div>
+                </div>-->
             </div>
             <!-- Sidebar inner chat end-->
             <!-- Main-body start-->
-        <?php } ?>
+<?php } ?>
         <div class="main-body">
             @include('layouts.notifications')
             @yield('content')
@@ -1058,9 +946,9 @@ function toast(message) {
         <script src="<?= $root ?>bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
         @yield('footer')
     </body>
-    <?php
-    if (request('type_id') != 'subject' && !preg_match('/emailsms/', url()->current()) && !preg_match('/sales/', url()->current()) && !preg_match('/logs/', url()->current()) && !preg_match('/payment_history/i', url()->current()) && !preg_match('/api/', url()->current())) {
-        ?>
+<?php
+if (request('type_id') != 'subject' && !preg_match('/emailsms/', url()->current()) && !preg_match('/sales/', url()->current()) && !preg_match('/logs/', url()->current()) && !preg_match('/payment_history/i', url()->current()) && !preg_match('/api/', url()->current())) {
+    ?>
         <script type="text/javascript">
 
                                 $(document).ready(function () {
@@ -1150,11 +1038,11 @@ function toast(message) {
                                     console.log(this.value);
                                 });
         </script>
-    <?php } ?>
+<?php } ?>
 </html>
-<?php
+    <?php
 ///echo url()->current();
-if (preg_match('/localhost/', url()->current())) {
-    ?>
+    if (preg_match('/localhost/', url()->current())) {
+        ?>
     <p align="center">This page took <?php echo (microtime(true) - LARAVEL_START) ?> seconds to render</p>
 <?php } ?>
