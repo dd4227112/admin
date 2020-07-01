@@ -32,6 +32,11 @@ class Kernel extends ConsoleKernel {
     protected function schedule(Schedule $schedule) {
         $schedule->command('inspire')
                 ->hourly();
+         $schedule->call(function () {
+            // sync invoices 
+            $this->syncInvoice();
+            //$this->updateInvoice();
+        })->everyMinute();
         $schedule->call(function () {
             (new Message())->sendSms();
         })->everyMinute();
@@ -75,11 +80,7 @@ class Kernel extends ConsoleKernel {
             (new Message())->paymentReminder();
         })->dailyAt('05:10');
 
-        $schedule->call(function () {
-            // sync invoices 
-            $this->syncInvoice();
-            //$this->updateInvoice();
-        })->everyMinute();
+       
         $schedule->call(function () {
             $this->checkSchedule();
         })->everyMinute();

@@ -54,7 +54,7 @@
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2-bootstrap.css">
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css">       
 
-<link href="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.css" rel="stylesheet">
+        <link href="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.css" rel="stylesheet">
 
 
 
@@ -62,6 +62,30 @@
 
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script>
+
+        <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+        <!-- Google font-->
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
+        <!-- Required Fremwork -->
+        <link rel="stylesheet" type="text/css" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+        <!-- themify icon -->
+        <link rel="stylesheet" type="text/css" href="assets/icon/themify-icons/themify-icons.css">
+        <!-- ico font -->
+        <link rel="stylesheet" type="text/css" href="assets/icon/icofont/css/icofont.css">
+        <!-- flag icon framework css -->
+        <link rel="stylesheet" type="text/css" href="assets/pages/flag-icon/flag-icon.min.css">
+        <!-- Menu-Search css -->
+        <link rel="stylesheet" type="text/css" href="assets/pages/menu-search/css/component.css">
+        <!-- Horizontal-Timeline css -->
+        <link rel="stylesheet" type="text/css" href="assets/pages/dashboard/horizontal-timeline/css/style.css">
+        <!-- amchart css -->
+        <link rel="stylesheet" type="text/css" href="assets/pages/dashboard/amchart/css/amchart.css">
+        <!-- flag icon framework css -->
+        <link rel="stylesheet" type="text/css" href="assets/pages/flag-icon/flag-icon.min.css">
+        <!-- Style.css -->
+        <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+        <!--color css-->
+        <link rel="stylesheet" type="text/css" href="assets/css/color/color-1.css" id="color"/>
         <script type="text/javascript">
 ajax_setup = function () {
     $.ajaxSetup({
@@ -142,135 +166,136 @@ function toast(message) {
                             if (strlen(request('token')) < 4) {
                                 ?>
                                 <li>
+                                    <input type="search" name="search" id="input_search" style="height: 81%;"/>
                                     <a class="main-search morphsearch-search" href="#">
                                         <!-- themify icon -->
                                         <i class="ti-search"></i>
                                     </a>
                                 </li>
                             <?php } ?>
-                            <!--                            <li>
-                                                            <a href="#!" onclick="javascript:toggleFullScreen()">
-                                                                <i class="ti-fullscreen"></i>
-                                                            </a>
-                                                        </li>
-                                                        <li class="mega-menu-top">
-                                                            <a href="#">
-                                                                Mega
-                                                                <i class="ti-angle-down"></i>
-                                                            </a>
-                                                            <ul class="show-notification row">
-                                                                <li class="col-sm-3">
-                                                                    <h6 class="mega-menu-title">Popular Links</h6>
-                                                                    <ul class="mega-menu-links">
-                                                                        <li><a href="form-elements-component.html">Form Elements</a></li>
-                                                                        <li><a href="button.html">Buttons</a></li>
-                                                                        <li><a href="map-google.html">Maps</a></li>
-                                                                        <li><a href="user-card.html">Contact Cards</a></li>
-                                                                        <li><a href="user-profile.html">User Information</a></li>
-                                                                        <li><a href="auth-lock-screen.html">Lock Screen</a></li>
-                                                                    </ul>
-                                                                </li>
-                                                                <li class="col-sm-3">
-                                                                    <h6 class="mega-menu-title">Mailbox</h6>
-                                                                    <ul class="mega-mailbox">
-                                                                        <li>
-                                                                            <a href="#" class="media">
-                                                                                <div class="media-left">
-                                                                                    <i class="ti-folder"></i>
-                                                                                </div>
-                                                                                <div class="media-body">
-                                                                                    <h5>Data Backup</h5>
-                                                                                    <small class="text-muted">Store your data</small>
-                                                                                </div>
-                                                                            </a>
-                                                                        </li>
-                                                                        <li>
-                                                                            <a href="#" class="media">
-                                                                                <div class="media-left">
-                                                                                    <i class="ti-headphone-alt"></i>
-                                                                                </div>
-                                                                                <div class="media-body">
-                                                                                    <h5>Support</h5>
-                                                                                    <small class="text-muted">24-hour support</small>
-                                                                                </div>
-                                                                            </a>
-                                                                        </li>
-                                                                        <li>
-                                                                            <a href="#" class="media">
-                                                                                <div class="media-left">
-                                                                                    <i class="ti-dropbox"></i>
-                                                                                </div>
-                                                                                <div class="media-body">
-                                                                                    <h5>Drop-box</h5>
-                                                                                    <small class="text-muted">Store large amount of data in one-box only
-                                                                                    </small>
-                                                                                </div>
-                                                                            </a>
-                                                                        </li>
-                                                                        <li>
-                                                                            <a href="#" class="media">
-                                                                                <div class="media-left">
-                                                                                    <i class="ti-location-pin"></i>
-                                                                                </div>
-                                                                                <div class="media-body">
-                                                                                    <h5>Location</h5>
-                                                                                    <small class="text-muted">Find Your Location with ease of use</small>
-                                                                                </div>
-                                                                            </a>
-                                                                        </li>
-                                                                    </ul>
-                                                                </li>
-                                                                <li class="col-sm-3">
-                                                                    <h6 class="mega-menu-title">Gallery</h6>
-                                                                    <div class="row m-b-20">
-                                                                        <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/01.jpg" alt="Gallery-1">
-                                                                        </div>
-                                                                        <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/02.jpg" alt="Gallery-2">
-                                                                        </div>
-                                                                        <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/03.jpg" alt="Gallery-3">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row m-b-20">
-                                                                        <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/04.jpg" alt="Gallery-4">
-                                                                        </div>
-                                                                        <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/05.jpg" alt="Gallery-5">
-                                                                        </div>
-                                                                        <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/06.jpg" alt="Gallery-6">
-                                                                        </div>
-                                                                    </div>
-                                                                    <button class="btn btn-primary btn-sm btn-block">Browse Gallery</button>
-                                                                </li>
-                                                                <li class="col-sm-3">
-                                                                    <h6 class="mega-menu-title">Contact Us</h6>
-                                                                    <div class="mega-menu-contact">
-                                                                        <div class="form-group row">
-                                                                            <label for="example-text-input" class="col-3 col-form-label">Name</label>
-                                                                            <div class="col-9">
-                                                                                <input class="form-control" type="text" placeholder="Artisanal kale" id="example-text-input">
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="form-group row">
-                                                                            <label for="example-search-input" class="col-3 col-form-label">Email</label>
-                                                                            <div class="col-9">
-                                                                                <input class="form-control" type="email" placeholder="Enter your E-mail Id" id="example-search-input">
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="form-group row">
-                                                                            <label for="example-search-input" class="col-3 col-form-label">Contact</label>
-                                                                            <div class="col-9">
-                                                                                <input class="form-control" type="number" placeholder="+91-9898989898" id="example-search-input">
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="form-group row">
-                                                                            <label for="exampleTextarea" class="col-3 col-form-label">Message</label>
-                                                                            <div class="col-9">
-                                                                                <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </li>
-                                                            </ul>
-                                                        </li>-->
+                            <li>
+                                <a href="#!" onclick="javascript:toggleFullScreen()">
+                                    <i class="ti-fullscreen"></i>
+                                </a>
+                            </li>
+                            <li class="mega-menu-top">
+                                <!--                                                            <a href="#">
+                                                                                                Mega
+                                                                                                <i class="ti-angle-down"></i>
+                                                                                            </a>-->
+                                <ul class="show-notification row">
+                                    <li class="col-sm-3">
+                                        <h6 class="mega-menu-title">Popular Links</h6>
+                                        <ul class="mega-menu-links">
+                                            <li><a href="form-elements-component.html">Form Elements</a></li>
+                                            <li><a href="button.html">Buttons</a></li>
+                                            <li><a href="map-google.html">Maps</a></li>
+                                            <li><a href="user-card.html">Contact Cards</a></li>
+                                            <li><a href="user-profile.html">User Information</a></li>
+                                            <li><a href="auth-lock-screen.html">Lock Screen</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="col-sm-3">
+                                        <h6 class="mega-menu-title">Mailbox</h6>
+                                        <ul class="mega-mailbox">
+                                            <li>
+                                                <a href="#" class="media">
+                                                    <div class="media-left">
+                                                        <i class="ti-folder"></i>
+                                                    </div>
+                                                    <div class="media-body">
+                                                        <h5>Data Backup</h5>
+                                                        <small class="text-muted">Store your data</small>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="media">
+                                                    <div class="media-left">
+                                                        <i class="ti-headphone-alt"></i>
+                                                    </div>
+                                                    <div class="media-body">
+                                                        <h5>Support</h5>
+                                                        <small class="text-muted">24-hour support</small>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="media">
+                                                    <div class="media-left">
+                                                        <i class="ti-dropbox"></i>
+                                                    </div>
+                                                    <div class="media-body">
+                                                        <h5>Drop-box</h5>
+                                                        <small class="text-muted">Store large amount of data in one-box only
+                                                        </small>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="media">
+                                                    <div class="media-left">
+                                                        <i class="ti-location-pin"></i>
+                                                    </div>
+                                                    <div class="media-body">
+                                                        <h5>Location</h5>
+                                                        <small class="text-muted">Find Your Location with ease of use</small>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="col-sm-3">
+                                        <h6 class="mega-menu-title">Gallery</h6>
+                                        <div class="row m-b-20">
+                                            <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/01.jpg" alt="Gallery-1">
+                                            </div>
+                                            <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/02.jpg" alt="Gallery-2">
+                                            </div>
+                                            <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/03.jpg" alt="Gallery-3">
+                                            </div>
+                                        </div>
+                                        <div class="row m-b-20">
+                                            <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/04.jpg" alt="Gallery-4">
+                                            </div>
+                                            <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/05.jpg" alt="Gallery-5">
+                                            </div>
+                                            <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/06.jpg" alt="Gallery-6">
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-primary btn-sm btn-block">Browse Gallery</button>
+                                    </li>
+                                    <li class="col-sm-3">
+                                        <h6 class="mega-menu-title">Contact Us</h6>
+                                        <div class="mega-menu-contact">
+                                            <div class="form-group row">
+                                                <label for="example-text-input" class="col-3 col-form-label">Name</label>
+                                                <div class="col-9">
+                                                    <input class="form-control" type="text" placeholder="Artisanal kale" id="example-text-input">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="example-search-input" class="col-3 col-form-label">Email</label>
+                                                <div class="col-9">
+                                                    <input class="form-control" type="email" placeholder="Enter your E-mail Id" id="example-search-input">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="example-search-input" class="col-3 col-form-label">Contact</label>
+                                                <div class="col-9">
+                                                    <input class="form-control" type="number" placeholder="+91-9898989898" id="example-search-input">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="exampleTextarea" class="col-3 col-form-label">Message</label>
+                                                <div class="col-9">
+                                                    <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
                         </ul>
                         <?php
                         if (strlen(request('token')) < 4) {
@@ -327,12 +352,15 @@ function toast(message) {
                                             </li>
                                         </ul>
                                     </li>
-                                    <!--                                    <li class="header-notification">
-                                                                            <a href="#!" class="displayChatbox">
-                                                                                <i class="ti-comments"></i>
-                                                                                <span class="badge">9</span>
-                                                                            </a>
-                                                                        </li>-->
+                                    <li class="header-notification">
+                                        <a href="#!" class="displayChatbox">
+                                            <i class="ti-comments"></i>
+                                            <span class="badge"><?php
+                                                $users = \App\Models\User::where('status', 1)->get();
+                                                echo count($users);
+                                                ?></span>
+                                        </a>
+                                    </li>
                                 <?php } ?>
                                 <li class="user-profile header-notification">
                                     <a href="#!">
@@ -522,26 +550,26 @@ function toast(message) {
                                 </ul>
                             </li>
                         <?php } ?>
-                            
-                            
-           <li class="nav-item">
-                                <a href="#!">
-                                    <i class="ti-layout-cta-right"></i>
-                                    <span data-i18n="nav.navigate.main">Office Administrator</span>
-                                </a>
-                                <ul class="tree-1">
-                                    <li>
-                                        <a href="<?= url('Visitor/index') ?>" data-i18n="nav.navigate.navbar">Visitors</a>
-                                    </li>
-                                   
-                                    
-                                
 
-                                </ul>
-                            </li>                  
-                            
-                            
-                            
+
+                        <li class="nav-item">
+                            <a href="#!">
+                                <i class="ti-layout-cta-right"></i>
+                                <span data-i18n="nav.navigate.main">Office Administrator</span>
+                            </a>
+                            <ul class="tree-1">
+                                <li>
+                                    <a href="<?= url('Visitor/index') ?>" data-i18n="nav.navigate.navbar">Visitors</a>
+                                </li>
+
+
+
+
+                            </ul>
+                        </li>                  
+
+
+
                         <?php if (can_access('manage_sales')) { ?>
                             <li class="nav-item">
                                 <a href="#!">
@@ -555,14 +583,14 @@ function toast(message) {
                                     <li>
                                         <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">Schools</a>
                                     </li>
-                                
+
 
                                 </ul>
                             </li>
                         <?php } ?>
-                              <?php if (can_access('manage_marketing')) { ?>
+                        <?php if (can_access('manage_marketing')) { ?>
                             <li class="nav-item">
-                                <a href="<?=url('users/tasks')?>">
+                                <a href="<?= url('users/tasks') ?>">
                                     <i class="ti-gift "></i>
                                     <span data-i18n="nav.extra-components.main">Tasks Management</span>
                                 </a>
@@ -666,13 +694,13 @@ function toast(message) {
                             </li>
                         <?php } ?>
                         <?php if (can_access('manage_expenses')) { ?>
-<!--                            <li class="nav-item single-item has-class">
-                                <a href="<?= url('account/transaction/4') ?>">
-                                    <i class="ti-view-grid"></i>
-                                    <span data-i18n="nav.widget.main"> Expenses</span>
-                                    <label class="label label-danger menu-caption">+</label>
-                                </a>
-                            </li>-->
+                            <!--                            <li class="nav-item single-item has-class">
+                                                            <a href="<?= url('account/transaction/4') ?>">
+                                                                <i class="ti-view-grid"></i>
+                                                                <span data-i18n="nav.widget.main"> Expenses</span>
+                                                                <label class="label label-danger menu-caption">+</label>
+                                                            </a>
+                                                        </li>-->
 
                         <?php } ?>
                         <?php if (can_access('manage_users')) { ?>
@@ -1024,9 +1052,9 @@ function toast(message) {
 
 
         <!-- Custom js -->
-   <script src="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.js"></script>  
-   
-        
+        <script src="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.js"></script>  
+
+
         <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/custom-dashboard.js?v=3"></script>
         <script type="text/javascript" src="<?= $root ?>assets/js/script.js?v=2"></script>
 
@@ -1043,7 +1071,7 @@ function toast(message) {
         @yield('footer')
     </body>
     <?php
-    if (request('type_id') != 'subject' && !preg_match('/emailsms/', url()->current()) && !preg_match('/sales/', url()->current()) && !preg_match('/logs/', url()->current()) && !preg_match('/payment_history/i',url()->current()) && !preg_match('/api/', url()->current())) {
+    if (request('type_id') != 'subject' && !preg_match('/emailsms/', url()->current()) && !preg_match('/sales/', url()->current()) && !preg_match('/logs/', url()->current()) && !preg_match('/payment_history/i', url()->current()) && !preg_match('/api/', url()->current())) {
         ?>
         <script type="text/javascript">
 
@@ -1124,15 +1152,15 @@ function toast(message) {
                                                            ]
                                                        });
                                                    });
-                                                   
-                                                   
-                                                   
-                                                   
-           $('.clockpicker').clockpicker({
-            donetext: 'Done'
-         }).find('input').change(function () {
-            console.log(this.value);
-        });
+
+
+
+
+                                                   $('.clockpicker').clockpicker({
+                                                       donetext: 'Done'
+                                                   }).find('input').change(function () {
+                                                       console.log(this.value);
+                                                   });
         </script>
     <?php } ?>
 </html>
