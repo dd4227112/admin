@@ -244,7 +244,7 @@
                                             <!-- accepted payments column -->
 
                                             <div class="col-sm-6 invoice-col">
-                                                <p class="well-sm "><b>Amount in words:</b> <?= number_to_words($price * ($students + $siteinfos->estimated_students)) ?></p>
+                                                <p class="well-sm "><b>Amount in words:</b> <?php // number_to_words($price * ($students + $siteinfos->estimated_students)) ?></p>
                                                 <br/>
 
                                                 <p class="lead  well-sm ">Payment Methods:</p>
