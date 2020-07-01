@@ -222,7 +222,7 @@ class Kernel extends ConsoleKernel {
 
     public function syncInvoice() {
         $invoices = DB::select("select distinct schema_name from admin.all_bank_accounts_integrations where invoice_prefix in (select prefix from admin.all_invoices where schema_name not in ('public','accounts','beta_testing')  and sync=0)");
-        print_r($invoices);
+     
         foreach ($invoices as $invoice) {
             $this->syncInvoicePerSchool($invoice->schema_name);
         }
@@ -234,24 +234,24 @@ class Kernel extends ConsoleKernel {
     public function syncInvoicePerSchool($schema = '') {
 
         $invoices = DB::select("select b.id, b.student_id, b.status, b.reference, b.prefix,b.date,b.sync,b.return_message,b.push_status,b.academic_year_id,b.created_at, b.updated_at, a.amount, c.name as student_name, '" . $schema . "' as schema_name, (select sub_invoice from  " . $schema . ".setting limit 1) as sub_invoice   from  " . $schema . ".invoices b join " . $schema . ".student c on c.student_id=b.student_id join ( select sum(balance) as amount, a.invoice_id from " . $schema . ".invoice_balances a group by a.invoice_id ) a on a.invoice_id=b.id where  a.amount >0  and b.sync <>1 order by random() limit 15");
-       print_r($invoices);
+     
             foreach ($invoices as $invoice) {
 
                 if ($invoice->sub_invoice == 1) {
                     $sub_invoices = DB::select("select b.id, b.student_id, b.reference||'EA'||a.fee_id as reference, b.prefix,b.date,b.sync,b.return_message,b.push_status,b.academic_year_id,b.created_at, b.updated_at, a.balance as amount, c.name  from  " . $schema . ".invoices b join " . $schema . ".student c on c.student_id=b.student_id join " . $schema . ".invoice_balances a on a.invoice_id=b.id  where b.id=" . $invoice->id);
 
                     foreach ($sub_invoices as $sub_invoice) {
-                      return $this->pushInvoice($sub_invoice);
+                       $this->pushInvoice($sub_invoice);
                     }
                 } else {
-                    return $this->pushInvoice($invoice);
+                     $this->pushInvoice($invoice);
                 }
             }
         
     }
 
     public function pushInvoice($invoice) {
-
+        print_r($invoice);
         $token = $this->getToken($invoice);
         if (strlen($token) > 4) {
             $fields = array(
