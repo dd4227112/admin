@@ -232,8 +232,45 @@ class Users extends Controller {
         echo $message;
     }
 
-      public function tasks() {
-              $this->data['budget'] = [];
-        return view('users.tasks', $this->data);
+    public function minutes() {
+        
+        $this->data['minutes'] = \App\Models\Minutes::all();
+        return view('users.minutes', $this->data);
     }
+    
+    public function addMinute() {
+        
+        if ($_POST) {
+        
+                $filename='';
+                if (!empty(request('attached'))){
+                    $file = request()->file('attached');
+                    $filename = time() . rand(11, 8894).'.' . $file->guessExtension();
+                    $filePath = base_path().'/storage/uploads/images/';
+                    $file->move($filePath, $filename);
+                }
+                
+                $array = [
+                    'title' => request('title'),
+                    'note' => request('note'),
+                    'date' => request('date'),
+                    'start_time' => request('start_time'),
+                    'end_time' => request('end_time'),
+                    'department_id' => request('department_id'),
+                    'attached' => $filename
+                ];
+                \App\Models\Minutes::create($array);
+            return redirect('users/minutes')->with('success', request('title') . ' updated successfully');
+    }
+    $this->data['users'] = \App\Models\User::all();
+    return view('users.addminute', $this->data);
+}
+
+public function showMinute() {
+    $id = request()->segment(3);
+    $this->data['minute'] = \App\Models\Minutes::where('id', $id)->first();
+    return view('users.view_minute', $this->data);
+}
+
+
 }

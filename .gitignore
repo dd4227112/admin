@@ -4,6 +4,7 @@
 /public/admin5
 /storage/*.key
 /vendor
+/config
 /.vagrant
 Homestead.json
 Homestead.yaml
