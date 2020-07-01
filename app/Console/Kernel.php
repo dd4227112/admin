@@ -41,9 +41,9 @@ class Kernel extends ConsoleKernel {
             (new Message())->sendSms();
         })->everyMinute();
 
-        $schedule->call(function () {
-            (new Message())->checkPhoneStatus();
-        })->everyFiveMinutes();
+//        $schedule->call(function () {
+//            (new Message())->checkPhoneStatus();
+//        })->everyFiveMinutes();
         $schedule->call(function () {
             $this->curlServer(['action' => 'payment'], 'http://51.77.212.234:8081/api/cron');
             (new Message())->sendEmail();
@@ -233,20 +233,20 @@ class Kernel extends ConsoleKernel {
     public function syncInvoicePerSchool($schema = '') {
 
         $invoices = DB::select("select b.id, b.student_id, b.status, b.reference, b.prefix,b.date,b.sync,b.return_message,b.push_status,b.academic_year_id,b.created_at, b.updated_at, a.amount, c.name as student_name, '" . $schema . "' as schema_name, (select sub_invoice from  " . $schema . ".setting limit 1) as sub_invoice   from  " . $schema . ".invoices b join " . $schema . ".student c on c.student_id=b.student_id join ( select sum(balance) as amount, a.invoice_id from " . $schema . ".invoice_balances a group by a.invoice_id ) a on a.invoice_id=b.id where  a.amount >0  and b.sync <>1 order by random() limit 15");
-        if (count($invoices) > 0) {
+       print_r($invoices);
             foreach ($invoices as $invoice) {
 
                 if ($invoice->sub_invoice == 1) {
                     $sub_invoices = DB::select("select b.id, b.student_id, b.reference||'EA'||a.fee_id as reference, b.prefix,b.date,b.sync,b.return_message,b.push_status,b.academic_year_id,b.created_at, b.updated_at, a.balance as amount, c.name  from  " . $schema . ".invoices b join " . $schema . ".student c on c.student_id=b.student_id join " . $schema . ".invoice_balances a on a.invoice_id=b.id  where b.id=" . $invoice->id);
 
                     foreach ($sub_invoices as $sub_invoice) {
-                        $this->pushInvoice($sub_invoice);
+                      return $this->pushInvoice($sub_invoice);
                     }
                 } else {
-                    $this->pushInvoice($invoice);
+                    return $this->pushInvoice($invoice);
                 }
             }
-        }
+        
     }
 
     public function pushInvoice($invoice) {
