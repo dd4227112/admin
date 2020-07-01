@@ -251,7 +251,7 @@ class Kernel extends ConsoleKernel {
     }
 
     public function pushInvoice($invoice) {
-        print_r($invoice);
+       
         $token = $this->getToken($invoice);
         if (strlen($token) > 4) {
             $fields = array(
@@ -260,14 +260,15 @@ class Kernel extends ConsoleKernel {
                 "student_id" => $invoice->student_id,
                 "amount" => $invoice->amount,
                 // "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
-                "type" => ucfirst($invoice->schema_name) . '  school fee',
+                "type" => ucfirst($invoice->schema_name) . '  School fee',
                 "code" => "10",
                 "callback_url" => "http://51.77.212.234:8081/api/init",
                 "token" => $token
             );
-
+            print_r($fields);
             $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
             //$push_status = 'invoice_submission';
+            echo $push_status;
             if ($invoice->schema_name == 'beta_testing') {
                 //testing invoice
                 $setting = DB::table('beta_testing.setting')->first();
