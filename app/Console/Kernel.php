@@ -222,8 +222,9 @@ class Kernel extends ConsoleKernel {
 
     public function syncInvoice() {
         $invoices = DB::select("select distinct schema_name from admin.all_bank_accounts_integrations where invoice_prefix in (select prefix from admin.all_invoices where schema_name not in ('public','accounts','beta_testing')  and sync=0)");
+        print_r($invoices);
         foreach ($invoices as $invoice) {
-           return $this->syncInvoicePerSchool($invoice->schema_name);
+            $this->syncInvoicePerSchool($invoice->schema_name);
         }
     }
 
