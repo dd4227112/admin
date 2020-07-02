@@ -478,7 +478,8 @@ function toast(message) {
                                     <span data-i18n="nav.page_layout.main">Customer Service</span>
                                 </a>
                                 <ul class="tree-1">
-                                    <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.bottom-menu">System Setup</a></li>
+                                <li><a href="<?= url('customer/activity') ?>" data-i18n="nav.page_layout.bottom-menu">Activity & Tasks</a></li>
+                                <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.bottom-menu">System Setup</a></li>
                                     <li>
                                         <a href="<?= url('Phone_call/index') ?>" data-i18n="nav.navigate.navbar">phone Calls</a>
                                     </li>

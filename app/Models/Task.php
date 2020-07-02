@@ -35,5 +35,10 @@ class Task extends Model {
     public function taskType() {
         return $this->belongsTo(\App\Models\TaskType::class, 'task_type_id', 'id')->withDefault(['name'=>'Not allocated']);
     }
+    
+    
+    public function modules() {
+        return $this->hasMany(\App\Models\ModuleTask::class, 'task_id', 'id');
+    }
 
 }

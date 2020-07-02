@@ -254,8 +254,19 @@
                                     </div>
 
 
+                                    <div class="form-group">
+                        <strong>  Pick Modules where task will be Performed</strong> 
+                          <hr>
+                    <?php
+                    $modules = DB::table('modules')->get();
+                    foreach ($modules as $module) {
+                      ?>
+                      <input type="checkbox" id="feature<?= $module->id ?>" value="{{$module->id}}" name="module_id[]" >  <?php echo $module->name; ?>  &nbsp; &nbsp;
 
+                    <?php } ?>
+                    </div>
 
+                                           <?php   /*
                                     <div class="form-group">
                                       <div class="row">
                                         <?php
@@ -277,6 +288,7 @@
 
                                       </div>
                                     </div>
+                                    */ ?>
                                   </div>
                                   <div class="modal-footer">
                                     <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
