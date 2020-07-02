@@ -12,8 +12,8 @@ class ModuleTask extends Model {
     protected $fillable = ['id', 'module_id', 'task_id', 'created_at'];
 
 
-    public function subModule() {
-        return $this->belongsTo(\App\Models\SubModule::class, 'module_id', 'id');
+    public function module() {
+        return $this->belongsTo(\App\Models\Module::class, 'module_id', 'id');
     }
 
     public function task() {

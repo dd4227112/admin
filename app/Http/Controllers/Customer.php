@@ -296,7 +296,19 @@ class Customer extends Controller {
                         . '</ul>';
                 $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
             }
-            return redirect('customer/profile/' . $school)->with('success', 'success');
+            if(count($task->id) > 0 && request('module_id')){
+                $modules = request('module_id');
+               foreach($modules as $key => $value) {
+                   if(request('module_id')[$key] != ''){
+                $array = ['module_id' => request('module_id')[$key], 'task_id' => $task->id];
+                $check_unique = \App\Models\ModuleTask::where($array);
+                if (count($check_unique->first()) == 0) {
+                    \App\Models\ModuleTask::create($array);
+                }
+            }
+        }
+    }
+            return redirect('customer/profile/'.$school)->with('success', 'success');
         }
         if ((int) $id > 0) {
             return view('customer/addtask', $this->data);
@@ -305,16 +317,48 @@ class Customer extends Controller {
         }
     }
 
-    public function addTask() {
-        $module_id = request('module_id');
-        if ((int) $module_id > 0) {
-            $array = ['module_id' => request('module_id'), 'task_id' => request('task_id')];
+    public function activity() {
+        $tab = request()->segment(3);
+        $id = request()->segment(4);
+        if($tab == 'add'){
+            $this->data['clients'] = \App\Models\Client::all();
+            if ($_POST) {
 
-            $check_unique = \App\Models\ModuleTask::where($array);
-            if (count($check_unique->first()) == 0) {
-                \App\Models\ModuleTask::create($array);
+            $data = array_merge(request()->all(), ['user_id' => Auth::user()->id]);
+            $task = \App\Models\Task::create($data);
+            if ((int) request('to_user_id') > 0) {
+                $user = \App\Models\User::find(request('to_user_id'));
+                $message = 'Hello ' . $user->firstname . '<br/>'
+                        . 'A task has been allocated to you'
+                        . '<ul>'
+                        . '<li>Task: ' . $task->activity . '</li>'
+                        . '<li>Type: ' . $task->taskType->name . '</li>'
+                        . '<li>Deadline: ' . $task->date . '</li>'
+                        . '</ul>';
+                $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
             }
-            echo "success";
+            if(count($task->id) > 0 && request('module_id')){
+                $modules = request('module_id');
+               foreach($modules as $key => $value) {
+                   if(request('module_id')[$key] != ''){
+                $array = ['module_id' => request('module_id')[$key], 'task_id' => $task->id];
+                $check_unique = \App\Models\ModuleTask::where($array);
+                if (count($check_unique->first()) == 0) {
+                    \App\Models\ModuleTask::create($array);
+                }
+            }
+        }
+    }
+        return redirect('customer/activity')->with('success', 'success');
+    }
+
+    return view('customer/addtask', $this->data);
+    }elseif($tab == 'show' && $id>0){
+        $this->data['activity'] = \App\Models\Task::find($id);
+        return view('customer/view_task', $this->data);
+    }else{
+            $this->data['activities'] = \App\Models\Task::all();
+            return view('customer/activity', $this->data);
         }
     }
 
