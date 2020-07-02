@@ -64,7 +64,7 @@
                                                 <td><a href="<?= url('customer/activity/show/' . $activity->id) ?>"><?= substr($activity->activity, 0, 60) ?></a></td>
 
                                                 <td><?= $activity->user->firstname ?></td>
-                                                <td><?= $activity->client->name ?></td>
+                                                <td><?= $activity->client->username ?></td>
                                                 <td><?= $activity->date ?> <?= $activity->time ?></td>
 
                                                 <td><?= $activity->created_at ?></td>
@@ -74,7 +74,8 @@
                                     </tbody>
                                     <tfoot>
                                     <tr>
-                                        <th>Task type</th>
+                                    <th>No</th>
+                                    <th>Task type</th>
                                         <th>Task Title</th>
                                             <th>Added By</th>
                                             <th>School</th>
