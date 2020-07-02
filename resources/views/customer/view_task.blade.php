@@ -50,7 +50,14 @@
                                     </tr>
                                     <tr>
                                       <th scope="row">Staff Members</th>
-                                      <th> By <?= $activity->user->firstname ?> <?= $activity->user->lastname ?> To <?= $activity->toUser->firstname ?> <?= $activity->toUser->lastname ?></th>
+                                      <th>
+                                      <?php
+                                      if($activity->user_id == $activity->to_user_id){
+                                        echo $activity->user->firstname.' '. $activity->user->lastname;
+                                      }else{
+                                        echo 'By '.$activity->user->firstname.' '. $activity->user->lastname. ' To '.$activity->toUser->firstname. ' '. $activity->toUser->lastname;
+                                      }
+                                         ?>
                                       </tr>
                                       <tr>
                                       <th> Client Name</th>
