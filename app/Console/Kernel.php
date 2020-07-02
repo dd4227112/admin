@@ -33,12 +33,17 @@ class Kernel extends ConsoleKernel {
         $schedule->command('inspire')
                 ->hourly();
         $schedule->call(function () {
+            // sync invoices 
+            $this->syncInvoice();
+            //$this->updateInvoice();
+        })->everyMinute();
+        $schedule->call(function () {
             (new Message())->sendSms();
         })->everyMinute();
 
-        $schedule->call(function () {
-            (new Message())->checkPhoneStatus();
-        })->everyFiveMinutes();
+//        $schedule->call(function () {
+//            (new Message())->checkPhoneStatus();
+//        })->everyFiveMinutes();
         $schedule->call(function () {
             $this->curlServer(['action' => 'payment'], 'http://51.77.212.234:8081/api/cron');
             (new Message())->sendEmail();
@@ -75,11 +80,7 @@ class Kernel extends ConsoleKernel {
             (new Message())->paymentReminder();
         })->dailyAt('05:10');
 
-        $schedule->call(function () {
-            // sync invoices 
-            $this->syncInvoice();
-            //$this->updateInvoice();
-        })->everyMinute();
+
         $schedule->call(function () {
             $this->checkSchedule();
         })->everyMinute();
@@ -220,7 +221,8 @@ class Kernel extends ConsoleKernel {
     }
 
     public function syncInvoice() {
-        $invoices = DB::select("select distinct schema_name from admin.all_bank_accounts_integrations where invoice_prefix in (select prefix from admin.all_invoices where schema_name not in ('public','accounts','beta_testing')  and sync=0)");
+        $invoices = DB::select("select distinct schema_name from admin.all_bank_accounts_integrations where invoice_prefix in (select prefix from admin.all_invoices where schema_name not in ('public','accounts','beta_testing')  and sync=0) and invoice_prefix like '%SAS%'");
+
         foreach ($invoices as $invoice) {
             $this->syncInvoicePerSchool($invoice->schema_name);
         }
@@ -232,25 +234,24 @@ class Kernel extends ConsoleKernel {
     public function syncInvoicePerSchool($schema = '') {
 
         $invoices = DB::select("select b.id, b.student_id, b.status, b.reference, b.prefix,b.date,b.sync,b.return_message,b.push_status,b.academic_year_id,b.created_at, b.updated_at, a.amount, c.name as student_name, '" . $schema . "' as schema_name, (select sub_invoice from  " . $schema . ".setting limit 1) as sub_invoice   from  " . $schema . ".invoices b join " . $schema . ".student c on c.student_id=b.student_id join ( select sum(balance) as amount, a.invoice_id from " . $schema . ".invoice_balances a group by a.invoice_id ) a on a.invoice_id=b.id where  a.amount >0  and b.sync <>1 order by random() limit 15");
-        if (count($invoices) > 0) {
-            foreach ($invoices as $invoice) {
 
-                if ($invoice->sub_invoice == 1) {
-                    $sub_invoices = DB::select("select b.id, b.student_id, b.reference||'EA'||a.fee_id as reference, b.prefix,b.date,b.sync,b.return_message,b.push_status,b.academic_year_id,b.created_at, b.updated_at, a.balance as amount, c.name  from  " . $schema . ".invoices b join " . $schema . ".student c on c.student_id=b.student_id join " . $schema . ".invoice_balances a on a.invoice_id=b.id  where b.id=" . $invoice->id);
+        foreach ($invoices as $invoice) {
 
-                    foreach ($sub_invoices as $sub_invoice) {
-                        $this->pushInvoice($sub_invoice);
-                    }
-                } else {
-                    $this->pushInvoice($invoice);
+            if ($invoice->sub_invoice == 1) {
+                $sub_invoices = DB::select("select b.id, b.student_id, b.reference||'EA'||a.fee_id as reference, b.prefix,b.date,b.sync,b.return_message,b.push_status,b.academic_year_id,b.created_at, b.updated_at, a.balance as amount, c.name  from  " . $schema . ".invoices b join " . $schema . ".student c on c.student_id=b.student_id join " . $schema . ".invoice_balances a on a.invoice_id=b.id  where b.id=" . $invoice->id);
+
+                foreach ($sub_invoices as $sub_invoice) {
+                    $this->pushInvoice($sub_invoice);
                 }
+            } else {
+                $this->pushInvoice($invoice);
             }
         }
     }
 
     public function pushInvoice($invoice) {
 
-        $token = $this->getToken($invoice);
+        echo $token = $this->getToken($invoice);
         if (strlen($token) > 4) {
             $fields = array(
                 "reference" => trim($invoice->reference),
@@ -258,14 +259,15 @@ class Kernel extends ConsoleKernel {
                 "student_id" => $invoice->student_id,
                 "amount" => $invoice->amount,
                 // "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
-                "type" => ucfirst($invoice->schema_name) . '  school fee',
+                "type" => ucfirst($invoice->schema_name) . '  School fee',
                 "code" => "10",
                 "callback_url" => "http://51.77.212.234:8081/api/init",
                 "token" => $token
             );
-
+            print_r($fields);
             $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
             //$push_status = 'invoice_submission';
+            echo $push_status;
             if ($invoice->schema_name == 'beta_testing') {
                 //testing invoice
                 $setting = DB::table('beta_testing.setting')->first();
@@ -373,8 +375,9 @@ class Kernel extends ConsoleKernel {
                 $user = trim($credentials->api_username);
                 $pass = trim($credentials->api_password);
             } else {
-                $user = '';
-                $pass = '';
+                $credentials = DB::table($invoice->schema_name . '.bank_accounts_integrations')->first();
+                $user = trim($credentials->api_username);
+                $pass = trim($credentials->api_password);
             }
         }
         $request = $this->curlServer([
@@ -382,6 +385,8 @@ class Kernel extends ConsoleKernel {
             'password' => $pass
                 ], $url);
         $obj = json_decode($request);
+ 
+        print_r($obj);
         //DB::table('api.requests')->insert(['return' => json_encode($obj), 'content' => json_encode($request)]);
         if (isset($obj) && is_object($obj) && isset($obj->status) && $obj->status == 1) {
             return $obj->token;

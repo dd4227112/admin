@@ -27,7 +27,7 @@ class Analyse extends Controller {
 //       created_at < date_trunc('week', CURRENT_TIMESTAMP)
 //      )"))->first()->aggregate;
         //$this->data['log_graph'] = $this->createBarGraph();
-       
+
         return view('analyse.index', $this->data);
     }
 
@@ -49,12 +49,50 @@ class Analyse extends Controller {
     }
 
     public function setting() {
-        $this->data['association']=\App\Model\Association::first();
-        return view('analyse.setting', $this->data); 
+        $this->data['association'] = \App\Model\Association::first();
+        return view('analyse.setting', $this->data);
     }
-    
+
     public function accounts() {
-         $this->data['association']=\App\Model\Association::first();
-        return view('analyse.accounts', $this->data);  
+        $this->data['association'] = \App\Model\Association::first();
+        return view('analyse.accounts', $this->data);
     }
+
+    public function search() {
+        $q = strtolower(request('q'));
+        $users = DB::select("select a.reference,a.id,b.name,b.username from admin.invoices a join admin.clients b on b.id=a.client_id where (lower(a.reference) like  '%" . $q . "%'  or lower(b.name) like  '%" . $q . "%' )");
+        $user_list = '';
+        foreach ($users as $user) {
+            $user_list .= '   <a class="dummy-media-object" href="' . url('account/invoiceView/' . $user->username) . '">
+                                        <img class="round" src="' . url('public/assets/images/avatar-1.png') . '" alt="' . $user->name . '" />
+                                        <h3>' . $user->name . '<br/>' . $user->reference . '</h3>
+                                    </a>';
+        }
+
+        $school_list = '';
+        $schools = DB::select("select * from (select sname,schema_name,photo, 1 as is_schema from admin.all_setting where lower(schema_name) like '%" . $q . "%' union select name as sname, name as schema_name,'default.png' as photo, id as is_schema from admin.schools where lower(name) like '%" . $q . "%' ) b limit 6 ");
+
+        foreach ($schools as $school) {
+            $url = $school->is_schema == 1 ? url('customer/profile/' . $school->schema_name) : url('sales/profile/' . $school->is_schema);
+            $school_list .= ' <a class="dummy-media-object" href="' . $url . '">
+                                        <img src="' . url('public/assets/images/avatar-1.png') . '" alt="' . $school->schema_name . '" />
+                                        <h3>' . $school->sname . '</h3>
+                                    </a>';
+        }
+        $activity_list = '';
+        $activities = DB::SELECT("select * from admin.tasks where lower(activity) like  '%" . $q . "%' limit 4");
+        foreach ($activities as $activity) {
+            $url = url('users/notification/null?#tasks' . $activity->id);
+            $activity_list .= ' <a class="dummy-media-object" href="' . $url . '">
+                                        <img src="' . url('public/assets/images/avatar-1.png') . '" alt="" />
+                                        <h3>' . $activity->activity . '</h3>
+                                    </a>';
+        }
+        echo json_encode([
+            'people' => $user_list,
+            'schools' => $school_list,
+            'activities' => $activity_list
+        ]);
+    }
+
 }
