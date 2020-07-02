@@ -357,8 +357,9 @@ class Customer extends Controller {
         $this->data['activity'] = \App\Models\Task::find($id);
         return view('customer/view_task', $this->data);
     }else{
-            $this->data['activities'] = \App\Models\Task::all();
-            return view('customer/activity', $this->data);
+        $days = date('Y-m-d H:i:s', strtotime('-60 days'));
+        $this->data['activities'] = \App\Models\Task::where('created_at', '>', $days)->orderBy('id', 'desc')->get();
+        return view('customer/activity', $this->data);
         }
     }
 
