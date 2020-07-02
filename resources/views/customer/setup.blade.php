@@ -26,6 +26,7 @@
 //foreach ($levels as $level) {
 //    $classlevel_status[$level->schema_name] = $level->schema_name;
 //}
+
 ?>
 <!-- Sidebar inner chat end-->
 <!-- Main-body start -->
@@ -84,6 +85,7 @@
                                             <th>Sections</th>
 
                                             <th>School Stamp</th>
+                                            <th>Source</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -101,7 +103,7 @@
                                                         echo '<b class="label label-warning">Not Defined</b>';
                                                     }
                                                     ?>
-                                                    
+
                                                 </td>
                                                 <td>
                                                     <?php
@@ -156,6 +158,21 @@
                                                         }
                                                     }
                                                     ?></td>
+                                                <td >
+                                                    <select name="source" id="source">
+                                                        <option value="Event"  >Event</option>
+                                                        <option value="Direct Sales" <?= $sources[$value->schema_name] == 'Event' ? 'selected' : '' ?>>Direct Sales (Visit)</option>
+                                                        <option value="Cold Call" <?= $sources[$value->schema_name] == 'Event' ? 'selected' : '' ?>>Cold Call</option>
+                                                        <option value="Call Received" <?= $sources[$value->schema_name] == 'Event' ? 'selected' : '' ?>>Call Received</option>
+                                                        <option value="Partnership(NMB)" <?= $sources[$value->schema_name] == 'Event' ? 'selected' : '' ?>>Partnership (NMB Bank)</option>                                     
+                                                        <option value="Partnership(Other)" <?= $sources[$value->schema_name] == 'Event' ? 'selected' : '' ?>>Partnership (Others)</option>
+
+                                                        <option value="Referral" <?= $sources[$value->schema_name] == 'Event' ? 'selected' : '' ?>>Referral</option>
+                                                        <option value="Website" <?= $sources[$value->schema_name] == 'Event' ? 'selected' : '' ?>>Website</option>
+                                                        <option value="SMS" <?= $sources[$value->schema_name] == 'Event' ? 'selected' : '' ?>>SMS</option>
+                                                        <option value="Social Media" <?= $sources[$value->schema_name] == 'Event' ? 'selected' : '' ?>>Social Media</option>
+                                                    </select>
+                                                </td>
                                                 <td><a href="<?= url('customer/profile/' . $school->schema_name) ?>" class="btn btn-mini waves-effect waves-light btn-primary"><i class="icofont icofont-eye-alt"></i> View</a></td>
                                             </tr>
                                         <?php } ?>
@@ -190,7 +207,7 @@
     <?php $root = url('/') . '/public/' ?>
 
     <script type="text/javascript">
-      
+
         get_statistic = function () {
             // var data = getData();
             // console.log(data);

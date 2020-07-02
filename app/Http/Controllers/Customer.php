@@ -267,7 +267,7 @@ class Customer extends Controller {
             $this->data['client_id'] = $id;
             $this->data['school'] = \collect(DB::select(' select name as sname, name, region , ward, district as address  from admin.schools where id=' . $id))->first();
         } else {
-         
+
             $is_client = 1;
             $this->data['school'] = DB::table($school . '.setting')->first();
             $this->data['levels'] = DB::table($school . '.classlevel')->get();
@@ -275,7 +275,6 @@ class Customer extends Controller {
             if (count($client) == 0) {
 
                 $client = \App\Models\Client::create(['name' => $this->data['school']->sname, 'email' => $this->data['school']->email, 'phone' => $this->data['school']->phone, 'address' => $this->data['school']->address, 'username' => $school]);
-                
             }
             $this->data['client_id'] = $client->id;
 
@@ -297,11 +296,11 @@ class Customer extends Controller {
                         . '</ul>';
                 $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
             }
-            return redirect('customer/profile/'.$school)->with('success', 'success');
+            return redirect('customer/profile/' . $school)->with('success', 'success');
         }
-        if((int)$id>0){
-        return view('customer/addtask', $this->data);
-        }else{
+        if ((int) $id > 0) {
+            return view('customer/addtask', $this->data);
+        } else {
             return view('customer/profile', $this->data);
         }
     }
@@ -310,16 +309,14 @@ class Customer extends Controller {
         $module_id = request('module_id');
         if ((int) $module_id > 0) {
             $array = ['module_id' => request('module_id'), 'task_id' => request('task_id')];
-            
+
             $check_unique = \App\Models\ModuleTask::where($array);
             if (count($check_unique->first()) == 0) {
                 \App\Models\ModuleTask::create($array);
             }
             echo "success";
         }
-      
     }
-
 
     public function removeTag() {
         $id = request('id');
@@ -333,29 +330,36 @@ class Customer extends Controller {
         $schema = request('schema');
         $user_id = request('user_id');
         $role_id = request('role_id');
-        if ((int) $school_id == 0) {
-            $sch = DB::table('admin.all_setting')->where('schema_name', $schema)->first();
-            $obj = DB::table('schools')->where('name', 'ilike', '%' . substr($schema, 0, 4) . '%')->first();
-            $school_id = count($sch) == 1 ? $sch->school_id : count($obj) == 1 ? $obj->id : '';
-        }
-        if ((int) $school_id == 0) {
-            //this school does not exists, try to add it in a list of schols
-            $school_id = DB::table('schools')->insertGetId(['name' => $schema, 'ownership' => 'Non-Government', 'schema_name' => $schema]);
-        }
-        $school_info = DB::table('schools')->where('id', $school_id);
-        if (count($school_info->first()) == 1) {
-            $check = DB::table('users_schools')->where('schema_name', $schema)->where('role_id', $role_id);
-            if ((int) $check->count() > 0) {
-                $check->update(['user_id' => $user_id]);
-            } else {
-                DB::table('users_schools')->insert(['school_id' => $school_id, 'user_id' => $user_id, 'role_id' => $role_id, 'schema_name' => $schema]);
+        if (strlen($schema) > 2) {
+            if ((int) $role_id == 5) {
+                $sch = DB::table($schema . '.setting')->update(['source' => request('val')]);
+                echo 1;
+                exit;
             }
-            DB::table($schema . '.setting')->update(['school_id' => $school_id]);
+            if ((int) $school_id == 0) {
+                $sch = DB::table('admin.all_setting')->where('schema_name', $schema)->first();
+                $obj = DB::table('schools')->where('name', 'ilike', '%' . substr($schema, 0, 4) . '%')->first();
+                $school_id = count($sch) == 1 ? $sch->school_id : count($obj) == 1 ? $obj->id : '';
+            }
+            if ((int) $school_id == 0) {
+                //this school does not exists, try to add it in a list of schols
+                $school_id = DB::table('schools')->insertGetId(['name' => $schema, 'ownership' => 'Non-Government', 'schema_name' => $schema]);
+            }
+            $school_info = DB::table('schools')->where('id', $school_id);
+            if (count($school_info->first()) == 1) {
+                $check = DB::table('users_schools')->where('schema_name', $schema)->where('role_id', $role_id);
+                if ((int) $check->count() > 0) {
+                    $check->update(['user_id' => $user_id]);
+                } else {
+                    DB::table('users_schools')->insert(['school_id' => $school_id, 'user_id' => $user_id, 'role_id' => $role_id, 'schema_name' => $schema]);
+                }
+                DB::table($schema . '.setting')->update(['school_id' => $school_id]);
+            }
+
+            $school_info->update(['schema_name' => $schema]);
+
+            echo 1;
         }
-
-        $school_info->update(['schema_name' => $schema]);
-
-        echo 1;
     }
 
     public function requirements() {
@@ -484,16 +488,15 @@ class Customer extends Controller {
         $schema = request('schema');
         if (strlen($val) > 3) {
             $schools = DB::select('select * from admin.schools where lower("name") like \'%' . strtolower($val) . '%\'');
-            if(count($schools)>0){
-            foreach ($schools as $school) {
+            if (count($schools) > 0) {
+                foreach ($schools as $school) {
 
-                echo '<p><a href="' . url('customer/map/' . $schema . '/' . $school->id) . '">' . $school->name . '( ' . $school->region . ' )</a></p>';
+                    echo '<p><a href="' . url('customer/map/' . $schema . '/' . $school->id) . '">' . $school->name . '( ' . $school->region . ' )</a></p>';
+                }
             }
+        } else {
+            echo '<p id="new_id"> This School does not exist <button type="button" class="btn btn-link">Click to add</button></p>';
         }
-        
-            } else {
-             echo '<p id="new_id"> This School does not exist <button type="button" class="btn btn-link">Click to add</button></p>';    
-            }
     }
 
     public function map() {
