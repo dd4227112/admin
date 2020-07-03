@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.9/select2-bootstrap.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.min.js"></script>
+
 <div class="main-body">
     <div class="page-wrapper">
         <!-- Page-header start -->
@@ -146,7 +150,7 @@
                                                                 $array[$categ->id] = $categ->name;
                                                             }
                                                         }
-                                                        echo form_dropdown("expense", $array, old("expense", $sub_id), "id='refer_expense_id' class='form-control select2' name='expense'");
+                                                        echo form_dropdown("expense", $array, old("expense", $sub_id), "id='refer_expense_id' style='border: 1px solid red' class='form-control select2' name='expense'");
                                                         ?>
                                                         <?php if (empty($category)) { ?>
                                                             <span class="red">Please click  <a href="<?= url("expense/financial_category/$check_id") ?>" class="btn btn-primary" role="button">add category</a> to add category</span>
@@ -450,6 +454,13 @@
 
     };
     $(document).ready(payment_method_status)
+
+    $(".select2").select2({
+		theme: "bootstrap",
+		dropdownAutoWidth: false,
+		allowClear: false,
+        debug: true
+	});
 </script>
 
 @endsection
