@@ -251,7 +251,7 @@ class Kernel extends ConsoleKernel {
 
     public function pushInvoice($invoice) {
 
-        echo $token = $this->getToken($invoice);
+         $token = $this->getToken($invoice);
         if (strlen($token) > 4) {
             $fields = array(
                 "reference" => trim($invoice->reference),
@@ -264,7 +264,7 @@ class Kernel extends ConsoleKernel {
                 "callback_url" => "http://51.77.212.234:8081/api/init",
                 "token" => $token
             );
-            print_r($fields);
+           
             $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
             //$push_status = 'invoice_submission';
             echo $push_status;
