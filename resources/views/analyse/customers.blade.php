@@ -145,7 +145,7 @@
                                         </thead>
                                         <tbody>
                                             <?php
-                                            $tasks = DB::select('select count(a.*),b.name from admin.tasks a join admin.task_types b on b.id=a.task_type_id where  a.created_at = current_date - interval \'7 days\'  group by b.name');
+                                            $tasks = DB::select('select count(a.*),b.name from admin.tasks a join admin.task_types b on b.id=a.task_type_id where  a.created_at > current_date - interval \'7 days\'  group by b.name');
                                             foreach ($tasks as $task) {
                                                 ?>
                                                 <tr>
