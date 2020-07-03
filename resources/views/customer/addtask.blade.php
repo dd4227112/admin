@@ -2,26 +2,15 @@
 @section('content')
 <?php $root = url('/') . '/public/' ?>
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.9/select2-bootstrap.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.min.js"></script>
+
 <div class="main-body">
     <div class="page-wrapper">
         <!-- Page-header start -->
         <div class="page-header">
-            <div class="page-header-title">
-                <h4><?= $school->sname ?></h4>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="#">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!"><?= $school->sname ?> </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!"><?=$schema?></a>
-                    </li>
-                </ul>
-            </div>
+           
         </div>
         <!-- Page-header end -->
         <!-- Page-body start -->
@@ -46,23 +35,35 @@
                   <textarea class="form-control" placeholder="Create Task" rows="5" name="activity"></textarea>
                 </div>
                 <div class="form-group">
+                <strong>  Select School or Client</strong> 
+
+                <select name="client_id"  class="form-control select2" required>
+                <option value=''> Select Client Here...</option>
+                        <?php
+                        foreach ($clients as $client) {
+                          ?>
+                          <option value='<?php echo $client->id; ?>'><?= $client->name ?>  (<?= $client->username ?>)</option>
+                        <?php } ?>
+                        </select>
+                </div>
+                <div class="form-group">
                   <div class="row">
 
                     <div class="col-md-6">
-                      Task Type
-                      <select name="task_type_id"  class="form-control">
+                    <strong> Task Type</strong> 
+                      <select name="task_type_id" required class="form-control">
                         <?php
                         $types = DB::table('task_types')->whereNull('department')->get();
                         foreach ($types as $type) {
                           ?>
-                          <option value="<?= $type->id ?>"><?= $type->name ?></option>
+                          <option value="<?= $type->id ?>"> <?= $type->name ?></option>
                         <?php } ?>
 
                       </select>
                     </div>
                     <div class="col-md-6">
-                      Person Allocated to do
-                      <select name="to_user_id" class="form-control">
+                    <strong> Person Allocated to do</strong> 
+                      <select name="to_user_id" class="form-control select2" required>
                         <?php
                         $staffs = DB::table('users')->where('status', 1)->get();
                         foreach ($staffs as $staff) {
@@ -78,23 +79,29 @@
                   <div class="row">
 
                     <div class="col-md-6">
-                      Deadline Date
+                    <strong> Deadline Date</strong> 
                       <input type="date" class="form-control" placeholder="Deadline" name="date">
                     </div>
                     <div class="col-md-6">
-                      Deadline Time
+                    <strong> Deadline Time</strong> 
                       <input type="time" class="form-control" placeholder="Time" name="time">
                     </div>
                   </div>
                 </div>
 
                 <div class="form-group">
-                  <div class="row">
+                        <strong>  Pick Modules where task will be Performed</strong> 
+                          <hr>
                     <?php
                     $modules = DB::table('modules')->get();
                     foreach ($modules as $module) {
                       ?>
-                      <div class="col-md-3">
+                      <input type="checkbox" id="feature<?= $module->id ?>" value="{{$module->id}}" name="module_id[]" >  <?php echo $module->name; ?>  &nbsp; &nbsp;
+
+                    <?php } ?>
+                      <?php
+                      /*
+                    <div class="col-md-3">
                         Task on <?=$module->name?>
                         <br>
                         <?php
@@ -105,15 +112,13 @@
                         <?php } ?>
 
                       </div>
-                    <?php } ?>
-
                   </div>
+                  */ ?>
                 </div>
               </div>
               <div class="modal-footer">
                 <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
               </div>
-              <input type="hidden" value="<?= $client_id ?>" name="client_id"/>
               <?= csrf_field() ?>
             </form>
           </div>
@@ -128,20 +133,11 @@
 </div>
 <script type="text/javascript">
 
-<script>
-send_comment = function (id) {
-  var featur_id = $('#feature' + id).val();
-  var module_id = $('#module' + id).val();
-  $.ajax({
-    type: 'POST',
-    url: '<?=url('Customer/addTask')?>',
-    data: {module_id: module_id,module_id: module_id, _token: '{{ csrf_token() }}'},
-    dataType: "html",
-    success: function (data) {
-      
-      //   window.location.href = '';
-    }
-  });
-}
+$(".select2").select2({
+		theme: "bootstrap",
+		dropdownAutoWidth: false,
+		allowClear: false,
+        debug: true
+	});
 </script>
 @endsection

@@ -117,7 +117,7 @@
                                   $user_image = 'storage/uploads/images/defualt.png';
                                   ?>
 
-                                  <img class="media-object img-circle" src="https://demo.shulesoft.com/<?= $user_image ?>" alt="Generic placeholder image">
+                                  <img class="media-object img-circle" src="https://demo.shulesoft.com/<?= $user_image ?>" alt="Image">
                                   <div class="live-status bg-danger"></div>
                                 </a>
                                 <div class="media-body">
@@ -254,8 +254,19 @@
                                     </div>
 
 
+                                    <div class="form-group">
+                        <strong>  Pick Modules where task will be Performed</strong> 
+                          <hr>
+                    <?php
+                    $modules = DB::table('modules')->get();
+                    foreach ($modules as $module) {
+                      ?>
+                      <input type="checkbox" id="feature<?= $module->id ?>" value="{{$module->id}}" name="module_id[]" >  <?php echo $module->name; ?>  &nbsp; &nbsp;
 
+                    <?php } ?>
+                    </div>
 
+                                           <?php   /*
                                     <div class="form-group">
                                       <div class="row">
                                         <?php
@@ -277,6 +288,7 @@
 
                                       </div>
                                     </div>
+                                    */ ?>
                                   </div>
                                   <div class="modal-footer">
                                     <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
@@ -328,7 +340,7 @@
                                             ?>
                                             <div class="media m-b-1" style="margin: 0px; padding: 0px">
                                               <a class="media-left" href="#">
-                                                <img class="media-object img-circle m-r-2" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
+                                                <img class="media-object img-circle m-r-2" src="<?= $root ?>assets/images/avatar-1.png" alt="Image">
                                               </a>
                                               <div class="media-body b-b-muted social-client-description">
                                                 <div class="chat-header"><?= $comment->user->firstname ?> - <span class="text-muted"><?= date('d M Y', strtotime($comment->created_at)) ?></span></div>
@@ -343,7 +355,7 @@
                                         <div class="new_comment<?= $task->id ?>"></div>
                                         <div class="media">
                                           <a class="media-left" href="#">
-                                            <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-blank.jpg" alt="Generic placeholder image">
+                                            <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-blank.jpg" alt="Image">
                                           </a>
                                           <div class="media-body">
                                             <form class="">

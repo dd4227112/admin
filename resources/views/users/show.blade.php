@@ -520,7 +520,7 @@ foreach ($user_permission as $permis) {
                                                                     ?>
                                                                     <div class="media m-b-20">
                                                                         <a class="media-left" href="#">
-                                                                            <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
+                                                                            <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-1.png" alt="Image">
                                                                         </a>
                                                                         <div class="media-body b-b-muted social-client-description">
                                                                             <div class="chat-header"><?= $comment->user->name ?><span class="text-muted"><?php echo date('d M Y', strtotime($comment->created_at)) ?></span></div>
@@ -535,7 +535,7 @@ foreach ($user_permission as $permis) {
                                                             <div class="new_comment<?= $task->id ?>"></div>
                                                             <div class="media">
                                                                 <a class="media-left" href="#">
-                                                                    <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-blank.jpg" alt="Generic placeholder image">
+                                                                    <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-blank.jpg" alt="Image">
                                                                 </a>
                                                                 <div class="media-body">
                                                                     <form class="">
