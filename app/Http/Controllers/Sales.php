@@ -336,4 +336,24 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
         return redirect()->back()->with('success', 'success');
     }
 
+    function addSchool() {
+        if ($_POST) {
+              
+                $array = [
+                    'name' => request('name'),
+                    'ward' => request('ward'),
+                    'zone' => request('zone'),
+                    'type' => request('type'),
+                    'region' => request('region'),
+                    'district' => request('district'),
+                    'ownership' => request('ownership'),
+                    'nmb_zone' => request('zone')
+                ];
+                DB::table('admin.schools')->insert($array);
+                return redirect('sales/school')->with('success',  request('name').' successfully');
+        }
+        return view('sales.add_school');
+    }
+    
+    
 }

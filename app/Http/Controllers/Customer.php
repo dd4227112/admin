@@ -457,7 +457,7 @@ class Customer extends Controller {
     public function taskComment() {
         if (request('content') != '' && (int) request('task_id') > 0) {
             \App\Models\TaskComment::create(array_merge(request()->all(), ['user_id' => Auth::user()->id]));
-            echo ' <div class="media m-b-20"><a class="media-left" href="#"><img class="media-object img-circle m-r-20" src="' . url('/') . '/public/assets/images/avatar-1.png" alt="Generic placeholder image"></a> <div class="media-body b-b-muted social-client-description"><div class="chat-header">' . Auth::user()->name . '<span class="text-muted">' . date('d M Y') . '</span></div><p class="text-muted">' . request('content') . '</p></div> </div>';
+            echo ' <div class="media m-b-20"><a class="media-left" href="#"><img class="media-object img-circle m-r-20" src="' . url('/') . '/public/assets/images/avatar-1.png" alt="Image"></a> <div class="media-body b-b-muted social-client-description"><div class="chat-header">' . Auth::user()->name . '<span class="text-muted">' . date('d M Y') . '</span></div><p class="text-muted">' . request('content') . '</p></div> </div>';
         }
     }
 
