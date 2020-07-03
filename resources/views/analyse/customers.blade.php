@@ -336,8 +336,8 @@
                         <div class="card-block">
                             
                             <?php
-//                            $sql_2 = "select count(*) as count, created_at::date as date from admin.all_log   group by created_at::date order by created_at::date desc limit 8 ";
-//                            echo $insight->createChartBySql($sql_2, 'date', 'User Login per Day', 'bar', false);
+                            $sql_2 = "select count(*) as count, controller as module from admin.all_log   where controller not in ('background','SmsController') and created_at >= current_date - interval '7 days'  group by controller order by count desc limit 8 ";
+                            echo $insight->createChartBySql($sql_2, 'module', 'System Usability Per Modules', 'bar', false);
                             ?>
                         </div>
                     </div>
