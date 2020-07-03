@@ -386,7 +386,7 @@ class Kernel extends ConsoleKernel {
                 ], $url);
         $obj = json_decode($request);
  
-        print_r($obj);
+       // print_r($obj);
         //DB::table('api.requests')->insert(['return' => json_encode($obj), 'content' => json_encode($request)]);
         if (isset($obj) && is_object($obj) && isset($obj->status) && $obj->status == 1) {
             return $obj->token;
