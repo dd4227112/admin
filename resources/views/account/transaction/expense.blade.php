@@ -12,7 +12,7 @@
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
+                        <a href="<?= url('/') ?>"> 
                             <i class="icofont icofont-home"></i>
                         </a>
                     </li>
@@ -50,11 +50,10 @@
                             }
                             ?>
                         </h5>
-                        <br/><br/>
 
-                        <h5 class="page-header"  style="float: right;">
+                        <h5  style="float: right;">
 
-                            <a class="btn btn-success" href="<?php echo url('account/addTransaction/' . $id . '') ?>">
+                            <a class="btn btn-success" href="<?php echo url('account/addTransaction/' . $id) ?>">
                                 <i class="fa fa-plus"></i> 
                                 Add New Expense
                             </a>
