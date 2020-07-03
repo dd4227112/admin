@@ -315,7 +315,7 @@ function toast(message) {
                                                 ?>
                                                 <li >
                                                     <div class="media">
-                                                        <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Generic placeholder image">
+                                                        <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Image">
                                                         <div class="media-body">
                                                             <h5 class="notification-user">Client: <?= $task->client->name ?></h5>
                                                             <p class="notification-msg"><?= $task->activity ?></p>
@@ -572,6 +572,9 @@ function toast(message) {
                                     <li>
                                         <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">Schools</a>
                                     </li>
+                                    <li>
+                                        <a href="<?= url('sales/addSchool') ?>" data-i18n="nav.navigate.navbar">add New School</a>
+                                    </li>
 
 
                                 </ul>
@@ -783,7 +786,7 @@ function toast(message) {
     <?php } ?>
 <!--                                <div class="media userlist-box" data-id="2" data-status="online" data-username="Lary Doe" data-toggle="tooltip" data-placement="left" title="Lary Doe">
                                     <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u1.jpg" alt="Generic placeholder image">
+                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u1.jpg" alt="Image">
                                         <div class="live-status bg-success"></div>
                                     </a>
                                     <div class="media-body">
@@ -805,7 +808,7 @@ function toast(message) {
                 </div>
 <!--                <div class="media chat-messages">
                     <a class="media-left photo-table" href="#!">
-                        <img class="media-object img-circle m-t-5" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
+                        <img class="media-object img-circle m-t-5" src="<?= $root ?>assets/images/avatar-1.png" alt="Image">
                     </a>
                     <div class="media-body chat-menu-content">
                         <div class="">
@@ -823,7 +826,7 @@ function toast(message) {
                     </div>
                     <div class="media-right photo-table">
                         <a href="#!">
-                            <img class="media-object img-circle m-t-5" src="<?= $root ?>assets/images/avatar-2.png" alt="Generic placeholder image">
+                            <img class="media-object img-circle m-t-5" src="<?= $root ?>assets/images/avatar-2.png" alt="Image">
                         </a>
                     </div>
                 </div>-->

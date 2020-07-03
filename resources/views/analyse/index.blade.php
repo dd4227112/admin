@@ -458,7 +458,7 @@
                         <div class="card-block">
                             <p class="text-center">12:05 A.M.</p>
                             <div class="media">
-                                <img class="d-flex mr-3 img-circle img-40 img-thumbnail" src="<?= $root ?>assets/images/user-card/img-round1.jpg" alt="Generic placeholder image">
+                                <img class="d-flex mr-3 img-circle img-40 img-thumbnail" src="<?= $root ?>assets/images/user-card/img-round1.jpg" alt="Image">
                                 <div class="media-body send-chat">
                                     Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at
                                     <span class="time">3 min ago</span>
@@ -473,7 +473,7 @@
                                 </div>
                             </div>
                             <div class="media">
-                                <img class="d-flex mr-3 img-circle img-40 img-thumbnail" src="<?= $root ?>assets/images/user-card/img-round1.jpg" alt="Generic placeholder image">
+                                <img class="d-flex mr-3 img-circle img-40 img-thumbnail" src="<?= $root ?>assets/images/user-card/img-round1.jpg" alt="Image">
                                 <div class="media-body send-chat">
                                     Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at
                                     <span class="time">3 min ago</span>

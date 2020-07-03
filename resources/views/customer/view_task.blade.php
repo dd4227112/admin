@@ -119,7 +119,7 @@
                                             ?>
                                             <div class="media m-b-1" style="margin: 0px; padding: 0px">
                                               <a class="media-left" href="#">
-                                                <img class="media-object img-circle m-r-2" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
+                                                <img class="media-object img-circle m-r-2" src="<?= $root ?>assets/images/avatar-1.png" alt="Image">
                                               </a>
                                               <div class="media-body b-b-muted social-client-description">
                                                 <div class="chat-header"><?= $comment->user->firstname ?> - <span class="text-muted"><?= date('d M Y', strtotime($comment->created_at)) ?></span></div>
@@ -134,7 +134,7 @@
                                         <div class="new_comment<?= $activity->id ?>"></div>
                                         <div class="media">
                                           <a class="media-left" href="#">
-                                            <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-blank.jpg" alt="Generic placeholder image">
+                                            <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-blank.jpg" alt="Image">
                                           </a>
                                           <div class="media-body">
                                             <form class="">
