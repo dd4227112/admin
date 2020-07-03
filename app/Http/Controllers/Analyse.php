@@ -47,6 +47,9 @@ class Analyse extends Controller {
         return view('analyse.index', $this->data);
     }
 
+    public function customers() {
+          return view('analyse.customers', $this->data);
+    }
     public function summary() {
 
         $this->data['parents'] = \collect(DB::select('select count(*) as count from admin.all_parent'))->first()->count;
@@ -321,6 +324,10 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         echo $this->createChartBySql($sql_, 'age', 'Overall Average', 'scatter', false);
         $corr = \collect(DB::SELECT('select corr(count,age) from (' . $sql_ . ' ) x '))->first();
         echo '<p>Correlation Factor : ' . round($corr->corr, 3) . '</p>';
+    }
+    
+    public function charts() {
+         return view('analyse.charts.logins', $this->data);  
     }
 
 }
