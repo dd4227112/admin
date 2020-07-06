@@ -34,6 +34,9 @@
                     <div class="card">
                         <div class="card-header">
                         <a class="btn btn-success btn-sm" href="<?= url('customer/activity/add') ?>"> Add New Task</a>
+                        <span style="float: right">
+                        <input type="date" style="width:300px;" class="form-control" placeholder="Time" id='daskdate'>
+                    </span>
 
                         </div>
 
@@ -101,47 +104,21 @@
     <?php $root = url('/') . '/public/' ?>
 
     <script type="text/javascript">
-      
-        get_statistic = function () {
-            // var data = getData();
-            // console.log(data);
-            //        $(".get_data").each(function (index) {
-            //            var tag = $(this).attr('tag');
-            //            var schema = $(this).attr('schema');
-            //            //$(schema + tag).html(1);
-            //
-            //
-            //        });
-        }
-        function getData() {
+           $('#taskdate').change(function (event) {
+        var taskdate = $(this).val();
+        if (taskdate === '') {
+        } else {
             $.ajax({
-                type: 'get',
-                url: '<?= url('customer/getData/null/') ?>',
-                data: {tag: 'users'},
-                dataType: 'json',
+                type: 'POST',
+                url: "<?= url('customer/activity') ?>",
+                data: {taskdate: class_levtaskdateel_id},
+                dataType: "html",
                 success: function (data) {
-                    $.each(data, function (i, info)
-                    {
-                        $(".get_data").each(function (index) {
-                            var tag = $(this).attr('tag');
-                            var schema = $(this).attr('schema');
-
-                            if (tag == info.table && schema == info.schema_name) {
-                                $('#' + schema + tag).html(info.count);
-                            }
-
-
-                        });
-
-                    });
-                    return data;
-                },
-                error: function () {
-                    return 2;
+                    $('#classes_id').html(data);
                 }
-
-            });
+            });            
         }
-        $(document).ready(get_statistic);
+    });
+
     </script>
     @endsection

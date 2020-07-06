@@ -104,8 +104,17 @@
                          
                           <div class="card-block user-desc">
                             <div class="view-desc">
-                            <h4>About This Activity</h4>
-                              <p> <?= $activity->activity ?></p>
+                            <h4>About This Activity </h4>
+                            <span style="float: right;"><b>Task Excuted:</b>
+                             <select id="action" class="form-control">
+                             <option value='{{ $activity->action }}'>{{ $activity->action }}</option>
+                             <option value='Yes'>Yes</option>
+                             <option value='No'>No</option>
+                             <option value='Resolved'>Resolved</option>
+                             </select>
+                             </span>
+                             <p> <?= $activity->activity ?></p>
+                              
                             </div>
                             
                           <div class="card-block user-desc">
@@ -165,5 +174,18 @@
         </div>
         <!-- personal card end-->
       </div>
-
+      <script>
+$('#action').change(function () {
+  var val = $(this).val();
+  $.ajax({
+            type: 'POST',
+            url: "<?=url('Customer/updateTask')?>",
+            data: "id=" + <?=$activity->id?> +"&action="+val,
+            dataType: "html",
+            success: function(data) { 
+              window.location.href = '#';
+  }
+});
+});
+</script>
       @endsection

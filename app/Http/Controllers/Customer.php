@@ -357,8 +357,13 @@ class Customer extends Controller {
         $this->data['activity'] = \App\Models\Task::find($id);
         return view('customer/view_task', $this->data);
     }else{
+        $date = request('taskdate');
+        if($date == ''){
         $days = date('Y-m-d H:i:s', strtotime('-40 days'));
         $this->data['activities'] = \App\Models\Task::where('created_at', '>', $days)->orderBy('id', 'desc')->get();
+        }else{
+            $this->data['activities'] = \App\Models\Task::whereDate('created_at', $date)->orderBy('id', 'desc')->get();
+        }
         return view('customer/activity', $this->data);
         }
     }
@@ -368,6 +373,13 @@ class Customer extends Controller {
         $tag = \App\Models\Task::find($id);
         count($tag) == 1 ? $tag->delete() : '';
         echo 1;
+    }
+
+    public function updateTask() {
+        $id = request('id');
+        $action = request('action');
+        \App\Models\Task::where('id', $id)->update(['action' => $action]);
+        return redirect()->back()->with('success', 'success');
     }
 
     public function allocate() {
