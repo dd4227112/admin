@@ -8,10 +8,7 @@
 
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-           
-        </div>
+       
         <!-- Page-header end -->
         <!-- Page-body start -->
         <div class="page-body">
@@ -32,7 +29,7 @@
                 Create a task for this school with implementation deadline</span>
 
                 <div class="form-group">
-                  <textarea class="form-control" placeholder="Create Task" rows="5" name="activity"></textarea>
+                  <textarea class="form-control" placeholder="Create Task" rows="4" name="activity"></textarea>
                 </div>
                 <div class="form-group">
                 <strong>  Select School or Client</strong> 
@@ -47,11 +44,10 @@
                         </select>
                 </div>
                 <div class="form-group">
-                  <div class="row">
 
-                    <div class="col-md-6">
                     <strong> Task Type</strong> 
-                      <select name="task_type_id" required class="form-control">
+                      <select name="task_type_id" required class="form-control select2">
+                      <option value=''> Select Here...</option>
                         <?php
                         $types = DB::table('task_types')->whereNull('department')->get();
                         foreach ($types as $type) {
@@ -61,6 +57,10 @@
 
                       </select>
                     </div>
+                    
+                <div class="form-group">
+                  <div class="row">
+
                     <div class="col-md-6">
                     <strong> Person Allocated to do</strong> 
                       <select name="to_user_id" class="form-control select2" required>
@@ -72,6 +72,15 @@
                         <?php } ?>
 
                       </select>
+                    </div>
+                    
+                    <div class="col-md-6">
+                    <strong> Task Executed Successfully</strong> 
+                    <select name="action" class="form-control" required>
+                    <option value=''> Select Task Status Here...</option>
+                    <option value='Yes'> Yes </option>
+                    <option value='No'> No </option>
+                    </select>
                     </div>
                   </div>
                 </div>
