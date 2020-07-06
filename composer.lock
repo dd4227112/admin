@@ -435,6 +435,7 @@
                 "redis",
                 "xcache"
             ],
+
             "funding": [
                 {
                     "url": "https://www.doctrine-project.org/sponsorship.html",
@@ -449,6 +450,7 @@
                     "type": "tidelift"
                 }
             ],
+ 
             "time": "2020-05-27T16:24:54+00:00"
         },
         {
@@ -1187,6 +1189,7 @@
                 "user agent",
                 "useragent"
             ],
+
             "funding": [
                 {
                     "url": "https://github.com/jenssegers",
@@ -1197,6 +1200,7 @@
                     "type": "tidelift"
                 }
             ],
+
             "time": "2020-06-13T08:05:20+00:00"
         },
         {
@@ -1576,12 +1580,14 @@
                 "sftp",
                 "storage"
             ],
+
             "funding": [
                 {
                     "url": "https://offset.earth/frankdejonge",
                     "type": "other"
                 }
             ],
+
             "time": "2020-05-18T15:13:39+00:00"
         },
         {
@@ -1710,7 +1716,8 @@
                 "log",
                 "logging",
                 "psr-3"
-            ],
+          ],
+
             "funding": [
                 {
                     "url": "https://github.com/Seldaek",
@@ -1721,6 +1728,7 @@
                     "type": "tidelift"
                 }
             ],
+
             "time": "2020-05-22T07:31:27+00:00"
         },
         {
@@ -2633,6 +2641,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
+
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -2647,6 +2656,7 @@
                     "type": "tidelift"
                 }
             ],
+
             "time": "2020-05-30T18:58:05+00:00"
         },
         {
@@ -2770,6 +2780,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
+
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -2784,6 +2795,7 @@
                     "type": "tidelift"
                 }
             ],
+
             "time": "2020-05-22T18:25:20+00:00"
         },
         {
@@ -2854,6 +2866,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
+
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -2868,6 +2881,7 @@
                     "type": "tidelift"
                 }
             ],
+
             "time": "2020-05-20T08:37:50+00:00"
         },
         {
@@ -3043,6 +3057,7 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
+
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3057,6 +3072,7 @@
                     "type": "tidelift"
                 }
             ],
+
             "time": "2020-05-16T13:15:54+00:00"
         },
         {
@@ -3147,6 +3163,7 @@
             ],
             "description": "Symfony HttpKernel Component",
             "homepage": "https://symfony.com",
+
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3161,6 +3178,7 @@
                     "type": "tidelift"
                 }
             ],
+
             "time": "2020-06-12T10:57:07+00:00"
         },
         {
@@ -3223,6 +3241,7 @@
                 "polyfill",
                 "portable"
             ],
+
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3237,6 +3256,7 @@
                     "type": "tidelift"
                 }
             ],
+
             "time": "2020-06-06T08:46:27+00:00"
         },
         {
@@ -3303,6 +3323,7 @@
                 "portable",
                 "shim"
             ],
+
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3317,6 +3338,7 @@
                     "type": "tidelift"
                 }
             ],
+
             "time": "2020-06-06T08:46:27+00:00"
         },
         {
@@ -3380,6 +3402,7 @@
                 "portable",
                 "shim"
             ],
+
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3394,6 +3417,7 @@
                     "type": "tidelift"
                 }
             ],
+
             "time": "2020-06-06T08:46:27+00:00"
         },
         {
@@ -3454,6 +3478,7 @@
                 "portable",
                 "shim"
             ],
+
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3468,6 +3493,7 @@
                     "type": "tidelift"
                 }
             ],
+
             "time": "2020-06-06T08:46:27+00:00"
         },
         {
@@ -3531,6 +3557,7 @@
                 "portable",
                 "shim"
             ],
+
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3545,6 +3572,8 @@
                     "type": "tidelift"
                 }
             ],
+
+
             "time": "2020-06-06T08:46:27+00:00"
         },
         {
@@ -3614,6 +3643,7 @@
                     "type": "tidelift"
                 }
             ],
+
             "time": "2020-05-12T16:47:27+00:00"
         },
         {
@@ -3670,6 +3700,7 @@
                 "polyfill",
                 "shim"
             ],
+
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3684,6 +3715,8 @@
                     "type": "tidelift"
                 }
             ],
+
+
             "time": "2020-06-06T08:46:27+00:00"
         },
         {
@@ -3733,6 +3766,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
+
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3747,6 +3781,7 @@
                     "type": "tidelift"
                 }
             ],
+
             "time": "2020-05-23T17:05:51+00:00"
         },
         {
@@ -3823,6 +3858,7 @@
                 "uri",
                 "url"
             ],
+
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -3837,6 +3873,7 @@
                     "type": "tidelift"
                 }
             ],
+
             "time": "2020-05-30T19:50:06+00:00"
         },
         {
@@ -4039,6 +4076,7 @@
                 "debug",
                 "dump"
             ],
+
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -4053,6 +4091,7 @@
                     "type": "tidelift"
                 }
             ],
+
             "time": "2020-05-23T12:00:17+00:00"
         },
         {
@@ -4221,6 +4260,7 @@
                 "env",
                 "environment"
             ],
+
             "funding": [
                 {
                     "url": "https://github.com/GrahamCampbell",
@@ -4231,6 +4271,7 @@
                     "type": "tidelift"
                 }
             ],
+
             "time": "2020-06-02T14:06:52+00:00"
         },
         {
@@ -4357,6 +4398,7 @@
                 "constructor",
                 "instantiate"
             ],
+
             "funding": [
                 {
                     "url": "https://www.doctrine-project.org/sponsorship.html",
@@ -4371,6 +4413,7 @@
                     "type": "tidelift"
                 }
             ],
+
             "time": "2020-05-29T17:27:14+00:00"
         },
         {
@@ -4524,6 +4567,7 @@
                 "serialize",
                 "tokenizer"
             ],
+            "abandoned": "opis/closure",
             "time": "2018-03-21T22:21:57+00:00"
         },
         {
@@ -4769,12 +4813,14 @@
                 "object",
                 "object graph"
             ],
+
             "funding": [
                 {
                     "url": "https://tidelift.com/funding/github/packagist/myclabs/deep-copy",
                     "type": "tidelift"
                 }
             ],
+
             "time": "2020-06-29T13:22:24+00:00"
         },
         {
@@ -6012,6 +6058,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
+
             "funding": [
                 {
                     "url": "https://symfony.com/sponsor",
@@ -6026,6 +6073,7 @@
                     "type": "tidelift"
                 }
             ],
+
             "time": "2020-05-20T08:37:50+00:00"
         },
         {

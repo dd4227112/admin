@@ -366,8 +366,7 @@ Thank you.';
                 DB::statement("insert into " . $school->username . ".sms (phone_number,body,type) values ('" . $school->phone . "','" . strip_tags($message) . "',0)");
             } else if ($days <= 0 && in_array($days, [0, -2, -5, -10])) {
                 $message = 'Hi ' . $school->name . '<br/>,
-
-This is the reminder that your ShuleSoft account has been expired since ' . date('d M Y', strtotime($payment->next_payment_date)) . ' . This means your management staff and parents are now not able to login, view any report, prepare any report. If you have any challange on how to make your payment kindly call us and let us know your concern. <br/>
+                This is the reminder that your ShuleSoft account has been expired since ' . date('d M Y', strtotime($payment->next_payment_date)) . ' . This means your management staff and parents are now not able to login, view any report, prepare any report. If you have any challange on how to make your payment kindly call us and let us know your concern. <br/>
 
 Kind regards,';
                 if (filter_var($school->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $school->email)) {
