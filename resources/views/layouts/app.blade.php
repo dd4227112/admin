@@ -313,7 +313,8 @@ function toast(message) {
                                             <?php
                                             foreach ($tasks as $task) {
                                                 ?>
-                                                <li >
+                                                <li onMouseOver="this.style.backgroundColor='#cccccc'">
+                                                <a href="<?= url('customer/activity/show/' . $task->id) ?>" >
                                                     <div class="media">
                                                         <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Image">
                                                         <div class="media-body">
@@ -322,6 +323,7 @@ function toast(message) {
                                                             <span class="notification-time"><?= date('d M Y', strtotime($task->date)) ?></span>
                                                         </div>
                                                     </div>
+                                            </a>
                                                 </li>
                                             <?php } ?>
                                             <li>
