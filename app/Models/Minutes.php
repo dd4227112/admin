@@ -20,7 +20,7 @@ class Minutes extends Model {
     }
 
     public function minuteuser() {
-        return $this->hasMany(\App\Models\MinuteUSer::class, 'minute_id', 'id');
+        return $this->hasMany(\App\Models\MinuteUser::class, 'minute_id', 'id');
     }
 
 }
