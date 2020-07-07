@@ -36,7 +36,7 @@ $root = url('/') . '/public/';
                                 <div class="sub-title">Tasks Management</div>                                        
                                 
                                 <div class="embed-responsive embed-responsive-16by9">
-  <iframe class="embed-responsive-item" src="http://projects.inetstz.com/" allowfullscreen></iframe>
+  <iframe class="embed-responsive-item" src="https://projects.inetstz.com/" allowfullscreen></iframe>
 </div>
                             </div>
                         </div>
