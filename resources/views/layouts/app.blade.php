@@ -472,7 +472,7 @@ function toast(message) {
                                 </a>
                                 <ul class="tree-1 has-class">
                                     <li>
-                                        <a href="<?= url('analyse/index') ?>" data-i18n="nav.dash.default"> Sales </a></li>
+                                        <a href="<?= url('analyse/sales') ?>" data-i18n="nav.dash.default"> Sales </a></li>
                                     <li>
                                     <li><a href="<?= url('analyse/marketing') ?>" data-i18n="nav.dash.ecommerce"> Marketing</a></li>
                                     <li><a href="<?= url('analyse/accounts') ?>" data-i18n="nav.dash.crm">Accounts</a></li>
