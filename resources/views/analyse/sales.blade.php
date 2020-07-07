@@ -61,27 +61,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                 </div>
 
             </div>
-            <script>
-                check = function () {
-                    $('#check_custom_date').change(function () {
-                        var val = $(this).val();
-                        if (val == 'today') {
-                            window.location.href = '<?= url('analyse/sales/') ?>/1';
-                        } else {
-                            $('#show_date').show();
-                        }
-                    });
-                }
-                submit_search = function () {
-                    $('#search_custom').mousedown(function () {
-                        var start_date = $('#start_date').val();
-                        var end_date = $('#end_date').val();
-                        window.location.href = '<?= url('analyse/sales/') ?>/5?start=' + start_date + '=&end=' + end_date;
-                    });
-                }
-                $(document).ready(check);
-                $(document).ready(submit_search);
-            </script>
+
 
             <div class="row">
                 <!-- counter-card-1 start-->
@@ -275,4 +255,25 @@ where extract(year from a.created_at)=' .$year. '  group by month order by month
         </div>
     </div>
 </div>
+            <script>
+                check = function () {
+                    $('#check_custom_date').change(function () {
+                        var val = $(this).val();
+                        if (val == 'today') {
+                            window.location.href = '<?= url('analyse/sales/') ?>/1';
+                        } else {
+                            $('#show_date').show();
+                        }
+                    });
+                }
+                submit_search = function () {
+                    $('#search_custom').mousedown(function () {
+                        var start_date = $('#start_date').val();
+                        var end_date = $('#end_date').val();
+                        window.location.href = '<?= url('analyse/sales/') ?>/5?start=' + start_date + '&end=' + end_date;
+                    });
+                }
+                $(document).ready(check);
+                $(document).ready(submit_search);
+            </script>
 @endsection
