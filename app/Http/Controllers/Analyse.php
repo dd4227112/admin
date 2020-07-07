@@ -7,21 +7,25 @@ use DB;
 use App\Charts\SimpleChart;
 
 class Analyse extends Controller {
+
     /**
      *
      * @var Graph title 
      */
     public $graph_title = '';
+
     /**
      *
      * @var x axis 
      */
     public $x_axis = '';
+
     /**
      *
      * @var y axis 
      */
     public $y_axis = '';
+
     /**
      * Create a new controller instance.
      *
@@ -48,8 +52,17 @@ class Analyse extends Controller {
     }
 
     public function customers() {
-          return view('analyse.customers', $this->data);
+        return view('analyse.customers', $this->data);
     }
+
+    public function software() {
+        return view('analyse.software', $this->data);
+    }
+
+    public function sales() {
+        return view('analyse.sales', $this->data);
+    }
+
     public function summary() {
 
         $this->data['parents'] = \collect(DB::select('select count(*) as count from admin.all_parent'))->first()->count;
@@ -78,9 +91,10 @@ class Analyse extends Controller {
     }
 
     public function marketing() {
-       $this->data['association'] = \App\Model\Association::first();
-        return view('analyse.marketing', $this->data);   
+       // $this->data['association'] = \App\Model\Association::first();
+        return view('analyse.marketing', $this->data);
     }
+
     public function search() {
         $q = strtolower(request('q'));
         $users = DB::select("select a.reference,a.id,b.name,b.username from admin.invoices a join admin.clients b on b.id=a.client_id where (lower(a.reference) like  '%" . $q . "%'  or lower(b.name) like  '%" . $q . "%' )");
@@ -273,7 +287,7 @@ class Analyse extends Controller {
         $title = $this->graph_title == '' ?
                 ucwords('Relationship Between ' . $table . ' and ' . str_replace('_', ' ', $firstpart)) : $this->graph_title;
         $chart->title($title);
-        $this->data['chart']=$chart;
+        $this->data['chart'] = $chart;
         return $custom == true ? $this->createCustomChart($data, $chart_type, $firstpart) : view('analyse.charts.chart', $this->data);
     }
 
@@ -325,9 +339,9 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         $corr = \collect(DB::SELECT('select corr(count,age) from (' . $sql_ . ' ) x '))->first();
         echo '<p>Correlation Factor : ' . round($corr->corr, 3) . '</p>';
     }
-    
+
     public function charts() {
-         return view('analyse.charts.logins', $this->data);  
+        return view('analyse.charts.logins', $this->data);
     }
 
 }
