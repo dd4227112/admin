@@ -313,17 +313,17 @@ function toast(message) {
                                             <?php
                                             foreach ($tasks as $task) {
                                                 ?>
-                                                <li onMouseOver="this.style.backgroundColor='#cccccc'">
-                                                <a href="<?= url('customer/activity/show/' . $task->id) ?>" >
-                                                    <div class="media">
-                                                        <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Image">
-                                                        <div class="media-body">
-                                                            <h5 class="notification-user">Client: <?= $task->client->name ?></h5>
-                                                            <p class="notification-msg"><?= $task->activity ?></p>
-                                                            <span class="notification-time"><?= date('d M Y', strtotime($task->date)) ?></span>
+                                                <li onMouseOver="this.style.backgroundColor = '#cccccc'">
+                                                    <a href="<?= url('customer/activity/show/' . $task->id) ?>" >
+                                                        <div class="media">
+                                                            <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Image">
+                                                            <div class="media-body">
+                                                                <h5 class="notification-user">Client: <?= $task->client->name ?></h5>
+                                                                <p class="notification-msg"><?= $task->activity ?></p>
+                                                                <span class="notification-time"><?= date('d M Y', strtotime($task->date)) ?></span>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                            </a>
+                                                    </a>
                                                 </li>
                                             <?php } ?>
                                             <li>
@@ -375,7 +375,7 @@ function toast(message) {
                                         <?php } ?>
                                         <li><a href="{{ route('logout') }}"
                                                onclick="event.preventDefault();
-                                                       document.getElementById('logout-form').submit();"><i class="ti-layout-sidebar-left"></i> Logout</a></li>
+                                                           document.getElementById('logout-form').submit();"><i class="ti-layout-sidebar-left"></i> Logout</a></li>
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                             {{ csrf_field() }}
                                         </form>
@@ -472,9 +472,11 @@ function toast(message) {
                                 </a>
                                 <ul class="tree-1 has-class">
                                     <li>
-                                        <a href="<?= url('analyse/sales') ?>" data-i18n="nav.dash.default"> Sales </a></li>
-                                    <li>
+                                        <a href="<?= url('analyse/index') ?>" data-i18n="nav.dash.default"> Home </a></li>
+                                  
+                                    
                                     <li><a href="<?= url('analyse/marketing') ?>" data-i18n="nav.dash.ecommerce"> Marketing</a></li>
+                                    <li><a href="<?= url('analyse/sales') ?>" data-i18n="nav.dash.ecommerce"> Sales</a></li>
                                     <li><a href="<?= url('analyse/accounts') ?>" data-i18n="nav.dash.crm">Accounts</a></li>
                                     <li><a href="<?= url('analyse/customers') ?>" data-i18n="nav.dash.analytics">Customers</a>
                                         <label class="label label-info menu-caption">NEW</label>
@@ -496,8 +498,8 @@ function toast(message) {
                                     <span data-i18n="nav.page_layout.main">Customer Service</span>
                                 </a>
                                 <ul class="tree-1">
-                                <li><a href="<?= url('customer/activity') ?>" data-i18n="nav.page_layout.bottom-menu">Activity & Tasks</a></li>
-                                <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.bottom-menu">System Setup</a></li>
+                                    <li><a href="<?= url('customer/activity') ?>" data-i18n="nav.page_layout.bottom-menu">Activity & Tasks</a></li>
+                                    <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.bottom-menu">System Setup</a></li>
                                     <li>
                                         <a href="<?= url('Phone_call/index') ?>" data-i18n="nav.navigate.navbar">phone Calls</a>
                                     </li>
@@ -574,9 +576,7 @@ function toast(message) {
                                     <li>
                                         <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">Schools</a>
                                     </li>
-                                    <li>
-                                        <a href="<?= url('sales/addSchool') ?>" data-i18n="nav.navigate.navbar">add New School</a>
-                                    </li>
+
 
 
                                 </ul>
@@ -785,17 +785,17 @@ function toast(message) {
                                             <div class="f-13 chat-header"><?= $user->firstname . ' ' . $user->lastname ?></div>
                                         </div>
                                     </div>
-    <?php } ?>
-<!--                                <div class="media userlist-box" data-id="2" data-status="online" data-username="Lary Doe" data-toggle="tooltip" data-placement="left" title="Lary Doe">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u1.jpg" alt="Image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Lary Doe</div>
-                                    </div>
-                                </div>-->
-                            
+                                <?php } ?>
+                                <!--                                <div class="media userlist-box" data-id="2" data-status="online" data-username="Lary Doe" data-toggle="tooltip" data-placement="left" title="Lary Doe">
+                                                                    <a class="media-left" href="#!">
+                                                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u1.jpg" alt="Image">
+                                                                        <div class="live-status bg-success"></div>
+                                                                    </a>
+                                                                    <div class="media-body">
+                                                                        <div class="f-13 chat-header">Lary Doe</div>
+                                                                    </div>
+                                                                </div>-->
+
                             </div>
                         </div>
                     </div>
@@ -808,42 +808,42 @@ function toast(message) {
                         <i class="icofont icofont-rounded-left"></i> Information Hidden
                     </a>
                 </div>
-<!--                <div class="media chat-messages">
-                    <a class="media-left photo-table" href="#!">
-                        <img class="media-object img-circle m-t-5" src="<?= $root ?>assets/images/avatar-1.png" alt="Image">
-                    </a>
-                    <div class="media-body chat-menu-content">
-                        <div class="">
-                            <p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
-                            <p class="chat-time">8:20 a.m.</p>
-                        </div>
-                    </div>
-                </div>-->
-<!--                <div class="media chat-messages">
-                    <div class="media-body chat-menu-reply">
-                        <div class="">
-                            <p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
-                            <p class="chat-time">8:20 a.m.</p>
-                        </div>
-                    </div>
-                    <div class="media-right photo-table">
-                        <a href="#!">
-                            <img class="media-object img-circle m-t-5" src="<?= $root ?>assets/images/avatar-2.png" alt="Image">
-                        </a>
-                    </div>
-                </div>-->
-<!--                <div class="chat-reply-box p-b-20">
-                    <div class="right-icon-control">
-                        <input type="text" class="form-control search-text" placeholder="Share Your Thoughts">
-                        <div class="form-icon">
-                            <i class="icofont icofont-paper-plane"></i>
-                        </div>
-                    </div>
-                </div>-->
+                <!--                <div class="media chat-messages">
+                                    <a class="media-left photo-table" href="#!">
+                                        <img class="media-object img-circle m-t-5" src="<?= $root ?>assets/images/avatar-1.png" alt="Image">
+                                    </a>
+                                    <div class="media-body chat-menu-content">
+                                        <div class="">
+                                            <p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
+                                            <p class="chat-time">8:20 a.m.</p>
+                                        </div>
+                                    </div>
+                                </div>-->
+                <!--                <div class="media chat-messages">
+                                    <div class="media-body chat-menu-reply">
+                                        <div class="">
+                                            <p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
+                                            <p class="chat-time">8:20 a.m.</p>
+                                        </div>
+                                    </div>
+                                    <div class="media-right photo-table">
+                                        <a href="#!">
+                                            <img class="media-object img-circle m-t-5" src="<?= $root ?>assets/images/avatar-2.png" alt="Image">
+                                        </a>
+                                    </div>
+                                </div>-->
+                <!--                <div class="chat-reply-box p-b-20">
+                                    <div class="right-icon-control">
+                                        <input type="text" class="form-control search-text" placeholder="Share Your Thoughts">
+                                        <div class="form-icon">
+                                            <i class="icofont icofont-paper-plane"></i>
+                                        </div>
+                                    </div>
+                                </div>-->
             </div>
             <!-- Sidebar inner chat end-->
             <!-- Main-body start-->
-<?php } ?>
+        <?php } ?>
         <div class="main-body">
             @include('layouts.notifications')
             @yield('content')
@@ -952,103 +952,103 @@ function toast(message) {
         <script src="<?= $root ?>bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
         @yield('footer')
     </body>
-<?php
-if (request('type_id') != 'subject' && !preg_match('/emailsms/', url()->current()) && !preg_match('/sales/', url()->current()) && !preg_match('/logs/', url()->current()) && !preg_match('/payment_history/i', url()->current()) && !preg_match('/api/', url()->current())) {
-    ?>
+    <?php
+    if (request('type_id') != 'subject' && !preg_match('/emailsms/', url()->current()) && !preg_match('/sales/', url()->current()) && !preg_match('/logs/', url()->current()) && !preg_match('/payment_history/i', url()->current()) && !preg_match('/api/', url()->current())) {
+        ?>
         <script type="text/javascript">
 
-                                $(document).ready(function () {
-                                    $('.dataTable').DataTable({
-                                        dom: 'Bfrtip',
-                                        responsive: false,
-                                        paging: true,
-                                        info: false,
-                                        "pageLength": 10,
-                                        buttons: [
-                                            {
-                                                text: 'PDF',
-                                                extend: 'pdfHtml5',
-                                                message: '',
-                                                orientation: 'landscape',
-                                                exportOptions: {
-                                                    columns: ':visible'
-                                                },
-                                                customize: function (doc) {
-                                                    doc.pageMargins = [10, 10, 10, 10];
-                                                    doc.defaultStyle.fontSize = 7;
-                                                    doc.styles.tableHeader.fontSize = 7;
-                                                    doc.styles.title.fontSize = 9;
-                                                    // Remove spaces around page title
-                                                    doc.content[0].text = doc.content[0].text.trim();
-                                                    // Create a footer
-                                                    doc['footer'] = (function (page, pages) {
-                                                        return {
-                                                            columns: [
-                                                                'www.shulesoft.com',
-                                                                {
-                                                                    // This is the right column
-                                                                    alignment: 'right',
-                                                                    text: ['page ', {text: page.toString()}, ' of ', {text: pages.toString()}]
-                                                                }
-                                                            ],
-                                                            margin: [10, 0]
-                                                        }
-                                                    });
-                                                    // Styling the table: create style object
-                                                    var objLayout = {};
-                                                    // Horizontal line thickness
-                                                    objLayout['hLineWidth'] = function (i) {
-                                                        return .5;
-                                                    };
-                                                    // Vertikal line thickness
-                                                    objLayout['vLineWidth'] = function (i) {
-                                                        return .5;
-                                                    };
-                                                    // Horizontal line color
-                                                    objLayout['hLineColor'] = function (i) {
-                                                        return '#aaa';
-                                                    };
-                                                    // Vertical line color
-                                                    objLayout['vLineColor'] = function (i) {
-                                                        return '#aaa';
-                                                    };
-                                                    // Left padding of the cell
-                                                    objLayout['paddingLeft'] = function (i) {
-                                                        return 4;
-                                                    };
-                                                    // Right padding of the cell
-                                                    objLayout['paddingRight'] = function (i) {
-                                                        return 4;
-                                                    };
-                                                    // Inject the object in the document
-                                                    doc.content[1].layout = objLayout;
-                                                }
+                            $(document).ready(function () {
+                                $('.dataTable').DataTable({
+                                    dom: 'Bfrtip',
+                                    responsive: false,
+                                    paging: true,
+                                    info: false,
+                                    "pageLength": 10,
+                                    buttons: [
+                                        {
+                                            text: 'PDF',
+                                            extend: 'pdfHtml5',
+                                            message: '',
+                                            orientation: 'landscape',
+                                            exportOptions: {
+                                                columns: ':visible'
                                             },
+                                            customize: function (doc) {
+                                                doc.pageMargins = [10, 10, 10, 10];
+                                                doc.defaultStyle.fontSize = 7;
+                                                doc.styles.tableHeader.fontSize = 7;
+                                                doc.styles.title.fontSize = 9;
+                                                // Remove spaces around page title
+                                                doc.content[0].text = doc.content[0].text.trim();
+                                                // Create a footer
+                                                doc['footer'] = (function (page, pages) {
+                                                    return {
+                                                        columns: [
+                                                            'www.shulesoft.com',
+                                                            {
+                                                                // This is the right column
+                                                                alignment: 'right',
+                                                                text: ['page ', {text: page.toString()}, ' of ', {text: pages.toString()}]
+                                                            }
+                                                        ],
+                                                        margin: [10, 0]
+                                                    }
+                                                });
+                                                // Styling the table: create style object
+                                                var objLayout = {};
+                                                // Horizontal line thickness
+                                                objLayout['hLineWidth'] = function (i) {
+                                                    return .5;
+                                                };
+                                                // Vertikal line thickness
+                                                objLayout['vLineWidth'] = function (i) {
+                                                    return .5;
+                                                };
+                                                // Horizontal line color
+                                                objLayout['hLineColor'] = function (i) {
+                                                    return '#aaa';
+                                                };
+                                                // Vertical line color
+                                                objLayout['vLineColor'] = function (i) {
+                                                    return '#aaa';
+                                                };
+                                                // Left padding of the cell
+                                                objLayout['paddingLeft'] = function (i) {
+                                                    return 4;
+                                                };
+                                                // Right padding of the cell
+                                                objLayout['paddingRight'] = function (i) {
+                                                    return 4;
+                                                };
+                                                // Inject the object in the document
+                                                doc.content[1].layout = objLayout;
+                                            }
+                                        },
 
-                                            {extend: 'excelHtml5', footer: true},
-                                            {extend: 'csvHtml5', customize: function (csv) {
-                                                    return "ShuleSoft" + csv + "ShuleSoft";
-                                                }},
-                                            {extend: 'print', footer: true}
+                                        {extend: 'excelHtml5', footer: true},
+                                        {extend: 'csvHtml5', customize: function (csv) {
+                                                return "ShuleSoft" + csv + "ShuleSoft";
+                                            }},
+                                        {extend: 'print', footer: true}
 
-                                        ]
-                                    });
+                                    ]
                                 });
+                            });
 
 
 
 
-                                $('.clockpicker').clockpicker({
-                                    donetext: 'Done'
-                                }).find('input').change(function () {
-                                    console.log(this.value);
-                                });
+                            $('.clockpicker').clockpicker({
+                                donetext: 'Done'
+                            }).find('input').change(function () {
+                                console.log(this.value);
+                            });
         </script>
-<?php } ?>
+    <?php } ?>
 </html>
-    <?php
+<?php
 ///echo url()->current();
-    if (preg_match('/localhost/', url()->current())) {
-        ?>
+if (preg_match('/localhost/', url()->current())) {
+    ?>
     <p align="center">This page took <?php echo (microtime(true) - LARAVEL_START) ?> seconds to render</p>
 <?php } ?>

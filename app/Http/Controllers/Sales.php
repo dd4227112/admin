@@ -340,7 +340,7 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
         if ($_POST) {
               
                 $array = [
-                    'name' => request('name'),
+                    'name' => strtoupper(request('name')),
                     'ward' => request('ward'),
                     'zone' => request('zone'),
                     'type' => request('type'),

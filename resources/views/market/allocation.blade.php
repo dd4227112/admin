@@ -74,7 +74,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-3"></div>
+                            <div class="col-lg-3">   <a href="<?= url('sales/addSchool') ?>" data-i18n="nav.navigate.navbar" class="btn btn-success">add New School</a></div>
                             <div class="col-lg-6">
                                 <?php
                                 if (can_access('manage_customers')) {
@@ -101,9 +101,10 @@
                                 <div class="white-box">
                                     <h3 class="box-title">List of Schools</h3>
                                     <div class="row">
-                                        <div class="col-lg-4"></div>
+                                        <div class="col-lg-4">
+                                         
+                                        </div>
                                         <div class="col-lg-4 row">
-
                                         </div>
                                         <div class="col-lg-4"></div>
                                     </div>
