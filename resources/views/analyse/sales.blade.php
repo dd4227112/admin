@@ -288,6 +288,7 @@ echo '<p>Correlation Factor : ' . round($corr2->corr, 3) . '</p>';
 <div class="page-wrapper">
   <?php if (can_access('manage_users')) { ?>
     <?php
+      $on = 'Today';
     if($days == '' || $days == 1){
         $days = 1;
         $on = 'Today';
