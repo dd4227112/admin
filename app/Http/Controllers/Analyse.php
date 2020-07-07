@@ -52,6 +52,7 @@ class Analyse extends Controller {
     }
 
     public function customers() {
+          $this->data['days'] =  request()->segment(3);
         return view('analyse.customers', $this->data);
     }
 
@@ -59,9 +60,17 @@ class Analyse extends Controller {
         return view('analyse.software', $this->data);
     }
 
+    
+
+    
     public function sales() {
+        $this->data['days'] =  request()->segment(3);
+        $this->data['shulesoft_schools'] = \collect(DB::select('select count(*) as count from admin.all_setting'))->first()->count;
+        $this->data['schools'] = \collect(DB::select('select count(*) as count from admin.schools'))->first()->count;
+        $this->data['nmb_schools'] = \collect(DB::select('select count(*) as count from admin.nmb_schools'))->first()->count;
+        $this->data['clients'] = \collect(DB::select('select count(*) as count from admin.clients'))->first()->count;
         return view('analyse.sales', $this->data);
-    }
+  }
 
     public function summary() {
 

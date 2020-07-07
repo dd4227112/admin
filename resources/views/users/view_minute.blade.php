@@ -62,6 +62,22 @@
                                         <th scope="row">Department</th>
                                         <td> <?=$minute->department->name?></td>
                                       </tr>
+                                      <tr>
+                                      <th>Attendee's</th>
+                                      <td>
+                                      <?php
+                                      $users = $minute->minuteuser()->get();
+                                        if (count($users) > 0) {
+                                          foreach ($users as $user) {
+                                             echo '<u>'.$user->user->name.'</u>'; ?>  &nbsp;|
+                                              <?php
+                                          }
+                                        }else{
+                                            echo "Meeting Attendee no Added.";
+                                        }
+                                        ?>
+                                      </td>
+                                      <tr>
                                     </tbody>
                                   </table>
                                 </div>
