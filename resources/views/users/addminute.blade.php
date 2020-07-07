@@ -106,6 +106,20 @@
                     <textarea name="note" rows="4" placeholder="Write More details Here .." class="form-control"> </textarea>
                   </div>
                 </div>
+                
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="form-group">
+                        <strong>  Tick Attendee of the Meeting</strong> 
+                          <hr>
+                    <?php
+                    $users = DB::table('users')->where('status', 1)->get();
+                    foreach ($users as $user) {
+                      ?>
+                      <input type="checkbox" id="feature<?= $user->id ?>" value="{{$user->id}}" name="user_id[]" >  <?php echo $user->name; ?>  &nbsp; &nbsp;
+
+                    <?php } ?>
+                    </div>
+                </div>
                 <div id="savebtnWrapper" class="form-group">
                   <button type="submit" class="btn btn-primary">
                     &emsp;Submit&emsp;

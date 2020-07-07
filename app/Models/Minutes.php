@@ -19,4 +19,8 @@ class Minutes extends Model {
         return $this->belongsTo(\App\Models\Department::class, 'department_id', 'id');
     }
 
+    public function minuteuser() {
+        return $this->hasMany(\App\Models\MinuteUSer::class, 'minute_id', 'id');
+    }
+
 }

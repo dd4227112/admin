@@ -29,7 +29,7 @@ echo '<p>Correlation Factor : ' . round($corr2->corr, 3) . '</p>';
   </div>
   <?php if (can_access('manage_users')) { ?>
     <?php
-    if($days == ''){
+    if($days == '' || $days == 1){
         $days = 1;
         $on = 'Today';
     }if($days == 7){
@@ -182,9 +182,8 @@ echo '<p>Correlation Factor : ' . round($corr2->corr, 3) . '</p>';
             <div class="card-header">
               <h5>Average system usability</h5>
             </div>
-            <div class="card-block">
-              <div class="table-responsive dt-responsive">
-                <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
+                  <div class="table-responsive dt-responsive">
+                    <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                   <thead>
                     <tr>
                       <th>Task type</th>
@@ -195,7 +194,10 @@ echo '<p>Correlation Factor : ' . round($corr2->corr, 3) . '</p>';
                   </thead>
                   <tbody>
                     <?php
+                    $t = '-'.$days.' days';
+                    $at = date('Y-m-d H:i:s', strtotime($t));
                     $i = 1;
+                    $activities = \App\Models\Task::where('created_at', '>=', $at)->orderBy('id', 'desc')->get();
                     foreach ($activities as $activity) {
                       ?>
                       <tr>
@@ -207,13 +209,20 @@ echo '<p>Correlation Factor : ' . round($corr2->corr, 3) . '</p>';
                       </tr>
                     <?php } ?>
                   </tbody>
+                  <tfooter>
+                    <tr>
+                      <th>Task type</th>
+                      <th>Added By</th>
+                      <th>School</th>
+                      <th>Deadline</th>
+                    </tr>
+                  </tfooter>
                 </table>
 
               </div>
             </div>
           </div>
           <!-- .events-content -->
-        </div>
         <!-- Todo card start -->
         <div class="col-md-12 col-xl-4">
           <div class="card">

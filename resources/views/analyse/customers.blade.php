@@ -22,7 +22,7 @@
   </div>
   <?php if (can_access('manage_users')) { ?>
     <?php
-    if($days == ''){
+    if($days == '' || $days == 1){
         $days = 1;
         $on = 'Today';
     }if($days == 7){
