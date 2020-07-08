@@ -90,7 +90,12 @@ class Account extends Controller {
             $this->data['invoice'] = Invoice::find($invoice_id);
             return view('account.invoice.single', $this->data);
         } else {
-            $client = \App\Models\Client::where('username', $invoice_id)->first();
+            if ($_POST) {
+                $school = request('school');
+                DB::table($school.'.setting')->update(['next_payment_date' => request('next_payment_date'), 'last_payment_date' => request('last_payment_date')]);
+                return redirect()->back();
+            }else{
+            $this->data['client'] = $client = \App\Models\Client::where('username', $invoice_id)->first();
             $this->data['siteinfos'] = DB::table($invoice_id . '.setting')->first();
             $this->data['students'] = DB::table($invoice_id . '.student')->where('status', 1)->count();
             if (count($client) == 1) {
@@ -98,9 +103,11 @@ class Account extends Controller {
             } else {
                 $this->data['invoice'] = [];
             }
+
             return view('account.invoice.shulesoft', $this->data);
         }
-
+        }
+        
 
         ///
     }
