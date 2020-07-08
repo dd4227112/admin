@@ -5,6 +5,7 @@ $root = url('/') . '/public/';
 
 $page = request()->segment(3);
 $today = 0;
+
 if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
     //current day
     $where = '  a.created_at::date=CURRENT_DATE';
@@ -86,7 +87,8 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                     <div class="card client-blocks dark-primary-border">
                         <div class="card-block">
                             <?php
-                            $out_of = \collect(DB::select('select count(*) from admin.all_setting a  WHERE ' . $where))->first()->count;
+                            $where_setting=(int) $today==1 ?' ':" WHERE a.created_at::date <='".$end_date."'";
+                            $out_of = \collect(DB::select('select count(*) from admin.all_setting a   '.$where_setting))->first()->count;
                             $active_customers = \collect(DB::select('select count(distinct "schema_name") from admin.all_login_locations a  WHERE "table" in (\'setting\',\'users\',\'teacher\') and ' . $where))->first()->count;
                             ?>
 
@@ -191,7 +193,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
 
                             <div class="new-task">
                                 <div class="table-responsive">
-                                    <table class="table">
+                                    <table class="table dataTable">
                                         <thead>
                                             <tr class="text-capitalize">
 
@@ -242,7 +244,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                             </div>
                         </div>
                         <div class="card-block">
-                            <table id="res-config" class="table table-bordered w-100">
+                            <table id="res-config" class="table table-bordered w-100 dataTable">
                                 <thead>
                                     <tr>
                                         <th>Name</th>
@@ -323,7 +325,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                     </div>
                     <div class="card-block">
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table dataTable">
                                 <thead>
                                     <tr class="text-capitalize">
 
@@ -365,6 +367,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
 <script type="text/javascript">
 
     check = function () {
+      
         $('#check_custom_date').change(function () {
             var val = $(this).val();
             if (val == 'today') {
