@@ -216,9 +216,9 @@
                                         <div class="col-md-6">
                                           Task Type
                                           <select name="task_type_id"  class="form-control">
-                                            <?php
-                                            $types = DB::table('task_types')->whereNull('department')->get();
-                                            foreach ($types as $type) {
+                                                <?php
+                                              $types = DB::table('task_types')->get();
+                                              foreach ($types as $type) {
                                               ?>
                                               <option value="<?= $type->id ?>"><?= $type->name ?></option>
                                             <?php } ?>
