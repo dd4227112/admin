@@ -49,7 +49,7 @@
                       <select name="task_type_id" required class="form-control select2">
                       <option value=''> Select Here...</option>
                         <?php
-                        $types = DB::table('task_types')->whereNull('department')->get();
+                        $types = DB::table('task_types')->get();
                         foreach ($types as $type) {
                           ?>
                           <option value="<?= $type->id ?>"> <?= $type->name ?></option>
