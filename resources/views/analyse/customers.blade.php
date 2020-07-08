@@ -21,8 +21,29 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
 <div class="page-wrapper">
     <div class="page-header">
         <div class="page-header-title">
-            <h4>Dashboard</h4>
-        </div>
+        <?php
+if($days == '' || $days == 1){
+    $days = 1;
+    $on = 'Today';
+}if($days == 7){
+    $on = 'This Week';
+}if($days == 30){
+    $on = 'This Month';
+}if($days == 90){
+    $on = 'Three Month';
+}   if($days == 181){
+    $on = 'Six Month';
+}if($days == 365){
+    $on = 'This Year';
+  }
+?>
+<a href="<?= url('Analyse/customers/1') ?>" class="btn btn-primary btn-sm">Day</a>
+<a href="<?= url('Analyse/customers/7') ?>" class="btn btn-primary btn-sm">Week</a>
+<a href="<?= url('Analyse/customers/30') ?>" class="btn btn-primary btn-sm">Month</a>
+<a href="<?= url('Analyse/customers/90') ?>" class="btn btn-primary btn-sm">Quater</a>
+<a href="<?= url('Analyse/customers/181') ?>" class="btn btn-primary btn-sm">Six Month</a>
+<a href="<?= url('Analyse/customers/365') ?>" class="btn btn-primary btn-sm">Year</a>
+</div>
         <div class="page-header-breadcrumb">
             <ul class="breadcrumb-title">
                 <li class="breadcrumb-item">
@@ -37,23 +58,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
             </ul>
         </div>
     </div>
-    <?php
-      $on = 'Today';
-    if ($days == '' || $days == 1) {
-        $days = 1;
-        $on = 'Today';
-    }if ($days == 7) {
-        $on = 'This Week';
-    }if ($days == 30) {
-        $on = 'This Month';
-    }if ($days == 90) {
-        $on = 'Three Month';
-    } if ($days == 181) {
-        $on = 'Six Month';
-    }if ($days == 365) {
-        $on = 'This Year';
-    }
-    ?>
+  
     <div class="page-body">
 
         <div class="page-body">
@@ -215,10 +220,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                                         </tbody>
                                     </table>
                                 </div>
-                                <?php
-                                $support_distribution = "select count(*) as count, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.users c on c.id=a.user_id WHERE  a.task_type_id in (select id from admin.task_types where department=1) and " . $where . " group by user_name";
-                                echo $insight->createChartBySql($support_distribution, 'user_name', 'Support Activity', 'bar', false);
-                                ?>
+                               
 
                             </div>
                         </div>
@@ -353,7 +355,10 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                 </div>
             </div>
 
-
+            <?php
+                                $support_distribution = "select count(*) as count, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.users c on c.id=a.user_id WHERE  a.task_type_id in (select id from admin.task_types where department=1) and " . $where . " group by user_name";
+                                echo $insight->createChartBySql($support_distribution, 'user_name', 'Support Activity', 'bar', false);
+                                ?>
 
             <?php
             $new_schools = 'select count(*),extract(month from created_at) as month from admin.all_setting

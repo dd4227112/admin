@@ -490,7 +490,8 @@ function select($value, $schema,$sources) {
                 var schema = $('option:selected', this).attr('schema');
                 var val = $(this).val();
                 $.ajax({
-                    url: '<?= url('customer/allocate/null') ?>',
+                    type: 'post',
+                    url: '<?= url('customer/allocate') ?>',
                     data: {user_id: user_id, school_id: school_id, role_id: role_id, schema: schema, val: val},
                     dataType: 'html',
                     success: function (data) {
