@@ -93,7 +93,15 @@ class Account extends Controller {
             if ($_POST) {
                 $school = request('school');
                 DB::table($school.'.setting')->update(['next_payment_date' => request('next_payment_date'), 'last_payment_date' => request('last_payment_date')]);
-                return redirect()->back();
+                $arr = [
+                    'amount' => request('amount'),
+                    'schema_name' => $school,
+                    'user_id' => Auth::user()->id,
+                    'date' => date('Y-m-d'),
+                    'student' => request('student')
+                ];
+                \App\Models\InvoiceSent::create($arr);
+                return redirect()->back()->with('success', 'success');
             }else{
             $this->data['client'] = $client = \App\Models\Client::where('username', $invoice_id)->first();
             $this->data['siteinfos'] = DB::table($invoice_id . '.setting')->first();

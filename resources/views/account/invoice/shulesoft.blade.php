@@ -298,7 +298,12 @@
                                   <tr>
 
                                     <th>Unpaid Total Amount:</th>
-                                    <td><?= money($price * ($students + $siteinfos->estimated_students) - $siteinfos->total_paid_amount) ?></td>
+                                    <td>
+                                    <?php
+                                    $unpaid = $price * ($students + $siteinfos->estimated_students) - $siteinfos->total_paid_amount;
+                                     echo money($unpaid);
+                                      ?>
+                                  </td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -522,7 +527,20 @@
                     <div class="col-md-6">
                       Invoice Due Date
                       <input type="date" class="form-control"  name="next_payment_date" required>
-                      <input type="hidden" name="school" value="<?=$client->username?>">
+                    </div>
+                  </div>
+                  </div>
+                  
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-md-6">
+                      Amount To be Paid
+                      <input type="number" class="form-control"  name="amount" value="<?=$unpaid?>" required>
+                    </div>
+                    <div class="col-md-6">
+                      Number of Students
+                      <input type="number" class="form-control"  name="student" value="<?=$students?>" required>
+                      <input type="hidden" name="school" value="<?=$client->username?>"> 
                     </div>
                   </div>
                 </div>
