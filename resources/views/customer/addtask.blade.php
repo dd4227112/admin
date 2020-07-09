@@ -2,9 +2,7 @@
 @section('content')
 <?php $root = url('/') . '/public/' ?>
 
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css" rel="stylesheet" />
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.9/select2-bootstrap.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.min.js"></script>
+<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
 
 <div class="main-body">
     <div class="page-wrapper">
@@ -42,7 +40,16 @@
                                         <div class="form-group">
                                             <textarea class="form-control" placeholder="Create Task" rows="4" name="activity"></textarea>
                                         </div>
-                                        <div class="form-group"  id="client_id">
+                                     
+                                          
+                                        <div class="form-group">
+                                            <strong>  Select School</strong> 
+
+                                            <input type="text" class="form-control" id="get_schools" name="school_id" value="<?= old('school_id') ?>" >
+
+                                        </div>
+
+<!--                                        <div class="form-group"  id="client_id">
                                             <strong>  Select School or Client</strong> 
 
                                             <select name="client_id"  class="form-control select2">
@@ -53,7 +60,7 @@
                                                     <option value='<?php echo $client->id; ?>'><?= $client->name ?>  (<?= $client->username ?>)</option>
                                                 <?php } ?>
                                             </select>
-                                        </div>
+                                        </div>-->
                                         <div class="form-group">
 
                                             <strong> Task Type</strong> 
@@ -150,6 +157,7 @@
 </div>
 </div>
 </div>
+
 <script type="text/javascript">
 
 $(".select2").select2({
@@ -158,24 +166,57 @@ $(".select2").select2({
     allowClear: false,
     debug: true
 });
-department=function(){
-    $('#department').change(function(){
-        var val=$(this).val();
-        if(val > 4){
+department = function () {
+    $('#department').change(function () {
+        var val = $(this).val();
+        if (val > 4) {
             $('#modules,#client_id').hide();
-        }else{
+        } else {
             $('#modules,#client_id').show();
         }
         $.ajax({
-            data:{dep_id:val},
-            method:'get',
-            url:'<?=url('customer/getTaskByDepartment/null')?>',
-            success:function(data){
+            data: {dep_id: val},
+            method: 'get',
+            url: '<?= url('customer/getTaskByDepartment/null') ?>',
+            success: function (data) {
                 $('#task_type_id').html(data);
             }
         })
     })
 }
+get_schools = function () {
+    $("#get_schools").select2({
+        minimumInputLength: 2,
+       // tags: [],
+        ajax: {
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+            url: '<?= url('student/getschools/null') ?>',
+            dataType: 'json',
+            type: "GET",
+            quietMillis: 50,
+            data: function (term) {
+                return {
+                    term: term,
+                    token: $('meta[name="csrf-token"]').attr('content')
+                };
+            },
+            results: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            text: item.name,
+                            id: item.id
+                        };
+                    })
+                };
+            }
+        }
+    });
+}
+
 $(document).ready(department);
+$(document).ready(get_schools);
 </script>
 @endsection

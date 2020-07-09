@@ -106,9 +106,9 @@ class Sales extends Controller {
     }
 
     public function school() {
-        $this->data['use_shulesoft']=DB::table('admin.all_setting')->count()-5;
-        $this->data['nmb_schools']=DB::table('admin.nmb_schools')->count();
-        $this->data['nmb_shulesoft_schools']= \collect(DB::select("select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22"))->first()->count;
+        $this->data['use_shulesoft'] = DB::table('admin.all_setting')->count() - 5;
+        $this->data['nmb_schools'] = DB::table('admin.nmb_schools')->count();
+        $this->data['nmb_shulesoft_schools'] = \collect(DB::select("select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22"))->first()->count;
         $this->data['school_types'] = DB::select("select type, count(*) from admin.schools where ownership='Non-Government' group by type,ownership");
         $this->data['ownerships'] = DB::select('select ownership, COUNT(*) as count, 
 SUM(COUNT(*)) over() as total_schools, 
@@ -201,7 +201,7 @@ group by ownership');
                 if ((int) request('type') == 3) {
                     $sql = "select * from (select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a   where lower(a.ownership) <>'government') a where activities >0";
                 } else if ((int) request('type') == 2) {
-                   $sql = "select a.*, (select count(*) from admin.tasks where client_id in (select id from admin.clients where username in (select schema_name from admin.all_setting where school_id=a.id))) as activities from admin.schools a   where lower(a.ownership) <>'government' and a.id in (select school_id from admin.all_setting)"; 
+                    $sql = "select a.*, (select count(*) from admin.tasks where client_id in (select id from admin.clients where username in (select schema_name from admin.all_setting where school_id=a.id))) as activities from admin.schools a   where lower(a.ownership) <>'government' and a.id in (select school_id from admin.all_setting)";
                 } else {
                     $sql = "select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a   where lower(a.ownership) <>'government'";
                 }
@@ -235,15 +235,18 @@ group by ownership');
                 $sql = "select b.id, b.activity,b.created_at,a.name,c.firstname  from admin.clients a join admin.tasks b on a.id=b.client_id join admin.users c on c.id=b.to_user_id ";
                 return $this->ajaxTable('tasks', ['activity', 'name', 'firstname', 'created_at'], $sql);
                 break;
-               case 'payments':
+            case 'payments':
                 $sql = "select a.id,b.name, a.amount, a.method,a.created_at,a.transaction_id, d.name as bank_name,'Client Payment' as payment_type from admin.payments a join admin.clients b on b.id=a.client_id left join admin.bank_accounts c on c.id=a.bank_account_id left join constant.refer_banks d on d.id=c.refer_bank_id
 union all
 select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.transaction_id, d.name as bank_name, 'Revenue' as payment_type from admin.revenues a left join admin.bank_accounts c on c.id=a.bank_account_id left join constant.refer_banks d on d.id=c.refer_bank_id ";
-                return $this->ajaxTable('payments', ['a.id', 'amount','name','a.created_at'], $sql);
+                return $this->ajaxTable('payments', ['a.id', 'amount', 'name', 'a.created_at'], $sql);
                 break;
-              case 'tasks':
-                $sql = "select b.id,d.name as task_name, b.activity,b.created_at,a.name,c.firstname,b.date  from admin.clients a join admin.tasks b on a.id=b.client_id join admin.users c on c.id=b.user_id join admin.task_types d on d.id=b.task_type_id ";
-                return $this->ajaxTable('tasks', ['b.activity', 'd.name', 'c.firstname', 'b.created_at','b.date'], $sql);
+            case 'tasks':
+                $sql = "select t.id,t.activity,t.date, t.created_at,p.school_name,p.client,u.firstname||' '||u.lastname as user_name,tt.name as task_name from admin.tasks t left join (
+select a.task_id, c.name as school_name,'Client' as client from admin.tasks_clients a join admin.clients c on c.id=a.client_id
+UNION ALL
+SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks_schools b join admin.schools s on s.id=b.school_id ) p on p.task_id=t.id join admin.users u on u.id=t.user_id join admin.task_types tt on tt.id=t.task_type_id where u.id=" . Auth::user()->id . " OR t.id in (select task_id from admin.tasks_users where user_id=" . Auth::user()->id . " )";
+                return $this->ajaxTable('tasks', ['t.activity', 'user_name', 'p.school_name', 't.created_at', 't.date', 'task_name'], $sql);
                 break;
             default:
                 break;
@@ -304,10 +307,17 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
             } else {
                 $data = array_merge(request()->all(), ['user_id' => Auth::user()->id, 'school_id' => request('client_id')]);
 
-                \App\Models\Task::create($data);
+                $task = \App\Models\Task::create($data);
                 \App\Models\UsersSchool::create([
                     'user_id' => Auth::user()->id, 'school_id' => request('client_id'), 'role_id' => Auth::user()->role->id, 'status' => 1,
                 ]);
+                $school_id = request('client_id');
+
+                DB::table('tasks_schools')->insert([
+                    'task_id' => $task->id,
+                    'school_id' => (int) $school_id
+                ]);
+
                 return redirect()->back()->with('success', 'Report added successfully');
             }
         }
@@ -342,22 +352,21 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
 
     function addSchool() {
         if ($_POST) {
-              
-                $array = [
-                    'name' => strtoupper(request('name')),
-                    'ward' => request('ward'),
-                    'zone' => request('zone'),
-                    'type' => request('type'),
-                    'region' => request('region'),
-                    'district' => request('district'),
-                    'ownership' => request('ownership'),
-                    'nmb_zone' => request('zone')
-                ];
-                DB::table('admin.schools')->insert($array);
-                return redirect('sales/school')->with('success',  request('name').' successfully');
+
+            $array = [
+                'name' => strtoupper(request('name')),
+                'ward' => request('ward'),
+                'zone' => request('zone'),
+                'type' => request('type'),
+                'region' => request('region'),
+                'district' => request('district'),
+                'ownership' => request('ownership'),
+                'nmb_zone' => request('zone')
+            ];
+            DB::table('admin.schools')->insert($array);
+            return redirect('sales/school')->with('success', request('name') . ' successfully');
         }
         return view('sales.add_school');
     }
-    
-    
+
 }
