@@ -116,7 +116,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                         </div>
                     </div>
                 </div>
-                <!-- New clients card end -->
+                <!-- New clients card end --> 
                 <!-- New files card start -->
                 <div class="col-md-6 col-xl-3">
                     <div class="card client-blocks success-border">
