@@ -322,8 +322,8 @@ ORDER  BY conrelid::regclass::text, contype DESC";
     public function logs() {
         $schema = request()->segment(3);
 
-        $where = strlen($schema) > 3 ? ' where deleted_at is null and "schema_name"=\'' . $schema . '\' ' : ' where deleted_at is null';
-        $this->data['error_logs'] = DB::select('select * from admin.error_logs ' . $where . ' ');
+     
+        $this->data['error_logs'] =strlen($schema) > 3 ? DB::table('error_logs')->whereNull('deleted_at')->where('schema_name',$schema)->count() : DB::table('error_logs')->whereNull('deleted_at')->count();
         $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1 '))->first();
         return view('software.logs', $this->data);
     }
