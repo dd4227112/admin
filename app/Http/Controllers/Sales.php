@@ -241,6 +241,10 @@ union all
 select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.transaction_id, d.name as bank_name, 'Revenue' as payment_type from admin.revenues a left join admin.bank_accounts c on c.id=a.bank_account_id left join constant.refer_banks d on d.id=c.refer_bank_id ";
                 return $this->ajaxTable('payments', ['a.id', 'amount','name','a.created_at'], $sql);
                 break;
+              case 'tasks':
+                $sql = "select b.id,d.name as task_name, b.activity,b.created_at,a.name,c.firstname,b.date  from admin.clients a join admin.tasks b on a.id=b.client_id join admin.users c on c.id=b.to_user_id join admin.task_types d on d.id=b.task_type_id ";
+                return $this->ajaxTable('tasks', ['activity', 'name', 'firstname', 'created_at'], $sql);
+                break;
             default:
                 break;
         }
