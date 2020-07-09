@@ -114,7 +114,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                             <div class="card-block-big">
                                 <div>
                                     <?php
-                                    $total_schools = \collect(DB::select('select count(*) from admin.error_logs a WHERE deleted_at is null and  ' . $where))->first()->count;
+                                    $total_schools = \collect(DB::select('select count(*) from admin.error_logs a WHERE deleted_at is not null and  ' . $where))->first()->count;
                                     ?>
                                     <h3><?= $total_schools ?></h3>
                                     <p>Error Resolved
@@ -214,7 +214,7 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
 
                                                 foreach ($activities as $activity) {
                                                     ?>
-                                                    ?>
+                                                    
                                                     <tr>
                                                         <td class="pro-name"><?= $activity->task_name ?></td>
                                                         <td class="img-pro"><?= $activity->user_name ?></td>
