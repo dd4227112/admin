@@ -48,44 +48,34 @@
                                         <tr>
                                             <th>No.</th>
                                             <th>Task type</th>
-                                            <th>Task Performed</th>
+                                            <th>Status</th>
+                                            <th style=" display: block;/* or inline-block */
+                                                text-overflow: ellipsis;
+                                                word-wrap: break-word;
+                                                overflow: hidden;
+                                                max-height: 3.6em;
+                                                line-height: 1.8em;">Task Performed</th>
                                             <th>Added By</th>
                                             <th>School</th>
-                                            <th> Deadline</th>
+                                            <th>Deadline</th>
                                             <th>Added On</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php
-                                        $i = 1;
-                                        if ($i == 0) {
-                                            foreach ($activities as $activity) {
-                                                ?>
-                                                <tr>
-                                                    <td><?= $i++; ?></td>
-                                                    <td><?= $activity->taskType->name ?></td>
-                                                    <td><a href="<?= url('customer/activity/show/' . $activity->id) ?>"><?= substr($activity->activity, 0, 60) ?></a></td>
 
-                                                    <td><?= $activity->user->firstname ?></td>
-                                                    <td><?= $activity->client->username ?></td>
-                                                    <td><?= $activity->date ?> <?= $activity->time ?></td>
-
-                                                    <td><?= $activity->created_at ?></td>
-                                                    <td><a href="<?= url('customer/activity/show/' . $activity->id) ?>" class="btn btn-mini waves-effect waves-light btn-primary"> <i class="icofont icofont-eye-alt"></i> View</a></td>
-                                                </tr>
-                                            <?php }
-                                        } ?>
                                     </tbody>
                                     <tfoot>
                                         <tr>
                                             <th>No</th>
+
                                             <th>Task type</th>
-                                            <th>Task Title</th>
+                                            <th>Status</th>
+                                            <th style="width:1em">Task Performed</th>
                                             <th>Added By</th>
                                             <th>School</th>
                                             <th>Added On</th>
-                                            <th> Deadline</th>
+                                            <th>Deadline</th>
                                             <th>Action</th>
                                         </tr>
                                     </tfoot>
@@ -103,7 +93,7 @@
     @endsection
     @section('footer')
     <!-- data-table js -->
-<?php $root = url('/') . '/public/' ?>
+    <?php $root = url('/') . '/public/' ?>
 
     <script type="text/javascript">
         load_tasks = function () {
@@ -118,6 +108,8 @@
 
                     {"data": "id"},
                     {"data": "task_name"},
+                    {"data": ""},
+
                     {"data": "activity"},
                     {"data": "user_name"},
                     {"data": "school_name"},
@@ -127,26 +119,60 @@
                 ],
                 "columnDefs": [
                     {
-                        "targets": 7,
+                        "targets": 8,
                         "data": null,
                         "render": function (data, type, row, meta) {
 
-                            return '<a href="<?= url('customer/activity/show/') ?>/'+row.id+'" class="btn btn-mini waves-effect waves-light btn-primary"> <i class="icofont icofont-eye-alt"></i> View</a>';
+                            return '<a href="<?= url('customer/activity/show/') ?>/' + row.id + '" class="btn btn-mini waves-effect waves-light btn-primary"> <i class="icofont icofont-eye-alt"></i> View</a>';
 
 
                         }
 
-                    }
+                    },
+                    {
+                        "targets": 2,
+                        "data": null,
+                        "render": function (data, type, row, meta) {
+                            var status;
+                            var message;
+                            if (row.status == 1) {
+                                status = 'success';
+                                message = 'Complete';
+
+                            } else if (row.status == 2) {
+                                status = 'warning';
+                                message = 'On progress';
+                            } else {
+                                status = 'danger';
+                                message = 'Closed';
+                            }
+                            return '<div class="dropdown-secondary dropdown f-right"><button class="btn btn-' + status + ' btn-mini dropdown-toggle waves-effect waves-light" type="button" id="dropdown6' + row.id + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + message + '</button><div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_status(2,' + row.id + ')"><span class="point-marker bg-danger"></span>On progress</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_status(1,' + row.id + ')"><span class="point-marker bg-warning"></span>Complete</a><a class="dropdown-item waves-light waves-effect" href="#!" onmousedown="change_status(0,' + row.id + ')"><span class="point-marker bg-warning"></span>Closed</a></div> <span class="f-left m-r-5 text-inverse" style="display:none">Priority : ' + row.priority + '</span></div>';
+
+
+                        }
+
+                    },
                 ],
 
                 rowCallback: function (row, data) {
-                    //$(row).addClass('selectRow');
-                    $(row).attr('id', 'log' + data.id);
+                    $(row).click(function (row) {
+                       // window.location.href = '<?= url('customer/activity/show/') ?>/' + row.id;
+                    });
+                    //$(row).attr('id', 'log' + data.id);
+
                 }
             });
-            View_log = function (a) {
+            change_status = function (a, b) {
+                $.ajax({
+                    url: '<?= url('customer/changeStatus') ?>/null',
+                    method: 'get',
+                    data: {status: a, id: b},
+                    success: function (data) {
 
-                window.location.href = "<?= url('software/Readlogs') ?>/" + a;
+                        $('#dropdown6' + a).html(data);
+
+                    }
+                });
             },
                     delete_log = function (a) {
                         $.ajax({
