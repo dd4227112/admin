@@ -324,6 +324,7 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
         </div>
     </div>
 </div>
+        
 <script>
     check = function () {
         $('#check_custom_date').change(function () {
