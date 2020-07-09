@@ -283,7 +283,6 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                                     //\App\Models\Task::where('created_at', '>=', $at)->where('department', 2)->orderBy('id', 'desc')->get();
                                     foreach ($activities as $activity) {
                                         ?>
-                                                ?>
                                         ?>
                                         <tr>
                                         <td class="pro-name"><?= $activity->task_name ?></td>
