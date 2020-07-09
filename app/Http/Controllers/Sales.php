@@ -242,8 +242,8 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
                 return $this->ajaxTable('payments', ['a.id', 'amount','name','a.created_at'], $sql);
                 break;
               case 'tasks':
-                $sql = "select b.id,d.name as task_name, b.activity,b.created_at,a.name,c.firstname,b.date  from admin.clients a join admin.tasks b on a.id=b.client_id join admin.users c on c.id=b.to_user_id join admin.task_types d on d.id=b.task_type_id ";
-                return $this->ajaxTable('tasks', ['activity', 'name', 'firstname', 'created_at'], $sql);
+                $sql = "select b.id,d.name as task_name, b.activity,b.created_at,a.name,c.firstname,b.date  from admin.clients a join admin.tasks b on a.id=b.client_id join admin.users c on c.id=b.user_id join admin.task_types d on d.id=b.task_type_id ";
+                return $this->ajaxTable('tasks', ['b.activity', 'd.name', 'c.firstname', 'b.created_at','b.date'], $sql);
                 break;
             default:
                 break;
