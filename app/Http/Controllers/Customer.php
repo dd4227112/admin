@@ -371,7 +371,7 @@ class Customer extends Controller {
                 $days = date('Y-m-d H:i:s', strtotime('-40 days'));
                 $this->data['activities'] = \App\Models\Task::where('created_at', '>', $days)->orderBy('id', 'desc')->get();
             } else {
-                $this->data['activities'] = \App\Models\Task::whereDate('created_at', $date)->orderBy('id', 'desc')->get();
+                $this->data['activities'] = \App\Models\Task::where('user_id', Auth::user()->id)->orWhere('to_user_id', Auth::user()->id)->get();
             }
             return view('customer/activity', $this->data);
         }
