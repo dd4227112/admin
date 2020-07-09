@@ -119,8 +119,8 @@
                     {"data": "id"},
                     {"data": "task_name"},
                     {"data": "activity"},
-                    {"data": "firstname"},
-                    {"data": "name"},
+                    {"data": "user_name"},
+                    {"data": "school_name"},
                     {"data": "created_at"},
                     {"data": "date"},
                     {"data": ""}

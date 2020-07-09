@@ -303,14 +303,17 @@
                         </div>
                         <div class="col-md-12 timeline-dot">
                           <?php
-                          $tasks = \App\Models\Task::where('client_id', $client_id)->orderBy('created_at', 'desc')->get();
+                               $tasks_ids=  \App\Models\TaskSchool::whereIn('school_id',\App\Models\ClientSchool::where('client_id',$client_id)->get(['school_id']))->get(['task_id']);
+                              
+                            $tasks = \App\Models\Task::whereIn('id', \App\Models\TaskClient::where('client_id',$client_id)->get(['task_id']))->orWhereIn('id',$tasks_ids)->orderBy('created_at', 'desc')->get();
+             
                           foreach ($tasks as $task) {
                             ?>
                             <div class="social-timelines p-relative o-hidden" id="removetag<?=$task->id?>">
                               <div class="row timeline-right p-t-35">
                                 <div class="col-xs-2 col-sm-1">
                                   <div class="social-timelines-left">
-                                    <img class="img-circle timeline-icon" src="<?= $root ?>assets/images/avatar-2.png" alt="">
+                                    <img class="img-circle timeline-icon" src="<?= Auth::user()->photo ?>" alt="">
                                   </div>
                                 </div>
                                 <div class="col-xs-10 col-sm-11 p-l-5 p-b-35">

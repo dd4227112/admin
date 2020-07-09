@@ -284,8 +284,13 @@ class Customer extends Controller {
         if ($_POST) {
 
             $data = array_merge(request()->all(), ['user_id' => Auth::user()->id]);
+
             $task = \App\Models\Task::create($data);
             if ((int) request('to_user_id') > 0) {
+                DB::table('tasks_users')->insert([
+                    'task_id' => $task->id,
+                    'user_id' => request('to_user_id')
+                ]);
                 $user = \App\Models\User::find(request('to_user_id'));
                 $message = 'Hello ' . $user->firstname . '<br/>'
                         . 'A task has been allocated to you'
@@ -296,6 +301,13 @@ class Customer extends Controller {
                         . '</ul>';
                 $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
             }
+
+            DB::table('tasks_clients')->insert([
+                'task_id' => $task->id,
+                'client_id' => (int) request('client_id')
+            ]);
+
+
             if (count($task->id) > 0 && request('module_id')) {
                 $modules = request('module_id');
                 foreach ($modules as $key => $value) {
@@ -322,6 +334,7 @@ class Customer extends Controller {
         $id = request()->segment(4);
         if ($tab == 'add') {
             $this->data['clients'] = \App\Models\Client::all();
+            $this->data['schools'] = \DB::table('schools')->get();
             if ($_POST) {
 
                 $data = array_merge(request()->except('to_user_id'), ['user_id' => Auth::user()->id]);
@@ -345,7 +358,21 @@ class Customer extends Controller {
                         $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
                     }
                 }
+                $school_id = request('school_id');
+                if (preg_match('/c/i', $school_id)) {
 
+                    DB::table('tasks_clients')->insert([
+                        'task_id' => $task->id,
+                        'client_id' => (int) $school_id
+                    ]);
+                }
+                if ((int) $school_id > 0 && !preg_match('/c/i', $school_id)) {
+
+                    DB::table('tasks_schools')->insert([
+                        'task_id' => $task->id,
+                        'school_id' => (int) $school_id
+                    ]);
+                }
                 if (count($task->id) > 0 && request('module_id')) {
                     $modules = request('module_id');
                     foreach ($modules as $key => $value) {
