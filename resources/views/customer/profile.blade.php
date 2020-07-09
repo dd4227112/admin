@@ -2,6 +2,11 @@
 @section('content')
 <?php $root = url('/') . '/public/' ?>
 
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css" rel="stylesheet" />
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.9/select2-bootstrap.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.min.js"></script>
+
 <div class="main-body">
   <div class="page-wrapper">
     <!-- Page-header start -->
@@ -215,7 +220,7 @@
 
                                         <div class="col-md-6">
                                           Task Type
-                                          <select name="task_type_id"  class="form-control">
+                                          <select name="task_type_id"  class="form-control select2">
                                                 <?php
                                               $types = DB::table('task_types')->get();
                                               foreach ($types as $type) {
@@ -227,7 +232,7 @@
                                         </div>
                                         <div class="col-md-6">
                                           Person Allocated to do
-                                          <select name="to_user_id" class="form-control">
+                                          <select name="to_user_id" class="form-control select2">
                                             <?php
                                             $staffs = DB::table('users')->where('status', 1)->get();
                                             foreach ($staffs as $staff) {
