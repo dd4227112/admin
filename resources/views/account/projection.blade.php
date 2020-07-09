@@ -54,6 +54,10 @@ function tagEdit($schema_name, $column, $value) {
                                         <a class="nav-link" data-toggle="tab" href="#profile7" role="tab"><i class="icofont icofont-ui-user "></i>Actuals</a>
                                         <div class="slide"></div>
                                     </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#reports" role="tab"><i class="icofont icofont-list "></i>Reports</a>
+                                        <div class="slide"></div>
+                                    </li>
 
                                 </ul>
                                 <!-- Tab panes -->
@@ -156,6 +160,61 @@ function tagEdit($schema_name, $column, $value) {
                                             </div>
                                         </div>
                                     </div>
+ 
+                                    <div class="tab-pane" id="reports" role="tabpanel">
+                                    <div class="card-header">
+                                            <h5>Current Sent School Invoices</h5>
+                                           <!-- <span>This part shows list of invoices sent.</span> -->
+                                        </div>
+                                        <div class="card-block">
+                                            <div class="table-responsive dt-responsive">
+                                                <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>School Name</th>
+                                                            <th>Students</th>
+                                                            <th>Paid Amount</th>
+                                                            <th>Added By</th>
+                                                            <th>Issued Date</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php
+                                                        $total_students = 0;
+                                                        $total_price = 0;
+                                                        $schools = App\Models\InvoiceSent::orderBy('id', 'DESC')->get();
+                                                        if(count($schools) > 0){
+                                                        foreach ($schools as $school) {
+                                                            
+                                                            ?>
+                                                            <tr>
+                                                                <td><?= ucfirst($school->schema_name) ?></td>
+                                                                <td><?php echo $school->student; $total_students += $school->student; ?></td>
+                                                                <td><?php echo $school->amount; $total_price += $school->amount;?> </td>
+                                                                <td><?php echo $school->user->name;?> </td>
+                                                                <td><?= $school->date ?></td>
+                                                               
+                                                                <td ><a href="<?= url('account/invoiceView/' . $school->schema_name) ?>" class="btn btn-sm btn-success">View</a></td>
+                                                            </tr>
+                                                        <?php } 
+                                                        }?>
+                                                    </tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <th>Total</th>
+                                                            <th><?= $total_students ?></th>
+                                                            <th><?= $total_price ?></th>
+                                                            <th>User</th>
+                                                            <th>Date</th>
+                                                            <th>Action</th>
+
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>                                   
                                 </div>
                             </div>
                         </div>
