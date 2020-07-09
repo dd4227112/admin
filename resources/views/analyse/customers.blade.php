@@ -244,9 +244,7 @@ if($days == '' || $days == 1){
                                     <!--<i class="icofont icofont-ui-edit"></i>-->
                                 </div>
                             </div>
-                        </div>
-                        <div class="card-block">
-                            <table id="res-config" class="table table-bordered w-100 dataTable">
+                             <table id="res-config" class="table table-bordered w-100 dataTable">
                                 <thead>
                                     <tr>
                                         <th>Name</th>
@@ -265,9 +263,7 @@ if($days == '' || $days == 1){
                                             <td class="img-pro">
                                                 <?= $activity->user_name ?>
                                             </td>
-                                            <td class="pro-name">
-
-                                                <span class="text-muted f-12"><?= $activity->activity ?></span>
+                                            <td class="pro-name"><?= $activity->activity ?>
                                             </td>
                                             <td>  <?= $activity->task_name ?></td>
                                             <td>
@@ -281,6 +277,9 @@ if($days == '' || $days == 1){
                                 </tbody>
                             </table>
 
+                        </div>
+                        <div class="card-block">
+                           
                         </div>
 
                     </div>
