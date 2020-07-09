@@ -55,7 +55,13 @@
                                       if($activity->user_id == $activity->to_user_id){
                                         echo $activity->user->firstname.' '. $activity->user->lastname;
                                       }else{
-                                        echo 'By '.$activity->user->firstname.' '. $activity->user->lastname. ' To '.$activity->toUser->firstname. ' '. $activity->toUser->lastname;
+                                        echo 'By '.$activity->user->firstname.' '. $activity->user->lastname. ' To ';
+                                        $to_users=$activity->taskUsers()->get();
+                                        $person='';
+                                        foreach ($to_users as $user) {
+                                            $person.=$user->user->firstname.' '.$user->user->lastname.',';
+                                        }
+                                       echo $person;
                                       }
                                          ?>
                                       </tr>
