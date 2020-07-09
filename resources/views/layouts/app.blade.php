@@ -899,8 +899,7 @@ function toast(message) {
     </div>
     <![endif]-->
         <!-- Warning Section Ends -->
-        <!-- Required Jqurey -->
-        <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
+
         <script src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/tether/dist/js/tether.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
