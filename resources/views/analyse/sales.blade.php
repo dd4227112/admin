@@ -63,6 +63,95 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
             </div>
 
 
+            <?php if (can_access('manage_users')) { ?>
+        <?php
+        $on = 'Today';
+        if ($days == '' || $days == 1) {
+            $days = 1;
+            $on = 'Today';
+        }if ($days == 7) {
+            $on = 'This Week';
+        }if ($days == 30) {
+            $on = 'This Month';
+        }if ($days == 90) {
+            $on = 'Three Month';
+        } if ($days == 181) {
+            $on = 'Six Month';
+        }if ($days == 365) {
+            $on = 'This Year';
+        }
+        ?>
+        <div class="page-body">
+            <div class="row">
+                <!-- Documents card start -->
+                <div class="col-md-6 col-xl-3">
+                    <div class="card client-blocks dark-primary-border">
+                        <div class="card-block">
+                            <h5> Schools in ShuleSoft</h5>
+                            <ul>
+                                <li>
+                                    <i class="icofont icofont-list"></i>
+                                </li>
+                                <li class="text-right">
+                                    <?php echo $shulesoft_schools; ?>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Documents card end -->
+                <!-- New clients card start -->
+                <div class="col-md-6 col-xl-3">
+                    <div class="card client-blocks warning-border">
+                        <div class="card-block">
+                            <h5>NMB Schools</h5>
+                            <ul>
+                                <li>
+                                    <i class="ti-layout text-warning"></i>
+                                </li>
+                                <li class="text-right text-warning">
+                                    <?php echo $nmb_schools; ?>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- New clients card end --> 
+                <!-- New files card start -->
+                <div class="col-md-6 col-xl-3">
+                    <div class="card client-blocks success-border">
+                        <div class="card-block">
+                            <h5>Our Clients</h5>
+                            <ul>
+                                <li>
+                                    <i class="icofont icofont-users text-success"></i>
+                                </li>
+                                <li class="text-right text-success">
+                                    <?php echo $clients; ?>
+
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- New files card end -->
+                <!-- Open Project card start -->
+                <div class="col-md-6 col-xl-3">
+                    <div class="card client-blocks">
+                        <div class="card-block">
+                            <h5>All Schools</h5>
+                            <ul>
+                                <li>
+                                    <i class="icofont icofont-ui-folder text-primary"></i>
+                                </li>
+                                <li class="text-right text-primary">
+                                    <?php echo $schools; ?>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Open Project card end -->
             <div class="row">
                 <!-- counter-card-1 start-->
                 <div class="col-md-12 col-xl-4">
@@ -185,29 +274,26 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                                                 <th>Date</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-
-                                            <?php
-                                            $activities = DB::select("select a.activity,a.created_at,b.name as task_name, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id WHERE  a.task_type_id in (select id from admin.task_types where department=2) and " . $where);
-                                            foreach ($activities as $activity) {
-                                                ?>                    
-                                                <tr>
-                                                    <td class="img-pro">
-                                                        <?= $activity->user_name ?>
-                                                    </td>
-                                                    <td class="pro-name">
-
-                                                        <span class="text-muted f-12"><?= $activity->activity ?></span>
-                                                    </td>
-                                                    <td>  <?= $activity->task_name ?></td>
-                                                    <td>
-                                                        <label class="text-danger">  <?= $activity->created_at ?></label>
-                                                    </td>
-
-                                                </tr>
-                                            <?php } ?>
-
-
+                                <tbody>
+                                    <?php
+                                    $t = '-' . $days . ' days';
+                                    $at = date('Y-m-d H:i:s', strtotime($t));
+                                    $i = 1;
+                                    $activities = $activities = DB::select("select a.id,d.username, a.activity,a.created_at,b.name as task_name, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id join admin.clients d on d.id=a.client_id WHERE  a.task_type_id in (select id from admin.task_types where department=2) and " . $where);
+                                    //\App\Models\Task::where('created_at', '>=', $at)->where('department', 2)->orderBy('id', 'desc')->get();
+                                    foreach ($activities as $activity) {
+                                        ?>
+                                        ?>
+                                        <tr>
+                                        <td class="pro-name"><?= $activity->task_name ?></td>
+                                            <td class="img-pro"><?= $activity->user_name ?></td>
+                                            <td><a href="<?= url('customer/activity/show/' . $activity->id) ?>"><?= $activity->username ?></a></td>
+                                            <td> <label class="text-danger"><?= $activity->created_at ?></td>
+                                        </tr>
+                                    <?php } ?>
+                                   <?php
+                                   //
+                                    ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -231,23 +317,6 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
 
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-sm-12">
-                            <!-- User activities chart start -->
-                            <div class="card analytic-user">
-                                <div class="card-block-big text-center">
-                                    <i class="icofont icofont-wallet"></i>
-                                    <?php
-                                    $student_sum = \collect(DB::select('select sum(students) from admin.schools WHERE id in (select school_id from admin.tasks a where a.task_type_id in (select id from admin.task_types where department=2) and ' . $where . ')'))->first()->sum;
-                                    ?>
-                                    <h3>Tsh <?= number_format($student_sum * 10000) ?> /=</h3>
-                                    <h4>Projected Income</h4>
-                                </div>
-                                <div class="card-footer p-t-25 p-b-25">
-                                    <p class="m-b-0"></p>
-                                </div>
-                            </div>
-                            <!-- User activities chart end -->
                         </div>
                     </div>
                 </div>
@@ -283,119 +352,8 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
   echo '<p>Correlation Factor : ' . round($corr2->corr, 3) . '</p>';
  */ ?>
 
-<?php $root = url('/') . '/public/' ?>
-<div class="page-wrapper">
-    <?php if (can_access('manage_users')) { ?>
-        <?php
-        $on = 'Today';
-        if ($days == '' || $days == 1) {
-            $days = 1;
-            $on = 'Today';
-        }if ($days == 7) {
-            $on = 'This Week';
-        }if ($days == 30) {
-            $on = 'This Month';
-        }if ($days == 90) {
-            $on = 'Three Month';
-        } if ($days == 181) {
-            $on = 'Six Month';
-        }if ($days == 365) {
-            $on = 'This Year';
-        }
-        ?>
-        <div class="page-body">
-            <div class="row">
-                <!-- Documents card start -->
-                <div class="col-md-6 col-xl-3">
-                    <div class="card client-blocks dark-primary-border">
-                        <div class="card-block">
-                            <h5> Schools in ShuleSoft</h5>
-                            <ul>
-                                <li>
-                                    <i class="icofont icofont-list"></i>
-                                </li>
-                                <li class="text-right">
-                                    <?php echo $shulesoft_schools; ?>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!-- Documents card end -->
-                <!-- New clients card start -->
-                <div class="col-md-6 col-xl-3">
-                    <div class="card client-blocks warning-border">
-                        <div class="card-block">
-                            <h5>NMB Schools</h5>
-                            <ul>
-                                <li>
-                                    <i class="ti-layout text-warning"></i>
-                                </li>
-                                <li class="text-right text-warning">
-                                    <?php echo $nmb_schools; ?>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!-- New clients card end -->
-                <!-- New files card start -->
-                <div class="col-md-6 col-xl-3">
-                    <div class="card client-blocks success-border">
-                        <div class="card-block">
-                            <h5>Our Clients</h5>
-                            <ul>
-                                <li>
-                                    <i class="icofont icofont-users text-success"></i>
-                                </li>
-                                <li class="text-right text-success">
-                                    <?php echo $clients; ?>
-
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!-- New files card end -->
-                <!-- Open Project card start -->
-                <div class="col-md-6 col-xl-3">
-                    <div class="card client-blocks">
-                        <div class="card-block">
-                            <h5>All Schools</h5>
-                            <ul>
-                                <li>
-                                    <i class="icofont icofont-ui-folder text-primary"></i>
-                                </li>
-                                <li class="text-right text-primary">
-                                    <?php echo $schools; ?>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <!-- Open Project card end -->
-                <!-- Morris chart start -->
-                <div class="col-md-12 col-xl-8">
-                    <div class="card">
-                        <div class="card-header">
-                            <a href="<?= url('Analyse/sales/1') ?>" class="btn btn-primary btn-sm">Day</a>
-                            <a href="<?= url('Analyse/sales/7') ?>" class="btn btn-primary btn-sm">Week</a>
-                            <a href="<?= url('Analyse/sales/30') ?>" class="btn btn-primary btn-sm">Month</a>
-                            <a href="<?= url('Analyse/sales/90') ?>" class="btn btn-primary btn-sm">Quater</a>
-                            <a href="<?= url('Analyse/sales/181') ?>" class="btn btn-primary btn-sm">Six Month</a>
-                            <a href="<?= url('Analyse/sales/365') ?>" class="btn btn-primary btn-sm">Year</a>
-                        </div>
-                        <div class="card-block">
-                            <div id="login_graph"></div>
-                            <?php
-                            $sql_ = "select count(distinct (user_id,\"table\")) as count, created_at::date as date from admin.all_login_locations where created_at >= current_date - interval '$days days'  group by created_at::date ";
-                            echo $insight->createChartBySql($sql_, 'date', 'User Login per Day', 'bar', false);
-                            ?>
-                        </div>
-                    </div>
-                </div>
-                <!-- Morris chart end -->
-                <!-- Todo card start -->
+                <div class="col-md-12 col-xl-12">
+                  <div class="row">
                 <div class="col-md-12 col-xl-4">
                     <div class="card">
                         <div class="card-header">
@@ -415,7 +373,7 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                                         </thead>
                                         <tbody>
                                             <?php
-                                            $sqls = "select count(a.*),b.name from admin.tasks a join admin.task_types b on b.id=a.task_type_id where  a.created_at > current_date - interval '$days days'  group by b.name";
+                                            $sqls = "select count(a.*),b.name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.task_types c on c.id=a.task_type_id where $where  and c.department=2  group by b.name";
                                             $tasks = DB::select($sqls);
                                             foreach ($tasks as $task) {
                                                 ?>
@@ -435,52 +393,6 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                     </div>
                 </div>
 
-                <!-- Horizontal Timeline start -->
-                <div class="col-md-12 col-xl-8">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Average system usability</h5>
-                        </div>
-                        <div class="table-responsive dt-responsive">
-                            <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
-                                <thead>
-                                    <tr>
-                                        <th>Task type</th>
-                                        <th>Added By</th>
-                                        <th>School</th>
-                                        <th>Deadline</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    $t = '-' . $days . ' days';
-                                    $at = date('Y-m-d H:i:s', strtotime($t));
-                                    $i = 1;
-                                    $activities = \App\Models\Task::where('created_at', '>=', $at)->orderBy('id', 'desc')->get();
-                                    foreach ($activities as $activity) {
-                                        ?>
-                                        <tr>
-                                            <td><?= $activity->taskType->name ?></td>
-                                            <td><?= $activity->user->firstname ?></td>
-                                            <td><a href="<?= url('customer/activity/show/' . $activity->id) ?>"><?= $activity->client->username ?></a></td>
-                                            <td><?= $activity->date ?> <?= $activity->time ?></td>
-
-                                        </tr>
-                                    <?php } ?>
-                                </tbody>
-                                <tfooter>
-                                    <tr>
-                                        <th>Task type</th>
-                                        <th>Added By</th>
-                                        <th>School</th>
-                                        <th>Deadline</th>
-                                    </tr>
-                                </tfooter>
-                            </table>
-
-                        </div>
-                    </div>
-                </div>
                 <!-- .events-content -->
                 <!-- Todo card start -->
                 <div class="col-md-12 col-xl-4">
@@ -502,7 +414,7 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                                         </thead>
                                         <tbody>
                                             <?php
-                                            $sqls = "select count(a.*),b.username from admin.tasks a join admin.clients b on a.client_id=b.id where  a.created_at > current_date - interval '$days days'  group by b.username";
+                                            $sqls = "select count(a.*),b.username from admin.tasks a join admin.clients b on a.client_id=b.id join admin.task_types c on c.id=a.task_type_id where $where  and c.department=2 group by b.username";
                                             $tasks = DB::select($sqls);
                                             foreach ($tasks as $task) {
                                                 ?>
@@ -521,6 +433,24 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                     </div>
                 </div>
                 <!-- Horizontal Timeline end -->
+
+                <div class="col-md-12 col-xl-4">
+                    <!-- User activities chart start -->
+                    <div class="card analytic-user">
+                        <div class="card-block-big text-center">
+                            <i class="icofont icofont-wallet"></i>
+                            <?php
+                            $student_sum = \collect(DB::select('select sum(students) from admin.schools WHERE id in (select school_id from admin.tasks a where a.task_type_id in (select id from admin.task_types where department=2) and ' . $where . ')'))->first()->sum;
+                            ?>
+                            <h3>Tsh <?= number_format($student_sum * 10000) ?> /=</h3>
+                            <h4>Projected Income</h4>
+                        </div>
+                        <div class="card-footer p-t-25 p-b-25">
+                            <p class="m-b-0"></p>
+                        </div>
+                    </div>
+                    <!-- User activities chart end -->
+                </div>
             </div>
         </div>
     <?php } ?>
@@ -532,78 +462,9 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
         <script src="<?= url('/public') ?>/code/modules/export-data.js"></script>
         <script src="<?= url('/public') ?>/code/modules/series-label.js"></script>
         <script src="<?= url('/public') ?>/code/modules/data.js"></script>
-        <table id="users_table" style="display:none">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>User Feedback</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                $logs = DB::select('select count(*),extract(month from created_at) as month from constant.feedback
-        where extract(year from created_at)=' . date('Y') . ' group by month order by month');
-                foreach ($logs as $log) {
-                    $monthNum = $log->month;
-                    $dateObj = DateTime::createFromFormat('!m', $monthNum);
-                    $monthName = $dateObj->format('F'); // March
-                    ?>
-                    <tr>
-                        <th><?= $monthName ?></th>
-                        <td><?= $log->count ?></td>
-                    </tr>
-                <?php }
-                ?>
-            </tbody>
-        </table>
-        <script type="text/javascript">
-                    Highcharts.chart('container', {
-                        data: {
-                            table: 'users_table'
-                        },
-                        chart: {
-                            type: 'column'
-                        },
-                        title: {
-                            text: 'User Feedback Per Month'
-                        },
-                        yAxis: {
-                            allowDecimals: false,
-                            title: {
-                                text: 'User Feedback'
-                            }
-                        },
-                        tooltip: {
-                            formatter: function () {
-                                return '<b>' + this.series.name + '</b><br/>' +
-                                        this.point.y + ' ' + this.point.name.toLowerCase();
-                            }
-                        }
-                    });
 
-                    Highcharts.chart('container2', {
-                        data: {
-                            table: 'users_sales'
-                        },
-                        chart: {
-                            type: 'column'
-                        },
-                        title: {
-                            text: 'No of Sales Per Month of <?= date('Y') ?>'
-                        },
-                        yAxis: {
-                            allowDecimals: false,
-                            title: {
-                                text: 'No of new onboarded school'
-                            }
-                        },
-                        tooltip: {
-                            formatter: function () {
-                                return '<b>' + this.series.name + '</b><br/>' +
-                                        this.point.y + ' ' + this.point.name.toLowerCase();
-                            }
-                        }
-                    });
+        <script type="text/javascript">
+
                     dashboard_summary = function () {
                         $.ajax({
                             url: '<?= url('analyse/summary/null') ?>',
