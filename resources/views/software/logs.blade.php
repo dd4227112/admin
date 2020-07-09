@@ -51,7 +51,7 @@
                                     <i class="icofont icofont-document-folder"></i>
                                 </li>
                                 <li class="text-right">
-                                    <?php //count($error_logs) ?>
+                                    <?= $error_logs ?>
                                 </li>
                             </ul>
                         </div>
@@ -118,11 +118,11 @@
                             <select name="select" class="form-control select2" id="schema_select">
                                 <option value="0">Select</option>
                                 <?php
-                                //$schemas = DB::select('select distinct "schema_name" from admin.error_logs');
-                                //foreach ($schemas as $schema) {
+                                $schemas = DB::select('select distinct "schema_name" from admin.error_logs');
+                                foreach ($schemas as $schema) {
                                     ?>
-                                    <option value="<?php // $schema->schema_name ?>"><?php // $schema->schema_name ?></option>
-                                <?php // }
+                                    <option value="<?php echo $schema->schema_name ?>"><?php echo $schema->schema_name ?></option>
+                                <?php }
                                 ?>
                             </select>
                         </div>
@@ -134,7 +134,7 @@
                         <ul class="nav nav-tabs md-tabs" role="tablist">
                             <li class="nav-item complete">
                                 <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true">
-                                    <strong>( <?php // count($error_logs) ?>)</strong> Errors
+                                    <strong>( <?= ($error_logs) ?>)</strong> Errors
                                 </a>
                                 <div class="slide"></div>
                             </li>
