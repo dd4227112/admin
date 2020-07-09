@@ -22,6 +22,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
     <div class="page-header">
         <div class="page-header-title">
         <?php
+        $on = 'Today';
 if($days == '' || $days == 1){
     $days = 1;
     $on = 'Today';
