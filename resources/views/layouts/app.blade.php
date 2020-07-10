@@ -503,7 +503,6 @@ function toast(message) {
                                 </a>
                                 <ul class="tree-1">
 
-                                <li><a href="<?= url('customer/activity') ?>" data-i18n="nav.page_layout.bottom-menu">Task & Activity</a></li>
                                 <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.bottom-menu">System Setup</a></li>
                                     <li>
                                         <a href="<?= url('Phone_call/index') ?>" data-i18n="nav.navigate.navbar">phone Calls</a>
