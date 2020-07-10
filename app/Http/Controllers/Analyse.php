@@ -57,6 +57,7 @@ class Analyse extends Controller {
     }
 
     public function software() {
+         $this->data['days'] =  request()->segment(3);
         return view('analyse.software', $this->data);
     }
 

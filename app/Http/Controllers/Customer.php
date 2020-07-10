@@ -394,16 +394,16 @@ class Customer extends Controller {
             return view('customer/view_task', $this->data);
         } else {
             $date = request('taskdate');
-            if ($date == '') {
-                $days = date('Y-m-d H:i:s', strtotime('-40 days'));
-                $this->data['activities'] = \App\Models\Task::where('created_at', '>', $days)->orderBy('id', 'desc')->get();
-            } else {
-                $this->data['activities'] = \App\Models\Task::where('user_id', Auth::user()->id)->orWhere('to_user_id', Auth::user()->id)->get();
-            }
+          
+            $this->data['activities'] = [];
             return view('customer/activity', $this->data);
         }
     }
 
+    public function changeStatus() {
+      \App\Models\Task::where('id', request('id'))->update(['status'=> request('status')]); 
+      echo 'success';
+    }
     public function getTaskByDepartment() {
         $dep_id = request('dep_id');
         $types = DB::table('task_types')->where('department', $dep_id)->get();
