@@ -394,16 +394,37 @@ class Customer extends Controller {
             return view('customer/view_task', $this->data);
         } else {
             $date = request('taskdate');
-          
+
             $this->data['activities'] = [];
             return view('customer/activity', $this->data);
         }
     }
 
     public function changeStatus() {
-      \App\Models\Task::where('id', request('id'))->update(['status'=> request('status')]); 
-      echo 'success';
+         \App\Models\Task::where('id', request('id'))->update(['status' => request('status')]);
+        $users = DB::table('tasks_users')->where('task_id', request('id'))->get();
+        if (count($users) > 0) {
+            $task = \App\Models\Task::find(request('id'));
+            foreach ($users as $user) {
+                $user_id=$user->user_id;
+                DB::table('tasks_users')->insert([
+                    'task_id' => $task->id,
+                    'user_id' => $user_id
+                ]);
+                $user = \App\Models\User::find($user_id);
+                $message = 'Hello ' . $user->firstname . '<br/>'
+                        . 'A task has been allocated to you'
+                        . '<ul>'
+                        . '<li>Task: ' . $task->activity . '</li>'
+                        . '<li>Type: ' . $task->taskType->name . '</li>'
+                        . '<li>Deadline: ' . $task->date . '</li>'
+                        . '</ul>';
+                $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+            }
+        }
+        echo request('status');
     }
+
     public function getTaskByDepartment() {
         $dep_id = request('dep_id');
         $types = DB::table('task_types')->where('department', $dep_id)->get();

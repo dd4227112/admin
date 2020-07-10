@@ -346,7 +346,8 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                                     <div class="card-block">
                                         <?php
                                         $new_schools = 'select count(*), status from admin.tasks a
-where ' . $where . ' group by status';
+where  a.task_type_id in (select id from admin.task_types where department=3) and ' . $where . ' group by status';
+                                       
                                         echo $insight->createChartBySql($new_schools, 'status', 'Technical Tasks Status', 'line', false);
                                         ?>
                                     </div>
@@ -362,7 +363,7 @@ where ' . $where . ' group by status';
             $('#check_custom_date').change(function () {
                 var val = $(this).val();
                 if (val == 'today') {
-                    window.location.href = '<?= url('analyse/sales/') ?>/1';
+                    window.location.href = '<?= url('analyse/software/') ?>/1';
                 } else {
                     $('#show_date').show();
                 }
@@ -372,7 +373,7 @@ where ' . $where . ' group by status';
             $('#search_custom').mousedown(function () {
                 var start_date = $('#start_date').val();
                 var end_date = $('#end_date').val();
-                window.location.href = '<?= url('analyse/sales/') ?>/5?start=' + start_date + '&end=' + end_date;
+                window.location.href = '<?= url('analyse/software/') ?>/5?start=' + start_date + '&end=' + end_date;
             });
         }
         $(document).ready(check);

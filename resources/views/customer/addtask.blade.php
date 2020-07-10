@@ -42,7 +42,7 @@
                                         </div>
                                      
                                           
-                                        <div class="form-group">
+                                        <div class="form-group" id="client_id">
                                             <strong>  Select School</strong> 
 
                                             <input type="text" class="form-control" id="get_schools" name="school_id" value="<?= old('school_id') ?>" >
