@@ -135,18 +135,18 @@
                         "render": function (data, type, row, meta) {
                             var status;
                             var message;
-                            if (row.status == 1) {
+                            if (row.status == 'complete') {
                                 status = 'success';
                                 message = 'Complete';
 
-                            } else if (row.status == 2) {
+                            } else if (row.status == 'on progress') {
                                 status = 'warning';
                                 message = 'On progress';
                             } else {
                                 status = 'danger';
-                                message = 'Closed';
+                                message = 'New';
                             }
-                            return '<div class="dropdown-secondary dropdown f-right"><button class="btn btn-' + status + ' btn-mini dropdown-toggle waves-effect waves-light" type="button" id="dropdown6' + row.id + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + message + '</button><div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_status(2,' + row.id + ')"><span class="point-marker bg-danger"></span>On progress</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_status(1,' + row.id + ')"><span class="point-marker bg-warning"></span>Complete</a><a class="dropdown-item waves-light waves-effect" href="#!" onmousedown="change_status(0,' + row.id + ')"><span class="point-marker bg-warning"></span>Closed</a></div> <span class="f-left m-r-5 text-inverse" style="display:none">Priority : ' + row.priority + '</span></div>';
+                            return '<div class="dropdown-secondary dropdown f-right"><button class="btn btn-' + status + ' btn-mini dropdown-toggle waves-effect waves-light" type="button" id="dropdown6' + row.id + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + message + '</button><div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_status(\'on progress\',' + row.id + ')"><span class="point-marker bg-danger"></span>On progress</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_status(\'complete\',' + row.id + ')"><span class="point-marker bg-warning"></span>Complete</a><a class="dropdown-item waves-light waves-effect" href="#!" onmousedown="change_status(\'new\',' + row.id + ')"><span class="point-marker bg-warning"></span>New</a></div> <span class="f-left m-r-5 text-inverse" style="display:none">Priority : ' + row.priority + '</span></div>';
 
 
                         }
@@ -169,7 +169,7 @@
                     data: {status: a, id: b},
                     success: function (data) {
 
-                        $('#dropdown6' + a).html(data);
+                        $('#dropdown6' + b).html(data).removeClass('btn btn-danger').addClass('btn btn-primary');
 
                     }
                 });
