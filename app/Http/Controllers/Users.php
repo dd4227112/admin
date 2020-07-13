@@ -284,6 +284,11 @@ class Users extends Controller {
         return view('users.view_minute', $this->data);
     }
 
+    public function deleteMinute() {
+        $id = request()->segment(3);
+        \App\Models\Minutes::where('id', $id)->delete();
+        return redirect()->back()->with('success', 'Minute Deleted');
+    }
     public function tasks() {
         $this->data['users'] = 1;
         return view('users.tasks', $this->data);

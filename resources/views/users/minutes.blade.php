@@ -68,6 +68,7 @@
                           <td><?=$minute->department->name?></td>
 
                           <td>
+                          <a class="btn btn-success btn-sm" href="{{ url('users/deleteMinute/'.$minute->id) }}">Delete</a>
                           <a class="btn btn-info btn-sm" href="{{ url('users/showMinute/'.$minute->id) }}">Show</a>
                           </td>
                         </tr>
