@@ -286,16 +286,16 @@ class Kernel extends ConsoleKernel {
                 DB::table($invoice->schema_name . '.invoices')
                         ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status,'updated_at'=>'now()']);
 
-//                        $users = DB::table($invoice->schema_name . '.parent')->whereIn('parentID', DB::table('student_parents')->where('student_id', $invoice->student_id)->get(['parent_id']))->get();
-//                        foreach ($users as $user) {
-//                            $message = 'Hello ' . $user->name . ','
-//                                    . 'Control Namba ya '.$invoice->student_name.', kwa malipo ya mafunzo mtandaoni ni ' . $invoice->reference . '.'
-//                                    . 'Unaweza lipa sasa kupitia mitandao ya simu (888999) au njia nyingine za bank ulizo elekezwa na shule. Asante';
-//                            if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
-//                                DB::statement("insert into " . $invoice->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Control Number Ya Malipo ya Online','" . $message . "')");
-//                            }
-//                            DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
-//                        }
+                        $users = DB::table($invoice->schema_name . '.parent')->whereIn('parentID', DB::table('student_parents')->where('student_id', $invoice->student_id)->get(['parent_id']))->get();
+                        foreach ($users as $user) {
+                            $message = 'Hello ' . $user->name . ','
+                                    . 'Control Namba ya '.$invoice->student_name.', kwa malipo ya '.$invoice->schema_name.' ni ' . $invoice->reference . '.'
+                                    . 'Unaweza lipa sasa kupitia mitandao ya simu au njia nyingine za bank ulizo elekezwa na shule. Asante';
+                            if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
+                                DB::statement("insert into " . $invoice->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Control Number Ya Malipo ya Ada ya Shule','" . $message . "')");
+                            }
+                            DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
+                        }
             }
             DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
         }

@@ -401,19 +401,16 @@ class Customer extends Controller {
     }
 
     public function changeStatus() {
-         \App\Models\Task::where('id', request('id'))->update(['status' => request('status')]);
+        \App\Models\Task::where('id', request('id'))->update(['status' => request('status')]);
         $users = DB::table('tasks_users')->where('task_id', request('id'))->get();
         if (count($users) > 0) {
+           
             $task = \App\Models\Task::find(request('id'));
-            foreach ($users as $user) {
-                $user_id=$user->user_id;
-                DB::table('tasks_users')->insert([
-                    'task_id' => $task->id,
-                    'user_id' => $user_id
-                ]);
-                $user = \App\Models\User::find($user_id);
+            foreach ($users as $user_task) {
+            
+                $user = \App\Models\User::find($user_task->user_id);
                 $message = 'Hello ' . $user->firstname . '<br/>'
-                        . 'A task has been allocated to you'
+                        . 'Task Status has been updated to :' . request('status')
                         . '<ul>'
                         . '<li>Task: ' . $task->activity . '</li>'
                         . '<li>Type: ' . $task->taskType->name . '</li>'
@@ -713,4 +710,5 @@ class Customer extends Controller {
         return view('customer.call.create', $this->data);
     }
 
+   
 }
