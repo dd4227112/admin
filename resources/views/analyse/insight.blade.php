@@ -54,7 +54,7 @@ if($days == '' || $days == 1){
                 </li>
                 <li class="breadcrumb-item"><a href="#!">Summary</a>
                 </li>
-                <li class="breadcrumb-item"><a href="#!">Dashboard</a>
+                <li class="breadcrumb-item"><a href="#!">Customer More Insight</a>
                 </li>
             </ul>
         </div>
@@ -174,18 +174,36 @@ if($days == '' || $days == 1){
                 </div>
                 <!-- Open Project card end -->
                 <!-- Morris chart start -->
-                <div class="col-md-12 col-xl-8">
-                    <div class="card">
-
-                        <div class="card-block">
-                            <div id="login_graph"></div>
-                            <?php
-                            $sql_ = "select count(distinct (user_id,\"table\")) as count, created_at::date as date from admin.all_login_locations a where " . $where . " group by created_at::date ";
-                            echo $insight->createChartBySql($sql_, 'date', 'Total Users Login', 'bar', false);
-                            ?>
-                        </div>
-                    </div>
-                </div>
+                    <!-- Monthly Growth Chart start-->
+                            <div class="col-xl-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>School Expenses per month</h5>
+                                    </div>
+                                    <div class="card-block">
+                                        <?php
+                                        $new_schools = 'select count(distinct "schema_name"),extract(month from created_at) as month from admin.all_expense a
+where extract(year from a.created_at)=2019  group by month order by month';
+                                        echo $insight->createChartBySql($new_schools, 'month', 'Expenses Schools', 'line', false);
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Monthly Growth Chart end-->
+                            <!-- Google Chart start-->
+                            <div class="col-xl-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5>Sales Distribution Activities</h5>
+                                    </div>
+                                    <div class="card-block">
+                                        <?php
+                                        $sales_group = "select count(*),b.name as task_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id WHERE  a.task_type_id in (select id from admin.task_types where department=2) and " . $where . " group by task_name";
+                                        echo $insight->createChartBySql($sales_group, 'task_name', 'Sales Group Activity', 'bar', false);
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
 
                 <!-- Morris chart end -->
                 <!-- Todo card start -->
@@ -376,7 +394,7 @@ if($days == '' || $days == 1){
         $('#check_custom_date').change(function () {
             var val = $(this).val();
             if (val == 'today') {
-                window.location.href = '<?= url('analyse/customers/') ?>/1';
+                window.location.href = '<?= url('analyse/moreInsight/') ?>/1';
             } else {
                 $('#show_date').show();
             }
@@ -386,7 +404,7 @@ if($days == '' || $days == 1){
         $('#search_custom').mousedown(function () {
             var start_date = $('#start_date').val();
             var end_date = $('#end_date').val();
-            window.location.href = '<?= url('analyse/customers/') ?>/5?start=' + start_date + '&end=' + end_date;
+            window.location.href = '<?= url('analyse/moreInsight/') ?>/5?start=' + start_date + '&end=' + end_date;
         });
     }
     $(document).ready(check);
