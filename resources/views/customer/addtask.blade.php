@@ -40,16 +40,16 @@
                                         <div class="form-group">
                                             <textarea class="form-control" placeholder="Create Task" rows="4" name="activity"></textarea>
                                         </div>
-                                     
+                                     <!--                         
                                           
                                         <div class="form-group" id="client_id">
                                             <strong>  Select School</strong> 
 
                                             <input type="text" class="form-control" id="get_schools" name="school_id" value="<?= old('school_id') ?>" >
 
-                                        </div>
+                                        </div>-->
 
-<!--                                        <div class="form-group"  id="client_id">
+                                        <div class="form-group"  id="client_id">
                                             <strong>  Select School or Client</strong> 
 
                                             <select name="client_id"  class="form-control select2">
@@ -60,7 +60,7 @@
                                                     <option value='<?php echo $client->id; ?>'><?= $client->name ?>  (<?= $client->username ?>)</option>
                                                 <?php } ?>
                                             </select>
-                                        </div>-->
+                                        </div>
                                         <div class="form-group">
 
                                             <strong> Task Type</strong> 
