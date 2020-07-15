@@ -249,7 +249,6 @@ if($days == '' || $days == 1){
                                 <thead>
                                     <tr>
                                         <th>Name</th>
-                                        <th>Task</th>
                                         <th>Task Type</th>
                                         <th>Date</th>
                                     </tr>
@@ -264,9 +263,9 @@ if($days == '' || $days == 1){
                                             <td class="img-pro">
                                                 <?= $activity->user_name ?>
                                             </td>
-                                            <td class="pro-name"><?= $activity->activity ?>
-                                            </td>
-                                            <td>  <?= $activity->task_name ?></td>
+                                        <!--    <td class="pro-name"><?= $activity->activity ?>
+                                            </td>-->
+                                            <td>  <?= $activity->task_name ?></td> 
                                             <td>
                                                 <label class="text-danger">  <?= $activity->created_at ?></label>
                                             </td>
