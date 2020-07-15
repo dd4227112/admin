@@ -137,7 +137,8 @@ if($days == '' || $days == 1){
                     <div class="card client-blocks success-border">
                         <div class="card-block">
                             <?php
-                            $total_reacherd = \collect(DB::select('select count(distinct client_id) from admin.tasks a  WHERE  a.task_type_id in (select id from admin.task_types where department=1) and ' . $where))->first()->count;
+                            $sql="select (count(distinct school_id) + count(distinct client_id)) as count from admin.tasks_schools a, admin.tasks_clients b where b.task_id in (select id from admin.tasks a where task_type_id in (select id from task_types where department=1) and ".$where.") and a.task_id in (select id from admin.tasks a where task_type_id in (select id from task_types where department=1) and ".$where.")";
+                            $total_reacherd = \collect(DB::select($sql))->first()->count;
                             ?>
                             <h5>Schools Supported</h5>
                             <ul>
