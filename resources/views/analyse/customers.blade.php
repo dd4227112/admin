@@ -117,7 +117,7 @@ if($days == '' || $days == 1){
                     <div class="card client-blocks warning-border">
                         <div class="card-block">
                             <?php
-                            $total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.task_type_id in (select id from admin.task_types where department=1) and ' . $where))->first()->count;
+                            $total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=1) and ' . $where))->first()->count;
                             ?>
                             <h5>Support Activities</h5>
                             <ul>
@@ -137,7 +137,7 @@ if($days == '' || $days == 1){
                     <div class="card client-blocks success-border">
                         <div class="card-block">
                             <?php
-                            $total_reacherd = \collect(DB::select('select count(distinct b.client_id) from admin.tasks a, admin.tasks_clients b WHERE a.id=b.task_id and a.task_type_id in (select id from admin.task_types where department=1) AND ' . $where))->first()->count;
+                            $total_reacherd = \collect(DB::select('select count(distinct b.client_id) from admin.tasks a, admin.tasks_clients b WHERE a.id=b.task_id and  a.user_id in (select id from admin.users where department=1) AND ' . $where))->first()->count;
                             ?>
                             <h5>Schools Supported</h5>
                             <ul>
@@ -209,7 +209,7 @@ if($days == '' || $days == 1){
                                         </thead>
                                         <tbody>
                                             <?php
-                                            $tasks = DB::select('select count(a.*),b.name from admin.tasks a join admin.task_types b on b.id=a.task_type_id where  a.task_type_id in (select id from admin.task_types where department=1) and ' . $where . '  group by b.name');
+                                            $tasks = DB::select('select count(a.*),b.name from admin.tasks a join admin.task_types b on b.id=a.task_type_id where   a.user_id in (select id from admin.users where department=1) and ' . $where . '  group by b.name');
                                             foreach ($tasks as $task) {
                                                 ?>
                                                 <tr>
@@ -256,7 +256,7 @@ if($days == '' || $days == 1){
                                 <tbody>
 
                                     <?php
-                                    $activities = DB::select("select a.activity,a.created_at,b.name as task_name, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id WHERE  a.task_type_id in (select id from admin.task_types where department=1) and " . $where);
+                                    $activities = DB::select("select a.activity,a.created_at,b.name as task_name, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id WHERE   a.user_id in (select id from admin.users where department=1) and " . $where);
                                     foreach ($activities as $activity) {
                                         ?>                    
                                         <tr>
@@ -355,7 +355,7 @@ if($days == '' || $days == 1){
             </div>
 
             <?php
-                                $support_distribution = "select count(*) as count, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.users c on c.id=a.user_id WHERE  a.task_type_id in (select id from admin.task_types where department=1) and " . $where . " group by user_name";
+                                $support_distribution = "select count(*) as count, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.users c on c.id=a.user_id WHERE   a.user_id in (select id from admin.users where department=1) and " . $where . " group by user_name";
                                 echo $insight->createChartBySql($support_distribution, 'user_name', 'Support Activity', 'bar', false);
                                 ?>
 

@@ -196,7 +196,7 @@
                 $.ajax({
                     type: 'POST',
                     url: "<?= url('customer/activity') ?>",
-                    data: {taskdate: class_levtaskdateel_id},
+                    data: {taskdate: taskdate},
                     dataType: "html",
                     success: function (data) {
                         $('#classes_id').html(data);
