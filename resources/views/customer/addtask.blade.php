@@ -16,7 +16,7 @@
                         <div class="card-block">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title">Create Task/Activity</h4>
+                                    <h4 class="modal-title">Create Task/Activity <?php echo Auth::user()->department; ?></h4>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">×</span>
                                     </button>
@@ -25,6 +25,8 @@
                                     <div class="modal-body">
                                         <span>
                                             Create a task with implementation deadline</span>
+                                            <br>
+                                            <?php /*
                                         <div class="form-group">
                                             <strong> Department</strong> 
                                             <select name="dep_id" id="department" class="form-control " required>
@@ -37,9 +39,7 @@
 
                                             </select>
                                         </div>
-                                        <div class="form-group">
-                                            <textarea class="form-control" placeholder="Create Task" rows="4" name="activity"></textarea>
-                                        </div>
+                                       
                                      <!--                         
                                           
                                         <div class="form-group" id="client_id">
@@ -48,7 +48,7 @@
                                             <input type="text" class="form-control" id="get_schools" name="school_id" value="<?= old('school_id') ?>" >
 
                                         </div>-->
-
+                                                */ ?>
                                         <div class="form-group"  id="client_id">
                                             <strong>  Select School or Client</strong> 
 
@@ -67,7 +67,7 @@
                                             <select name="task_type_id" id="task_type_id" required class="form-control select2">
                                                 <option value=''> Select Here...</option>
                                                 <?php
-                                                $types = DB::table('task_types')->get();
+                                                $types = DB::table('task_types')->where('department', Auth::user()->department)->get();
                                                 foreach ($types as $type) {
                                                     ?>
                                                     <option value="<?= $type->id ?>"> <?= $type->name ?></option>
@@ -115,7 +115,9 @@
                                                 </div>
                                             </div>
                                         </div>
-
+                                        <div class="form-group">
+                                            <textarea class="form-control col-xs-9" rows="4" name="activity" id="content_part" ></textarea>
+                                        </div>
                                         <div class="form-group" id="modules">
                                             <strong>  Pick Modules where task will be Performed</strong> 
                                             <hr>
@@ -218,5 +220,26 @@ get_schools = function () {
 
 $(document).ready(department);
 $(document).ready(get_schools);
+</script>
+
+<script src="<?= url('public/assets/tinymce/tinymce.min.js') ?>"></script>
+   <script type="text/javascript">   
+                wywig = function () {
+                    tinymce.init({
+                        selector: 'textarea#content_part',
+                        height: 200,
+                        plugins: [
+                            'advlist autolink lists link image charmap print preview anchor',
+                            'searchreplace visualblocks code fullscreen',
+                            'insertdatetime media table contextmenu paste code'
+                        ],
+                        toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+                        content_css: [
+                            '//fast.fonts.net/cssapi/e6dc9b99-64fe-4292-ad98-6974f93cd2a2.css',
+                            '//localhost/shule/public/assets/tinymce/codepan.css' 
+                        ]
+                    });
+                }
+                wywig();
 </script>
 @endsection
