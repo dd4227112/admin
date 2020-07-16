@@ -197,7 +197,8 @@
                   <div class="tab-pane" id="timeline" aria-expanded="false">
                     <div class="row">
                       <div class="card-block">
-                        <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#large-Modal">Create Task</button>
+                      <!--  <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#large-Modal">Create Task</button>-->
+                        <a href="<?=url('Customer/activity/add')?>" class="btn btn-primary waves-effect">Create Task</a>
                         <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
                           <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
