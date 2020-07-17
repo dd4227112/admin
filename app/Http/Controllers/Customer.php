@@ -426,11 +426,20 @@ class Customer extends Controller {
         $dep_id = request('dep_id');
         $types = DB::table('task_types')->where('department', $dep_id)->get();
         $select = '';
+        if(count($types) > 0){
+        foreach ($types as $type) {
+            $select .= '<option value="' . $type->id . '"> ' . $type->name . '</option>';
+        }
+        echo $select;
+    }else{
+        $types = DB::table('task_types')->where('department', Auth::user()->department)->get();
+        $select = '';
         foreach ($types as $type) {
             $select .= '<option value="' . $type->id . '"> ' . $type->name . '</option>';
         }
         echo $select;
     }
+}
 
     public function removeTag() {
         $id = request('id');
