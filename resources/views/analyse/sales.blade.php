@@ -151,7 +151,7 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
                                     <div class="card-block-big">
                                         <div>
                                             <?php
-                                            $total_reacherd = \collect(DB::select( "select (count(distinct school_id) + count(distinct client_id)) as count from admin.tasks_schools a, admin.tasks_clients b where b.task_id in (select id from admin.tasks a where task_type_id in (select id from task_types where department=2) and ".$where.") and a.task_id in (select id from admin.tasks a where task_type_id in (select id from task_types where department=2) and ".$where.")" ))->first()->count;
+                                            $total_reacherd = \collect(DB::select( "select (count(distinct school_id) + count(distinct client_id)) as count from admin.tasks_schools a, admin.tasks_clients b where b.task_id in (select id from admin.tasks a where a.user_id in (select id from admin.users where department=2) and ".$where.") and a.task_id in (select id from admin.tasks a where a.user_id in (select id from admin.users where department=2) and ".$where.")" ))->first()->count;
                                             ?>
                                             <h3><?= $total_reacherd ?></h3>
                                             <p>Total School Reached

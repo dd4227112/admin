@@ -125,7 +125,9 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                     <div class="card client-blocks success-border">
                         <div class="card-block">
                             <?php
-                            $total_reacherd = \collect(DB::select('select count(distinct b.client_id) from admin.tasks a, admin.tasks_clients b WHERE a.id=b.task_id and  a.user_id in (select id from admin.users where department=1) AND ' . $where))->first()->count;
+                    //        $total_reacherd = \collect(DB::select('select count(distinct b.client_id) from admin.tasks a, admin.tasks_clients b WHERE a.id=b.task_id and  a.user_id in (select id from admin.users where department=1) AND ' . $where))->first()->count;
+                            $total_reacherd = \collect(DB::select( "select (count(distinct school_id) + count(distinct client_id)) as count from admin.tasks_schools a, admin.tasks_clients b where b.task_id in (select id from admin.tasks a where a.user_id in (select id from admin.users where department=1) and ".$where.") and a.task_id in (select id from admin.tasks a where a.user_id in (select id from admin.users where department=1) and ".$where.")" ))->first()->count;
+                            
                             ?>
                             <h5>Schools Supported</h5>
                             <ul>
