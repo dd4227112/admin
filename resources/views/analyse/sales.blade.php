@@ -264,37 +264,38 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                                     <div class="card-block">
                                         <div class="table-responsive">
                                             <div class="dt-responsive table-responsive">
-                                                <table id="res-config" class="table table-bordered w-100 dataTable">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Name</th>
-                                                            <th>Task</th>
-                                                            <th>Task Type</th>
-                                                            <th>Date</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <?php
-                                                        $t = '-' . $days . ' days';
-                                                        $at = date('Y-m-d H:i:s', strtotime($t));
-                                                        $i = 1;
-                                                        $activities = $activities = DB::select("select a.id,d.username, a.activity,a.created_at,b.name as task_name, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id join admin.clients d on d.id=a.client_id WHERE   a.user_id in (select id from admin.users where department=2) and " . $where);
-                                              
-                                                        foreach ($activities as $activity) {
-                                                            ?>
-                                                            
-                                                            <tr>
-                                                                <td class="pro-name"><?= $activity->task_name ?></td>
-                                                                <td class="img-pro"><?= $activity->user_name ?></td>
-                                                                <td><a href="<?= url('customer/activity/show/' . $activity->id) ?>"><?= $activity->username ?></a></td>
-                                                                <td> <label class="text-danger"><?= $activity->created_at ?></td>
-                                                            </tr>
-                                                        <?php } ?>
-                                                        <?php
-                                                        //
-                                                        ?>
-                                                    </tbody>
-                                                </table>
+                                            <table id="res-config" class="table table-bordered w-100 dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Task Type</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    <?php
+                                    $activities = DB::select("select a.activity,a.created_at,b.name as task_name, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id WHERE   a.user_id in (select id from admin.users where department=2) and " . $where);
+                                    foreach ($activities as $activity) {
+                                        ?>                    
+                                        <tr>
+                                            <td class="img-pro">
+                                                <?= $activity->user_name ?>
+                                            </td>
+                                        <!--    <td class="pro-name"><?= $activity->activity ?>
+                                            </td>-->
+                                            <td>  <?= $activity->task_name ?></td> 
+                                            <td>
+                                                <label class="text-danger">  <?= $activity->created_at ?></label>
+                                            </td>
+
+                                        </tr>
+                                    <?php } ?>
+
+
+                                </tbody>
+                            </table>
+
                                             </div>
                                         </div>
                                     </div>
