@@ -336,7 +336,11 @@ if($days == '' || $days == 1){
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $sqls = "select count(a.*),b.username from admin.tasks a join admin.clients b on a.client_id=b.id where  a.created_at > current_date - interval '$days days'  group by b.username";
+                                            $sqls = "select count(a.*),b.username from admin.tasks a join admin.tasks_clients c on a.id=c.task_id join admin.clients b on b.id=c.client_id 
+                                            WHERE a.user_id in (select id from admin.users where department=1) and $where group by b.username
+                                            UNION ALL 
+                                            select count(a.*),b.name from admin.tasks a join admin.tasks_schools c on a.id=c.task_id join admin.schools b on b.id=c.school_id 
+                                            WHERE a.user_id in (select id from admin.users where department=1) and $where group by b.name";
                                     $tasks = DB::select($sqls);
                                     foreach ($tasks as $task) {
                                         ?>
