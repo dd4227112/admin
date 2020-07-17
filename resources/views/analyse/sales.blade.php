@@ -15,6 +15,10 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
     $year = date('Y', strtotime(request('start')));
     $where = "  a.created_at::date >='" . $start_date . "' AND a.created_at::date <='" . $end_date . "'";
 }
+$total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and ' . $where))->first()->count;
+    $yes_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and action=(\'Yes\') and ' . $where))->first()->count;
+    $no_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and action=(\'No\') and ' . $where))->first()->count;
+
 ?><div class="main-body">
     <div class="page-wrapper">
         <div class="page-header">
@@ -38,7 +42,10 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
         </div>
         <div class="page-body">
             <div class="row">
-                <div class="col-lg-8"></div>
+                <div class="col-lg-4">
+                   <p class="btn btn-success"> Yes - <?= $no_activity ?> out of <?= $total_activity ?> <span style="padding-left: 40px;"> No - <?= $no_activity ?>  out of <?= $total_activity ?> </span></p>
+                </div>
+                <div class="col-lg-4"></div>
                 <div class="col-lg-4 text-right">
                     <select class="form-control" id="check_custom_date">
                         <option value="today" <?= $today == 1 ? 'selected' : '' ?>>Today</option>
@@ -65,20 +72,6 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
 
             <?php
                 $on = 'Today';
-                if ($days == '' || $days == 1) {
-                    $days = 1;
-                    $on = 'Today';
-                }if ($days == 7) {
-                    $on = 'This Week';
-                }if ($days == 30) {
-                    $on = 'This Month';
-                }if ($days == 90) {
-                    $on = 'Three Month';
-                } if ($days == 181) {
-                    $on = 'Six Month';
-                }if ($days == 365) {
-                    $on = 'This Year';
-                }
                 ?>
                 <div class="page-body">
                     <div class="row">
@@ -205,9 +198,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                                 <div class="card counter-card-3">
                                     <div class="card-block-big">
                                         <div>
-                                            <?php
-                                            $total_activity = \collect(DB::select('select count(*) from admin.tasks a where   a.user_id in (select id from admin.users where department=2) and ' . $where))->first()->count;
-                                            ?>
+                                           
                                             <h3><?= $total_activity ?></h3>
                                             <p>Total Sales Activities
             <!--                                    <span class="f-right text-default">
