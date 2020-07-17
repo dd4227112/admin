@@ -43,7 +43,7 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
         <div class="page-body">
             <div class="row">
                 <div class="col-lg-4">
-                   <p class="btn btn-success"> Yes - <?= $no_activity ?> out of <?= $total_activity ?> <span style="padding-left: 40px;"> No - <?= $no_activity ?>  out of <?= $total_activity ?> </span></p>
+                   <p class="btn btn-success"> Yes - <?= $yes_activity ?> out of <?= $total_activity ?> <span style="padding-left: 40px;"> No - <?= $no_activity ?>  out of <?= $total_activity ?> </span></p>
                 </div>
                 <div class="col-lg-4"></div>
                 <div class="col-lg-4 text-right">
