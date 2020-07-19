@@ -137,8 +137,8 @@ if($days == '' || $days == 1){
                     <div class="card client-blocks success-border">
                         <div class="card-block">
                             <?php
-                            $sql="select (count(distinct school_id) + count(distinct client_id)) as count from admin.tasks_schools a, admin.tasks_clients b where b.task_id in (select id from admin.tasks a where task_type_id in (select id from task_types where department=1) and ".$where.") and a.task_id in (select id from admin.tasks a where task_type_id in (select id from task_types where department=1) and ".$where.")";
-                            $total_reacherd = \collect(DB::select($sql))->first()->count;
+
+                            $total_reacherd = \collect(DB::select('select count(distinct b.client_id) from admin.tasks a, admin.tasks_clients b WHERE a.id=b.task_id and a.task_type_id in (select id from admin.task_types where department=1) AND ' . $where))->first()->count;
                             ?>
                             <h5>Schools Supported</h5>
                             <ul>
@@ -250,7 +250,6 @@ if($days == '' || $days == 1){
                                 <thead>
                                     <tr>
                                         <th>Name</th>
-                                        <th>Task</th>
                                         <th>Task Type</th>
                                         <th>Date</th>
                                     </tr>
@@ -265,9 +264,9 @@ if($days == '' || $days == 1){
                                             <td class="img-pro">
                                                 <?= $activity->user_name ?>
                                             </td>
-                                            <td class="pro-name"><?= $activity->activity ?>
-                                            </td>
-                                            <td>  <?= $activity->task_name ?></td>
+                                        <!--    <td class="pro-name"><?= $activity->activity ?>
+                                            </td>-->
+                                            <td>  <?= $activity->task_name ?></td> 
                                             <td>
                                                 <label class="text-danger">  <?= $activity->created_at ?></label>
                                             </td>

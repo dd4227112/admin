@@ -210,7 +210,7 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                                                 $t = '-' . $days . ' days';
                                                 $at = date('Y-m-d H:i:s', strtotime($t));
                                                 $i = 1;
-                                                $activities = $activities = DB::select("select a.id,d.username, a.activity,a.created_at,b.name as task_name, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id join admin.clients d on d.id=a.client_id WHERE  a.task_type_id in (select id from admin.task_types where department=3) and " . $where);
+                                                $activities = $activities = DB::select("select a.id,d.username, a.activity,a.created_at,b.name as task_name, c.firstname||' '||c.lastname as user_name from admin.tasks a  join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id join admin.tasks_clients e on a.id=e.task_id join admin.clients d on d.id=e.client_id WHERE  a.task_type_id in (select id from admin.task_types where department=3) and " . $where);
 
                                                 foreach ($activities as $activity) {
                                                     ?>
@@ -315,7 +315,7 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                                                 </thead>
                                                 <tbody>
                                                     <?php
-                                                    $sqls = "select count(a.*),b.username from admin.tasks a join admin.clients b on a.client_id=b.id join admin.task_types c on c.id=a.task_type_id where $where  and c.department=3 group by b.username";
+                                                    $sqls = "select count(a.*),d.username  from admin.tasks a  join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id join admin.tasks_clients e on a.id=e.task_id join admin.clients d on d.id=e.client_id WHERE  a.task_type_id in (select id from admin.task_types where department=3)  and  $where group by d.username";
                                                     $tasks = DB::select($sqls);
                                                     foreach ($tasks as $task) {
                                                         ?>
