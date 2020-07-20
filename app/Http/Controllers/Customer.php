@@ -509,9 +509,10 @@ class Customer extends Controller {
             if ((int) request('to_user_id') > 0) {
                 
                 $user = \App\Models\User::find(request('to_user_id'));
-                $message = 'Hello ' . $user->name . '<br/>'
-                        . 'There is New School Requirement from '. $req->school->name .' ('.$req->school->name.')'
-                        . '<p><b>Requirement:</b> ' . $req->note . '</p>';
+                $message = 'Hello ' . $user->name . '<br/><br/>'
+                        . 'There is New School Requirement from '. $req->school->name .' ('.$req->school->region.')'
+                        . '<br/><br/><p><b>Requirement:</b> ' . $req->note . '</p>'
+                        . '<br/><br/><p><b>By:</b> ' . $req->user->name . '</p>';
                 $this->send_email($user->email, 'ShuleSoft New Customer Requirement', $message);
             }
 
