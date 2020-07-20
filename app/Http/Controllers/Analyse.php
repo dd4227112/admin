@@ -68,9 +68,10 @@ class Analyse extends Controller {
 
     public function sales() {
         $this->data['days'] = request()->segment(3);
-        $this->data['shulesoft_schools'] = \collect(DB::select('select count(*) as count from admin.all_setting'))->first()->count;
-        $this->data['schools'] = \collect(DB::select('select count(*) as count from admin.schools'))->first()->count;
+        $this->data['shulesoft_schools'] = \collect(DB::select("select count(*) as count from admin.all_classlevel where lower(name) NOT like '%nursery%' and schema_name not in ('public','accounts')"))->first()->count;
+        $this->data['schools'] = \collect(DB::select("select count(*) as count from admin.schools where lower(ownership)<>'government'"))->first()->count;
         $this->data['nmb_schools'] = \collect(DB::select('select count(*) as count from admin.nmb_schools'))->first()->count;
+          $this->data['shulesoft_nmb_schools'] = \collect(DB::select('select count(distinct "schema_name") from admin.all_bank_accounts where refer_bank_id=22'))->first()->count;
         $this->data['clients'] = \collect(DB::select('select count(*) as count from admin.clients'))->first()->count;
         return view('analyse.sales', $this->data);
     }
