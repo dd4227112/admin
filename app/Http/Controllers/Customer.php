@@ -509,13 +509,10 @@ class Customer extends Controller {
             if ((int) request('to_user_id') > 0) {
                 
                 $user = \App\Models\User::find(request('to_user_id'));
-                $message = 'Hello ' . $user->firstname . '<br/>'
-                        . 'There is New School Requirement'
-                        . '<ul>'
-                        . '<li>Requirement: ' . $req->note . '</li>'
-                        . '<li>School: ' . $req->school->name . '</li>'
-                        . '</ul>';
-                $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+                $message = 'Hello ' . $user->name . '<br/>'
+                        . 'There is New School Requirement from '. $req->school->name .' ('.$req->school->name.')'
+                        . '<p><b>Requirement:</b> ' . $req->note . '</p>';
+                $this->send_email($user->email, 'ShuleSoft New Customer Requirement', $message);
             }
 
         }
@@ -529,7 +526,7 @@ class Customer extends Controller {
         \App\Models\Requirement::where('id', $id)->update(['status' => $action]);
         return redirect()->back()->with('success', 'success');
     }
-    
+
     public function modules() {
         $schemas = $this->data['schools'] = DB::select("SELECT distinct table_schema as schema_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public')");
         $sch = [];
