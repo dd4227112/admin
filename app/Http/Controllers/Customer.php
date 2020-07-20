@@ -493,10 +493,43 @@ class Customer extends Controller {
     }
 
     public function requirements() {
+        
+        $tab = request()->segment(3);
+        $id = request()->segment(4);
+        if ($tab == 'show' && $id > 0) {
+            $this->data['requirement'] = \App\Models\Requirement::where('id', $id)->first();
+            return view('customer/view_requirement', $this->data);
+        }
         $this->data['levels'] = [];
+        if ($_POST) {
+
+            $data = array_merge(request()->all(), ['user_id' => Auth::user()->id]);
+
+            $req = \App\Models\Requirement::create($data);
+            if ((int) request('to_user_id') > 0) {
+                
+                $user = \App\Models\User::find(request('to_user_id'));
+                $message = 'Hello ' . $user->firstname . '<br/>'
+                        . 'There is New School Requirement'
+                        . '<ul>'
+                        . '<li>Requirement: ' . $req->note . '</li>'
+                        . '<li>School: ' . $req->school->name . '</li>'
+                        . '</ul>';
+                $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+            }
+
+        }
+        $this->data['requirements'] = \App\Models\Requirement::orderBy('id', 'DESC')->get();
         return view('customer/analysis', $this->data);
     }
 
+    public function updateReq() {
+        $id = request('id');
+        $action = request('action');
+        \App\Models\Requirement::where('id', $id)->update(['status' => $action]);
+        return redirect()->back()->with('success', 'success');
+    }
+    
     public function modules() {
         $schemas = $this->data['schools'] = DB::select("SELECT distinct table_schema as schema_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public')");
         $sch = [];

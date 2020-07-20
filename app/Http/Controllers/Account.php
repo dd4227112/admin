@@ -150,6 +150,11 @@ class Account extends Controller {
         return view('account.project', $this->data);
     }
 
+    public function receipt() {
+        $id = request()->segment(3);
+        $this->data['projects'] = Project::all();
+        return view('account.project', $this->data);
+    }
     public function createInvoice() {
         $this->data['projects'] = Project::all();
         if (request('noexcel')) {
