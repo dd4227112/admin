@@ -266,7 +266,7 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                                 <tbody>
 
                                     <?php
-                                    $activities = DB::select("select a.activity,a.created_at,b.name as task_name, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id WHERE   a.user_id in (select id from admin.users where department=2) and " . $where);
+                                    $activities = DB::select("select a.id, a.activity,a.created_at,b.name as task_name, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id WHERE   a.user_id in (select id from admin.users where department=2) and " . $where);
                                     foreach ($activities as $activity) {
                                         ?>                    
                                         <tr>
@@ -275,7 +275,7 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                                             </td>
                                         <!--    <td class="pro-name"><?= $activity->activity ?>
                                             </td>-->
-                                            <td>  <?= $activity->task_name ?></td> 
+                                            <td> <a href="<?= url('customer/activity/show/'.$activity->id) ?>"> <?= $activity->task_name ?></a></td> 
                                             <td>
                                                 <label class="text-danger">  <?= $activity->created_at ?></label>
                                             </td>
