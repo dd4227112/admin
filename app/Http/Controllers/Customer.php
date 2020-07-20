@@ -493,8 +493,39 @@ class Customer extends Controller {
     }
 
     public function requirements() {
+        
+        $tab = request()->segment(3);
+        $id = request()->segment(4);
+        if ($tab == 'show' && $id > 0) {
+            $this->data['requirement'] = \App\Models\Requirement::where('id', $id)->first();
+            return view('customer/view_requirement', $this->data);
+        }
         $this->data['levels'] = [];
+        if ($_POST) {
+
+            $data = array_merge(request()->all(), ['user_id' => Auth::user()->id]);
+
+            $req = \App\Models\Requirement::create($data);
+            if ((int) request('to_user_id') > 0) {
+                
+                $user = \App\Models\User::find(request('to_user_id'));
+                $message = 'Hello ' . $user->name . '<br/><br/>'
+                        . 'There is New School Requirement from '. $req->school->name .' ('.$req->school->region.')'
+                        . '<br/><br/><p><b>Requirement:</b> ' . $req->note . '</p>'
+                        . '<br/><br/><p><b>By:</b> ' . $req->user->name . '</p>';
+                $this->send_email($user->email, 'ShuleSoft New Customer Requirement', $message);
+            }
+
+        }
+        $this->data['requirements'] = \App\Models\Requirement::orderBy('id', 'DESC')->get();
         return view('customer/analysis', $this->data);
+    }
+
+    public function updateReq() {
+        $id = request('id');
+        $action = request('action');
+        \App\Models\Requirement::where('id', $id)->update(['status' => $action]);
+        return redirect()->back()->with('success', 'success');
     }
 
     public function modules() {
