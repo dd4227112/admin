@@ -197,7 +197,8 @@
                   <div class="tab-pane" id="timeline" aria-expanded="false">
                     <div class="row">
                       <div class="card-block">
-                        <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#large-Modal">Create Task</button>
+                      <!--  <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#large-Modal">Create Task</button>-->
+                        <a href="<?=url('Customer/activity/add')?>" class="btn btn-primary waves-effect">Create Task</a>
                         <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
                           <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
@@ -222,7 +223,7 @@
                                           Task Type
                                           <select name="task_type_id"  class="form-control select2">
                                                 <?php
-                                              $types = DB::table('task_types')->get();
+                                              $types = DB::table('task_types')->where('department', Auth::user()->department)->get();
                                               foreach ($types as $type) {
                                               ?>
                                               <option value="<?= $type->id ?>"><?= $type->name ?></option>
@@ -271,29 +272,20 @@
                     <?php } ?>
                     </div>
 
-                                           <?php   /*
-                                    <div class="form-group">
+                    <div class="form-group">
                                       <div class="row">
-                                        <?php
-                                        $modules = DB::table('modules')->get();
-                                        foreach ($modules as $module) {
-                                          ?>
-                                          <div class="col-md-4">
-                                            Task on <?=$module->name?>
-                                            <br>
-                                            <?php
-                                            $subs = DB::table('sub_modules')->where('module_id', $module->id)->orderBy('id', 'DESC')->get();
-                                            foreach ($subs as $sub) { ?>
-                                              <input type="checkbox" id="feature<?= $sub->id ?>" value="{{$sub->id}}" name="data{{$sub->id}}[]" onchange="send_comment(<?= $sub->id ?>)">  <?php echo $sub->name; ?>
-                                              <br>
-                                            <?php } ?>
-
-                                          </div>
-                                        <?php } ?>
-
-                                      </div>
-                                    </div>
-                                    */ ?>
+                                       
+                                      <div class="col-md-6">
+                                      <strong> Task Executed Successfully</strong> 
+                                      <select name="action" class="form-control" required>
+                                          <option value=''> Select Task Status Here...</option>
+                                          <option value='Yes'> Yes </option>
+                                          <option value='No'> No </option>
+                                      </select>
+                                  </div>
+                              </div>
+                              </div>
+                                        
                                   </div>
                                   <div class="modal-footer">
                                     <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>

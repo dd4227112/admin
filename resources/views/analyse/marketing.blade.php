@@ -310,7 +310,7 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
                         <div class="card-block-big">
                             <div>
                                 <h3>4000</h3>
-                                <p>Most Played Last Month
+                                <p>SMS sent
                                     <span class="f-right text-primary">
                                         <i class="icofont icofont-arrow-up"></i>
                                         37.89%
@@ -328,7 +328,7 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
                         <div class="card-block-big">
                             <div>
                                 <h3>2500</h3>
-                                <p>Coffee cups per day
+                                <p>Email Sent
                                     <span class="f-right text-success">
                                         <i class="icofont icofont-arrow-up"></i>
                                         34.52%
@@ -346,8 +346,8 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
                     <div class="card counter-card-3">
                         <div class="card-block-big">
                             <div>
-                                <h3>800 Gb</h3>
-                                <p>Average Monthly Uploads
+                                <h3>24</h3>
+                                <p>Schools with No Activities
                                     <span class="f-right text-default">
                                         <i class="icofont icofont-arrow-down"></i>
                                         22.34%

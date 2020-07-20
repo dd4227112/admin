@@ -15,6 +15,10 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
     $year = date('Y', strtotime(request('start')));
     $where = "  a.created_at::date >='" . $start_date . "' AND a.created_at::date <='" . $end_date . "'";
 }
+$total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=3) and ' . $where))->first()->count;
+    $yes_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=3) and action=(\'Yes\') and ' . $where))->first()->count;
+    $no_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=3) and action=(\'No\') and ' . $where))->first()->count;
+
 ?><div class="main-body">
     <div class="page-wrapper">
         <div class="page-header">
@@ -38,7 +42,11 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
         </div>
         <div class="page-body">
             <div class="row">
-                <div class="col-lg-8"></div>
+            <div class="col-lg-4 text-left">
+                   <p class="btn btn-success"> Yes - <?= $yes_activity ?> out of <?= $total_activity ?> <span style="padding-left: 40px;"> No - <?= $no_activity ?>  out of <?= $total_activity ?> </span></p>
+
+                </div>
+                <div class="col-lg-4"></div>
                 <div class="col-lg-4 text-right">
                     <select class="form-control" id="check_custom_date">
                         <option value="today" <?= $today == 1 ? 'selected' : '' ?>>Today</option>
@@ -65,20 +73,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
 
             <?php
             $on = 'Today';
-            if ($days == '' || $days == 1) {
-                $days = 1;
-                $on = 'Today';
-            }if ($days == 7) {
-                $on = 'This Week';
-            }if ($days == 30) {
-                $on = 'This Month';
-            }if ($days == 90) {
-                $on = 'Three Month';
-            } if ($days == 181) {
-                $on = 'Six Month';
-            }if ($days == 365) {
-                $on = 'This Year';
-            }
+            
             ?>
             <div class="page-body">
 
@@ -138,7 +133,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                             <div class="card-block-big">
                                 <div>
                                     <?php
-                                    $total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.task_type_id in (select id from admin.task_types where department=3) and ' . $where))->first()->count;
+                                    $total_activity = \collect(DB::select('select count(*) from admin.tasks a where   a.user_id in (select id from admin.users where department=3) and ' . $where))->first()->count;
                                     ?>
                                     <h3><?= $total_activity ?></h3>
                                     <p>New Tasks Recorded
@@ -180,7 +175,7 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                             </div>
                             <div class="card-block">
                                 <?php
-                                $sales_group = "select count(*),b.name as task_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id WHERE  a.task_type_id in (select id from admin.task_types where department=3) and " . $where . " group by task_name";
+                                $sales_group = "select count(*),b.name as task_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id WHERE   a.user_id in (select id from admin.users where department=3) and " . $where . " group by task_name";
                                 echo $insight->createChartBySql($sales_group, 'task_name', 'Technical Activity', 'bar', false);
                                 ?>
                             </div>
@@ -210,7 +205,7 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                                                 $t = '-' . $days . ' days';
                                                 $at = date('Y-m-d H:i:s', strtotime($t));
                                                 $i = 1;
-                                                $activities = $activities = DB::select("select a.id,d.username, a.activity,a.created_at,b.name as task_name, c.firstname||' '||c.lastname as user_name from admin.tasks a  join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id join admin.tasks_clients e on a.id=e.task_id join admin.clients d on d.id=e.client_id WHERE  a.task_type_id in (select id from admin.task_types where department=3) and " . $where);
+                                                $activities = $activities = DB::select("select a.id,d.username, a.activity,a.created_at,b.name as task_name, c.firstname||' '||c.lastname as user_name from admin.tasks a  join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id join admin.tasks_clients e on a.id=e.task_id join admin.clients d on d.id=e.client_id WHERE   a.user_id in (select id from admin.users where department=3) and " . $where);
 
                                                 foreach ($activities as $activity) {
                                                     ?>
@@ -242,7 +237,7 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                                     </div>
                                     <div class="card-block">
                                         <?php
-                                        $sales_distribution = "select count(*) as count, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.users c on c.id=a.user_id WHERE  a.task_type_id in (select id from admin.task_types where department=3) and " . $where . " group by user_name";
+                                        $sales_distribution = "select count(*) as count, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.users c on c.id=a.user_id WHERE   a.user_id in (select id from admin.users where department=3) and " . $where . " group by user_name";
                                         echo $insight->createChartBySql($sales_distribution, 'user_name', 'Technical Team Activity', 'bar', false);
                                         ?>
 
@@ -315,7 +310,7 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                                                 </thead>
                                                 <tbody>
                                                     <?php
-                                                    $sqls = "select count(a.*),d.username  from admin.tasks a  join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id join admin.tasks_clients e on a.id=e.task_id join admin.clients d on d.id=e.client_id WHERE  a.task_type_id in (select id from admin.task_types where department=3)  and  $where group by d.username";
+                                                    $sqls = "select count(a.*),d.username  from admin.tasks a  join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id join admin.tasks_clients e on a.id=e.task_id join admin.clients d on d.id=e.client_id WHERE   a.user_id in (select id from admin.users where department=3)  and  $where group by d.username";
                                                     $tasks = DB::select($sqls);
                                                     foreach ($tasks as $task) {
                                                         ?>
@@ -346,7 +341,7 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                                     <div class="card-block">
                                         <?php
                                         $new_schools = 'select count(*), status from admin.tasks a
-where  a.task_type_id in (select id from admin.task_types where department=3) and ' . $where . ' group by status';
+where   a.user_id in (select id from admin.users where department=3) and ' . $where . ' group by status';
                                        
                                         echo $insight->createChartBySql($new_schools, 'status', 'Technical Tasks Status', 'line', false);
                                         ?>

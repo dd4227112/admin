@@ -23,27 +23,16 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
         <div class="page-header-title">
         <?php
         $on = 'Today';
-if($days == '' || $days == 1){
-    $days = 1;
-    $on = 'Today';
-}if($days == 7){
-    $on = 'This Week';
-}if($days == 30){
-    $on = 'This Month';
-}if($days == 90){
-    $on = 'Three Month';
-}   if($days == 181){
-    $on = 'Six Month';
-}if($days == 365){
-    $on = 'This Year';
-  }
+        ?>
+        <?php
+    $where_setting=(int) $today==1 ?' ':" WHERE a.created_at::date <='".$end_date."'";
+    $out_of = \collect(DB::select('select count(*) from admin.all_setting a   '.$where_setting))->first()->count;
+    $active_customers = \collect(DB::select('select count(distinct "schema_name") from admin.all_login_locations a  WHERE "table" in (\'setting\',\'users\',\'teacher\') and ' . $where))->first()->count;
+    $total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=1) and ' . $where))->first()->count;
+    $yes_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=1) and action=(\'Yes\') and ' . $where))->first()->count;
+    $no_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=1) and action=(\'No\') and ' . $where))->first()->count;
+
 ?>
-<a href="<?= url('Analyse/customers/1') ?>" class="btn btn-primary btn-sm">Day</a>
-<a href="<?= url('Analyse/customers/7') ?>" class="btn btn-primary btn-sm">Week</a>
-<a href="<?= url('Analyse/customers/30') ?>" class="btn btn-primary btn-sm">Month</a>
-<a href="<?= url('Analyse/customers/90') ?>" class="btn btn-primary btn-sm">Quater</a>
-<a href="<?= url('Analyse/customers/181') ?>" class="btn btn-primary btn-sm">Six Month</a>
-<a href="<?= url('Analyse/customers/365') ?>" class="btn btn-primary btn-sm">Year</a>
 </div>
         <div class="page-header-breadcrumb">
             <ul class="breadcrumb-title">
@@ -59,12 +48,17 @@ if($days == '' || $days == 1){
             </ul>
         </div>
     </div>
-  
+
     <div class="page-body">
 
         <div class="page-body">
             <div class="row">
-                <div class="col-lg-8"></div>
+                <div class="col-lg-4 text-left">
+                   <p class="btn btn-success"> Yes - <?= $yes_activity ?> out of <?= $total_activity ?> <span style="padding-left: 40px;"> No - <?= $no_activity ?>  out of <?= $total_activity ?> </span></p>
+
+                </div>
+                <div class="col-lg-4"></div>
+
                 <div class="col-lg-4 text-right">
                     <select class="form-control" id="check_custom_date">
                         <option value="today" <?= $today == 1 ? 'selected' : '' ?>>Today</option>
@@ -92,11 +86,7 @@ if($days == '' || $days == 1){
                 <div class="col-md-6 col-xl-3">
                     <div class="card client-blocks dark-primary-border">
                         <a href="<?=url('analyse/moreInsight')?>"><div class="card-block">
-                            <?php
-                            $where_setting=(int) $today==1 ?' ':" WHERE a.created_at::date <='".$end_date."'";
-                            $out_of = \collect(DB::select('select count(*) from admin.all_setting a   '.$where_setting))->first()->count;
-                            $active_customers = \collect(DB::select('select count(distinct "schema_name") from admin.all_login_locations a  WHERE "table" in (\'setting\',\'users\',\'teacher\') and ' . $where))->first()->count;
-                            ?>
+                            
 
                             <h5> Active Customers</h5>
                             <ul>
@@ -116,9 +106,7 @@ if($days == '' || $days == 1){
                 <div class="col-md-6 col-xl-3">
                     <div class="card client-blocks warning-border">
                         <div class="card-block">
-                            <?php
-                            $total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.task_type_id in (select id from admin.task_types where department=1) and ' . $where))->first()->count;
-                            ?>
+                          
                             <h5>Support Activities</h5>
                             <ul>
                                 <li>
@@ -138,7 +126,9 @@ if($days == '' || $days == 1){
                         <div class="card-block">
                             <?php
 
-                            $total_reacherd = \collect(DB::select('select count(distinct b.client_id) from admin.tasks a, admin.tasks_clients b WHERE a.id=b.task_id and a.task_type_id in (select id from admin.task_types where department=1) AND ' . $where))->first()->count;
+                    //        $total_reacherd = \collect(DB::select('select count(distinct b.client_id) from admin.tasks a, admin.tasks_clients b WHERE a.id=b.task_id and  a.user_id in (select id from admin.users where department=1) AND ' . $where))->first()->count;
+                            $total_reacherd = \collect(DB::select( "select (count(distinct school_id) + count(distinct client_id)) as count from admin.tasks_schools a, admin.tasks_clients b where b.task_id in (select id from admin.tasks a where a.user_id in (select id from admin.users where department=1) and ".$where.") and a.task_id in (select id from admin.tasks a where a.user_id in (select id from admin.users where department=1) and ".$where.")" ))->first()->count;
+                            
                             ?>
                             <h5>Schools Supported</h5>
                             <ul>
@@ -210,7 +200,7 @@ if($days == '' || $days == 1){
                                         </thead>
                                         <tbody>
                                             <?php
-                                            $tasks = DB::select('select count(a.*),b.name from admin.tasks a join admin.task_types b on b.id=a.task_type_id where  a.task_type_id in (select id from admin.task_types where department=1) and ' . $where . '  group by b.name');
+                                            $tasks = DB::select('select count(a.*),b.name from admin.tasks a join admin.task_types b on b.id=a.task_type_id where   a.user_id in (select id from admin.users where department=1) and ' . $where . '  group by b.name');
                                             foreach ($tasks as $task) {
                                                 ?>
                                                 <tr>
@@ -222,7 +212,7 @@ if($days == '' || $days == 1){
                                         </tbody>
                                     </table>
                                 </div>
-                               
+
 
                             </div>
                         </div>
@@ -257,16 +247,16 @@ if($days == '' || $days == 1){
                                 <tbody>
 
                                     <?php
-                                    $activities = DB::select("select a.activity,a.created_at,b.name as task_name, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id WHERE  a.task_type_id in (select id from admin.task_types where department=1) and " . $where);
+                                    $activities = DB::select("select a.activity,a.created_at,b.name as task_name, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id WHERE   a.user_id in (select id from admin.users where department=1) and " . $where);
                                     foreach ($activities as $activity) {
-                                        ?>                    
+                                        ?>
                                         <tr>
                                             <td class="img-pro">
                                                 <?= $activity->user_name ?>
                                             </td>
                                         <!--    <td class="pro-name"><?= $activity->activity ?>
                                             </td>-->
-                                            <td>  <?= $activity->task_name ?></td> 
+                                            <td>  <?= $activity->task_name ?></td>
                                             <td>
                                                 <label class="text-danger">  <?= $activity->created_at ?></label>
                                             </td>
@@ -280,46 +270,12 @@ if($days == '' || $days == 1){
 
                         </div>
                         <div class="card-block">
-                           
+
                         </div>
 
                     </div>
                 </div>
-                <!-- User chat box end -->
-                <!-- Horizontal Timeline start -->
                 <div class="col-md-12 col-xl-4">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Average system usability</h5>
-                        </div>
-                        <div class="card-block">
-                            <div class="cd-horizontal-timeline loaded">
-
-                                <!-- .timeline -->
-                                <div class="events-content">
-                                    <div class="card">
-
-                                        <div class="card-block">
-
-                                            <?php
-//                            $sql_2 = "select count(id) as count, controller as module from admin.all_log a   where controller not in ('background','SmsController') and ".$where."  group by controller order by count desc limit 8 ";
-//                            
-//                            echo $insight->createChartBySql($sql_2, 'module', 'System Usability Per Modules', 'bar', false);
-                                            ?>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- .events-content -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Horizontal Timeline end -->
-
-
-            </div>
-            <!-- Todo card start -->
-            <div class="col-md-12 col-xl-4">
                 <div class="card">
                     <div class="card-header">
                         <h5> Tasks count per School</h5>
@@ -337,7 +293,11 @@ if($days == '' || $days == 1){
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $sqls = "select count(a.*),b.username from admin.tasks a join admin.clients b on a.client_id=b.id where  a.created_at > current_date - interval '$days days'  group by b.username";
+                                            $sqls = "select count(a.*),b.username from admin.tasks a join admin.tasks_clients c on a.id=c.task_id join admin.clients b on b.id=c.client_id
+                                            WHERE a.user_id in (select id from admin.users where department=1) and $where group by b.username
+                                            UNION ALL
+                                            select count(a.*),b.name from admin.tasks a join admin.tasks_schools c on a.id=c.task_id join admin.schools b on b.id=c.school_id
+                                            WHERE a.user_id in (select id from admin.users where department=1) and $where group by b.name";
                                     $tasks = DB::select($sqls);
                                     foreach ($tasks as $task) {
                                         ?>
@@ -354,9 +314,44 @@ if($days == '' || $days == 1){
                     </div>
                 </div>
             </div>
+                <!-- User chat box end -->
+
+
+
+            </div>
+            <!-- Todo card start -->
+            <!-- Horizontal Timeline start -->
+            <div class="col-md-12 col-xl-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Average system usability</h5>
+                    </div>
+                    <div class="card-block">
+                        <div class="cd-horizontal-timeline loaded">
+
+                            <!-- .timeline -->
+                            <div class="events-content">
+                                <div class="card">
+
+                                    <div class="card-block">
+
+                                        <?php
+      //                            $sql_2 = "select count(id) as count, controller as module from admin.all_log a   where controller not in ('background','SmsController') and ".$where."  group by controller order by count desc limit 8 ";
+      //
+      //                            echo $insight->createChartBySql($sql_2, 'module', 'System Usability Per Modules', 'bar', false);
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- .events-content -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Horizontal Timeline end -->
 
             <?php
-                                $support_distribution = "select count(*) as count, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.users c on c.id=a.user_id WHERE  a.task_type_id in (select id from admin.task_types where department=1) and " . $where . " group by user_name";
+                                $support_distribution = "select count(*) as count, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.users c on c.id=a.user_id WHERE   a.user_id in (select id from admin.users where department=1) and " . $where . " group by user_name";
                                 echo $insight->createChartBySql($support_distribution, 'user_name', 'Support Activity', 'bar', false);
                                 ?>
 
@@ -372,7 +367,7 @@ if($days == '' || $days == 1){
 <script type="text/javascript">
 
     check = function () {
-      
+
         $('#check_custom_date').change(function () {
             var val = $(this).val();
             if (val == 'today') {
