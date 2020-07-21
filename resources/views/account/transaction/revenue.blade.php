@@ -101,7 +101,9 @@
                                                         <?php //if (can_access('edit_revenue')) {  ?>
                                                         <td data-title="<?= __('action') ?>">
 
-                                                            <a href="<?php echo url('account/revenue/index/' . $revenue->id) ?>">View </a></td>
+                                                            <a href="<?php echo url('account/receipts/' . $revenue->id) ?>">Receipt </a>
+                                                            <a href="<?php echo url('account/revenue/index/' . $revenue->id) ?>">View </a>
+                                                            </td>
                                                         <?php //}  ?>
 
                                                     </tr>
