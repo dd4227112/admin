@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use App\Charts\SimpleChart;
+use Illuminate\Support\Facades\Auth;
 
 class Analyse extends Controller {
 
@@ -47,7 +48,7 @@ class Analyse extends Controller {
 //       created_at < date_trunc('week', CURRENT_TIMESTAMP)
 //      )"))->first()->aggregate;
         //$this->data['log_graph'] = $this->createBarGraph();
-
+        $this->data['activity'] = \App\Models\Task::where('user_id', Auth::user()->id)->orderBy('id', 'DESC')->get();
         return view('analyse.index', $this->data);
     }
 

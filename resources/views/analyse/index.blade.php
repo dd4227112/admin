@@ -20,9 +20,10 @@
             </ul>
         </div>
     </div>
-    <?php if (can_access('manage_users')) { ?>
-        <div class="page-body">
-            <div class="row">
+    <div class="page-body">
+        <div class="row">
+              <?php if (can_access('manage_users')) { ?>
+
                 <div class="col-md-12 col-xl-4">
                     <!-- table card start -->
                     <div class="card table-card">
@@ -187,13 +188,13 @@
 
                 <div class="col-lg-6">
                     <div class="row">
-                       
+
                         <div class="col-lg-12">
                             <!-- Invoice list card start -->
                             <div class="card card-border-primary">
                                 <div class="card-header">
                                     <h5>Other Users Activities</h5>
-                                    
+
                                 </div>
                                 <div class="card-block">
                                     <div class="row">
@@ -203,7 +204,7 @@
                                                 ?>
                                     </div>
                                 </div>
-                             
+
                                 <!-- end of card-footer -->
                             </div>
                             <!-- Invoice list card end -->
@@ -212,16 +213,59 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="card">
-         
+
                         <div class="card-block">
                             <div id="container"></div>
                         </div>
                     </div>
                 </div>
-               
+              <?php } ?>
+
+                <div class="card-block">
+
+                    <div class="table-responsive dt-responsive">
+                        <table id="dt-ajax-array" class="table table-striped table-bordered nowrap">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Task type</th>
+                                    <th>Status</th>
+                                    <th style=" display: block;/* or inline-block */
+                                        text-overflow: ellipsis;
+                                        word-wrap: break-word;
+                                        overflow: hidden;
+                                        max-height: 3.6em;
+                                        line-height: 1.8em;">Task Performed</th>
+                                    <th>Added By</th>
+                                    <th>School</th>
+                                    <th>Deadline</th>
+                                    <th>Added On</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>No</th>
+
+                                    <th>Task type</th>
+                                    <th>Status</th>
+                                    <th style="width:1em">Task Performed</th>
+                                    <th>Added By</th>
+                                    <th>School</th>
+                                    <th>Added On</th>
+                                    <th>Deadline</th>
+                                    <th>Action</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                </div>
             </div>
         </div>
-    <?php } ?>
 </div>
     <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
 
@@ -239,7 +283,7 @@
         </thead>
         <tbody>
             <?php
-            $logs = DB::select('select count(*),extract(month from created_at) as month from constant.feedback 
+            $logs = DB::select('select count(*),extract(month from created_at) as month from constant.feedback
 where extract(year from created_at)=' . date('Y') . ' group by month order by month');
             foreach ($logs as $log) {
                 $monthNum = $log->month;
@@ -251,7 +295,7 @@ where extract(year from created_at)=' . date('Y') . ' group by month order by mo
                     <td><?= $log->count ?></td>
                 </tr>
             <?php }
-            ?> 
+            ?>
         </tbody>
     </table>
     <table id="users_sales" style="display:none">
@@ -263,7 +307,7 @@ where extract(year from created_at)=' . date('Y') . ' group by month order by mo
         </thead>
         <tbody>
             <?php
-            $new_schools = DB::select('select count(*),extract(month from created_at) as month from admin.all_setting 
+            $new_schools = DB::select('select count(*),extract(month from created_at) as month from admin.all_setting
 where extract(year from created_at)=' . date('Y') . ' group by month order by month');
             foreach ($new_schools as $new_school) {
                 $monthNum = $new_school->month;
@@ -275,9 +319,10 @@ where extract(year from created_at)=' . date('Y') . ' group by month order by mo
                     <td><?= $new_school->count ?></td>
                 </tr>
             <?php }
-            ?> 
+            ?>
         </tbody>
     </table>
+
 
     <script type="text/javascript">
         Highcharts.chart('container', {
@@ -354,4 +399,3 @@ where extract(year from created_at)=' . date('Y') . ' group by month order by mo
     </script>
 
 @endsection
-
