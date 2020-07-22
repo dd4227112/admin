@@ -385,12 +385,10 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
                         <div class="card-block">
 
                                 <?php
-                             $sql1 = "SELECT count(id) as count, controller as date from admin.all_log a where " . $where . "  group by created_at::date, controller order by date desc ";
-                            echo $insight->createChartBySql($sql1 , 'date', 'Module Usage', 'bar', false);
+                                 $sql1 = "select count(id) as count, controller as module from admin.all_log a   where controller not in ('background','SmsController','signin','dashboard') and ".$where."  group by controller order by count desc limit 10 ";
+                                 echo $insight->createChartBySql($sql1 , 'date', 'Module Usage', 'bar', false);
                             ?>
-
-
-                                </div>
+                            </div>
 
                             </div>
                         </div>
