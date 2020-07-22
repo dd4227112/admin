@@ -170,7 +170,7 @@
                                             <div class="col-sm-4 invoice-col">
                                                 <p class=" well-sm "> &nbsp;</p>
                                                 <address>
-                                                    <b>Invoice #<?= $invoice->reference ?></b>
+                                                    <b>Invoice #<?php // $invoice->reference ?></b>
                                                     <br>
                                                     <b>Date:</b> <?= date('d M Y', strtotime('-30 day', strtotime($siteinfos->payment_deadline_date))); ?>
                                                     <br>
@@ -244,7 +244,7 @@
                                             <!-- accepted payments column -->
 
                                             <div class="col-sm-6 invoice-col">
-                                                <p class="well-sm "><b>Amount in words:</b> <?= number_to_words($price * ($students + $siteinfos->estimated_students)) ?></p>
+                                                <p class="well-sm "><b>Amount in words:</b> <?= number_to_words( (float)$price * ((int)$students + (int)$siteinfos->estimated_students)) ?></p>
                                                 <br/>
 
                                                 <p class="lead  well-sm ">Payment Methods:</p>

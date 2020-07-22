@@ -54,7 +54,7 @@
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2-bootstrap.css">
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css">       
 
-<link href="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.css" rel="stylesheet">
+        <link href="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.css" rel="stylesheet">
 
 
 
@@ -62,6 +62,8 @@
 
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script>
+
+
         <script type="text/javascript">
 ajax_setup = function () {
     $.ajaxSetup({
@@ -142,135 +144,136 @@ function toast(message) {
                             if (strlen(request('token')) < 4) {
                                 ?>
                                 <li>
+
                                     <a class="main-search morphsearch-search" href="#">
                                         <!-- themify icon -->
                                         <i class="ti-search"></i>
                                     </a>
                                 </li>
                             <?php } ?>
-                            <!--                            <li>
-                                                            <a href="#!" onclick="javascript:toggleFullScreen()">
-                                                                <i class="ti-fullscreen"></i>
-                                                            </a>
-                                                        </li>
-                                                        <li class="mega-menu-top">
-                                                            <a href="#">
-                                                                Mega
-                                                                <i class="ti-angle-down"></i>
-                                                            </a>
-                                                            <ul class="show-notification row">
-                                                                <li class="col-sm-3">
-                                                                    <h6 class="mega-menu-title">Popular Links</h6>
-                                                                    <ul class="mega-menu-links">
-                                                                        <li><a href="form-elements-component.html">Form Elements</a></li>
-                                                                        <li><a href="button.html">Buttons</a></li>
-                                                                        <li><a href="map-google.html">Maps</a></li>
-                                                                        <li><a href="user-card.html">Contact Cards</a></li>
-                                                                        <li><a href="user-profile.html">User Information</a></li>
-                                                                        <li><a href="auth-lock-screen.html">Lock Screen</a></li>
-                                                                    </ul>
-                                                                </li>
-                                                                <li class="col-sm-3">
-                                                                    <h6 class="mega-menu-title">Mailbox</h6>
-                                                                    <ul class="mega-mailbox">
-                                                                        <li>
-                                                                            <a href="#" class="media">
-                                                                                <div class="media-left">
-                                                                                    <i class="ti-folder"></i>
-                                                                                </div>
-                                                                                <div class="media-body">
-                                                                                    <h5>Data Backup</h5>
-                                                                                    <small class="text-muted">Store your data</small>
-                                                                                </div>
-                                                                            </a>
-                                                                        </li>
-                                                                        <li>
-                                                                            <a href="#" class="media">
-                                                                                <div class="media-left">
-                                                                                    <i class="ti-headphone-alt"></i>
-                                                                                </div>
-                                                                                <div class="media-body">
-                                                                                    <h5>Support</h5>
-                                                                                    <small class="text-muted">24-hour support</small>
-                                                                                </div>
-                                                                            </a>
-                                                                        </li>
-                                                                        <li>
-                                                                            <a href="#" class="media">
-                                                                                <div class="media-left">
-                                                                                    <i class="ti-dropbox"></i>
-                                                                                </div>
-                                                                                <div class="media-body">
-                                                                                    <h5>Drop-box</h5>
-                                                                                    <small class="text-muted">Store large amount of data in one-box only
-                                                                                    </small>
-                                                                                </div>
-                                                                            </a>
-                                                                        </li>
-                                                                        <li>
-                                                                            <a href="#" class="media">
-                                                                                <div class="media-left">
-                                                                                    <i class="ti-location-pin"></i>
-                                                                                </div>
-                                                                                <div class="media-body">
-                                                                                    <h5>Location</h5>
-                                                                                    <small class="text-muted">Find Your Location with ease of use</small>
-                                                                                </div>
-                                                                            </a>
-                                                                        </li>
-                                                                    </ul>
-                                                                </li>
-                                                                <li class="col-sm-3">
-                                                                    <h6 class="mega-menu-title">Gallery</h6>
-                                                                    <div class="row m-b-20">
-                                                                        <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/01.jpg" alt="Gallery-1">
-                                                                        </div>
-                                                                        <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/02.jpg" alt="Gallery-2">
-                                                                        </div>
-                                                                        <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/03.jpg" alt="Gallery-3">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row m-b-20">
-                                                                        <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/04.jpg" alt="Gallery-4">
-                                                                        </div>
-                                                                        <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/05.jpg" alt="Gallery-5">
-                                                                        </div>
-                                                                        <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/06.jpg" alt="Gallery-6">
-                                                                        </div>
-                                                                    </div>
-                                                                    <button class="btn btn-primary btn-sm btn-block">Browse Gallery</button>
-                                                                </li>
-                                                                <li class="col-sm-3">
-                                                                    <h6 class="mega-menu-title">Contact Us</h6>
-                                                                    <div class="mega-menu-contact">
-                                                                        <div class="form-group row">
-                                                                            <label for="example-text-input" class="col-3 col-form-label">Name</label>
-                                                                            <div class="col-9">
-                                                                                <input class="form-control" type="text" placeholder="Artisanal kale" id="example-text-input">
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="form-group row">
-                                                                            <label for="example-search-input" class="col-3 col-form-label">Email</label>
-                                                                            <div class="col-9">
-                                                                                <input class="form-control" type="email" placeholder="Enter your E-mail Id" id="example-search-input">
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="form-group row">
-                                                                            <label for="example-search-input" class="col-3 col-form-label">Contact</label>
-                                                                            <div class="col-9">
-                                                                                <input class="form-control" type="number" placeholder="+91-9898989898" id="example-search-input">
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="form-group row">
-                                                                            <label for="exampleTextarea" class="col-3 col-form-label">Message</label>
-                                                                            <div class="col-9">
-                                                                                <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </li>
-                                                            </ul>
-                                                        </li>-->
+                            <li>
+                                <a href="#!" onclick="javascript:toggleFullScreen()">
+                                    <i class="ti-fullscreen"></i>
+                                </a>
+                            </li>
+                            <li class="mega-menu-top">
+                                <!--                                                            <a href="#">
+                                                                                                Mega
+                                                                                                <i class="ti-angle-down"></i>
+                                                                                            </a>-->
+                                <ul class="show-notification row">
+                                    <li class="col-sm-3">
+                                        <h6 class="mega-menu-title">Popular Links</h6>
+                                        <ul class="mega-menu-links">
+                                            <li><a href="form-elements-component.html">Form Elements</a></li>
+                                            <li><a href="button.html">Buttons</a></li>
+                                            <li><a href="map-google.html">Maps</a></li>
+                                            <li><a href="user-card.html">Contact Cards</a></li>
+                                            <li><a href="user-profile.html">User Information</a></li>
+                                            <li><a href="auth-lock-screen.html">Lock Screen</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="col-sm-3">
+                                        <h6 class="mega-menu-title">Mailbox</h6>
+                                        <ul class="mega-mailbox">
+                                            <li>
+                                                <a href="#" class="media">
+                                                    <div class="media-left">
+                                                        <i class="ti-folder"></i>
+                                                    </div>
+                                                    <div class="media-body">
+                                                        <h5>Data Backup</h5>
+                                                        <small class="text-muted">Store your data</small>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="media">
+                                                    <div class="media-left">
+                                                        <i class="ti-headphone-alt"></i>
+                                                    </div>
+                                                    <div class="media-body">
+                                                        <h5>Support</h5>
+                                                        <small class="text-muted">24-hour support</small>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="media">
+                                                    <div class="media-left">
+                                                        <i class="ti-dropbox"></i>
+                                                    </div>
+                                                    <div class="media-body">
+                                                        <h5>Drop-box</h5>
+                                                        <small class="text-muted">Store large amount of data in one-box only
+                                                        </small>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="media">
+                                                    <div class="media-left">
+                                                        <i class="ti-location-pin"></i>
+                                                    </div>
+                                                    <div class="media-body">
+                                                        <h5>Location</h5>
+                                                        <small class="text-muted">Find Your Location with ease of use</small>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="col-sm-3">
+                                        <h6 class="mega-menu-title">Gallery</h6>
+                                        <div class="row m-b-20">
+                                            <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/01.jpg" alt="Gallery-1">
+                                            </div>
+                                            <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/02.jpg" alt="Gallery-2">
+                                            </div>
+                                            <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/03.jpg" alt="Gallery-3">
+                                            </div>
+                                        </div>
+                                        <div class="row m-b-20">
+                                            <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/04.jpg" alt="Gallery-4">
+                                            </div>
+                                            <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/05.jpg" alt="Gallery-5">
+                                            </div>
+                                            <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/06.jpg" alt="Gallery-6">
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-primary btn-sm btn-block">Browse Gallery</button>
+                                    </li>
+                                    <li class="col-sm-3">
+                                        <h6 class="mega-menu-title">Contact Us</h6>
+                                        <div class="mega-menu-contact">
+                                            <div class="form-group row">
+                                                <label for="example-text-input" class="col-3 col-form-label">Name</label>
+                                                <div class="col-9">
+                                                    <input class="form-control" type="text" placeholder="Artisanal kale" id="example-text-input">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="example-search-input" class="col-3 col-form-label">Email</label>
+                                                <div class="col-9">
+                                                    <input class="form-control" type="email" placeholder="Enter your E-mail Id" id="example-search-input">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="example-search-input" class="col-3 col-form-label">Contact</label>
+                                                <div class="col-9">
+                                                    <input class="form-control" type="number" placeholder="+91-9898989898" id="example-search-input">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="exampleTextarea" class="col-3 col-form-label">Message</label>
+                                                <div class="col-9">
+                                                    <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
                         </ul>
                         <?php
                         if (strlen(request('token')) < 4) {
@@ -327,12 +330,15 @@ function toast(message) {
                                             </li>
                                         </ul>
                                     </li>
-                                    <!--                                    <li class="header-notification">
-                                                                            <a href="#!" class="displayChatbox">
-                                                                                <i class="ti-comments"></i>
-                                                                                <span class="badge">9</span>
-                                                                            </a>
-                                                                        </li>-->
+                                    <li class="header-notification">
+                                        <a href="#!" class="displayChatbox">
+                                            <i class="ti-comments"></i>
+                                            <span class="badge"><?php
+                                                $users = \App\Models\User::where('status', 1)->get();
+                                                echo count($users);
+                                                ?></span>
+                                        </a>
+                                    </li>
                                 <?php } ?>
                                 <li class="user-profile header-notification">
                                     <a href="#!">
@@ -378,44 +384,54 @@ function toast(message) {
                             </ul>
                             <!-- search -->
                         <?php } ?>
+                        <script>
+                            search_inputs = function () {
+                                $('#search_inputs').keyup(function () {
+                                    var val = $(this).val();
+//                                    if(val.lenght >1){
+                                    $.ajax({
+                                        type: "post",
+                                        url: "<?= url('analyse/search') ?>",
+                                        data: "q=" + val,
+                                        dataType: 'JSON',
+                                        success: function (data) {
+                                            console.log(data);
+                                            $('#search_people').html(data.people);
+                                            $('#search_schools').html(data.schools);
+                                            $('#search_activities').html(data.activities);
+                                        }
+                                    });
+//                                    }else{
+//                                     $('#search_people').html('');
+//                                     $('#search_schools').html('');
+//                                     $('#search_activities').html('');
+//                                    }
+                                })
+                            }
+                            $(document).ready(search_inputs);
+                        </script>
                         <div id="morphsearch" class="morphsearch">
                             <form class="morphsearch-form">
-                                <input class="morphsearch-input" type="search" placeholder="Search..." />
+                                <input class="morphsearch-input" id="search_inputs" type="search" placeholder="Search..." />
                                 <button class="morphsearch-submit" type="submit">Search</button>
                             </form>
                             <div class="morphsearch-content">
                                 <div class="dummy-column">
-                                    <h2>People</h2>
-                                    <a class="dummy-media-object" href="#!">
-                                        <img class="round" src="http://0.gravatar.com/avatar/81b58502541f9445253f30497e53c280?s=50&amp;d=identicon&amp;r=G" alt="Sara Soueidan" />
-                                        <h3>Sara Soueidan</h3>
-                                    </a>
-                                    <a class="dummy-media-object" href="#!">
-                                        <img class="round" src="http://1.gravatar.com/avatar/9bc7250110c667cd35c0826059b81b75?s=50&amp;d=identicon&amp;r=G" alt="Shaun Dona" />
-                                        <h3>Shaun Dona</h3>
-                                    </a>
+                                    <h2>Invoices</h2>
+                                    <span id="search_people"></span>
+
+
                                 </div>
                                 <div class="dummy-column">
-                                    <h2>Popular</h2>
-                                    <a class="dummy-media-object" href="#!">
-                                        <img src="<?= $root ?>assets/images/avatar-1.png" alt="PagePreloadingEffect" />
-                                        <h3>Page Preloading Effect</h3>
-                                    </a>
-                                    <a class="dummy-media-object" href="#!">
-                                        <img src="<?= $root ?>assets/images/avatar-1.png" alt="DraggableDualViewSlideshow" />
-                                        <h3>Draggable Dual-View Slideshow</h3>
-                                    </a>
+                                    <h2>Schools</h2>
+                                    <span id="search_schools"></span>
+
+
                                 </div>
                                 <div class="dummy-column">
-                                    <h2>Recent</h2>
-                                    <a class="dummy-media-object" href="#!">
-                                        <img src="<?= $root ?>assets/images/avatar-1.png" alt="TooltipStylesInspiration" />
-                                        <h3>Tooltip Styles Inspiration</h3>
-                                    </a>
-                                    <a class="dummy-media-object" href="#!">
-                                        <img src="<?= $root ?>assets/images/avatar-1.png" alt="NotificationStyles" />
-                                        <h3>Notification Styles Inspiration</h3>
-                                    </a>
+                                    <h2>Activity</h2>
+                                    <span id="search_activities"></span>
+
                                 </div>
                             </div>
                             <!-- /morphsearch-content -->
@@ -522,26 +538,26 @@ function toast(message) {
                                 </ul>
                             </li>
                         <?php } ?>
-                            
-                            
-           <li class="nav-item">
-                                <a href="#!">
-                                    <i class="ti-layout-cta-right"></i>
-                                    <span data-i18n="nav.navigate.main">Office Administrator</span>
-                                </a>
-                                <ul class="tree-1">
-                                    <li>
-                                        <a href="<?= url('Visitor/index') ?>" data-i18n="nav.navigate.navbar">Visitors</a>
-                                    </li>
-                                   
-                                    
-                                
 
-                                </ul>
-                            </li>                  
-                            
-                            
-                            
+
+                        <li class="nav-item">
+                            <a href="#!">
+                                <i class="ti-layout-cta-right"></i>
+                                <span data-i18n="nav.navigate.main">Office Administrator</span>
+                            </a>
+                            <ul class="tree-1">
+                                <li>
+                                    <a href="<?= url('Visitor/index') ?>" data-i18n="nav.navigate.navbar">Visitors</a>
+                                </li>
+
+
+
+
+                            </ul>
+                        </li>                  
+
+
+
                         <?php if (can_access('manage_sales')) { ?>
                             <li class="nav-item">
                                 <a href="#!">
@@ -555,14 +571,14 @@ function toast(message) {
                                     <li>
                                         <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">Schools</a>
                                     </li>
-                                
+
 
                                 </ul>
                             </li>
                         <?php } ?>
-                              <?php if (can_access('manage_marketing')) { ?>
+                        <?php if (can_access('manage_marketing')) { ?>
                             <li class="nav-item">
-                                <a href="<?=url('users/tasks')?>">
+                                <a href="<?= url('users/tasks') ?>">
                                     <i class="ti-gift "></i>
                                     <span data-i18n="nav.extra-components.main">Tasks Management</span>
                                 </a>
@@ -666,13 +682,13 @@ function toast(message) {
                             </li>
                         <?php } ?>
                         <?php if (can_access('manage_expenses')) { ?>
-<!--                            <li class="nav-item single-item has-class">
-                                <a href="<?= url('account/transaction/4') ?>">
-                                    <i class="ti-view-grid"></i>
-                                    <span data-i18n="nav.widget.main"> Expenses</span>
-                                    <label class="label label-danger menu-caption">+</label>
-                                </a>
-                            </li>-->
+                            <!--                            <li class="nav-item single-item has-class">
+                                                            <a href="<?= url('account/transaction/4') ?>">
+                                                                <i class="ti-view-grid"></i>
+                                                                <span data-i18n="nav.widget.main"> Expenses</span>
+                                                                <label class="label label-danger menu-caption">+</label>
+                                                            </a>
+                                                        </li>-->
 
                         <?php } ?>
                         <?php if (can_access('manage_users')) { ?>
@@ -751,16 +767,20 @@ function toast(message) {
                                 </div>
                             </div>
                             <div class="main-friend-list">
-                                <div class="media userlist-box" data-id="1" data-status="online" data-username="Josephin Doe" data-toggle="tooltip" data-placement="left" title="Josephin Doe">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Josephin Doe</div>
+                                <?php
+                                foreach ($users as $user) {
+                                    ?>
+                                    <div class="media userlist-box" data-id="1" data-status="online" data-username="<?= $user->firstname . ' ' . $user->lastname ?>" data-toggle="tooltip" data-placement="left" title="<?= $user->firstname . ' ' . $user->lastname ?>">
+                                        <a class="media-left" href="#!">
+                                            <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="<?= $user->firstname . ' ' . $user->lastname ?>">
+                                            <div class="live-status bg-success"></div>
+                                        </a>
+                                        <div class="media-body">
+                                            <div class="f-13 chat-header"><?= $user->firstname . ' ' . $user->lastname ?></div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="media userlist-box" data-id="2" data-status="online" data-username="Lary Doe" data-toggle="tooltip" data-placement="left" title="Lary Doe">
+    <?php } ?>
+<!--                                <div class="media userlist-box" data-id="2" data-status="online" data-username="Lary Doe" data-toggle="tooltip" data-placement="left" title="Lary Doe">
                                     <a class="media-left" href="#!">
                                         <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u1.jpg" alt="Generic placeholder image">
                                         <div class="live-status bg-success"></div>
@@ -768,124 +788,8 @@ function toast(message) {
                                     <div class="media-body">
                                         <div class="f-13 chat-header">Lary Doe</div>
                                     </div>
-                                </div>
-                                <div class="media userlist-box" data-id="3" data-status="online" data-username="Alice" data-toggle="tooltip" data-placement="left" title="Alice">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-2.png" alt="Generic placeholder image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Alice</div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box" data-id="4" data-status="online" data-username="Alia" data-toggle="tooltip" data-placement="left" title="Alia">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u2.jpg" alt="Generic placeholder image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Alia</div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box" data-id="5" data-status="online" data-username="Suzen" data-toggle="tooltip" data-placement="left" title="Suzen">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u3.jpg" alt="Generic placeholder image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Suzen</div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box" data-id="6" data-status="offline" data-username="Michael Scofield" data-toggle="tooltip" data-placement="left" title="Michael Scofield">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-3.png" alt="Generic placeholder image">
-                                        <div class="live-status bg-danger"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Michael Scofield</div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box" data-id="7" data-status="online" data-username="Irina Shayk" data-toggle="tooltip" data-placement="left" title="Irina Shayk">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-4.png" alt="Generic placeholder image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Irina Shayk</div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box" data-id="8" data-status="offline" data-username="Sara Tancredi" data-toggle="tooltip" data-placement="left" title="Sara Tancredi">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-5.png" alt="Generic placeholder image">
-                                        <div class="live-status bg-danger"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Sara Tancredi</div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box" data-id="9" data-status="online" data-username="Samon" data-toggle="tooltip" data-placement="left" title="Samon">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Samon</div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box" data-id="10" data-status="online" data-username="Daizy Mendize" data-toggle="tooltip" data-placement="left" title="Daizy Mendize">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u3.jpg" alt="Generic placeholder image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Daizy Mendize</div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box" data-id="11" data-status="offline" data-username="Loren Scofield" data-toggle="tooltip" data-placement="left" title="Loren Scofield">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-3.png" alt="Generic placeholder image">
-                                        <div class="live-status bg-danger"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Loren Scofield</div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box" data-id="12" data-status="online" data-username="Shayk" data-toggle="tooltip" data-placement="left" title="Shayk">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-4.png" alt="Generic placeholder image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Shayk</div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box" data-id="13" data-status="offline" data-username="Sara" data-toggle="tooltip" data-placement="left" title="Sara">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u3.jpg" alt="Generic placeholder image">
-                                        <div class="live-status bg-danger"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Sara</div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box" data-id="14" data-status="online" data-username="Doe" data-toggle="tooltip" data-placement="left" title="Doe">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Doe</div>
-                                    </div>
-                                </div>
-                                <div class="media userlist-box" data-id="15" data-status="online" data-username="Lary" data-toggle="tooltip" data-placement="left" title="Lary">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u1.jpg" alt="Generic placeholder image">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header">Lary</div>
-                                    </div>
-                                </div>
+                                </div>-->
+                            
                             </div>
                         </div>
                     </div>
@@ -895,10 +799,10 @@ function toast(message) {
             <div class="showChat_inner">
                 <div class="media chat-inner-header">
                     <a class="back_chatBox">
-                        <i class="icofont icofont-rounded-left"></i> Josephin Doe
+                        <i class="icofont icofont-rounded-left"></i> Information Hidden
                     </a>
                 </div>
-                <div class="media chat-messages">
+<!--                <div class="media chat-messages">
                     <a class="media-left photo-table" href="#!">
                         <img class="media-object img-circle m-t-5" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
                     </a>
@@ -908,8 +812,8 @@ function toast(message) {
                             <p class="chat-time">8:20 a.m.</p>
                         </div>
                     </div>
-                </div>
-                <div class="media chat-messages">
+                </div>-->
+<!--                <div class="media chat-messages">
                     <div class="media-body chat-menu-reply">
                         <div class="">
                             <p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
@@ -921,19 +825,19 @@ function toast(message) {
                             <img class="media-object img-circle m-t-5" src="<?= $root ?>assets/images/avatar-2.png" alt="Generic placeholder image">
                         </a>
                     </div>
-                </div>
-                <div class="chat-reply-box p-b-20">
+                </div>-->
+<!--                <div class="chat-reply-box p-b-20">
                     <div class="right-icon-control">
                         <input type="text" class="form-control search-text" placeholder="Share Your Thoughts">
                         <div class="form-icon">
                             <i class="icofont icofont-paper-plane"></i>
                         </div>
                     </div>
-                </div>
+                </div>-->
             </div>
             <!-- Sidebar inner chat end-->
             <!-- Main-body start-->
-        <?php } ?>
+<?php } ?>
         <div class="main-body">
             @include('layouts.notifications')
             @yield('content')
@@ -1024,11 +928,11 @@ function toast(message) {
 
 
         <!-- Custom js -->
-   <script src="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.js"></script>  
-   
-        
+        <script src="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.js"></script>  
+
+
         <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/custom-dashboard.js?v=3"></script>
-        <script type="text/javascript" src="<?= $root ?>assets/js/script.js?v=2"></script>
+        <script type="text/javascript" src="<?= $root ?>assets/js/script.js?v=3"></script>
 
         <script src="<?= $root ?>bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
         <script src="<?= $root ?>bower_components/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
@@ -1042,103 +946,103 @@ function toast(message) {
         <script src="<?= $root ?>bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
         @yield('footer')
     </body>
-    <?php
-    if (request('type_id') != 'subject' && !preg_match('/emailsms/', url()->current()) && !preg_match('/sales/', url()->current()) && !preg_match('/logs/', url()->current()) && !preg_match('/payment_history/i',url()->current()) && !preg_match('/api/', url()->current())) {
-        ?>
+<?php
+if (request('type_id') != 'subject' && !preg_match('/emailsms/', url()->current()) && !preg_match('/sales/', url()->current()) && !preg_match('/logs/', url()->current()) && !preg_match('/payment_history/i', url()->current()) && !preg_match('/api/', url()->current())) {
+    ?>
         <script type="text/javascript">
 
-                                                   $(document).ready(function () {
-                                                       $('.dataTable').DataTable({
-                                                           dom: 'Bfrtip',
-                                                           responsive: false,
-                                                           paging: true,
-                                                           info: false,
-                                                           "pageLength": 10,
-                                                           buttons: [
-                                                               {
-                                                                   text: 'PDF',
-                                                                   extend: 'pdfHtml5',
-                                                                   message: '',
-                                                                   orientation: 'landscape',
-                                                                   exportOptions: {
-                                                                       columns: ':visible'
-                                                                   },
-                                                                   customize: function (doc) {
-                                                                       doc.pageMargins = [10, 10, 10, 10];
-                                                                       doc.defaultStyle.fontSize = 7;
-                                                                       doc.styles.tableHeader.fontSize = 7;
-                                                                       doc.styles.title.fontSize = 9;
-                                                                       // Remove spaces around page title
-                                                                       doc.content[0].text = doc.content[0].text.trim();
-                                                                       // Create a footer
-                                                                       doc['footer'] = (function (page, pages) {
-                                                                           return {
-                                                                               columns: [
-                                                                                   'www.shulesoft.com',
-                                                                                   {
-                                                                                       // This is the right column
-                                                                                       alignment: 'right',
-                                                                                       text: ['page ', {text: page.toString()}, ' of ', {text: pages.toString()}]
-                                                                                   }
-                                                                               ],
-                                                                               margin: [10, 0]
-                                                                           }
-                                                                       });
-                                                                       // Styling the table: create style object
-                                                                       var objLayout = {};
-                                                                       // Horizontal line thickness
-                                                                       objLayout['hLineWidth'] = function (i) {
-                                                                           return .5;
-                                                                       };
-                                                                       // Vertikal line thickness
-                                                                       objLayout['vLineWidth'] = function (i) {
-                                                                           return .5;
-                                                                       };
-                                                                       // Horizontal line color
-                                                                       objLayout['hLineColor'] = function (i) {
-                                                                           return '#aaa';
-                                                                       };
-                                                                       // Vertical line color
-                                                                       objLayout['vLineColor'] = function (i) {
-                                                                           return '#aaa';
-                                                                       };
-                                                                       // Left padding of the cell
-                                                                       objLayout['paddingLeft'] = function (i) {
-                                                                           return 4;
-                                                                       };
-                                                                       // Right padding of the cell
-                                                                       objLayout['paddingRight'] = function (i) {
-                                                                           return 4;
-                                                                       };
-                                                                       // Inject the object in the document
-                                                                       doc.content[1].layout = objLayout;
-                                                                   }
-                                                               },
+                                $(document).ready(function () {
+                                    $('.dataTable').DataTable({
+                                        dom: 'Bfrtip',
+                                        responsive: false,
+                                        paging: true,
+                                        info: false,
+                                        "pageLength": 10,
+                                        buttons: [
+                                            {
+                                                text: 'PDF',
+                                                extend: 'pdfHtml5',
+                                                message: '',
+                                                orientation: 'landscape',
+                                                exportOptions: {
+                                                    columns: ':visible'
+                                                },
+                                                customize: function (doc) {
+                                                    doc.pageMargins = [10, 10, 10, 10];
+                                                    doc.defaultStyle.fontSize = 7;
+                                                    doc.styles.tableHeader.fontSize = 7;
+                                                    doc.styles.title.fontSize = 9;
+                                                    // Remove spaces around page title
+                                                    doc.content[0].text = doc.content[0].text.trim();
+                                                    // Create a footer
+                                                    doc['footer'] = (function (page, pages) {
+                                                        return {
+                                                            columns: [
+                                                                'www.shulesoft.com',
+                                                                {
+                                                                    // This is the right column
+                                                                    alignment: 'right',
+                                                                    text: ['page ', {text: page.toString()}, ' of ', {text: pages.toString()}]
+                                                                }
+                                                            ],
+                                                            margin: [10, 0]
+                                                        }
+                                                    });
+                                                    // Styling the table: create style object
+                                                    var objLayout = {};
+                                                    // Horizontal line thickness
+                                                    objLayout['hLineWidth'] = function (i) {
+                                                        return .5;
+                                                    };
+                                                    // Vertikal line thickness
+                                                    objLayout['vLineWidth'] = function (i) {
+                                                        return .5;
+                                                    };
+                                                    // Horizontal line color
+                                                    objLayout['hLineColor'] = function (i) {
+                                                        return '#aaa';
+                                                    };
+                                                    // Vertical line color
+                                                    objLayout['vLineColor'] = function (i) {
+                                                        return '#aaa';
+                                                    };
+                                                    // Left padding of the cell
+                                                    objLayout['paddingLeft'] = function (i) {
+                                                        return 4;
+                                                    };
+                                                    // Right padding of the cell
+                                                    objLayout['paddingRight'] = function (i) {
+                                                        return 4;
+                                                    };
+                                                    // Inject the object in the document
+                                                    doc.content[1].layout = objLayout;
+                                                }
+                                            },
 
-                                                               {extend: 'excelHtml5', footer: true},
-                                                               {extend: 'csvHtml5', customize: function (csv) {
-                                                                       return "ShuleSoft" + csv + "ShuleSoft";
-                                                                   }},
-                                                               {extend: 'print', footer: true}
+                                            {extend: 'excelHtml5', footer: true},
+                                            {extend: 'csvHtml5', customize: function (csv) {
+                                                    return "ShuleSoft" + csv + "ShuleSoft";
+                                                }},
+                                            {extend: 'print', footer: true}
 
-                                                           ]
-                                                       });
-                                                   });
-                                                   
-                                                   
-                                                   
-                                                   
-           $('.clockpicker').clockpicker({
-            donetext: 'Done'
-         }).find('input').change(function () {
-            console.log(this.value);
-        });
+                                        ]
+                                    });
+                                });
+
+
+
+
+                                $('.clockpicker').clockpicker({
+                                    donetext: 'Done'
+                                }).find('input').change(function () {
+                                    console.log(this.value);
+                                });
         </script>
-    <?php } ?>
+<?php } ?>
 </html>
-<?php
+    <?php
 ///echo url()->current();
-if (preg_match('/localhost/', url()->current())) {
-    ?>
+    if (preg_match('/localhost/', url()->current())) {
+        ?>
     <p align="center">This page took <?php echo (microtime(true) - LARAVEL_START) ?> seconds to render</p>
 <?php } ?>
