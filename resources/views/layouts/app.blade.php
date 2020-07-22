@@ -468,28 +468,32 @@ function toast(message) {
 
                         <hr style="background:white"/>
 
-                        <?php if (can_access('manage_users')) { ?>
                             <li class="nav-item">
                                 <a href="#!">
                                     <i class="ti-home"></i>
                                     <span data-i18n="nav.dash.main">Dashboard</span>
                                 </a>
                                 <ul class="tree-1 has-class">
-                                    <li>
+                                <?php if (can_access('manage_users')) { ?>
+                                 <li>
                                         <a href="<?= url('analyse/index') ?>" data-i18n="nav.dash.default"> Home </a></li>
 
+                                <?php } if (can_access('manage_users') || Auth::user()->department == 2) { ?>
 
-                                    <li><a href="<?= url('analyse/marketing') ?>" data-i18n="nav.dash.ecommerce"> Marketing</a></li>
+                                    <li><a href="<?= url('analyse/marketing') ?>" data-i18n="nav.dash.ecommerce"> Marketing </a></li>
+                                <?php } if (can_access('manage_users') || Auth::user()->department == 2) { ?>
                                     <li><a href="<?= url('analyse/sales') ?>" data-i18n="nav.dash.ecommerce"> Sales</a></li>
+                                <?php } if (can_access('manage_users')  || Auth::user()->department == 4) { ?>
                                     <li><a href="<?= url('analyse/accounts') ?>" data-i18n="nav.dash.crm">Accounts</a></li>
+                                <?php } if (can_access('manage_users')  || Auth::user()->department == 1) { ?>
                                     <li><a href="<?= url('analyse/customers') ?>" data-i18n="nav.dash.analytics">Customers</a>
                                         <label class="label label-info menu-caption">NEW</label>
-                                    </li>
-                                    <li><a href="<?= url('analyse/software') ?>" data-i18n="nav.dash.project">Software Dev</a>
-                                    </li>
+                                        </li>
+                                <?php } if (can_access('manage_users')  || Auth::user()->department == 3) { ?>
+                                    <li><a href="<?= url('analyse/software') ?>" data-i18n="nav.dash.project">Software Dev</a></li>
+                                <?php } ?>
                                 </ul>
                             </li>
-                        <?php } ?>
                         <?php if (can_access('manage_customers')) { ?>
                             <li class="nav-title" data-i18n="nav.category.navigation">
                                 <i class="ti-line-dashed"></i>

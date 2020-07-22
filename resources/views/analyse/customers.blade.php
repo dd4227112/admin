@@ -247,7 +247,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                                 <tbody>
 
                                     <?php
-                                    $activities = DB::select("select a.activity,a.created_at,b.name as task_name, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id WHERE   a.user_id in (select id from admin.users where department=1) and " . $where);
+                                    $activities = DB::select("select a.id, a.activity,a.created_at,b.name as task_name, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id WHERE   a.user_id in (select id from admin.users where department=1) and " . $where);
                                     foreach ($activities as $activity) {
                                         ?>
                                         <tr>
@@ -256,7 +256,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                                             </td>
                                         <!--    <td class="pro-name"><?= $activity->activity ?>
                                             </td>-->
-                                            <td>  <?= $activity->task_name ?></td>
+                                            <td> <a href="<?= url('customer/activity/show/'.$activity->id) ?>"> <?= $activity->task_name ?></a> </td>
                                             <td>
                                                 <label class="text-danger">  <?= $activity->created_at ?></label>
                                             </td>
@@ -336,9 +336,9 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                                     <div class="card-block">
 
                                         <?php
-      //                            $sql_2 = "select count(id) as count, controller as module from admin.all_log a   where controller not in ('background','SmsController') and ".$where."  group by controller order by count desc limit 8 ";
-      //
-      //                            echo $insight->createChartBySql($sql_2, 'module', 'System Usability Per Modules', 'bar', false);
+                                 $sql_2 = "select count(id) as count, controller as module from admin.all_log a   where controller not in ('background','SmsController','signin','dashboard') and ".$where."  group by controller order by count desc limit 10 ";
+      
+                               echo $insight->createChartBySql($sql_2, 'module', 'System Usability Per Modules', 'bar', false);
                                         ?>
                                     </div>
                                 </div>

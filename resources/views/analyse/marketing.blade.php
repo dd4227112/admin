@@ -366,8 +366,9 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
                         <div class="card-block">
                             <div id="login_graph"></div>
                             <?php
-                            $sql_ = "select count(distinct (user_id,\"table\")) as count, created_at::date as date from admin.all_login_locations a where " . $where . " group by created_at::date ";
-                            echo $insight->createChartBySql($sql_, 'date', 'Total Users Login', 'bar', false);
+                          //  $sql_ = "select count(distinct (user_id,\"table\")) as count, created_at::date as date from admin.all_login_locations a where " . $where . " group by created_at::date ";
+                            $sql_2 = 'SELECT count(id) as count, "table" as date from admin.all_login_locations a where '.$where.' group by created_at::date,"table"';
+                            echo $insight->createChartBySql($sql_2, 'date', 'Total Users Login', 'bar', false);
                             ?>
                         </div>
                     </div>
@@ -383,70 +384,11 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
                         </div>
                         <div class="card-block">
 
-                            <div class="new-task">
-                                <div class="table-responsive">
-                                    <script type="text/javascript">
-//                                    $(function () {
-//                                        $('#container3').highcharts({
-//                                            chart: {
-//                                                plotBackgroundColor: null,
-//                                                plotBorderWidth: null,
-//                                                plotShadow: false,
-//                                                type: 'pie'
-//                                            },
-//                                            title: {
-//                                                text: 'Browser market shares January, 2015 to May, 2015'
-//                                            },
-//                                            tooltip: {
-//                                                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-//                                            },
-//                                            plotOptions: {
-//                                                pie: {
-//                                                    allowPointSelect: true,
-//                                                    cursor: 'pointer',
-//                                                    dataLabels: {
-//                                                        enabled: true,
-//                                                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-//                                                        style: {
-//                                                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-//                                                        }
-//                                                    }
-//                                                }
-//                                            },
-//                                            series: [{
-//                                                    name: 'Brands',
-//                                                    colorByPoint: true,
-//                                                    data: [{
-//                                                            name: 'Microsoft Internet Explorer',
-//                                                            y: 56.33
-//                                                        }, {
-//                                                            name: 'Chrome',
-//                                                            y: 24.03,
-//                                                            sliced: true,
-//                                                            selected: true
-//                                                        }, {
-//                                                            name: 'Firefox',
-//                                                            y: 10.38
-//                                                        }, {
-//                                                            name: 'Safari',
-//                                                            y: 4.77
-//                                                        }, {
-//                                                            name: 'Opera',
-//                                                            y: 0.91
-//                                                        }, {
-//                                                            name: 'Proprietary or Undetectable',
-//                                                            y: 0.2
-//                                                        }]
-//                                                }]
-//                                        });
-//                                    });
-                                    </script>
-
-
-                                    <div id="container3" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
-
-
-                                </div>
+                                <?php
+                                 $sql1 = "select count(id) as count, controller as date from admin.all_log a   where controller not in ('background','SmsController','signin','dashboard') and ".$where."  group by controller order by count desc limit 10 ";
+                                 echo $insight->createChartBySql($sql1 , 'date', 'Module Usage', 'bar', false);
+                            ?>
+                            </div>
 
                             </div>
                         </div>
@@ -455,7 +397,7 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
                 <!-- Todo card end -->
                 <!-- Social user card end -->
                 <!-- Live-chart start -->
-                <div class="col-xl-5 dashbored-live-left col-lg-6">
+                <div class="col-xl-12 dashbored-live-left col-lg-6">
                     <div class="card widget">
                         <div class="section section-graph">
                             <div class="graph-info">
@@ -473,7 +415,7 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
                 </div>
                 <!-- Live-chart end -->
                 <!-- Last activity start -->
-                <div class="col-xl-7">
+                <div class="col-xl-12">
                     <div class="card">
                         <div class="card-header">
                             <h5>Marketing Activities</h5>

@@ -20,9 +20,10 @@
             </ul>
         </div>
     </div>
-    <?php if (can_access('manage_users')) { ?>
-        <div class="page-body">
-            <div class="row">
+    <div class="page-body">
+        <div class="row">
+              <?php if (can_access('manage_users')) { ?>
+
                 <div class="col-md-12 col-xl-4">
                     <!-- table card start -->
                     <div class="card table-card">
@@ -183,17 +184,66 @@
                         </div>
                     </div>
                 </div>
+              <?php } ?>
 
+                <div class="col-lg-12">
+                  <div class="card card-border-primary">
+                                <div class="card-header">
+                                    <h5>My User Activities</h5>
+
+                                </div>
+                                    <div class="card-block">
+
+                                    <div class="table-responsive">
+                                    <table class="table dataTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>No.</th>
+                                                        <th>Task type</th>
+                                                        <th>School</th>
+                                                        <th>Deadline</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                  <?php
+                                                  $user = Auth::user()->id;
+                                                  $sql = "(select a.id, a.activity,a.created_at::date, a.date,b.name as client,d.name as user ,e.name as type  from admin.tasks a join admin.tasks_clients c on a.id=c.task_id join admin.clients b on b.id=c.client_id
+                                                  join admin.users d on d.id=a.user_id join admin.task_types e on a.task_type_id=e.id WHERE a.user_id = $user order by a.created_at::date desc)
+                                                  UNION ALL
+                                                  (select a.id, a.activity,a.created_at::date, a.date,b.name as client,d.name as user ,e.name as type  from admin.tasks a join admin.tasks_schools c on a.id=c.task_id join admin.schools b on b.id=c.school_id
+                                                 join admin.users d on d.id=a.user_id join admin.task_types e on a.task_type_id=e.id WHERE a.user_id = $user order by a.created_at::date desc)";
+                                                $activities = DB::select($sql);
+                                                 $i = 1;
+                                                  foreach ($activities as $act):
+                                                     ?>
+                                                  <tr>
+                                                  <td><?=$i++?></td>
+                                                  <td><?=$act->type?></td>
+                                                  <td><?=$act->client?></td>
+                                                  <td><?=$act->date?></td>
+                                                  <td> <a href="<?=url('customer/activity/show/'.$act->id)?>">View</a> </td>
+                                                </tr>
+                                              <?php endforeach; ?>
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                      </div>
+                                    </div>
+                  </div>
+
+              <?php    if (can_access('manage_users')) { ?>
 
                 <div class="col-lg-6">
                     <div class="row">
-                       
+
                         <div class="col-lg-12">
                             <!-- Invoice list card start -->
                             <div class="card card-border-primary">
                                 <div class="card-header">
                                     <h5>Other Users Activities</h5>
-                                    
+
                                 </div>
                                 <div class="card-block">
                                     <div class="row">
@@ -203,7 +253,7 @@
                                                 ?>
                                     </div>
                                 </div>
-                             
+
                                 <!-- end of card-footer -->
                             </div>
                             <!-- Invoice list card end -->
@@ -212,16 +262,17 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="card">
-         
+
                         <div class="card-block">
                             <div id="container"></div>
                         </div>
                     </div>
                 </div>
-               
+              <?php } ?>
+
+                </div>
             </div>
         </div>
-    <?php } ?>
 </div>
     <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
 
@@ -239,7 +290,7 @@
         </thead>
         <tbody>
             <?php
-            $logs = DB::select('select count(*),extract(month from created_at) as month from constant.feedback 
+            $logs = DB::select('select count(*),extract(month from created_at) as month from constant.feedback
 where extract(year from created_at)=' . date('Y') . ' group by month order by month');
             foreach ($logs as $log) {
                 $monthNum = $log->month;
@@ -251,7 +302,7 @@ where extract(year from created_at)=' . date('Y') . ' group by month order by mo
                     <td><?= $log->count ?></td>
                 </tr>
             <?php }
-            ?> 
+            ?>
         </tbody>
     </table>
     <table id="users_sales" style="display:none">
@@ -263,7 +314,7 @@ where extract(year from created_at)=' . date('Y') . ' group by month order by mo
         </thead>
         <tbody>
             <?php
-            $new_schools = DB::select('select count(*),extract(month from created_at) as month from admin.all_setting 
+            $new_schools = DB::select('select count(*),extract(month from created_at) as month from admin.all_setting
 where extract(year from created_at)=' . date('Y') . ' group by month order by month');
             foreach ($new_schools as $new_school) {
                 $monthNum = $new_school->month;
@@ -275,9 +326,10 @@ where extract(year from created_at)=' . date('Y') . ' group by month order by mo
                     <td><?= $new_school->count ?></td>
                 </tr>
             <?php }
-            ?> 
+            ?>
         </tbody>
     </table>
+
 
     <script type="text/javascript">
         Highcharts.chart('container', {
@@ -354,4 +406,3 @@ where extract(year from created_at)=' . date('Y') . ' group by month order by mo
     </script>
 
 @endsection
-
