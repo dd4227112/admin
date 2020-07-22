@@ -184,6 +184,58 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-lg-12">
+                  <div class="card card-border-primary">
+                                <div class="card-header">
+                                    <h5>My User Activities</h5>
+
+                                </div>
+                                    <div class="card-block">
+
+                                    <div class="table-responsive">
+                                    <table class="table dataTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>No.</th>
+                                                        <th>Task type</th>
+                                                        <th>Task Performed</th>
+                                                        <th>Added By</th>
+                                                        <th>School</th>
+                                                        <th>Deadline</th>
+                                                        <th>Added On</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                  <?php
+                                                  $user = Auth::user()->id;
+                                                  $sql = "(select a.id, a.activity,a.created_at::date, a.date,b.name as client,d.name as user ,e.name as type  from admin.tasks a join admin.tasks_clients c on a.id=c.task_id join admin.clients b on b.id=c.client_id
+                                                  join admin.users d on d.id=a.user_id join admin.task_types e on a.task_type_id=e.id WHERE a.user_id = $user order by a.created_at::date desc)
+                                                  UNION ALL
+                                                  (select a.id, a.activity,a.created_at::date, a.date,b.name as client,d.name as user ,e.name as type  from admin.tasks a join admin.tasks_schools c on a.id=c.task_id join admin.schools b on b.id=c.school_id
+                                                 join admin.users d on d.id=a.user_id join admin.task_types e on a.task_type_id=e.id WHERE a.user_id = $user order by a.created_at::date desc)";
+                                                $activities = DB::select($sql);
+                                                 $i = 1;
+                                                  foreach ($activities as $act):
+                                                     ?>
+                                                  <tr>
+                                                  <td><?=$i++?></td>
+                                                  <td><?=$act->type?></td>
+                                                  <td><?=substr($act->activity, 0, 40)?></td>
+                                                  <td><?=$act->user?></td>
+                                                  <td><?=$act->client?></td>
+                                                  <td><?=$act->date?></td>
+                                                  <td><?=$act->created_at?></td>
+                                                  <td> <a href="<?=url(''.$act->id)?>">View</a> </td>
+                                                </tr>
+                                              <?php endforeach; ?>
+                                                </tbody>
+                                                
+                                            </table>
+                                        </div>
+                                      </div>
+                                    </div>
+                  </div>
 
 
                 <div class="col-lg-6">
@@ -221,48 +273,6 @@
                 </div>
               <?php } ?>
 
-                <div class="card-block">
-
-                    <div class="table-responsive dt-responsive">
-                        <table id="dt-ajax-array" class="table table-striped table-bordered nowrap">
-                            <thead>
-                                <tr>
-                                    <th>No.</th>
-                                    <th>Task type</th>
-                                    <th>Status</th>
-                                    <th style=" display: block;/* or inline-block */
-                                        text-overflow: ellipsis;
-                                        word-wrap: break-word;
-                                        overflow: hidden;
-                                        max-height: 3.6em;
-                                        line-height: 1.8em;">Task Performed</th>
-                                    <th>Added By</th>
-                                    <th>School</th>
-                                    <th>Deadline</th>
-                                    <th>Added On</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>No</th>
-
-                                    <th>Task type</th>
-                                    <th>Status</th>
-                                    <th style="width:1em">Task Performed</th>
-                                    <th>Added By</th>
-                                    <th>School</th>
-                                    <th>Added On</th>
-                                    <th>Deadline</th>
-                                    <th>Action</th>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
                 </div>
             </div>
         </div>
