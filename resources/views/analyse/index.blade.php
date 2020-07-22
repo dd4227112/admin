@@ -184,6 +184,8 @@
                         </div>
                     </div>
                 </div>
+              <?php } ?>
+
                 <div class="col-lg-12">
                   <div class="card card-border-primary">
                                 <div class="card-header">
@@ -230,13 +232,14 @@
                                                 </tr>
                                               <?php endforeach; ?>
                                                 </tbody>
-                                                
+
                                             </table>
                                         </div>
                                       </div>
                                     </div>
                   </div>
 
+              <?php    if (can_access('manage_users')) { ?>
 
                 <div class="col-lg-6">
                     <div class="row">
