@@ -36,7 +36,7 @@
                                 <div class="col-md-12">
                                     <!-- Social wallpaper start -->
                                     <div class="social-wallpaper">
-                                        <img src="<?= $root ?><?=url('/')?>/public/assets/images/social/shulesoft.jpg" class="img-fluid width-100" alt="">
+                                        <img src="<?= $root ?><?= url('/') ?>/public/assets/images/social/shulesoft.jpg" class="img-fluid width-100" alt="">
                                         <div class="profile-hvr">
                                             <i class="icofont icofont-ui-edit p-r-10"></i>
                                             <i class="icofont icofont-ui-delete"></i>
@@ -60,7 +60,7 @@
                                         <!-- social-profile card start -->
                                         <div class="card">
                                             <div class="social-profile">
-                                                <img class="img-fluid width-100" src="<?=url('/')?>/public/assets/images/social/profile.jpg" alt="">
+                                                <img class="img-fluid width-100" src="<?= url('/') ?>/public/assets/images/social/profile.jpg" alt="">
                                                 <div class="profile-hvr m-t-15">
                                                     <i class="icofont icofont-ui-edit p-r-10"></i>
                                                     <i class="icofont icofont-ui-delete"></i>
@@ -97,6 +97,9 @@
 
                                                     </p>
                                                 </div>
+                                                <a href="<?= url('sales/onboard/' . request()->segment(3)) ?>" class="btn btn-danger waves-effect"><i class="icofont icofont-arrow-up m-r-10"></i> 
+                                                    Onboard This School
+                                                </a>
                                             </div>
                                         </div>
                                         <!-- social-profile card end -->
@@ -162,12 +165,12 @@
                                                                                 <option value="director">Director/Owner</option>
                                                                                 <option value="manager">School Manager</option>                      
                                                                                 <option value="head teacher">Head Teacher</option>
-                                                                                                                                                <option value="Second Master/Mistress">Second Master/Mistress</option>
+                                                                                <option value="Second Master/Mistress">Second Master/Mistress</option>
                                                                                 <option value="academic master">Academic Master</option>
-                                                                                 <option value="teacher">Normal Teacher</option>
+                                                                                <option value="teacher">Normal Teacher</option>
                                                                                 <option value="Accountant">Accountant</option>
                                                                                 <option value="Other Staff">Other Non Teaching Staff</option>
-                                                                               
+
 
                                                                             </select>
                                                                         </div>
@@ -297,8 +300,8 @@
                                                 </div>
                                                 <div class="col-md-12 timeline-dot">
                                                     <?php
-                                                    $tasks = \App\Models\Task::whereIn('id', \App\Models\TaskSchool::where('school_id',$school->id)->get(['task_id']))->orderBy('created_at', 'desc')->get();
-                                                   // dd($tasks);
+                                                    $tasks = \App\Models\Task::whereIn('id', \App\Models\TaskSchool::where('school_id', $school->id)->get(['task_id']))->orderBy('created_at', 'desc')->get();
+                                                    // dd($tasks);
                                                     foreach ($tasks as $task) {
                                                         ?>
                                                         <div class="social-timelines p-relative o-hidden" id="removetag<?= $task->id ?>">
@@ -410,31 +413,28 @@
                                                                                 ?>
                                                                                 <?php
                                                                                 foreach ($vars as $key => $variable) {
-                                                                                    if (!in_array($key, array('id', 'created_at', 'updated_at','status','schema_name','registration_number'))) {
+                                                                                    if (!in_array($key, array('id', 'created_at', 'updated_at', 'status', 'schema_name', 'registration_number'))) {
                                                                                         $name = ucfirst(str_replace('_', ' ', $key));
-                                                                
                                                                                         ?>
                                                                                         <div class="form-group">
                                                                                             <div class="row">
 
                                                                                                 <div class="col-md-12">
                                                                                                     <?php
-                                                                                                      echo $name;
-                                                                                                    
-                                                                                                      
-                                                                                                        ?>
-                                                                                                      
-                                                                                                        <input type="text" name="<?= $key ?>" value="<?= $variable ?>" class="form-control"/>
-                                                                                                  
+                                                                                                    echo $name;
+                                                                                                    ?>
+
+                                                                                                    <input type="text" name="<?= $key ?>" value="<?= $variable ?>" class="form-control"/>
+
                                                                                                 </div>
 
                                                                                             </div>
                                                                                         </div>
 
-                                                                                        <?php
-                                                                                    }
-                                                                                }
-                                                                                ?>
+        <?php
+    }
+}
+?>
                                                                             </div>
                                                                             <div class="modal-footer">
                                                                                 <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
@@ -442,7 +442,7 @@
                                                                             </div>
                                                                             <input type="hidden" value="<?= $school->id ?>" name="client_id"/>
                                                                             <input type="hidden" name="add_sale" value="1"/>
-                                                                            <?= csrf_field() ?>
+<?= csrf_field() ?>
                                                                         </form>
                                                                     </div>
                                                                 </div>
@@ -472,7 +472,7 @@
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <th class="social-label b-none p-b-0">Use NMB</th>
-                                                                                    <td class="social-user-name b-none p-b-0 text-muted"><?= strlen($school->nmb_branch) > 2 ? 'YES : '. ucwords($school->nmb_branch).' Branch' : 'NO' ?></td>
+                                                                                    <td class="social-user-name b-none p-b-0 text-muted"><?= strlen($school->nmb_branch) > 2 ? 'YES : ' . ucwords($school->nmb_branch) . ' Branch' : 'NO' ?></td>
                                                                                 </tr>
                                                                             </tbody></table>
                                                                     </form>
@@ -496,23 +496,23 @@
                                                         <div class="demo-gallery">
                                                             <ul id="profile-lightgallery">
                                                                 <li class="col-md-4 col-lg-2 col-sm-6 col-xs-12  p-3">
-                                                                    <a href="<?=url('/')?>/public/assets/images/light-box/l1.jpg" data-toggle="lightbox" data-title="A random title" data-footer="A custom footer text">
-                                                                        <img src="<?=url('/')?>/public/assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
+                                                                    <a href="<?= url('/') ?>/public/assets/images/light-box/l1.jpg" data-toggle="lightbox" data-title="A random title" data-footer="A custom footer text">
+                                                                        <img src="<?= url('/') ?>/public/assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
                                                                     </a>
                                                                 </li>
                                                                 <li class="col-md-4 col-lg-2 col-sm-6 col-xs-12  p-3">
-                                                                    <a href="<?=url('/')?>/public/assets/images/light-box/l1.jpg" data-toggle="lightbox" data-title="A random title" data-footer="A custom footer text">
-                                                                        <img src="<?=url('/')?>/public/assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
+                                                                    <a href="<?= url('/') ?>/public/assets/images/light-box/l1.jpg" data-toggle="lightbox" data-title="A random title" data-footer="A custom footer text">
+                                                                        <img src="<?= url('/') ?>/public/assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
                                                                     </a>
                                                                 </li>
                                                                 <li class="col-md-4 col-lg-2 col-sm-6 col-xs-12  p-3">
-                                                                    <a href="<?=url('/')?>/public/assets/images/light-box/l1.jpg" data-toggle="lightbox" data-title="A random title" data-footer="A custom footer text">
-                                                                        <img src="<?=url('/')?>/public/assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
+                                                                    <a href="<?= url('/') ?>/public/assets/images/light-box/l1.jpg" data-toggle="lightbox" data-title="A random title" data-footer="A custom footer text">
+                                                                        <img src="<?= url('/') ?>/public/assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
                                                                     </a>
                                                                 </li>
                                                                 <li class="col-md-4 col-lg-2 col-sm-6 col-xs-12  p-3">
-                                                                    <a href="<?=url('/')?>/public/assets/images/light-box/l1.jpg" data-toggle="lightbox" data-title="A random title" data-footer="A custom footer text">
-                                                                        <img src="<?=url('/')?>/public/assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
+                                                                    <a href="<?= url('/') ?>/public/assets/images/light-box/l1.jpg" data-toggle="lightbox" data-title="A random title" data-footer="A custom footer text">
+                                                                        <img src="<?= url('/') ?>/public/assets/images/light-box/sl1.jpg" class="img-fluid" alt="">
                                                                     </a>
                                                                 </li>
                                                             </ul>
@@ -538,7 +538,7 @@
                                                         <div class="media bg-white d-flex p-10">
                                                             <div class="media-left media-middle">
                                                                 <a href="#">
-                                                                    <img class="media-object" src="<?=url('/')?>/public/assets/images/timeline/img2.png" alt="">
+                                                                    <img class="media-object" src="<?= url('/') ?>/public/assets/images/timeline/img2.png" alt="">
                                                                 </a>
                                                             </div>
                                                             <div class="media-body friend-elipsis">
@@ -562,7 +562,7 @@
                                                         <div class="media bg-white d-flex p-10">
                                                             <div class="media-left media-middle">
                                                                 <a href="#">
-                                                                    <img class="media-object" src="<?=url('/')?>/public/assets/images/timeline/img2.png" alt="">
+                                                                    <img class="media-object" src="<?= url('/') ?>/public/assets/images/timeline/img2.png" alt="">
                                                                 </a>
                                                             </div>
                                                             <div class="media-body friend-elipsis">
@@ -586,7 +586,7 @@
                                                         <div class="media bg-white d-flex p-10">
                                                             <div class="media-left media-middle">
                                                                 <a href="#">
-                                                                    <img class="media-object" src="<?=url('/')?>/public/assets/images/timeline/img2.png" alt="">
+                                                                    <img class="media-object" src="<?= url('/') ?>/public/assets/images/timeline/img2.png" alt="">
                                                                 </a>
                                                             </div>
                                                             <div class="media-body friend-elipsis">
@@ -610,7 +610,7 @@
                                                         <div class="media bg-white d-flex p-10">
                                                             <div class="media-left media-middle">
                                                                 <a href="#">
-                                                                    <img class="media-object" src="<?=url('/')?>/public/assets/images/timeline/img2.png" alt="">
+                                                                    <img class="media-object" src="<?= url('/') ?>/public/assets/images/timeline/img2.png" alt="">
                                                                 </a>
                                                             </div>
                                                             <div class="media-body friend-elipsis">
@@ -634,7 +634,7 @@
                                                         <div class="media bg-white d-flex p-10">
                                                             <div class="media-left media-middle">
                                                                 <a href="#">
-                                                                    <img class="media-object" src="<?=url('/')?>/public/assets/images/timeline/img2.png" alt="">
+                                                                    <img class="media-object" src="<?= url('/') ?>/public/assets/images/timeline/img2.png" alt="">
                                                                 </a>
                                                             </div>
                                                             <div class="media-body friend-elipsis">
@@ -658,7 +658,7 @@
                                                         <div class="media bg-white d-flex p-10">
                                                             <div class="media-left media-middle">
                                                                 <a href="#">
-                                                                    <img class="media-object" src="<?=url('/')?>/public/assets/images/timeline/img2.png" alt="">
+                                                                    <img class="media-object" src="<?= url('/') ?>/public/assets/images/timeline/img2.png" alt="">
                                                                 </a>
                                                             </div>
                                                             <div class="media-body friend-elipsis">
@@ -682,7 +682,7 @@
                                                         <div class="media bg-white d-flex p-10">
                                                             <div class="media-left media-middle">
                                                                 <a href="#">
-                                                                    <img class="media-object" src="<?=url('/')?>/public/assets/images/timeline/img2.png" alt="">
+                                                                    <img class="media-object" src="<?= url('/') ?>/public/assets/images/timeline/img2.png" alt="">
                                                                 </a>
                                                             </div>
                                                             <div class="media-body friend-elipsis">
@@ -706,7 +706,7 @@
                                                         <div class="media bg-white d-flex p-10">
                                                             <div class="media-left media-middle">
                                                                 <a href="#">
-                                                                    <img class="media-object" src="<?=url('/')?>/public/assets/images/timeline/img2.png" alt="">
+                                                                    <img class="media-object" src="<?= url('/') ?>/public/assets/images/timeline/img2.png" alt="">
                                                                 </a>
                                                             </div>
                                                             <div class="media-body friend-elipsis">
@@ -730,7 +730,7 @@
                                                         <div class="media bg-white d-flex p-10">
                                                             <div class="media-left media-middle">
                                                                 <a href="#">
-                                                                    <img class="media-object" src="<?=url('/')?>/public/assets/images/timeline/img2.png" alt="">
+                                                                    <img class="media-object" src="<?= url('/') ?>/public/assets/images/timeline/img2.png" alt="">
                                                                 </a>
                                                             </div>
                                                             <div class="media-body friend-elipsis">
@@ -754,7 +754,7 @@
                                                         <div class="media bg-white d-flex p-10">
                                                             <div class="media-left media-middle">
                                                                 <a href="#">
-                                                                    <img class="media-object" src="<?=url('/')?>/public/assets/images/timeline/img2.png" alt="">
+                                                                    <img class="media-object" src="<?= url('/') ?>/public/assets/images/timeline/img2.png" alt="">
                                                                 </a>
                                                             </div>
                                                             <div class="media-body friend-elipsis">

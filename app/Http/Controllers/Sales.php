@@ -369,4 +369,31 @@ SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks
         return view('sales.add_school');
     }
 
+    public function onboard() {
+        $school_id = request()->segment(3);
+        $school = DB::table('admin.schools')->where('id', $school_id)->first();
+        $username = preg_replace('/[^a-z]/', null, strtolower($school->name));
+        $code = rand(343, 32323);
+
+        $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
+        if (count($school_contact) == 1) {
+            DB::table('admin.clients')->insert([
+                'name' => $school->name,
+                'address' => $school->ward . ' ' . $school->district . ' ' . $school->region,
+                'phone' => $school_contact->phone,
+                'email' => $school_contact->email,
+                'status' => 3,
+                'code' => $code,
+                'email_verified' => 0,
+                'phone_verified' => 0,
+                'created_by'=>Auth::user()->id,
+                'username' => $username
+            ]);
+
+            return redirect('https://' . $username . '.shulesoft.com');
+        } else {
+            return redirect()->back()->with('error', 'This school does not have any contacts allocated. Please add contact first before your click onboard');
+        }
+    }
+
 }
