@@ -235,7 +235,7 @@ class Users extends Controller {
     public function minutes() {
 
         $this->data['minutes'] = \App\Models\Minutes::orderBy('id', 'DESC')->get();
-        return view('users.minutes', $this->data);
+        return view('users.minutes.minutes', $this->data);
     }
 
     public function addMinute() {
@@ -275,13 +275,13 @@ class Users extends Controller {
             return redirect('users/minutes')->with('success', request('title') . ' updated successfully');
         }
         $this->data['users'] = \App\Models\User::all();
-        return view('users.addminute', $this->data);
+        return view('users.minutes.addminute', $this->data);
     }
 
     public function showMinute() {
         $id = request()->segment(3);
         $this->data['minute'] = \App\Models\Minutes::where('id', $id)->first();
-        return view('users.view_minute', $this->data);
+        return view('users.minutes.view_minute', $this->data);
     }
 
     public function deleteMinute() {
