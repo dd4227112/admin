@@ -336,9 +336,9 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                                     <div class="card-block">
 
                                         <?php
-      //                            $sql_2 = "select count(id) as count, controller as module from admin.all_log a   where controller not in ('background','SmsController') and ".$where."  group by controller order by count desc limit 8 ";
-      //
-      //                            echo $insight->createChartBySql($sql_2, 'module', 'System Usability Per Modules', 'bar', false);
+                                 $sql_2 = "select count(id) as count, controller as module from admin.all_log a   where controller not in ('background','SmsController','signin','dashboard') and ".$where."  group by controller order by count desc limit 10 ";
+      
+                               echo $insight->createChartBySql($sql_2, 'module', 'System Usability Per Modules', 'bar', false);
                                         ?>
                                     </div>
                                 </div>
