@@ -256,7 +256,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                                             </td>
                                         <!--    <td class="pro-name"><?= $activity->activity ?>
                                             </td>-->
-                                            <td> <a href="<?= url('customer/activity/show/'.$activity->id) ?>"> <?= $activity->task_name ?></a> <?= $activity->task_name ?> </a></td>
+                                            <td> <a href="<?= url('customer/activity/show/'.$activity->id) ?>"> <?= $activity->task_name ?></a> </td>
                                             <td>
                                                 <label class="text-danger">  <?= $activity->created_at ?></label>
                                             </td>
