@@ -48,17 +48,10 @@
                                         <tr>
                                             <th>No.</th>
                                             <th>Task type</th>
-                                            <th>Status</th>
-                                            <th style=" display: block;/* or inline-block */
-                                                text-overflow: ellipsis;
-                                                word-wrap: break-word;
-                                                overflow: hidden;
-                                                max-height: 3.6em;
-                                                line-height: 1.8em;">Task Performed</th>
                                             <th>Added By</th>
                                             <th>School</th>
                                             <th>Deadline</th>
-                                            <th>Added On</th>
+                                            <th>Status</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -68,14 +61,11 @@
                                     <tfoot>
                                         <tr>
                                             <th>No</th>
-
                                             <th>Task type</th>
-                                            <th>Status</th>
-                                            <th style="width:1em">Task Performed</th>
                                             <th>Added By</th>
                                             <th>School</th>
-                                            <th>Added On</th>
                                             <th>Deadline</th>
+                                            <th>Status</th>
                                             <th>Action</th>
                                         </tr>
                                     </tfoot>
@@ -108,18 +98,16 @@
 
                     {"data": "id"},
                     {"data": "task_name"},
-                    {"data": ""},
 
-                    {"data": "activity"},
                     {"data": "user_name"},
                     {"data": "school_name"},
-                    {"data": "created_at"},
                     {"data": "date"},
+                    {"data": ""},
                     {"data": ""}
                 ],
                 "columnDefs": [
                     {
-                        "targets": 8,
+                        "targets": 6,
                         "data": null,
                         "render": function (data, type, row, meta) {
 
@@ -130,7 +118,7 @@
 
                     },
                     {
-                        "targets": 2,
+                        "targets": 5,
                         "data": null,
                         "render": function (data, type, row, meta) {
                             var status;
