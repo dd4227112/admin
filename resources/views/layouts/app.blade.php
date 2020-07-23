@@ -611,12 +611,12 @@ function toast(message) {
                                     <i class="ti-gift "></i>
                                     <span data-i18n="nav.extra-components.main">Marketing</span>
                                 </a>
-                                <!--                        <ul class="tree-1">
-                                                            <li><a href="session-timeout.html" data-i18n="nav.extra-components.session-timeout">Session Timeout</a></li>
-                                                            <li><a href="session-idle-timeout.html" data-i18n="nav.extra-components.session-idle-timeout">Session Idle Timeout</a>
-                                                            </li>
-                                                            <li><a href="offline.html" data-i18n="nav.extra-components.offline">Offline</a></li>
-                                                        </ul>-->
+                                <ul class="tree-1">
+                                                            <li><a href="<?= url('Marketing/socialMedia') ?>" data-i18n="nav.extra-components.session-timeout">Social Media</a></li>
+                                                            <li><a href="<?= url('Marketing/designing') ?>" data-i18n="nav.extra-components.offline">Materials</a></li>
+                                                            <li><a href="<?= url('Marketing/schools') ?>" data-i18n="nav.extra-components.session-idle-timeout">Schools</a></li>
+                                                            <li><a href="<?= url('Marketing/Events') ?>" data-i18n="nav.extra-components.session-idle-timeout">Events</a></li>
+                                                        </ul>
                             </li>
                         <?php } ?>
                         <?php if (can_access('manage_software')) { ?>
