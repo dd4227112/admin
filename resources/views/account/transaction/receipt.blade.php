@@ -147,7 +147,7 @@
                                     <div class="ttl-amts">
                                       Received from
                                       <span style="padding-left:100px;padding-right: 30px; font-weight:bold; text-transform:uppercase">
-                                        <?= $revenue->payer_name ?> - <?= $revenue->payer_phone ?></span><hr/>
+                                        <?= $revenue->payer_name ?> </span><hr/>
                                       </div>
 
                                       <div class="ttl-amts">
