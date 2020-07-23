@@ -12,8 +12,7 @@
  */
 Route::any('/bitbucket', function() {
 
-    $data = ['content' => json_decode(request()->all())
-    ];
+    $data = ['content' => json_decode(request()->all())];
     return DB::table('api.requests')->insert($data);
 });
 
