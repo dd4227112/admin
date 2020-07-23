@@ -8,8 +8,8 @@
     <!-- Page-header start -->
     <div class="page-header">
       <div class="page-header-title">
-        <h4>Shulesoft Meeting Minutes</h4>
-        <span>The Part holds all written record of everything that's happened during a meeting.</span>
+        <h4>Shulesoft Social Media Posts</h4>
+        <span>The Part holds all  Posts from Company Social Media Accounts</span>
 
       </div>
       <div class="page-header-breadcrumb">
@@ -35,7 +35,7 @@
           <div class="card tab-card">
             <div class="card-block">
             <span>
-        <a class="btn btn-success btn-sm" href="<?= url('Marketing/socialMedia/add') ?>"> Add New Post</a>
+        <a class="btn btn-success btn-sm" href="<?= url('Marketing/socialMedia/add') ?>"> Add New Post </a>
         </span>
               <div class="steamline">
                 <div class="card-block">
@@ -48,7 +48,7 @@
                           <th>Title</th>
                           <th>Category</th>
                           <th>Type</th>
-                          <th>End Time</th>
+                          <th>Created By</th>
                           <th>Action</th>
                         </tr>
                       </thead>
@@ -66,7 +66,7 @@
                           <td><?=$post->user->name?></td>
 
                           <td>
-                          <a class="btn btn-info btn-sm" href="{{ url('Marketing/socialMedia/show/'.$post->id) }}">Show</a>
+                          <a class="btn btn-info btn-sm" href="{{ url('Marketing/socialMedia/show/'.$post->id.'/1') }}">Show</a>
                           <a class="btn btn-warning btn-sm" href="{{ url('Marketing/DeleteMedia/'.$post->id) }}">Delete</a>
                           </td>
                         </tr>

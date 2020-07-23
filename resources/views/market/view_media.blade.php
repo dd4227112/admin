@@ -8,8 +8,8 @@
     <!-- Page-header start -->
     <div class="page-header">
       <div class="page-header-title">
-        <h4>Shulesoft Meeting Minutes</h4>
-        <span>The Part holds all written record of everything that's happened during a meeting.</span>
+      <h4>Shulesoft Social Media Posts</h4>
+      <span> Social Media Post of <u><?=$post->created_at?> </u></span>
       </div>
       <div class="page-header-breadcrumb">
         <ul class="breadcrumb-title">
@@ -18,7 +18,7 @@
               <i class="icofont icofont-home"></i>
             </a>
           </li>
-          <li class="breadcrumb-item"><a href="#!">Company Minutes</a>
+          <li class="breadcrumb-item"><a href="#!">Company Post</a>
           </li>
           <li class="breadcrumb-item"><a href="#!">posts</a>
           </li>
@@ -26,6 +26,9 @@
       </div>
     </div>
     <!-- Page-header end -->
+    <?php
+                $medias = \App\Models\SocialMediaPost::where('post_id', $post->id)->get();
+                  ?>
     <!-- Page-body start -->
     <div class="page-body">
       <div class="row">
@@ -36,34 +39,20 @@
             <div class="card">
               <div class="card-header">
                 <h5 class="card-header-text">Title: {{ $post->title }}</h5>
-              </div>
-              <div class="card-block">
-                <div class="view-info">
-                  <div class="row">
-                    <div class="col-lg-12">
-                      <div class="general-info">
-                        <div class="row">
-                          <div class="col-lg-12 col-xl-12">
-                            <table class="table m-0">
+                <table class="table m-0">
                               <tbody>
                                 <tr>
                                   <th scope="row">Category</th>
-                                    <td>{{ $post->category }}</td>
-                                    </tr>
-                                    <tr>
-                                      <th scope="row">Type</th>
-                                      <td><?=ucfirst($post->type)?></td>
-                                      </tr>
-                                      <tr>
-                                      <th style="border-left: 1px solid grey;"> Staff</td>
-                                        <td> <?=$post->user->name?></td>
-                                      </tr>
-                                      <tr>
+                                      <th>Type</th>
+                                      <th> Staff</td>
                                       <th>Social Media Account</th>
-                                      <td>
+                                     </tr>
+                                     <tr>
+                                     <th>{{ $post->category }}</th>
+                                     <th><?=ucfirst($post->type)?></th>
+                                     <th> <?=$post->user->name?></th>
+                                      <th>
                                       <?php
-                                      $medias = \App\Models\SocialMediaPost::where('post_id', $post->id)->get();
-                                      
                                         if (count($medias) > 0) {
                                           foreach ($medias as $media) {
                                              echo '<u>'.$media->media->name.'</u>'; ?>  &nbsp;|
@@ -73,29 +62,16 @@
                                             echo "Social Media not Defined.";
                                         }
                                         ?>
-                                      </td>
+                                      </th>
                                       <tr>
                                     </tbody>
                                   </table>
-                                </div>
-                              </div>
-                              <!-- end of row -->
-                            </div>
-                            <!-- end of general info -->
-                          </div>
-                          <!-- end of col-lg-12 -->
-                        </div>
-                        <!-- end of row -->
-                      </div>
-
-                      <!-- end of card-block -->
-                    </div>
-                    
-                    <div class="row">
-                      <div class="col-lg-12">
-                        <div class="card">
-                          <div class="card-header">
-                          Social Media Engagement
+              </div>
+              <div class="card-block">
+                <div class="view-info">
+                
+                          <h5 class="card-header-text">Social Media Engagement</h4>
+                          <a href="<?= url('/Marketing/socialMedia/show/' . $post->id.'/0')?>" class="btn btn-info  f-right"> <i class="icofont icofont-edit"></i> Update </a>
                           </div>
                           <div class="card-block user-desc">
                           
@@ -110,7 +86,7 @@
                           <th>Comment</th>
                           <th>Shares</th>
                           <th>Reach</th>
-                          <th>LastUpdate</th>
+                          <th>Last Update</th>
                           </tr>
                           </thead>
                           <tbody>
@@ -121,12 +97,33 @@
                                 <tr>
                                 <td><strong> <i class="<?=$media->media->icon?>"> </i> </strong></td>
                                 <td><?=$media->media->name?></td>
-                                <td><?=$media->views?></td>
-                                <td><?=$media->likes?></td>
-                                <td><?=$media->comments?></td>
-                                <td><?=$media->share?></td>
-                                <td><?=$media->reach?></td>
-                                <td><?=$media->id?></td>
+                                <td>
+                                <span type="number" value="" <?=$published==0 ? 'contenteditable="true"':''?>  class="form-control mark" socialmedia_id="<?= $media->socialmedia_id ?>" post_id="<?= $post->id ?>" type_id="views" data-title="" >
+                                <?=$media->views?>
+                                </span>  
+                                <span id="<?= $media->socialmedia_id . $post->id ?>views"></span>
+                                </td>
+                                <td>
+                                <span type="number" value="" <?=$published==0 ? 'contenteditable="true"':''?>  class="form-control mark" socialmedia_id="<?= $media->socialmedia_id ?>" post_id="<?= $post->id ?>" type_id="likes" data-title="" >
+                                <?=$media->likes?>
+                                <span id="<?= $media->socialmedia_id . $post->id ?>likes"></span>
+                                </td>
+                                <td>
+                                <span type="number" value="" <?=$published==0 ? 'contenteditable="true"':''?>  class="form-control mark" socialmedia_id="<?= $media->socialmedia_id ?>" post_id="<?= $post->id ?>" type_id="comments" data-title="" >
+                                <?=$media->comments?>
+                                <span id="<?= $media->socialmedia_id . $post->id ?>comments"></span>
+                                </td>
+                                <td>
+                                <span type="number" value="" <?=$published==0 ? 'contenteditable="true"':''?>  class="form-control mark" socialmedia_id="<?= $media->socialmedia_id ?>" post_id="<?= $post->id ?>" type_id="share" data-title="" >
+                                <?=$media->share?>
+                                <span id="<?= $media->socialmedia_id . $post->id ?>share"></span>
+                                </td>
+                                <td>
+                                <span type="number" value="" <?=$published==0 ? 'contenteditable="true"':''?>  class="form-control mark" socialmedia_id="<?= $media->socialmedia_id ?>" post_id="<?= $post->id ?>" type_id="reach" data-title="" >
+                                <?=$media->reach?>
+                                <span id="<?= $media->socialmedia_id . $post->id ?>reach"></span>
+                                </td>
+                                <td><?=$media->updated_at=='' ? $media->created_at : $media->updated_at?></td>
                                 </tr>
                               <?php } } ?>
                               </tbody>
@@ -137,8 +134,7 @@
                       <div class="col-lg-12">
                         <div class="card">
                           <div class="card-header">
-                            <h5 class="card-header-text">Description of this Meeting</h5>
-                            <a href="<?= url('/storage/uploads/images/' . $post->id)?>" class="btn btn-info  f-right"> <i class="icofont icofont-cloud"></i> Update </a>
+                            <h5 class="card-header-text">More About this Post</h5>
                           </div>
                           <div class="card-block user-desc">
                             <div class="view-desc">
@@ -157,18 +153,37 @@
         </div>
         <!-- personal card end-->
       </div>
-<script>
-$('#school_id').click(function () {
-  var val = $(this).val();
-  $.ajax({
-    url: '<?= url('customer/search/null') ?>',
-    data: {val: val, type: 'school', schema: '<?= $schema ?>'},
-    dataType: 'html',
-    success: function (data) {
 
-      $('#search_result').html(data);
-    }
-  });
-});
+<script type="text/javascript">
+   
+    $(".mark").blur(function (event) {
+
+        var inputs = $(this).text();
+        var socialmedia_id = $(this).attr('socialmedia_id');
+        var post_id = $(this).attr('post_id');
+        var type_id = $(this).attr('type_id');
+
+        if (inputs == null) {
+
+        } else if (inputs >= 0) {
+            $.ajax({
+                type: 'POST',
+                url: "<?= url('Marketing/socialMediaUpdate') ?>",
+                data: {
+                    "type_id": type_id,
+                    "socialmedia_id": socialmedia_id,
+                    "post_id": post_id,
+                    "inputs": inputs
+                },
+                dataType: "html ",
+                success: function (data) {
+                  $(inputs).html(data);
+                }
+            });
+        } else {
+            swal('Error', 'Mark cannot be greater than 100, please enter it correctly');
+        }
+
+    });
 </script>
       @endsection
