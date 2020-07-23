@@ -99,7 +99,7 @@
                           <tbody>
                             <tr>
                               <td>
-                                <img src="{{url('public/assets/images/inets.png')}}" height="120" alt="INETS Company Limtied, ShuleSoft School Management System" style="margin-right: 40%;">
+                                <img src="{{url('public/assets/images/inets.png')}}" height="140" alt="INETS Company Limtied, ShuleSoft School Management System" style="margin-right: 40%;">
                               </td>
                               <td>
                                 <ul>
@@ -176,25 +176,21 @@
                                           </div>
                                           <div class="ttl-amts">
 
-                                            <div style="padding-left:5%;">
-                                              <div style="z-index: 4000">
-                                                <img src="<?= url('storage/uploads/images/default.jpg') ?>"
-                                                width="100" height="100"
-                                                style="position:relative; margin:-17% 15% 0 0; float:right;">
+                                            <div style="padding-left:15%;">
+                                              <div style="z-index: 5000">
+                                                <img src="<?= url('public/images/company_seal.png') ?>"
+                                                width="200" height="150"
+                                                style="position:relative; margin-left: 3px; float:right;">
                                               </div>
                                             </div>
                                           </div>
 
                                           <div class="ttl-amts">
-                                            Tshs: <b></b>
-                                            <span style="padding-left:130px; font-weight:bold;padding-right: 50px; text-transform:uppercase">
-                                              <i style="padding-right: 30px;"> <?= money($revenue->amount) ?>/- </i> NON REFUNDABLE </span> <hr/>
+                                            Tshs: <b><?= money($revenue->amount) ?>/- </i></b>
+                                            <span style="padding-left:75px; font-weight:bold;padding-right: 50px; text-transform:uppercase">
+                                                NON.REFUNDABLE </span> <hr/>
                                             </div>
                                             
-                                            <div class="ttl-amts">
-                                              <b>Received By: </b>
-                                              <br>  Signature<span style="text-align: center">-----------------------------------------------------------------------------------------------------------------</span>
-                                            </div>
                                             <div class="ttl-amts">
                                               <br>
                                             <p class="text-muted well well-sm no-shadow" style="margin-top: 10px; text-align: center">

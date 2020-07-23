@@ -70,7 +70,7 @@
                                               <?php
                                           }
                                         }else{
-                                            echo "Meeting Attendee no Added.";
+                                            echo "Social Media not Defined.";
                                         }
                                         ?>
                                       </td>
@@ -90,12 +90,55 @@
 
                       <!-- end of card-block -->
                     </div>
+                    
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <div class="card">
+                          <div class="card-header">
+                          Social Media Engagement
+                          </div>
+                          <div class="card-block user-desc">
+                          
+                          <div class="col-lg-12 col-xl-12">
+                            <table class="table m-0">
+                            <tr>
+                        <thead>
+                          <th>Icon </th>
+                          <th>Source</th>
+                          <th>Views</th>
+                          <th>Likes</th>
+                          <th>Comment</th>
+                          <th>Shares</th>
+                          <th>Reach</th>
+                          <th>LastUpdate</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                             <?php if (count($medias) > 0) { 
+                               $i = 1;
+                                foreach ($medias as $media) {
+                              ?>
+                                <tr>
+                                <td><strong> <i class="<?=$media->media->icon?>"> </i> </strong></td>
+                                <td><?=$media->media->name?></td>
+                                <td><?=$media->views?></td>
+                                <td><?=$media->likes?></td>
+                                <td><?=$media->comments?></td>
+                                <td><?=$media->share?></td>
+                                <td><?=$media->reach?></td>
+                                <td><?=$media->id?></td>
+                                </tr>
+                              <?php } } ?>
+                              </tbody>
+                              </table>
+                          </div>
+
                     <div class="row">
                       <div class="col-lg-12">
                         <div class="card">
                           <div class="card-header">
                             <h5 class="card-header-text">Description of this Meeting</h5>
-                            <a href="<?= url('/storage/uploads/images/' . $post->id)?>" class="btn btn-info  f-right"> <i class="icofont icofont-cloud"></i> Document</a>
+                            <a href="<?= url('/storage/uploads/images/' . $post->id)?>" class="btn btn-info  f-right"> <i class="icofont icofont-cloud"></i> Update </a>
                           </div>
                           <div class="card-block user-desc">
                             <div class="view-desc">
@@ -114,5 +157,18 @@
         </div>
         <!-- personal card end-->
       </div>
+<script>
+$('#school_id').click(function () {
+  var val = $(this).val();
+  $.ajax({
+    url: '<?= url('customer/search/null') ?>',
+    data: {val: val, type: 'school', schema: '<?= $schema ?>'},
+    dataType: 'html',
+    success: function (data) {
 
+      $('#search_result').html(data);
+    }
+  });
+});
+</script>
       @endsection

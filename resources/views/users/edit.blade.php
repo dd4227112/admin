@@ -106,7 +106,7 @@
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group ">
                                             <strong>Map Location:</strong>
-                                            <input id="location" readonly placeholder="location" type="text" class="form-control" name="location" value="" required>
+                                            <input id="location" readonly placeholder="location" type="text" class="form-control" name="location" value="<?=ucfirst($user->location)?>" required>
                                         </div>
                                     </div>
 
@@ -149,19 +149,20 @@
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong>National ID:</strong>
-                                            <input id="location" placeholder="National ID" type="text" class="form-control" name="national_id" value="" required>
+                                            <input id="location" placeholder="National ID" type="text" class="form-control" name="national_id" value="<?=ucfirst($user->national_id)?>" required>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong>Date of Birth:*</strong>
-                                            <input id="location" placeholder="basic salary" type="date" class="form-control" name="date_of_birth" value="" required>
+                                            <input id="location" placeholder="basic salary" type="date" class="form-control" name="date_of_birth" value="<?=ucfirst($user->date_of_birth)?>" required>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong>Employment Category*:</strong>  <br/>
                                             <select name='employment_category' class="form-control">
+                                            <option value="<?=$user->employment_category?>"><?=ucfirst($user->employment_category)?> </option>
                                                 <option value="permant">Permanent </option>
                                                 <option value="temporarily">Temporarily</option>
                                                 <option value="consultant">Consultant</option>
@@ -174,59 +175,54 @@
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong>Basic Salary:</strong>
-                                            <input id="location" placeholder="basic salary" type="text" class="form-control" name="salary" value="" required>
+                                            <input id="location" placeholder="basic salary" type="text" class="form-control" name="salary" value="<?=$user->salary?>">
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong>Joining Date:*</strong>
-                                            <input id="location" placeholder="Date of Joining" type="date" class="form-control" name="joining_date" value="" required>
+                                            <input id="location" placeholder="Date of Joining" type="date" class="form-control" name="joining_date" value="<?=$user->joining_date?>" required>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong>Contract End date:*</strong>
-                                            <input id="location" placeholder="Contract End date" type="date" class="form-control" name="contract_end_date" value="" required>
+                                            <input id="location" placeholder="Contract End date" type="date" class="form-control" name="contract_end_date" value="<?=$user->contract_end_date?>" required>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong>Scanned Academic Certificates:</strong>
-                                            <input id="location" placeholder="Academic Certificates" type="text" class="form-control" name="academic_certificates" value="" required>
+                                            <input id="location" placeholder="Academic Certificates" type="text" class="form-control" name="academic_certificates" value="<?=$user->academic_certificates?>" required>
                                             <span class="hinge">Please Scan all academic certificates, place them into one document, upload them in company Google drive account, and paste a shared link here</span>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong>Scanned Medical Report:</strong>
-                                            <input id="location" placeholder="Academic Certificates" type="text" class="form-control" name="medical_report" value="" required>
+                                            <input id="location" placeholder="Academic Certificates" type="text" class="form-control" name="medical_report" value="<?=$user->medical_report?>" required>
                                             <span class="hinge">Please Scan health check report from registered hospital, place them into one document, upload them in company Google drive account, and paste a shared link here</span>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong>T-shirt Size:</strong>
-                                            <input id="location" placeholder="T-shirt size" type="text" class="form-control" name="tshirt_size" value="" required>
+                                            <input id="location" placeholder="T-shirt size" type="text" class="form-control" name="tshirt_size" value="<?=$user->tshirt_size?>" required>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong>Have Driving License:</strong>
                                             <br/>
-                                            <select name='driving_license' class="form-control">
-                                                <option value="YES">YES </option>
-                                                <option value="NO">NO </option>
-                                            </select>
+                                            <?php  echo form_dropdown("driving_license", array('YES' => 'YES', "NO" => 'NO'), old("valid_passport", $user->driving_license), "id='valid_passport' class='form-control'"); ?>
+
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong>Have Valid Passport:</strong>
                                             <br/>
-                                            <select name='valid_passport' class="form-control">
-                                                <option value="YES">YES </option>
-                                                <option value="NO">NO </option>
-                                            </select>
+                                            <?php  echo form_dropdown("valid_passport", array('YES' => 'YES', "NO" => 'NO'), old("valid_passport", $user->valid_passport), "id='valid_passport' class='form-control'"); ?>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12">
