@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('content')
+@section('content') 
 <?php $root = url('/') . '/public/' ?>
 <div class="main-body">
     <div class="page-wrapper">
@@ -26,6 +26,7 @@
         </div>
         <!-- Page-header end -->
         <!-- Page-body start -->
+        <?php if (can_access('manage_users')) { ?>
         <div class="page-body">
             <div class="row">
                 <div class="col-lg-12">
@@ -91,7 +92,7 @@
                                     </table>
                                 </div>
                             </div>
-
+        <?php } ?>
                         </div>
                     </div>
                 </div>

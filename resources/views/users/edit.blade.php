@@ -25,6 +25,7 @@
             </div>
         </div>
         <!-- Page-header end -->
+    <?php    if (can_access('manage_users') || Auth::user()->id == $id) { ?>
         <!-- Page-body start -->
         <div class="page-body">
             <div class="row">
@@ -260,6 +261,7 @@
                         </div>
                     </div>
                 </div>
+    <?php } ?>
             </div>
         </div>
     </div>
