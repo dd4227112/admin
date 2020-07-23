@@ -137,7 +137,7 @@ class Users extends Controller {
      */
     public function edit() {
         $id = request()->segment(3);
-        $user = User::find($id);
+        $this->data['user'] = User::find($id);
 
         if ($_POST) {
             $this->validate(request(), [
@@ -146,12 +146,11 @@ class Users extends Controller {
                 'phone' => 'required|max:255',
             ]);
             $user = User::find($id)->update(request()->all());
-
-
-            return redirect('users/index')->with('success', 'User ' . request('firstname') . ' ' . request('lastname') . ' updated successfully');
+            return redirect('/')->with('success', 'User ' . request('firstname') . ' ' . request('lastname') . ' updated successfully');
         }
+        $this->data['id'] = $id;
 
-        return view('users.edit', compact('user'));
+        return view('users.edit', $this->data);
     }
 
     /**

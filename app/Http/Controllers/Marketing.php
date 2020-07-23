@@ -6,8 +6,9 @@ use App\Jobs\PushSMS;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
+use Auth;
 
-class MarketingController extends Controller {
+class Marketing extends Controller {
 
      public function __construct() {
         $this->middleware('auth');
@@ -177,29 +178,121 @@ group by ownership');
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id) {
-        //
+    
+    public function socialMedia() {
+        $tab = request()->segment(3);
+        $id = request()->segment(4);
+        if ($tab == 'add') {
+            if ($_POST) {
+                $data = 
+                    [
+                        'user_id' => Auth::user()->id,
+                        'type' => request('type'),
+                        'category' => request('category'),
+                        'note' => request('note'),
+                        'title' => request('title')
+                    ];
+                //    dd($data);
+                $post = \App\Models\MediaPost::create($data);
+                      /*  $user = \App\Models\User::find($user_id);
+                        $message = 'Hello ' . $user->firstname . '<br/>'
+                                . 'A task has been allocated to you'
+                                . '<ul>'
+                                . '<li>Task: ' . $post->activity . '</li>'
+                                . '<li>Type: ' . $post->taskType->name . '</li>'
+                                . '<li>Deadline: ' . $post->date . '</li>'
+                                . '</ul>';
+                        $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+                        */                        
+                        
+                        
+                if (count($post->id) > 0 && request('socialmedia_id')) {
+                    $modules = request('socialmedia_id');
+                    foreach ($modules as $key => $value) {
+                        if (request('socialmedia_id')[$key] != '') {
+                            $array = ['socialmedia_id' => request('socialmedia_id')[$key], 'post_id' => $post->id];
+                            $check_unique = \App\Models\SocialMediaPost::where($array);
+                            if (count($check_unique->first()) == 0) {
+                                \App\Models\SocialMediaPost::create($array);
+                            }
+                        }
+                    }
+                }
+                return redirect('Marketing/socialMedia')->with('success', 'success');
+            }
+            $this->data['socialmedia'] = \App\Models\SocialMedia::all();
+            return view('market/addpost', $this->data);
+        } elseif ($tab == 'show' && $id > 0) {
+            $this->data['post'] = \App\Models\MediaPost::find($id);
+            return view('market/view_media', $this->data);
+        } else {
+            $date = request('taskdate');
+
+            $this->data['posts'] = \App\Models\MediaPost::orderBy('id', 'DESC')->get();
+            return view('market/medias', $this->data);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id) {
-        //
+    public function socialMedia1() {
+
+        $this->data['minutes'] = \App\Models\Minutes::orderBy('id', 'DESC')->get();
+        return view('users.minutes.minutes', $this->data);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id) {
-        //
+    public function addMinute() {
+
+        if ($_POST) {
+
+            $filename = '';
+            if (!empty(request('attached'))) {
+                $file = request()->file('attached');
+                $filename = time() . rand(11, 8894) . '.' . $file->guessExtension();
+                $filePath = base_path() . '/storage/uploads/images/';
+                $file->move($filePath, $filename);
+            }
+
+            $array = [
+                'title' => request('title'),
+                'note' => request('note'),
+                'date' => request('date'),
+                'start_time' => request('start_time'),
+                'end_time' => request('end_time'),
+                'department_id' => request('department_id'),
+                'attached' => $filename
+            ];
+            $minute = \App\Models\Minutes::create($array);
+            if(count($minute->id) > 0 && request('user_id')){
+                $modules = request('user_id');
+               foreach($modules as $key => $value) {
+                   if(request('user_id')[$key] != ''){
+                $array = ['user_id' => request('user_id')[$key], 'minute_id' => $minute->id];
+                $check_unique = \App\Models\MinuteUser::where($array);
+                if (count($check_unique->first()) == 0) {
+                    \App\Models\MinuteUser::create($array);
+                }
+            }
+        }
+    }
+            return redirect('users/minutes')->with('success', request('title') . ' updated successfully');
+        }
+        $this->data['users'] = \App\Models\User::all();
+        return view('users.minutes.addminute', $this->data);
+    }
+
+    public function showMinute() {
+        $id = request()->segment(3);
+        $this->data['minute'] = \App\Models\Minutes::where('id', $id)->first();
+        return view('users.minutes.view_minute', $this->data);
+    }
+
+    public function deleteMinute() {
+        $id = request()->segment(3);
+        \App\Models\Minutes::where('id', $id)->delete();
+        return redirect()->back()->with('success', 'Minute Deleted');
+    }
+    public function tasks() {
+        $this->data['users'] = 1;
+        return view('users.tasks', $this->data);
     }
 
 }
