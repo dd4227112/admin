@@ -13,7 +13,8 @@
 Route::any('/bitbucket', function() {
 
     $data = ['content' => json_encode(request()->all())];
-    return DB::table('api.requests')->insert($data);
+     DB::table('api.requests')->insert($data);
+     exit;
 });
 
 $bad_url = ['acme-challenge', 'rss', 'index.php', 'errors', 'phpR', 'apple-touch', 'assetlinks', '.php', 'public', '.tff', '.jpg'];
