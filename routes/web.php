@@ -22,7 +22,16 @@ foreach ($bad_url as $value) {
 //Route::group(['middleware' => ['guest']], function() {
 //    Auth::routes();
 //});
-
+Route::get('/student/getschools/null', function() {
+    if (strlen(request('term')) > 1) {
+        $sql = "SELECT id::text,upper(name)|| ' '||upper(type)||' - '||upper(region) as name FROM admin.schools 
+			WHERE lower(name) LIKE '%" . str_replace("'", null, strtolower(request('term'))) . "%'
+			UNION ALL
+                        SELECT id||'c' as id, name||' -(Already Client)' from admin.clients WHERE lower(name) LIKE '%" . str_replace("'", null, strtolower(request('term'))) . "%'
+                        LIMIT 10";
+        die(json_encode(DB::select($sql)));
+    }
+});
 //dd(createRoute());
 if (createRoute() != NULL) {
 

@@ -51,7 +51,7 @@
                                     <i class="icofont icofont-document-folder"></i>
                                 </li>
                                 <li class="text-right">
-                                    <?= count($error_logs) ?>
+                                    <?= $error_logs ?>
                                 </li>
                             </ul>
                         </div>
@@ -121,7 +121,7 @@
                                 $schemas = DB::select('select distinct "schema_name" from admin.error_logs');
                                 foreach ($schemas as $schema) {
                                     ?>
-                                    <option value="<?= $schema->schema_name ?>"><?= $schema->schema_name ?></option>
+                                    <option value="<?php echo $schema->schema_name ?>"><?php echo $schema->schema_name ?></option>
                                 <?php }
                                 ?>
                             </select>
@@ -134,7 +134,7 @@
                         <ul class="nav nav-tabs md-tabs" role="tablist">
                             <li class="nav-item complete">
                                 <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true">
-                                    <strong>( <?= count($error_logs) ?>)</strong> Errors
+                                    <strong>( <?= ($error_logs) ?>)</strong> Errors
                                 </a>
                                 <div class="slide"></div>
                             </li>

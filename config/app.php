@@ -154,9 +154,9 @@ return [
         App\Providers\RouteServiceProvider::class,
         Zizaco\Entrust\EntrustServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
-        
-         Maatwebsite\Excel\ExcelServiceProvider::class,
-        // model generator
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+        ConsoleTVs\Charts\ChartsServiceProvider::class,
+    // model generator
 //        'Way\Generators\GeneratorsServiceProvider',
 //        'Xethron\MigrationsGenerator\MigrationsGeneratorServiceProvider',
 //        'User11001\EloquentModelGenerator\EloquentModelGeneratorProvider',
@@ -210,6 +210,6 @@ return [
         'Entrust' => Zizaco\Entrust\EntrustFacade::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
-         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 ];

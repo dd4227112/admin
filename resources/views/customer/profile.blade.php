@@ -2,6 +2,11 @@
 @section('content')
 <?php $root = url('/') . '/public/' ?>
 
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css" rel="stylesheet" />
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.9/select2-bootstrap.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.min.js"></script>
+
 <div class="main-body">
   <div class="page-wrapper">
     <!-- Page-header start -->
@@ -117,7 +122,7 @@
                                   $user_image = 'storage/uploads/images/defualt.png';
                                   ?>
 
-                                  <img class="media-object img-circle" src="https://demo.shulesoft.com/<?= $user_image ?>" alt="Generic placeholder image">
+                                  <img class="media-object img-circle" src="https://demo.shulesoft.com/<?= $user_image ?>" alt="Image">
                                   <div class="live-status bg-danger"></div>
                                 </a>
                                 <div class="media-body">
@@ -192,7 +197,8 @@
                   <div class="tab-pane" id="timeline" aria-expanded="false">
                     <div class="row">
                       <div class="card-block">
-                        <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#large-Modal">Create Task</button>
+                      <!--  <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#large-Modal">Create Task</button>-->
+                        <a href="<?=url('Customer/activity/add')?>" class="btn btn-primary waves-effect">Create Task</a>
                         <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
                           <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content">
@@ -215,10 +221,10 @@
 
                                         <div class="col-md-6">
                                           Task Type
-                                          <select name="task_type_id"  class="form-control">
-                                            <?php
-                                            $types = DB::table('task_types')->whereNull('department')->get();
-                                            foreach ($types as $type) {
+                                          <select name="task_type_id"  class="form-control select2">
+                                                <?php
+                                              $types = DB::table('task_types')->where('department', Auth::user()->department)->get();
+                                              foreach ($types as $type) {
                                               ?>
                                               <option value="<?= $type->id ?>"><?= $type->name ?></option>
                                             <?php } ?>
@@ -227,7 +233,7 @@
                                         </div>
                                         <div class="col-md-6">
                                           Person Allocated to do
-                                          <select name="to_user_id" class="form-control">
+                                          <select name="to_user_id" class="form-control select2">
                                             <?php
                                             $staffs = DB::table('users')->where('status', 1)->get();
                                             foreach ($staffs as $staff) {
@@ -254,29 +260,32 @@
                                     </div>
 
 
-
-
                                     <div class="form-group">
+                        <strong>  Pick Modules where task will be Performed</strong> 
+                          <hr>
+                    <?php
+                    $modules = DB::table('modules')->get();
+                    foreach ($modules as $module) {
+                      ?>
+                      <input type="checkbox" id="feature<?= $module->id ?>" value="{{$module->id}}" name="module_id[]" >  <?php echo $module->name; ?>  &nbsp; &nbsp;
+
+                    <?php } ?>
+                    </div>
+
+                    <div class="form-group">
                                       <div class="row">
-                                        <?php
-                                        $modules = DB::table('modules')->get();
-                                        foreach ($modules as $module) {
-                                          ?>
-                                          <div class="col-md-4">
-                                            Task on <?=$module->name?>
-                                            <br>
-                                            <?php
-                                            $subs = DB::table('sub_modules')->where('module_id', $module->id)->orderBy('id', 'DESC')->get();
-                                            foreach ($subs as $sub) { ?>
-                                              <input type="checkbox" id="feature<?= $sub->id ?>" value="{{$sub->id}}" name="data{{$sub->id}}[]" onchange="send_comment(<?= $sub->id ?>)">  <?php echo $sub->name; ?>
-                                              <br>
-                                            <?php } ?>
-
-                                          </div>
-                                        <?php } ?>
-
-                                      </div>
-                                    </div>
+                                       
+                                      <div class="col-md-6">
+                                      <strong> Task Executed Successfully</strong> 
+                                      <select name="action" class="form-control" required>
+                                          <option value=''> Select Task Status Here...</option>
+                                          <option value='Yes'> Yes </option>
+                                          <option value='No'> No </option>
+                                      </select>
+                                  </div>
+                              </div>
+                              </div>
+                                        
                                   </div>
                                   <div class="modal-footer">
                                     <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
@@ -291,14 +300,17 @@
                         </div>
                         <div class="col-md-12 timeline-dot">
                           <?php
-                          $tasks = \App\Models\Task::where('client_id', $client_id)->orderBy('created_at', 'desc')->get();
+                               $tasks_ids=  \App\Models\TaskSchool::whereIn('school_id',\App\Models\ClientSchool::where('client_id',$client_id)->get(['school_id']))->get(['task_id']);
+                              
+                            $tasks = \App\Models\Task::whereIn('id', \App\Models\TaskClient::where('client_id',$client_id)->get(['task_id']))->orWhereIn('id',$tasks_ids)->orderBy('created_at', 'desc')->get();
+             
                           foreach ($tasks as $task) {
                             ?>
                             <div class="social-timelines p-relative o-hidden" id="removetag<?=$task->id?>">
                               <div class="row timeline-right p-t-35">
                                 <div class="col-xs-2 col-sm-1">
                                   <div class="social-timelines-left">
-                                    <img class="img-circle timeline-icon" src="<?= $root ?>assets/images/avatar-2.png" alt="">
+                                    <img class="img-circle timeline-icon" src="<?= Auth::user()->photo ?>" alt="">
                                   </div>
                                 </div>
                                 <div class="col-xs-10 col-sm-11 p-l-5 p-b-35">
@@ -328,7 +340,7 @@
                                             ?>
                                             <div class="media m-b-1" style="margin: 0px; padding: 0px">
                                               <a class="media-left" href="#">
-                                                <img class="media-object img-circle m-r-2" src="<?= $root ?>assets/images/avatar-1.png" alt="Generic placeholder image">
+                                                <img class="media-object img-circle m-r-2" src="<?= $root ?>assets/images/avatar-1.png" alt="Image">
                                               </a>
                                               <div class="media-body b-b-muted social-client-description">
                                                 <div class="chat-header"><?= $comment->user->firstname ?> - <span class="text-muted"><?= date('d M Y', strtotime($comment->created_at)) ?></span></div>
@@ -343,7 +355,7 @@
                                         <div class="new_comment<?= $task->id ?>"></div>
                                         <div class="media">
                                           <a class="media-left" href="#">
-                                            <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-blank.jpg" alt="Generic placeholder image">
+                                            <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-blank.jpg" alt="Image">
                                           </a>
                                           <div class="media-body">
                                             <form class="">

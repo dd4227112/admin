@@ -42,7 +42,7 @@ class Kernel extends ConsoleKernel {
         })->everyMinute();
 
 //        $schedule->call(function () {
-//            (new Message())->checkPhoneStatus();
+//          (new Message())->checkPhoneStatus();
 //        })->everyFiveMinutes();
         $schedule->call(function () {
             $this->curlServer(['action' => 'payment'], 'http://51.77.212.234:8081/api/cron');
@@ -251,7 +251,7 @@ class Kernel extends ConsoleKernel {
 
     public function pushInvoice($invoice) {
 
-        echo $token = $this->getToken($invoice);
+        $token = $this->getToken($invoice);
         if (strlen($token) > 4) {
             $fields = array(
                 "reference" => trim($invoice->reference),
@@ -264,7 +264,7 @@ class Kernel extends ConsoleKernel {
                 "callback_url" => "http://51.77.212.234:8081/api/init",
                 "token" => $token
             );
-            print_r($fields);
+
             $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
             //$push_status = 'invoice_submission';
             echo $push_status;
@@ -284,18 +284,18 @@ class Kernel extends ConsoleKernel {
             if ((strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
 //update invoice no
                 DB::table($invoice->schema_name . '.invoices')
-                        ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status]);
+                        ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status,'updated_at'=>'now()']);
 
-//                        $users = DB::table($invoice->schema_name . '.parent')->whereIn('parentID', DB::table('student_parents')->where('student_id', $invoice->student_id)->get(['parent_id']))->get();
-//                        foreach ($users as $user) {
-//                            $message = 'Hello ' . $user->name . ','
-//                                    . 'Control Namba ya '.$invoice->student_name.', kwa malipo ya mafunzo mtandaoni ni ' . $invoice->reference . '.'
-//                                    . 'Unaweza lipa sasa kupitia mitandao ya simu (888999) au njia nyingine za bank ulizo elekezwa na shule. Asante';
-//                            if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
-//                                DB::statement("insert into " . $invoice->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Control Number Ya Malipo ya Online','" . $message . "')");
-//                            }
-//                            DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
-//                        }
+                        $users = DB::table($invoice->schema_name . '.parent')->whereIn('parentID', DB::table('student_parents')->where('student_id', $invoice->student_id)->get(['parent_id']))->get();
+                        foreach ($users as $user) {
+                            $message = 'Hello ' . $user->name . ','
+                                    . 'Control Namba ya '.$invoice->student_name.', kwa malipo ya '.$invoice->schema_name.' ni ' . $invoice->reference . '.'
+                                    . 'Unaweza lipa sasa kupitia mitandao ya simu au njia nyingine za bank ulizo elekezwa na shule. Asante';
+                            if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
+                                DB::statement("insert into " . $invoice->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Control Number Ya Malipo ya Ada ya Shule','" . $message . "')");
+                            }
+                            DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
+                        }
             }
             DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
         }
@@ -335,7 +335,7 @@ class Kernel extends ConsoleKernel {
                     if (($result->status == 1 && strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
 //update invoice no
                         DB::table($invoice->schema_name . '.invoices')
-                                ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status]);
+                                ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status,'updated_at'=>'now()']);
                     }
                     DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
                 }
@@ -385,8 +385,8 @@ class Kernel extends ConsoleKernel {
             'password' => $pass
                 ], $url);
         $obj = json_decode($request);
- 
-        print_r($obj);
+
+        // print_r($obj);
         //DB::table('api.requests')->insert(['return' => json_encode($obj), 'content' => json_encode($request)]);
         if (isset($obj) && is_object($obj) && isset($obj->status) && $obj->status == 1) {
             return $obj->token;
@@ -505,7 +505,8 @@ class Kernel extends ConsoleKernel {
             if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
                 DB::statement("insert into " . $user->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Ratiba Ya Zamu','" . $message . "')");
             }
-            DB::statement("insert into " . $user->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
+            $key = DB::table($user->schema_name . '.sms_keys')->first();
+            DB::statement("insert into " . $user->schema_name . ".sms (phone_number,body,type,sms_keys_id) values ('" . $user->phone . "','" . $message . "',0," . $key->id . ")");
         }
     }
 
@@ -515,10 +516,10 @@ class Kernel extends ConsoleKernel {
             $message = 'Hello  ' . $user->name . ' ,'
                     . 'Activity to do: ' . $user->activity . ' for ' . $user->client_name . '. Kindly remember to write all activities in respective profile.  Thanks';
 
-            if (filter_var($user->email, FILTER_VALIDATE_EMAIL)) {
                 DB::statement("insert into public.email (email,subject,body) values ('" . $user->email . "', 'Todays Tasks','" . $message . "')");
-            }
-            DB::statement("insert into public.sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
+            
+            $key = DB::table('public.sms_keys')->first();
+            DB::statement("insert into public.sms (phone_number,body,type,sms_keys_id) values ('" . $user->phone . "','" . $message . "',0," . $key->id . " )");
         }
     }
 
@@ -555,10 +556,12 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
                         ]);
                         //DB::statement("insert into " . $user->schema_name . ".email (email,subject,body) values ('" . $user->email . "', '" . $sequence->title . "','" . $message . "')");
                     }
+                    $key = DB::table($user->schema_name . '.sms_keys')->first();
                     DB::table('public.sms')->insert([
                         'phone_number' => $user->phone,
                         'body' => $message,
-                        'type' => 0
+                        'type' => 0,
+                        'sms_keys_id'=>$key->id
                     ]);
                     // DB::statement("insert into public.sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
                     DB::table('users_sequences')->insert(['user_id' => $user->id, 'table' => $user->table, 'sequence_id' => $sequence->id, 'schema_name' => $user->schema_name
@@ -576,7 +579,7 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
 //$class_ids = (explode(',', preg_replace('/{/', '', preg_replace('/}/', '', $notice->class_id))));
             $to_roll_ids = preg_replace('/{/', '', preg_replace('/}/', '', $notice->to_roll_id));
 
-            $users = $to_roll_ids == 0 ? DB::select("select *,(select id as sms_keys_id from " . $notice->table_schema . ".sms_keys limit 1 ) from admin.all_users where schema_name::text='" . $notice->schema_name . "'") : DB::select('select *,(select id as sms_keys_id from ' . $notice->schema_name . '.sms_keys limit 1 ) from admin.all_users where role_id IN (' . $to_roll_ids . ' ) and schema_name::text=\'' . $notice->schema_name . '\'  ');
+            $users = $to_roll_ids == 0 ? DB::select("select *,(select id as sms_keys_id from " . $notice->table_schema . ".sms_keys limit 1 ) as sms_keys_id from admin.all_users where schema_name::text='" . $notice->schema_name . "'") : DB::select('select *,(select id as sms_keys_id from ' . $notice->schema_name . '.sms_keys limit 1 ) as sms_keys_id from admin.all_users where role_id IN (' . $to_roll_ids . ' ) and schema_name::text=\'' . $notice->schema_name . '\'  ');
             if (count($users) > 0) {
                 foreach ($users as $user) {
 
@@ -600,8 +603,8 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
             if (!in_array($schema->table_schema, array('public', 'api', 'admin'))) {
                 //Remind parents,class and section teachers to wish their students
 
-                $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")"
-                        . "select 'Hello '|| c.name|| ', tunapenda kumtakia '||a.name||' heri ya siku yake ya kuzaliwa katika tarehe kama ya leo. Mungu ampe afya tele, maisha marefu, baraka na mafanikio.  Kama hajaziliwa tarehe kama ya leo, tuambie tubadili tarehe zake ziwe sahihi. Ubarikiwe',c.phone, 0,0, c.\"parentID\",'parent'  FROM " . $schema->table_schema . ".student a join " . $schema->table_schema . ".student_parents b on b.student_id=a.\"student_id\" JOIN " . $schema->table_schema . ".parent c on c.\"parentID\"=b.parent_id WHERE 
+                $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\",sms_keys_id)"
+                        . "select 'Hello '|| c.name|| ', tunapenda kumtakia '||a.name||' heri ya siku yake ya kuzaliwa katika tarehe kama ya leo. Mungu ampe afya tele, maisha marefu, baraka na mafanikio.  Kama hajaziliwa tarehe kama ya leo, tuambie tubadili tarehe zake ziwe sahihi. Ubarikiwe',c.phone, 0,0, c.\"parentID\",'parent', (select id from " . $schema->table_schema . ".sms_keys limit )  FROM " . $schema->table_schema . ".student a join " . $schema->table_schema . ".student_parents b on b.student_id=a.\"student_id\" JOIN " . $schema->table_schema . ".parent c on c.\"parentID\"=b.parent_id WHERE 
                     DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) AND a.status = 1  
 
                     AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE)";

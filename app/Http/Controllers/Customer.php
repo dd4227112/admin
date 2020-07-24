@@ -267,7 +267,7 @@ class Customer extends Controller {
             $this->data['client_id'] = $id;
             $this->data['school'] = \collect(DB::select(' select name as sname, name, region , ward, district as address  from admin.schools where id=' . $id))->first();
         } else {
-         
+
             $is_client = 1;
             $this->data['school'] = DB::table($school . '.setting')->first();
             $this->data['levels'] = DB::table($school . '.classlevel')->get();
@@ -275,7 +275,6 @@ class Customer extends Controller {
             if (count($client) == 0) {
 
                 $client = \App\Models\Client::create(['name' => $this->data['school']->sname, 'email' => $this->data['school']->email, 'phone' => $this->data['school']->phone, 'address' => $this->data['school']->address, 'username' => $school]);
-                
             }
             $this->data['client_id'] = $client->id;
 
@@ -285,8 +284,13 @@ class Customer extends Controller {
         if ($_POST) {
 
             $data = array_merge(request()->all(), ['user_id' => Auth::user()->id]);
+
             $task = \App\Models\Task::create($data);
             if ((int) request('to_user_id') > 0) {
+                DB::table('tasks_users')->insert([
+                    'task_id' => $task->id,
+                    'user_id' => request('to_user_id')
+                ]);
                 $user = \App\Models\User::find(request('to_user_id'));
                 $message = 'Hello ' . $user->firstname . '<br/>'
                         . 'A task has been allocated to you'
@@ -297,29 +301,145 @@ class Customer extends Controller {
                         . '</ul>';
                 $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
             }
-            return redirect('customer/profile/'.$school)->with('success', 'success');
+
+            DB::table('tasks_clients')->insert([
+                'task_id' => $task->id,
+                'client_id' => (int) request('client_id')
+            ]);
+
+
+            if (count($task->id) > 0 && request('module_id')) {
+                $modules = request('module_id');
+                foreach ($modules as $key => $value) {
+                    if (request('module_id')[$key] != '') {
+                        $array = ['module_id' => request('module_id')[$key], 'task_id' => $task->id];
+                        $check_unique = \App\Models\ModuleTask::where($array);
+                        if (count($check_unique->first()) == 0) {
+                            \App\Models\ModuleTask::create($array);
+                        }
+                    }
+                }
+            }
+            return redirect('customer/profile/' . $school)->with('success', 'success');
         }
-        if((int)$id>0){
-        return view('customer/addtask', $this->data);
-        }else{
+        if ((int) $id > 0) {
+            return view('customer/addtask', $this->data);
+        } else {
             return view('customer/profile', $this->data);
         }
     }
 
-    public function addTask() {
-        $module_id = request('module_id');
-        if ((int) $module_id > 0) {
-            $array = ['module_id' => request('module_id'), 'task_id' => request('task_id')];
-            
-            $check_unique = \App\Models\ModuleTask::where($array);
-            if (count($check_unique->first()) == 0) {
-                \App\Models\ModuleTask::create($array);
+    public function activity() {
+        $tab = request()->segment(3);
+        $id = request()->segment(4);
+        if ($tab == 'add') {
+            $this->data['clients'] = \App\Models\Client::all();
+            $this->data['schools'] = \DB::table('schools')->get();
+            if ($_POST) {
+
+                $data = array_merge(request()->except('to_user_id'), ['user_id' => Auth::user()->id]);
+
+                $task = \App\Models\Task::create($data);
+                $users = request('to_user_id');
+                if (count($users) > 0) {
+                    foreach ($users as $user_id) {
+                        DB::table('tasks_users')->insert([
+                            'task_id' => $task->id,
+                            'user_id' => $user_id
+                        ]);
+                        $user = \App\Models\User::find($user_id);
+                        $message = 'Hello ' . $user->firstname . '<br/>'
+                                . 'A task has been allocated to you'
+                                . '<ul>'
+                                . '<li>Task: ' . $task->activity . '</li>'
+                                . '<li>Type: ' . $task->taskType->name . '</li>'
+                                . '<li>Deadline: ' . $task->date . '</li>'
+                                . '</ul>';
+                        $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+                    }
+                }
+                $school_id = request('school_id');
+                if (preg_match('/c/i', $school_id)) {
+
+                    DB::table('tasks_clients')->insert([
+                        'task_id' => $task->id,
+                        'client_id' => (int) $school_id
+                    ]);
+                }
+                if ((int) $school_id > 0 && !preg_match('/c/i', $school_id)) {
+
+                    DB::table('tasks_schools')->insert([
+                        'task_id' => $task->id,
+                        'school_id' => (int) $school_id
+                    ]);
+                }
+                if (count($task->id) > 0 && request('module_id')) {
+                    $modules = request('module_id');
+                    foreach ($modules as $key => $value) {
+                        if (request('module_id')[$key] != '') {
+                            $array = ['module_id' => request('module_id')[$key], 'task_id' => $task->id];
+                            $check_unique = \App\Models\ModuleTask::where($array);
+                            if (count($check_unique->first()) == 0) {
+                                \App\Models\ModuleTask::create($array);
+                            }
+                        }
+                    }
+                }
+                return redirect('customer/activity')->with('success', 'success');
             }
-            echo "success";
+
+            return view('customer/addtask', $this->data);
+        } elseif ($tab == 'show' && $id > 0) {
+            $this->data['activity'] = \App\Models\Task::find($id);
+            return view('customer/view_task', $this->data);
+        } else {
+            $date = request('taskdate');
+
+            $this->data['activities'] = [];
+            return view('customer/activity', $this->data);
         }
-      
     }
 
+    public function changeStatus() {
+        \App\Models\Task::where('id', request('id'))->update(['status' => request('status')]);
+        $users = DB::table('tasks_users')->where('task_id', request('id'))->get();
+        if (count($users) > 0) {
+           
+            $task = \App\Models\Task::find(request('id'));
+            foreach ($users as $user_task) {
+            
+                $user = \App\Models\User::find($user_task->user_id);
+                $message = 'Hello ' . $user->firstname . '<br/>'
+                        . 'Task Status has been updated to :' . request('status')
+                        . '<ul>'
+                        . '<li>Task: ' . $task->activity . '</li>'
+                        . '<li>Type: ' . $task->taskType->name . '</li>'
+                        . '<li>Deadline: ' . $task->date . '</li>'
+                        . '</ul>';
+                $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+            }
+        }
+        echo request('status');
+    }
+
+    public function getTaskByDepartment() {
+        $dep_id = request('dep_id');
+        $types = DB::table('task_types')->where('department', $dep_id)->get();
+        $select = '';
+        if(count($types) > 0){
+        foreach ($types as $type) {
+            $select .= '<option value="' . $type->id . '"> ' . $type->name . '</option>';
+        }
+        echo $select;
+    }else{
+        $types = DB::table('task_types')->where('department', Auth::user()->department)->get();
+        $select = '';
+        foreach ($types as $type) {
+            $select .= '<option value="' . $type->id . '"> ' . $type->name . '</option>';
+        }
+        echo $select;
+    }
+}
 
     public function removeTag() {
         $id = request('id');
@@ -328,39 +448,84 @@ class Customer extends Controller {
         echo 1;
     }
 
+    public function updateTask() {
+        $id = request('id');
+        $action = request('action');
+        \App\Models\Task::where('id', $id)->update(['action' => $action]);
+        return redirect()->back()->with('success', 'success');
+    }
+
     public function allocate() {
         $school_id = request('school_id');
         $schema = request('schema');
         $user_id = request('user_id');
         $role_id = request('role_id');
-        if ((int) $school_id == 0) {
-            $sch = DB::table('admin.all_setting')->where('schema_name', $schema)->first();
-            $obj = DB::table('schools')->where('name', 'ilike', '%' . substr($schema, 0, 4) . '%')->first();
-            $school_id = count($sch) == 1 ? $sch->school_id : count($obj) == 1 ? $obj->id : '';
-        }
-        if ((int) $school_id == 0) {
-            //this school does not exists, try to add it in a list of schols
-            $school_id = DB::table('schools')->insertGetId(['name' => $schema, 'ownership' => 'Non-Government', 'schema_name' => $schema]);
-        }
-        $school_info = DB::table('schools')->where('id', $school_id);
-        if (count($school_info->first()) == 1) {
-            $check = DB::table('users_schools')->where('schema_name', $schema)->where('role_id', $role_id);
-            if ((int) $check->count() > 0) {
-                $check->update(['user_id' => $user_id]);
-            } else {
-                DB::table('users_schools')->insert(['school_id' => $school_id, 'user_id' => $user_id, 'role_id' => $role_id, 'schema_name' => $schema]);
+        if (strlen($schema) > 2) {
+            if ((int) $role_id == 5) {
+                $sch = DB::table($schema . '.setting')->update(['source' => request('val')]);
+                echo 1;
+                exit;
             }
-            DB::table($schema . '.setting')->update(['school_id' => $school_id]);
+            if ((int) $school_id == 0) {
+                $sch = DB::table('admin.all_setting')->where('schema_name', $schema)->first();
+                $obj = DB::table('schools')->where('name', 'ilike', '%' . substr($schema, 0, 4) . '%')->first();
+                $school_id = count($sch) == 1 ? $sch->school_id : count($obj) == 1 ? $obj->id : '';
+            }
+            if ((int) $school_id == 0) {
+                //this school does not exists, try to add it in a list of schols
+                $school_id = DB::table('schools')->insertGetId(['name' => $schema, 'ownership' => 'Non-Government', 'schema_name' => $schema]);
+            }
+            $school_info = DB::table('schools')->where('id', $school_id);
+            if (count($school_info->first()) == 1) {
+                $check = DB::table('users_schools')->where('schema_name', $schema)->where('role_id', $role_id);
+                if ((int) $check->count() > 0) {
+                    $check->update(['user_id' => $user_id]);
+                } else {
+                    DB::table('users_schools')->insert(['school_id' => $school_id, 'user_id' => $user_id, 'role_id' => $role_id, 'schema_name' => $schema]);
+                }
+                DB::table($schema . '.setting')->update(['school_id' => $school_id]);
+            }
+
+            $school_info->update(['schema_name' => $schema]);
+
+            echo 1;
         }
-
-        $school_info->update(['schema_name' => $schema]);
-
-        echo 1;
     }
 
     public function requirements() {
+        
+        $tab = request()->segment(3);
+        $id = request()->segment(4);
+        if ($tab == 'show' && $id > 0) {
+            $this->data['requirement'] = \App\Models\Requirement::where('id', $id)->first();
+            return view('customer/view_requirement', $this->data);
+        }
         $this->data['levels'] = [];
+        if ($_POST) {
+
+            $data = array_merge(request()->all(), ['user_id' => Auth::user()->id]);
+
+            $req = \App\Models\Requirement::create($data);
+            if ((int) request('to_user_id') > 0) {
+                
+                $user = \App\Models\User::find(request('to_user_id'));
+                $message = 'Hello ' . $user->name . '<br/><br/>'
+                        . 'There is New School Requirement from '. $req->school->name .' ('.$req->school->region.')'
+                        . '<br/><br/><p><b>Requirement:</b> ' . $req->note . '</p>'
+                        . '<br/><br/><p><b>By:</b> ' . $req->user->name . '</p>';
+                $this->send_email($user->email, 'ShuleSoft New Customer Requirement', $message);
+            }
+
+        }
+        $this->data['requirements'] = \App\Models\Requirement::orderBy('id', 'DESC')->get();
         return view('customer/analysis', $this->data);
+    }
+
+    public function updateReq() {
+        $id = request('id');
+        $action = request('action');
+        \App\Models\Requirement::where('id', $id)->update(['status' => $action]);
+        return redirect()->back()->with('success', 'success');
     }
 
     public function modules() {
@@ -408,7 +573,7 @@ class Customer extends Controller {
     public function taskComment() {
         if (request('content') != '' && (int) request('task_id') > 0) {
             \App\Models\TaskComment::create(array_merge(request()->all(), ['user_id' => Auth::user()->id]));
-            echo ' <div class="media m-b-20"><a class="media-left" href="#"><img class="media-object img-circle m-r-20" src="' . url('/') . '/public/assets/images/avatar-1.png" alt="Generic placeholder image"></a> <div class="media-body b-b-muted social-client-description"><div class="chat-header">' . Auth::user()->name . '<span class="text-muted">' . date('d M Y') . '</span></div><p class="text-muted">' . request('content') . '</p></div> </div>';
+            echo ' <div class="media m-b-20"><a class="media-left" href="#"><img class="media-object img-circle m-r-20" src="' . url('/') . '/public/assets/images/avatar-1.png" alt="Image"></a> <div class="media-body b-b-muted social-client-description"><div class="chat-header">' . Auth::user()->name . '<span class="text-muted">' . date('d M Y') . '</span></div><p class="text-muted">' . request('content') . '</p></div> </div>';
         }
     }
 
@@ -484,16 +649,15 @@ class Customer extends Controller {
         $schema = request('schema');
         if (strlen($val) > 3) {
             $schools = DB::select('select * from admin.schools where lower("name") like \'%' . strtolower($val) . '%\'');
-            if(count($schools)>0){
-            foreach ($schools as $school) {
+            if (count($schools) > 0) {
+                foreach ($schools as $school) {
 
-                echo '<p><a href="' . url('customer/map/' . $schema . '/' . $school->id) . '">' . $school->name . '( ' . $school->region . ' )</a></p>';
+                    echo '<p><a href="' . url('customer/map/' . $schema . '/' . $school->id) . '">' . $school->name . '( ' . $school->region . ' )</a></p>';
+                }
             }
+        } else {
+            echo '<p id="new_id"> This School does not exist <button type="button" class="btn btn-link">Click to add</button></p>';
         }
-        
-            } else {
-             echo '<p id="new_id"> This School does not exist <button type="button" class="btn btn-link">Click to add</button></p>';    
-            }
     }
 
     public function map() {
@@ -586,4 +750,5 @@ class Customer extends Controller {
         return view('customer.call.create', $this->data);
     }
 
+   
 }

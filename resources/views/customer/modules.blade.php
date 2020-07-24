@@ -58,11 +58,11 @@ foreach ($payments as $payment) {
     $payment_count[$payment->schema_name] = $payment->count;
 }
 
-$school_allocations = DB::select('select a.schema_name, c.sname,b.firstname, b.lastname from admin.users_schools a join admin.users b on b.id=a.user_id join admin.all_setting c on c."schema_name"=a."schema_name" where a.role_id=8 and a.status=1 and c.schema_name is not null');
+$school_allocations = DB::select('select a.schema_name,c.source, c.sname,b.firstname, b.lastname from admin.users_schools a join admin.users b on b.id=a.user_id join admin.all_setting c on c."schema_name"=a."schema_name" where a.role_id=8 and a.status=1 and c.schema_name is not null');
 $allocation = [];
 $users_allocation = [];
-foreach ($school_allocations as $school_allocation) {
 
+foreach ($school_allocations as $school_allocation) {
     $allocation[$school_allocation->schema_name] = $school_allocation->firstname . ' ' . $school_allocation->lastname;
 }
 
@@ -89,6 +89,16 @@ function getActiveStatus($schema_name) {
 }
 
 $staffs = DB::table('users')->where('status', 1)->get();
+
+$sources = [];
+$schools_data = DB::table('admin.all_setting')->get();
+foreach ($schools_data as $value) {
+    $sources[$value->schema_name] = $value->source;
+}
+
+function select($value, $schema,$sources) {
+    return isset($sources[$schema]) && strtolower($sources[$schema]) == strtolower($value) ? 'Selected' : '';
+}
 ?>
 <!-- Sidebar inner chat end-->
 <!-- Main-body start -->
@@ -189,10 +199,12 @@ $staffs = DB::table('users')->where('status', 1)->get();
                                                             <th>School Name</th>
                                                             <td>Support Personnel</td>
                                                             <?php
-                                                            if (in_array(Auth::user()->id, [2, 7])) {
+                                                            if (in_array(Auth::user()->id, [2, 7,20])) {
                                                                 ?>
-                                                                <td>Allocate Support</td>
-                                                                <td>Allocate Sales</td>
+                                                                <td>Sales Source</td>
+                                                                <td> Support Person</td>
+                                                                <td>Sales Person</td>
+
                                                             <?php } ?>
                                                             <td>Students</td>
                                                             <th>Marks Entered</th>
@@ -232,8 +244,33 @@ $staffs = DB::table('users')->where('status', 1)->get();
                                                                     }
                                                                     ?></td>
                                                                 <?php
-                                                                if (in_array(Auth::user()->id, [2, 7])) {
+                                                                if (in_array(Auth::user()->id, [2, 7,20])) {
                                                                     ?>
+                                                                    <td>
+                                                                        <?php
+                                                                        if ($a == 0) {
+                                                                            $schema= $school->schema_name;
+                                                                            ?>
+
+                                                                            <select name="source_id" class="allocate" >
+                                                                                <option></option>
+                                                                                <option  role_id="5"  schema="<?= $school->schema_name ?>"  value="Event" <?=select("Event", $schema,$sources) ?> >Event</option>
+                                                                                <option  role_id="5" schema="<?= $school->schema_name ?>"   value="Direct Sales" <?=select("Direct Sales", $schema,$sources) ?>>Direct Sales (Visit)</option>
+                                                                                <option  role_id="5" schema="<?= $school->schema_name ?>"  value="Cold Call" <?=select("Cold Call", $schema,$sources) ?>>Cold Call</option>
+                                                                                <option  role_id="5" schema="<?= $school->schema_name ?>"  value="Call Received" <?=select("Call Received", $schema,$sources) ?>>Call Received</option>
+                                                                                <option  role_id="5" schema="<?= $school->schema_name ?>"  value="Partnership(NMB)" <?=select("Partnership(NMB)", $schema,$sources) ?>>Partnership (NMB Bank)</option>                                     
+                                                                                <option  role_id="5" schema="<?= $school->schema_name ?>"  value="Partnership(Other)" <?=select("Partnership(Other)", $schema,$sources) ?>>Partnership (Others)</option>
+
+                                                                                <option  role_id="5" schema="<?= $school->schema_name ?>"  value="Referral" <?=select("Referral", $schema,$sources) ?>>Referral</option>
+                                                                                <option  role_id="5" schema="<?= $school->schema_name ?>"  value="Website" <?=select("Website", $schema,$sources) ?>>Website</option>
+                                                                                <option  role_id="5" schema="<?= $school->schema_name ?>"  value="SMS" <?=select("SMS", $schema,$sources) ?>>SMS</option>
+                                                                                <option  role_id="5" schema="<?= $school->schema_name ?>"  value="Social Media" <?=select("Social Media", $schema,$sources) ?>>Social Media</option>
+
+
+                                                                            </select>
+                                                                            <span id="status_result_5_<?= $school->schema_name ?>"></span>
+                                                                        <?php } ?>
+                                                                    </td>
                                                                     <td>
                                                                         <?php
                                                                         if ($a == 0) {
@@ -390,8 +427,8 @@ $staffs = DB::table('users')->where('status', 1)->get();
                                                         $schools = $user->usersSchools()->where('role_id', 8);
                                                         ?>
                                                         <tr>
-                                                            <td><?=$user->firstname . ' ' . $user->lastname   ?></td>
-                                                            <td><?=$schools->count()   ?></td>
+                                                            <td><?= $user->firstname . ' ' . $user->lastname ?></td>
+                                                            <td><?= $schools->count() ?></td>
                                                             <td>
                                                                 <?php
                                                                 $active = 0;
@@ -405,7 +442,7 @@ $staffs = DB::table('users')->where('status', 1)->get();
                                                             </td>
                                                             <td><?= $active ?></td>
                                                             <td><?= $not_active ?></td>
-                                                            <td><?= $user->tasks()->count()   ?></td>
+                                                            <td><?= $user->tasks()->count() ?></td>
 
                                                             <td>Action</td>
                                                         </tr>
@@ -451,9 +488,11 @@ $staffs = DB::table('users')->where('status', 1)->get();
                 var school_id = $('option:selected', this).attr('school_id');
                 var role_id = $('option:selected', this).attr('role_id');
                 var schema = $('option:selected', this).attr('schema');
+                var val = $(this).val();
                 $.ajax({
-                    url: '<?= url('customer/allocate/null') ?>',
-                    data: {user_id: user_id, school_id: school_id, role_id: role_id, schema: schema},
+                    type: 'post',
+                    url: '<?= url('customer/allocate') ?>',
+                    data: {user_id: user_id, school_id: school_id, role_id: role_id, schema: schema, val: val},
                     dataType: 'html',
                     success: function (data) {
                         /// alert('success',data);
@@ -544,7 +583,7 @@ $staffs = DB::table('users')->where('status', 1)->get();
                 if (status === true) {
                     //var text = $('#row' + value).html();
                     $('#search_checked_table').show();
-                    
+
                     var ex = $('#schools_mapped').val();
                     console.log(ex);
                     var param = ex.split(",");

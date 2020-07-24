@@ -75,7 +75,7 @@ class Message extends Controller {
         $sms = preg_replace($patterns, $replacements, $message);
         foreach (explode(',', $list_schema) as $schema) {
             $value = str_replace("'", null, $schema);
-            $sql = "insert into public.sms (body,user_id,type,phone_number) select '{$sms}',id,'0',phone from admin.all_users WHERE schema_name::text IN ($schema) AND usertype !='Student' {$in_array} AND  phone is not NULL  AND \"table\" !='setting' ";
+            $sql = "insert into public.sms (body,user_id,type,phone_number,sms_keys_id) select '{$sms}',id,'0',phone, (select id from public.sms_keys limit 1) from admin.all_users WHERE schema_name::text IN ($schema) AND usertype !='Student' {$in_array} AND  phone is not NULL  AND \"table\" !='setting' ";
             DB::statement($sql);
         }
 
@@ -203,7 +203,8 @@ class Message extends Controller {
 
         $user = DB::table('admin.all_users')->where('id', $feedback->user_id)->where('table', $feedback->table)->where('schema_name', str_replace('.', NULL, $feedback->schema))->first();
         if (count($user) == 1) {
-            DB::table('public.sms')->insert(['body' => "Majibu ya ujumbe:" . $feedback->message . ". Jibu: " . $message, 'phone_number' => $user->phone, 'type' => 0]);
+            $key = DB::table('public.sms_keys')->first();
+            DB::table('public.sms')->insert(['body' => "Majibu ya ujumbe:" . $feedback->message . ". Jibu: " . $message, 'phone_number' => $user->phone, 'type' => 0,'sms_keys_id'=>$key->id]);
 
             $reply_message = '<div>'
                     . '<p><b>Majibu ya ujumbe:: </b> ' . $feedback->message . '</p><br/><br/>Jibu:' . $message . '</div>';
@@ -243,7 +244,7 @@ class Message extends Controller {
                             DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 1, 'return_code' => json_encode($result), 'updated_at' => 'now()']);
                         } else {
 //stop retrying
-                            if (preg_match('/Insufficient/i', $result->message)) {
+                            if (isset($result->message) && preg_match('/Insufficient/i', $result->message)) {
                                 //This user try to send sms with bulk SMS but he does not have enough credit
                                 //lets resend these sms with normal phone
                                 DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 0, 'type' => 0, 'return_code' => json_encode(array_merge((array) $result, ['action' => 'Message will be resent via phone SMS'])), 'updated_at' => 'now()']);
@@ -365,8 +366,7 @@ Thank you.';
                 DB::statement("insert into " . $school->username . ".sms (phone_number,body,type) values ('" . $school->phone . "','" . strip_tags($message) . "',0)");
             } else if ($days <= 0 && in_array($days, [0, -2, -5, -10])) {
                 $message = 'Hi ' . $school->name . '<br/>,
-
-This is the reminder that your ShuleSoft account has been expired since ' . date('d M Y', strtotime($payment->next_payment_date)) . ' . This means your management staff and parents are now not able to login, view any report, prepare any report. If you have any challange on how to make your payment kindly call us and let us know your concern. <br/>
+                This is the reminder that your ShuleSoft account has been expired since ' . date('d M Y', strtotime($payment->next_payment_date)) . ' . This means your management staff and parents are now not able to login, view any report, prepare any report. If you have any challange on how to make your payment kindly call us and let us know your concern. <br/>
 
 Kind regards,';
                 if (filter_var($school->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $school->email)) {

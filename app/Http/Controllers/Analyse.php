@@ -4,8 +4,28 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
+use App\Charts\SimpleChart;
+use Illuminate\Support\Facades\Auth;
 
 class Analyse extends Controller {
+
+    /**
+     *
+     * @var Graph title 
+     */
+    public $graph_title = '';
+
+    /**
+     *
+     * @var x axis 
+     */
+    public $x_axis = '';
+
+    /**
+     *
+     * @var y axis 
+     */
+    public $y_axis = '';
 
     /**
      * Create a new controller instance.
@@ -14,6 +34,7 @@ class Analyse extends Controller {
      */
     public function __construct() {
         $this->middleware('auth');
+        $this->data['insight'] = $this;
     }
 
     public function logRequest() {
@@ -27,8 +48,33 @@ class Analyse extends Controller {
 //       created_at < date_trunc('week', CURRENT_TIMESTAMP)
 //      )"))->first()->aggregate;
         //$this->data['log_graph'] = $this->createBarGraph();
-
+        $this->data['activity'] = \App\Models\Task::where('user_id', Auth::user()->id)->orderBy('id', 'DESC')->get();
         return view('analyse.index', $this->data);
+    }
+
+    public function customers() {
+        $this->data['days'] = request()->segment(3);
+        return view('analyse.customers', $this->data);
+    }
+
+    public function software() {
+        $this->data['days'] = request()->segment(3);
+        return view('analyse.software', $this->data);
+    }
+
+    public function moreInsight() {
+        $this->data['days'] = request()->segment(3);
+        return view('analyse.insight', $this->data);
+    }
+
+    public function sales() {
+        $this->data['days'] = request()->segment(3);
+        $this->data['shulesoft_schools'] = \collect(DB::select("select count(*) as count from admin.all_classlevel where lower(name) NOT like '%nursery%' and schema_name not in ('public','accounts')"))->first()->count;
+        $this->data['schools'] = \collect(DB::select("select count(*) as count from admin.schools where lower(ownership)<>'government'"))->first()->count;
+        $this->data['nmb_schools'] = \collect(DB::select('select count(*) as count from admin.nmb_schools'))->first()->count;
+          $this->data['shulesoft_nmb_schools'] = \collect(DB::select('select count(distinct "schema_name") from admin.all_bank_accounts where refer_bank_id=22'))->first()->count;
+        $this->data['clients'] = \collect(DB::select('select count(*) as count from admin.clients'))->first()->count;
+        return view('analyse.sales', $this->data);
     }
 
     public function summary() {
@@ -56,6 +102,11 @@ class Analyse extends Controller {
     public function accounts() {
         $this->data['association'] = \App\Model\Association::first();
         return view('analyse.accounts', $this->data);
+    }
+
+    public function marketing() {
+        // $this->data['association'] = \App\Model\Association::first();
+        return view('analyse.marketing', $this->data);
     }
 
     public function search() {
@@ -93,6 +144,218 @@ class Analyse extends Controller {
             'schools' => $school_list,
             'activities' => $activity_list
         ]);
+    }
+
+    public function index2() {
+        $this->data['pg_id'] = clean_htmlentities($this->uri->segment(3));
+        $this->data['page'] = clean_htmlentities($this->uri->segment(4));
+        if ($this->data['pg_id'] == 1) {
+            $this->getUsers('student');
+        } else if ($this->data['pg_id'] == 2) {
+            $this->getUsers('parent');
+        } else {
+            $this->getUsers();
+        }
+        $this->getPageCalled($this->data['pg_id']);
+        return view('insight.index', $this->data);
+    }
+
+    /**
+     * 
+     * @param type $pg_id
+     */
+    public function getPageCalled($pg_id) {
+        $page_id = $this->data['page_id'] = $pg_id == null ? 1 : $pg_id;
+        switch ($page_id) {
+            case 1:
+                $pg = 'student';
+                $ar_list = [
+                    'overview', 'locations', 'previus_school', 'age', 'health', 'religion', 'other_reports'
+                ];
+                break;
+            case 2:
+                $pg = 'parent';
+                $ar_list = [
+                    'overview', 'relation', 'age', 'locations', 'career', 'health'
+                ];
+                break;
+            case 3:
+
+                $pg = 'teacher';
+                $ar_list = [
+                    'overview', 'locations', 'age', 'career', 'health', 'religion', 'salary'
+                ];
+                $this->getUsers('teacher');
+                break;
+            case 4:
+                $pg = 'staff';
+                $ar_list = [
+                    'overview', 'locations', 'age', 'career', 'health', 'religion', 'joining_date', 'salary'
+                ];
+
+                break;
+            case 5:
+                $pg = 'academic';
+                $ar_list = [
+                    'overview', 'class_average', 'subject_average', 'student_information', 'teachers_performance', 'activity_with_performance'
+                ];
+
+                break;
+            case 6:
+
+                $pg = 'accounts';
+                $ar_list = [
+                    'overview', 'Installments', 'parent_information', 'student_performance', 'financial_ratios'
+                ];
+                break;
+            default:
+                $pg = 'student';
+                $ar_list = [
+                    'overview', 'locations', 'previus_school', 'age', 'health', 'religion', 'other_reports'
+                ];
+                break;
+        }
+        $this->data['pg'] = $pg;
+        $this->data['ar_list'] = $ar_list;
+    }
+
+    /**
+     * 
+     * @param type $sql
+     * @param type $firstpart
+     * @param type $table
+     * @param type $chart_type
+     * @param type $custom
+     * @return type
+     */
+    public function createChartBySql($sql, $firstpart, $table, $chart_type, $custom = false, $call_back_sql = false) {
+        $data = DB::select($sql);
+        return $this->createGraph($data, $firstpart, $table, $chart_type, $custom, $call_back_sql);
+    }
+
+    /**
+     * 
+     * @param type $table
+     * @param type $base_column
+     * @param type $join_table
+     * @param type $join_table_array
+     * @param type $chart_type
+     * @param type $custom
+     * @param type $as_alias
+     * @return type
+     */
+    public function createChart($table, $base_column, $join_table = false, $join_table_array = false, $chart_type = 'bar', $custom = false, $as_alias = false) {
+
+        $data = $join_table == false ? DB::table($table)
+                        ->select(DB::raw('count(*)'), DB::raw($base_column))
+                        ->groupBy(DB::raw($as_alias == FALSE ? $base_column : $as_alias))->get() :
+                DB::table($table)
+                        ->join($join_table, array_keys($join_table_array)[0] . '.' . array_values($join_table_array)[0], array_keys($join_table_array)[1] . '.' . array_values($join_table_array)[1])
+                        ->select(DB::raw('count(*)'), DB::raw($base_column))
+                        ->groupBy(DB::raw($as_alias == FALSE ? $base_column : $as_alias))->get();
+        $column = preg_replace('/^([^::]*).*$/', '$1', $as_alias == FALSE ? $base_column : $as_alias);
+        list($firstpart) = explode(',', $column);
+        return $this->createGraph($data, $firstpart, $table, $chart_type, $custom);
+    }
+
+    /**
+     * 
+     * @param type $data
+     * @param type $chart_type
+     * @param type $base_column
+     * @return type
+     */
+    private function createCustomChart($data, $chart_type, $base_column) {
+        $insight = $this;
+        return view('insight.highcharts', compact('data', 'chart_type', 'base_column', 'insight'));
+    }
+
+    /**
+     * 
+     * @param type $data
+     * @param type $firstpart
+     * @param type $table
+     * @param type $chart_type
+     * @param type $custom
+     * @param type $call_back_sql
+     * @return type
+     */
+    private function createGraph($data, $firstpart, $table, $chart_type, $custom = false, $call_back_sql = false) {
+        $k = [];
+        $l = [];
+        foreach ($data as $value) {
+            array_push($k, $value->{$firstpart});
+            array_push($l, (int) $value->count);
+        }
+        $chart = new SimpleChart;
+        $chart->labels($k);
+        $chart->dataset($this->x_axis == '' ? $table : $this->x_axis, $chart_type, $l);
+
+        if ($call_back_sql != false) {
+            foreach ($call_back_sql as $key => $sql) {
+                $call = $this->createCallBack(DB::select($sql), $firstpart);
+                $chart->labels($call[0]);
+                $chart->dataset($key, $chart_type, $call[1]);
+            }
+        }
+        $title = $this->graph_title == '' ?
+                ucwords('Relationship Between ' . $table . ' and ' . str_replace('_', ' ', $firstpart)) : $this->graph_title;
+        $chart->title($title);
+        $this->data['chart'] = $chart;
+        return $custom == true ? $this->createCustomChart($data, $chart_type, $firstpart) : view('analyse.charts.chart', $this->data);
+    }
+
+    /**
+     * 
+     * @param type $data
+     * @param type $firstpart
+     * @return type
+     */
+    private function createCallBack($data, $firstpart) {
+        $k = [];
+        $l = [];
+        foreach ($data as $value) {
+            array_push($k, $value->{$firstpart});
+            array_push($l, (int) $value->count);
+        }
+        return [$k, $l];
+    }
+
+    /**
+     * 
+     * @param type $table
+     * @return type
+     */
+    public function getUsers($table = 'student') {
+        $this->data['user'] = \collect(DB::SELECT("with total as (
+	select count(*) as total from $table where status=1 ),
+	total_male as (
+select count(*) as male from $table where status=1 and lower(sex)='male'),
+total_female as (
+select count(*) as female from $table where status=1 and lower(sex) <>'male')
+SELECT * FROM total,total_male, total_female
+"))->first();
+
+        $this->data['student_by_class'] = DB::SELECT('with classes AS (select count(a.*) as total,a."classesID",b.classes from student a join classes b on a."classesID"=b."classesID"  where a.status=1 group by a."classesID",b.classes ),
+class_males as (select count(a.*) as male,a."classesID",b.classes from student a join classes b on a."classesID"=b."classesID"  where a.status=1 and lower(a.sex)=\'male\' group by a."classesID",b.classes),
+class_females as (select count(a.*) as female,a."classesID",b.classes from student a join classes b on a."classesID"=b."classesID"  where a.status=1 and lower(a.sex) <>\'male\' group by a."classesID",b.classes)
+select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b."classesID" left join class_females c on c."classesID"=a."classesID" ORDER BY "classesID"');
+
+        $this->data['locations'] = DB::SELECT('select count(a.*),a.city_id,b.city from ' . $table . ' a left join constant.refer_cities b on b.id=a.city_id group by city_id,b.city');
+        $this->data['detail_locations'] = DB::select('select count(*),location from ' . $table . ' group by location');
+        return $this->data;
+    }
+
+    public function custom() {
+        $class_id = request('class_id');
+        $sql_ = 'select round(avg(a.average),1) as count, EXTRACT(YEAR FROM age(cast(b.dob as date))) as age from sum_exam_average_done a join student b on a.student_id=b.student_id where a."classesID"=' . $class_id . ' group by b.dob';
+        echo $this->createChartBySql($sql_, 'age', 'Overall Average', 'scatter', false);
+        $corr = \collect(DB::SELECT('select corr(count,age) from (' . $sql_ . ' ) x '))->first();
+        echo '<p>Correlation Factor : ' . round($corr->corr, 3) . '</p>';
+    }
+
+    public function charts() {
+        return view('analyse.charts.logins', $this->data);
     }
 
 }

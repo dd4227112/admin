@@ -90,7 +90,20 @@ class Account extends Controller {
             $this->data['invoice'] = Invoice::find($invoice_id);
             return view('account.invoice.single', $this->data);
         } else {
-            $client = \App\Models\Client::where('username', $invoice_id)->first();
+            if ($_POST) {
+                $school = request('school');
+                DB::table($school.'.setting')->update(['next_payment_date' => request('next_payment_date'), 'last_payment_date' => request('last_payment_date')]);
+                $arr = [
+                    'amount' => request('amount'),
+                    'schema_name' => $school,
+                    'user_id' => Auth::user()->id,
+                    'date' => date('Y-m-d'),
+                    'student' => request('student')
+                ];
+                \App\Models\InvoiceSent::create($arr);
+                return redirect()->back()->with('success', 'success');
+            }else{
+            $this->data['client'] = $client = \App\Models\Client::where('username', $invoice_id)->first();
             $this->data['siteinfos'] = DB::table($invoice_id . '.setting')->first();
             $this->data['students'] = DB::table($invoice_id . '.student')->where('status', 1)->count();
             if (count($client) == 1) {
@@ -98,9 +111,11 @@ class Account extends Controller {
             } else {
                 $this->data['invoice'] = [];
             }
+
             return view('account.invoice.shulesoft', $this->data);
         }
-
+        }
+        
 
         ///
     }
@@ -135,6 +150,11 @@ class Account extends Controller {
         return view('account.project', $this->data);
     }
 
+    public function receipt() {
+        $id = request()->segment(3);
+        $this->data['projects'] = Project::all();
+        return view('account.project', $this->data);
+    }
     public function createInvoice() {
         $this->data['projects'] = Project::all();
         if (request('noexcel')) {
@@ -423,6 +443,19 @@ class Account extends Controller {
         }
         return view('account.transaction.' . $page, $this->data);
         //  }
+    }
+
+    public function receipts() {
+        $id = request()->segment(3);
+        if((int)$id > 0){
+        $this->data['invoice'] = Invoice::find($id);
+        $this->data["payment_types"] = \App\Models\PaymentType::all();
+        $this->data['banks'] = \App\Models\BankAccount::all();
+        $this->data['revenue'] = \App\Models\Revenue::where('id', $id)->first();
+        return view('account.transaction.receipt', $this->data);
+        }else{
+            return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
+        }
     }
 
     public function revenueAdd() {

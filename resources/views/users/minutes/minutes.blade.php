@@ -69,6 +69,7 @@
 
                           <td>
                           <a class="btn btn-info btn-sm" href="{{ url('users/showMinute/'.$minute->id) }}">Show</a>
+                          <a class="btn btn-warning btn-sm" href="{{ url('users/deleteMinute/'.$minute->id) }}">Delete</a>
                           </td>
                         </tr>
                         <?php } } ?>

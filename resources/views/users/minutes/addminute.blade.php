@@ -103,8 +103,22 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                   <div class="form-group">
                     <strong>Meeting Description:</strong>
-                    <textarea name="note" rows="4" placeholder="Write More details Here .." class="form-control"> </textarea>
+                    <textarea name="note" rows="4" id="content_part" placeholder="Write More details Here .." class="form-control"> </textarea>
                   </div>
+                </div>
+                
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="form-group">
+                        <strong>  Tick Attendee of the Meeting</strong> 
+                          <hr>
+                    <?php
+                    $users = DB::table('users')->where('status', 1)->get();
+                    foreach ($users as $user) {
+                      ?>
+                      <input type="checkbox" id="feature<?= $user->id ?>" value="{{$user->id}}" name="user_id[]" >  <?php echo $user->name; ?>  &nbsp; &nbsp;
+
+                    <?php } ?>
+                    </div>
                 </div>
                 <div id="savebtnWrapper" class="form-group">
                   <button type="submit" class="btn btn-primary">
@@ -122,4 +136,25 @@
     </div>
   </div>
 </div>
+
+<script src="<?= url('public/assets/tinymce/tinymce.min.js') ?>"></script>
+   <script type="text/javascript">   
+                wywig = function () {
+                    tinymce.init({
+                        selector: 'textarea#content_part',
+                        height: 200,
+                        plugins: [
+                            'advlist autolink lists link image charmap print preview anchor',
+                            'searchreplace visualblocks code fullscreen',
+                            'insertdatetime media table contextmenu paste code'
+                        ],
+                        toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+                        content_css: [
+                            '//fast.fonts.net/cssapi/e6dc9b99-64fe-4292-ad98-6974f93cd2a2.css',
+                            '//localhost/shule/public/assets/tinymce/codepan.css' 
+                        ]
+                    });
+                }
+                wywig();
+</script>
 @endsection

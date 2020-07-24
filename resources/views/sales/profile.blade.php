@@ -113,7 +113,7 @@
                                                     ?>
                                                     <div class="media m-b-10">
                                                         <a class="media-left" href="#!">
-                                                            <img class="media-object img-circle" src="<?= $root ?><?=url('/')?>/public/assets/images/avatar-1.png" alt="Generic placeholder image">
+                                                            <img class="media-object img-circle" src="<?= Auth::user()->photo ?>" alt="Image">
                                                             <div class="live-status bg-danger"></div>
                                                         </a>
                                                         <div class="media-body">
@@ -297,14 +297,15 @@
                                                 </div>
                                                 <div class="col-md-12 timeline-dot">
                                                     <?php
-                                                    $tasks = \App\Models\Task::where('client_id', $school->id)->orderBy('created_at', 'desc')->where('school_id', $school->id)->get();
+                                                    $tasks = \App\Models\Task::whereIn('id', \App\Models\TaskSchool::where('school_id',$school->id)->get(['task_id']))->orderBy('created_at', 'desc')->get();
+                                                   // dd($tasks);
                                                     foreach ($tasks as $task) {
                                                         ?>
                                                         <div class="social-timelines p-relative o-hidden" id="removetag<?= $task->id ?>">
                                                             <div class="row timeline-right p-t-35">
                                                                 <div class="col-xs-2 col-sm-1">
                                                                     <div class="social-timelines-left">
-                                                                        <img class="img-circle timeline-icon" src="<?= $root ?><?=url('/')?>/public/assets/images/avatar-2.png" alt="">
+                                                                        <img class="img-circle timeline-icon" src="<?= Auth::user()->photo ?>" alt="">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-xs-10 col-sm-11 p-l-5 p-b-35">
@@ -340,7 +341,7 @@
                                                                                     ?>
                                                                                     <div class="media m-b-20">
                                                                                         <a class="media-left" href="#">
-                                                                                            <img class="media-object img-circle m-r-20" src="<?= $root ?><?=url('/')?>/public/assets/images/avatar-1.png" alt="Generic placeholder image">
+                                                                                            <img class="media-object img-circle m-r-20" src="<?= Auth::user()->photo ?>" alt="Image">
                                                                                         </a>
                                                                                         <div class="media-body b-b-muted social-client-description">
                                                                                             <div class="chat-header"><?= $comment->user->name ?><span class="text-muted"><?= date('d M Y', strtotime($comment->created_at)) ?></span></div>
@@ -355,7 +356,7 @@
                                                                             <div class="new_comment<?= $task->id ?>"></div>
                                                                             <div class="media">
                                                                                 <a class="media-left" href="#">
-                                                                                    <img class="media-object img-circle m-r-20" src="<?= $root ?><?=url('/')?>/public/assets/images/avatar-blank.jpg" alt="Generic placeholder image">
+                                                                                    <img class="media-object img-circle m-r-20" src="<?= Auth::user()->photo ?>" alt="Image">
                                                                                 </a>
                                                                                 <div class="media-body">
                                                                                     <form class="">

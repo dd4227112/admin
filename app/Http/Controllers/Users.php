@@ -220,57 +220,78 @@ class Users extends Controller {
         $from = request('from');
         $to = request('to');
         $user_id = request('user_id');
-        $tasks = DB::select("select b.name, count(a.*) from admin.tasks a join admin.task_types b on b.id=a.task_type_id where  a.user_id=" . $user_id . " and a.created_at between '".date('Y-m-d', strtotime($from))."' AND '".date('Y-m-d', strtotime($to))."'  group by b.name");
+        $tasks = DB::select("select b.name, count(a.*) from admin.tasks a join admin.task_types b on b.id=a.task_type_id where  a.user_id=" . $user_id . " and a.created_at between '" . date('Y-m-d', strtotime($from)) . "' AND '" . date('Y-m-d', strtotime($to)) . "'  group by b.name");
         $tr = '';
         foreach ($tasks as $task) {
             $tr .= '<tr><td>' . $task->name . '</td><td>' . $task->count . '</td></tr>';
         }
         $message = ''
-                . '<h5>Report From '.$from.' To '.$to.'</h5>'
+                . '<h5>Report From ' . $from . ' To ' . $to . '</h5>'
                 . '<p></p>'
                 . '<table class="table"><thead><tr><th>Activity Name</th><th>Number of Activities</th></tr></thead><tbody>' . $tr . '</tbody></table>';
         echo $message;
     }
 
     public function minutes() {
-        
-        $this->data['minutes'] = \App\Models\Minutes::all();
-        return view('users.minutes', $this->data);
+
+        $this->data['minutes'] = \App\Models\Minutes::orderBy('id', 'DESC')->get();
+        return view('users.minutes.minutes', $this->data);
     }
-    
+
     public function addMinute() {
-        
+
         if ($_POST) {
-        
-                $filename='';
-                if (!empty(request('attached'))){
-                    $file = request()->file('attached');
-                    $filename = time() . rand(11, 8894).'.' . $file->guessExtension();
-                    $filePath = base_path().'/storage/uploads/images/';
-                    $file->move($filePath, $filename);
+
+            $filename = '';
+            if (!empty(request('attached'))) {
+                $file = request()->file('attached');
+                $filename = time() . rand(11, 8894) . '.' . $file->guessExtension();
+                $filePath = base_path() . '/storage/uploads/images/';
+                $file->move($filePath, $filename);
+            }
+
+            $array = [
+                'title' => request('title'),
+                'note' => request('note'),
+                'date' => request('date'),
+                'start_time' => request('start_time'),
+                'end_time' => request('end_time'),
+                'department_id' => request('department_id'),
+                'attached' => $filename
+            ];
+            $minute = \App\Models\Minutes::create($array);
+            if(count($minute->id) > 0 && request('user_id')){
+                $modules = request('user_id');
+               foreach($modules as $key => $value) {
+                   if(request('user_id')[$key] != ''){
+                $array = ['user_id' => request('user_id')[$key], 'minute_id' => $minute->id];
+                $check_unique = \App\Models\MinuteUser::where($array);
+                if (count($check_unique->first()) == 0) {
+                    \App\Models\MinuteUser::create($array);
                 }
-                
-                $array = [
-                    'title' => request('title'),
-                    'note' => request('note'),
-                    'date' => request('date'),
-                    'start_time' => request('start_time'),
-                    'end_time' => request('end_time'),
-                    'department_id' => request('department_id'),
-                    'attached' => $filename
-                ];
-                \App\Models\Minutes::create($array);
-            return redirect('users/minutes')->with('success', request('title') . ' updated successfully');
+            }
+        }
     }
-    $this->data['users'] = \App\Models\User::all();
-    return view('users.addminute', $this->data);
-}
+            return redirect('users/minutes')->with('success', request('title') . ' updated successfully');
+        }
+        $this->data['users'] = \App\Models\User::all();
+        return view('users.minutes.addminute', $this->data);
+    }
 
-public function showMinute() {
-    $id = request()->segment(3);
-    $this->data['minute'] = \App\Models\Minutes::where('id', $id)->first();
-    return view('users.view_minute', $this->data);
-}
+    public function showMinute() {
+        $id = request()->segment(3);
+        $this->data['minute'] = \App\Models\Minutes::where('id', $id)->first();
+        return view('users.minutes.view_minute', $this->data);
+    }
 
+    public function deleteMinute() {
+        $id = request()->segment(3);
+        \App\Models\Minutes::where('id', $id)->delete();
+        return redirect()->back()->with('success', 'Minute Deleted');
+    }
+    public function tasks() {
+        $this->data['users'] = 1;
+        return view('users.tasks', $this->data);
+    }
 
 }
