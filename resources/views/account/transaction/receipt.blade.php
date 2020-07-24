@@ -109,6 +109,7 @@
                                   <li> 2nd Floor,Block NO. 576</li>
                                   <li>Mbezi Beach Bagamoyo Road</li>
                                   <li>Mobile no: +255 655 406 004 </li>
+                                  <li>Telephone: +255 22 278 0228</li>
                                 </ul>
                               </td>
                               <td>

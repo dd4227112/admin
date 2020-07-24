@@ -223,21 +223,30 @@ group by ownership');
             $this->data['socialmedia'] = \App\Models\SocialMedia::all();
             return view('market/addpost', $this->data);
         } elseif ($tab == 'show' && $id > 0) {
+            $status = request()->segment(5);
+            $this->data['published'] = $status;
             $this->data['post'] = \App\Models\MediaPost::find($id);
             return view('market/view_media', $this->data);
         } else {
-            $date = request('taskdate');
 
             $this->data['posts'] = \App\Models\MediaPost::orderBy('id', 'DESC')->get();
             return view('market/medias', $this->data);
         }
     }
 
-    public function socialMedia1() {
-
-        $this->data['minutes'] = \App\Models\Minutes::orderBy('id', 'DESC')->get();
-        return view('users.minutes.minutes', $this->data);
-    }
+    public function socialMediaUpdate() {
+            $media = request("socialmedia_id");
+            $post = request("post_id");
+            $type = request("type_id");
+            $number = request("inputs");
+            $now = date('Y=m-d H:i:s');
+            if ((float) request("inputs") >= 0 && request("post_id") !='' && request("socialmedia_id") !='') {
+                    \App\Models\SocialMediaPost::where('post_id', $post)->where('socialmedia_id', $media)->update([$type => $number, 'updated_at' => $now]);
+                    echo "success";
+                } else {
+                    echo "Class can not be empty";
+                }
+        }
 
     public function addMinute() {
 
