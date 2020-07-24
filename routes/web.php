@@ -10,12 +10,7 @@
   | contains the "web" middleware group. Now create something great!
   |
  */
-Route::any('/bitbucket', function() {
 
-    $data = ['content' => json_encode(request()->all())];
-     DB::table('api.requests')->insert($data);
-     exit;
-});
 
 $bad_url = ['acme-challenge', 'rss', 'index.php', 'errors', 'phpR', 'apple-touch', 'assetlinks', '.php', 'public', '.tff', '.jpg'];
 foreach ($bad_url as $value) {
