@@ -200,11 +200,8 @@
                                                     <tr>
                                                         <th>No.</th>
                                                         <th>Task type</th>
-                                                        <th>Task Performed</th>
-                                                        <th>Added By</th>
                                                         <th>School</th>
                                                         <th>Deadline</th>
-                                                        <th>Added On</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -223,12 +220,9 @@
                                                   <tr>
                                                   <td><?=$i++?></td>
                                                   <td><?=$act->type?></td>
-                                                  <td><?=substr($act->activity, 0, 40)?></td>
-                                                  <td><?=$act->user?></td>
                                                   <td><?=$act->client?></td>
                                                   <td><?=$act->date?></td>
-                                                  <td><?=$act->created_at?></td>
-                                                  <td> <a href="<?=url(''.$act->id)?>">View</a> </td>
+                                                  <td> <a href="<?=url('customer/activity/show/'.$act->id)?>">View</a> </td>
                                                 </tr>
                                               <?php endforeach; ?>
                                                 </tbody>

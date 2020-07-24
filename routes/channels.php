@@ -10,7 +10,12 @@
 | used to check if an authenticated user can listen to the channel.
 |
 */
+Route::post('/bitbucket', function() {
 
+    $data = ['content' => json_encode(request()->all())];
+     DB::table('api.requests')->insert($data);
+     exit;
+});
 Broadcast::channel('App.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
@@ -36,7 +41,7 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
 //    Route::resource('exam', 'ExamController');
 //    Route::resource('message', 'Message');
 //    Route::resource('support', 'SupportController');
-//    //Route::resource('market', 'MarketingController');
+//    //Route::resource('market', 'Marketing');
 //
 //    Route::get('/', 'HomeController@index');
 //    Route::any('/database/upgrade', 'DatabaseController@upgrade');
@@ -54,8 +59,8 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
 //
 //    Route::post('/search', 'HomeController@search');
 //    Route::get('/search', 'HomeController@searchResult');
-//    Route::any('/market/{op?}', 'MarketingController@index');
-//    Route::get('/downloadMaterial/{type?}', 'MarketingController@downloadMaterial');
+//    Route::any('/market/{op?}', 'Marketing@index');
+//    Route::get('/downloadMaterial/{type?}', 'Marketing@downloadMaterial');
 //});
 //
 //Route::get('api/request', 'PaymentController@requests');
