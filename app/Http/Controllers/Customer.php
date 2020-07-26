@@ -750,5 +750,9 @@ class Customer extends Controller {
         return view('customer.call.create', $this->data);
     }
 
+    public function tech_task(){
+        
+    }
+
    
 }

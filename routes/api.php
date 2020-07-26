@@ -12,7 +12,8 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('/bitbucket', function() {
+Route::post('/bitbucket', 'customer@tech_task');
+Route::post('/bitbucket1', function() {
 
     $data = ['content' => json_encode(request()->all())];
      DB::table('api.requests')->insert($data);
