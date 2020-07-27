@@ -33,8 +33,6 @@ class Workshop extends Controller {
         $event = \App\Models\EventAttendee::create(array_merge(request()->except('phone'), ['phone' => $phonenumber]));
         if(count($event->id) > 0 && request('email')){
             
-
-
 $message = '<h4>Dear ' . request('name') . 'Conglatulations!  </h4><br/>'
 .'<h>I trust this email finds you well.</p>'
 . '<p></p>'
@@ -51,11 +49,12 @@ $message = '<h4>Dear ' . request('name') . 'Conglatulations!  </h4><br/>'
 .'<p>Thanks and regards,</p>'
 .'<p><b>Shulesoft Team</b></p>'
 .'<p> Call: +255 655 406 004 </p>';
-
 $this->send_email(request('title'), 'ShuleSoft Webinar on '.request('title'), $message);
-
+echo "<script>
+alert('Conglatulations for registering!!! We glad to have you.');
+window.location.href='https://www.shulesoft.com/';
+</script>";
 }
-        return redirect('/workshop')->with('success', request('title') . ' updated successfully');
     }
 
 }
