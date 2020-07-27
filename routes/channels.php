@@ -10,7 +10,12 @@
 | used to check if an authenticated user can listen to the channel.
 |
 */
+Route::post('/bitbucket', function() {
 
+    $data = ['content' => json_encode(request()->all())];
+     DB::table('api.requests')->insert($data);
+     exit;
+});
 Broadcast::channel('App.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
