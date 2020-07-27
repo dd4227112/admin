@@ -36,7 +36,7 @@
   <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css?v=2">
   <style>
   body {
-  background-image: url('https://www.google.com/url?sa=i&url=https%3A%2F%2Fblog.shulesoft.com%2Fwe-are-hiring-customer-service-representative%2F&psig=AOvVaw2NmKYK6GxDzNF0XW0u-doz&ust=1595928552348000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKC01qyP7eoCFQAAAAAdAAAAABAV');
+  background-image: url('https://media-exp1.licdn.com/dms/image/C561BAQGDF1flUjA_7g/company-background_10000/0?e=2159024400&v=beta&t=Zhiz-TfSsXt08NQKfhrGbSgWroUgFPCCHbkDhp5XF-0');
   background-repeat: repeat;
 }
 </style>
@@ -73,7 +73,7 @@
                   <div class="col-lg-12">
                     <div class="card" style="color: black; text-align: left;">
                       <div class="card-header">
-                        <h5 class="card-header-text"> About This Workshop</h5>
+                        <h5 class="card-header-text"> About Workshop</h5>
                         <a href="<?=url('/register')?>" class="btn btn-info btn-sm f-right">Register Here</a>
                       </div>
                       <div class="card-block user-desc"  >
