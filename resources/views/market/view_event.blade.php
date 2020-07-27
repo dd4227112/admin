@@ -136,7 +136,7 @@
                     </div>
                     <div class="modal-body">
                       <div class="col-lg-12">
-                        <img src="<?= url('storage/uploads/images/15935269286662.jpeg')?>" class="img-responsive" style="width: 100%; height: auto;">
+                        <img src="<?= url('/storage/uploads/images/' . $event->attach)?>" class="img-responsive" style="width: 100%; height: auto;">
                       </div>
                     </div>
                     <div class="modal-footer">

@@ -38,21 +38,27 @@
 </head>
 
 
-<body class="fix-menu">
-        <section class="login  bg-primary common-img-bg">
-
-            <!-- Container-fluid starts -->
-            <div class="container-fluid">
-                 <div class="page-wrapper">
+<body  style="overflow: scroll">
+        <section class="login  bg-primary common-img-bg"> 
+        <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+               <!-- Container-fluid starts -->
+      <div class="container-fluid">
+        <div class="page-wrapper">
+        <div class="page-body">
           <div class="row">
-
             <div class="col-lg-12">
-            <br>
-          <br>
-          <br>
-          <br>
+            
                   <div class="card">
                     <div class="card-header">
+                   
                     <h1 class="card-header-text" style="color: black; font-weight: bold;"><img src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="logo.png" width="70" height="70">
                     {{ $event->title }} </h1>
 
@@ -62,7 +68,7 @@
 
 
                                 <div class="col-sm-12">Event Date:&nbsp;&nbsp; {{ $event->event_date }}</div>
-                                <div class="col-sm-12">Start - {{ $event->start_time }} &nbsp;&nbsp; &nbsp;&nbsp; End - {{ $event->end_time }} </div>
+                                <div class="col-sm-12">Start - {{ $event->start_time }} &nbsp;&nbsp; - &nbsp;&nbsp; End - {{ $event->end_time }} </div>
                               </div>
 
                             </div>
@@ -105,7 +111,7 @@
                       </div>
                       <div class="modal-body">
                       <div class="col-lg-12">
-                      <img src="<?= url('storage/uploads/images/15935269286662.jpeg')?>" class="img-responsive" style="width: 100%; height: auto;">
+                      <img src="<?= url('/storage/uploads/images/' . $event->attach)?>" class="img-responsive" style="width: 100%; height: auto;">
                       </div>
                       </div>
                       <div class="modal-footer">

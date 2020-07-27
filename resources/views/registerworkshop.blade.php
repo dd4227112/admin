@@ -58,8 +58,7 @@
 }
 </style>
 </head>
-<body class="fix-menu">
-<?php $event = \App\Models\Events::where('id', 1)->first(); ?>
+<body class="fix-menu"   style="overflow: scroll">
             <!-- Container-fluid starts -->
             <div class="container-fluid">
                  <div class="page-wrapper">
@@ -83,9 +82,8 @@
                           <div class="form-group">
                             <div class="col-sm-12 col-xs-12">
                               Your Fullname
-                              <input type="text" name="name" class="form-control" placeholder="Enter your full name here..."  value="{{ old('email') }}" autofocus>
+                              <input type="text" name="name" class="form-control" placeholder="Enter your full name here..."  value="{{ old('email') }}" autofocus required>
                             </div>
-
                           </div>
                           <div class="form-group">
                             <div class="col-sm-12 col-xs-12">
@@ -96,7 +94,7 @@
                                 </div>
                                 <div class="col-md-6">
                                   Email Address
-                                  <input type="email" class="form-control" placeholder="" name="email" required>
+                                  <input type="email" class="form-control" placeholder="" name="email" >
                                 </div>
                               </div>
                             </div>
@@ -105,7 +103,7 @@
                           <div class="form-group">
                             <div class="col-sm-12 col-xs-12">
                               Your Position
-                              <input type="text" name="position" class="form-control" placeholder="" value="{{ old('email') }}">
+                              <input type="text" name="position" class="form-control" placeholder="Enter your position here eg. Teacher" value="{{ old('position') }}" required>
                             </div>
                           </div>
                           <div class="form-group">

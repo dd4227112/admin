@@ -8,8 +8,8 @@
     <!-- Page-header start -->
     <div class="page-header">
       <div class="page-header-title">
-        <h4>Shulesoft Social Media Posts</h4>
-        <span>The Part holds all  Posts from Company Social Media Accounts</span>
+      <h4>Shulesoft Workshop Event Post</h4>
+        <span>The Part holds all  Upcomming Events</span>
 
       </div>
       <div class="page-header-breadcrumb">
@@ -19,7 +19,7 @@
               <i class="icofont icofont-home"></i>
             </a>
           </li>
-          <li class="breadcrumb-item"><a href="#!">Company Minutes</a>
+          <li class="breadcrumb-item"><a href="#!">Company Workshop</a>
           </li>
           <li class="breadcrumb-item"><a href="#!">posts</a>
           </li>
@@ -35,7 +35,7 @@
           <div class="card tab-card">
             <div class="card-block">
             <span>
-        <a class="btn btn-success btn-sm" href="<?= url('Marketing/socialMedia/add') ?>"> Add New Post </a>
+        <a class="btn btn-success btn-sm" href="<?= url('Marketing/addEvent') ?>"> Add New Event </a>
         </span>
               <div class="steamline">
                 <div class="card-block">

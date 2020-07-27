@@ -251,7 +251,7 @@ group by ownership');
                 }
         }
 
-    public function addMinute() {
+    public function addEvent() {
 
         if ($_POST) {
 
@@ -266,29 +266,18 @@ group by ownership');
             $array = [
                 'title' => request('title'),
                 'note' => request('note'),
-                'date' => request('date'),
+                'event_date' => request('event_date'),
                 'start_time' => request('start_time'),
                 'end_time' => request('end_time'),
                 'department_id' => request('department_id'),
-                'attached' => $filename
+                'user_id' => Auth::user()->id,
+                'attach' => $filename
             ];
-            $minute = \App\Models\Minutes::create($array);
-            if(count($minute->id) > 0 && request('user_id')){
-                $modules = request('user_id');
-               foreach($modules as $key => $value) {
-                   if(request('user_id')[$key] != ''){
-                $array = ['user_id' => request('user_id')[$key], 'minute_id' => $minute->id];
-                $check_unique = \App\Models\MinuteUser::where($array);
-                if (count($check_unique->first()) == 0) {
-                    \App\Models\MinuteUser::create($array);
-                }
-            }
-        }
-    }
-            return redirect('users/minutes')->with('success', request('title') . ' updated successfully');
+            $minute = \App\Models\Events::create($array);
+            return redirect('marketing/events')->with('success', request('title') . ' added successfully');
         }
         $this->data['users'] = \App\Models\User::all();
-        return view('users.minutes.addminute', $this->data);
+        return view('market.add_event', $this->data);
     }
 
     public function Events() {
