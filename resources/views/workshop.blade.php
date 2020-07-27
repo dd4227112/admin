@@ -38,8 +38,8 @@
 </head>
 
 
-<body  style="overflow: scroll">
-        <section class="login  bg-primary common-img-bg"> 
+<body  >
+        <section class="login  bg-primary common-img-bg" style="overflow: scroll"> 
         <br>
                     <br>
                     <br>
