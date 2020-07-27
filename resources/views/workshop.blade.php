@@ -34,31 +34,30 @@
   <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/icon/icofont/css/icofont.css">
   <!-- Style.css -->
   <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css?v=2">
-
+  <style>
+  body {
+  background-image: url('https://www.google.com/url?sa=i&url=https%3A%2F%2Fblog.shulesoft.com%2Fwe-are-hiring-customer-service-representative%2F&psig=AOvVaw2NmKYK6GxDzNF0XW0u-doz&ust=1595928552348000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKC01qyP7eoCFQAAAAAdAAAAABAV');
+  background-repeat: repeat;
+}
+</style>
 </head>
-<body  >
-        <section class="login  bg-primary common-img-bg" style="overflow: scroll">
-        <!-- Container-fluid starts -->
+<body class="fix-menu"   style="overflow: scroll; background-image: url(https://www.google.com/url?sa=i&url=https%3A%2F%2Fblog.shulesoft.com%2Fwe-are-hiring-customer-service-representative%2F&psig=AOvVaw2NmKYK6GxDzNF0XW0u-doz&ust=1595928552348000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCKC01qyP7eoCFQAAAAAdAAAAABAV); background-repeat: repeat; background-color: #cccccc;" >
+            <!-- Container-fluid starts -->
             <div class="container-fluid">
                  <div class="page-wrapper">
         <div class="page-body">
           <div class="row">
             <div class="col-lg-12">
-            <br><br>
-            <br><br>
-            <br><br>
                   <div class="card">
                     <div class="card-header ">
                     <h1 class="text-center" style="color: black; font-weight: bold;">
                     <img src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="logo.png" width="80" height="80">
                      </h1>
-                     <h4 class="text-center" style="color: black; font-weight: bold;">
-                     <b>{{ $event->title }}</b>
-                     </h4>
+                    <h4 class="text-center"><b>{{ $event->title }}</b></h4>
 
                     </div>
 
-                    <div class="card-block">
+                    <div class="card-block text-center">
                           <div class="col-lg-12"  style="color: black;">
                                 <div class="col-sm-12">Event Date:&nbsp;&nbsp; {{ $event->event_date }}</div>
                                 <div class="col-sm-12">Start - {{ $event->start_time }} &nbsp;&nbsp; - &nbsp;&nbsp; End - {{ $event->end_time }} </div>
