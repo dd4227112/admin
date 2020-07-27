@@ -36,37 +36,30 @@
   <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css?v=2">
 
 </head>
-
-
-<body  style="overflow: scroll">
-        <section class="login  bg-primary common-img-bg"> 
-        <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-               <!-- Container-fluid starts -->
-      <div class="container-fluid">
-        <div class="page-wrapper">
+<body  >
+        <section class="login  bg-primary common-img-bg" style="overflow: scroll">
+        <!-- Container-fluid starts -->
+            <div class="container-fluid">
+                 <div class="page-wrapper">
         <div class="page-body">
           <div class="row">
             <div class="col-lg-12">
-            
+            <br><br>
+            <br><br>
+            <br><br>
                   <div class="card">
-                    <div class="card-header">
-                   
-                    <h1 class="card-header-text" style="color: black; font-weight: bold;"><img src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="logo.png" width="70" height="70">
-                    {{ $event->title }} </h1>
+                    <div class="card-header ">
+                    <h1 class="text-center" style="color: black; font-weight: bold;">
+                    <img src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="logo.png" width="80" height="80">
+                     </h1>
+                     <h4 class="text-center" style="color: black; font-weight: bold;">
+                     <b>{{ $event->title }}</b>
+                     </h4>
 
                     </div>
+
                     <div class="card-block">
                           <div class="col-lg-12"  style="color: black;">
-
-
                                 <div class="col-sm-12">Event Date:&nbsp;&nbsp; {{ $event->event_date }}</div>
                                 <div class="col-sm-12">Start - {{ $event->start_time }} &nbsp;&nbsp; - &nbsp;&nbsp; End - {{ $event->end_time }} </div>
                               </div>

@@ -67,9 +67,8 @@
             <div class="col-lg-12">
                   <div class="card">
                     <div class="card-header ">
-                    <h1 class="card-header-text" style="color: black; font-weight: bold;">
-                    <img src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="logo.png" width="70" height="70">
-                     School Management System
+                    <h1 class="text-center" style="color: black; font-weight: bold;">
+                    <img src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="logo.png" width="80" height="80">
                      </h1>
                     <h4 class="text-center"><b>{{ $event->title }}</b></h4>
 
