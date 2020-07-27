@@ -177,7 +177,7 @@
                 },
                 dataType: "html ",
                 success: function (data) {
-                  $(inputs).html(data);
+                  toast(data);
                 }
             });
         } else {
