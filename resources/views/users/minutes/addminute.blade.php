@@ -62,7 +62,7 @@
                 <div class="col-md-6">
 
                     <strong>Department:</strong>
-                    <select name='department_id' class="form-control" required>
+                    <select name='department_id' class="form-control select2" required>
                       <?php
                       $roles = DB::table('departments')->get();
                       ?>
@@ -137,6 +137,15 @@
   </div>
 </div>
 
+<script>
+
+$(".select2").select2({
+    theme: "bootstrap",
+    dropdownAutoWidth: false,
+    allowClear: false,
+    debug: true
+});
+</script>
 <script src="<?= url('public/assets/tinymce/tinymce.min.js') ?>"></script>
    <script type="text/javascript">   
                 wywig = function () {

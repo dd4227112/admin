@@ -239,6 +239,9 @@ group by ownership');
             $post = request("post_id");
             $type = request("type_id");
             $number = request("inputs");
+            if($number == ''){
+                $number = 0;
+            }
             $now = date('Y=m-d H:i:s');
             if ((float) request("inputs") >= 0 && request("post_id") !='' && request("socialmedia_id") !='') {
                     \App\Models\SocialMediaPost::where('post_id', $post)->where('socialmedia_id', $media)->update([$type => $number, 'updated_at' => $now]);
@@ -288,10 +291,14 @@ group by ownership');
         return view('users.minutes.addminute', $this->data);
     }
 
-    public function showMinute() {
+    public function Events() {
         $id = request()->segment(3);
-        $this->data['minute'] = \App\Models\Minutes::where('id', $id)->first();
-        return view('users.minutes.view_minute', $this->data);
+        if((int)$id>0){
+            $this->data['event'] = \App\Models\Events::where('id', $id)->first();
+            return view('market.view_event', $this->data);
+        }
+        $this->data['events'] = \App\Models\Events::orderBy('id', 'DESC')->get();
+        return view('market.events', $this->data);
     }
 
     public function deleteMinute() {
