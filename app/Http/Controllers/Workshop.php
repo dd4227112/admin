@@ -49,7 +49,7 @@ $message = '<h4>Dear ' . request('name') . 'Conglatulations!  </h4><br/>'
 .'<p>Thanks and regards,</p>'
 .'<p><b>Shulesoft Team</b></p>'
 .'<p> Call: +255 655 406 004 </p>';
-$this->send_email(request('title'), 'ShuleSoft Webinar on '.request('title'), $message);
+$this->send_email(request('email'), 'ShuleSoft Webinar on '.request('title'), $message);
 echo "<script>
 alert('Conglatulations for registering!!! We glad to have you.');
 window.location.href='https://www.shulesoft.com/';
