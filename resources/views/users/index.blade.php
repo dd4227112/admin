@@ -7,8 +7,8 @@
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4 class="box-title">Exams </h4>
-                <span>Exams are defined only once for quick reference</span>
+                <h4 class="box-title">Company Staff Members </h4>
+                <span>This Part show all Active Company Staff Members</span>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -34,15 +34,7 @@
                         <div id="editorForm">
                             <div class="row">
                                 <div class="card-header">
-                                    <div class="pull-left">
-                                        <h2>User Management</h2>
-                                    </div>
-                                    <div class="pull-right">
-                                       
-                                            <a class="btn btn-success" href="<?= url('users/create') ?>"> Create New User</a>
-                                      
-                                    </div>
-                                </div>
+                                <a class="btn btn-success" href="<?= url('users/create') ?>"> Create New User</a>
                             </div>
                             @if ($message = Session::get('success'))
                             <div class="alert alert-success">

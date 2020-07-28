@@ -6,8 +6,8 @@
     <!-- Page-header start -->
     <div class="page-header">
       <div class="page-header-title">
-        <h4 class="box-title">Company Minute </h4>
-        <span>Register all users who are supposed to be in the system</span>
+      <h4>Shulesoft Workshop Event Post</h4>
+        <span>Add Workshop Details Here. Fill all Details Properly</span>
       </div>
       <div class="page-header-breadcrumb">
         <ul class="breadcrumb-title">
@@ -16,7 +16,7 @@
               <i class="icofont icofont-home"></i>
             </a>
           </li>
-          <li class="breadcrumb-item"><a href="<?= url('/') ?>/Users/minutes">Company Minute</a>
+          <li class="breadcrumb-item"><a href="<?= url('/') ?>/Users/minutes">Company Workshop</a>
           </li>
           <li class="breadcrumb-item"><a href="#!">Create</a>
           </li>
@@ -46,7 +46,7 @@
               <div class="card-block">
                 <div class="col-xs-12 col-sm-12 col-md-12">
                   <div class="form-group">
-                    <strong>Meeting Title:</strong>
+                    <strong>Workshop Title:</strong>
                     <input type="text" class="form-control"  name="title" required>
 
                   </div>
@@ -56,8 +56,8 @@
                     <div class="row">
 
                       <div class="col-md-6">
-                    <strong>Meeting Date:</strong>
-                    <input type="date" class="form-control" placeholder="Date" name="date" required>
+                    <strong>Workshop Date:</strong>
+                    <input type="date" class="form-control" placeholder="Date" name="event_date" required>
                   </div>
                 <div class="col-md-6">
 
@@ -96,20 +96,20 @@
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
                   <div class="form-group">
-                    <strong>Attach Document:</strong>
+                    <strong>Attach Workshop Poster:</strong>
                     <input type="file" class="form-control"  name="attached">
                   </div>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-12">
                   <div class="form-group">
-                    <strong>Meeting Description:</strong>
+                    <strong>More Details About this Workshop:</strong>
                     <textarea name="note" rows="4" id="content_part" placeholder="Write More details Here .." class="form-control"> </textarea>
                   </div>
                 </div>
-                
+                <!--
                 <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
-                        <strong>  Tick Attendee of the Meeting</strong> 
+                        <strong>  Tick Attendee of the Workshop</strong> 
                           <hr>
                     <?php
                     $users = DB::table('users')->where('status', 1)->get();
@@ -119,7 +119,7 @@
 
                     <?php } ?>
                     </div>
-                </div>
+                </div> -->
                 <div id="savebtnWrapper" class="form-group">
                   <button type="submit" class="btn btn-primary">
                     &emsp;Submit&emsp;
