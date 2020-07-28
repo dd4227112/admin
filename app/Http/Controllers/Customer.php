@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use \App\Models\User;
 use DB;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Maatwebsite\Excel\Facades\Excel;
 
 class Customer extends Controller {
@@ -750,9 +751,7 @@ class Customer extends Controller {
         return view('customer.call.create', $this->data);
     }
 
-    public function tech_task(){
-        
-    }
-
    
 }
+
+

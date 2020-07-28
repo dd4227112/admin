@@ -263,4 +263,67 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
             ]);
         }
     }
+
+
+
+    public function tech_task()
+    {
+        // $data1          = json_decode(file_get_contents(base_path() . '/task.json'));
+        $data1 = request()->all();
+    
+        $repo           = isset($data1['repository']['full_name'])? $data1['repository']['full_name']:'';
+        $user           = isset($data1['push']['changes'][0]['commits'][0])? $data1['push']['changes'][0]['commits'][0]['author']['user']['display_name']:'' ;
+        $commit_message = isset($data1['push']['changes'][0]['commits'][0]) ? $data1['push']['changes'][0]['commits'][0]['message'] : '';
+        print("repo");
+        print($repo);
+        print("user");
+        print($user);
+        print("message");
+        print($commit_message);
+        $commit_message_in_words = explode(' ', trim($commit_message));
+        $activity_type  = strtolower($commit_message_in_words[0]);
+
+        // after getting message then taking Id for identifying type
+        // firstly getting activity type from database
+
+        if (DB::table('admin.task_types')->whereRaw('LOWER(name) LIKE ?', ['%' . ($activity_type) . '%'])->count()) {
+            $id = DB::table('admin.task_types')->whereRaw('LOWER(name) LIKE ?', ['%' . ($activity_type) . '%'])->first();
+            $task_id = $id->id;
+        } else {
+            $task_id =  29;
+            #sending message to the Commiter that the entered activity type is not correct
+        }
+
+        #getting a user who push
+        if (DB::table('admin.users')->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($user) . '%'])->count()) {
+            $actor = DB::table('admin.users')->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($user) . '%'])->first();
+            $user_id = $actor->id;
+        }
+        $data = [
+            'user_id'  => $user_id,
+            'activity' => $commit_message,
+            'date'     => date('Y-m-d'),
+            'to_user_id' => $user_id,
+            'task_type_id' => $task_id,
+            'action'  => 'Yes',
+            'time'    => '1',
+        ];
+
+
+        // Then pushing to the database(Task) from Repository after push
+        $send_task = \App\Models\Task::create($data);
+
+        // Then pushing to the database(Table tasks_user) from Repository after push
+        $send_task_to_user_task = DB::table('tasks_users')->insert(
+            [
+                'user_id' => $user_id,
+                'task_id' =>  $send_task->id
+            ]
+        );
+ 
+    }
+
+
+
+
 }
