@@ -34,22 +34,20 @@ class Workshop extends Controller {
         $event = \App\Models\EventAttendee::create(array_merge(request()->except('phone'), ['phone' => $phonenumber]));
         if(count($event->id) > 0 && request('email')){
             
-$message = '<h4>Dear ' . request('name') . ' Conglatulations!  </h4><br/>'
+$message = '<h4>Dear ' . request('name') .  '</h4>'
 .'<h4>I trust this email finds you well.</h4>'
-. '<p></p>'
 .'<p>Please find below the details for the Shulesoft Webinar session to be held on '.$workshop->event_date.'.</p>'
 .'<p>Topic: '. $workshop->title . '</p>'
-.'<p>Time: '. $workshop->start_time .' - ' .$workshop->end_time. ' <br/>'
+.'<p>Time: '. $workshop->start_time .' - ' .$workshop->end_time. ' </p>'
 .'<p>Link: https://meet.google.com/ney-osuq-bsq </p>'
-.'<p> <p>'
+.'<br/>'
 .'<p>Join through Google Meeting, You have an option to use Smartphone or Computer, if you’re going to use a smartphone, you have to download an application click that link to do so. Remember to join the session 5 minutes before the specified time in order to test your device</p>'
 .'<p><br>Looking forward to hearing your contribution in the discussion.</p>'
-.'<br>'
 .'<br>'
 .'<p>Thanks and regards,</p>'
 .'<p><b>Shulesoft Team</b></p>'
 .'<p> Call: +255 655 406 004 </p>';
-$this->send_email(request('email'), 'ShuleSoft Webinar on '.request('title'), $message);
+$this->send_email(request('email'), 'ShuleSoft Webinar on '. $workshop->title, $message);
 echo "<script>
     alert('Conglatulations for registering!!! We glad to have you.');
     window.location.href='https://www.shulesoft.com/';
