@@ -12,12 +12,11 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('/bitbucket', function() {
+// from repository to database after push
 
-    $data = ['content' => json_encode(request()->all())];
-     DB::table('api.requests')->insert($data);
-     exit;
-});
+Route::post('/bitbucket', 'Background@tech_task');
+
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

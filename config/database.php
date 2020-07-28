@@ -68,6 +68,7 @@ return [
         ],
 
         'karibusms' => [
+
            'database' =>'other_app',
             'username' => 'postgres',
             'password' =>'Jesus_ShuleSoft@2020_',
@@ -80,7 +81,6 @@ return [
             'port' => '5432',
             'prefix_indexes' => true,
             'sslmode' => 'prefer',
-         
         ],
     ],
 
