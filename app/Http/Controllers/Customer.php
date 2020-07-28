@@ -571,7 +571,7 @@ class Customer extends Controller {
         $this->data['dschools'] = \App\Models\School::whereIn('schema_name', $sch)->get();
         return view('customer.modules', $this->data);
     }
-
+ 
     public function taskComment() {
         if (request('content') != '' && (int) request('task_id') > 0) {
             \App\Models\TaskComment::create(array_merge(request()->all(), ['user_id' => Auth::user()->id]));
