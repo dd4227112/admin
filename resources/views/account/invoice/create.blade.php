@@ -34,7 +34,7 @@
                         <ul class="nav nav-tabs md-tabs" role="tablist">
                             <li class="nav-item complete">
                                 <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true">
-                                    <strong>Create Single Invoice</strong> 
+                                    <strong>Create Single Invoice</strong>
                                 </a>
                                 <div class="slide"></div>
                             </li>
@@ -42,8 +42,13 @@
                                 <a class="nav-link" data-toggle="tab" href="#profile3" role="tab" aria-expanded="false">Create Invoice From Excel</a>
                                 <div class="slide"></div>
                             </li>
+                            <li class="nav-item complete">
+                                <a class="nav-link" data-toggle="tab" href="#invoice" role="tab" aria-expanded="false">Create 10% Invoice </a>
+                                <div class="slide"></div>
+                            </li>
                         </ul>
                         <div class="tab-content">
+
                             <div class="tab-pane active" id="home3" role="tabpanel" aria-expanded="true">
                                 <div class="card-block">
 
@@ -58,11 +63,11 @@
                                                 <div class="form-group ">
                                                     <label for="type" class="control-label col-lg-3">Project</label>
                                                     <div class="col-lg-6">
-                                                        <select class="form-control select2_single select2"  name="project_id" id="project_id">
-                                                            <option value="0"></option> 
+                                                        <select class="form-control select2_single select2" name="project_id" id="project_id">
+                                                            <option value="0"></option>
 
                                                             @foreach ($projects as $project)
-                                                            <option value="{{$project->id}}">{{$project->name}}</option>                                                  @endforeach;
+                                                            <option value="{{$project->id}}">{{$project->name}}</option> @endforeach;
                                                         </select>
 
                                                     </div>
@@ -72,19 +77,19 @@
                                                 <div class="form-group ">
                                                     <label for="number" class="control-label col-lg-3">Client (Required)</label>
                                                     <div class="col-lg-6">
-                                                        <select class="form-control select2_single select2" id="client_id"  name="client_id">
+                                                        <select class="form-control select2_single select2" id="client_id" name="client_id">
 
                                                         </select>
 
                                                     </div>
                                                     <?php echo form_error($errors, 'client_id'); ?>
                                                     <div class="col-lg-6"> <span id="client_id_error"></span></div>
-                                                    <a  href="<?=url('account/createClient')?>">Or Add new</a>
+                                                    <a href="<?= url('account/createClient') ?>">Or Add new</a>
                                                 </div>
                                                 <div class="form-group ">
                                                     <label for="number" class="control-label col-lg-3">Date (Required)</label>
                                                     <div class="col-lg-6">
-                                                        <input type="date" name="date" id="date" class="form-control"/>
+                                                        <input type="date" name="date" id="date" class="form-control" />
 
                                                     </div>
                                                     <?php echo form_error($errors, 'date'); ?>
@@ -98,7 +103,7 @@
 
                                                             <div class="card-body">
                                                                 <div id="table" class="table-editable">
-                                                                    <span onclick="addRow(this)"  class="table-add float-right mb-3 mr-2">
+                                                                    <span onclick="addRow(this)" class="table-add float-right mb-3 mr-2">
                                                                         <a href="#!" class=" btn btn-sx"><i class="fa fa-plus fa-2x" aria-hidden="true"></i>Add</a></span>
                                                                     <div id="table_error_area"></div>
                                                                     <table class="table table-bordered table-responsive-md table-striped text-center" id='table'>
@@ -114,7 +119,7 @@
                                                                         </thead>
                                                                         <tbody id='user_area'>
                                                                             <tr class=''>
-                                                                                <td class="name" contenteditable="true" >ShuleSoft Service </td>
+                                                                                <td class="name" contenteditable="true">ShuleSoft Service </td>
 
                                                                                 <td class="quantity" contenteditable="true">21</td>
 
@@ -122,8 +127,7 @@
 
                                                                                 <td class="project" contenteditable="true">shulesoft</td>
                                                                                 <td>
-                                                                                    <span class="table-remove"><button type="button"
-                                                                                                                       class="btn btn-danger btn-rounded btn-sm my-0">Remove</button></span>
+                                                                                    <span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0">Remove</button></span>
                                                                                 </td>
                                                                             </tr>
 
@@ -138,11 +142,11 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                       <div class="col-lg-6"> <input type="checkbox" name="force_new" value="" id="force_new" />            Force to Create New Invoice if Exists
-                                                   
-                                        
+                                                    <div class="col-lg-6"> <input type="checkbox" name="force_new" value="" id="force_new" /> Force to Create New Invoice if Exists
 
-                                                    </div> 
+
+
+                                                    </div>
                                                 </div>
 
                                                 <div class="form-group">
@@ -157,6 +161,8 @@
                                     </div>
                                 </div>
                             </div>
+
+
                             <div class="tab-pane" id="profile3" role="tabpanel" aria-expanded="false">
                                 <div class="card-block">
 
@@ -165,10 +171,10 @@
                                             <div class="panel-body">
                                                 <div class="alert alert-info">This will be a one invoice with multiple users within a certain organization. You need to upload excel file with list of applicants who will be paid by this invoice. </div>
                                                 <p>Sample Excel Format. </p>
-                                                <img src="<?= url('public/images/sample_excel.jpg') ?>"/>
-                                                <br/>
+                                                <img src="<?= url('public/images/sample_excel.jpg') ?>" />
+                                                <br />
                                                 <div class=" form">
-                                                    <br/>
+                                                    <br />
                                                     <form class="cmxform form-horizontal " id="commentForm2" method="post" action="<?= url('invoice') ?>" enctype="multipart/form-data">
                                                         <div class="form-group ">
                                                             <label for="type" class="control-label col-lg-3">Employer</label>
@@ -176,7 +182,7 @@
                                                                 <select class="form-control select2_single select2" name="user_id">
 
                                                                     @foreach ($projects as $type)
-                                                                    <option value="{{$type->id}}">{{$type->name}}</option>                                                  @endforeach;
+                                                                    <option value="{{$type->id}}">{{$type->name}}</option> @endforeach;
                                                                 </select>
 
                                                             </div>
@@ -215,6 +221,164 @@
                                 </div>
                             </div>
 
+
+                            <div class="tab-pane active "  id="invoice" role="tabpanel" aria-expanded="true">
+                                <div class="card-block">
+
+                                    <header class="panel-heading">
+                                       Create 10% Invoice
+
+                                    </header>
+                                    <div class="panel-body">
+                                        <div id="error_area"></div>
+                                        <div class=" form">
+                                            <form class="form-horizontal" role="form" method="post">
+                                                <div class='form-group'>
+                                                    <label for="payment method" class="col-sm-2 control-label">
+                                                        Payment From<span class="red">*</span>
+                                                    </label>
+                                                    <div class="col-sm-6">
+                                                        <select name="payer_name" id="user_in_shulesoft" class="form-control">
+                                                            <option value=""></option>
+                                                            <option value="1">User in ShuleSoft</option>
+                                                            <option value="2">User Not in ShuleSoft</option>
+                                                        </select>
+                                                    </div>
+                                                    <span class="col-sm-4 control-label">
+                                                        <?php echo form_error($errors, 'user_in_shulesoft'); ?>
+                                                    </span>
+                                                </div>
+
+
+
+
+
+                                                <div class='form-group'>
+                                                    <label for="amount" class="col-sm-2 control-label">
+                                                        <?= __("Amount") ?><span class="red">*</span>
+                                                    </label>
+                                                    <div class="col-sm-6">
+
+                                                        <input type="number" class="form-control" id="amount" name="amount" value="<?= old('amount') ?>" required="true">
+                                                    </div>
+                                                    <span class="col-sm-4 control-label">
+                                                        <?php echo form_error($errors, 'amount'); ?>
+                                                    </span>
+                                                </div>
+
+                                                <div class='form-group'>
+                                                    <label for="payment method" class="col-sm-2 control-label">
+                                                        Payment method <span class="red">*</span>
+                                                    </label>
+                                                    <div class="col-sm-6">
+                                                        <select name="payment_type_id" id="payment_method_status" class="form-control" required="">
+                                                            <option value="">Select Payment type</option>
+                                                            <?php
+                                                            /*
+                                                            if (count($payment_types) > 0) {
+
+                                                                foreach ($payment_types as $payment_type) {
+                                                            
+
+                                                                    <option value="<?= $payment_type->id ?>"><?= $payment_type->name ?></option>
+
+                                                            <?php
+                                                                }
+                                                            } */
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                    <span class="col-sm-4 control-label">
+                                                        <?php echo form_error($errors, 'payment_method'); ?>
+                                                    </span>
+                                                </div>
+                                                <div id="refer_no" style="display: none">
+                                                    <div class='form-group'>
+                                                        <label for="bank" class="col-sm-2 control-label">Bank Name</label>
+                                                        <div class="col-sm-6">
+                                                            <select class="select2_multiple form-control" name="bank_account_id" id="bank_name">
+                                                                <option value=""></option>
+
+                                                                <?php
+                                                                /*
+                                                                if (count($banks) > 0) {
+
+                                                                    foreach ($banks as $bank) {
+                                                                ?>
+
+                                                                        <option value="<?= $bank->id ?>"><?= $bank->referBank->name . ' (' . $bank->number . ')' ?></option>
+
+                                                                <?php
+                                                                    }
+                                                                } */
+                                                                ?>
+
+                                                            </select>
+                                                        </div>
+                                                        <span class="col-sm-4 control-label">
+                                                            <?php 
+                                                            //echo form_error($errors, 'bank_name'); 
+                                                            ?>
+                                                        </span>
+                                                    </div>
+
+
+                                                    <div class='form-group'>
+                                                        <label for="amount" class="col-sm-2 control-label">
+                                                            <?= __("Ref No") ?>
+                                                        </label>
+                                                        <div class="col-sm-6">
+
+                                                            <input type="text" placeholder="Enter ref number/cheque number" class="form-control" id="ref_no" name="transaction_id" value="<?= old('transaction_id', time()) ?>">
+                                                        </div>
+                                                        <span class="col-sm-4 control-label">
+                                                            <!--<span id="ref_no_status"></span>-->
+                                                            <?php 
+                                                            // echo form_error($errors, 'transaction_id');
+                                                             ?>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class='form-group'>
+                                                    <label for="date" class="col-sm-2 control-label">
+                                                        <?= __("Date") ?> <span class="red">*</span>
+                                                    </label>
+                                                    <div class="col-sm-6">
+                                                        <input type="date" class="form-control calendar" id="date" name="date" value="<?= old('date') ?>" required="true">
+
+                                                    </div>
+                                                    <span class="col-sm-4 control-label">
+                                                        <?php echo form_error($errors, 'date'); ?>
+                                                    </span>
+                                                </div>
+
+                                                <div class='form-group'>
+                                                    <label for="note" class="col-sm-2 control-label">
+                                                        <?= __("note") ?>
+                                                    </label>
+                                                    <div class="col-sm-6">
+                                                        <textarea style="resize:none;" class="form-control" id="note" name="note"><?= old('note') ?></textarea>
+                                                    </div>
+                                                    <span class="col-sm-4 control-label">
+                                                        <?php echo form_error($errors, 'note'); ?>
+                                                    </span>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="col-sm-offset-2 col-sm-4">
+                                                        <input type="submit" class="btn btn-primary btn-block" value="Save">
+                                                    </div>
+                                                </div>
+
+                                                <?= csrf_field() ?>
+                                            </form>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 
@@ -245,7 +409,7 @@
                             <div class="form-group ">
                                 <label for="cname" class="control-label col-lg-3">Abbreviation</label>
                                 <div class="col-lg-6">
-                                    <input class=" form-control" id="abbrname" name="abbreviation"  type="text" required="">
+                                    <input class=" form-control" id="abbrname" name="abbreviation" type="text" required="">
                                 </div>
                             </div>
                             <div class="form-group " style="display: none;">
@@ -275,7 +439,7 @@
                 </div>
                 <div class="modal-footer">
                     <?= csrf_field() ?>
-                    <input type="hidden" name="user" value="employer"/>
+                    <input type="hidden" name="user" value="employer" />
                     <button data-dismiss="modal" class="btn btn-default" type="button">Close</button>
                     <button class="btn btn-success" type="submit">Save changes</button>
                 </div>
@@ -306,7 +470,7 @@
         table_id.find('table').append($clone);
 
     }
-    table_add = function () {
+    table_add = function() {
         var table_id = $('#table');
 
         var $BTN = $('#export-btn');
@@ -315,12 +479,12 @@
 
 
 
-        table_id.on('click', '.table-remove', function () {
+        table_id.on('click', '.table-remove', function() {
 
             $(this).parents('tr').detach();
         });
 
-        table_id.on('click', '.table-up', function () {
+        table_id.on('click', '.table-up', function() {
 
             const $row = $(this).parents('tr');
 
@@ -331,7 +495,7 @@
             $row.prev().before($row.get(0));
         });
 
-        table_id.on('click', '.table-down', function () {
+        table_id.on('click', '.table-down', function() {
 
             const $row = $(this).parents('tr');
             $row.next().after($row.get(0));
@@ -348,13 +512,13 @@
             const data = [];
 
             // Get the headers (add special header logic here)
-            $($rows.shift()).find('th:not(:empty)').each(function () {
+            $($rows.shift()).find('th:not(:empty)').each(function() {
 
                 headers.push($(this).text().toLowerCase());
             });
 
             // Turn all existing rows into a loopable array
-            $rows.each(function () {
+            $rows.each(function() {
                 const $td = $(this).find('td');
                 const h = {};
 
@@ -372,14 +536,14 @@
         });
     }
     $(document).ready(table_add);
-    single_no_excel_submit = function () {
+    single_no_excel_submit = function() {
 
-        $('#noexcel').mousedown(function () {
+        $('#noexcel').mousedown(function() {
             var client_id = $('#client_id').val();
             var project_id = $('#project_id').val();
             var date = $('#date').val();
             var force_new = $('#force_new').is(':checked');
-  
+
             var ary = [];
 
             if (parseInt(project_id) < 1 || project_id == null) {
@@ -395,7 +559,7 @@
                 return false;
             }
 
-            $('#user_area tr').each(function (a, b) {
+            $('#user_area tr').each(function(a, b) {
                 var name = $('.name', b).text();
                 var quantity = $('.quantity', b).text();
                 var unit_price = $('.unit_price', b).text();
@@ -405,38 +569,52 @@
                     return false;
                 }
 
-                ary.push({name: name, quantity: quantity, unit_price: unit_price, project: project});
+                ary.push({
+                    name: name,
+                    quantity: quantity,
+                    unit_price: unit_price,
+                    project: project
+                });
 
             });
             //alert(JSON.stringify(ary));
             $.ajax({
                 type: 'POST',
                 url: "<?= url('account/createInvoice') ?>/null",
-                data: {date: date, client_id: client_id, noexcel: 1, users: ary, project_id: project_id,force_new:force_new},
+                data: {
+                    date: date,
+                    client_id: client_id,
+                    noexcel: 1,
+                    users: ary,
+                    project_id: project_id,
+                    force_new: force_new
+                },
                 dataType: "html",
-                success: function (data) {
-                
-                       window.location.href="<?=url('account/invoice')?>/"+project_id;
-        
+                success: function(data) {
+
+                    window.location.href = "<?= url('account/invoice') ?>/" + project_id;
+
                 }
             });
         });
     }
-    checkClient = function () {
-        $('#project_id').change(function () {
+    checkClient = function() {
+        $('#project_id').change(function() {
             var project_id = $(this).val();
             $.ajax({
                 type: 'get',
                 url: "<?= url('account/getClient') ?>/null",
-                data: {project_id: project_id},
+                data: {
+                    project_id: project_id
+                },
                 dataType: "html",
-                success: function (data) {
+                success: function(data) {
                     console.log(data);
                     $('#client_id').html(data);
-//                    if (data === 'success') {
-//$('#home7').html('<div clas="alert alert-success">Recorded successfully. To add new record, please refresh </div>');
-//
-//                    }
+                    //                    if (data === 'success') {
+                    //$('#home7').html('<div clas="alert alert-success">Recorded successfully. To add new record, please refresh </div>');
+                    //
+                    //                    }
 
                 }
             });
@@ -447,5 +625,3 @@
     $(document).ready(single_no_excel_submit);
 </script>
 @endsection
-
-
