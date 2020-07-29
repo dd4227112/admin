@@ -99,6 +99,23 @@
                                 <div class="txt-primary"><?= \DB::table($schema . '.teacher')->where('status', 1)->count() ?></div>
                                 <div>Teacher</div>
                               </div>
+                              <div class="col-md-12 col-lg-12">
+                              <hr>
+                                <div class="txt-primary">School Status</div>
+                                <?php $st = DB::table($schema . '.setting')->first(); 
+                                if($st->status == 1){
+                                echo '<div class="btn btn-primary">Active Paid</div>';
+                                }elseif($st->status == 2){
+                                  echo '<div class="btn btn-success">Active</div>';
+                                }elseif($st->status == 3){
+                                  echo '<div class="btn btn-warning">Resale</div>';
+                                }elseif($st->status == 4){
+                                  echo '<div class="btn btn-warning">Inactive</div>';
+                                }else{
+                                  echo '<div>not defined</div>';
+                                }
+                                ?>
+                              </div>
                             </div>
                           <?php } ?>
                         </div>
@@ -388,8 +405,8 @@
                           <div class="card">
                             <div class="card-header">
                               <h5 class="card-header-text">Basic Information</h5>
-                              <button id="edit-btn" type="button" class="btn btn-primary waves-effect waves-light f-right">
-                                <i class="icofont icofont-edit"></i>
+                              <button id="edit-btn" type="button" class="btn btn-primary waves-effect waves-light f-right" data-toggle="modal" data-target="#status-Modal">
+                                <i class="icofont icofont-edit"></i> Change school Status
                               </button>
                             </div>
                             <div class="card-block">
@@ -785,6 +802,43 @@
 <!-- Page-body end -->
 </div>
 </div>
+                      <div class="card-block">
+                        <div class="modal fade" id="status-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
+                          <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h4 class="modal-title">Change Schools Status</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">×</span>
+                                </button>
+                              </div>
+                              <form action="<?= url('customer/schoolStatus')?>" method="post">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                    <input type="hidden" value="<?= $schema ?>" name="schema_name"/>
+                                    </div>
+                                    <div class="form-group">
+                                    School <?= ucfirst($schema) ?> status 
+                                          <select name="status"  class="form-control select2">
+                                                <option value="">Select status</option>
+                                                <option value="1">Active Paid</option>
+                                                <option value="2">Active</option>
+                                                <option value="3">Resale</option>
+                                                <option value="4">Inactive</option>
+                                          </select>
+                                          </div>
+                                                  
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
+                                  </div>
+                                  <?= csrf_field() ?>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
 <script type="text/javascript">
 allocate = function (a, role_id) {
   $.ajax({

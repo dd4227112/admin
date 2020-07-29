@@ -530,7 +530,8 @@ class Customer extends Controller {
     }
 
     public function modules() {
-        $schemas = $this->data['schools'] = DB::select("SELECT distinct table_schema as schema_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public')");
+    //    $schemas = $this->data['schools'] = DB::select("SELECT distinct table_schema as schema_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public')");
+        $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public') AND status in (1,2)");
         $sch = [];
         foreach ($schemas as $schema) {
             array_push($sch, $schema->schema_name);
@@ -570,7 +571,7 @@ class Customer extends Controller {
         $this->data['dschools'] = \App\Models\School::whereIn('schema_name', $sch)->get();
         return view('customer.modules', $this->data);
     }
-
+ 
     public function taskComment() {
         if (request('content') != '' && (int) request('task_id') > 0) {
             \App\Models\TaskComment::create(array_merge(request()->all(), ['user_id' => Auth::user()->id]));
@@ -661,6 +662,18 @@ class Customer extends Controller {
         }
     }
 
+    public function schoolStatus() {
+        if ($_POST) {
+        $schema = request('schema_name');
+        $status = request('status');
+        if((int)$status > 0){
+        DB::table($schema . '.setting')->update(['status' => $status]);
+        return redirect()->back()->with('success', $schema.' Status Updated successfuly');
+        }
+    }
+}
+
+    
     public function map() {
         $schema = request()->segment(3);
         $school_id = request()->segment(4);
