@@ -283,6 +283,7 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
         if (DB::table('admin.task_types')->whereRaw('LOWER(name) LIKE ?', ['%' . ($activity_type) . '%'])->count()) {
             $id = DB::table('admin.task_types')->whereRaw('LOWER(name) LIKE ?', ['%' . ($activity_type) . '%'])->first();
             $task_id = $id->id;
+            
         } else {
             $task_id =  29;
             #sending message to the Commiter that the entered activity type is not correct
@@ -293,6 +294,7 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
             $actor = DB::table('admin.users')->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($user) . '%'])->first();
             $user_id = $actor->id;
         }
+        #data to be sent to the database
         $data = [
             'user_id'  => $user_id,
             'activity' => $commit_message,
