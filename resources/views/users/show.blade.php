@@ -203,7 +203,7 @@ foreach ($user_permission as $permis) {
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">Birth Date</th>
-                                                                        <td>October 25th, 1990</td>
+                                                                        <td>{{ $user->date_of_birth }}</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">Marital Status</th>
@@ -212,6 +212,13 @@ foreach ($user_permission as $permis) {
                                                                     <tr>
                                                                         <th scope="row">Location</th>
                                                                         <td> {{ $user->town }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="row">Academic Certificates</th>
+                                                                        <td><a href="<?= url('/storage/uploads/images/' . $user->academic_certificates)?>" class="btn btn-primary btn-sm"> View Certificate</a></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><a href="<?= url('users/resetPassword/' . $user->id) ?>" class="btn btn-warning btn-sm">Reset Password</a></td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
@@ -222,28 +229,29 @@ foreach ($user_permission as $permis) {
                                                                 <tbody>
                                                                     <tr>
                                                                         <th scope="row">Email</th>
-                                                                        <td><a href="#!">{{ $user->email }}</a></td>
+                                                                        <td><a href="#!">{{ $user->email }}</a>, <a href="#!">{{ $user->personal_email }}</a></td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">Mobile Number</th>
                                                                         <td>{{ $user->phone }}</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <th scope="row">Twitter</th>
-                                                                        <td>shulesoft</td>
+                                                                        <th scope="row">National ID</th>
+                                                                        <td>{{ $user->national_id }}</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">Role</th>
                                                                         <td>{{ $user->role->display_name }}</td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <th scope="row">Skills</th>
-                                                                        <td><a href="#!"> {{ $user->skills }}</a></td>
+                                                                        <th scope="row">Employment Category</th>
+                                                                        <td> <?php echo ucfirst($user->employment_category); ?></td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td class="text-nowrap"></td>
-                                                                        <td>                      <a href="<?= url('users/resetPassword/' . $user->id) ?>" class="btn btn-warning btn-sm">Reset Password</a></td>
+                                                                        <th scope="row">Medical Report</th>
+                                                                        <td><a href="<?= url('/storage/uploads/images/' . $user->medical_report)?>" class="btn btn-info btn-sm"> View Report</a></td>
                                                                     </tr>
+
 
 
                                                                 </tbody>
@@ -416,6 +424,8 @@ foreach ($user_permission as $permis) {
                                         <div class="card-block user-desc">
                                             <div class="view-desc">
                                                 <p><?= $user->about ?></p>
+                                        <hr />
+                                                <b>Skills: <?php echo $user->skills; ?></b>
                                             </div>
                                             <div class="edit-desc" style="display: none;">
                                                 <div class="col-md-12">

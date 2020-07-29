@@ -145,7 +145,25 @@ class Users extends Controller {
                 'lastname' => 'required|max:255',
                 'phone' => 'required|max:255',
             ]);
-            $user = User::find($id)->update(request()->all());
+            
+            $filename = '';
+            if (!empty(request('medical_report'))) {
+                $file = request()->file('medical_report');
+                $filename = time() . rand(11, 8894) . '.' . $file->guessExtension();
+                $filePath = base_path() . '/storage/uploads/images/';
+                $file->move($filePath, $filename);
+            }
+
+            $filename1 = '';
+            if (!empty(request('academic_certificates'))) {
+                $file = request()->file('academic_certificates');
+                $filename1 = time() . rand(11, 8894) . '.' . $file->guessExtension();
+                $filePath = base_path() . '/storage/uploads/images/';
+                $file->move($filePath, $filename1);
+            }
+
+            $user = User::find($id)->update(request()->except('medical_report', 'academic_certificates'));
+            User::find($id)->update(['medical_report' => $filename, 'academic_certificates' => $filename1]);
             return redirect('/')->with('success', 'User ' . request('firstname') . ' ' . request('lastname') . ' updated successfully');
         }
         $this->data['id'] = $id;
