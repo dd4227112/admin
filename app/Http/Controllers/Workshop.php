@@ -50,21 +50,19 @@ $message = '<h4>Dear ' . request('name') .  '</h4>'
 .'<p> Call: +255 655 406 004 </p>';
 $this->send_email(request('email'), 'ShuleSoft Webinar on '. $workshop->title, $message);
 
-$message1 = '<h4>Dear ' . request('name') .  '</h4>'
-.'<p>Thanks for registering for the Shulesoft Webinar session to be held on '.$workshop->event_date.'.</p>'
-.'<p>Topic: '. $workshop->title . '</p>'
-.'<p>Time: '. $workshop->start_time .' - ' .$workshop->end_time. ' </p>'
-.'<p>Link: https://meet.google.com/ney-osuq-bsq </p>'
-.'<br/>'
-.'<p>Remember to join the session 5 minutes before the specified time in order to test your device</p>'
-.'<p><br>Looking forward to hearing your contribution in the discussion.</p>'
-.'<br>'
-.'<p>Thanks and regards,</p>'
-.'<p><b>Shulesoft Team</b></p>'
-.'<p> Call: +255 655 406 004 </p>';
+$message1 = 'Dear ' . request('name') .  '.'
+.chr(10).'Thanks for registering for the Shulesoft Webinar session to be held on '.$workshop->event_date.'.'
+.chr(10).'Topic: '. $workshop->title . '.'
+.chr(10).'Time: '. $workshop->start_time .' - ' .$workshop->end_time. ''
+.chr(10).'Link: https://meet.google.com/ney-osuq-bsq .'
+.chr(10)
+.'Remember to join the session 5 minutes before the specified time in order to test your device.'
+.chr(10).' Looking forward to hearing your contribution in the discussion.'
+.chr(10).'Thanks and regards,'
+.chr(10).'Shulesoft Team'
+.chr(10).' Call: +255 655 406 004 ';
 $sql = "insert into public.sms (body,user_id, type,phone_number) values ('$message1', 1, '0', '$phonenumber')";
 DB::statement($sql);
-echo $sql; 
 
 echo "<script>
     alert('Conglatulations for registering!!! We glad to have you.');
