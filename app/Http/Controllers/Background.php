@@ -274,12 +274,6 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
         $repo           = isset($data1['repository']['full_name'])? $data1['repository']['full_name']:'';
         $user           = isset($data1['push']['changes'][0]['commits'][0])? $data1['push']['changes'][0]['commits'][0]['author']['user']['display_name']:'' ;
         $commit_message = isset($data1['push']['changes'][0]['commits'][0]) ? $data1['push']['changes'][0]['commits'][0]['message'] : '';
-        print("repo");
-        print($repo);
-        print("user");
-        print($user);
-        print("message");
-        print($commit_message);
         $commit_message_in_words = explode(' ', trim($commit_message));
         $activity_type  = strtolower($commit_message_in_words[0]);
 
