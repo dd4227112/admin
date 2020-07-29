@@ -274,12 +274,6 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
         $repo           = isset($data1['repository']['full_name'])? $data1['repository']['full_name']:'';
         $user           = isset($data1['push']['changes'][0]['commits'][0])? $data1['push']['changes'][0]['commits'][0]['author']['user']['display_name']:'' ;
         $commit_message = isset($data1['push']['changes'][0]['commits'][0]) ? $data1['push']['changes'][0]['commits'][0]['message'] : '';
-        print("repo");
-        print($repo);
-        print("user");
-        print($user);
-        print("message");
-        print($commit_message);
         $commit_message_in_words = explode(' ', trim($commit_message));
         $activity_type  = strtolower($commit_message_in_words[0]);
 
@@ -289,6 +283,7 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
         if (DB::table('admin.task_types')->whereRaw('LOWER(name) LIKE ?', ['%' . ($activity_type) . '%'])->count()) {
             $id = DB::table('admin.task_types')->whereRaw('LOWER(name) LIKE ?', ['%' . ($activity_type) . '%'])->first();
             $task_id = $id->id;
+            
         } else {
             $task_id =  29;
             #sending message to the Commiter that the entered activity type is not correct
@@ -299,6 +294,7 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
             $actor = DB::table('admin.users')->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($user) . '%'])->first();
             $user_id = $actor->id;
         }
+        #data to be sent to the database
         $data = [
             'user_id'  => $user_id,
             'activity' => $commit_message,
@@ -309,7 +305,6 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
             'time'    => '1',
         ];
 
-
         // Then pushing to the database(Task) from Repository after push
         $send_task = \App\Models\Task::create($data);
 
@@ -318,6 +313,7 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
             [
                 'user_id' => $user_id,
                 'task_id' =>  $send_task->id
+
             ]
         );
  
