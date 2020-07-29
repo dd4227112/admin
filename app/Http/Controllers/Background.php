@@ -303,7 +303,6 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
             'time'    => '1',
         ];
 
-
         // Then pushing to the database(Task) from Repository after push
         $send_task = \App\Models\Task::create($data);
 
@@ -312,6 +311,7 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
             [
                 'user_id' => $user_id,
                 'task_id' =>  $send_task->id
+
             ]
         );
  
