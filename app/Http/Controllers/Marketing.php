@@ -311,9 +311,10 @@ group by ownership');
                 .chr(10).'Call: +255 655 406 004 ';
                 $sql = "insert into public.sms (body,user_id, type,phone_number) values ('$message1', 1, '0', '$event->phone')";
                 DB::statement($sql);
-                return redirect()->back()->with('success', 'Message Sent Successfully to '. count($events). ' Attendees.');
             }
         }
+        return redirect()->back()->with('success', 'Message Sent Successfully to '. count($events). ' Attendees.');
+
     }
             $this->data['event'] = \App\Models\Events::where('id', $id)->first();
             return view('market.view_event', $this->data);
