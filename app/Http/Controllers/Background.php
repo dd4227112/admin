@@ -285,7 +285,7 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
             $task_id = $id->id;
 
         } else {
-            $task_id =  29;
+            $task_id =  27;
             #sending message to the Commiter that the entered activity type is not correct
         }
 
