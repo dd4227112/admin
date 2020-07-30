@@ -1181,4 +1181,17 @@ class Account extends Controller {
         }
     }
 
+    public function createInitialInvoice(){
+        $payer_name = request('payer_name');
+        $amount_to_pay = request('amount');
+        $payment_method = request('payment_method');
+        $inssued_date = request('inssued_date');
+        $note = request('note');
+
+        $data_to_be_inserted = [
+            ''
+        ];
+
+    }
+
 }
