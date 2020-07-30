@@ -1,4 +1,47 @@
-{
+Webhookscommit details to Admin panel request logs
+Request details
+When an event in Bitbucket triggers a webhook, you can use the request details to figure out
+if something went wrong.
+
+To learn more about how webhooks work, check out the documentation.
+
+Resend request
+Type: repo: push
+Event time: in a minute(Wednesday, July 29 th 2020, 11: 23: 38 am)
+Response from https: //admin.shulesoft.com/api/bitbucket/
+    HTTP status: 200
+Elapsed time: 796 ms
+Request time: in a minute(Wednesday, July 29 th 2020, 11: 23: 38 am)
+Headers
+X - RateLimit - Remaining 59
+X - XSS - Protection 1;
+mode = block
+X - Content - Type - Options nosniff
+Content - Encoding gzip
+Transfer - Encoding chunked
+X - Powered - By PHP / 7.1 .33
+Vary Accept - Encoding
+Server nginx
+Connection keep - alive
+X - RateLimit - Limit 60
+Cache - Control no - cache, private
+Date Wed, 29 Jul 2020 08: 23: 38 GMT
+Content - Type text / html;
+charset = UTF - 8
+Body
+No content
+Request
+Attempt type: Initial attempt
+Headers
+X - Request - UUID f3d99fdf - b91c - 4 db7 - 8 d61 - e92963ce87d1
+X - Event - Key repo: push
+X - Event - Time Wed, 29 Jul 2020 08: 23: 37 GMT
+X - Attempt - Number 1
+X - Hook - UUID 1 c065ec2 - fcbd - 4 a63 - 822 b - 5 fd091708581
+User - Agent Bitbucket - Webhooks / 2.0
+Content - Type application / json
+Body
+Hide request body {
     "push": {
         "changes": [{
             "forced": false,
@@ -24,13 +67,13 @@
                 "type": "branch",
                 "target": {
                     "rendered": {},
-                    "hash": "f56c43d1f8e683927b8c22835107ea194a89803e",
+                    "hash": "eadf688c9576214f99203406638b750d428b52ef",
                     "links": {
                         "self": {
-                            "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/commit/f56c43d1f8e683927b8c22835107ea194a89803e"
+                            "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/commit/eadf688c9576214f99203406638b750d428b52ef"
                         },
                         "html": {
-                            "href": "https://bitbucket.org/inets_company/shulesoft/commits/f56c43d1f8e683927b8c22835107ea194a89803e"
+                            "href": "https://bitbucket.org/inets_company/shulesoft/commits/eadf688c9576214f99203406638b750d428b52ef"
                         }
                     },
                     "author": {
@@ -56,184 +99,125 @@
                         }
                     },
                     "summary": {
-                        "raw": "Event Workshop\n",
+                        "raw": "Merge branch 'master' of bitbucket.org:inets_company/shulesoft\n",
                         "markup": "markdown",
-                        "html": "<p>Event Workshop</p>",
+                        "html": "<p>Merge branch 'master' of bitbucket.org:inets_company/shulesoft</p>",
                         "type": "rendered"
                     },
                     "parents": [{
-                        "hash": "afd7323bcaafd355f6a16215e0059f9526559694",
-                        "type": "commit",
-                        "links": {
-                            "self": {
-                                "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/commit/afd7323bcaafd355f6a16215e0059f9526559694"
-                            },
-                            "html": {
-                                "href": "https://bitbucket.org/inets_company/shulesoft/commits/afd7323bcaafd355f6a16215e0059f9526559694"
+                            "hash": "f0f56d7afd2310ffda5b71c7a309119c321e42b9",
+                            "type": "commit",
+                            "links": {
+                                "self": {
+                                    "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/commit/f0f56d7afd2310ffda5b71c7a309119c321e42b9"
+                                },
+                                "html": {
+                                    "href": "https://bitbucket.org/inets_company/shulesoft/commits/f0f56d7afd2310ffda5b71c7a309119c321e42b9"
+                                }
+                            }
+                        },
+                        {
+                            "hash": "cafd3e401016c83b4fd2b84dda1349d8b9edabc1",
+                            "type": "commit",
+                            "links": {
+                                "self": {
+                                    "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/commit/cafd3e401016c83b4fd2b84dda1349d8b9edabc1"
+                                },
+                                "html": {
+                                    "href": "https://bitbucket.org/inets_company/shulesoft/commits/cafd3e401016c83b4fd2b84dda1349d8b9edabc1"
+                                }
                             }
                         }
-                    }],
-                    "date": "2020-07-27T09:41:58+00:00",
-                    "message": "Event Workshop\n",
+                    ],
+                    "date": "2020-07-29T06:44:55+00:00",
+                    "message": "Merge branch 'master' of bitbucket.org:inets_company/shulesoft\n",
                     "type": "commit",
                     "properties": {}
                 }
             },
             "links": {
                 "commits": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/commits?include=abd2854c53f9cec5a432fe9cdc8fe96c6ee123df&exclude=f56c43d1f8e683927b8c22835107ea194a89803e"
+                    "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/commits?include=1fa7626a22a692f104758bb82e7021c9920d230b&exclude=eadf688c9576214f99203406638b750d428b52ef"
                 },
                 "html": {
-                    "href": "https://bitbucket.org/inets_company/shulesoft/branches/compare/abd2854c53f9cec5a432fe9cdc8fe96c6ee123df..f56c43d1f8e683927b8c22835107ea194a89803e"
+                    "href": "https://bitbucket.org/inets_company/shulesoft/branches/compare/1fa7626a22a692f104758bb82e7021c9920d230b..eadf688c9576214f99203406638b750d428b52ef"
                 },
                 "diff": {
-                    "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/diff/abd2854c53f9cec5a432fe9cdc8fe96c6ee123df..f56c43d1f8e683927b8c22835107ea194a89803e"
+                    "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/diff/1fa7626a22a692f104758bb82e7021c9920d230b..eadf688c9576214f99203406638b750d428b52ef"
                 }
             },
             "created": false,
             "commits": [{
-                    "rendered": {},
-                    "hash": "abd2854c53f9cec5a432fe9cdc8fe96c6ee123df",
-                    "links": {
-                        "self": {
-                            "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/commit/abd2854c53f9cec5a432fe9cdc8fe96c6ee123df"
-                        },
-                        "comments": {
-                            "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/commit/abd2854c53f9cec5a432fe9cdc8fe96c6ee123df/comments"
-                        },
-                        "patch": {
-                            "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/patch/abd2854c53f9cec5a432fe9cdc8fe96c6ee123df"
-                        },
-                        "html": {
-                            "href": "https://bitbucket.org/inets_company/shulesoft/commits/abd2854c53f9cec5a432fe9cdc8fe96c6ee123df"
-                        },
-                        "diff": {
-                            "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/diff/abd2854c53f9cec5a432fe9cdc8fe96c6ee123df"
-                        },
-                        "approve": {
-                            "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/commit/abd2854c53f9cec5a432fe9cdc8fe96c6ee123df/approve"
-                        },
-                        "statuses": {
-                            "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/commit/abd2854c53f9cec5a432fe9cdc8fe96c6ee123df/statuses"
-                        }
+                "rendered": {},
+                "hash": "1fa7626a22a692f104758bb82e7021c9920d230b",
+                "links": {
+                    "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/commit/1fa7626a22a692f104758bb82e7021c9920d230b"
                     },
-                    "author": {
-                        "raw": "Albogast <albogastkiyogoma@gmail.com>",
-                        "type": "author",
-                        "user": {
-                            "display_name": "albogast kiyogoma",
-                            "account_id": "5d92049175c86a0dcda30933",
-                            "links": {
-                                "self": {
-                                    "href": "https://api.bitbucket.org/2.0/users/%7B08f79da4-a457-440c-a49d-c1d60bd1efe5%7D"
-                                },
-                                "html": {
-                                    "href": "https://bitbucket.org/%7B08f79da4-a457-440c-a49d-c1d60bd1efe5%7D/"
-                                },
-                                "avatar": {
-                                    "href": "https://secure.gravatar.com/avatar/22b27f5b63818227fd36586931de1f97?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FAK-4.png"
-                                }
-                            },
-                            "nickname": "albogast kiyogoma",
-                            "type": "user",
-                            "uuid": "{08f79da4-a457-440c-a49d-c1d60bd1efe5}"
-                        }
+                    "comments": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/commit/1fa7626a22a692f104758bb82e7021c9920d230b/comments"
                     },
-                    "summary": {
-                        "raw": "Event Workshop\n",
-                        "markup": "markdown",
-                        "html": "<p>Event Workshop</p>",
-                        "type": "rendered"
+                    "patch": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/patch/1fa7626a22a692f104758bb82e7021c9920d230b"
                     },
-                    "parents": [{
-                        "hash": "acbb4f0344dc7c47ffcb2814ca2deea0c9d4aa6e",
-                        "type": "commit",
-                        "links": {
-                            "self": {
-                                "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/commit/acbb4f0344dc7c47ffcb2814ca2deea0c9d4aa6e"
-                            },
-                            "html": {
-                                "href": "https://bitbucket.org/inets_company/shulesoft/commits/acbb4f0344dc7c47ffcb2814ca2deea0c9d4aa6e"
-                            }
-                        }
-                    }],
-                    "date": "2020-07-27T12:53:14+00:00",
-                    "message": "Event Workshop\n",
-                    "type": "commit",
-                    "properties": {}
+                    "html": {
+                        "href": "https://bitbucket.org/inets_company/shulesoft/commits/1fa7626a22a692f104758bb82e7021c9920d230b"
+                    },
+                    "diff": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/diff/1fa7626a22a692f104758bb82e7021c9920d230b"
+                    },
+                    "approve": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/commit/1fa7626a22a692f104758bb82e7021c9920d230b/approve"
+                    },
+                    "statuses": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/commit/1fa7626a22a692f104758bb82e7021c9920d230b/statuses"
+                    }
                 },
-                {
-                    "rendered": {},
-                    "hash": "acbb4f0344dc7c47ffcb2814ca2deea0c9d4aa6e",
-                    "links": {
-                        "self": {
-                            "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/commit/acbb4f0344dc7c47ffcb2814ca2deea0c9d4aa6e"
-                        },
-                        "comments": {
-                            "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/commit/acbb4f0344dc7c47ffcb2814ca2deea0c9d4aa6e/comments"
-                        },
-                        "patch": {
-                            "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/patch/acbb4f0344dc7c47ffcb2814ca2deea0c9d4aa6e"
-                        },
-                        "html": {
-                            "href": "https://bitbucket.org/inets_company/shulesoft/commits/acbb4f0344dc7c47ffcb2814ca2deea0c9d4aa6e"
-                        },
-                        "diff": {
-                            "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/diff/acbb4f0344dc7c47ffcb2814ca2deea0c9d4aa6e"
-                        },
-                        "approve": {
-                            "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/commit/acbb4f0344dc7c47ffcb2814ca2deea0c9d4aa6e/approve"
-                        },
-                        "statuses": {
-                            "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/commit/acbb4f0344dc7c47ffcb2814ca2deea0c9d4aa6e/statuses"
-                        }
-                    },
-                    "author": {
-                        "raw": "Albogast <albogastkiyogoma@gmail.com>",
-                        "type": "author",
-                        "user": {
-                            "display_name": "albogast kiyogoma",
-                            "account_id": "5d92049175c86a0dcda30933",
-                            "links": {
-                                "self": {
-                                    "href": "https://api.bitbucket.org/2.0/users/%7B08f79da4-a457-440c-a49d-c1d60bd1efe5%7D"
-                                },
-                                "html": {
-                                    "href": "https://bitbucket.org/%7B08f79da4-a457-440c-a49d-c1d60bd1efe5%7D/"
-                                },
-                                "avatar": {
-                                    "href": "https://secure.gravatar.com/avatar/22b27f5b63818227fd36586931de1f97?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FAK-4.png"
-                                }
-                            },
-                            "nickname": "albogast kiyogoma",
-                            "type": "user",
-                            "uuid": "{08f79da4-a457-440c-a49d-c1d60bd1efe5}"
-                        }
-                    },
-                    "summary": {
-                        "raw": "Event Workshop\n",
-                        "markup": "markdown",
-                        "html": "<p>Event Workshop</p>",
-                        "type": "rendered"
-                    },
-                    "parents": [{
-                        "hash": "f56c43d1f8e683927b8c22835107ea194a89803e",
-                        "type": "commit",
+                "author": {
+                    "raw": "Albogast <albogastkiyogoma@gmail.com>",
+                    "type": "author",
+                    "user": {
+                        "display_name": "albogast kiyogoma",
+                        "account_id": "5d92049175c86a0dcda30933",
                         "links": {
                             "self": {
-                                "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/commit/f56c43d1f8e683927b8c22835107ea194a89803e"
+                                "href": "https://api.bitbucket.org/2.0/users/%7B08f79da4-a457-440c-a49d-c1d60bd1efe5%7D"
                             },
                             "html": {
-                                "href": "https://bitbucket.org/inets_company/shulesoft/commits/f56c43d1f8e683927b8c22835107ea194a89803e"
+                                "href": "https://bitbucket.org/%7B08f79da4-a457-440c-a49d-c1d60bd1efe5%7D/"
+                            },
+                            "avatar": {
+                                "href": "https://secure.gravatar.com/avatar/22b27f5b63818227fd36586931de1f97?d=https%3A%2F%2Favatar-management--avatars.us-west-2.prod.public.atl-paas.net%2Finitials%2FAK-4.png"
                             }
-                        }
-                    }],
-                    "date": "2020-07-27T11:19:25+00:00",
-                    "message": "Event Workshop\n",
+                        },
+                        "nickname": "albogast kiyogoma",
+                        "type": "user",
+                        "uuid": "{08f79da4-a457-440c-a49d-c1d60bd1efe5}"
+                    }
+                },
+                "summary": {
+                    "raw": "Updates On User Profile View And Edit to have all Basic and necesary information\n",
+                    "markup": "markdown",
+                    "html": "<p>Updates On User Profile View And Edit to have all Basic and necesary information</p>",
+                    "type": "rendered"
+                },
+                "parents": [{
+                    "hash": "eadf688c9576214f99203406638b750d428b52ef",
                     "type": "commit",
-                    "properties": {}
-                }
-            ],
+                    "links": {
+                        "self": {
+                            "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/commit/eadf688c9576214f99203406638b750d428b52ef"
+                        },
+                        "html": {
+                            "href": "https://bitbucket.org/inets_company/shulesoft/commits/eadf688c9576214f99203406638b750d428b52ef"
+                        }
+                    }
+                }],
+                "date": "2020-07-29T08:23:19+00:00",
+                "message": "Updates On User Profile View And Edit to have all Basic and necesary information\n",
+                "type": "commit",
+                "properties": {}
+            }],
             "truncated": false,
             "closed": false,
             "new": {
@@ -258,13 +242,13 @@
                 "type": "branch",
                 "target": {
                     "rendered": {},
-                    "hash": "abd2854c53f9cec5a432fe9cdc8fe96c6ee123df",
+                    "hash": "1fa7626a22a692f104758bb82e7021c9920d230b",
                     "links": {
                         "self": {
-                            "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/commit/abd2854c53f9cec5a432fe9cdc8fe96c6ee123df"
+                            "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/commit/1fa7626a22a692f104758bb82e7021c9920d230b"
                         },
                         "html": {
-                            "href": "https://bitbucket.org/inets_company/shulesoft/commits/abd2854c53f9cec5a432fe9cdc8fe96c6ee123df"
+                            "href": "https://bitbucket.org/inets_company/shulesoft/commits/1fa7626a22a692f104758bb82e7021c9920d230b"
                         }
                     },
                     "author": {
@@ -290,25 +274,25 @@
                         }
                     },
                     "summary": {
-                        "raw": "Event Workshop\n",
+                        "raw": "Updates On User Profile View And Edit to have all Basic and necesary information\n",
                         "markup": "markdown",
-                        "html": "<p>Event Workshop</p>",
+                        "html": "<p>Updates On User Profile View And Edit to have all Basic and necesary information</p>",
                         "type": "rendered"
                     },
                     "parents": [{
-                        "hash": "acbb4f0344dc7c47ffcb2814ca2deea0c9d4aa6e",
+                        "hash": "eadf688c9576214f99203406638b750d428b52ef",
                         "type": "commit",
                         "links": {
                             "self": {
-                                "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/commit/acbb4f0344dc7c47ffcb2814ca2deea0c9d4aa6e"
+                                "href": "https://api.bitbucket.org/2.0/repositories/inets_company/shulesoft/commit/eadf688c9576214f99203406638b750d428b52ef"
                             },
                             "html": {
-                                "href": "https://bitbucket.org/inets_company/shulesoft/commits/acbb4f0344dc7c47ffcb2814ca2deea0c9d4aa6e"
+                                "href": "https://bitbucket.org/inets_company/shulesoft/commits/eadf688c9576214f99203406638b750d428b52ef"
                             }
                         }
                     }],
-                    "date": "2020-07-27T12:53:14+00:00",
-                    "message": "Event Workshop\n",
+                    "date": "2020-07-29T08:23:19+00:00",
+                    "message": "Updates On User Profile View And Edit to have all Basic and necesary information\n",
                     "type": "commit",
                     "properties": {}
                 }
