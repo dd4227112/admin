@@ -296,11 +296,6 @@ group by ownership');
             $message = '<h4>Dear ' . $event->name .  '</h4>'
             .'<h4>I trust this email finds you well.</h4>'
             .'<h4>'.$body.'</h4>'
-            .'<p>Shulesoft Webinar session to be held on '.$workshop->event_date.'.</p>'
-                .'<p>Topic: '. $workshop->title . '</p>'
-                .'<p>Time: '. $workshop->start_time .' - ' .$workshop->end_time. ' </p>'
-                .'<p>Link: https://meet.google.com/ney-osuq-bsq </p>'
-                .'<br/>'
                 .'<p><br>Looking forward to hearing your contribution in the discussion.</p>'
                 .'<br>'
                 .'<p>Thanks and regards,</p>'
@@ -311,9 +306,6 @@ group by ownership');
             if($event->phone != '' && (int)$sms > 0 ){
                 $message1 = 'Dear ' . $event->name .  '.'
                 .chr(10).$body
-                .chr(10).chr(10).'Topic: '. $workshop->title . '.'
-                .chr(10).'Time: '. $workshop->start_time .' - ' .$workshop->end_time. ''
-                .chr(10).'Link: https://meet.google.com/ney-osuq-bsq .'
                 .chr(10)
                 .chr(10).'Shulesoft Team'
                 .chr(10).'Call: +255 655 406 004 ';
@@ -321,8 +313,8 @@ group by ownership');
                 DB::statement($sql);
                 return redirect()->back()->with('success', 'Message Sent Successfully to '. count($events). ' Attendees.');
             }
-            }
         }
+    }
             $this->data['event'] = \App\Models\Events::where('id', $id)->first();
             return view('market.view_event', $this->data);
         }

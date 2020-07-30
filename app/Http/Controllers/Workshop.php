@@ -30,7 +30,6 @@ class Workshop extends Controller {
         }else{
             $phonenumber = request('phone'); 
         }
-        echo  $phonenumber;
        $workshop = \App\Models\Events::where('id', request('event_id'))->first();
         $event = \App\Models\EventAttendee::create(array_merge(request()->except('phone'), ['phone' => $phonenumber]));
         if(count($event->id) > 0 && request('email')){
