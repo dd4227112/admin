@@ -58,9 +58,9 @@ return [
             'host' => '127.0.0.1',
             'port' =>5432,
 
-            'database' => 'shulesoft_system',
+            'database' => 'back22may',
             'username' => 'postgres',
-            'password' =>'Namwinyu1995',
+            'password' =>'newpassword',
             'charset' => 'utf8',
             'prefix' => '',
             'schema' =>'admin',

@@ -22,6 +22,18 @@ Auth::routes();
 //Route::group(['middleware' => ['guest']], function() {
 //    Auth::routes();
 //});
+Route::get('/epayment/i/{id}', function() {
+    $invoice_id = request()->segment(3);
+    $booking = \App\Models\Invoice::where('id', $invoice_id)->first();
+    $paid = 0;
+    if ($booking->payments()->sum('amount') == $booking->amount || $booking->payments()->sum('amount') == $booking->invoiceFees()->sum('amount')) {
+        $paid = 1;
+    }
+
+    $balance = $booking->payments()->sum('amount');
+
+    return view('account.invoice.pay', compact('booking','balance','paid'));
+});
 Route::get('/student/getschools/null', function() {
     if (strlen(request('term')) > 1) {
         $sql = "SELECT id::text,upper(name)|| ' '||upper(type)||' - '||upper(region) as name FROM admin.schools 

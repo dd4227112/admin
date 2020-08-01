@@ -7,7 +7,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use DB;
-
+use Auth;
 class Controller extends BaseController {
 
     use AuthorizesRequests,
@@ -78,11 +78,38 @@ class Controller extends BaseController {
     public function send_email($email, $subject, $message) {
 
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $obj = array('body' =>$message, 'subject' => $subject, 'email' => $email);
+            $obj = array('body' => $message, 'subject' => $subject, 'email' => $email);
             DB::table('public.email')->insert($obj);
         }
 
         return $this;
+    }
+
+    public function send_sms($phone_number, $message, $priority = 0) {
+        if ((strlen($phone_number) > 6 && strlen($phone_number) < 20) && $message != '') {
+            $sms_keys_id = DB::table('public.sms_keys')->first()->id;
+            DB::table('public.sms')->insert(array('phone_number' => $phone_number, 'body' => $message, 'type' => $priority, 'priority' => $priority, 'sms_keys_id' => $sms_keys_id));
+        }
+        return $this;
+    }
+
+    public function saveFile($file, $subfolder = null, $local = null) {
+
+        $path = \Storage::disk('s3')->put($subfolder, $file);
+        $url = \Storage::disk('s3')->url($path);
+
+        if (strlen($url) > 10) {
+            return DB::table('company_files')->insertGetId([
+                        'name' => $file->getClientOriginalName(),
+                        'extension' => $file->getClientOriginalExtension(),
+                        'user_id' => Auth::user()->id,
+                        'size' => $file->getSize(),
+                        'caption' => $file->getRealPath(),
+                        'path' => $url
+            ]);
+        } else {
+            return false;
+        }
     }
 
 }
