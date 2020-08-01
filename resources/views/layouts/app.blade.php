@@ -605,7 +605,7 @@ function toast(message) {
                                                     </ul>-->
                         </li>
 
-                        <?php if (can_access('manage_marketing')) { ?>
+                        <?php if (can_access('manage_marketing') || Auth::user()->id == 37) { ?>
                             <li class="nav-item">
                                 <a href="#!">
                                     <i class="ti-gift "></i>

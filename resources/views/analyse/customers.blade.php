@@ -86,7 +86,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                 <div class="col-md-6 col-xl-3">
                     <div class="card client-blocks dark-primary-border">
                         <a href="<?=url('analyse/moreInsight')?>"><div class="card-block">
-                            
+
 
                             <h5> Active Customers</h5>
                             <ul>
@@ -106,7 +106,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                 <div class="col-md-6 col-xl-3">
                     <div class="card client-blocks warning-border">
                         <div class="card-block">
-                          
+
                             <h5>Support Activities</h5>
                             <ul>
                                 <li>
@@ -128,7 +128,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
 
                     //        $total_reacherd = \collect(DB::select('select count(distinct b.client_id) from admin.tasks a, admin.tasks_clients b WHERE a.id=b.task_id and  a.user_id in (select id from admin.users where department=1) AND ' . $where))->first()->count;
                             $total_reacherd = \collect(DB::select( "select (count(distinct school_id) + count(distinct client_id)) as count from admin.tasks_schools a, admin.tasks_clients b where b.task_id in (select id from admin.tasks a where a.user_id in (select id from admin.users where department=1) and ".$where.") and a.task_id in (select id from admin.tasks a where a.user_id in (select id from admin.users where department=1) and ".$where.")" ))->first()->count;
-                            
+
                             ?>
                             <h5>Schools Supported</h5>
                             <ul>
@@ -337,7 +337,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
 
                                         <?php
                                  $sql_2 = "select count(id) as count, controller as module from admin.all_log a   where controller not in ('background','SmsController','signin','dashboard') and ".$where."  group by controller order by count desc limit 10 ";
-      
+
                                echo $insight->createChartBySql($sql_2, 'module', 'System Usability Per Modules', 'bar', false);
                                         ?>
                                     </div>

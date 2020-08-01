@@ -239,6 +239,9 @@ group by ownership');
             $post = request("post_id");
             $type = request("type_id");
             $number = request("inputs");
+            if($number == ''){
+                $number = 0;
+            }
             $now = date('Y=m-d H:i:s');
             if ((float) request("inputs") >= 0 && request("post_id") !='' && request("socialmedia_id") !='') {
                     \App\Models\SocialMediaPost::where('post_id', $post)->where('socialmedia_id', $media)->update([$type => $number, 'updated_at' => $now]);
@@ -248,7 +251,7 @@ group by ownership');
                 }
         }
 
-    public function addMinute() {
+    public function addEvent() {
 
         if ($_POST) {
 
@@ -263,35 +266,61 @@ group by ownership');
             $array = [
                 'title' => request('title'),
                 'note' => request('note'),
-                'date' => request('date'),
+                'event_date' => request('event_date'),
                 'start_time' => request('start_time'),
                 'end_time' => request('end_time'),
                 'department_id' => request('department_id'),
-                'attached' => $filename
+                'user_id' => Auth::user()->id,
+                'attach' => $filename
             ];
-            $minute = \App\Models\Minutes::create($array);
-            if(count($minute->id) > 0 && request('user_id')){
-                $modules = request('user_id');
-               foreach($modules as $key => $value) {
-                   if(request('user_id')[$key] != ''){
-                $array = ['user_id' => request('user_id')[$key], 'minute_id' => $minute->id];
-                $check_unique = \App\Models\MinuteUser::where($array);
-                if (count($check_unique->first()) == 0) {
-                    \App\Models\MinuteUser::create($array);
-                }
-            }
-        }
-    }
-            return redirect('users/minutes')->with('success', request('title') . ' updated successfully');
+            $minute = \App\Models\Events::create($array);
+            return redirect('marketing/events')->with('success', request('title') . ' added successfully');
         }
         $this->data['users'] = \App\Models\User::all();
-        return view('users.minutes.addminute', $this->data);
+        return view('market.add_event', $this->data);
     }
 
-    public function showMinute() {
+    public function Events() {
         $id = request()->segment(3);
-        $this->data['minute'] = \App\Models\Minutes::where('id', $id)->first();
-        return view('users.minutes.view_minute', $this->data);
+        if((int)$id>0){
+            
+        if ($_POST) {
+            $body = request('message');
+            $sms = request('sms');
+            $email = request('email');
+            $events = \App\Models\EventAttendee::where('event_id', $id)->get();
+            $workshop = \App\Models\Events::where('id', $id)->first();
+            
+            foreach($events as $event){
+                if($event->email != '' && (int)$email>0 ){
+            $message = '<h4>Dear ' . $event->name .  '</h4>'
+            .'<h4>I trust this email finds you well.</h4>'
+            .'<h4>'.$body.'</h4>'
+                .'<p><br>Looking forward to hearing your contribution in the discussion.</p>'
+                .'<br>'
+                .'<p>Thanks and regards,</p>'
+                .'<p><b>Shulesoft Team</b></p>'
+                .'<p>Call: +255 655 406 004 </p>';
+                $this->send_email($event->email, 'ShuleSoft Webinar on '. $workshop->title, $message);
+            }
+            if($event->phone != '' && (int)$sms > 0 ){
+                $message1 = 'Dear ' . $event->name .  '.'
+                .chr(10).$body
+                .chr(10)
+                .chr(10).'Shulesoft Team'
+                .chr(10).'Call: +255 655 406 004 ';
+                $sql = "insert into public.sms (body,user_id, type,phone_number) values ('$message1', 1, '0', '$event->phone')";
+                DB::statement($sql);
+            }
+        }
+        return redirect()->back()->with('success', 'Message Sent Successfully to '. count($events). ' Attendees.');
+
+    }
+            $this->data['event'] = \App\Models\Events::where('id', $id)->first();
+            return view('market.view_event', $this->data);
+        }
+        $this->data['events'] = \App\Models\Events::orderBy('id', 'DESC')->get();
+        return view('market.events', $this->data);
     }
 
     public function deleteMinute() {

@@ -54,7 +54,7 @@
                                     </ul>
                                 </div>
                                 @endif
-                                {!! Form::model($user, ['method' => 'PATCH','class'=>'form-horizontal','url' => ['users/edit', $user->id]]) !!}
+                                {!! Form::model($user, ['method' => 'PATCH','class'=>'form-horizontal', 'enctype' => 'multipart/form-data', 'url' => ['users/edit', $user->id]]) !!}
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group ">
@@ -94,7 +94,7 @@
                                         <div class="form-group {{ $errors->has('town') ? ' has-error' : '' }}">
                                             <strong>Town:</strong>
                                             <input id="town" placeholder="Town" type="text" class="form-control" name="town"
-                                                   value="{{$user->town}}" required>
+                                                   value="{{$user->town}}" >
 
                                             @if ($errors->has('town'))
                                             <span class="help-block">
@@ -106,7 +106,7 @@
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group ">
                                             <strong>Map Location:</strong>
-                                            <input id="location" readonly placeholder="location" type="text" class="form-control" name="location" value="<?=ucfirst($user->location)?>" required>
+                                            <input id="location" readonly placeholder="location" type="text" class="form-control" name="location" value="<?=ucfirst($user->location)?>">
                                         </div>
                                     </div>
 
@@ -149,7 +149,7 @@
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong>National ID:</strong>
-                                            <input id="location" placeholder="National ID" type="text" class="form-control" name="national_id" value="<?=ucfirst($user->national_id)?>" required>
+                                            <input id="location" placeholder="National ID" type="text" class="form-control" name="national_id" value="<?=ucfirst($user->national_id)?>" >
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12">
@@ -165,7 +165,7 @@
                                             <option value="<?=$user->employment_category?>"><?=ucfirst($user->employment_category)?> </option>
                                                 <option value="permant">Permanent </option>
                                                 <option value="temporarily">Temporarily</option>
-                                                <option value="consultant">Consultant</option>
+                                                <option value="contract">Contract</option>
                                                 <option value="intern">Intern</option>
                                                 <option value="practical training">Practical Training</option>
                                                 <option value="consultant">Consultant</option>
@@ -181,26 +181,26 @@
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong>Joining Date:*</strong>
-                                            <input id="location" placeholder="Date of Joining" type="date" class="form-control" name="joining_date" value="<?=$user->joining_date?>" required>
+                                            <input id="location" placeholder="Date of Joining" type="date" class="form-control" name="joining_date" value="<?=$user->joining_date?>" >
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong>Contract End date:*</strong>
-                                            <input id="location" placeholder="Contract End date" type="date" class="form-control" name="contract_end_date" value="<?=$user->contract_end_date?>" required>
+                                            <input id="location" placeholder="Contract End date" type="date" class="form-control" name="contract_end_date" value="<?=$user->contract_end_date?>" >
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong>Scanned Academic Certificates:</strong>
-                                            <input id="location" placeholder="Academic Certificates" type="text" class="form-control" name="academic_certificates" value="<?=$user->academic_certificates?>" required>
+                                            <input id="certificate" placeholder="Academic Certificates" type="file" class="form-control" name="academic_certificates" value="<?=$user->academic_certificates?>" >
                                             <span class="hinge">Please Scan all academic certificates, place them into one document, upload them in company Google drive account, and paste a shared link here</span>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong>Scanned Medical Report:</strong>
-                                            <input id="location" placeholder="Academic Certificates" type="text" class="form-control" name="medical_report" value="<?=$user->medical_report?>" required>
+                                            <input id="location" placeholder="Academic Certificates" type="file" class="form-control" name="medical_report" value="<?=$user->medical_report?>" >
                                             <span class="hinge">Please Scan health check report from registered hospital, place them into one document, upload them in company Google drive account, and paste a shared link here</span>
                                         </div>
                                     </div>

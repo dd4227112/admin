@@ -49,3 +49,6 @@ if (createRoute() != NULL) {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/workshop', 'Workshop@index')->name('workshop');
+Route::post('/addregister', 'Workshop@addregister');
+Route::get('/register', 'Workshop@register')->name('register');
