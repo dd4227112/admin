@@ -371,33 +371,151 @@ SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks
 
     public function onboard() {
         $school_id = request()->segment(3);
-                
-        $this->data['school'] =$school = DB::table('admin.schools')->where('id', $school_id)->first();
+
+        $this->data['school'] = $school = DB::table('admin.schools')->where('id', $school_id)->first();
         $username = preg_replace('/[^a-z]/', null, strtolower($school->name));
+        $this->data['staffs'] = DB::table('users')->where('status', 1)->get();
         if ($_POST) {
             $code = rand(343, 32323);
-
+ 
             $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
-            if (count($school_contact) == 1) {
-                DB::table('admin.clients')->insert([
-                    'name' => $school->name,
-                    'address' => $school->ward . ' ' . $school->district . ' ' . $school->region,
-                    'phone' => $school_contact->phone,
-                    'email' => $school_contact->email,
-                    'status' => 3,
-                    'code' => $code,
-                    'email_verified' => 0,
-                    'phone_verified' => 0,
-                    'created_by' => Auth::user()->id,
-                    'username' => $username
+            if (count($school_contact) == 0) {
+                DB::table('admin.school_contacts')->insert([
+                    'name' => request('name'), 'email' => request('email'), 'phone' => request('phone'), 'school_id' => $school_id, 'user_id' => Auth::user()->id, 'title' => request('title')
                 ]);
-
-                return redirect('https://' . $username . '.shulesoft.com');
-            } else {
-                return redirect()->back()->with('error', 'This school does not have any contacts allocated. Please add contact first before your click onboard');
+                $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
             }
+            DB::table('admin.schools')->where('id', $school_id)->update(['students' => request('students')]);
+
+            $client_id = DB::table('admin.clients')->insertGetId([
+                'name' => $school->name,
+                'address' => $school->ward . ' ' . $school->district . ' ' . $school->region,
+                'phone' => $school_contact->phone,
+                'email' => $school_contact->email,
+                'estimated_students' => request('students'),
+                'status' => 3,
+                'code' => $code,
+                'email_verified' => 0,
+                'phone_verified' => 0,
+                'created_by' => Auth::user()->id,
+                'username' => $username
+            ]);
+//client school
+            DB::table('admin.client_schools')->insert([
+                'school_id' => $school_id, 'client_id' => $client_id
+            ]);
+            //client projects
+            DB::table('admin.client_projects')->insert([
+                'project_id' => 1, 'client_id' => $client_id //default ShuleSoft project
+            ]);
+            //sales person
+            //support person
+            DB::table('admin.users_schools')->insert([
+                'school_id' => $school_id, 'client_id' => $client_id, 'user_id' => request('support_user_id'), 'role_id' => 8, 'status' => 1
+            ]);
+            //post task, onboarded
+            $data = ['user_id' => Auth::user()->id, 'school_id' => $school_id, 'activity' => 'Onboarding', 'task_type_id' => request('task_type_id'), 'user_id' => Auth::user()->id];
+            $task = \App\Models\Task::create($data);
+            DB::table('tasks_schools')->insert([
+                'task_id' => $task->id,
+                'school_id' => $school_id
+            ]);
+
+            //add company file
+
+            $file = request()->file('file');
+            $file_id = $this->saveFile($file, 'company/contracts');
+            //save contract
+            $contract_id = DB::table('admin.contracts')->insertGetId([
+                'name' => 'ShuleSoft', 'company_file_id' => $file_id, 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'contract_type_id' => request('contract_type_id'), 'user_id' => Auth::user()->id
+            ]);
+            //client contracts
+            DB::table('admin.client_contracts')->insert([
+                'contract_id' => $contract_id, 'client_id' => $client_id
+            ]);
+
+            //once a school has been installed, now create an invoice for this school or create a promo code
+            if (request('payment_status') == 1) {
+                // create an invoice for this school
+                $check_booking = DB::table('admin.invoices')->where('client_id', $client_id)->first();
+                if (count($check_booking) == 1) {
+                    $booking = $check_booking;
+                } else {
+                    $order_id = time() . $client_id;
+                    $client = DB::table('admin.clients')->where('id', $client_id)->first();
+                    $total_price = (int) request('students') < 100 ? 100000 : $client->estimated_students * 1000;
+
+                    $order = array("order_id" => $order_id, "amount" => $total_price,
+                        'buyer_name' => $client->name, 'buyer_phone' => $client->phone, 'end_point' => '/checkout/create-order', 'action' => 'createOrder', 'client_id' => $client->id, 'source' => $client->id);
+                    $this->curlPrivate($order);
+                    $booking = DB::table('admin.invoices')->where('order_id', $order_id)->first();
+                }
+                return redirect('sales/customerSuccess/1/' . $booking->id);
+            } else {
+                //create a trial code for this school
+                $trial_code = $client_id . time();
+                $client = DB::table('admin.clients')->where('id', $client_id);
+                DB::table('admin.clients')->where('id', $client_id)->update(['code' => $trial_code]);
+                $user = $client->first();
+                $message = 'Hello ' . $user->name . '. Your Trial Code is ' . $trial_code;
+                $this->send_sms($user->phone, $message, 1);
+                $this->send_email($user->email, 'Success: School Onboarded Successfully', $message);
+                return redirect('sales/customerSuccess/2/' . $trial_code);
+            }
+            return redirect('https://' . $username . '.shulesoft.com');
         }
         return view('sales.onboarding_school', $this->data);
+    }
+
+    /**
+     * Redirect to this page to finalize onboarding
+     */
+    public function customerSuccess() {
+
+        $id = request()->segment(3);
+        if ((int) $id == 2) {
+            $this->data['trial_code'] = request()->segment(4);
+            $this->data['client'] = DB::table('admin.clients')->where('code', $this->data['trial_code'])->first();
+            if (count($this->data['client']) == 1) {
+                return view('sales.customer_success', $this->data);
+            } else {
+
+                die('Invalid URL');
+            }
+        } else {
+             $client_id = request()->segment(4);
+            $this->data['client'] = $client = \App\Models\Client::where('id', $client_id)->first();
+            $this->data['siteinfos'] = DB::table($this->data['client']->username . '.setting')->first();
+            $this->data['students'] =  $this->data['client']->estimated_students;
+            if (count($client) == 1) {
+              $this->data['booking'] =   $this->data['invoice'] = Invoice::where('client_id', $client->id)->first();
+            } else {
+                $this->data['booking'] = $this->data['invoice'] = [];
+            }
+
+            return view('account.invoice.shulesoft', $this->data);
+        }
+    }
+
+    public function curlPrivate($fields, $url = null) {
+        // Open connection
+        $url = 'http://51.77.212.234:8081/api/payment';
+        $ch = curl_init();
+// Set the url, number of POST vars, POST data
+
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'application/x-www-form-urlencoded'
+        ));
+
+        curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+        return $result;
     }
 
 }

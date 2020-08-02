@@ -60,39 +60,58 @@
                             </div>
                         </div>
                         <div class="user-body" style="min-height: 625px;">
+                            <?php
+                            $school_clients=DB::table('client_schools')->where('school_id',$school->id)->first();
+                            if(count($school_clients)==0){
+                            ?>
                             <div class="card-block">
-                                <button class="btn btn-danger btn-block" id="onboard_school">Oboard School</button>
+                                <button class="btn btn-danger btn-block" id="onboard_school">Onboard School</button>
                             </div>
+                            <?php }else{
+                                $client_id=$school_clients->client_id;
+                                ?>
+                            <br/>
+                            <div class="card-block alert alert-warning">
+                                <b class="">Already Onboarded</b>
+                            </div>
+                            <?php } ?>
                             <ul class="page-list">
                                 <li class="active">
-                                    <div class="mail-section">
+                                    <div class="mail-section"  onclick="show_tabs('activities')">
                                         <a href="#">
                                             <i class="icofont icofont-inbox"></i> Activities
                                         </a>
-                                        <label class="label label-primary f-right">6</label>
+                                        <label class="label label-primary f-right" id="task_count_"></label>
                                     </div>
                                 </li>
                                 <li>
-                                    <div class="mail-section">
-                                        <a href="#">
+                                    <div class="mail-section" onclick="show_tabs('contacts')">
+                                        <a href="#" >
                                             <i class="icofont icofont-star"></i> Contacts
                                         </a>
                                     </div>
                                 </li>
                                 <li>
-                                    <div class="mail-section">
-                                        <a href="#">
+                                    <div class="mail-section"  onclick="show_tabs('school_details')">
+                                        <a href="#" >
                                             <i class="icofont icofont-file-text"></i> School Details
                                         </a>
                                     </div>
                                 </li>
-                                <li>
-                                    <div class="mail-section">
-                                        <a href="#">
-                                            <i class="icofont icofont-paper-plane"></i> Other Details
+<!--                                <li>
+                                    <div class="mail-section"  onclick="show_tabs('contracts')">
+                                        <a href="#" >
+                                            <i class="icofont icofont-paper-plane"></i> Contracts
                                         </a>
                                     </div>
-                                </li>
+                                </li>-->
+                                <script type="text/javascript">
+                                    show_tabs = function (a) {
+                                        $('.live_tabs').hide(function () {
+                                            $('#' + a).show();
+                                        });
+                                    }
+                                </script>
 
                             </ul>
 
@@ -125,7 +144,7 @@
                             </div>
                             <div class="mail-body-content">
 
-                                <div class="timeline live_tabs" style="margin-left:2em">
+                                <div class="timeline live_tabs" id="activities" style="margin-left:2em">
                                     <div class="row">
                                         <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#large-Modal">Create Task</button>
                                         <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
@@ -204,6 +223,7 @@
                                             <?php
                                             $tasks = \App\Models\Task::whereIn('id', \App\Models\TaskSchool::where('school_id', $school->id)->get(['task_id']))->orderBy('created_at', 'desc')->get();
                                             // dd($tasks);
+                                            echo '<input type="hidden" value="'.count($tasks).'" id="task_count"/>';
                                             foreach ($tasks as $task) {
                                                 ?>
                                                 <div class="social-timelines p-relative o-hidden" id="removetag<?= $task->id ?>">
@@ -268,9 +288,9 @@
                                                                                 <div class="">
                                                                                     <textarea rows="5" cols="5" id="task_comment<?= $task->id ?>" class="form-control" placeholder="Write Something here..."></textarea>
                                                                                     <div class="text-right m-t-20"><a href="#" class="btn btn-primary waves-effect waves-light" onclick="return false" onmousedown="$.get('<?= url('customer/taskComment/null') ?>', {content: $('#task_comment<?= $task->id ?>').val(), task_id:<?= $task->id ?>}, function (data) {
-                                                                                                    $('.new_comment<?= $task->id ?>').after(data);
-                                                                                                    $('#task_comment<?= $task->id ?>').val('')
-                                                                                                })">Post</a></div>
+                                                                                                $('.new_comment<?= $task->id ?>').after(data);
+                                                                                                $('#task_comment<?= $task->id ?>').val('')
+                                                                                            })">Post</a></div>
                                                                                 </div>
                                                                             </form>
                                                                         </div>
@@ -286,7 +306,7 @@
                                     </div>
                                 </div>
 
-                                <div class="school_contacts live_tabs" style="display:none">           
+                                <div class="school_contacts live_tabs" id="contacts" style="display:none">           
                                     <div class="table-responsive">
                                         <div class="card-block user-box">
                                             <?php
@@ -313,6 +333,97 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="live_tabs" id='school_details' style="display:none">
+                                    <div class="card-block">
+                                        <button id="edit-btn" type="button" class="btn btn-primary waves-effect waves-light f-right" data-toggle="modal" data-target="#large-Modal-edit-school">
+                                            <i class="icofont icofont-edit"></i>
+                                        </button>
+                                        <div id="view-info" class="row">
+                                            <div class="col-lg-12 col-md-12">
+                                                <form>
+                                                    <table class="table m-b-0">
+                                                        <tbody><tr>
+                                                                <th class="social-label b-none p-t-0">School Name
+                                                                </th>
+                                                                <td class="social-user-name b-none p-t-0 text-muted"><?= $school->name ?></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th class="social-label b-none">Region</th>
+                                                                <td class="social-user-name b-none text-muted"><?= $school->region ?></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th class="social-label b-none">District</th>
+                                                                <td class="social-user-name b-none text-muted"><?= $school->district ?></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th class="social-label b-none">Ward</th>
+                                                                <td class="social-user-name b-none text-muted"><?= $school->ward ?></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th class="social-label b-none p-b-0">Use NMB</th>
+                                                                <td class="social-user-name b-none p-b-0 text-muted"><?= strlen($school->nmb_branch) > 2 ? 'YES : ' . ucwords($school->nmb_branch) . ' Branch' : 'NO' ?></td>
+                                                            </tr>
+                                                        </tbody></table>
+                                                </form>
+                                                <br/>
+                                                <?php
+                                                if(isset($client_id) && (int) $client_id>0){
+                                                    $client = DB::table('admin.clients')->where('id', $client_id)->first();
+                                                
+                                                ?>
+                                                <h3>Onboarding Details</h3>
+                                                  <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Name</th>
+                                                            <th>Client Phone</th>
+                                                            <th>Client Try Code</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th scope="row">1</th>
+                                                            <td><?=$client->name?></td>
+                                                            <td><?=$client->phone?></td>
+                                                            <td><?=$client->code?></td>
+                                                        </tr>
+                                                  
+                                                    </tbody>
+                                                </table>
+                                                <?php }?>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="live_tabs" id='contracts' style="display:none">
+                                    <table>
+                                        <div class="card-block table-border-style">
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>First Name</th>
+                                                            <th>Last Name</th>
+                                                            <th>Username</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th scope="row">1</th>
+                                                            <td>Mark</td>
+                                                            <td>Otto</td>
+                                                            <td>@mdo</td>
+                                                        </tr>
+                                                  
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </table>
+                                </div>
                                 <div class="live_tabs" id="onboard_school_content">
 
                                 </div>
@@ -328,217 +439,128 @@
 
 
 
-    <div class="page-body">
-        <div class="row">
-            <div class="col-sm-12">
-                <div>
-                    <div class="content social-timeline">
-                        <div class="">
 
-                            <!-- Row end -->
-                            <!-- Row Starts -->
+
+
+    <div class="modal fade" id="large-Modal-add-person" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add New Person</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <form action="#" method="post">
+                    <div class="modal-body">
+                        <span>Person Details </span>
+
+                        <div class="form-group">
                             <div class="row">
-                                <div class="col-xl-3 col-lg-4 col-md-4 col-xs-12">
-                                    <!-- Social timeline left start -->
-                                    <div class="social-timeline-left">
-                                        <!-- social-profile card start -->
-
-                                        <!-- social-profile card end -->
-                                        <!-- Who to follow card start -->
-                                        <div class="card">
-
-
-                                            <div class="modal fade" id="large-Modal-add-person" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
-                                                <div class="modal-dialog modal-lg" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h4 class="modal-title">Add New Person</h4>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">×</span>
-                                                            </button>
-                                                        </div>
-                                                        <form action="#" method="post">
-                                                            <div class="modal-body">
-                                                                <span>Person Details </span>
-
-                                                                <div class="form-group">
-                                                                    <div class="row">
-                                                                        <div class="col-md-6">
-                                                                            Name
-                                                                            <input type="text" name="name" class="form-control"/> 
-                                                                        </div>
-                                                                        <div class="col-md-6">
-                                                                            Phone
-                                                                            <input type="text" name="phone" class="form-control"/> 
-                                                                        </div>
-                                                                        <div class="col-md-6">
-                                                                            Email
-                                                                            <input type="text" name="email" class="form-control"/> 
-                                                                        </div>
-                                                                        <div class="col-md-6">
-                                                                            Title
-                                                                            <select name="title" class="form-control">
-
-                                                                                <option value="director">Director/Owner</option>
-                                                                                <option value="manager">School Manager</option>                      
-                                                                                <option value="head teacher">Head Teacher</option>
-                                                                                <option value="Second Master/Mistress">Second Master/Mistress</option>
-                                                                                <option value="academic master">Academic Master</option>
-                                                                                <option value="teacher">Normal Teacher</option>
-                                                                                <option value="Accountant">Accountant</option>
-                                                                                <option value="Other Staff">Other Non Teaching Staff</option>
-
-
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-
-
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                                                                <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
-                                                            </div>
-                                                            <input type="hidden" value="<?= $school->id ?>" name="school_id"/>
-                                                            <input type="hidden" value="1" name="add_user"/>
-                                                            <?= csrf_field() ?>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- Who to follow card end -->
-
-                                        <!-- Friends card end -->
-                                    </div>
-                                    <!-- Social timeline left end -->
+                                <div class="col-md-6">
+                                    Name
+                                    <input type="text" name="name" class="form-control"/> 
                                 </div>
-                                <div class="col-xl-9 col-lg-8 col-md-8 col-xs-12 ">
-                                    <!-- Nav tabs -->
-                                    <div class="card" id="onboard_school_content" style="display:none"></div>
+                                <div class="col-md-6">
+                                    Phone
+                                    <input type="text" name="phone" class="form-control"/> 
+                                </div>
+                                <div class="col-md-6">
+                                    Email
+                                    <input type="text" name="email" class="form-control"/> 
+                                </div>
+                                <div class="col-md-6">
+                                    Title
+                                    <select name="title" class="form-control">
 
-                                    <!-- Tab panes -->
-                                    <div class="tab-content">
-                                        <!-- Timeline tab start -->
+                                        <option value="director">Director/Owner</option>
+                                        <option value="manager">School Manager</option>                      
+                                        <option value="head teacher">Head Teacher</option>
+                                        <option value="Second Master/Mistress">Second Master/Mistress</option>
+                                        <option value="academic master">Academic Master</option>
+                                        <option value="teacher">Normal Teacher</option>
+                                        <option value="Accountant">Accountant</option>
+                                        <option value="Other Staff">Other Non Teaching Staff</option>
 
-                                        <!-- Timeline tab end -->
-                                        <!-- About tab start -->
-                                        <div class="tab-pane" id="about">
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <div class="card">
-                                                        <div class="card-header">
-                                                            <h5 class="card-header-text">Basic Information</h5>
-                                                            <button id="edit-btn" type="button" class="btn btn-primary waves-effect waves-light f-right" data-toggle="modal" data-target="#large-Modal-edit-school">
-                                                                <i class="icofont icofont-edit"></i>
-                                                            </button>
-                                                            <div class="modal fade" id="large-Modal-edit-school" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
-                                                                <div class="modal-dialog modal-lg" role="document">
-                                                                    <div class="modal-content">
-                                                                        <div class="modal-header">
-                                                                            <h4 class="modal-title">Edit School</h4>
-                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                <span aria-hidden="true">×</span>
-                                                                            </button>
-                                                                        </div>
-                                                                        <form action="#" method="post">
-                                                                            <div class="modal-body">
-                                                                                <?php
-                                                                                $school_info = DB::table('schools')->where('id', $school->id)->first();
 
-                                                                                $vars = get_object_vars($school_info);
-                                                                                ?>
-                                                                                <?php
-                                                                                foreach ($vars as $key => $variable) {
-                                                                                    if (!in_array($key, array('id', 'created_at', 'updated_at', 'status', 'schema_name', 'registration_number'))) {
-                                                                                        $name = ucfirst(str_replace('_', ' ', $key));
-                                                                                        ?>
-                                                                                        <div class="form-group">
-                                                                                            <div class="row">
-
-                                                                                                <div class="col-md-12">
-                                                                                                    <?php
-                                                                                                    echo $name;
-                                                                                                    ?>
-
-                                                                                                    <input type="text" name="<?= $key ?>" value="<?= $variable ?>" class="form-control"/>
-
-                                                                                                </div>
-
-                                                                                            </div>
-                                                                                        </div>
-
-                                                                                        <?php
-                                                                                    }
-                                                                                }
-                                                                                ?>
-                                                                            </div>
-                                                                            <div class="modal-footer">
-                                                                                <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                                                                                <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
-                                                                            </div>
-                                                                            <input type="hidden" value="<?= $school->id ?>" name="client_id"/>
-                                                                            <input type="hidden" name="add_sale" value="1"/>
-                                                                            <?= csrf_field() ?>
-                                                                        </form>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="card-block">
-                                                            <div id="view-info" class="row">
-                                                                <div class="col-lg-6 col-md-12">
-                                                                    <form>
-                                                                        <table class="table m-b-0">
-                                                                            <tbody><tr>
-                                                                                    <th class="social-label b-none p-t-0">School Name
-                                                                                    </th>
-                                                                                    <td class="social-user-name b-none p-t-0 text-muted"><?= $school->name ?></td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <th class="social-label b-none">Region</th>
-                                                                                    <td class="social-user-name b-none text-muted"><?= $school->region ?></td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <th class="social-label b-none">District</th>
-                                                                                    <td class="social-user-name b-none text-muted"><?= $school->district ?></td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <th class="social-label b-none">Ward</th>
-                                                                                    <td class="social-user-name b-none text-muted"><?= $school->ward ?></td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <th class="social-label b-none p-b-0">Use NMB</th>
-                                                                                    <td class="social-user-name b-none p-b-0 text-muted"><?= strlen($school->nmb_branch) > 2 ? 'YES : ' . ucwords($school->nmb_branch) . ' Branch' : 'NO' ?></td>
-                                                                                </tr>
-                                                                            </tbody></table>
-                                                                    </form>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <!-- Row end -->
+                                    </select>
                                 </div>
                             </div>
                         </div>
+
+
+
                     </div>
-                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
+                    </div>
+                    <input type="hidden" value="<?= $school->id ?>" name="school_id"/>
+                    <input type="hidden" value="1" name="add_user"/>
+                    <?= csrf_field() ?>
+                </form>
             </div>
         </div>
     </div>
+
+
     <!-- Page-body end -->
+</div>
+<div class="modal fade" id="large-Modal-edit-school" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit School</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form action="#" method="post">
+                <div class="modal-body">
+                    <?php
+                    $school_info = DB::table('schools')->where('id', $school->id)->first();
+
+                    $vars = get_object_vars($school_info);
+                    ?>
+                    <?php
+                    foreach ($vars as $key => $variable) {
+                        if (!in_array($key, array('id', 'created_at', 'updated_at', 'status', 'schema_name', 'registration_number'))) {
+                            $name = ucfirst(str_replace('_', ' ', $key));
+                            ?>
+                            <div class="form-group">
+                                <div class="row">
+
+                                    <div class="col-md-12">
+                                        <?php
+                                        echo $name;
+                                        ?>
+
+                                        <input type="text" name="<?= $key ?>" value="<?= $variable ?>" class="form-control"/>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <?php
+                        }
+                    }
+                    ?>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
+                </div>
+                <input type="hidden" value="<?= $school->id ?>" name="client_id"/>
+                <input type="hidden" name="add_sale" value="1"/>
+                <?= csrf_field() ?>
+            </form>
+        </div>
+    </div>
 </div>
 <script type="text/javascript">
     onboard = function () {
+        $('#task_count_').html($('#task_count').val());
         $('#onboard_school').mousedown(function () {
             $('#onboard_tabs').hide();
             $.ajax({

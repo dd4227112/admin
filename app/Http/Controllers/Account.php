@@ -103,13 +103,14 @@ class Account extends Controller {
                 \App\Models\InvoiceSent::create($arr);
                 return redirect()->back()->with('success', 'success');
             }else{
+             
             $this->data['client'] = $client = \App\Models\Client::where('username', $invoice_id)->first();
             $this->data['siteinfos'] = DB::table($invoice_id . '.setting')->first();
             $this->data['students'] = DB::table($invoice_id . '.student')->where('status', 1)->count();
             if (count($client) == 1) {
-                $this->data['invoice'] = Invoice::where('client_id', $client->id)->first();
+               $this->data['booking'] =  $this->data['invoice'] = Invoice::where('client_id', $client->id)->first();
             } else {
-                $this->data['invoice'] = [];
+               $this->data['booking'] =  $this->data['invoice'] = [];
             }
 
             return view('account.invoice.shulesoft', $this->data);
@@ -1194,4 +1195,7 @@ class Account extends Controller {
 
     }
 
+    public function epayment() {
+        
+    }
 }
