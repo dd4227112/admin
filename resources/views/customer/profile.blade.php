@@ -858,7 +858,7 @@ function check_status($table,$where=null) {
                                                                         <th scope="row">3</th>
                                                                         <td>Inventory Usage</td>
                                                                         <td>Vendors Registered: <?= check_status('vendors'); ?><br/>
-                                                                            Items Registered:<?= check_status('item'); ?> 
+                                                                            Items Registered:<?= check_status('items'); ?> 
                                                                             
                                                                         </td>
                                                                         <td></td>
