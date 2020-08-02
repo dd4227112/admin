@@ -10,7 +10,7 @@ class Client extends Model {
      * Generated
      */
     protected $table = 'clients';
-    protected $fillable = ['id', 'name', 'email', 'phone', 'address', 'lat', 'long', 'google_map', 'username'];
+    protected $fillable = ['id', 'name', 'email', 'phone', 'address', 'lat', 'long', 'google_map', 'username','status','code','email_verified','phone_verified','created_by','estimated_students','special_trial_code'];
 
     public function invoices() {
         return $this->hasMany(\App\Models\Invoice::class, 'client_id', 'id');
@@ -26,6 +26,9 @@ class Client extends Model {
 
     public function payments() {
         return $this->hasMany(\App\Models\Payment::class, 'client_id', 'id');
+    }
+      public function createdBy() {
+        return $this->hasMany(\App\Models\User::class, 'created_by', 'id');
     }
 
 }

@@ -455,7 +455,7 @@ SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks
                 //create a trial code for this school
                 $trial_code = $client_id . time();
                 $client = DB::table('admin.clients')->where('id', $client_id);
-                $update = $client->update(['code' => $trial_code]);
+                DB::table('admin.clients')->where('id', $client_id)->update(['code' => $trial_code]);
                 $user = $client->first();
                 $message = 'Hello ' . $user->name . '. Your Trial Code is ' . $trial_code;
                 $this->send_sms($user->phone, $message, 1);
