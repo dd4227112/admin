@@ -123,6 +123,19 @@ group by ownership');
         return view('market.objective');
     }
 
+    function schoolStatus() {
+        $id = request()->segment(3);
+        if($id == 'shulesoft'){
+            $this->data['title'] = "Schools Alreardy Onboarded";
+        $this->data['all_schools'] = DB::table('admin.schools')->whereNotNull('schema_name')->get();
+        }
+        if($id == 'bank'){
+            $this->data['title'] = "Schools With Bank Payment Integrarion";
+            $this->data['all_schools'] = DB::select('select * from admin.schools WHERE schema_name IN (select distinct schema_name from admin.all_bank_accounts where refer_bank_id=22)');
+        }
+        return view('sales.school_status', $this->data);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
