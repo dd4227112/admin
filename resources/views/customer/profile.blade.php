@@ -149,6 +149,7 @@ function check_status($table,$where=null) {
                                                     </div>
                                                     <div class="card-block user-box">
                                                         <?php
+                                                        if(count($top_users) > 0){
                                                         foreach ($top_users as $log) {
                                                             ?>
                                                             <div class="media m-b-10">
@@ -165,7 +166,10 @@ function check_status($table,$where=null) {
                                                                     <div class="text-muted social-designation"><?= $log->usertype ?></div>
                                                                 </div>
                                                             </div>
-                                                        <?php } ?>
+                                                        <?php 
+                                                        }
+                                                        }
+                                                         ?>
 
                                                     </div>
                                                 </div>
@@ -549,7 +553,9 @@ function check_status($table,$where=null) {
                                                                                         <?php
                                                                                         $school_allocations = \collect(DB::select("select b.id from admin.users_schools a join admin.users b on b.id=a.user_id join admin.schools c on c.id=a.school_id where a.role_id=8 and a.status=1 and c.schema_name='" . $schema . "'"))->first();
                                                                                         ?>    <select class="form-control" id="support_id" name="support_id">
-                                                                                        <?php foreach ($shulesoft_users as $user) { ?>
+                                                                                        <?php
+                                                                                        if(count($shulesoft_users)>0){
+                                                                                        foreach ($shulesoft_users as $user) { ?>
                                                                                                 <option value="<?= $user->id ?>" <?php
                                                                                                 if (count($school_allocations) == 1 && $user->id == $school_allocations->id) {
                                                                                                     $support_person = $user->firstname . ' ' . $user->lastname;
@@ -558,7 +564,9 @@ function check_status($table,$where=null) {
                                                                                                     echo '';
                                                                                                 }
                                                                                                 ?>><?= $user->firstname . ' ' . $user->lastname ?></option>
-                                                                                                    <?php }
+                                                                                            <?php
+                                                                                                     }
+                                                                                                }
                                                                                                     ?>
                                                                                         </select>
 
