@@ -4,12 +4,6 @@
 $root = url('/') . '/public/';
 $page = request()->segment(3);
 $today = 0;
-$sqls1 = "select count(a.*),b.username from admin.tasks a join admin.tasks_clients c on a.id=c.task_id join admin.clients b on b.id=c.client_id 
-                                                WHERE a.user_id in (select id from admin.users where department=2) and $where group by b.username
-                                                UNION ALL 
-                                                select count(a.*),b.name from admin.tasks a join admin.tasks_schools c on a.id=c.task_id join admin.schools b on b.id=c.school_id 
-                                                WHERE a.user_id in (select id from admin.users where department=2) and $where group by b.name";
-$taskss = DB::select($sqls1);
 
 if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
     //current day
@@ -22,6 +16,13 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
     $year = date('Y', strtotime(request('start')));
     $where = "  a.created_at::date >='" . $start_date . "' AND a.created_at::date <='" . $end_date . "'";
 }
+$sqls1 = "select count(a.*),b.username from admin.tasks a join admin.tasks_clients c on a.id=c.task_id join admin.clients b on b.id=c.client_id 
+                                                WHERE a.user_id in (select id from admin.users where department=2) and $where group by b.username
+                                                UNION ALL 
+                                                select count(a.*),b.name from admin.tasks a join admin.tasks_schools c on a.id=c.task_id join admin.schools b on b.id=c.school_id 
+                                                WHERE a.user_id in (select id from admin.users where department=2) and $where group by b.name";
+$taskss = DB::select($sqls1);
+
 $total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and ' . $where))->first()->count;
 $yes_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and action=(\'Yes\') and ' . $where))->first()->count;
 $no_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and action=(\'No\') and ' . $where))->first()->count;
