@@ -855,7 +855,7 @@ function check_status($table,$where=null) {
                                                                         <th scope="row">7</th>
                                                                         <td>SMS sents</td>
                                                                         <td> Expenses: <?= check_status('expense',' WHERE refer_expense_id in (select id from '.$schema.'.refer_expense where financial_category_id in (2,3)) '); ?>
-                                                                        <br/>/td>
+                                                                        <br/></td>
                                                                         <td></td>
                                                                     </tr>
                                                                     <tr>
