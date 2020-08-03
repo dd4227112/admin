@@ -851,6 +851,13 @@ function check_status($table,$where=null) {
                                                                         <td> <?= check_status('sms'); ?></td>
                                                                         <td></td>
                                                                     </tr>
+                                                                       <tr>
+                                                                        <th scope="row">7</th>
+                                                                        <td>SMS sents</td>
+                                                                        <td> Expenses: <?= check_status('expense',' WHERE refer_expense_id in (select id from '.$schema.'.refer_expense where financial_category_id in (2,3)) '); ?>
+                                                                        <br/>/td>
+                                                                        <td></td>
+                                                                    </tr>
                                                                     <tr>
                                                                         <th scope="row" colspan="3">
                                                                             <div class="label-main">
@@ -889,8 +896,7 @@ function check_status($table,$where=null) {
                                                                         <td>
                                                                         Revenue: <?= check_status('revenues',' WHERE refer_expense_id in (select id from '.$schema.'.refer_expense where financial_category_id=1) '); ?>
                                                                         <br/>
-                                                                        Expenses: <?= check_status('expense',' WHERE refer_expense_id in (select id from '.$schema.'.refer_expense where financial_category_id in (2,3)) '); ?>
-                                                                        <br/>
+                                                                      
                                                                         Capital : <?= check_status('revenues',' WHERE refer_expense_id in (select id from '.$schema.'.refer_expense where financial_category_id=7) '); ?><br/>
                                                                         Fixed Assets: <?= check_status('expense',' WHERE refer_expense_id in (select id from '.$schema.'.refer_expense where financial_category_id=4) '); ?><br/>
                                                                         Liabilities : <?= check_status('expense',' WHERE refer_expense_id in (select id from '.$schema.'.refer_expense where financial_category_id=6) '); ?><br/>
@@ -1186,8 +1192,7 @@ foreach ($logs as $log) {
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary waves-effect waves-light ">Save changes</button>
-                </div>
+              </div>
             </div>
         </div>
     </div>
