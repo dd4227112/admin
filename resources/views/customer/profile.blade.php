@@ -343,7 +343,7 @@ function check_status($table,$where=null) {
                                                     <div class="col-md-12 timeline-dot">
                                                         <?php
                                                         $tasks_ids = \App\Models\TaskSchool::whereIn('school_id', \App\Models\ClientSchool::where('client_id', $client_id)->get(['school_id']))->get(['task_id']);
-
+                                                        if(count($tasks_ids)>0){
                                                         $tasks = \App\Models\Task::whereIn('id', \App\Models\TaskClient::where('client_id', $client_id)->get(['task_id']))->orWhereIn('id', $tasks_ids)->orderBy('created_at', 'desc')->get();
                                                         if(count($tasks) > 0){
                                                         foreach ($tasks as $task) {
@@ -417,7 +417,11 @@ function check_status($table,$where=null) {
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        <?php } } ?>
+                                                        <?php
+                                                        } 
+                                                    }
+                                                 }
+                                             ?>
                                                     </div>
                                                 </div>
 
