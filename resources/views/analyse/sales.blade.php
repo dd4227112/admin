@@ -4,6 +4,13 @@
 $root = url('/') . '/public/';
 $page = request()->segment(3);
 $today = 0;
+$sqls1 = "select count(a.*),b.username from admin.tasks a join admin.tasks_clients c on a.id=c.task_id join admin.clients b on b.id=c.client_id 
+                                                WHERE a.user_id in (select id from admin.users where department=2) and $where group by b.username
+                                                UNION ALL 
+                                                select count(a.*),b.name from admin.tasks a join admin.tasks_schools c on a.id=c.task_id join admin.schools b on b.id=c.school_id 
+                                                WHERE a.user_id in (select id from admin.users where department=2) and $where group by b.name";
+$taskss = DB::select($sqls1);
+
 if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
     //current day
     $where = '  a.created_at::date=CURRENT_DATE';
@@ -169,9 +176,9 @@ $no_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.
                         <div class="card-block-big">
                             <div>
                                 <?php
-                                $total_reacherd = \collect(DB::select("select (count(distinct school_id) + count(distinct client_id)) as count from admin.tasks_schools a, admin.tasks_clients b where b.task_id in (select id from admin.tasks a where a.user_id in (select id from admin.users where department=2) and " . $where . ") and a.task_id in (select id from admin.tasks a where a.user_id in (select id from admin.users where department=2) and " . $where . ")"))->first()->count;
+                               // $total_reacherd = \collect(DB::select("select (count(distinct school_id) + count(distinct client_id)) as count from admin.tasks_schools a, admin.tasks_clients b where b.task_id in (select id from admin.tasks a where a.user_id in (select id from admin.users where department=2) and " . $where . ") and a.task_id in (select id from admin.tasks a where a.user_id in (select id from admin.users where department=2) and " . $where . ")"))->first()->count;
                                 ?>
-                                <h3><?= $total_reacherd ?></h3>
+                                <h3><?php echo count($taskss); ?></h3>
                                 <p>Total School Reached
 <!--                                    <span class="f-right text-primary">
                                         <i class="icofont icofont-arrow-up"></i>
@@ -417,13 +424,8 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                                             </thead>
                                             <tbody>
                                                 <?php
-                                                $sqls = "select count(a.*),b.username from admin.tasks a join admin.tasks_clients c on a.id=c.task_id join admin.clients b on b.id=c.client_id 
-                                                WHERE a.user_id in (select id from admin.users where department=2) and $where group by b.username
-                                                UNION ALL 
-                                                select count(a.*),b.name from admin.tasks a join admin.tasks_schools c on a.id=c.task_id join admin.schools b on b.id=c.school_id 
-                                                WHERE a.user_id in (select id from admin.users where department=2) and $where group by b.name";
-                                                $tasks = DB::select($sqls);
-                                                foreach ($tasks as $task) {
+                                                
+                                                foreach ($taskss as $task) {
                                                     ?>
                                                     <tr>
                                                         <td><?= substr($task->username, 0, 30) ?></td>
