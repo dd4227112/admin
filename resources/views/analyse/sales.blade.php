@@ -4,6 +4,7 @@
 $root = url('/') . '/public/';
 $page = request()->segment(3);
 $today = 0;
+
 if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
     //current day
     $where = '  a.created_at::date=CURRENT_DATE';
@@ -15,6 +16,13 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
     $year = date('Y', strtotime(request('start')));
     $where = "  a.created_at::date >='" . $start_date . "' AND a.created_at::date <='" . $end_date . "'";
 }
+$sqls1 = "select count(a.*),b.username from admin.tasks a join admin.tasks_clients c on a.id=c.task_id join admin.clients b on b.id=c.client_id 
+                                                WHERE a.user_id in (select id from admin.users where department=2) and $where group by b.username
+                                                UNION ALL 
+                                                select count(a.*),b.name from admin.tasks a join admin.tasks_schools c on a.id=c.task_id join admin.schools b on b.id=c.school_id 
+                                                WHERE a.user_id in (select id from admin.users where department=2) and $where group by b.name";
+$taskss = DB::select($sqls1);
+
 $total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and ' . $where))->first()->count;
 $yes_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and action=(\'Yes\') and ' . $where))->first()->count;
 $no_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and action=(\'No\') and ' . $where))->first()->count;
@@ -169,9 +177,9 @@ $no_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.
                         <div class="card-block-big">
                             <div>
                                 <?php
-                                $total_reacherd = \collect(DB::select("select (count(distinct school_id) + count(distinct client_id)) as count from admin.tasks_schools a, admin.tasks_clients b where b.task_id in (select id from admin.tasks a where a.user_id in (select id from admin.users where department=2) and " . $where . ") and a.task_id in (select id from admin.tasks a where a.user_id in (select id from admin.users where department=2) and " . $where . ")"))->first()->count;
+                               // $total_reacherd = \collect(DB::select("select (count(distinct school_id) + count(distinct client_id)) as count from admin.tasks_schools a, admin.tasks_clients b where b.task_id in (select id from admin.tasks a where a.user_id in (select id from admin.users where department=2) and " . $where . ") and a.task_id in (select id from admin.tasks a where a.user_id in (select id from admin.users where department=2) and " . $where . ")"))->first()->count;
                                 ?>
-                                <h3><?= $total_reacherd ?></h3>
+                                <h3><?php echo count($taskss); ?></h3>
                                 <p>Total School Reached
 <!--                                    <span class="f-right text-primary">
                                         <i class="icofont icofont-arrow-up"></i>
@@ -270,54 +278,7 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
             <!-- Google Chart end-->
             <!-- Recent Order table start -->
             <div class="row">
-                <div class="col-xl-8">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>SALES ACTIVITIES</h5>
-                        </div>
-                        <div class="card-block">
-                            <div class="table-responsive">
-                                <div class="dt-responsive table-responsive">
-                                    <table id="res-config" class="table table-bordered w-100 dataTable">
-                                        <thead>
-                                            <tr>
-                                                <th>Name</th>
-                                                <th>Task</th>
-                                                <th>Task Type</th>
-                                                <th>Date</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                            $t = '-' . $days . ' days';
-                                            $at = date('Y-m-d H:i:s', strtotime($t));
-                                            $i = 1;
-                                            $activities = $activities = DB::select("select a.id,d.username, a.activity,a.created_at,b.name as task_name, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id join admin.clients d on d.id=a.client_id WHERE  a.task_type_id in (select id from admin.task_types where department=2) and " . $where);
-
-                                            foreach ($activities as $activity) {
-                                                ?>
-
-                                                <tr>
-                                                    <td class="pro-name"><?= $activity->task_name ?></td>
-                                                    <td class="img-pro"><?= $activity->user_name ?></td>
-                                                    <td><a href="<?= url('customer/activity/show/' . $activity->id) ?>"><?= $activity->username ?></a></td>
-                                                    <td> <label class="text-danger"><?= $activity->created_at ?></td>
-                                                </tr>
-                                            <?php } ?>
-                                            <?php
-                                            //
-                                            ?>
-                                        </tbody>
-                                    </table>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Monthly Growth Chart end-->
-                <!-- Google Chart start-->
-                <div class="col-xl-4">
+                <div class="col-xl-12">
                     <div class="card">
                         <div class="card-header">
                             <h5>Sales Distribution Activities</h5>
@@ -417,13 +378,8 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                                             </thead>
                                             <tbody>
                                                 <?php
-                                                $sqls = "select count(a.*),b.username from admin.tasks a join admin.tasks_clients c on a.id=c.task_id join admin.clients b on b.id=c.client_id 
-                                                WHERE a.user_id in (select id from admin.users where department=2) and $where group by b.username
-                                                UNION ALL 
-                                                select count(a.*),b.name from admin.tasks a join admin.tasks_schools c on a.id=c.task_id join admin.schools b on b.id=c.school_id 
-                                                WHERE a.user_id in (select id from admin.users where department=2) and $where group by b.name";
-                                                $tasks = DB::select($sqls);
-                                                foreach ($tasks as $task) {
+                                                
+                                                foreach ($taskss as $task) {
                                                     ?>
                                                     <tr>
                                                         <td><?= substr($task->username, 0, 30) ?></td>

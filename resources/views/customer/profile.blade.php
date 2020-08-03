@@ -149,6 +149,7 @@ function check_status($table,$where=null) {
                                                     </div>
                                                     <div class="card-block user-box">
                                                         <?php
+                                                        if(count($top_users) > 0){
                                                         foreach ($top_users as $log) {
                                                             ?>
                                                             <div class="media m-b-10">
@@ -165,7 +166,10 @@ function check_status($table,$where=null) {
                                                                     <div class="text-muted social-designation"><?= $log->usertype ?></div>
                                                                 </div>
                                                             </div>
-                                                        <?php } ?>
+                                                        <?php 
+                                                        }
+                                                        }
+                                                         ?>
 
                                                     </div>
                                                 </div>
@@ -259,10 +263,11 @@ function check_status($table,$where=null) {
                                                                                         <select name="task_type_id"  class="form-control select2">
                                                                                             <?php
                                                                                             $types = DB::table('task_types')->where('department', Auth::user()->department)->get();
+                                                                                            if(count($types)>0){
                                                                                             foreach ($types as $type) {
                                                                                                 ?>
                                                                                                 <option value="<?= $type->id ?>"><?= $type->name ?></option>
-                                                                                            <?php } ?>
+                                                                                            <?php } }?>
 
                                                                                         </select>
                                                                                     </div>
@@ -271,10 +276,11 @@ function check_status($table,$where=null) {
                                                                                         <select name="to_user_id" class="form-control select2">
                                                                                             <?php
                                                                                             $staffs = DB::table('users')->where('status', 1)->get();
+                                                                                            if(count($staffs) > 0){
                                                                                             foreach ($staffs as $staff) {
                                                                                                 ?>
                                                                                                 <option value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
-                                                                                            <?php } ?>
+                                                                                            <?php } } ?>
 
                                                                                         </select>
                                                                                     </div>
@@ -300,11 +306,12 @@ function check_status($table,$where=null) {
                                                                                 <hr>
                                                                                 <?php
                                                                                 $modules = DB::table('modules')->get();
+                                                                                if(count($modules) >0){
                                                                                 foreach ($modules as $module) {
                                                                                     ?>
                                                                                     <input type="checkbox" id="feature<?= $module->id ?>" value="{{$module->id}}" name="module_id[]" >  <?php echo $module->name; ?>  &nbsp; &nbsp;
 
-                                                                                <?php } ?>
+                                                                                <?php } } ?>
                                                                             </div>
 
                                                                             <div class="form-group">
@@ -336,9 +343,8 @@ function check_status($table,$where=null) {
                                                     <div class="col-md-12 timeline-dot">
                                                         <?php
                                                         $tasks_ids = \App\Models\TaskSchool::whereIn('school_id', \App\Models\ClientSchool::where('client_id', $client_id)->get(['school_id']))->get(['task_id']);
-
                                                         $tasks = \App\Models\Task::whereIn('id', \App\Models\TaskClient::where('client_id', $client_id)->get(['task_id']))->orWhereIn('id', $tasks_ids)->orderBy('created_at', 'desc')->get();
-
+                                                        if(count($tasks) > 0){
                                                         foreach ($tasks as $task) {
                                                             ?>
                                                             <div class="social-timelines p-relative o-hidden" id="removetag<?= $task->id ?>">
@@ -410,7 +416,10 @@ function check_status($table,$where=null) {
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        <?php } ?>
+                                                        <?php
+                                                        } 
+                                                    }
+                                             ?>
                                                     </div>
                                                 </div>
 
@@ -453,9 +462,11 @@ function check_status($table,$where=null) {
                                                                                         <tr>
                                                                                             <th class="social-label b-none p-b-0">School Level</th>
                                                                                             <td class="social-user-name b-none p-b-0 text-muted"><?php
+                                                                                                if(count($levels) > 0){
                                                                                                 foreach ($levels as $level) {
                                                                                                     echo $level->name . ' - ' . $level->result_format . '<br/>';
                                                                                                 }
+                                                                                            }
                                                                                                 ?></td>
                                                                                         </tr>
 
@@ -549,7 +560,9 @@ function check_status($table,$where=null) {
                                                                                         <?php
                                                                                         $school_allocations = \collect(DB::select("select b.id from admin.users_schools a join admin.users b on b.id=a.user_id join admin.schools c on c.id=a.school_id where a.role_id=8 and a.status=1 and c.schema_name='" . $schema . "'"))->first();
                                                                                         ?>    <select class="form-control" id="support_id" name="support_id">
-                                                                                        <?php foreach ($shulesoft_users as $user) { ?>
+                                                                                        <?php
+                                                                                        if(count($shulesoft_users)>0){
+                                                                                        foreach ($shulesoft_users as $user) { ?>
                                                                                                 <option value="<?= $user->id ?>" <?php
                                                                                                 if (count($school_allocations) == 1 && $user->id == $school_allocations->id) {
                                                                                                     $support_person = $user->firstname . ' ' . $user->lastname;
@@ -558,7 +571,9 @@ function check_status($table,$where=null) {
                                                                                                     echo '';
                                                                                                 }
                                                                                                 ?>><?= $user->firstname . ' ' . $user->lastname ?></option>
-                                                                                                    <?php }
+                                                                                            <?php
+                                                                                                     }
+                                                                                                }
                                                                                                     ?>
                                                                                         </select>
 
@@ -573,7 +588,8 @@ function check_status($table,$where=null) {
                                                                                         $school_sales_allocations = \collect(DB::select("select b.id from admin.users_schools a join admin.users b on b.id=a.user_id join admin.schools c on c.id=a.school_id where a.role_id=3 and a.status=1 and c.schema_name='" . $schema . "'"))->first();
                                                                                         ?>                            <select class="form-control" id="sales_id" name="sales_id">
 
-                                                                                            <?php foreach ($shulesoft_users as $user) { ?>
+                                                                                            <?php if(count($school_sales_allocations)){
+                                                                                                foreach ($shulesoft_users as $user) { ?>
                                                                                                 <option value="<?= $user->id ?>" <?php
                                                                                                 if (count($school_sales_allocations) == 1 && $user->id == $school_sales_allocations->id) {
                                                                                                     $sales_person = $user->firstname . ' ' . $user->lastname;
@@ -582,7 +598,9 @@ function check_status($table,$where=null) {
                                                                                                     echo '';
                                                                                                 }
                                                                                                 ?>><?= $user->firstname . ' ' . $user->lastname ?></option>
-                                                                                                    <?php }
+                                                                                                    <?php 
+                                                                                                    }
+                                                                                            }
                                                                                                     ?>
                                                                                         </select>
 
@@ -652,6 +670,7 @@ function check_status($table,$where=null) {
                                                                                     <?php
                                                                                     $client_contracts = \App\Models\ClientContract::where('client_id', $client_id)->get();
                                                                                     $i = 1;
+                                                                                    if(count($client_contracts)>0){
                                                                                     foreach ($client_contracts as $client_contract) {
                                                                                         ?>
                                                                                         <tr>
@@ -667,6 +686,7 @@ function check_status($table,$where=null) {
                                                                                         <?php
                                                                                         $i++;
                                                                                     }
+                                                                                }
                                                                                     ?>
                                                                                 </tbody>
                                                                             </table>
@@ -981,6 +1001,7 @@ function check_status($table,$where=null) {
                                                                                                         data: [
 <?php
 $logs = DB::select('select count(*), extract(month from created_at) as month from ' . $schema . '.log where user_id is not null and extract(year from created_at)=' . date('Y') . '  group by extract(month from created_at) order by extract(month from created_at) asc');
+if(count($logs) > 0){
 foreach ($logs as $log) {
     $dateObj = DateTime::createFromFormat('!m', $log->month);
     $month = $dateObj->format('F');
@@ -993,8 +1014,9 @@ foreach ($logs as $log) {
                                                                                                                     drilldown: ''
                                                                                                                 },
     <?php
-}
-?>
+        }
+        }
+    ?>
                                                                                                         ]
                                                                                                     }]
                                                                                             });
@@ -1028,6 +1050,7 @@ foreach ($logs as $log) {
                                                             <tbody>
                                                                 <?php
                                                                 $users = DB::table($schema . '.user')->where('status', 1)->get();
+                                                                if(count($users) > 0){
                                                                 foreach ($users as $user) {
                                                                     ?>
                                                                     <tr>
@@ -1037,7 +1060,7 @@ foreach ($logs as $log) {
                                                                         <td><?= $user->email ?></td>
                                                                         <td><?= $user->usertype ?></td>
                                                                     </tr>
-<?php } ?>
+                                                            <?php } } ?>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -1088,7 +1111,7 @@ foreach ($logs as $log) {
                         <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
                     </div>
-<?= csrf_field() ?>
+                    <?= csrf_field() ?>
                 </form>
             </div>
         </div>
@@ -1124,10 +1147,11 @@ foreach ($logs as $log) {
 
                                 <?php
                                 $ctypes = DB::table('admin.contracts_types')->get();
+                                if(count($ctypes)>0){
                                 foreach ($ctypes as $ctype) {
                                     ?>
                                     <option value="<?= $ctype->id ?>"><?= $ctype->name ?></option>
-<?php } ?>
+                                    <?php } } ?>
 
                             </select>
                         </div>
@@ -1160,7 +1184,7 @@ foreach ($logs as $log) {
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label"></label>
                         <div class="col-sm-10">
-<?= csrf_field() ?>
+                                <?= csrf_field() ?>
                             <button type="submit" class="btn btn-success" placeholder="Default textarea">Submit</button>
                         </div>
                     </div>
