@@ -182,7 +182,7 @@
                                   <ul>
                                     <li><p style="font-size: 1rem;"> Invoice Info:</p></li>
                                     <address>
-                                      <li><b>Invoice #<?php // $invoice->reference ?></b></li>
+                                      <li><b>Invoice #<?php  $invoice->reference ?></b></li>
                                       <li><b>Date:</b> <?= date('d M Y', strtotime($siteinfos->last_payment_date)); ?></li>
                                       <li><b>Due Date:</b> <?= date('d M Y', strtotime($siteinfos->next_payment_date)) ?></li>
                                     </td>
@@ -274,6 +274,7 @@
                               <b>Account Name:</b> INETS COMPANY LIMITED <br/> <b>Bank Name:</b> NMB BANK PLC <br/>  <b>Account Number:</b> 22510028669
                               <br/>
                             </p>
+                            <d>Or Pay Electronically here <a href="<?=url('epayment/i/'. $booking->id)?>" target="_blank"><?=url('epayment/i/'. ($booking->id))?></a></d>
                             <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
 
                               Thank you for your business. we're glad to serve you

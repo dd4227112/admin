@@ -392,7 +392,7 @@ function select($value, $schema, $sources)
                                                     <tfoot>
                                                         <tr>
                                                             <th>School Name</th>
-                                                            <th></th>
+                                                            <th colspan="5"></th>
                                                             <th><?= $no_students ?></th>
                                                             <th><?= $no_marks ?></th>
                                                             <th><?= $no_exams_published ?></th>

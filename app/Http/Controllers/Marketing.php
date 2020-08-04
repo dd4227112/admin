@@ -283,6 +283,39 @@ group by ownership');
     public function Events() {
         $id = request()->segment(3);
         if((int)$id>0){
+            
+        if ($_POST) {
+            $body = request('message');
+            $sms = request('sms');
+            $email = request('email');
+            $events = \App\Models\EventAttendee::where('event_id', $id)->get();
+            $workshop = \App\Models\Events::where('id', $id)->first();
+            
+            foreach($events as $event){
+                if($event->email != '' && (int)$email>0 ){
+            $message = '<h4>Dear ' . $event->name .  '</h4>'
+            .'<h4>I trust this email finds you well.</h4>'
+            .'<h4>'.$body.'</h4>'
+                .'<p><br>Looking forward to hearing your contribution in the discussion.</p>'
+                .'<br>'
+                .'<p>Thanks and regards,</p>'
+                .'<p><b>Shulesoft Team</b></p>'
+                .'<p>Call: +255 655 406 004 </p>';
+                $this->send_email($event->email, 'ShuleSoft Webinar on '. $workshop->title, $message);
+            }
+            if($event->phone != '' && (int)$sms > 0 ){
+                $message1 = 'Dear ' . $event->name .  '.'
+                .chr(10).$body
+                .chr(10)
+                .chr(10).'Shulesoft Team'
+                .chr(10).'Call: +255 655 406 004 ';
+                $sql = "insert into public.sms (body,user_id, type,phone_number) values ('$message1', 1, '0', '$event->phone')";
+                DB::statement($sql);
+            }
+        }
+        return redirect()->back()->with('success', 'Message Sent Successfully to '. count($events). ' Attendees.');
+
+    }
             $this->data['event'] = \App\Models\Events::where('id', $id)->first();
             return view('market.view_event', $this->data);
         }

@@ -107,7 +107,9 @@
                           </div>
                           <div class="form-group">
                             <div class="col-sm-12 col-xs-12">
-                             Select School Here
+                             Your School / Organization
+                             <input type="text" name="school_id" class="form-control" placeholder="Enter your School name here.." value="{{ old('school_id') }}" required>
+      <!--
                               <select name="school_id" class="form-control select2-container step2-select" data-placeholder="Select Gender" required>
                                 <option value="1">Search Your School Here....</option>
                                 <?php
@@ -117,7 +119,7 @@
                                   <option value="<?= $school->id ?>"><?= $school->name. ' (<b> '.$school->type. ' </b>) - '.$school->region ?></option>
                                 <?php } ?>
 
-                              </select>
+                              </select> -->
                             </div>
                           </div>
 
@@ -163,14 +165,6 @@
           <!-- Authentication card end -->
         </div>
         <!-- end of col-sm-12 -->
-        
-<script>
-$(document).ready(function () {
-	$('select').select2({
-    allowClear: false,
-    debug: true
-    });
-});
-</script>
+ 
 </body>
 </html>

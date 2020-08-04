@@ -266,7 +266,7 @@ class Customer extends Controller {
         if ($school == 'school') {
             $id = request()->segment(4);
             $this->data['client_id'] = $id;
-            $this->data['school'] = \collect(DB::select(' select name as sname, name, region , ward, district as address  from admin.schools where id=' . $id))->first();
+            $this->data['school'] = \collect(DB::select(' select name as sname, name,schema_name, region , ward, district as address  from admin.schools where id=' . $id))->first();
         } else {
 
             $is_client = 1;
@@ -405,10 +405,10 @@ class Customer extends Controller {
         \App\Models\Task::where('id', request('id'))->update(['status' => request('status')]);
         $users = DB::table('tasks_users')->where('task_id', request('id'))->get();
         if (count($users) > 0) {
-           
+
             $task = \App\Models\Task::find(request('id'));
             foreach ($users as $user_task) {
-            
+
                 $user = \App\Models\User::find($user_task->user_id);
                 $message = 'Hello ' . $user->firstname . '<br/>'
                         . 'Task Status has been updated to :' . request('status')
@@ -427,20 +427,20 @@ class Customer extends Controller {
         $dep_id = request('dep_id');
         $types = DB::table('task_types')->where('department', $dep_id)->get();
         $select = '';
-        if(count($types) > 0){
-        foreach ($types as $type) {
-            $select .= '<option value="' . $type->id . '"> ' . $type->name . '</option>';
+        if (count($types) > 0) {
+            foreach ($types as $type) {
+                $select .= '<option value="' . $type->id . '"> ' . $type->name . '</option>';
+            }
+            echo $select;
+        } else {
+            $types = DB::table('task_types')->where('department', Auth::user()->department)->get();
+            $select = '';
+            foreach ($types as $type) {
+                $select .= '<option value="' . $type->id . '"> ' . $type->name . '</option>';
+            }
+            echo $select;
         }
-        echo $select;
-    }else{
-        $types = DB::table('task_types')->where('department', Auth::user()->department)->get();
-        $select = '';
-        foreach ($types as $type) {
-            $select .= '<option value="' . $type->id . '"> ' . $type->name . '</option>';
-        }
-        echo $select;
     }
-}
 
     public function removeTag() {
         $id = request('id');
@@ -494,7 +494,7 @@ class Customer extends Controller {
     }
 
     public function requirements() {
-        
+
         $tab = request()->segment(3);
         $id = request()->segment(4);
         if ($tab == 'show' && $id > 0) {
@@ -508,15 +508,14 @@ class Customer extends Controller {
 
             $req = \App\Models\Requirement::create($data);
             if ((int) request('to_user_id') > 0) {
-                
+
                 $user = \App\Models\User::find(request('to_user_id'));
                 $message = 'Hello ' . $user->name . '<br/><br/>'
-                        . 'There is New School Requirement from '. $req->school->name .' ('.$req->school->region.')'
+                        . 'There is New School Requirement from ' . $req->school->name . ' (' . $req->school->region . ')'
                         . '<br/><br/><p><b>Requirement:</b> ' . $req->note . '</p>'
                         . '<br/><br/><p><b>By:</b> ' . $req->user->name . '</p>';
                 $this->send_email($user->email, 'ShuleSoft New Customer Requirement', $message);
             }
-
         }
         $this->data['requirements'] = \App\Models\Requirement::orderBy('id', 'DESC')->get();
         return view('customer/analysis', $this->data);
@@ -530,8 +529,8 @@ class Customer extends Controller {
     }
 
     public function modules() {
-    //    $schemas = $this->data['schools'] = DB::select("SELECT distinct table_schema as schema_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public')");
-        $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public') AND status in (1,2)");
+        //    $schemas = $this->data['schools'] = DB::select("SELECT distinct table_schema as schema_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public')");
+        $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public') ");
         $sch = [];
         foreach ($schemas as $schema) {
             array_push($sch, $schema->schema_name);
@@ -571,7 +570,7 @@ class Customer extends Controller {
         $this->data['dschools'] = \App\Models\School::whereIn('schema_name', $sch)->get();
         return view('customer.modules', $this->data);
     }
- 
+
     public function taskComment() {
         if (request('content') != '' && (int) request('task_id') > 0) {
             \App\Models\TaskComment::create(array_merge(request()->all(), ['user_id' => Auth::user()->id]));
@@ -664,16 +663,15 @@ class Customer extends Controller {
 
     public function schoolStatus() {
         if ($_POST) {
-        $schema = request('schema_name');
-        $status = request('status');
-        if((int)$status > 0){
-        DB::table($schema . '.setting')->update(['status' => $status]);
-        return redirect()->back()->with('success', $schema.' Status Updated successfuly');
+            $schema = request('schema_name');
+            $status = request('status');
+            if ((int) $status > 0) {
+                DB::table($schema . '.setting')->update(['status' => $status]);
+                return redirect()->back()->with('success', $schema . ' Status Updated successfuly');
+            }
         }
     }
-}
 
-    
     public function map() {
         $schema = request()->segment(3);
         $school_id = request()->segment(4);
@@ -764,7 +762,26 @@ class Customer extends Controller {
         return view('customer.call.create', $this->data);
     }
 
-   
+    public function viewContract() {
+        $contract_id=request()->segment(3);
+        $contract=\App\Models\Contract::find($contract_id);
+        $this->data['path'] = $contract->companyFile->path;
+        return view('layouts.file_view', $this->data);
+    }
+
+    public function contract() {
+        $client_id = request()->segment(3);
+        $file = request()->file('file');
+        $file_id = $this->saveFile($file, 'company/contracts');
+        //save contract
+        $contract_id = DB::table('admin.contracts')->insertGetId([
+            'name' => request('name'), 'company_file_id' => $file_id, 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'contract_type_id' => request('contract_type_id'), 'user_id' => Auth::user()->id, 'note' => request('description')
+        ]);
+        //client contracts
+        DB::table('admin.client_contracts')->insert([
+            'contract_id' => $contract_id, 'client_id' => $client_id
+        ]);
+        return redirect()->back()->with('success','Succeess');
+    }
+
 }
-
-
