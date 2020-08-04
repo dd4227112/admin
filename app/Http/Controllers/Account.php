@@ -168,6 +168,7 @@ class Account extends Controller {
                 $user_invoice = Invoice::where('client_id', $client_id)->first();
                 $reference = 'SASA11' . date('Y') . $client_record->id;
             }
+            $this->data["payment_types"] = \App\Models\PaymentType::all();
 
 
             if (count($user_invoice) == 0) {
@@ -1182,14 +1183,14 @@ class Account extends Controller {
     }
 
     public function createInitialInvoice(){
-        $payer_name = request('payer_name');
-        $amount_to_pay = request('amount');
-        $payment_method = request('payment_method');
-        $inssued_date = request('inssued_date');
+
         $note = request('note');
 
         $data_to_be_inserted = [
-            ''
+            '' => request('payer_name'),
+            '' => request('amount'),
+            '' => request('payment_method'),
+            '' => request('inssued_date'),
         ];
 
     }
