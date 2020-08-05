@@ -2,7 +2,7 @@
 @section('content')
 <?php $root = url('/') . '/public/' ?>
 
-<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo url('public/select2/select2.js'); ?>"></script>
 
 <div class="main-body">
     <div class="page-wrapper">
