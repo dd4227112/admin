@@ -25,7 +25,7 @@
                 <div class="col-sm-10">
                     <select name="task_type_id"  class="form-control">
                         <?php
-                        $types = DB::table('task_types')->where('department', 1)->get();
+                        $types = DB::table('task_types')->where('department', 2)->get();
                         foreach ($types as $type) {
                             ?>
                             <option value="<?= $type->id ?>"><?= $type->name ?></option>
