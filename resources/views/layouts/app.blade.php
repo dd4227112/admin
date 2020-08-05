@@ -613,8 +613,7 @@ function toast(message) {
                                 </a>
                                 <ul class="tree-1">
                                                             <li><a href="<?= url('Marketing/socialMedia') ?>" data-i18n="nav.extra-components.session-timeout">Social Media</a></li>
-                                                            <li><a href="<?= url('Marketing/designing') ?>" data-i18n="nav.extra-components.offline">Materials</a></li>
-                                                            <li><a href="<?= url('Marketing/schools') ?>" data-i18n="nav.extra-components.session-idle-timeout">Schools</a></li>
+                                                            <li><a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">Schools</a></li>
                                                             <li><a href="<?= url('Marketing/Events') ?>" data-i18n="nav.extra-components.session-idle-timeout">Events</a></li>
                                                         </ul>
                             </li>
