@@ -442,7 +442,7 @@ Kind regards,';
             $tz_date = strtotime('-7 hours', $time);
 
 
-            $current_time = date('d-m-y H:i', $time);
+        echo    $current_time = date('d-m-y H:i', time());
             $sms_time = date('d-m-y H:i', $tz_date);
 
 
