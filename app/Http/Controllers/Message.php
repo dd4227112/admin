@@ -439,7 +439,7 @@ Kind regards,';
             $last_online = $result->last_online;
             $minutes = abs(strtotime($last_online) - time()) / 60;
             if ((int) $minutes > 120) {
-                echo 'More than 120min the device is offline';
+                echo $last_online. 'More than 120min the device is offline';
                 $message = "Hello, Your phone appears to be offline for more than 2 hours. For SMS to be sent, kindly make sure your phone is connected with internet and you have logged in";
                 $users = DB::table('admin.all_users')->where('schema_name', $sms->schema_name)->where('usertype', 'Admin')->get();
                 print_r($users);
