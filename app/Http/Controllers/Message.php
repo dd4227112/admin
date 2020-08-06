@@ -442,14 +442,16 @@ Kind regards,';
             $tz_date = strtotime('-7 hours', $time);
 
 
-        echo    $current_time = date('d-m-y H:i', time());
-            $sms_time = date('d-m-y H:i', $tz_date);
+        echo    $current_time = date('d-m-Y H:i', time());
+            $sms_time = date('d-m-Y H:i', $tz_date);
 
 
             $to_time = strtotime($current_time);
             $from_time = strtotime($sms_time);
             $minutes = round(abs($to_time - $from_time) / 60, 2);
+            echo '<br/>';
             echo $minutes;
+            echo '<br/>';
             if ((int) $minutes > 120) {
                 echo $last_online . 'More than 120min the device is offline';
                 $message = "Hello, Your phone appears to be offline for more than 2 hours. For SMS to be sent, kindly make sure your phone is connected with internet and you have logged in";
