@@ -90,7 +90,7 @@
                                                         $last_online = $client->last_reported_online;
 
                                                         $time = strtotime($last_online);
-                                                        $tz_date = strtotime('-4 hours', $time);
+                                                        $tz_date = strtotime('-5 hours', $time);
 
 
 
