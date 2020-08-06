@@ -452,15 +452,15 @@ Kind regards,';
             
             if ((int) $minutes > 120) {
                // echo $last_online . 'More than 120min the device is offline';
-                $message = "Hello, Your phone appears to be offline for more than 2 hours. For SMS to be sent from karibuSMS, kindly make sure your phone is connected with internet and you have logged in, or try to logout and login again. Thank you";
-                $users = DB::table('admin.all_users')->where('schema_name', $sms->schema_name)->where('usertype', 'Admin')->get();
-                
-                foreach ($users as $user) {
-                    if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
-                        DB::statement("insert into public.email (email,subject,body) values ('" . $user->email . "', 'Payment Reminder','" . $message . "')");
-                    }
-                    DB::statement("insert into public.sms (phone_number,body,type) values ('" . $user->phone . "','" . strip_tags($message) . "',0)");
-                }
+//                $message = "Hello, Your phone appears to be offline for more than 2 hours. For SMS to be sent from karibuSMS, kindly make sure your phone is connected with internet and you have logged in, or try to logout and login again. Thank you";
+//                $users = DB::table('admin.all_users')->where('schema_name', $sms->schema_name)->where('usertype', 'Admin')->get();
+//                
+//                foreach ($users as $user) {
+//                    if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
+//                        DB::statement("insert into public.email (email,subject,body) values ('" . $user->email . "', 'Payment Reminder','" . $message . "')");
+//                    }
+//                    DB::statement("insert into public.sms (phone_number,body,type) values ('" . $user->phone . "','" . strip_tags($message) . "',0)");
+//                }
             }
         }
     }

@@ -160,11 +160,11 @@ function toast(message) {
                                     <i class="ti-fullscreen"></i>
                                 </a>
                             </li>
-                            <li class="mega-menu-top">
-                                <!--                                                            <a href="#">
+<!--                            <li class="mega-menu-top">
+                                                                                            <a href="#">
                                                                                                 Mega
                                                                                                 <i class="ti-angle-down"></i>
-                                                                                            </a>-->
+                                                                                            </a>
                                 <ul class="show-notification row">
                                     <li class="col-sm-3">
                                         <h6 class="mega-menu-title">Popular Links</h6>
@@ -277,7 +277,7 @@ function toast(message) {
                                         </div>
                                     </li>
                                 </ul>
-                            </li>
+                            </li>-->
                         </ul>
                         <?php
                         if (strlen(request('token')) < 4) {
