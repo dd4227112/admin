@@ -530,12 +530,12 @@ class Customer extends Controller {
 
     public function modules() {
         //    $schemas = $this->data['schools'] = DB::select("SELECT distinct table_schema as schema_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public')");
-        if(Auth::user()->department==1){
-            $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public') and schema_name in (select schema_name from users_schools where user_id=".Auth::user()->id."  and status=1)");  
-        }else{
-          $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public') ");    
+        if (Auth::user()->department == 1) {
+            $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public') and schema_name in (select schema_name from users_schools where user_id=" . Auth::user()->id . "  and status=1)");
+        } else {
+            $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public') ");
         }
-      
+
         $sch = [];
         foreach ($schemas as $schema) {
             array_push($sch, $schema->schema_name);
@@ -612,6 +612,20 @@ class Customer extends Controller {
         $this->data['users'] = DB::table('admin.all_users')->distinct('usertype')->get(['usertype']);
         $this->data['data'] = DB::select('select count(*) as total_logs,"schema_name"::text from admin.all_log group by "schema_name"::text order by count(*)');
         return view('customer.logsummary', $this->data);
+    }
+
+    public function karibu() {
+     
+        $this->data['clients'] = DB::connection('karibusms')->table('client')->whereNotNull('keyname')->get();
+        $this->data['shulesoft'] = DB::connection('karibusms')->table('client')->where('client_id', 318)->first();
+        if((int) request()->segment(3) >0){
+            $client_id=request()->segment(3);
+            DB::connection('karibusms')->table('client')->where('client_id',$client_id)->update([
+                'gcm_id'=> $this->data['shulesoft']->gcm_id
+            ]);
+            return redirect()->back()->with('success','success');
+        }
+        return view('customer.karibusms', $this->data);
     }
 
     public function feedbacks() {
@@ -768,8 +782,8 @@ class Customer extends Controller {
     }
 
     public function viewContract() {
-        $contract_id=request()->segment(3);
-        $contract=\App\Models\Contract::find($contract_id);
+        $contract_id = request()->segment(3);
+        $contract = \App\Models\Contract::find($contract_id);
         $this->data['path'] = $contract->companyFile->path;
         return view('layouts.file_view', $this->data);
     }
@@ -786,7 +800,7 @@ class Customer extends Controller {
         DB::table('admin.client_contracts')->insert([
             'contract_id' => $contract_id, 'client_id' => $client_id
         ]);
-        return redirect()->back()->with('success','Succeess');
+        return redirect()->back()->with('success', 'Succeess');
     }
 
 }

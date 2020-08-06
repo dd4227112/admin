@@ -530,7 +530,7 @@ function toast(message) {
                                             <li><a href="<?= url('customer/modules') ?>" data-i18n="nav.page_layout.vertical.static-layout"> Modules </a></li>
                                             <li><a href="<?= url('customer/logs') ?>" data-i18n="nav.page_layout.vertical.header-fixed">
                                                     User Logs</a></li>
-                                            <li><a href="<?= url('customer/pages') ?>" data-i18n="nav.page_layout.vertical.compact"> Page Logs </a>
+                                            <li><a href="<?= url('customer/karibu') ?>" data-i18n="nav.page_layout.vertical.compact"> karibuSMS </a>
                                             </li>
                                             <li><a href="<?= url('customer/epayments') ?>" data-i18n="nav.page_layout.vertical.compact"> e-payments </a>
                                             </li>
