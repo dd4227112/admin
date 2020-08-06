@@ -132,7 +132,7 @@ function tagEdit($schema_name, $column, $value) {
                                                                 </td>
 
                                                                 <td>
-                                                                    <?php // tagEdit($schema->schema_name, 'estimated_students', $schema->estimated_students) ?>
+                                                                    <?= tagEdit($schema->schema_name, 'estimated_students', isset($schema->estimated_students) ? $schema->estimated_students:'') ?>
                                                                 </td>
 
 
