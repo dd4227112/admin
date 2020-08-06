@@ -48,8 +48,8 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                            <th>Client Name</th>
-                                            <th>Username</th>
+                                          
+                                            <th>School</th>
                                             <th>Account Logins</th>
                                             <th>Phone Used</th>
                                             <th>Last Reported Online</th>
@@ -65,8 +65,8 @@
                                                 ?>
                                                 <tr>
                                                     <td><?= $i ?></td>
-                                                    <td><?= isset($client->name) ? $client->name : '' ?></td>
-                                                    <td><?= isset($client->username) ? $client->username : '' ?></td>
+                                                 
+                                                    <td><?= isset($client->keyname) ? $client->keyname : '' ?></td>
 
                                                     <td>
                                                         phone:  <?= $client->phone_number ?> <br/>
@@ -78,10 +78,10 @@
                                                         <?php
                                                         $reset_button = 0;
                                                         if ($client->gcm_id == $shulesoft->gcm_id) {
-                                                            echo '<label class="label label-info">ShuleSoft Phone</label>';
+                                                            echo '<b><label class="label label-info">ShuleSoft Phone</label></b>';
                                                         } else {
                                                             $reset_button = 1;
-                                                            echo '<label class="label label-success">' . $client->keyname . ' Phone</label>';
+                                                            echo '<b><label class="label label-success">' . $client->keyname . ' Phone</label></b>';
                                                         }
                                                         ?>
                                                     </td>
