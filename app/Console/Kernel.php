@@ -34,7 +34,6 @@ class Kernel extends ConsoleKernel {
                 ->hourly();
         $schedule->call(function () {
             // sync invoices 
-               (new Message())->checkPhoneStatus();
             $this->syncInvoice();
             //$this->updateInvoice();
         })->everyMinute();
