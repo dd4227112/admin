@@ -435,11 +435,24 @@ Kind regards,';
             $karibusms->API_KEY = $sms->api_key;
             $karibusms->API_SECRET = $sms->api_secret;
             $result = (object) json_decode($karibusms->check_phone_status());
-
+//2020-08-06 20:07:28
             $last_online = $result->last_online;
+
+            $time = strtotime($last_online);
+            $tz_date = strtotime('-7 hours', $time);
+            
+            
+            echo $current_time = date('d-m-y H:i', $time) . '<br/>';
+            echo $sms_time = date('d-m-y H:i', $tz_date) . '<br/>';
+
+
+            $to_time = strtotime($current_time);
+            $from_time = strtotime($sms_time);
+            echo round(abs($to_time - $from_time) / 60, 2) . " minute";
+            exit;
             $minutes = abs(strtotime($last_online) - time()) / 60;
             if ((int) $minutes > 120) {
-                echo $last_online. 'More than 120min the device is offline';
+                echo $last_online . 'More than 120min the device is offline';
                 $message = "Hello, Your phone appears to be offline for more than 2 hours. For SMS to be sent, kindly make sure your phone is connected with internet and you have logged in";
                 $users = DB::table('admin.all_users')->where('schema_name', $sms->schema_name)->where('usertype', 'Admin')->get();
                 print_r($users);
