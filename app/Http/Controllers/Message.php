@@ -204,7 +204,7 @@ class Message extends Controller {
         $user = DB::table('admin.all_users')->where('id', $feedback->user_id)->where('table', $feedback->table)->where('schema_name', str_replace('.', NULL, $feedback->schema))->first();
         if (count($user) == 1) {
             $key = DB::table('public.sms_keys')->first();
-            DB::table('public.sms')->insert(['body' => "Majibu ya ujumbe:" . $feedback->message . ". Jibu: " . $message, 'phone_number' => $user->phone, 'type' => 0,'sms_keys_id'=>$key->id]);
+            DB::table('public.sms')->insert(['body' => "Majibu ya ujumbe:" . $feedback->message . ". Jibu: " . $message, 'phone_number' => $user->phone, 'type' => 0, 'sms_keys_id' => $key->id]);
 
             $reply_message = '<div>'
                     . '<p><b>Majibu ya ujumbe:: </b> ' . $feedback->message . '</p><br/><br/>Jibu:' . $message . '</div>';
@@ -438,8 +438,18 @@ Kind regards,';
 
             $last_online = $result->last_online;
             $minutes = abs(strtotime($last_online) - time()) / 60;
-            if ((int) $minutes > 30) {
-                echo 'More than 30min the device is offline';
+            if ((int) $minutes > 120) {
+                echo 'More than 120min the device is offline';
+                $message = "Hello, Your phone appears to be offline for more than 2 hours. For SMS to be sent, kindly make sure your phone is connected with internet and you have logged in";
+                $users = DB::table('admin.all_users')->where('schema_name', $sms->schema_name)->where('usertype', 'Admin')->get();
+                print_r($users);
+//                foreach ($users as $user) {
+//
+//                    if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
+//                        DB::statement("insert into public.email (email,subject,body) values ('" . $user->email . "', 'Payment Reminder','" . $message . "')");
+//                    }
+//                    DB::statement("insert into public.sms (phone_number,body,type) values ('" . $user->phone . "','" . strip_tags($message) . "',0)");
+//                }
             }
         }
     }
