@@ -48,7 +48,7 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
-                                          
+
                                             <th>School</th>
                                             <th>Account Logins</th>
                                             <th>Phone Used</th>
@@ -65,7 +65,7 @@
                                                 ?>
                                                 <tr>
                                                     <td><?= $i ?></td>
-                                                 
+
                                                     <td><?= isset($client->keyname) ? $client->keyname : '' ?></td>
 
                                                     <td>
@@ -85,12 +85,22 @@
                                                         }
                                                         ?>
                                                     </td>
-                                                    <td><?= $client->last_reported_online ?></td>
+                                                    <td><?php
+                                                        
+                                                        $last_online = $client->last_reported_online;
+
+                                                        $time = strtotime($last_online);
+                                                        $tz_date = strtotime('-4 hours', $time);
+
+
+
+                                                       echo $sms_time = date('d-m-Y H:i', $tz_date);
+                                                        ?></td>
                                                     <td>
                                                         <?php
-                                                        if($reset_button==1){
-                                                        ?>
-                                                        <a href="<?= url('customer/karibu/' . $client->client_id) ?>" class="btn btn-success btn-xs">Reset to ShuleSoft Phone</a>
+                                                        if ($reset_button == 1) {
+                                                            ?>
+                                                            <a href="<?= url('customer/karibu/' . $client->client_id) ?>" class="btn btn-success btn-xs">Reset to ShuleSoft Phone</a>
                                                         <?php } ?>
 
                                                     </td>
