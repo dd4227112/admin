@@ -120,7 +120,7 @@ class Account extends Controller {
 
     public function invoiceView() {
         $invoice_id = $this->data['schema'] = request()->segment(3);
-       $set= $this->data['set'] = 1;
+        $set = $this->data['set'] = 1;
         if ((int) $invoice_id > 0) {
 
             $this->data['invoice'] = Invoice::find($invoice_id);
@@ -157,9 +157,15 @@ class Account extends Controller {
                     $order_id = rand(454, 4557) . time();
                     $invoice = Invoice::where('client_id', $client->id)->first();
                     $amount = $price * ($this->data['students'] + (int) $this->data['siteinfos']->estimated_students);
+                    $phone_number = validate_phone_number($invoice->client->phone);
+                    if (is_array($phone_number)) {
+                        $phone = str_replace('+', null, validate_phone_number($invoice->client->phone)[1]);
+                    } else {
+                         $phone = '255754406004';
+                    }
                     $order = array("order_id" => $order_id, "amount" => $amount,
-                        'buyer_name' => $invoice->client->name, 'buyer_phone' => $invoice->client->phone, 'end_point' => '/checkout/create-order', 'action' => 'createOrder', 'client_id' => $invoice->client_id, 'source' => $invoice->client_id);
-                 
+                        'buyer_name' => $invoice->client->name, 'buyer_phone' => $phone, 'end_point' => '/checkout/create-order', 'action' => 'createOrder', 'client_id' => $invoice->client_id, 'source' => $invoice->client_id);
+
                     $this->curlPrivate($order);
                 }
                 if (count($client) == 1) {
