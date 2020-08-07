@@ -104,20 +104,6 @@ class Account extends Controller {
         return $result;
     }
 
-    public function createControlNumber() {
-
-        $order_id = rand(454, 4557) . time();
-        $order = array("order_id" => $order_id, "amount" => $total_price,
-            'buyer_name' => $this->data['siteinfos']->sname, 'buyer_phone' => $phone, 'end_point' => '/checkout/create-order', 'action' => 'createOrder', 'client_id' => $client->client_id, 'source' => 'karibusms');
-
-        //$payment = new \App\Http\Controllers\PaymentController();
-        // $order = array("order_id" => $order_id, 'action' => 'cancel', 'source' => 'karibusms');
-
-        $this->curlPrivate($order);
-        //$payment->createOrder($order);
-        $check = DB::table('admin.invoices')->where('order_id', $order_id);
-    }
-
     public function invoiceView() {
         $invoice_id = $this->data['schema'] = request()->segment(3);
         $set = $this->data['set'] = 1;
@@ -146,7 +132,6 @@ class Account extends Controller {
                 $control = request()->segment(4);
                 if ((int) $control > 0) {
                     $price = 0;
-
                     if ($set == 1 || $set == '') {
                         $price = $this->data['siteinfos']->price_per_student;
                     } else if ($set == 6) {
@@ -156,17 +141,19 @@ class Account extends Controller {
                     }
                     $order_id = rand(454, 4557) . time();
                     $invoice = Invoice::where('client_id', $client->id)->first();
-                    $amount = $price * ($this->data['students'] + (int) $this->data['siteinfos']->estimated_students);
-                    $phone_number = validate_phone_number($invoice->client->phone);
-                    if (is_array($phone_number)) {
-                        $phone = str_replace('+', null, validate_phone_number($invoice->client->phone)[1]);
-                    } else {
-                         $phone = '255754406004';
-                    }
-                    $order = array("order_id" => $order_id, "amount" => $amount,
-                        'buyer_name' => $invoice->client->name, 'buyer_phone' => $phone, 'end_point' => '/checkout/create-order', 'action' => 'createOrder', 'client_id' => $invoice->client_id, 'source' => $invoice->client_id);
+                    if (strlen($invoice->token) < 4) {
+                        $amount = $price * ($this->data['students'] + (int) $this->data['siteinfos']->estimated_students);
+                        $phone_number = validate_phone_number($invoice->client->phone);
+                        if (is_array($phone_number)) {
+                            $phone = str_replace('+', null, validate_phone_number($invoice->client->phone)[1]);
+                        } else {
+                            $phone = '255754406004';
+                        }
+                        $order = array("order_id" => $order_id, "amount" => $amount,
+                            'buyer_name' => $invoice->client->name, 'buyer_phone' => $phone, 'end_point' => '/checkout/create-order', 'action' => 'createOrder', 'client_id' => $invoice->client_id, 'source' => $invoice->client_id);
 
-                    $this->curlPrivate($order);
+                        $this->curlPrivate($order);
+                    }
                 }
                 if (count($client) == 1) {
                     $this->data['booking'] = $this->data['invoice'] = Invoice::where('client_id', $client->id)->first();
