@@ -120,16 +120,9 @@ class Account extends Controller {
 
     public function invoiceView() {
         $invoice_id = $this->data['schema'] = request()->segment(3);
-        $this->data['set'] = 1;
+       $set= $this->data['set'] = 1;
         if ((int) $invoice_id > 0) {
-            $control = request()->segment(4);
-            if ((int) $control > 0) {
-                $order_id = rand(454, 4557) . time();
-                $invoice=Invoice::find($invoice_id);
-                $order = array("order_id" => $order_id, "amount" => $invoice->invoiceFees()->sum('amount'),
-                    'buyer_name' => $invoice->client->name, 'buyer_phone' => $invoice->client->phone, 'end_point' => '/checkout/create-order', 'action' => 'createOrder', 'client_id' => $invoice->client_id, 'source' => $invoice->client_id);
-                $this->curlPrivate($order);
-            }
+
             $this->data['invoice'] = Invoice::find($invoice_id);
             return view('account.invoice.single', $this->data);
         } else {
@@ -150,6 +143,25 @@ class Account extends Controller {
                 $this->data['client'] = $client = \App\Models\Client::where('username', $invoice_id)->first();
                 $this->data['siteinfos'] = DB::table($invoice_id . '.setting')->first();
                 $this->data['students'] = DB::table($invoice_id . '.student')->where('status', 1)->count();
+                $control = request()->segment(4);
+                if ((int) $control > 0) {
+                    $price = 0;
+
+                    if ($set == 1 || $set == '') {
+                        $price = $this->data['siteinfos']->price_per_student;
+                    } else if ($set == 6) {
+                        $price = $this->data['siteinfos']->price_per_student / 2;
+                    } else if ($set == 12) {
+                        $price = $this->data['siteinfos']->price_per_student / 10;
+                    }
+                    $order_id = rand(454, 4557) . time();
+                    $invoice = Invoice::where('client_id', $client->id)->first();
+                    $amount = $price * ($this->data['students'] + (int) $this->data['siteinfos']->estimated_students);
+                    $order = array("order_id" => $order_id, "amount" => $amount,
+                        'buyer_name' => $invoice->client->name, 'buyer_phone' => $invoice->client->phone, 'end_point' => '/checkout/create-order', 'action' => 'createOrder', 'client_id' => $invoice->client_id, 'source' => $invoice->client_id);
+                 
+                    $this->curlPrivate($order);
+                }
                 if (count($client) == 1) {
                     $this->data['booking'] = $this->data['invoice'] = Invoice::where('client_id', $client->id)->first();
                 } else {
