@@ -882,7 +882,7 @@ if ($school->school_id == null) {
                                                                                 <?= $sms_time ?>
                                                                                 </label>
                                                                                 <?php
-                                                                            } else if (count($karibu == 1)) {
+                                                                            } else if (count($karibu) == 1) {
                                                                                 $last_online = $karibu->last_reported_online;
 
                                                                                 $time = strtotime($last_online);
