@@ -123,7 +123,7 @@
                                         <div class="col-lg-6">
                                             <?php
                                             if (strlen($invoice->token) < 4) {
-                                                ?><a href="<?= url()->current().'/1' ?>" class="btn btn-warning ">Create Control Number</a>
+                                                ?><a href="<?= url()->current() . '/1' ?>" class="btn btn-warning ">Create Control Number</a>
                                             <?php } ?><span style="float: right;" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#large-Modal">Define Due Date</span></div>
                                     </div>  
                                     <h2>Invoice For &nbsp; &nbsp;  &nbsp;</h2>
@@ -190,11 +190,13 @@
                                                             <ul>
                                                                 <li><p style="font-size: 1rem;"> Invoice Info:</p></li>
                                                                 <address>
-                                                                    <li><b>Invoice #<?php $invoice->token ?></b></li>
+                                                                    <li><b>Invoice #<?=$invoice->token ?></b></li>
                                                                     <li><b>Date:</b> <?= isset($siteinfos->last_payment_date) ? date('d M Y', strtotime($siteinfos->last_payment_date)) : '' ?></li>
                                                                     <li><b>Due Date:</b> <?= isset($siteinfos->next_payment_date) ? date('d M Y', strtotime($siteinfos->next_payment_date)) : '' ?></li>
-                                                                    </td>
+                                                                </address>
+
                                                             </ul>
+                                                        </td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -362,7 +364,7 @@
                                                                 <p></p>
                                                                 <ol>
                                                                     <li>Visit any nearby NMB BANK branch</li>
-                                                                    <li>Make deposit by specifying invoice number : <b><?= $invoice ?></b> with payment amount of Tsh <b><?php // money($price * $students)    ?></b></li>
+                                                                    <li>Make deposit by specifying invoice number : <b><?= $invoice ?></b> with payment amount of Tsh <b><?php // money($price * $students)     ?></b></li>
                                                                 </ol>
                                                                 <p></p>
 
@@ -380,7 +382,7 @@
                                                                     <li class="nmb3" key="step3">Select (5) for Bills Payment</li>
                                                                     <li class="nmb3" key="step4">Select (6) option </li>
                                                                     <li><span class="nmb3" key="step5">Enter invoice number </span>: <b><?= $invoice ?></b></li>
-                                                                    <li><span  class="nmb3" key="step6">Enter amount for your payment </span> <b>Tsh <?php // money($price * $students)    ?></b></li>
+                                                                    <li><span  class="nmb3" key="step6">Enter amount for your payment </span> <b>Tsh <?php // money($price * $students)     ?></b></li>
                                                                 </ol>
 
                                                                 <p></p>
@@ -394,7 +396,7 @@
                                                                 <p></p>
                                                                 <ol>
                                                                     <li>Visit any nearby NMB Wakala agent</li>
-                                                                    <li>Make deposit of Tsh <b><?php // money($price * $students)    ?></b> and specify invoice number : <b><?= $invoice ?></b></li>
+                                                                    <li>Make deposit of Tsh <b><?php // money($price * $students)     ?></b> and specify invoice number : <b><?= $invoice ?></b></li>
                                                                 </ol>
 
                                                             </div>
@@ -445,7 +447,7 @@
                                                                         <li>Select option 4, to enter business number </li>
                                                                         <li>Enter Business Number <b><?= $bn_number ?></b></li>
                                                                         <li>Enter Reference Number : <b><?= $invoice ?></b></li>
-                                                                        <li>Enter amount for your payment Tsh <b><?php // money($price * $students)    ?></b></li>
+                                                                        <li>Enter amount for your payment Tsh <b><?php // money($price * $students)     ?></b></li>
                                                                         <li>Enter pin to confirm </li>
                                                                     </ol>
                                                                     <p></p>
