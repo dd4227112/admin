@@ -123,7 +123,7 @@
                                         <div class="col-lg-6">
                                             <?php
                                             if (strlen($invoice->token) < 4) {
-                                                ?><a href="<?= url('account/invoiceView/accounts/1') ?>" class="btn btn-warning ">Create Control Number</a>
+                                                ?><a href="<?= url()->current().'/1' ?>" class="btn btn-warning ">Create Control Number</a>
                                             <?php } ?><span style="float: right;" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#large-Modal">Define Due Date</span></div>
                                     </div>  
                                     <h2>Invoice For &nbsp; &nbsp;  &nbsp;</h2>
