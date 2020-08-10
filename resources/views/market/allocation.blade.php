@@ -37,7 +37,7 @@
                                 $total = 0;
                                 foreach ($school_types as $type) {
                                     ?>
-                                    <div class="col-md-12 col-xl-4">
+                                        <div class="col-lg-3 col-xl-3 col-sm-12">
                                         <div class="card counter-card-<?= $i ?>">
                                             <div class="card-block-big">
                                                 <div>
