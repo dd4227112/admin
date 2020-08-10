@@ -368,13 +368,8 @@ SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks
 
             $array = [
                 'name' => strtoupper(request('name')),
-                'ward' => request('ward'),
-                'zone' => request('zone'),
-                'type' => request('type'),
-                'region' => request('region'),
-                'district' => request('district'),
-                'ownership' => request('ownership'),
-                'nmb_zone' => request('zone')
+                'ward_id' => request('ward'),
+                'ownership' => request('ownership')
             ];
             DB::table('admin.schools')->insert($array);
             return redirect('sales/school')->with('success', request('name') . ' successfully');
