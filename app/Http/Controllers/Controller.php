@@ -8,6 +8,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use DB;
 use Auth;
+
 class Controller extends BaseController {
 
     use AuthorizesRequests,
@@ -110,6 +111,27 @@ class Controller extends BaseController {
         } else {
             return false;
         }
+    }
+
+    public function curlPrivate($fields, $url = null) {
+        // Open connection
+        $url = 'http://51.77.212.234:8081/api/payment';
+        $ch = curl_init();
+// Set the url, number of POST vars, POST data
+
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'application/x-www-form-urlencoded'
+        ));
+
+        curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+        return $result;
     }
 
 }

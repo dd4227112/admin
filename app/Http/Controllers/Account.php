@@ -83,16 +83,19 @@ class Account extends Controller {
         }
     }
 
+
+
     public function invoiceView() {
         $invoice_id = $this->data['schema'] = request()->segment(3);
-        $this->data['set'] = 1;
+        $set = $this->data['set'] = 1;
         if ((int) $invoice_id > 0) {
+
             $this->data['invoice'] = Invoice::find($invoice_id);
             return view('account.invoice.single', $this->data);
         } else {
             if ($_POST) {
                 $school = request('school');
-                DB::table($school.'.setting')->update(['next_payment_date' => request('next_payment_date'), 'last_payment_date' => request('last_payment_date')]);
+                DB::table($school . '.setting')->update(['next_payment_date' => request('next_payment_date'), 'last_payment_date' => request('last_payment_date')]);
                 $arr = [
                     'amount' => request('amount'),
                     'schema_name' => $school,
@@ -102,21 +105,47 @@ class Account extends Controller {
                 ];
                 \App\Models\InvoiceSent::create($arr);
                 return redirect()->back()->with('success', 'success');
-            }else{
-             
-            $this->data['client'] = $client = \App\Models\Client::where('username', $invoice_id)->first();
-            $this->data['siteinfos'] = DB::table($invoice_id . '.setting')->first();
-            $this->data['students'] = DB::table($invoice_id . '.student')->where('status', 1)->count();
-            if (count($client) == 1) {
-               $this->data['booking'] =  $this->data['invoice'] = Invoice::where('client_id', $client->id)->first();
             } else {
-               $this->data['booking'] =  $this->data['invoice'] = [];
-            }
 
-            return view('account.invoice.shulesoft', $this->data);
+                $this->data['client'] = $client = \App\Models\Client::where('username', $invoice_id)->first();
+                $this->data['siteinfos'] = DB::table($invoice_id . '.setting')->first();
+                $this->data['students'] = DB::table($invoice_id . '.student')->where('status', 1)->count();
+                $control = request()->segment(4);
+                if ((int) $control > 0) {
+                    $price = 0;
+                    if ($set == 1 || $set == '') {
+                        $price = $this->data['siteinfos']->price_per_student;
+                    } else if ($set == 6) {
+                        $price = $this->data['siteinfos']->price_per_student / 2;
+                    } else if ($set == 12) {
+                        $price = $this->data['siteinfos']->price_per_student / 10;
+                    }
+                    $order_id = rand(454, 4557) . time();
+                    $invoice = Invoice::where('client_id', $client->id)->first();
+                    if (strlen($invoice->token) < 4) {
+                        $amount = $price * ($this->data['students'] + (int) $this->data['siteinfos']->estimated_students);
+                        $phone_number = validate_phone_number($invoice->client->phone);
+                        if (is_array($phone_number)) {
+                            $phone = str_replace('+', null, validate_phone_number($invoice->client->phone)[1]);
+                        } else {
+                            $phone = '255754406004';
+                        }
+                        $order = array("order_id" => $order_id, "amount" => $amount,
+                            'buyer_name' => $invoice->client->name, 'buyer_phone' => $phone, 'end_point' => '/checkout/create-order', 'action' => 'createOrder', 'client_id' => $invoice->client_id, 'source' => $invoice->client_id);
+
+                        $this->curlPrivate($order);
+                    }
+                }
+                if (count($client) == 1) {
+                    $this->data['booking'] = $this->data['invoice'] = Invoice::where('client_id', $client->id)->first();
+                } else {
+                    $this->data['booking'] = $this->data['invoice'] = [];
+                }
+
+                return view('account.invoice.shulesoft', $this->data);
+            }
         }
-        }
-        
+
 
         ///
     }
@@ -156,6 +185,7 @@ class Account extends Controller {
         $this->data['projects'] = Project::all();
         return view('account.project', $this->data);
     }
+
     public function createInvoice() {
         $this->data['projects'] = Project::all();
         if (request('noexcel')) {
@@ -448,13 +478,13 @@ class Account extends Controller {
 
     public function receipts() {
         $id = request()->segment(3);
-        if((int)$id > 0){
-        $this->data['invoice'] = Invoice::find($id);
-        $this->data["payment_types"] = \App\Models\PaymentType::all();
-        $this->data['banks'] = \App\Models\BankAccount::all();
-        $this->data['revenue'] = \App\Models\Revenue::where('id', $id)->first();
-        return view('account.transaction.receipt', $this->data);
-        }else{
+        if ((int) $id > 0) {
+            $this->data['invoice'] = Invoice::find($id);
+            $this->data["payment_types"] = \App\Models\PaymentType::all();
+            $this->data['banks'] = \App\Models\BankAccount::all();
+            $this->data['revenue'] = \App\Models\Revenue::where('id', $id)->first();
+            return view('account.transaction.receipt', $this->data);
+        } else {
             return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
         }
     }
@@ -599,7 +629,7 @@ class Account extends Controller {
                     $user = \App\Models\User::find(request('user_id'));
 
                     $obj = array_merge($array, [
-                        'recipient' => $user->firstname.' '.$user->lastname,
+                        'recipient' => $user->firstname . ' ' . $user->lastname,
                         'voucher_no' => $voucher_no + 1,
                         'payer_name' => $payer_name,
                     ]);
@@ -1182,7 +1212,7 @@ class Account extends Controller {
         }
     }
 
-    public function createInitialInvoice(){
+    public function createInitialInvoice() {
         $payer_name = request('payer_name');
         $amount_to_pay = request('amount');
         $payment_method = request('payment_method');
@@ -1192,10 +1222,10 @@ class Account extends Controller {
         $data_to_be_inserted = [
             ''
         ];
-
     }
 
     public function epayment() {
         
     }
+
 }
