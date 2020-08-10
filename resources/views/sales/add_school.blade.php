@@ -29,7 +29,7 @@
                     <div class="form-group">
                       <strong>  Select School or Client</strong>
 
-                      <input name="name"  class="form-control" placeholder="Enter School  Name.." required>
+                      <input name="name"  class="form-control" placeholder="Enter School  Name.." autofocus required>
 
                     </div>
                     <div class="form-group">
@@ -37,42 +37,22 @@
 
                         <div class="col-md-6">
                           <strong> Select Region</strong>
-                          <select type="text" name="region" style="text-transform:uppercase" required class="form-control select2">
-                            <option value="Arusha">Arusha</option>
-                            <option value="Dar es Salaam">Dar es Salaam</option>
-                            <option value="Dodoma">Dodoma</option>
-                            <option value="Geita">Geita</option>
-                            <option value="Iringa">Iringa</option>
-                            <option value="Kagera">Kagera</option>
-                            <option value="Katavi">Kagera</option>
-                            <option value="Kigoma">Kigoma</option>
-                            <option value="Kilimanjaro">Kilimanjaro</option>
-                            <option value="Lindi">Lindi</option>
-                            <option value="Manyara">Manyara</option>
-                            <option value="Mara">Mara</option>
-                            <option value="Mbeya">Mbeya</option>
-                            <option value="Morogoro">Morogoro</option>
-                            <option value="Mtwara">Mtwara</option>
-                            <option value="Mwanza">Mwanza</option>
-                            <option value="Njombe">Njombe</option>
-                            <option value="Pemba North">Pemba North</option>
-                            <option value="Pemba South">Pemba South</option>
-                            <option value="Pwani">Pwani</option>
-                            <option value="Rukwa">Rukwa</option>
-                            <option value="Ruvuma">Ruvuma</option>
-                            <option value="Shinyanga">Shinyanga</option>
-                            <option value="Simiyu">Simiyu</option>
-                            <option value="Singida">Singida</option>
-                            <option value="Tabora">Tabora</option>
-                            <option value="Tanga">Tanga</option>
-                            <option value="Zanzibar North">Zanzibar North</option>
-                            <option value="Zanzibar South and Central">Zanzibar South and Central</option>
-                            <option value="Zanzibar West">Zanzibar West</option>
+                          <select type="text" name="region" id="region" style="text-transform:uppercase" required class="form-control select2">
+                            <option value="">Select here...</option>
+                           <?php
+                            $regions = \App\Models\Region::where('country_id', 1)->get();
+                            foreach($regions as $region){
+                            echo  '<option value="'.$region->id.'">'.$region->name.'</option>';
+                            }
+                          ?>
                           </select>
                         </div>
                         <div class="col-md-6">
                           <strong>Enter District</strong>
-                          <input type="text" name="district" class="form-control" style="text-transform:uppercase" required>
+                          <select type="text" name="district" id="district" style="text-transform:uppercase" required class="form-control select2">
+                          <option value="">Select Here...</option>
+
+                          </select>
 
                         </div>
                       </div>
@@ -82,7 +62,8 @@
 
                         <div class="col-md-6">
                           <strong> Enter Ward</strong>
-                          <input type="text" name="ward" style="text-transform:uppercase" class="form-control" required>
+                          <select type="text" name="ward" id="ward" style="text-transform:uppercase" required class="form-control select2">
+                          </select>
                         </div>
                         <div class="col-md-6">
                           <strong> Select School Zone</strong>
@@ -143,5 +124,30 @@ $(".select2").select2({
   allowClear: false,
   debug: true
 });
+
+$('#region').change(function () {
+            var val = $(this).val();
+            $.ajax({
+                method: 'get',
+                url: '<?= url('Marketing/getDistrict/null') ?>',
+                data: {region: val},
+                dataType: 'html',
+                success: function (data) {
+                    $('#district').html(data);
+                }
+            });
+        });
+$('#district').change(function () {
+            var val = $(this).val();
+            $.ajax({
+                method: 'get',
+                url: '<?= url('Marketing/getWard/null') ?>',
+                data: {district: val},
+                dataType: 'html',
+                success: function (data) {
+                    $('#ward').html(data);
+                }
+            });
+        });
 </script>
 @endsection
