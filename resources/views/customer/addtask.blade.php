@@ -95,8 +95,9 @@
                                                     <strong> Task Executed Successfully</strong> 
                                                     <select name="action" class="form-control" required>
                                                         <option value=''> Select Task Status Here...</option>
-                                                        <option value='Yes'> Yes </option>
-                                                        <option value='No'> No </option>
+                                                        <option value='Yes'> Yes and Completed </option>
+                                                        <option value='No'> Yes but on Progress </option>
+                                                        <option value='schedule'> Not yet (Schedule) </option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -105,12 +106,12 @@
                                             <div class="row">
 
                                                 <div class="col-md-6">
-                                                    <strong> Deadline Date</strong> 
-                                                    <input type="date" class="form-control" placeholder="Deadline" name="date">
+                                                    <strong> Start Date</strong> 
+                                                    <input type="datetime-local" class="form-control" placeholder="Deadline" name="start_date">
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <strong> Estimated Hours</strong> 
-                                                    <input type="number" class="form-control" placeholder="Time" name="time">
+                                                    <strong> End Date </strong> 
+                                                    <input type="datetime-local" class="form-control" placeholder="Time" name="end_date">
                                                 </div>
                                             </div>
                                         </div>
