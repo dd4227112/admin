@@ -82,6 +82,67 @@
                             </div>
                         </div>
                 </div>
+                
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-block">
+
+                            <div class="row">
+                                <?php
+                                $i = 1;
+                                $total = 0;
+                                
+                                ?>
+                                    <div class="col-md-12 col-xl-4">
+                                        <div class="card counter-card-<?= $i ?>">
+                                            <div class="card-block-big">
+                                                <div>
+                                                    <h3><?= $schools ?></h3>
+                                                    <p>Private Schools</p>
+                                                    <div class="progress ">
+                                                        <div class="progress-bar progress-bar-striped progress-xs progress-bar-<?= $i == 1 ? 'warning' : 'warning' ?>" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                    <small><a href="#schools" class="btn btn-default btn-sm"> View</a></small>
+                                                </div>
+                                                <i class="icofont icofont-gift"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xl-4">
+                                        <div class="card counter-card-<?= $i ?>">
+                                            <div class="card-block-big">
+                                                <div>
+                                                    <h3><?= $use_shulesoft ?></h3>
+                                                    <p>Schools in Shulesoft</p>
+                                                    <div class="progress ">
+                                                        <div class="progress-bar progress-bar-striped progress-xs progress-bar-success" role="progressbar" style="width: 40%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                    <small><a href="<?= url('sales/schoolStatus/shulesoft') ?>" class="btn btn-default btn-sm"> View</a></small>
+
+                                                </div>
+                                                <i class="icofont icofont-crown"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                   
+                                <div class="col-md-12 col-xl-4">
+                                    <div class="card counter-card-<?= $i ?>">
+                                        <div class="card-block-big">
+                                            <div>
+                                                <h3><?= $nmb_shulesoft_schools ?></h3>
+                                                <p> Bank Intagration</p>
+                                                <div class="progress ">
+                                                    <div class="progress-bar progress-bar-striped progress-xs progress-bar-info" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <small><a href="<?= url('sales/schoolStatus/bank') ?>" class="btn btn-default btn-sm"> View</a></small>
+                                            </div>
+                                            <i class="icofont icofont-trophy-alt"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
                     
                 </div>
                 <div class="col-lg-12">

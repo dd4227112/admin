@@ -333,4 +333,35 @@ group by ownership');
         return view('users.tasks', $this->data);
     }
 
+    public function getDistrict() {
+        $id = request('region');
+        $districts = \App\Models\District::where('region_id', $id)->get();
+        if (count($districts) > 0) {
+            $select = '';
+            foreach ($districts as $type) {
+                $select .= '<option value="' . $type->id . '"> ' . $type->name . '</option>';
+            }
+            echo $select;
+        } else {
+            $districts = \App\Models\District::all();
+            $select = '';
+            foreach ($districts as $type) {
+                $select .= '<option value="' . $type->id . '"> ' . $type->name . '</option>';
+            }
+            echo $select;
+        }
+    }
+
+    public function getWard() {
+        $id = request('district');
+        $districts = \App\Models\Ward::where('district_id', $id)->get();
+        if (count($districts) > 0) {
+            $select = '';
+            foreach ($districts as $type) {
+                $select .= '<option value="' . $type->id . '"> ' . $type->name . '</option>';
+            }
+            echo $select;
+        }
+    }
+
 }
