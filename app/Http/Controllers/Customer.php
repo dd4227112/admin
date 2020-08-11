@@ -339,7 +339,7 @@ class Customer extends Controller {
             if ($_POST) {
 
                 $data = array_merge(request()->except('to_user_id'), ['user_id' => Auth::user()->id]);
-
+                
                 $task = \App\Models\Task::create($data);
                 $users = request('to_user_id');
                 if (count($users) > 0) {
@@ -386,6 +386,13 @@ class Customer extends Controller {
                         }
                     }
                 }
+//                tasks_schedules::create([
+//                    'task_id',
+//                    'training_section_id',
+//                    'client_role',
+//                ]);
+                //If we schedule this task, save this into schedule and add details to label it
+
                 return redirect('customer/activity')->with('success', 'success');
             }
 
@@ -615,15 +622,15 @@ class Customer extends Controller {
     }
 
     public function karibu() {
-     
+
         $this->data['clients'] = DB::connection('karibusms')->table('client')->whereNotNull('keyname')->get();
         $this->data['shulesoft'] = DB::connection('karibusms')->table('client')->where('client_id', 318)->first();
-        if((int) request()->segment(3) >0){
-            $client_id=request()->segment(3);
-            DB::connection('karibusms')->table('client')->where('client_id',$client_id)->update([
-                'gcm_id'=> $this->data['shulesoft']->gcm_id
+        if ((int) request()->segment(3) > 0) {
+            $client_id = request()->segment(3);
+            DB::connection('karibusms')->table('client')->where('client_id', $client_id)->update([
+                'gcm_id' => $this->data['shulesoft']->gcm_id
             ]);
-            return redirect()->back()->with('success','success');
+            return redirect()->back()->with('success', 'success');
         }
         return view('customer.karibusms', $this->data);
     }

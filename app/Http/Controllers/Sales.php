@@ -125,11 +125,11 @@ group by ownership');
 
     function schoolStatus() {
         $id = request()->segment(3);
-        if($id == 'shulesoft'){
+        if ($id == 'shulesoft') {
             $this->data['title'] = "Schools Alreardy Onboarded";
-        $this->data['all_schools'] = DB::table('admin.schools')->whereNotNull('schema_name')->get();
+            $this->data['all_schools'] = DB::table('admin.schools')->whereNotNull('schema_name')->get();
         }
-        if($id == 'bank'){
+        if ($id == 'bank') {
             $this->data['title'] = "Schools With Bank Payment Integrarion";
             $this->data['all_schools'] = DB::select('select * from admin.schools WHERE schema_name IN (select distinct schema_name from admin.all_bank_accounts where refer_bank_id=22)');
         }
@@ -390,7 +390,7 @@ SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks
         $this->data['staffs'] = DB::table('users')->where('status', 1)->get();
         if ($_POST) {
             $code = rand(343, 32323);
- 
+
             $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
             if (count($school_contact) == 0) {
                 DB::table('admin.school_contacts')->insert([
@@ -463,6 +463,7 @@ SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks
                     $this->curlPrivate($order);
                     $booking = DB::table('admin.invoices')->where('order_id', $order_id)->first();
                 }
+                $this->scheduleActivities($client->id);
                 return redirect('sales/customerSuccess/1/' . $booking->id);
             } else {
                 //create a trial code for this school
@@ -473,11 +474,75 @@ SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks
                 $message = 'Hello ' . $user->name . '. Your Trial Code is ' . $trial_code;
                 $this->send_sms($user->phone, $message, 1);
                 $this->send_email($user->email, 'Success: School Onboarded Successfully', $message);
+                $this->scheduleActivities($client->id);
                 return redirect('sales/customerSuccess/2/' . $trial_code);
             }
             return redirect('https://' . $username . '.shulesoft.com');
         }
         return view('sales.onboarding_school', $this->data);
+    }
+
+    /**
+     * Make this very easy for users to get a specific schedule
+     * @param type $client_id
+     */
+    public function scheduleActivities($client_id) {
+        return false;
+        $sections = \App\Models\TrainingSections::orderBy('id', 'asc')->get();
+        foreach ($sections as $section) {
+            $data = [
+                'activity' => $section->title,
+                'date' => date('d-m-Y', strtotime(request('implementation_date'))),
+                'user_id' => request('support_user_id'),
+                'start_date' => $start_date,
+                'end_date' => $end_date
+            ];
+            $task = \App\Models\Task::create($data);
+
+            DB::table('tasks_users')->insert([
+                'task_id' => $task->id,
+                'user_id' => request('support_user_id'),
+            ]);
+
+            DB::table('tasks_clients')->insert([
+                'task_id' => $task->id,
+                'client_id' => (int) $client_id
+            ]);
+            \App\Models\TaskSchedule::create([
+                'task_id' => $task->id,
+                'training_section_id' => $section->id,
+                'client_role' => request(),
+            ]);
+        }
+    }
+
+    //algorithm is very very simple
+    /**
+     * 1. check that user if he has a task at that particular time
+     * 2. if user has a time, return an error to adjust
+     * 3. if user does have a time, then fix that initial time there
+     * 4. check the specific task has been allocated how many minutes to be accomplished
+     * 5. add that minutes to the time specified and fix end datetime
+     * 6. if you find occupied time slot in between, add that time slot in between to extend time for end datetime
+     * 7. return both, start datetime and end datetime respectively
+     */
+    public function taskStartTime($start_date, $timeframe, $iterate = false) {
+
+        $end_time = date('d-m-Y H:i', strtotime("+{$timeframe} minutes", time()));
+        $start_time = date('d-m-Y H:i', strtotime($start_date));
+        $slot_available = \collect(DB::select("SELECT * FROM   admin.tasks WHERE  start_date::timestamp <='" . $start_time . "'::timestamp and end_date::timestamp >='" . $end_time . "'::timestamp"))->first();
+        if (count($slot_available) == 1) {
+            //slot not available
+            // so check the last slot and add next slot for the person to work
+            
+            return FALSE;
+        } else {
+            //slot available
+            return array($start_date, $end_time);
+        }
+        if ($iterate == true) {
+            
+        }
     }
 
     /**
@@ -496,12 +561,12 @@ SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks
                 die('Invalid URL');
             }
         } else {
-             $client_id = request()->segment(4);
+            $client_id = request()->segment(4);
             $this->data['client'] = $client = \App\Models\Client::where('id', $client_id)->first();
             $this->data['siteinfos'] = DB::table($this->data['client']->username . '.setting')->first();
-            $this->data['students'] =  $this->data['client']->estimated_students;
+            $this->data['students'] = $this->data['client']->estimated_students;
             if (count($client) == 1) {
-              $this->data['booking'] =   $this->data['invoice'] = Invoice::where('client_id', $client->id)->first();
+                $this->data['booking'] = $this->data['invoice'] = Invoice::where('client_id', $client->id)->first();
             } else {
                 $this->data['booking'] = $this->data['invoice'] = [];
             }
