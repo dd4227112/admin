@@ -370,8 +370,7 @@ group by ownership');
 
         $this->data['use_shulesoft'] = DB::table('admin.all_setting')->count() - 5;
         $this->data['active_school'] = \collect(DB::select('SELECT count(distinct "schema_name") from admin.all_login_locations a  WHERE "table" in (\'setting\',\'users\',\'teacher\') and ' . $where))->first()->count;
-        $this->data['zero_student'] = \collect(DB::table('SELECT count(distinct("schema_name")) as count from admin.all_setting a  WHERE a.status= 1 and "schema_name" not in (select distinct "schema_name" from admin.all_student group by "schema_name")'))->first();
-        $this->data['zero_student']->count;
+        $this->data['zero_student'] = DB::table('SELECT distinct("schema_name") as tables from admin.all_setting a  WHERE a.status= 1 and "schema_name" not in (select distinct "schema_name" from admin.all_student group by "schema_name")');
         $this->data['never_use'] = DB::table('admin.nmb_schools')->count();
         $this->data['never_use'] = DB::table('admin.nmb_schools')->count();
         $this->data['nmb_shulesoft_schools'] = \collect(DB::select("select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22"))->first()->count;
