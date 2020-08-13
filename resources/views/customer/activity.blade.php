@@ -34,9 +34,21 @@
                     <div class="card">
                         <div class="card-header">
                             <a class="btn btn-success btn-sm" href="<?= url('customer/activity/add') ?>"> Add New Task</a>
-                            <span style="float: right">
-                                <input type="date" style="width:300px;" class="form-control" placeholder="Time" id='daskdate'>
-                            </span>
+                            <?php
+                            if (Auth::user()->role_id == 1) {
+                                $users = \App\Models\User::where('status', 1)->get();
+                                ?>
+                                <span style="float: right">
+                                    <select class="form-control" style="width:300px;"  id='taskdate'>
+                                        <option></option>
+                                        <?php foreach ($users as $user) { ?>
+                                            <option value="<?= $user->id ?>" <?= (int) request('user_id') > 0 && request('user_id') == $user->id ? 'selected' : '' ?> ><?= $user->firstname . ' ' . $user->lastname ?></option>
+                                        <?php } ?>
+                                    </select>
+
+                                </span>
+
+                            <?php } ?>
 
                         </div>
 
@@ -92,7 +104,7 @@
                 "serverSide": true,
                 'serverMethod': 'post',
                 'ajax': {
-                    'url': "<?= url('sales/show/null?page=tasks') ?>"
+                    'url': "<?= url('sales/show/null?page=tasks&user_id=' . request('user_id')) ?>"
                 },
                 "columns": [
 
@@ -144,7 +156,7 @@
 
                 rowCallback: function (row, data) {
                     $(row).click(function (row) {
-                       // window.location.href = '<?= url('customer/activity/show/') ?>/' + row.id;
+                        // window.location.href = '<?= url('customer/activity/show/') ?>/' + row.id;
                     });
                     //$(row).attr('id', 'log' + data.id);
 
@@ -181,15 +193,8 @@
             var taskdate = $(this).val();
             if (taskdate === '') {
             } else {
-                $.ajax({
-                    type: 'POST',
-                    url: "<?= url('customer/activity') ?>",
-                    data: {taskdate: taskdate},
-                    dataType: "html",
-                    success: function (data) {
-                        $('#classes_id').html(data);
-                    }
-                });
+                window.location.href = '<?= url('customer/activity') ?>/null?user_id=' + taskdate;
+
             }
         });
 
