@@ -62,7 +62,8 @@
                                             <th>Task type</th>
                                             <th>Added By</th>
                                             <th>School</th>
-                                            <th>Deadline</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
@@ -76,7 +77,9 @@
                                             <th>Task type</th>
                                             <th>Added By</th>
                                             <th>School</th>
-                                            <th>Deadline</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
@@ -113,13 +116,14 @@
 
                     {"data": "user_name"},
                     {"data": "school_name"},
-                    {"data": "date"},
+                    {"data": "start_date"},
+                    {"data": "end_date"},
                     {"data": ""},
                     {"data": ""}
                 ],
                 "columnDefs": [
                     {
-                        "targets": 6,
+                        "targets": 7,
                         "data": null,
                         "render": function (data, type, row, meta) {
 
@@ -130,7 +134,7 @@
 
                     },
                     {
-                        "targets": 5,
+                        "targets": 6,
                         "data": null,
                         "render": function (data, type, row, meta) {
                             var status;
