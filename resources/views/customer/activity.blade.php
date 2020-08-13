@@ -269,7 +269,7 @@ $tasks = DB::select($sql);
 foreach ($tasks as $task) {
     ?>
                         {
-                            title: '<?= $task->school_name . ': ' . strip_tags($task->activity) ?>',
+                            title: '<?= $task->school_name . ': ' . addslashes(strip_tags($task->activity)) ?>',
                             start: '<?= date('Y-m-d H:i:s', strtotime($task->start_date)); ?>',
                             end: '<?= date('Y-m-d H:i:s', strtotime($task->end_date)); ?>',
                             constraint: 'businessHours',
