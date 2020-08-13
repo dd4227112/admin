@@ -46,10 +46,6 @@
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css">
 
 
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css" rel="stylesheet" />
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.9/select2-bootstrap.css" rel="stylesheet" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.min.js"></script>
-
         <!-- Style.css -->
         <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css">
 
@@ -608,14 +604,14 @@ function toast(message) {
                         <?php if (can_access('manage_marketing') || Auth::user()->id == 37) { ?>
                             <li class="nav-item">
                                 <a href="#!">
-                                    <i class="ti-gift "></i>
+                                    <i class="ti-bell "></i>
                                     <span data-i18n="nav.extra-components.main">Marketing</span>
                                 </a>
                                 <ul class="tree-1">
-                                                            <li><a href="<?= url('Marketing/socialMedia') ?>" data-i18n="nav.extra-components.session-timeout">Social Media</a></li>
-                                                            <li><a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">Schools</a></li>
-                                                            <li><a href="<?= url('Marketing/Events') ?>" data-i18n="nav.extra-components.session-idle-timeout">Events</a></li>
-                                                        </ul>
+                                    <li><a href="<?= url('Marketing/socialMedia') ?>" data-i18n="nav.extra-components.session-timeout">Social Media</a></li>
+                                    <li><a href="<?= url('Marketing/school') ?>" data-i18n="nav.navigate.navbar">Schools Status</a></li>
+                                    <li><a href="<?= url('Marketing/Events') ?>" data-i18n="nav.extra-components.session-idle-timeout">Events</a></li>
+                                </ul>
                             </li>
                         <?php } ?>
                         <?php if (can_access('manage_software')) { ?>

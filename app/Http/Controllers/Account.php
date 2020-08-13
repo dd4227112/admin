@@ -480,6 +480,18 @@ class Account extends Controller {
         $id = request()->segment(3);
         if ((int) $id > 0) {
             $this->data['invoice'] = Invoice::find($id);
+            $this->data['revenue'] = \App\Models\Revenue::where('id', $id)->first();
+            return view('account.transaction.receipt', $this->data);
+        } else {
+            return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
+        }
+    }
+
+
+    public function editRevenue() {
+        $id = request()->segment(3);
+        if ((int) $id > 0) {
+            $this->data['invoice'] = Invoice::find($id);
             $this->data["payment_types"] = \App\Models\PaymentType::all();
             $this->data['banks'] = \App\Models\BankAccount::all();
             $this->data['revenue'] = \App\Models\Revenue::where('id', $id)->first();
@@ -488,6 +500,18 @@ class Account extends Controller {
             return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
         }
     }
+
+    public function deleteRevenue() {
+        $id = request()->segment(3);
+        if ((int) $id > 0) {
+            $this->data['invoice'] = Invoice::find($id);
+            \App\Models\Revenue::where('id', $id)->delete();
+            return redirect()->back()->with('success', 'Revenue Delete Successfully!!');
+        } else {
+            return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
+        }
+    }
+
 
     public function revenueAdd() {
         $this->data['projects'] = Project::all();

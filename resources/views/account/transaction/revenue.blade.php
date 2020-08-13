@@ -51,13 +51,12 @@
                                                 <th class="col-sm-1">#</th>
                                                 <th class="col-sm-2">Payer Name</th>
                                                 <th class="col-sm-1">Fee Type</th>
-                                                <th class="col-sm-2">Date</th>
+                                                <th class="col-sm-1">Payment Date</th>
+                                                <th class="col-sm-1">Added Date</th>
                                                 <th class="col-sm-2"><?= __('Amount') . '(Tsh)' ?></th>
                                                 <th class="col-sm-2"><?= __('note') ?></th>
 
-                                                <?php //if (can_access('edit_revenue')) { ?>
                                                 <th class="col-sm-2"><?= __('action') ?></th>
-                                                    <?php //} ?>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -79,7 +78,13 @@
                                                         </td>
                                                         <td data-title="<?= __('expense_date') ?>">
                                                             <?php echo date("d M Y", strtotime($revenue->date)); ?>
-                                                        </td>     
+                                                        </td>
+                                                        
+                                                        <td data-title="<?= __('expense_date') ?>">
+                                                            <?php 
+                                                            echo date("d M Y", strtotime($revenue->created_at));
+                                                            ?>
+                                                        </td>      
                                                         <td data-title="<?= __('expense_amount') ?>">
                                                             <?php
                                                             $sum_amount = $revenue->amount;
@@ -98,13 +103,15 @@
                                                             </td>
                                                         <?php } ?>
 
-                                                        <?php //if (can_access('edit_revenue')) {  ?>
                                                         <td data-title="<?= __('action') ?>">
+                                                        <?php if (can_access('manage_finance')) { ?>
 
-                                                            <a href="<?php echo url('account/receipts/' . $revenue->id) ?>" class="btn btn-success btn-sm">Receipt </a>
-                                                            <a href="<?php echo url('account/revenue/index/' . $revenue->id) ?>" class="btn btn-info btn-sm">View </a>
+                                                            <a href="<?php echo url('account/receipts/' . $revenue->id) ?>" class="btn btn-success btn-sm"> Receipt </a>
+                                                          <!--  <a href="<?php echo url('account/revenue/index/' . $revenue->id) ?>" class="btn btn-info btn-sm"> Edit </a> -->
+                                                            <a href="<?php echo url('account/deleteRevenue/' . $revenue->id) ?>" class="btn btn-warning btn-sm"> Delete </a>
+                                                                <?php }  ?>
+
                                                             </td>
-                                                        <?php //}  ?>
 
                                                     </tr>
                                                     <?php
