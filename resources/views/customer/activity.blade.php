@@ -132,119 +132,119 @@
     <script type="text/javascript">
 
         load_tasks = function () {
-        var event;
-        var table = $('#dt-ajax-array').DataTable({
-        "processing": true,
+            var event;
+            var table = $('#dt-ajax-array').DataTable({
+                "processing": true,
                 "serverSide": true,
                 'serverMethod': 'post',
                 'ajax': {
-                'url': "<?= url('sales/show/null?page=tasks&user_id=' . request('user_id')) ?>"
+                    'url': "<?= url('sales/show/null?page=tasks&user_id=' . request('user_id')) ?>"
                 },
                 "columns": [
 
-                {"data": "id"},
-                {"data": "task_name"},
-                {"data": "user_name"},
-                {"data": "school_name"},
-                {"data": "start_date"},
-                {"data": "end_date"},
-                {"data": ""},
-                {"data": ""}
+                    {"data": "id"},
+                    {"data": "task_name"},
+                    {"data": "user_name"},
+                    {"data": "school_name"},
+                    {"data": "start_date"},
+                    {"data": "end_date"},
+                    {"data": ""},
+                    {"data": ""}
                 ],
                 "columnDefs": [
-                {
-                "targets": 7,
+                    {
+                        "targets": 7,
                         "data": null,
                         "render": function (data, type, row, meta) {
-                        $('#ajax_data_results').html(JSON.stringify(row));
-                        console.log(row);
-                        return '<a href="<?= url('customer/activity/show/') ?>/' + row.id + '" class="btn btn-mini waves-effect waves-light btn-primary"> <i class="icofont icofont-eye-alt"></i> View</a>';
+                            $('#ajax_data_results').html(JSON.stringify(row));
+                            console.log(row);
+                            return '<a href="<?= url('customer/activity/show/') ?>/' + row.id + '" class="btn btn-mini waves-effect waves-light btn-primary"> <i class="icofont icofont-eye-alt"></i> View</a>';
                         }
 
-                },
-                {
-                "targets": 6,
+                    },
+                    {
+                        "targets": 6,
                         "data": null,
                         "render": function (data, type, row, meta) {
-                        var status;
-                        var message;
-                        if (row.status == 'complete') {
-                        status = 'success';
-                        message = 'Complete';
-                        } else if (row.status == 'on progress') {
-                        status = 'warning';
-                        message = 'On progress';
-                        } else {
-                        status = 'danger';
-                        message = 'New';
-                        }
-                        return '<div class="dropdown-secondary dropdown f-right"><button class="btn btn-' + status + ' btn-mini dropdown-toggle waves-effect waves-light" type="button" id="dropdown6' + row.id + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + message + '</button><div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_status(\'on progress\',' + row.id + ')"><span class="point-marker bg-danger"></span>On progress</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_status(\'complete\',' + row.id + ')"><span class="point-marker bg-warning"></span>Complete</a><a class="dropdown-item waves-light waves-effect" href="#!" onmousedown="change_status(\'new\',' + row.id + ')"><span class="point-marker bg-warning"></span>New</a></div> <span class="f-left m-r-5 text-inverse" style="display:none">Priority : ' + row.priority + '</span></div>';
+                            var status;
+                            var message;
+                            if (row.status == 'complete') {
+                                status = 'success';
+                                message = 'Complete';
+                            } else if (row.status == 'on progress') {
+                                status = 'warning';
+                                message = 'On progress';
+                            } else {
+                                status = 'danger';
+                                message = 'New';
+                            }
+                            return '<div class="dropdown-secondary dropdown f-right"><button class="btn btn-' + status + ' btn-mini dropdown-toggle waves-effect waves-light" type="button" id="dropdown6' + row.id + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + message + '</button><div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_status(\'on progress\',' + row.id + ')"><span class="point-marker bg-danger"></span>On progress</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_status(\'complete\',' + row.id + ')"><span class="point-marker bg-warning"></span>Complete</a><a class="dropdown-item waves-light waves-effect" href="#!" onmousedown="change_status(\'new\',' + row.id + ')"><span class="point-marker bg-warning"></span>New</a></div> <span class="f-left m-r-5 text-inverse" style="display:none">Priority : ' + row.priority + '</span></div>';
                         }
 
-                },
+                    },
                 ],
                 rowCallback: function (row, data) {
-                $(row).click(function (row) {
-                // window.location.href = '<?= url('customer/activity/show/') ?>/' + row.id;
-                });
-                //$(row).attr('id', 'log' + data.id);
+                    $(row).click(function (row) {
+                        // window.location.href = '<?= url('customer/activity/show/') ?>/' + row.id;
+                    });
+                    //$(row).attr('id', 'log' + data.id);
 
                 }
-        });
-        change_status = function (a, b) {
-        $.ajax({
-        url: '<?= url('customer/changeStatus') ?>/null',
-                method: 'get',
-                data: {status: a, id: b},
-                success: function (data) {
-
-                $('#dropdown6' + b).html(data).removeClass('btn btn-danger').addClass('btn btn-primary');
-                }
-        });
-        },
-                delete_log = function (a) {
+            });
+            change_status = function (a, b) {
                 $.ajax({
-                url: '<?= url('software/logsDelete') ?>/null',
-                        method: 'get',
-                        data: {id: a},
-                        success: function (data) {
-                        if (data == '1') {
-                        $('#log' + a).fadeOut();
-                        }
-                        }
+                    url: '<?= url('customer/changeStatus') ?>/null',
+                    method: 'get',
+                    data: {status: a, id: b},
+                    success: function (data) {
+
+                        $('#dropdown6' + b).html(data).removeClass('btn btn-danger').addClass('btn btn-primary');
+                    }
                 });
-                }
+            },
+                    delete_log = function (a) {
+                        $.ajax({
+                            url: '<?= url('software/logsDelete') ?>/null',
+                            method: 'get',
+                            data: {id: a},
+                            success: function (data) {
+                                if (data == '1') {
+                                    $('#log' + a).fadeOut();
+                                }
+                            }
+                        });
+                    }
         }
         $(document).ready(load_tasks);
         $('#taskdate').change(function (event) {
-        var taskdate = $(this).val();
-        if (taskdate === '') {
-        } else {
-        window.location.href = '<?= url('customer/activity') ?>/null?user_id=' + taskdate;
-        }
+            var taskdate = $(this).val();
+            if (taskdate === '') {
+            } else {
+                window.location.href = '<?= url('customer/activity') ?>/null?user_id=' + taskdate;
+            }
         });
         "use strict";
         $(document).ready(function () {
-        $('#external-events .fc-event').each(function () {
+            $('#external-events .fc-event').each(function () {
 
-        // store data so the calendar knows to render an event upon drop
-        $(this).data('event', {
-        title: $.trim($(this).text()), // use the element's text as the event title
-                stick: true // maintain when user navigates (see docs on the renderEvent method)
-        });
-        // make the event draggable using jQuery UI
-        $(this).draggable({
-        zIndex: 999,
-                revert: true, // will cause the event to go back to its
-                revertDuration: 0 //  original position after the drag
-        });
-        });
-        $('#calendar').fullCalendar({
-        header: {
-        left: 'prev,next today',
-                center: 'title',
-                right: 'month,agendaWeek,agendaDay,listMonth'
-        },
+                // store data so the calendar knows to render an event upon drop
+                $(this).data('event', {
+                    title: $.trim($(this).text()), // use the element's text as the event title
+                    stick: true // maintain when user navigates (see docs on the renderEvent method)
+                });
+                // make the event draggable using jQuery UI
+                $(this).draggable({
+                    zIndex: 999,
+                    revert: true, // will cause the event to go back to its
+                    revertDuration: 0 //  original position after the drag
+                });
+            });
+            $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay,listMonth'
+                },
                 defaultDate: '<?= date('Y-m-d') ?>',
                 navLinks: true, // can click day/week names to navigate views
                 businessHours: true, // display business hours
@@ -252,11 +252,11 @@
                 droppable: true, // this allows things to be dropped onto the calendar
                 drop: function () {
 
-                // is the "remove after drop" checkbox checked?
-                if ($('#checkbox2').is(':checked')) {
-                // if so, remove the element from the "Draggable Events" list
-                $(this).remove();
-                }
+                    // is the "remove after drop" checkbox checked?
+                    if ($('#checkbox2').is(':checked')) {
+                        // if so, remove the element from the "Draggable Events" list
+                        $(this).remove();
+                    }
                 },
                 events: [
 <?php
@@ -264,26 +264,26 @@ $user_id = (int) request('user_id') > 0 ? request('user_id') : Auth::user()->id;
 $sql = "select t.id,substring(t.activity from 1 for 70) as activity,t.date, t.start_date,t.end_date, t.created_at,p.school_name,p.client,u.firstname||' '||u.lastname as user_name, substring(tt.name from 1 for 10) as task_name, t.status,t.priority from admin.tasks t left join (
 select a.task_id, c.name as school_name,'Client' as client from admin.tasks_clients a join admin.clients c on c.id=a.client_id
 UNION ALL
-SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks_schools b join admin.schools s on s.id=b.school_id ) p on p.task_id=t.id join admin.users u on u.id=t.user_id join admin.task_types tt on tt.id=t.task_type_id where u.id=" . $user_id . " OR t.id in (select task_id from admin.tasks_users where user_id=" . $user_id . " ) AND t.start_date::date=CURRENT_DATE";
+SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks_schools b join admin.schools s on s.id=b.school_id ) p on p.task_id=t.id join admin.users u on u.id=t.user_id join admin.task_types tt on tt.id=t.task_type_id where (u.id=" . $user_id . " OR t.id in (select task_id from admin.tasks_users where user_id=" . $user_id . " ) ) AND t.start_date::date=CURRENT_DATE";
 $tasks = DB::select($sql);
 foreach ($tasks as $task) {
     ?>
-                    {
-                    title: '<?= $task->school_name . ': ' . strip_tags($task->activity) ?>',
+                        {
+                            title: '<?= $task->school_name . ': ' . strip_tags($task->activity) ?>',
                             start: '<?= date('d M Y H:i:s', strtotime($task->start_date)); ?>',
                             end: '<?= date('d M Y H:i:s', strtotime($task->end_date)); ?>',
                             constraint: 'businessHours',
                             editable: true,
                             borderColor: '#1abc9c',
                             textColor: '#000'
-                    },
+                        },
 <?php } ?>
 
 
 
-          
+
                 ]
-        });
+            });
         });
 
     </script>
