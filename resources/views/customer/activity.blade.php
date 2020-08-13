@@ -261,15 +261,18 @@
                 events: [
 <?php
 $user_id = (int) request('user_id') > 0 ? request('user_id') : Auth::user()->id;
-$sql = "select t.id,substring(t.activity from 1 for 70) as activity,t.date, t.start_date,t.end_date, t.created_at,p.school_name,p.client,u.firstname||' '||u.lastname as user_name, substring(tt.name from 1 for 10) as task_name, t.status,t.priority from admin.tasks t left join (
+$sql = "select t.id,t.activity,t.date, t.start_date,t.end_date, t.created_at,p.school_name,p.client,u.firstname||' '||u.lastname as user_name, substring(tt.name from 1 for 10) as task_name, t.status,t.priority from admin.tasks t left join (
 select a.task_id, c.name as school_name,'Client' as client from admin.tasks_clients a join admin.clients c on c.id=a.client_id
 UNION ALL
 SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks_schools b join admin.schools s on s.id=b.school_id ) p on p.task_id=t.id join admin.users u on u.id=t.user_id join admin.task_types tt on tt.id=t.task_type_id where (u.id=" . $user_id . " OR t.id in (select task_id from admin.tasks_users where user_id=" . $user_id . " ) ) AND t.start_date::date=CURRENT_DATE";
 $tasks = DB::select($sql);
 foreach ($tasks as $task) {
     ?>
+                    /**
+                     * Removing Line Breaks and Newlines in PHP
+                     */
                         {
-                            title: '<?= $task->school_name . ': ' . addslashes(strip_tags($task->activity)) ?>',
+                            title: '<?= $task->school_name . ': ' . preg_replace('/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/', '', preg_replace('/[ \t]+/', ' ', preg_replace('/\s*$^\s*/m', "\n", addslashes(strip_tags($task->activity))))) ?>',
                             start: '<?= date('Y-m-d H:i:s', strtotime($task->start_date)); ?>',
                             end: '<?= date('Y-m-d H:i:s', strtotime($task->end_date)); ?>',
                             constraint: 'businessHours',
