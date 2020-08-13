@@ -260,7 +260,7 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
 select a.task_id, c.name as school_name,'Client' as client from admin.tasks_clients a join admin.clients c on c.id=a.client_id
 UNION ALL
 SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks_schools b join admin.schools s on s.id=b.school_id ) p on p.task_id=t.id join admin.users u on u.id=t.user_id join admin.task_types tt on tt.id=t.task_type_id where u.id=" .$user_id. " OR t.id in (select task_id from admin.tasks_users where user_id=" .$user_id . " )";
-                return $this->ajaxTable('tasks', ['activity', 'u.firstname', 'p.school_name', 't.created_at', 't.date', 'u.lastname'], $sql);
+                return $this->ajaxTable('tasks', ['activity', 'u.firstname', 'p.school_name', 't.created_at', 't.date', 'u.lastname','t.start_date','t.end_date'], $sql);
                 break;
             default:
                 break;
