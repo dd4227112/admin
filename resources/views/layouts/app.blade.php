@@ -780,7 +780,8 @@ function toast(message) {
                                 <?php
                                 foreach ($users as $user) {
                                     ?>
-                                    <div class="media userlist-box" data-id="1" data-status="online" data-username="<?= $user->firstname . ' ' . $user->lastname ?>" data-toggle="tooltip" data-placement="left" title="<?= $user->firstname . ' ' . $user->lastname ?>">
+                                    <div class="media userlist-box" onclick="get_user(<?=$user->id?>)" data-id="1" data-status="online" data-username="<?= $user->firstname . ' ' . $user->lastname ?>" data-toggle="tooltip" data-placement="left" title="<?= $user->firstname . ' ' . $user->lastname ?>">
+                                    <input id="to_user_id<?=$user->id?>" value="<?=$user->id?>" type="hidden">
                                         <a class="media-left" href="#!">
                                             <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="<?= $user->firstname . ' ' . $user->lastname ?>">
                                             <div class="live-status bg-success"></div>
@@ -807,43 +808,9 @@ function toast(message) {
             </div>
             <!-- Sidebar inner chat start-->
             <div class="showChat_inner">
-                <div class="media chat-inner-header">
-                    <a class="back_chatBox">
-                        <i class="icofont icofont-rounded-left"></i> Information Hidden
-                    </a>
+            <div id="usermessage"  style="overflow-y: auto; height: 100%;">
+
                 </div>
-                <!--                <div class="media chat-messages">
-                                    <a class="media-left photo-table" href="#!">
-                                        <img class="media-object img-circle m-t-5" src="<?= $root ?>assets/images/avatar-1.png" alt="Image">
-                                    </a>
-                                    <div class="media-body chat-menu-content">
-                                        <div class="">
-                                            <p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
-                                            <p class="chat-time">8:20 a.m.</p>
-                                        </div>
-                                    </div>
-                                </div>-->
-                <!--                <div class="media chat-messages">
-                                    <div class="media-body chat-menu-reply">
-                                        <div class="">
-                                            <p class="chat-cont">I'm just looking around. Will you tell me something about yourself?</p>
-                                            <p class="chat-time">8:20 a.m.</p>
-                                        </div>
-                                    </div>
-                                    <div class="media-right photo-table">
-                                        <a href="#!">
-                                            <img class="media-object img-circle m-t-5" src="<?= $root ?>assets/images/avatar-2.png" alt="Image">
-                                        </a>
-                                    </div>
-                                </div>-->
-                <!--                <div class="chat-reply-box p-b-20">
-                                    <div class="right-icon-control">
-                                        <input type="text" class="form-control search-text" placeholder="Share Your Thoughts">
-                                        <div class="form-icon">
-                                            <i class="icofont icofont-paper-plane"></i>
-                                        </div>
-                                    </div>
-                                </div>-->
             </div>
             <!-- Sidebar inner chat end-->
             <!-- Main-body start-->
@@ -959,7 +926,34 @@ function toast(message) {
     <?php
     if (request('type_id') != 'subject' && !preg_match('/emailsms/', url()->current()) && !preg_match('/sales/', url()->current()) && !preg_match('/logs/', url()->current()) && !preg_match('/activity/', url()->current()) && !preg_match('/payment_history/i', url()->current()) && !preg_match('/api/', url()->current())) {
         ?>
-        <script type="text/javascript">
+<script type="text/javascript">
+    send_message = function (id) {
+    var to_user_id = $('#to_user_id' + id).val();
+    var body =  $('#body').val();
+    $.ajax({
+    type: 'POST',
+    url: '<?=url('Users/storeChat/null')?>',
+    data: {to_user_id: to_user_id, body: body},
+    dataType: "html",
+    success: function (data) {
+        $('input[type="text"],textarea').val('');
+      $('#usermessage').html(data);
+    }
+  });
+}
+
+        get_user = function (id) {
+            var to_user_id = $('#to_user_id' + id).val();
+            $.ajax({
+            type: 'get',
+            url: '<?=url('Users/getUser/null')?>',
+            data: {to_user_id: to_user_id},
+            dataType: "html",
+            success: function (data) {
+            $('#usermessage').html(data);
+            }
+        });
+    }
 
                             $(document).ready(function () {
                                 $('.dataTable').DataTable({
