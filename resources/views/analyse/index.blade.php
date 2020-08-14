@@ -201,7 +201,7 @@
                                                         <th>No.</th>
                                                         <th>Task type</th>
                                                         <th>School</th>
-                                                        <th>Deadline</th>
+                                                        <th>Added On</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
