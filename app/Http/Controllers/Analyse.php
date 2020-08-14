@@ -55,7 +55,10 @@ class Analyse extends Controller {
             $this->data['nmb_shulesoft_schools'] = \collect(DB::select("select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22"))->first()->count;
             return view('analyse.nmb', $this->data);
         }else{
-        $this->data['activity'] = \App\Models\Task::where('user_id', Auth::user()->id)->orderBy('id', 'DESC')->get();
+            $user = Auth::user()->id;
+            $sql = "select a.id, substring(a.activity from 1 for 80) as activity,a.created_at::date, a.date,d.name as user ,e.name as type  from admin.tasks a join admin.tasks_clients c on a.id=c.task_id
+            join admin.users d on d.id=a.user_id join admin.task_types e on a.task_type_id=e.id WHERE a.user_id = $user order by a.created_at::date desc";
+            $this->data['activities'] = DB::select($sql);
         return view('analyse.index', $this->data);
         }
     }

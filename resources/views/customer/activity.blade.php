@@ -77,9 +77,7 @@
                                                     <tr>
                                                         <th>No.</th>
                                                         <th>Task type</th>
-                                                        <th>Added By</th>
-                                                        <th>School</th>
-                                                        <th>Start Date</th>
+                                                        <th>Activity</th>
                                                         <th>End Date</th>
                                                         <th>Status</th>
                                                         <th>Action</th>
@@ -92,11 +90,8 @@
                                                     <tr>
                                                         <th>No</th>
                                                         <th>Task type</th>
-                                                        <th>Added By</th>
-                                                        <th>School</th>
-                                                        <th>Start Date</th>
+                                                        <th>Activity</th>
                                                         <th>End Date</th>
-
                                                         <th>Status</th>
                                                         <th>Action</th>
                                                     </tr>
@@ -144,16 +139,15 @@
 
                     {"data": "id"},
                     {"data": "task_name"},
-                    {"data": "user_name"},
-                    {"data": "school_name"},
-                    {"data": "start_date"},
+                    {"data": "activity"},
+                 //   {"data": "start_date"},
                     {"data": "end_date"},
                     {"data": ""},
                     {"data": ""}
                 ],
                 "columnDefs": [
                     {
-                        "targets": 7,
+                        "targets": 5,
                         "data": null,
                         "render": function (data, type, row, meta) {
                             $('#ajax_data_results').html(JSON.stringify(row));
@@ -163,7 +157,7 @@
 
                     },
                     {
-                        "targets": 6,
+                        "targets": 4,
                         "data": null,
                         "render": function (data, type, row, meta) {
                             var status;
