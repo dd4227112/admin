@@ -56,7 +56,7 @@
                         <h3><?= $active_school ?></h3>
                         <p>Active Schools</p>
                         <div class="progress ">
-                          <div class="progress-bar progress-bar-striped progress-xs progress-bar-success ?>" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
+                          <div class="progress-bar progress-bar-striped progress-xs progress-bar-success" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                         <small> Thes are active schools</small>
                       </div>
