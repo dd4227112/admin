@@ -270,13 +270,13 @@ where extract(year from a.created_at)=' . $year . ' AND a.route is not null  gro
                                                 </thead>
                                                 <tbody>
                                                     <?php
-                                                    $sqls = "select count(a.*),b.name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.task_types c on c.id=a.task_type_id where $where  and c.department=3  group by b.name";
+                                                    $sqls = "select count(a.*),b.name,b.id from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.task_types c on c.id=a.task_type_id where $where  and c.department=3  group by b.name,b.id";
                                                     $tasks = DB::select($sqls);
                                                     foreach ($tasks as $task) {
                                                         ?>
                                                         <tr>
 
-                                                            <td><?= $task->name ?></td>
+                                                        <td><a href="<?=url('customer/taskGroup/task/'.$task->id)?>"><?= $task->name ?></a></td>
                                                             <td><?= $task->count ?></td>
 
                                                         </tr>

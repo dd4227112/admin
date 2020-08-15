@@ -16,7 +16,7 @@
                         <div class="card-block">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title">Create Task/Activity <?php echo Auth::user()->department; ?></h4>
+                                    <h4 class="modal-title">Create Task/Activity </h4>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">×</span>
                                     </button>
