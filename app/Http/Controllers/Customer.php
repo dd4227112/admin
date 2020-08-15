@@ -809,5 +809,21 @@ class Customer extends Controller {
         ]);
         return redirect()->back()->with('success', 'Succeess');
     }
+    public function taskGroup() {
+        $type = request()->segment(3);
+        $id = request()->segment(4);
+        if($type == 'user'){
+            $sql = "select a.id, a.activity,a.created_at::date, a.date,d.name as user ,e.name as type  from admin.tasks a join admin.tasks_clients c on a.id=c.task_id
+            join admin.users d on d.id=a.user_id join admin.task_types e on a.task_type_id=e.id WHERE a.user_id = $id order by a.id asc";
+            $this->data['activities'] = \App\Models\Task::where('user_id', $id)->orderBy('id', 'DESC')->get();
+        }elseif($type == 'task'){
+            $this->data['activities'] = \App\Models\Task::where('task_type_id', $id)->orderBy('id', 'DESC')->get();
+        }else{
+            $this->data['activities'] = \App\Models\Task::where('task_type_id', $id)->orderBy('id', 'DESC')->get();
+        }
+        return view('customer.task_group', $this->data);
+        return view('layouts.file_view', $this->data);
+    }
+
 
 }

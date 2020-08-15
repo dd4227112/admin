@@ -200,12 +200,12 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                                         </thead>
                                         <tbody>
                                             <?php
-                                            $tasks = DB::select('select count(a.*),b.name from admin.tasks a join admin.task_types b on b.id=a.task_type_id where   a.user_id in (select id from admin.users where department=1) and ' . $where . '  group by b.name');
+                                            $tasks = DB::select('select count(a.*),b.name,b.id from admin.tasks a join admin.task_types b on b.id=a.task_type_id where   a.user_id in (select id from admin.users where department=1) and ' . $where . '  group by b.name, b.id');
                                             foreach ($tasks as $task) {
                                                 ?>
                                                 <tr>
 
-                                                    <td><?= $task->name ?></td>
+                                                    <td><a href="<?=url('customer/taskGroup/task/'.$task->id)?>"><?= $task->name ?></a></td>
                                                     <td><?= $task->count ?></td>
                                                 </tr>
                                             <?php } ?>
@@ -247,12 +247,12 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                                 <tbody>
 
                                     <?php
-                                    $activities = DB::select("select a.id, a.activity,a.created_at,b.name as task_name, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id WHERE   a.user_id in (select id from admin.users where department=1) and " . $where);
+                                    $activities = DB::select("select a.id, a.activity,a.created_at,b.name as task_name,a.user_id, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id WHERE   a.user_id in (select id from admin.users where department=1) and " . $where);
                                     foreach ($activities as $activity) {
                                         ?>
                                         <tr>
                                             <td class="img-pro">
-                                                <?= $activity->user_name ?>
+                                            <a href="<?=url('customer/taskGroup/user/'.$activity->user_id)?>"><?= $activity->user_name ?></a>
                                             </td>
                                         <!--    <td class="pro-name"><?= $activity->activity ?>
                                             </td>-->
