@@ -398,15 +398,23 @@ group by ownership');
     }
 
     public function systemUser(){
-        $type = request()->segment(3);
-        $status = request()->segment(4);
+        $this->data['type'] = $type = request()->segment(4);
+        $this->data['status'] = $status = request()->segment(3);
         $end_date = date('Y-m-01');
         $this->data['where'] = $where = "a.created_at::date >='".$end_date."'";
        // $this->data['active_users'] = DB::SELECT('SELECT "table", count(*) as count from admin.all_users where status=1 and ("table",id) in (select "table", user_id from admin.all_log a where ' . $where .' group by "table",user_id) group by "table"  order by "table"');
         //$this->data['notactive_users'] = DB::SELECT('SELECT "table", count(*) as count from admin.all_users where status=1 and ("table",id) in (select "table", user_id from admin.all_log a where ' . $where .'group by "table",user_id) group by "table"  order by "table"');
         $this->data['users'] = DB::SELECT('SELECT "table", count(*) as count from admin.all_users where status=1  group by "table" order by "table"'); 
-        
-        $this->data['list_of_users'] = DB::SELECT('SELECT schema_name, count(*) as count from admin.all_users where status=1 and ("table",id) in (select "table", user_id from admin.all_log a where ' . $where .' group by schema_name) group by "table"  order by "table"');
+        if($type !='' && $status !=''){
+            $table = "'".$type."'";
+        if($status == 'active'){
+            $this->data['list_of_users'] = DB::SELECT('SELECT schema_name, count(*) as count from admin.all_users where status=1 and ("table",id) in (select a."table", a.user_id from admin.all_log a where ' . $where .'  and "table" = '.$table.' group by a."table", a.user_id) group by schema_name order by count(schema_name) desc');
+        }if($status == 'notactive'){
+            $this->data['list_of_users'] = DB::SELECT('SELECT schema_name, count(*) as count from admin.all_users where status=1 and  ("table",id) not in (select a."table", a.user_id from admin.all_log a where ' . $where .'  and "table" = '.$table.'  group by a."table", a.user_id) group by schema_name order by count(schema_name) desc');
+        }if($status == 'all'){
+            $this->data['list_of_users'] = DB::SELECT('SELECT schema_name, count(*) as count from admin.all_users where status=1 and "table" = '.$table.' group by schema_name order by count(schema_name) desc');
+        }
+    }
     
     return view('market.system_user', $this->data);
     }
