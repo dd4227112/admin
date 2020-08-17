@@ -45,17 +45,17 @@
                                     <div class="col-sm-4 text-center">
                                         <h5 id="all_users"><?=$user->count?></h5>
                                             <span><?=ucfirst($user->table)?></span>
-                                            <small>Total</small>
+                                            <small><a href="<?=url('Marketing/systemUser/all/'.$user->table)?>">Total</a></small>
                                             </div>
                                         <div class="col-sm-4 text-center">
                                             <h5 id="all_users"><?=$active_users?></h5>
                                             <span><?=ucfirst($user->table)?></span>
-                                            <small> Active</small>
+                                            <small> <a href="<?=url('Marketing/systemUser/active/'.$user->table)?>">Active </a></small>
                                         </div>
                                         <div class="col-sm-4 text-center">
                                             <h5 id="all_users"><?=$user->count - $active_users?></h5>
                                             <span><?=ucfirst($user->table)?></span>
-                                            <small>Not Active</small>
+                                            <small><a href="<?=url('Marketing/systemUser/notactive/'.$user->table)?>">Not Active</a></small>
                                         </div>
                                     </div>
                                 </div>
@@ -70,7 +70,7 @@
     <div class="col-lg-12">
       <div class="card">
       <div class="card-header">
-      <a href="">List of Users</a>
+      <a href="">List of <?=$status?> <?=$type?>s</a>
       <a href="<?= url('Marketing/systemUser/'.$type .'/'.$status) ?>" style="float: right" data-i18n="nav.navigate.navbar" class="btn btn-success"> <i class="icofont icofont-comment"></i> Send Message</a>
 
       </div>
@@ -82,18 +82,27 @@
                         <tr>
                           <th>#</th>
                           <th>School Name</th>
-                          <th>Region</th>
-                          <th>District</th>
-                          <th>Ward</th>
-                          <th>Type</th>
-                          <!--<th>Use NMB</th>-->
-                          <th>Students</th>
-                          <th>Activities</th>
+                          <th>count</th>
                           <th>Action</th>
                         </tr>
                       </thead>
                       <tbody>
-
+                      <?php
+                      $i = 1;
+                      if(isset($list_of_users) && count($list_of_users)){
+                        foreach($list_of_users as $list){
+                          echo '<tr>';
+                          echo '<td>'.$i++.'</td>';
+                          echo '<td>'.$list->schema_name.'</td>';
+                          echo '<td>'.$list->count.'</td>';
+                          echo '<td>
+                          <a href="'. url('Markerting/SentSMS/'.$status.'/'.$type). '" class="btn btn-primary btn-sm">View</a>
+                          <a href="'. url('Markerting/SentSMS/'.$status.'/'.$type). '" class="btn btn-primary btn-sm">Send SMS</a>
+                          </td>';
+                          echo '</tr>';
+                        }
+                      }
+                      ?>
                       </tbody>
                     </table>
                   </div>
