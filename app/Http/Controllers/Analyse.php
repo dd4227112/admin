@@ -48,14 +48,19 @@ class Analyse extends Controller {
 //       created_at < date_trunc('week', CURRENT_TIMESTAMP)
 //      )"))->first()->aggregate;
         //$this->data['log_graph'] = $this->createBarGraph();
-        if(Auth::user()->id == 36){
-            $this->data['use_shulesoft'] = DB::table('admin.all_setting')->count() - 5;
-            $this->data['nmb_schools'] = DB::table('admin.nmb_schools')->count();
-            $this->data['schools'] = DB::table('admin.schools')->where('ownership','<>', 'Government')->count();
-            $this->data['nmb_shulesoft_schools'] = \collect(DB::select("select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22"))->first()->count;
+        if(Auth::user()->department == 10){
+            $id = Auth::user()->id;
+            $this->data['branch'] = $branch = \App\Models\PartnerUser::where('user_id', $id)->first();
+            $this->data['use_shulesoft'] = \App\Models\School::whereIn('ward_id', \App\Models\Ward::where('district_id', $branch->branch->district_id)->get(['id']))->whereNotNull('schema_name')->count();
+            $this->data['nmb_schools'] = DB::table('admin.partner_schools')->where('branch_id', $branch->branch_id)->count();
+            $this->data['schools'] = \App\Models\School::whereIn('ward_id', \App\Models\Ward::where('district_id', $branch->branch->district_id)->get(['id']))->where('ownership','<>', 'Government')->orderBy('schema_name', 'ASC')->get();
+            $this->data['nmb_shulesoft_schools'] = \collect(DB::select('select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22 and schema_name in(select schema_name from admin.schools where schema_name is not null and ward_id in (select id from admin.wards where district_id = '. $branch->branch->district_id.'))'))->first()->count;
             return view('analyse.nmb', $this->data);
         }else{
-        $this->data['activity'] = \App\Models\Task::where('user_id', Auth::user()->id)->orderBy('id', 'DESC')->get();
+            $user = Auth::user()->id;
+            $sql = "select a.id, substring(a.activity from 1 for 80) as activity,a.created_at::date, a.date,d.name as user ,e.name as type  from admin.tasks a join admin.tasks_clients c on a.id=c.task_id
+            join admin.users d on d.id=a.user_id join admin.task_types e on a.task_type_id=e.id WHERE a.user_id = $user order by a.created_at::date desc";
+            $this->data['activities'] = DB::select($sql);
         return view('analyse.index', $this->data);
         }
     }

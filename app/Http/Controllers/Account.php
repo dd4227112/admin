@@ -95,7 +95,7 @@ class Account extends Controller {
         } else {
             if ($_POST) {
                 $school = request('school');
-                DB::table($school . '.setting')->update(['next_payment_date' => request('next_payment_date'), 'last_payment_date' => request('last_payment_date')]);
+                DB::table($school . '.setting')->update(['next_payment_date' => request('next_payment_date'), 'last_payment_date' => request('last_payment_date'), 'total_paid_amount' => request('total_paid_amount'), 'estimated_students' => request('student')]);
                 $arr = [
                     'amount' => request('amount'),
                     'schema_name' => $school,

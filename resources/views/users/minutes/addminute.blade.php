@@ -112,7 +112,7 @@
                         <strong>  Tick Attendee of the Meeting</strong> 
                           <hr>
                     <?php
-                    $users = DB::table('users')->where('status', 1)->get();
+                    $users = DB::table('users')->where('status', 1)->where('role_id', '<>', 7)->get();
                     foreach ($users as $user) {
                       ?>
                       <input type="checkbox" id="feature<?= $user->id ?>" value="{{$user->id}}" name="user_id[]" >  <?php echo $user->name; ?>  &nbsp; &nbsp;

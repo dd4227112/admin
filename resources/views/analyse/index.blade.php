@@ -201,30 +201,26 @@
                                                         <th>No.</th>
                                                         <th>Task type</th>
                                                         <th>School</th>
-                                                        <th>Deadline</th>
+                                                        <th>Added On</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                   <?php
-                                                  $user = Auth::user()->id;
-                                                  $sql = "(select a.id, a.activity,a.created_at::date, a.date,b.name as client,d.name as user ,e.name as type  from admin.tasks a join admin.tasks_clients c on a.id=c.task_id join admin.clients b on b.id=c.client_id
-                                                  join admin.users d on d.id=a.user_id join admin.task_types e on a.task_type_id=e.id WHERE a.user_id = $user order by a.created_at::date desc)
-                                                  UNION ALL
-                                                  (select a.id, a.activity,a.created_at::date, a.date,b.name as client,d.name as user ,e.name as type  from admin.tasks a join admin.tasks_schools c on a.id=c.task_id join admin.schools b on b.id=c.school_id
-                                                 join admin.users d on d.id=a.user_id join admin.task_types e on a.task_type_id=e.id WHERE a.user_id = $user order by a.created_at::date desc)";
-                                                $activities = DB::select($sql);
+                                               
                                                  $i = 1;
-                                                  foreach ($activities as $act):
+                                                 if(count($activities)){
+                                                  foreach ($activities as $act){
                                                      ?>
                                                   <tr>
                                                   <td><?=$i++?></td>
                                                   <td><?=$act->type?></td>
-                                                  <td><?=$act->client?></td>
+                                                  <td><?=$act->activity?>..</td>
                                                   <td><?=$act->date?></td>
                                                   <td> <a href="<?=url('customer/activity/show/'.$act->id)?>">View</a> </td>
                                                 </tr>
-                                              <?php endforeach; ?>
+                                                  <?php } ?>
+                                                  <?php } ?>
                                                 </tbody>
 
                                             </table>

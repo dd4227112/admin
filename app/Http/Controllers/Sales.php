@@ -127,11 +127,15 @@ group by ownership');
         $id = request()->segment(3);
         if ($id == 'shulesoft') {
             $this->data['title'] = "Schools Alreardy Onboarded";
-            $this->data['all_schools'] = DB::table('admin.schools')->whereNotNull('schema_name')->get();
+            $user = Auth::user()->id;            
+            $this->data['branch'] = $branch = \App\Models\PartnerUser::where('user_id', $user)->first();
+            $this->data['all_schools'] = \App\Models\School::whereIn('ward_id', \App\Models\Ward::where('district_id', $branch->branch->district_id)->get(['id']))->whereNotNull('schema_name')->orderBy('schema_name', 'ASC')->get();
         }
         if ($id == 'bank') {
+            $user = Auth::user()->id;            
+            $this->data['branch'] = $branch = \App\Models\PartnerUser::where('user_id', $user)->first();
             $this->data['title'] = "Schools With Bank Payment Integrarion";
-            $this->data['all_schools'] = DB::select('select * from admin.schools WHERE schema_name IN (select distinct schema_name from admin.all_bank_accounts where refer_bank_id=22)');
+            $this->data['all_schools'] = DB::select('select * from admin.schools WHERE schema_name IN (select distinct schema_name from admin.all_bank_accounts where refer_bank_id=22) and ward_id in (select id from admin.wards where district_id = '. $branch->branch->district_id.')');
         }
         return view('sales.school_status', $this->data);
     }
@@ -255,12 +259,24 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
                 return $this->ajaxTable('payments', ['a.id', 'amount', 'name', 'a.created_at'], $sql);
                 break;
             case 'tasks':
-                $user_id = (int) request('user_id') > 0 ? request('user_id') : Auth::user()->id;
-                $sql = "select t.id,substring(t.activity from 1 for 70) as activity,t.date, t.start_date,t.end_date, t.created_at,p.school_name,p.client,u.firstname||' '||u.lastname as user_name, substring(tt.name from 1 for 10) as task_name, t.status,t.priority from admin.tasks t left join (
-select a.task_id, c.name as school_name,'Client' as client from admin.tasks_clients a join admin.clients c on c.id=a.client_id
-UNION ALL
-SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks_schools b join admin.schools s on s.id=b.school_id ) p on p.task_id=t.id join admin.users u on u.id=t.user_id join admin.task_types tt on tt.id=t.task_type_id where u.id=" . $user_id . " OR t.id in (select task_id from admin.tasks_users where user_id=" . $user_id . " )";
-                return $this->ajaxTable('tasks', ['activity', 'u.firstname', 'p.school_name', 't.created_at', 't.date', 'u.lastname', 't.start_date', 't.end_date'], $sql);
+
+                $user_id=(int) request('user_id') > 0 ? request('user_id'):Auth::user()->id;
+                $sql = "select t.id,substring(t.activity from 1 for 75) as activity,t.date, t.start_date,t.end_date, t.created_at,p.school_name,p.client,u.firstname||' '||u.lastname as user_name, substring(tt.name from 1 for 10) as task_name, t.status,t.priority from admin.tasks t left join (
+                    select a.task_id, c.name as school_name,'Client' as client from admin.tasks_clients a join admin.clients c on c.id=a.client_id
+                    UNION ALL
+                SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks_schools b join admin.schools s on s.id=b.school_id ) p on p.task_id=t.id join admin.users u on u.id=t.user_id join admin.task_types tt on tt.id=t.task_type_id where u.id=" .$user_id. " OR t.id in (select task_id from admin.tasks_users where user_id=" .$user_id . " )";
+                return $this->ajaxTable('tasks', ['activity', 'u.firstname', 'p.school_name', 't.created_at', 't.date', 'u.lastname','t.start_date','t.end_date'], $sql);
+
+                break;
+            case 'school_status':
+                if ((int) request('type') == 3) {
+                    $sql = "select * from (select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a   where lower(a.ownership) <>'government') a where activities >0";
+                } else if ((int) request('type') == 2) {
+                    $sql = "select a.*, (select count(*) from admin.tasks where client_id in (select id from admin.clients where username in (select schema_name from admin.all_setting where school_id=a.id))) as activities from admin.schools a   where lower(a.ownership) <>'government' and a.id in (select school_id from admin.all_setting)";
+                } else {
+                    $sql = "select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a   where lower(a.ownership) <>'government'";
+                }
+                return $this->ajaxTable('schools', ['a.name', 'a.region', 'a.ward', 'a.district'], $sql);
                 break;
             default:
                 break;

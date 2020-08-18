@@ -311,4 +311,89 @@ class Users extends Controller {
         return view('users.tasks', $this->data);
     }
 
+
+    public function storeChat() {
+        $root = url('/') . '/public/';
+        $id = Auth::user()->id;
+        $to = request('to_user_id');
+        $message = \App\Models\Chat::create(['body' => request('body'), 'status' => 1]);
+        \App\Models\ChatUser::create(['user_id' => $id, 'to_user_id' => $to, 'message_id' => $message->id]);
+        $this->getUser($to);
+      //  return redirect()->back()->with('success', 'Message Sent');
+    }
+
+    public function getUser($id) {
+        if(request('to_user_id') != ''){
+            $id = request('to_user_id');
+        }else{
+            $id = $id;
+        }
+        $to = Auth::user()->id;
+        $user = \App\Models\User::where('id', $id)->first();
+        $send = "'send'::text AS sends";
+        $rec = "'receive'::text AS sends";
+        $results = DB::SELECT('SELECT a.body,a.created_at,b.user_id as user_id, '.$send .' from admin.chats a, admin.chat_users b where a.id=b.message_id and b.user_id ='. $id .' AND b.to_user_id='.$to.' UNION ALL SELECT a.body,a.created_at,b.to_user_id as user_id, '.$rec.' from admin.chats a, admin.chat_users b where a.id=b.message_id and b.user_id ='. $to .' AND b.to_user_id='.$id);
+        //  \App\Models\ChatUser::where('user_id', $id)->where('to_user_id', $to)->get();
+        $root = url('/') . '/public/';
+        $message1 = '';
+        $message1 .= '<div class="media chat-inner-header">
+        <a class="back_chatBox">
+        <input id="to_user_id'.$user->id.'" value="'.$user->id.'" type="hidden">
+            <i class="icofont icofont-rounded-left"></i>'. $user->firstname .' ' .$user->lastname .'
+        </a>
+    </div>';
+        if(count($results) > 0){
+                    foreach($results as $message){ 
+                if($message->sends == 'send'){
+                    $message1  .= '<div class="media chat-messages">
+                                    <a class="media-left photo-table" href="#!">
+                                    <img class="media-object img-circle m-t-5" src="'. $root .'assets/images/avatar-1.png" alt="Image">
+                                    </a>
+                                    <div class="media-body chat-menu-content">
+                                        <div class="">
+                                            <p class="chat-cont">'.$message->body .'<br>
+                                            <b>'.$message->created_at.'</b></p>
+                                        </div>
+                                    </div>
+                                </div>';
+                            }else{ 
+                                $message1 .= '<div class="media chat-messages">
+                                    <div class="media-body chat-menu-reply">
+                                        <div class="">
+                                        <p class="chat-cont">'.$message->body .'
+                                        <br>
+                                            <b>'.$message->created_at.'</b>
+                                        </p>
+                                        </div>
+                                    </div>
+                                    <div class="media-right photo-table">
+                                        <a href="#!">
+                                            <img class="media-object img-circle m-t-5" src="'. $root .'assets/images/avatar-2.png" alt="Image">
+                                        </a>
+                                    </div>
+                                </div>';
+                            } 
+                          }
+                      }else{
+                         $message1 .= '<div class="media chat-messages">
+                         <div class="media-body chat-menu">
+                             <div class="">
+                             <p class="chat-cont"> No new message...</p>
+                             </div>
+                             </div>
+                         </div>';
+                      }
+                      $message1 .= '<div class="chat-reply-box p-b-20">
+                      <div class="right-icon-control">
+                      <textarea rows="4" id="body" class="form-control search-text" placeholder="Type Here.."></textarea>
+                      <button type="button" class="btn btn-primary btn-sm" onmousedown="send_message('.$id.')"> Send </button>
+
+                      </div>
+                  </div>';
+
+        echo $message1;
+
+    }
+
+
 }
