@@ -7,7 +7,7 @@
         <div class="page-header">
             <div class="page-header-title">
                 <h4 class="box-title">Schools</h4>
-                <span>List of private schools in Tanzania</span>
+                <span>List of private schools in <?=$branch->branch->district->name?>, <?= $branch->branch->district->region->name?></span>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">

@@ -57,7 +57,7 @@ foreach ($user_permission as $permis) {
                                     <div class="card-block-big">
                                         <div>
                                             <h3>Tsh <?= number_format($user->salary) ?></h3>
-                                            <p>Basic Salary
+                                            <p>Basic Salary <?php echo Auth::user()->role_id; ?>
                                                 <span class="f-right text-success">
                                                     <i class="icofont icofont-arrow-up"></i>
                                                     increase every 3 months

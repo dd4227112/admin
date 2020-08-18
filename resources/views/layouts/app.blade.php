@@ -336,7 +336,7 @@ function toast(message) {
                                         <a href="#!" class="displayChatbox">
                                             <i class="ti-comments"></i>
                                             <span class="badge"><?php
-                                                $users = \App\Models\User::where('status', 1)->get();
+                                                $users = \App\Models\User::where('status', 1)->where('department', '<>', 10)->get();
                                                 echo count($users);
                                                 ?></span>
                                         </a>
