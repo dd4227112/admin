@@ -82,7 +82,7 @@
                                                     <strong> Person Allocated to do</strong> 
                                                     <select multiple="" name="to_user_id[]" class="form-control select2" required>
                                                         <?php
-                                                        $staffs = DB::table('users')->where('status', 1)->get();
+                                                        $staffs = DB::table('users')->where('status', 1)->where('role_id', '<>', 7)->get();
                                                         foreach ($staffs as $staff) {
                                                             ?>
                                                             <option value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
