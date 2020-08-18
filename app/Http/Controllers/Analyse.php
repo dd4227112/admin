@@ -48,11 +48,13 @@ class Analyse extends Controller {
 //       created_at < date_trunc('week', CURRENT_TIMESTAMP)
 //      )"))->first()->aggregate;
         //$this->data['log_graph'] = $this->createBarGraph();
-        if(Auth::user()->id == 36){
-            $this->data['use_shulesoft'] = DB::table('admin.all_setting')->count() - 5;
-            $this->data['nmb_schools'] = DB::table('admin.nmb_schools')->count();
-            $this->data['schools'] = DB::table('admin.schools')->where('ownership','<>', 'Government')->count();
-            $this->data['nmb_shulesoft_schools'] = \collect(DB::select("select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22"))->first()->count;
+        if(Auth::user()->department == 10){
+            $id = Auth::user()->id;
+            $this->data['branch'] = $branch = \App\Models\PartnerUser::where('user_id', $id)->first();
+            $this->data['use_shulesoft'] = \App\Models\School::whereIn('ward_id', \App\Models\Ward::where('district_id', $branch->branch->district_id)->get(['id']))->whereNotNull('schema_name')->count();
+            $this->data['nmb_schools'] = DB::table('admin.partner_schools')->where('branch_id', $branch->branch_id)->count();
+            $this->data['schools'] = \App\Models\School::whereIn('ward_id', \App\Models\Ward::where('district_id', $branch->branch->district_id)->get(['id']))->where('ownership','<>', 'Government')->orderBy('schema_name', 'ASC')->get();
+            $this->data['nmb_shulesoft_schools'] = \collect(DB::select('select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22 and schema_name in(select schema_name from admin.schools where schema_name is not null and ward_id in (select id from admin.wards where district_id = '. $branch->branch->district_id.'))'))->first()->count;
             return view('analyse.nmb', $this->data);
         }else{
             $user = Auth::user()->id;

@@ -13,7 +13,7 @@ class Ward extends Model {
     protected $fillable = ['id', 'name', 'district_id', 'created_at', 'updated_at'];
     
     public function district() {
-        return $this->belongsTo(\App\Models\District::class, 'district_id', 'id');
+        return $this->belongsTo(\App\Models\District::class, 'district_id', 'id')->withDefault(['name' => 'Not Defined']);
     }
 
 }
