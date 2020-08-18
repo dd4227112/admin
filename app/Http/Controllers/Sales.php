@@ -259,12 +259,14 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
                 return $this->ajaxTable('payments', ['a.id', 'amount', 'name', 'a.created_at'], $sql);
                 break;
             case 'tasks':
+
                 $user_id=(int) request('user_id') > 0 ? request('user_id'):Auth::user()->id;
                 $sql = "select t.id,substring(t.activity from 1 for 75) as activity,t.date, t.start_date,t.end_date, t.created_at,p.school_name,p.client,u.firstname||' '||u.lastname as user_name, substring(tt.name from 1 for 10) as task_name, t.status,t.priority from admin.tasks t left join (
                     select a.task_id, c.name as school_name,'Client' as client from admin.tasks_clients a join admin.clients c on c.id=a.client_id
                     UNION ALL
                 SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks_schools b join admin.schools s on s.id=b.school_id ) p on p.task_id=t.id join admin.users u on u.id=t.user_id join admin.task_types tt on tt.id=t.task_type_id where u.id=" .$user_id. " OR t.id in (select task_id from admin.tasks_users where user_id=" .$user_id . " )";
                 return $this->ajaxTable('tasks', ['activity', 'u.firstname', 'p.school_name', 't.created_at', 't.date', 'u.lastname','t.start_date','t.end_date'], $sql);
+
                 break;
             case 'school_status':
                 if ((int) request('type') == 3) {
@@ -473,7 +475,7 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
                     $this->curlPrivate($order);
                     $booking = DB::table('admin.invoices')->where('order_id', $order_id)->first();
                 }
-                $this->scheduleActivities($client->id);
+                $this->scheduleActivities($client_id);
                 return redirect('sales/customerSuccess/1/' . $booking->id);
             } else {
                 //create a trial code for this school
@@ -484,7 +486,7 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
                 $message = 'Hello ' . $user->name . '. Your Trial Code is ' . $trial_code;
                 $this->send_sms($user->phone, $message, 1);
                 $this->send_email($user->email, 'Success: School Onboarded Successfully', $message);
-                $this->scheduleActivities($client->id);
+                $this->scheduleActivities($client_id);
                 return redirect('sales/customerSuccess/2/' . $trial_code);
             }
             return redirect('https://' . $username . '.shulesoft.com');
@@ -497,18 +499,40 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
      * @param type $client_id
      */
     public function scheduleActivities($client_id) {
-        return false;
-        $sections = \App\Models\TrainingSections::orderBy('id', 'asc')->get();
+        $time = 0;
+        $sections = \App\Models\TrainItem::orderBy('id', 'asc')->get();
         foreach ($sections as $section) {
+
+            $start_date = date('Y-m-d H:i', strtotime("+{$time} minutes", strtotime(request('implementation_date'))));
+            //check if start_date is greater than 17 hours
+            if (((int) date('H', strtotime($start_date))) >= 16 && (int) $section->time >= 30) {
+                // we cannot add a task here, so switch this tomorrow
+                $add_time = (int) $time + 16 * 60;
+                $start_date = date('Y-m-d H:i', strtotime("+{$add_time} minutes", strtotime(request('implementation_date'))));
+            }
+            if (date('D', strtotime($start_date)) == 'Sat') {
+                //its saturday, so add 48 hours
+                $sat_add_time = (int) $time + 48 * 60;
+                $start_date = date('Y-m-d H:i', strtotime("+{$sat_add_time} minutes", strtotime(request('implementation_date'))));
+            }
+            
+            if (date('l', strtotime($start_date)) == 'Sunday') {
+                // its sunday, so add 24 hours
+                $sun_add_time = (int) $time + 24 * 60;
+                $start_date = date('Y-m-d H:i', strtotime("+{$sun_add_time} minutes", strtotime(request('implementation_date'))));
+            }
+            //later we will check if user attend, holiday etc
+            
+            $end_date = date('Y-m-d H:i', strtotime("+{$section->time} minutes", strtotime($start_date)));
             $data = [
-                'activity' => $section->title,
-                'date' => date('d-m-Y', strtotime(request('implementation_date'))),
+                'activity' => $section->content,
+                'date' => date('Y-m-d', strtotime($start_date)),
                 'user_id' => request('support_user_id'),
                 'start_date' => $start_date,
                 'end_date' => $end_date
             ];
+            $time += $section->time;
             $task = \App\Models\Task::create($data);
-
             DB::table('tasks_users')->insert([
                 'task_id' => $task->id,
                 'user_id' => request('support_user_id'),
@@ -518,10 +542,13 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
                 'task_id' => $task->id,
                 'client_id' => (int) $client_id
             ]);
-            \App\Models\TaskSchedule::create([
+            \App\Models\TrainItemAllocation::create([
                 'task_id' => $task->id,
-                'training_section_id' => $section->id,
-                'client_role' => request(),
+                'client_id'=>$client_id,
+                'user_id' => request('support_user_id'),
+                'train_item_id' => $section->id,
+                'school_person_allocated' => request("train_item{$section->id}"),
+                'max_time'=>$section->time
             ]);
         }
     }
@@ -544,7 +571,7 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
         if (count($slot_available) == 1) {
             //slot not available
             // so check the last slot and add next slot for the person to work
-            
+
             return FALSE;
         } else {
             //slot available

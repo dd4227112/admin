@@ -30,5 +30,8 @@ class Client extends Model {
       public function createdBy() {
         return $this->hasMany(\App\Models\User::class, 'created_by', 'id');
     }
+    public function user() {
+        
+    }
 
 }
