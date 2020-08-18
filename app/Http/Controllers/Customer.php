@@ -55,7 +55,90 @@ class Customer extends Controller {
         return view('customer.faq', $this->data);
     }
 
+    function config() {
+        $status_id = request('id'); //1=complete, 2 =pending, 3 =not yet
+        $schema = request('school_id');
+        $train_item_id = request('training_id');
+        $client = \App\Models\Client::where('username', $schema)->first();
+        $train_item = \App\Models\TrainItem::find($train_item_id);
+        //create a tasks in task table
+        $time = 0;
+        $activity = '';
+        if (strtolower($status_id) == 'complete') {
+            $activity = 'Complete : ' . $train_item->content;
+            $start_date = date('Y-m-d H:i');
+            $end_date = date('Y-m-d H:i', strtotime("+{$time} minutes", strtotime($start_date)));
+        } else {
+            //not yet and pending are tasks needed to be allocated
+            $activity = 'Pending Tasks: ' . $train_item->content;
+            $time += $train_item->time;
+            $end = \App\Models\Task::where('user_id', Auth::user()->id)->orderBy('end_date', 'desc')->first();
+
+            $start_date = count($end) == 0 ? date('Y-m-d H:i') : date('Y-m-d H:i', strtotime("+{$time} minutes", strtotime($end->end_date)));
+            if (date('H', strtotime($start_date)) > 16) {
+                //its end of the time, just add a new day
+                $sat_add_time = (int) $time + 16 * 60;
+                $start_date = date('Y-m-d H:i', strtotime("+{$sat_add_time} minutes", strtotime($start_date)));
+            }
+
+            if (date('D', strtotime($start_date)) == 'Sat') {
+                //its saturday, so add 48 hours
+                $sat_add_time = (int) $time + 48 * 60;
+                $start_date = date('Y-m-d H:i', strtotime("+{$sat_add_time} minutes", strtotime($start_date)));
+            }
+
+            if (date('l', strtotime($start_date)) == 'Sunday') {
+                // its sunday, so add 24 hours
+                $sun_add_time = (int) $time + 24 * 60;
+                $start_date = date('Y-m-d H:i', strtotime("+{$sun_add_time} minutes", strtotime($start_date)));
+            }
+
+            $end_date = date('Y-m-d H:i', strtotime("+{$time} minutes", strtotime($start_date)));
+        }
+        $data = [
+            'activity' => $activity,
+            'date' => date('Y-m-d'),
+            'user_id' => Auth::user()->id,
+            'status' => ucfirst($status_id),
+            'start_date' => $start_date,
+            'end_date' => $end_date
+        ];
+        $is_selected = $train_item->trainItemAllocation()->where('client_id', $client->id)->orderBy('id', 'desc')->first();
+        if (count($is_selected) == 1) {
+            \App\Models\Task::where('id', $is_selected->task->id)->update([
+                'activity' => $activity,
+                'user_id' => Auth::user()->id,
+                'status' => ucfirst($status_id)
+            ]);
+            echo 'updated';
+        } else {
+            $task = \App\Models\Task::create($data);
+
+            DB::table('tasks_users')->insert([
+                'task_id' => $task->id,
+                'user_id' => Auth::user()->id,
+            ]);
+
+            DB::table('tasks_clients')->insert([
+                'task_id' => $task->id,
+                'client_id' => (int) $client->id
+            ]);
+            \App\Models\TrainItemAllocation::create([
+                'task_id' => $task->id,
+                'client_id' => $client->id,
+                'user_id' => Auth::user()->id,
+                'train_item_id' => $train_item->id,
+                'school_person_allocated' => '',
+                'max_time' => $train_item->time
+            ]);
+            //insert into training allocation
+            $this->send_email(Auth::user()->email, 'Task Allocation', $activity . ' <br/>Start Date: ' . $start_date . ' <br/>End Date: ' . $end_date);
+            echo 'success';
+        }
+    }
+
     function setup() {
+
         if (request('type')) {
             echo json_encode(array('data' =>
                 array(
@@ -339,7 +422,7 @@ class Customer extends Controller {
             if ($_POST) {
 
                 $data = array_merge(request()->except('to_user_id'), ['user_id' => Auth::user()->id]);
-                
+
                 $task = \App\Models\Task::create($data);
                 $users = request('to_user_id');
                 if (count($users) > 0) {
