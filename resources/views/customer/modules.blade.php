@@ -97,6 +97,12 @@ foreach ($schools_data as $value) {
     $sources[$value->schema_name] = $value->source;
 }
 
+$invoice_issued = [];
+$invoices_current = DB::select('select * from admin.invoices_sent');
+foreach ($invoices_current as $invoice_info) {
+    $invoice_issued[$invoice_info->schema_name] =$invoice_info->amount;
+}
+
 function select($value, $schema, $sources)
 {
     return isset($sources[$schema]) && strtolower($sources[$schema]) == strtolower($value) ? 'Selected' : '';
@@ -199,6 +205,7 @@ function select($value, $schema, $sources)
                                                         <tr>
                                                             <th><input type="checkbox" name="all" id="toggle_all"> </th>
                                                             <th>School Name</th>
+                                                            <th>Invoice issued </th>
                                                             <td>Support Personnel</td>
                                                             <?php
                                                             if (in_array(Auth::user()->id, [2, 7, 20])) {
@@ -230,7 +237,7 @@ function select($value, $schema, $sources)
                                                         $a = 1;
                                                         foreach ($schools as $school) {
 
-                                                            $students = DB::table($school->schema_name . '.student')->count();
+                                                            $students = DB::table($school->schema_name . '.student')->where('status',1)->count();
                                                             
                                                         ?>
                                                             <tr>
@@ -238,6 +245,14 @@ function select($value, $schema, $sources)
                                                                     <input type="checkbox" class="check" name="select[]" value="<?= $school->schema_name ?>">
                                                                 </td>
                                                                 <td><?= $school->schema_name ?></td>
+                                                                 <td><?php
+                                                                    if (isset($invoice_issued[$school->schema_name])) {
+                                                                        echo $invoice_issued[$school->schema_name];
+                                                                        
+                                                                    } else {
+                                                                        echo '<b class="label label-warning">No</b>';
+                                                                    }
+                                                                    ?></td>
                                                                 <td><?php
                                                                     if (isset($allocation[$school->schema_name])) {
                                                                         echo $allocation[$school->schema_name];
