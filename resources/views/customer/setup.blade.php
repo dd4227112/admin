@@ -214,7 +214,7 @@ foreach ($trains as $train) {
                                         <tbody>
                                             <?php
                                             $u = 1;
-                                            $users_tasks = \App\Models\User::where('status', 1)->get();
+                                            $users_tasks = \App\Models\User::where('status', 1)->where('department','<>',10)->get();
                                             foreach ($users_tasks as $user) {
                                                 ?>
                                                 <tr>
