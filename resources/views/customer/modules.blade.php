@@ -99,7 +99,7 @@ foreach ($schools_data as $value) {
 $invoice_issued = [];
 $invoices_current = DB::select('select * from admin.invoices_sent');
 foreach ($invoices_current as $invoice_info) {
-    $invoice_issued[$invoice_info->schema_name] = $invoice_info->amount;
+    $invoice_issued[$invoice_info->schema_name] = date('d-m-Y H:i', strtotime('30 days', strtotime($invoice_info->date)));
 }
 
 function select($value, $schema, $sources) {
@@ -190,7 +190,7 @@ function select($value, $schema, $sources) {
                                                             <input type="hidden" id='schools_mapped' name="schools" value="" />
                                                         </div>
 
-                                                        <?= csrf_field() ?>
+<?= csrf_field() ?>
                                                     </form>
                                                 </div>
                                             </div>
@@ -203,20 +203,16 @@ function select($value, $schema, $sources) {
                                                         <tr>
                                                             <th><input type="checkbox" name="all" id="toggle_all"> </th>
                                                             <th>School Name</th>
-                                                            <?php
-                                                            if (in_array(Auth::user()->id, [2, 7, 20])) {
-                                                                ?>
-                                                                <th>Invoice issued </th>
-                                                            <?php } ?>
+                                                            <th>Invoice issued </th>
                                                             <td>Support Personnel</td>
-                                                            <?php
-                                                            if (in_array(Auth::user()->id, [2, 7, 20])) {
-                                                                ?>
+<?php
+if (in_array(Auth::user()->id, [2, 7, 20])) {
+    ?>
                                                                 <td>Sales Source</td>
                                                                 <td> Support Person</td>
                                                                 <td>Sales Person</td>
 
-                                                            <?php } ?>
+<?php } ?>
                                                             <td>Students</td>
                                                             <th>Marks Entered</th>
                                                             <th>Exams Published</th>
@@ -228,45 +224,43 @@ function select($value, $schema, $sources) {
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <?php
-                                                        $no_students = 0;
-                                                        $no_marks = 0;
-                                                        $no_exams_published = 0;
-                                                        $no_invoice = 0;
-                                                        $no_expense = 0;
-                                                        $no_payment = 0;
-                                                        $a = 1;
-                                                        foreach ($schools as $school) {
+<?php
+$no_students = 0;
+$no_marks = 0;
+$no_exams_published = 0;
+$no_invoice = 0;
+$no_expense = 0;
+$no_payment = 0;
+$a = 1;
+foreach ($schools as $school) {
 
-                                                            $students = DB::table($school->schema_name . '.student')->where('status', 1)->count();
-                                                            ?>
+    $students = DB::table($school->schema_name . '.student')->where('status', 1)->count();
+    ?>
                                                             <tr>
                                                                 <td>
                                                                     <input type="checkbox" class="check" name="select[]" value="<?= $school->schema_name ?>">
                                                                 </td>
                                                                 <td><?= $school->schema_name ?></td>
-                                                                <?php if (in_array(Auth::user()->id, [2, 7, 20])) { ?>
-                                                                    <td><?php
-                                                                        if (isset($invoice_issued[$school->schema_name])) {
-                                                                            echo $invoice_issued[$school->schema_name];
-                                                                        } else {
-                                                                            echo '<b class="label label-warning">No</b>';
-                                                                        }
-                                                                        ?></td>
-                                                                <?php } ?>
+                                                                <td><?php
+                                                        if (isset($invoice_issued[$school->schema_name])) {
+                                                            echo $invoice_issued[$school->schema_name];
+                                                        } else {
+                                                            echo '<b class="label label-warning">No</b>';
+                                                        }
+    ?></td>
+
                                                                 <td><?php
                                                                     if (isset($allocation[$school->schema_name])) {
-                                                                        echo $allocation[$school->schema_name];
-                                                                        //$a = 1;
-                                                                        $a = 0;
+                                                                        echo 'Yes: <b class="label label-success">'.$allocation[$school->schema_name].'</b>';
+                                                                       
                                                                     } else {
-                                                                        $a = 0;
+                                                                      
                                                                         echo '<b class="label label-warning">No Person Allocated</b>';
                                                                     }
                                                                     ?></td>
-                                                                <?php
-                                                                if (in_array(Auth::user()->id, [2, 7, 20])) {
-                                                                    ?>
+                                                                    <?php
+                                                                    if (in_array(Auth::user()->id, [2, 7, 20])) {
+                                                                        ?>
                                                                     <td>
                                                                         <?php
                                                                         if ($a == 0) {
@@ -290,43 +284,43 @@ function select($value, $schema, $sources) {
 
                                                                             </select>
                                                                             <span id="status_result_5_<?= $school->schema_name ?>"></span>
-                                                                        <?php } ?>
+        <?php } ?>
                                                                     </td>
                                                                     <td>
-                                                                        <?php
-                                                                        if ($a == 0) {
-                                                                            ?>
+        <?php
+        if ($a == 0) {
+            ?>
                                                                             <select name="support_id" class="allocate">
                                                                                 <option></option>
-                                                                                <?php
-                                                                                foreach ($staffs as $staff) {
-                                                                                    ?>
+                                                                            <?php
+                                                                            foreach ($staffs as $staff) {
+                                                                                ?>
                                                                                     <option user_id="<?= $staff->id ?>" role_id="8" schema="<?= $school->schema_name ?>" school_id="" value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
-                                                                                <?php } ?>
+                                                                            <?php } ?>
 
                                                                             </select>
                                                                             <span id="status_result_8_<?= $school->schema_name ?>"></span>
 
-                                                                        <?php } ?>
+                                                                            <?php } ?>
                                                                     </td>
 
                                                                     <td>
-                                                                        <?php
-                                                                        if ($a == 0) {
-                                                                            ?>
+        <?php
+        if ($a == 0) {
+            ?>
                                                                             <select name="sales_id" class="allocate">
                                                                                 <option></option>
-                                                                                <?php
-                                                                                foreach ($staffs as $staff) {
-                                                                                    ?>
+            <?php
+            foreach ($staffs as $staff) {
+                ?>
                                                                                     <option user_id="<?= $staff->id ?>" role_id="3" schema="<?= $school->schema_name ?>" school_id="" value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
-                                                                                <?php } ?>
+                                                                            <?php } ?>
 
                                                                             </select>
                                                                             <span id="status_result_3_<?= $school->schema_name ?>"></span>
-                                                                        <?php } ?>
+                                                                            <?php } ?>
                                                                     </td>
-                                                                <?php } ?>
+                                                                        <?php } ?>
 
                                                                 <td><?php
                                                                     if ($students == 0) {
@@ -401,7 +395,7 @@ function select($value, $schema, $sources) {
                                                                 <td><a href="<?= url('customer/profile/' . $school->schema_name) ?>" class="btn btn-mini waves-effect waves-light btn-primary"><i class="icofont icofont-eye-alt"></i> View</a></td>
 
                                                             </tr>
-                                                        <?php } ?>
+                                                                <?php } ?>
                                                     </tbody>
                                                     <tfoot>
                                                         <tr>
@@ -444,24 +438,24 @@ function select($value, $schema, $sources) {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <?php
-                                                    $users = \App\Models\User::where('role_id', 8)->get();
-                                                    foreach ($users as $user) {
-                                                        $schools = $user->usersSchools()->where('role_id', 8);
-                                                        ?>
+<?php
+$users = \App\Models\User::where('role_id', 8)->get();
+foreach ($users as $user) {
+    $schools = $user->usersSchools()->where('role_id', 8);
+    ?>
                                                         <tr>
                                                             <td><?= $user->firstname . ' ' . $user->lastname ?></td>
                                                             <td><?= $schools->count() ?></td>
                                                             <td>
-                                                                <?php
-                                                                $active = 0;
-                                                                $not_active = 0;
-                                                                foreach ($schools->get() as $school) {
-                                                                    echo $school->school->schema_name . ',';
-                                                                    $active = getActiveStatus($school->school->schema_name) == 1 ? $active + 1 : $active;
-                                                                    $not_active = getActiveStatus($school->school->schema_name) == 0 ? $not_active + 1 : $not_active;
-                                                                }
-                                                                ?>
+                                                        <?php
+                                                        $active = 0;
+                                                        $not_active = 0;
+                                                        foreach ($schools->get() as $school) {
+                                                            echo $school->school->schema_name . ',';
+                                                            $active = getActiveStatus($school->school->schema_name) == 1 ? $active + 1 : $active;
+                                                            $not_active = getActiveStatus($school->school->schema_name) == 0 ? $not_active + 1 : $not_active;
+                                                        }
+                                                        ?>
                                                             </td>
                                                             <td><?= $active ?></td>
                                                             <td><?= $not_active ?></td>
@@ -469,7 +463,7 @@ function select($value, $schema, $sources) {
 
                                                             <td>Action</td>
                                                         </tr>
-                                                    <?php } ?>
+                                                            <?php } ?>
                                                 </tbody>
                                                 <tfoot>
                                                     <tr>
@@ -502,7 +496,7 @@ function select($value, $schema, $sources) {
     @endsection
     @section('footer')
     <!-- data-table js -->
-    <?php $root = url('/') . '/public/' ?>
+<?php $root = url('/') . '/public/' ?>
 
     <script type="text/javascript">
         allocate = function () {
