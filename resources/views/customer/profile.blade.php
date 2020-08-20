@@ -733,7 +733,7 @@ function check_status($table, $where = null) {
                                                                         <th>#</th>
                                                                         <th>Task</th>
                                                                         <th>ShuleSoft Person Allocated</th>
-                                                                        <th><?= $schema ?> Person Allocated</th>
+                                                                        <th><?= ucfirst($schema) ?> Person Allocated</th>
                                                                         <th>Start Date : Time</th>
                                                                         <th>End Date : Time</th>
                                                                         <th>Status</th>
@@ -741,20 +741,45 @@ function check_status($table, $where = null) {
                                                                 </thead>
                                                                 <tbody>
                                                                     <?php
-                                                                    $x=1;
-                                                                    $trainings = \App\Models\TrainItemAllocation::where('client_id',$client_id)->orderBy('id','asc')->get();
+                                                                    $x = 1;
+
+                                                                    $trainings = \App\Models\TrainItemAllocation::where('client_id', $client_id)->orderBy('id', 'asc')->get();
                                                                     foreach ($trainings as $training) {
                                                                         ?>
                                                                         <tr>
-                                                                            <th scope="row"><?=$x?></th>
-                                                                            <td><?=$training->trainItem->content?></td>
-                                                                            <td> <?=$training->user->firstname.' '.$training->user->lastname?> </td>
-                                                                            <td>  <?=$training->school_person_allocated?> </td>
-                                                                            <td><?=$training->task->start_date?>  </td>
-                                                                            <td><?=$training->task->end_date?>  </td>
-                                                                            <td>  </td>
+                                                                            <th scope="row"><?= $x ?></th>
+                                                                            <td><?= $training->trainItem->content ?></td>
+                                                                            <td> 
+                                                                                <?php
+                                                                                ?>   
+                                                                                <select class="task_allocated_id"  name="" task-id="<?= $training->task->id ?>">
+                                                                                    <?php
+                                                                                    if (count($shulesoft_users) > 0) {
+                                                                                        foreach ($shulesoft_users as $user) {
+                                                                                            ?>
+                                                                                            <option value="<?= $user->id ?>" <?php
+                                                                                            if ($user->id == $training->user->id) {
+
+                                                                                                echo 'selected="selected"';
+                                                                                            } else {
+                                                                                                echo '';
+                                                                                            }
+                                                                                            ?>><?= $user->firstname . ' ' . $user->lastname ?></option>
+                                                                                                    <?php
+                                                                                                }
+                                                                                            }
+                                                                                            ?>
+                                                                                </select>
+                                                                            </td>
+                                                                            <td> <b data-attr="school_person" task-id="<?= $training->task->id ?>"  contenteditable="true" class="task_group"> <?= strlen($training->school_person_allocated) > 4 ? $training->school_person_allocated : 'Not Allocated' ?></b> </td>
+                                                                            <td><b data-attr="start_date" task-id="<?= $training->task->id ?>"  contenteditable="true"  class="task_group"><?= $training->task->start_date ?> </b> </td>
+                                                                            <td><b data-attr="end_date" task-id="<?= $training->task->id ?>" contenteditable="true"  class="task_group"><?= $training->task->end_date ?> </b> </td>
+                                                                            <td> <?= $training->task->status ?> </td>
                                                                         </tr>
-                                                                    <?php  $x++; } ?>
+                                                                        <?php
+                                                                        $x++;
+                                                                    }
+                                                                    ?>
 
                                                                 </tbody>
                                                             </table>
@@ -1303,7 +1328,38 @@ if (count($logs) > 0) {
             </div>
         </div>
     </div>
+    <?php $root = url('/') . '/public/' ?>
+
+<!-- notify js Fremwork -->
+<link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.css">
+<link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.brighttheme.css">
+<link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.buttons.css">
+<link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.history.css">
+<link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.mobile.css">
+<link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/pnotify/notify.css">
+
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.js"></script>
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.desktop.js"></script>
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.buttons.js"></script>
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.confirm.js"></script>
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.callbacks.js"></script>
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.animate.js"></script>
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.history.js"></script>
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.mobile.js"></script>
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.nonblock.js"></script>
+<script type="text/javascript" src="<?= $root ?>assets/pages/pnotify/notify.js"></script>
     <script type="text/javascript">
+    
+    notify = function (title, message, type) {
+        new PNotify({
+            title: title,
+            text: message,
+            type: type,
+            hide: 'false',
+            icon: 'icofont icofont-info-circle'
+        });
+    }
+
         allocate = function (a, role_id) {
             $.ajax({
                 url: '<?= url('customer/allocate/null') ?>',
@@ -1340,5 +1396,33 @@ if (count($logs) > 0) {
                 }
             });
         }
+        task_group = function () {
+            $('.task_group').blur(function () {
+                var val = $(this).text();
+                var data_attr = $(this).attr('data-attr');
+                var task_id = $(this).attr('task-id');
+                $.ajax({
+                    url: '<?= url('customer/editTrain') ?>/null',
+                    method: 'get',
+                    data: {task_id: task_id, value: val, attr: data_attr},
+                    success: function (data) {
+                       notify('Success', data, 'success');
+                    }
+                });
+            })
+            $('.task_allocated_id').change(function () {
+                var task_allocated_id = $(this).val();
+                var task_id = $(this).attr('task-id');
+                $.ajax({
+                    url: '<?= url('customer/editTrain') ?>/null',
+                    method: 'get',
+                    data: {task_id: task_id, user_id: task_allocated_id},
+                    success: function (data) {
+                    notify('Success', data, 'success');
+                    }
+                });
+            })
+        }
+        $(document).ready(task_group);
     </script>
     @endsection
