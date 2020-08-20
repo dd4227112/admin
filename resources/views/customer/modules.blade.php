@@ -99,7 +99,7 @@ foreach ($schools_data as $value) {
 $invoice_issued = [];
 $invoices_current = DB::select('select * from admin.invoices_sent');
 foreach ($invoices_current as $invoice_info) {
-    $invoice_issued[$invoice_info->schema_name] = date('d-m-Y H:i', strtotime('30 days', strtotime($invoice_info->date)));
+    $invoice_issued[$invoice_info->schema_name] = 'Due: '.date('d M Y', strtotime('30 days', strtotime($invoice_info->date)));
 }
 
 function select($value, $schema, $sources) {
@@ -203,7 +203,7 @@ function select($value, $schema, $sources) {
                                                         <tr>
                                                             <th><input type="checkbox" name="all" id="toggle_all"> </th>
                                                             <th>School Name</th>
-                                                            <th>Invoice issued </th>
+                                                            <th>Invoice </th>
                                                             <td>Support Personnel</td>
 <?php
 if (in_array(Auth::user()->id, [2, 7, 20])) {
@@ -251,7 +251,7 @@ foreach ($schools as $school) {
 
                                                                 <td><?php
                                                                     if (isset($allocation[$school->schema_name])) {
-                                                                        echo 'Yes: <b class="label label-success">'.$allocation[$school->schema_name].'</b>';
+                                                                        echo '<b class="label label-success">'.$allocation[$school->schema_name].'</b>';
                                                                        
                                                                     } else {
                                                                       
