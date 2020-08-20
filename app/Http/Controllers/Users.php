@@ -20,7 +20,7 @@ class Users extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $this->data['users'] = User::where('status', 1)->get();
+        $this->data['users'] = User::where('status', 1)->where('role_id', '<>', 7)->get();
         return view('users.index', $this->data);
     }
 
