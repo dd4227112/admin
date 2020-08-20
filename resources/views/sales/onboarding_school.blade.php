@@ -77,43 +77,27 @@
                         <thead>
                             <tr>
                                 <th>Tasks</th>
-                                 <th>Person Role Responsible at School</th>
+                                <th>Person Role Responsible at School</th>
                             </tr>
                         </thead> 
                         <tbody>
-                            <tr>
-                                <td>Support on Initial Configuration</td>
-                                <td> <input type="text" class="form-control" value="" name="configuration" required=""></td>
-                            </tr>
-                             <tr>
-                                 <td colspan="2">Data Entry and Training</td>
-                            </tr>
-                             <tr>
-                                <td>Students and Parents Upload</td>
-                                <td> <input type="text" class="form-control" value="" name="data_entry" required=""></td>
-                            </tr>
-                             <tr>
-                                <td>Exams Management</td>
-                                <td> <input type="text" class="form-control" value="" name="exams" required=""></td>
-                            </tr>
-                             <tr>
-                                <td>Accounts: Payroll</td>
-                                <td> <input type="text" class="form-control" value="" name="payroll" required=""></td>
-                            </tr>
-                             <tr>
-                                <td>Accounts: Payments Collection</td>
-                                <td> <input type="text" class="form-control" value="" name="payments" required=""></td>
-                            </tr>
-                             <tr>
-                                <td>Accounts: Expense Recording</td>
-                                <td> <input type="text" class="form-control" value="" name="expenses" required=""></td>
-                            </tr>
+                            <?php
+                            $sections = \App\Models\TrainItem::orderBy('id', 'asc')->get();
+                            foreach ($sections as $section) {
+                                ?>
+
+                                <tr>
+                                    <td><?=$section->content?></td>
+                                    <td> <input type="text" class="form-control" value="" name="train_item<?=$section->id?>" required=""></td>
+                                </tr>
+                            <?php } ?>
+                    
                         </tbody>
                     </table>
 
                 </div>
             </div>
-              <div class="form-group row">
+            <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Implementation Start Date</label>
                 <div class="col-sm-10">
                     <input type="datetime-local" class="form-control" value="" name="implementation_date" required="">

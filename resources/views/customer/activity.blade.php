@@ -150,8 +150,7 @@
                         "targets": 5,
                         "data": null,
                         "render": function (data, type, row, meta) {
-                            $('#ajax_data_results').html(JSON.stringify(row));
-                            console.log(row);
+                       
                             return '<a href="<?= url('customer/activity/show/') ?>/' + row.id + '" class="btn btn-mini waves-effect waves-light btn-primary"> <i class="icofont icofont-eye-alt"></i> View</a>';
                         }
 

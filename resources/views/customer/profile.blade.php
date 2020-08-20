@@ -213,11 +213,15 @@ function check_status($table, $where = null) {
                                         <div class="card social-tabs">
                                             <ul class="nav nav-tabs md-tabs tab-timeline" role="tablist">
                                                 <li class="nav-item">
-                                                    <a class="nav-link" data-toggle="tab" href="#timeline" role="tab" aria-expanded="false">Activities</a>
+                                                    <a class="nav-link active" data-toggle="tab" href="#timeline" role="tab" aria-expanded="false">Activities</a>
                                                     <div class="slide"></div>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link active" data-toggle="tab" href="#about" role="tab" aria-expanded="false">About</a>
+                                                    <a class="nav-link" data-toggle="tab" href="#about" role="tab" aria-expanded="false">About</a>
+                                                    <div class="slide"></div>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" data-toggle="tab" href="#implementation" role="tab" aria-expanded="false"> Implementation</a>
                                                     <div class="slide"></div>
                                                 </li>
                                                 <li class="nav-item">
@@ -233,7 +237,7 @@ function check_status($table, $where = null) {
                                         <!-- Tab panes -->
                                         <div class="tab-content">
                                             <!-- Timeline tab start -->
-                                            <div class="tab-pane" id="timeline" aria-expanded="false">
+                                            <div class="tab-pane active" id="timeline" aria-expanded="false">
                                                 <div class="row">
                                                     <div class="card-block">
                                                         <!--  <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#large-Modal">Create Task</button>-->
@@ -267,7 +271,7 @@ function check_status($table, $where = null) {
                                                                                                 foreach ($types as $type) {
                                                                                                     ?>
                                                                                                     <option value="<?= $type->id ?>"><?= $type->name ?></option>
-                                                                                                <?php
+                                                                                                    <?php
                                                                                                 }
                                                                                             }
                                                                                             ?>
@@ -283,7 +287,7 @@ function check_status($table, $where = null) {
                                                                                                 foreach ($staffs as $staff) {
                                                                                                     ?>
                                                                                                     <option value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
-                                                                                                <?php
+                                                                                                    <?php
                                                                                                 }
                                                                                             }
                                                                                             ?>
@@ -317,7 +321,7 @@ function check_status($table, $where = null) {
                                                                                         ?>
                                                                                         <input type="checkbox" id="feature<?= $module->id ?>" value="{{$module->id}}" name="module_id[]" >  <?php echo $module->name; ?>  &nbsp; &nbsp;
 
-                                                                                    <?php
+                                                                                        <?php
                                                                                     }
                                                                                 }
                                                                                 ?>
@@ -343,7 +347,7 @@ function check_status($table, $where = null) {
                                                                             <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
                                                                         </div>
                                                                         <input type="hidden" value="<?= $client_id ?>" name="client_id"/>
-<?= csrf_field() ?>
+                                                                        <?= csrf_field() ?>
                                                                     </form>
                                                                 </div>
                                                             </div>
@@ -376,7 +380,7 @@ function check_status($table, $where = null) {
                                                                                 <div class="card-block">
                                                                                     <div class="timeline-details">
                                                                                         <div class="chat-header">
-        <?= $task->user->firstname ?> - <span class="text-muted"><?= date("d M Y", strtotime($task->created_at)) ?></span>
+                                                                                            <?= $task->user->firstname ?> - <span class="text-muted"><?= date("d M Y", strtotime($task->created_at)) ?></span>
                                                                                         </div>
                                                                                         <p class="text-muted"><?= $task->activity ?></p>
                                                                                     </div>
@@ -435,7 +439,7 @@ function check_status($table, $where = null) {
                                             </div>
                                             <!-- Timeline tab end -->
                                             <!-- About tab start -->
-                                            <div class="tab-pane active" id="about" aria-expanded="true">
+                                            <div class="tab-pane " id="about" aria-expanded="true">
                                                 <div class="row">
                                                     <div class="col-sm-12">
                                                         <div class="card">
@@ -459,7 +463,7 @@ function check_status($table, $where = null) {
                                                                                         <th class="social-label b-none">Location</th>
                                                                                         <td class="social-user-name b-none text-muted"><?= $school->address ?></td>
                                                                                     </tr>
-<?php if ($is_client == 1) { ?>
+                                                                                    <?php if ($is_client == 1) { ?>
                                                                                         <tr>
                                                                                             <th class="social-label b-none">Date On boarded</th>
                                                                                             <td class="social-user-name b-none text-muted"><?= date('d M Y h:i', strtotime($school->created_at)) ?></td>
@@ -479,7 +483,7 @@ function check_status($table, $where = null) {
                                                                                                 ?></td>
                                                                                         </tr>
 
-<?php } ?>
+                                                                                    <?php } ?>
                                                                                 </tbody></table>
                                                                         </form>
                                                                     </div>
@@ -545,9 +549,9 @@ function check_status($table, $where = null) {
                                                                     <div class="col-lg-6 col-md-12">
                                                                         <table class="table m-b-0">
                                                                             <tbody>
-<?php
-if ($school->school_id == null) {
-    ?>
+                                                                                <?php
+                                                                                if ($school->school_id == null) {
+                                                                                    ?>
                                                                                     <tr>
                                                                                         <th class="social-label b-none">School Mapping </th>
                                                                                         <td class="social-user-name b-none text-muted">
@@ -562,7 +566,7 @@ if ($school->school_id == null) {
                                                                                         </td>
                                                                                         <td class="social-user-name b-none text-muted">  Type at least 3 characters</td>
                                                                                     </tr>
-                                                                                        <?php } ?>
+                                                                                <?php } ?>
                                                                                 <tr>
                                                                                     <th class="social-label b-none">Support Personnel </th>
                                                                                     <td class="social-user-name b-none text-muted">
@@ -594,9 +598,9 @@ if ($school->school_id == null) {
                                                                                 <tr>
                                                                                     <th class="social-label b-none">Sales Personnel </th>
                                                                                     <td class="social-user-name b-none text-muted">
-                                                                                            <?php
-                                                                                            $school_sales_allocations = \collect(DB::select("select b.id from admin.users_schools a join admin.users b on b.id=a.user_id join admin.schools c on c.id=a.school_id where a.role_id=3 and a.status=1 and c.schema_name='" . $schema . "'"))->first();
-                                                                                            ?>                            <select class="form-control" id="sales_id" name="sales_id">
+                                                                                        <?php
+                                                                                        $school_sales_allocations = \collect(DB::select("select b.id from admin.users_schools a join admin.users b on b.id=a.user_id join admin.schools c on c.id=a.school_id where a.role_id=3 and a.status=1 and c.schema_name='" . $schema . "'"))->first();
+                                                                                        ?>                            <select class="form-control" id="sales_id" name="sales_id">
 
                                                                                             <?php
                                                                                             if (count($school_sales_allocations)) {
@@ -712,6 +716,53 @@ if ($school->school_id == null) {
                                                 </div>
                                             </div>
 
+                                            <div class="tab-pane" id="implementation" aria-expanded="false">
+
+
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h5>Project Implementation Schedule</h5>
+                                                        <span>This part have to be followed effectively </span>
+
+                                                    </div>
+                                                    <div class="card-block table-border-style">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-bordered dataTable">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>#</th>
+                                                                        <th>Task</th>
+                                                                        <th>ShuleSoft Person Allocated</th>
+                                                                        <th><?= $schema ?> Person Allocated</th>
+                                                                        <th>Start Date : Time</th>
+                                                                        <th>End Date : Time</th>
+                                                                        <th>Status</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <?php
+                                                                    $x=1;
+                                                                    $trainings = \App\Models\TrainItemAllocation::where('client_id',$client_id)->orderBy('id','asc')->get();
+                                                                    foreach ($trainings as $training) {
+                                                                        ?>
+                                                                        <tr>
+                                                                            <th scope="row"><?=$x?></th>
+                                                                            <td><?=$training->trainItem->content?></td>
+                                                                            <td> <?=$training->user->firstname.' '.$training->user->lastname?> </td>
+                                                                            <td>  <?=$training->school_person_allocated?> </td>
+                                                                            <td><?=$training->task->start_date?>  </td>
+                                                                            <td><?=$training->task->end_date?>  </td>
+                                                                            <td>  </td>
+                                                                        </tr>
+                                                                    <?php  $x++; } ?>
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
                                             <!-- About tab end -->
                                             <!-- Photos tab start -->
                                             <div class="tab-pane" id="photos" aria-expanded="false">
@@ -836,7 +887,7 @@ if ($school->school_id == null) {
                                                                         <th scope="row">2</th>
                                                                         <td>Marking</td>
                                                                         <td>
-<?= check_status('mark'); ?>
+                                                                            <?= check_status('mark'); ?>
                                                                         </td>
                                                                         <td></td>
                                                                     </tr>
@@ -879,7 +930,7 @@ if ($school->school_id == null) {
                                                                                 ?>
                                                                                 Sent From <label class="label label-success"> ShuleSoft Phone</label><br/>
                                                                                 Last Seen <label class="label label-info">
-                                                                                <?= $sms_time ?>
+                                                                                    <?= $sms_time ?>
                                                                                 </label>
                                                                                 <?php
                                                                             } else if (count($karibu) == 1) {
@@ -894,10 +945,10 @@ if ($school->school_id == null) {
                                                                                 ?>
                                                                                 Sent From <label class="label label-success"> <?= $schema ?> Phone</label><br/>
                                                                                 Last Seen <label class="label label-info">
-                                                                                <?= $sms_time ?>
+                                                                                    <?= $sms_time ?>
                                                                                 </label>
-<?php }
-?>
+                                                                            <?php }
+                                                                            ?>
                                                                         </td>
                                                                         <td></td>
                                                                     </tr>
@@ -1110,10 +1161,10 @@ if (count($logs) > 0) {
                                                                             <td><?= $user->email ?></td>
                                                                             <td><?= $user->usertype ?></td>
                                                                         </tr>
-    <?php
-    }
-}
-?>
+                                                                        <?php
+                                                                    }
+                                                                }
+                                                                ?>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -1164,7 +1215,7 @@ if (count($logs) > 0) {
                         <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
                     </div>
-<?= csrf_field() ?>
+                    <?= csrf_field() ?>
                 </form>
             </div>
         </div>
@@ -1204,10 +1255,10 @@ if (count($logs) > 0) {
                                     foreach ($ctypes as $ctype) {
                                         ?>
                                         <option value="<?= $ctype->id ?>"><?= $ctype->name ?></option>
-    <?php
-    }
-}
-?>
+                                        <?php
+                                    }
+                                }
+                                ?>
 
                             </select>
                         </div>
@@ -1240,7 +1291,7 @@ if (count($logs) > 0) {
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label"></label>
                         <div class="col-sm-10">
-<?= csrf_field() ?>
+                            <?= csrf_field() ?>
                             <button type="submit" class="btn btn-success" placeholder="Default textarea">Submit</button>
                         </div>
                     </div>
@@ -1277,7 +1328,6 @@ if (count($logs) > 0) {
                 }
             });
         });
-
         removeTag = function (a) {
             $.ajax({
                 url: '<?= url('customer/removeTag') ?>/null',
