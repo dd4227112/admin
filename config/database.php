@@ -57,10 +57,9 @@ return [
             'driver' => 'pgsql',
             'host' => '127.0.0.1',
             'port' =>5432,
-
-            'database' => 'Shulesoft',
+           'database' => 'back22may',
             'username' => 'postgres',
-            'password' =>'kiyogoma',
+            'password' =>'newpassword',
             'charset' => 'utf8',
             'prefix' => '',
             'schema' =>'admin',
