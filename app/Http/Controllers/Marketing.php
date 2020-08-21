@@ -437,4 +437,9 @@ group by ownership');
         
         echo json_call($this->data);
     }
+    
+    public function Communication(){
+               $this->data['never_use'] = DB::table('admin.nmb_schools')->count();
+        return view('market.communication.index',$this->data);
+    }
 }

@@ -34,6 +34,13 @@ $users_allocation = [];
 foreach ($school_allocations as $school_allocation) {
     $allocation[$school_allocation->schema_name] = $school_allocation->firstname . ' ' . $school_allocation->lastname;
 }
+
+$t_allocations = [];
+$trains = DB::select('select * from admin.train_items_allocations a join admin.clients b on b.id=a.client_id join admin.tasks c on c.id=a.task_id join admin.train_items d on d.id=a.train_item_id');
+foreach ($trains as $train) {
+
+    $t_allocations[$train->username][$train->id] = $train->status;
+}
 ?>
 <!-- Sidebar inner chat end-->
 <!-- Main-body start -->
@@ -44,7 +51,7 @@ foreach ($school_allocations as $school_allocation) {
             <div class="page-header-title">
                 <h4>Schools Setup</h4>
                 <span>Once school is registered in the system, all mandatory parts must be specified</span>
-               
+
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -70,8 +77,8 @@ foreach ($school_allocations as $school_allocation) {
                         <div class="card-header">
                             <h5>School Basic Information</h5>
                             <span>This part shows areas to be defined in specific school. Your task is to ensure all parameters are defined effectively on each school</span>
-                          <b>Please Observe</b>
-                <p class="alert alert-info">If you allocate status to Any School, that task will be assigned to your account, not to someone else</p>
+                            <b>Please Observe</b>
+                            <p class="alert alert-info">If you allocate status to Any School, that task will be assigned to your account, not to someone else</p>
 
                         </div>
 
@@ -116,15 +123,14 @@ foreach ($school_allocations as $school_allocation) {
                                                     ?></td>
                                                 <?php
                                                 foreach ($trainings as $training) {
-                                                    $is_selected = $training->trainItemAllocation()->whereIn('client_id', \App\Models\Client::where('username', $school->schema_name)->get(['id']))->orderBy('id', 'desc')->first();
-                                                    $select = count($is_selected) == 1 ? $is_selected->task->status : '';
+                                                    $status = isset($t_allocations[$school->schema_name][$training->id]) ? $t_allocations[$school->schema_name][$training->id] : '';
                                                     ?>
                                                     <td>
                                                         <select name="<?= $training->id ?>" class="training" data-id="<?= $training->id ?>" data-school-id="<?= $school->schema_name ?>">
                                                             <option value="">Select status</option>
-                                                            <option value="complete" <?= strtolower($select) == 'complete' ? 'selected' : '' ?> >Complete</option>
-                                                            <option value="pending"  <?= strtolower($select) == 'pending' ? 'selected' : '' ?>>Pending</option>
-                                                            <option value="new"  <?= strtolower($select) == 'new' ? 'selected' : '' ?>>Not Yet</option>
+                                                            <option value="complete" <?= strtolower($status) == 'complete' ? 'selected' : '' ?> >Complete</option>
+                                                            <option value="pending"  <?= strtolower($status) == 'pending' ? 'selected' : '' ?>>Pending</option>
+                                                            <option value="new"  <?= strtolower($status) == 'new' ? 'selected' : '' ?>>Not Yet</option>
                                                         </select>
                                                         <span id="train_status<?= $training->id . '_client' . $school->schema_name ?>"></span>
                                                     </td>
@@ -175,7 +181,8 @@ foreach ($school_allocations as $school_allocation) {
                                                     <td><?= $total_schools - ($counts_complete + $counts_new + $counts_pending) ?></td>
 
                                                 </tr>
-                                                <?php $x++;
+                                                <?php
+                                                $x++;
                                             }
                                             ?>
 
@@ -184,10 +191,10 @@ foreach ($school_allocations as $school_allocation) {
                                 </div>
                             </div>
                         </div>
-                        
-                        
-                        
-                          <div class="card">
+
+
+
+                        <div class="card">
                             <div class="card-block table-border-style">
                                 <div class="card-header">
                                     <h5>Person Task Summary</h5>
@@ -207,19 +214,19 @@ foreach ($school_allocations as $school_allocation) {
                                         <tbody>
                                             <?php
                                             $u = 1;
-                                            $users_tasks = \App\Models\User::where('status',1)->get();
+                                            $users_tasks = \App\Models\User::where('status', 1)->where('department','<>',10)->get();
                                             foreach ($users_tasks as $user) {
-                                   
                                                 ?>
                                                 <tr>
                                                     <th scope="row"><?= $u ?></th>
                                                     <td><?= $user->firstname ?></td>
-                                                    <td><?= $user->tasks()->where('status','New')->count() ?></td>
-                                                    <td><?= $user->tasks()->where('status','Complete')->count()  ?></td>
-                                                    <td><?= $user->tasks()->where('status','Pending')->count()  ?></td>
-                     
+                                                    <td><?= $user->tasks()->where('status', 'New')->count() ?></td>
+                                                    <td><?= $user->tasks()->where('status', 'Complete')->count() ?></td>
+                                                    <td><?= $user->tasks()->where('status', 'Pending')->count() ?></td>
+
                                                 </tr>
-                                                <?php $u++;
+                                                <?php
+                                                $u++;
                                             }
                                             ?>
 
@@ -239,7 +246,7 @@ foreach ($school_allocations as $school_allocation) {
     @endsection
     @section('footer')
     <!-- data-table js -->
-<?php $root = url('/') . '/public/' ?>
+    <?php $root = url('/') . '/public/' ?>
 
     <script type="text/javascript">
 

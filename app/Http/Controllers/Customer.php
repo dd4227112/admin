@@ -152,6 +152,37 @@ class Customer extends Controller {
         }
     }
 
+    public function editTrain() {
+        $task_id = request('task_id');
+        $user_id = request('user_id');
+        $start_date = request('start_date');
+        $end_date = request('end_date');
+        $attr = request('attr');
+        $value = request('value');
+        if ((int) $user_id > 0 && (int) $task_id > 0) {
+            $task = \App\Models\Task::find($task_id)->update(['user_id' => $user_id]);
+            DB::table('tasks_users')->where('task_id', $task_id)->update([
+                'user_id' => $user_id,
+            ]);
+            \App\Models\TrainItemAllocation::where('task_id', $task_id)->update([
+                'user_id' => $user_id,
+            ]);
+        }
+        if ($attr == 'school_person' && (int) $task_id > 0) {
+            \App\Models\TrainItemAllocation::where('task_id', $task_id)->update([
+                'school_person_allocated' => $value,
+            ]);
+        }
+        if ($attr == 'start_date' && (int) $task_id > 0) {
+           \App\Models\Task::find($task_id)->update(['start_date' => $value]) ;
+        }
+        if ($attr == 'end_date' && (int) $task_id > 0) {
+           \App\Models\Task::find($task_id)->update(['end_date' => $value]);
+        }
+        //insert into training allocation
+        echo 'success';
+    }
+
     public function getData() {
         if (request('tag') == 'users') {
             $req = [];
@@ -892,21 +923,21 @@ class Customer extends Controller {
         ]);
         return redirect()->back()->with('success', 'Succeess');
     }
+
     public function taskGroup() {
         $type = request()->segment(3);
         $id = request()->segment(4);
-        if($type == 'user'){
+        if ($type == 'user') {
             $sql = "select a.id, a.activity,a.created_at::date, a.date,d.name as user ,e.name as type  from admin.tasks a join admin.tasks_clients c on a.id=c.task_id
             join admin.users d on d.id=a.user_id join admin.task_types e on a.task_type_id=e.id WHERE a.user_id = $id order by a.id asc";
             $this->data['activities'] = \App\Models\Task::where('user_id', $id)->orderBy('id', 'DESC')->get();
-        }elseif($type == 'task'){
+        } elseif ($type == 'task') {
             $this->data['activities'] = \App\Models\Task::where('task_type_id', $id)->orderBy('id', 'DESC')->get();
-        }else{
+        } else {
             $this->data['activities'] = \App\Models\Task::where('task_type_id', $id)->orderBy('id', 'DESC')->get();
         }
         return view('customer.task_group', $this->data);
         return view('layouts.file_view', $this->data);
     }
-
 
 }

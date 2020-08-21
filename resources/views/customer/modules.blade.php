@@ -66,8 +66,7 @@ foreach ($school_allocations as $school_allocation) {
     $allocation[$school_allocation->schema_name] = $school_allocation->firstname . ' ' . $school_allocation->lastname;
 }
 
-function getActiveStatus($schema_name)
-{
+function getActiveStatus($schema_name) {
     global $mark_status;
     global $payment_status;
     if (isset($mark_status[$schema_name])) {
@@ -97,8 +96,13 @@ foreach ($schools_data as $value) {
     $sources[$value->schema_name] = $value->source;
 }
 
-function select($value, $schema, $sources)
-{
+$invoice_issued = [];
+$invoices_current = DB::select('select * from admin.invoices_sent');
+foreach ($invoices_current as $invoice_info) {
+    $invoice_issued[$invoice_info->schema_name] = 'Due: ' . date('d M Y', strtotime('30 days', strtotime($invoice_info->date)));
+}
+
+function select($value, $schema, $sources) {
     return isset($sources[$schema]) && strtolower($sources[$schema]) == strtolower($value) ? 'Selected' : '';
 }
 ?>
@@ -199,10 +203,11 @@ function select($value, $schema, $sources)
                                                         <tr>
                                                             <th><input type="checkbox" name="all" id="toggle_all"> </th>
                                                             <th>School Name</th>
+                                                            <th>Invoice </th>
                                                             <td>Support Personnel</td>
                                                             <?php
                                                             if (in_array(Auth::user()->id, [2, 7, 20])) {
-                                                            ?>
+                                                                ?>
                                                                 <td>Sales Source</td>
                                                                 <td> Support Person</td>
                                                                 <td>Sales Person</td>
@@ -215,49 +220,51 @@ function select($value, $schema, $sources)
                                                             <th>Expense Recorded</th>
                                                             <th>Payments Recorded</th>
                                                             <th>Action</th>
-                                        
+
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         <?php
-                                                        
                                                         $no_students = 0;
                                                         $no_marks = 0;
                                                         $no_exams_published = 0;
                                                         $no_invoice = 0;
                                                         $no_expense = 0;
                                                         $no_payment = 0;
-                                                        $a = 1;
+                                                        $a = 0;
                                                         foreach ($schools as $school) {
 
-                                                            $students = DB::table($school->schema_name . '.student')->count();
-                                                            
-                                                        ?>
+                                                            $students = DB::table($school->schema_name . '.student')->where('status', 1)->count();
+                                                            ?>
                                                             <tr>
                                                                 <td>
                                                                     <input type="checkbox" class="check" name="select[]" value="<?= $school->schema_name ?>">
                                                                 </td>
                                                                 <td><?= $school->schema_name ?></td>
                                                                 <td><?php
-                                                                    if (isset($allocation[$school->schema_name])) {
-                                                                        echo $allocation[$school->schema_name];
-                                                                        //$a = 1;
-                                                                        $a = 0;
+                                                                    if (isset($invoice_issued[$school->schema_name])) {
+                                                                        echo '<b class="label label-success">'.$invoice_issued[$school->schema_name].'</b>';
                                                                     } else {
-                                                                        $a = 0;
+                                                                        echo '<b class="label label-warning">No</b>';
+                                                                    }
+                                                                    ?></td>
+
+                                                                <td><?php
+                                                                    if (isset($allocation[$school->schema_name])) {
+                                                                        echo '<b class="label label-success">' . $allocation[$school->schema_name] . '</b>';
+                                                                    } else {
+
                                                                         echo '<b class="label label-warning">No Person Allocated</b>';
                                                                     }
                                                                     ?></td>
-                                                                <?php
-                                                            
+                                                                    <?php
                                                                 if (in_array(Auth::user()->id, [2, 7, 20])) {
-                                                                    
-                                                                ?>
+                                                                    ?>
                                                                     <td>
                                                                         <?php
                                                                         if ($a == 0) {
                                                                             $schema = $school->schema_name;
-                                                                        ?>
+                                                                            ?>
 
                                                                             <select name="source_id" class="allocate">
                                                                                 <option></option>
@@ -281,30 +288,30 @@ function select($value, $schema, $sources)
                                                                     <td>
                                                                         <?php
                                                                         if ($a == 0) {
-                                                                        ?>
+                                                                            ?>
                                                                             <select name="support_id" class="allocate">
                                                                                 <option></option>
                                                                                 <?php
                                                                                 foreach ($staffs as $staff) {
-                                                                                ?>
+                                                                                    ?>
                                                                                     <option user_id="<?= $staff->id ?>" role_id="8" schema="<?= $school->schema_name ?>" school_id="" value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
                                                                                 <?php } ?>
 
                                                                             </select>
                                                                             <span id="status_result_8_<?= $school->schema_name ?>"></span>
-                                                                            
+
                                                                         <?php } ?>
                                                                     </td>
 
                                                                     <td>
                                                                         <?php
                                                                         if ($a == 0) {
-                                                                        ?>
+                                                                            ?>
                                                                             <select name="sales_id" class="allocate">
                                                                                 <option></option>
                                                                                 <?php
                                                                                 foreach ($staffs as $staff) {
-                                                                                ?>
+                                                                                    ?>
                                                                                     <option user_id="<?= $staff->id ?>" role_id="3" schema="<?= $school->schema_name ?>" school_id="" value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
                                                                                 <?php } ?>
 
@@ -315,25 +322,25 @@ function select($value, $schema, $sources)
                                                                 <?php } ?>
 
                                                                 <td><?php
-                                                                    if ($students == 0) {
-                                                                        echo 0;
-                                                                        $no_students++;
-                                                                    } else {
-                                                                        echo $students;
-                                                                    }
-                                                                    ?></td>
+                                                                if ($students == 0) {
+                                                                    echo 0;
+                                                                    $no_students++;
+                                                                } else {
+                                                                    echo $students;
+                                                                }
+                                                                ?></td>
                                                                 <td> <?php
-                                                                        //classlevel
-                                                                        //active has both marks and acccounts
+                                                                //classlevel
+                                                                //active has both marks and acccounts
 
-                                                                        if (isset($mark_status[$school->schema_name])) {
+                                                                if (isset($mark_status[$school->schema_name])) {
 
-                                                                            echo '<b class="label label-success">' . date('d M Y', strtotime($mark_status[$school->schema_name])) . '</b>';
-                                                                        } else {
-                                                                            $no_marks++;
-                                                                            echo '<b class="label label-warning">Not Defined</b>';
-                                                                        }
-                                                                        ?>
+                                                                    echo '<b class="label label-success">' . date('d M Y', strtotime($mark_status[$school->schema_name])) . '</b>';
+                                                                } else {
+                                                                    $no_marks++;
+                                                                    echo '<b class="label label-warning">Not Defined</b>';
+                                                                }
+                                                                ?>
                                                                 </td>
                                                                 <td>
                                                                     <?php
@@ -365,34 +372,34 @@ function select($value, $schema, $sources)
 
 
                                                                 <td> <?php
-                                                                        //classlevel
-                                                                        if (isset($expense_status[$school->schema_name])) {
+                                                                //classlevel
+                                                                if (isset($expense_status[$school->schema_name])) {
 
-                                                                            echo '<b class="label label-success">' . $expense_status_count[$school->schema_name] . ' trans</b><br/><b  class="label label-success">Last created: ' . date('d M Y', strtotime($expense_status[$school->schema_name])) . '</b>';
-                                                                        } else {
-                                                                            $no_expense++;
-                                                                            echo '<b class="label label-warning">No Expense Recorded</b>';
-                                                                        }
-                                                                        ?></td>
+                                                                    echo '<b class="label label-success">' . $expense_status_count[$school->schema_name] . ' trans</b><br/><b  class="label label-success">Last created: ' . date('d M Y', strtotime($expense_status[$school->schema_name])) . '</b>';
+                                                                } else {
+                                                                    $no_expense++;
+                                                                    echo '<b class="label label-warning">No Expense Recorded</b>';
+                                                                }
+                                                                    ?></td>
                                                                 <td> <?php
-                                                                        //classlevel
-                                                                        if (isset($payment_status[$school->schema_name])) {
+                                                                //classlevel
+                                                                if (isset($payment_status[$school->schema_name])) {
 
-                                                                            echo '<b class="label label-success">' . $payment_count[$school->schema_name] . ' trans</b><br/><b  class="label label-success">Last created: ' . date('d M Y', strtotime($payment_status[$school->schema_name])) . '</b>';
-                                                                        } else {
-                                                                            $no_payment++;
-                                                                            echo '<b class="label label-warning">No Payment Recorded</b>';
-                                                                        }
-                                                                        ?></td>
+                                                                    echo '<b class="label label-success">' . $payment_count[$school->schema_name] . ' trans</b><br/><b  class="label label-success">Last created: ' . date('d M Y', strtotime($payment_status[$school->schema_name])) . '</b>';
+                                                                } else {
+                                                                    $no_payment++;
+                                                                    echo '<b class="label label-warning">No Payment Recorded</b>';
+                                                                }
+                                                                    ?></td>
                                                                 <td><a href="<?= url('customer/profile/' . $school->schema_name) ?>" class="btn btn-mini waves-effect waves-light btn-primary"><i class="icofont icofont-eye-alt"></i> View</a></td>
-                                                        
+
                                                             </tr>
                                                         <?php } ?>
                                                     </tbody>
                                                     <tfoot>
                                                         <tr>
                                                             <th>School Name</th>
-                                                            <th colspan="5"></th>
+                                                            <th colspan="6"></th>
                                                             <th><?= $no_students ?></th>
                                                             <th><?= $no_marks ?></th>
                                                             <th><?= $no_exams_published ?></th>
@@ -434,7 +441,7 @@ function select($value, $schema, $sources)
                                                     $users = \App\Models\User::where('role_id', 8)->get();
                                                     foreach ($users as $user) {
                                                         $schools = $user->usersSchools()->where('role_id', 8);
-                                                    ?>
+                                                        ?>
                                                         <tr>
                                                             <td><?= $user->firstname . ' ' . $user->lastname ?></td>
                                                             <td><?= $schools->count() ?></td>
@@ -491,8 +498,8 @@ function select($value, $schema, $sources)
     <?php $root = url('/') . '/public/' ?>
 
     <script type="text/javascript">
-        allocate = function() {
-            $('.allocate').change(function() {
+        allocate = function () {
+            $('.allocate').change(function () {
                 var user_id = $('option:selected', this).attr('user_id');
                 var school_id = $('option:selected', this).attr('school_id');
                 var role_id = $('option:selected', this).attr('role_id');
@@ -509,7 +516,7 @@ function select($value, $schema, $sources)
                         val: val
                     },
                     dataType: 'html',
-                    success: function(data) {
+                    success: function (data) {
                         /// alert('success',data);
                         $('#status_result_' + role_id + '_' + schema).html('<b class="label label-success">success</b>');
 
@@ -517,7 +524,7 @@ function select($value, $schema, $sources)
                 });
             });
         }
-        $('#school_id').keyup(function() {
+        $('#school_id').keyup(function () {
             var val = $(this).val();
             $.ajax({
                 url: '<?= url('customer/search/null') ?>',
@@ -527,7 +534,7 @@ function select($value, $schema, $sources)
                     schema: ''
                 },
                 dataType: 'html',
-                success: function(data) {
+                success: function (data) {
 
                     $('#search_result').html(data);
                 }
@@ -535,7 +542,7 @@ function select($value, $schema, $sources)
         });
 
 
-        get_statistic = function() {
+        get_statistic = function () {
             // var data = getData();
             // console.log(data);
             //        $(".get_data").each(function (index) {
@@ -555,9 +562,9 @@ function select($value, $schema, $sources)
                     tag: 'users'
                 },
                 dataType: 'json',
-                success: function(data) {
-                    $.each(data, function(i, info) {
-                        $(".get_data").each(function(index) {
+                success: function (data) {
+                    $.each(data, function (i, info) {
+                        $(".get_data").each(function (index) {
                             var tag = $(this).attr('tag');
                             var schema = $(this).attr('schema');
 
@@ -571,17 +578,17 @@ function select($value, $schema, $sources)
                     });
                     return data;
                 },
-                error: function() {
+                error: function () {
                     return 2;
                 }
 
             });
         }
-        search_checked = function() {
+        search_checked = function () {
 
 
 
-            $('.check').click(function() {
+            $('.check').click(function () {
                 var value = $(this).val();
                 var status = $(this).is(':checked');
                 //uncheck "select all", if one of the listed checkbox item is unchecked
@@ -617,12 +624,12 @@ function select($value, $schema, $sources)
                     var ex = $('.link').attr('tags');
                     var url = '<?= url('invoices/delete_class_invoice/?ids=') ?>';
                     var param = ex.split(",");
-                    param = jQuery.grep(param, function(val) {
+                    param = jQuery.grep(param, function (val) {
                         return val != value;
                     });
                     var arr = param;
 
-                    var result = arr.filter(function(elem) {
+                    var result = arr.filter(function (elem) {
                         return elem != value;
                     });
                     console.log(result);

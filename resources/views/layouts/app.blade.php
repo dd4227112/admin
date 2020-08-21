@@ -156,124 +156,124 @@ function toast(message) {
                                     <i class="ti-fullscreen"></i>
                                 </a>
                             </li>
-<!--                            <li class="mega-menu-top">
-                                                                                            <a href="#">
-                                                                                                Mega
-                                                                                                <i class="ti-angle-down"></i>
-                                                                                            </a>
-                                <ul class="show-notification row">
-                                    <li class="col-sm-3">
-                                        <h6 class="mega-menu-title">Popular Links</h6>
-                                        <ul class="mega-menu-links">
-                                            <li><a href="form-elements-component.html">Form Elements</a></li>
-                                            <li><a href="button.html">Buttons</a></li>
-                                            <li><a href="map-google.html">Maps</a></li>
-                                            <li><a href="user-card.html">Contact Cards</a></li>
-                                            <li><a href="user-profile.html">User Information</a></li>
-                                            <li><a href="auth-lock-screen.html">Lock Screen</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="col-sm-3">
-                                        <h6 class="mega-menu-title">Mailbox</h6>
-                                        <ul class="mega-mailbox">
-                                            <li>
-                                                <a href="#" class="media">
-                                                    <div class="media-left">
-                                                        <i class="ti-folder"></i>
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <h5>Data Backup</h5>
-                                                        <small class="text-muted">Store your data</small>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#" class="media">
-                                                    <div class="media-left">
-                                                        <i class="ti-headphone-alt"></i>
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <h5>Support</h5>
-                                                        <small class="text-muted">24-hour support</small>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#" class="media">
-                                                    <div class="media-left">
-                                                        <i class="ti-dropbox"></i>
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <h5>Drop-box</h5>
-                                                        <small class="text-muted">Store large amount of data in one-box only
-                                                        </small>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#" class="media">
-                                                    <div class="media-left">
-                                                        <i class="ti-location-pin"></i>
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <h5>Location</h5>
-                                                        <small class="text-muted">Find Your Location with ease of use</small>
-                                                    </div>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li class="col-sm-3">
-                                        <h6 class="mega-menu-title">Gallery</h6>
-                                        <div class="row m-b-20">
-                                            <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/01.jpg" alt="Gallery-1">
-                                            </div>
-                                            <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/02.jpg" alt="Gallery-2">
-                                            </div>
-                                            <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/03.jpg" alt="Gallery-3">
-                                            </div>
-                                        </div>
-                                        <div class="row m-b-20">
-                                            <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/04.jpg" alt="Gallery-4">
-                                            </div>
-                                            <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/05.jpg" alt="Gallery-5">
-                                            </div>
-                                            <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/06.jpg" alt="Gallery-6">
-                                            </div>
-                                        </div>
-                                        <button class="btn btn-primary btn-sm btn-block">Browse Gallery</button>
-                                    </li>
-                                    <li class="col-sm-3">
-                                        <h6 class="mega-menu-title">Contact Us</h6>
-                                        <div class="mega-menu-contact">
-                                            <div class="form-group row">
-                                                <label for="example-text-input" class="col-3 col-form-label">Name</label>
-                                                <div class="col-9">
-                                                    <input class="form-control" type="text" placeholder="Artisanal kale" id="example-text-input">
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="example-search-input" class="col-3 col-form-label">Email</label>
-                                                <div class="col-9">
-                                                    <input class="form-control" type="email" placeholder="Enter your E-mail Id" id="example-search-input">
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="example-search-input" class="col-3 col-form-label">Contact</label>
-                                                <div class="col-9">
-                                                    <input class="form-control" type="number" placeholder="+91-9898989898" id="example-search-input">
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="exampleTextarea" class="col-3 col-form-label">Message</label>
-                                                <div class="col-9">
-                                                    <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li>-->
+                            <!--                            <li class="mega-menu-top">
+                                                                                                                        <a href="#">
+                                                                                                                            Mega
+                                                                                                                            <i class="ti-angle-down"></i>
+                                                                                                                        </a>
+                                                            <ul class="show-notification row">
+                                                                <li class="col-sm-3">
+                                                                    <h6 class="mega-menu-title">Popular Links</h6>
+                                                                    <ul class="mega-menu-links">
+                                                                        <li><a href="form-elements-component.html">Form Elements</a></li>
+                                                                        <li><a href="button.html">Buttons</a></li>
+                                                                        <li><a href="map-google.html">Maps</a></li>
+                                                                        <li><a href="user-card.html">Contact Cards</a></li>
+                                                                        <li><a href="user-profile.html">User Information</a></li>
+                                                                        <li><a href="auth-lock-screen.html">Lock Screen</a></li>
+                                                                    </ul>
+                                                                </li>
+                                                                <li class="col-sm-3">
+                                                                    <h6 class="mega-menu-title">Mailbox</h6>
+                                                                    <ul class="mega-mailbox">
+                                                                        <li>
+                                                                            <a href="#" class="media">
+                                                                                <div class="media-left">
+                                                                                    <i class="ti-folder"></i>
+                                                                                </div>
+                                                                                <div class="media-body">
+                                                                                    <h5>Data Backup</h5>
+                                                                                    <small class="text-muted">Store your data</small>
+                                                                                </div>
+                                                                            </a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="#" class="media">
+                                                                                <div class="media-left">
+                                                                                    <i class="ti-headphone-alt"></i>
+                                                                                </div>
+                                                                                <div class="media-body">
+                                                                                    <h5>Support</h5>
+                                                                                    <small class="text-muted">24-hour support</small>
+                                                                                </div>
+                                                                            </a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="#" class="media">
+                                                                                <div class="media-left">
+                                                                                    <i class="ti-dropbox"></i>
+                                                                                </div>
+                                                                                <div class="media-body">
+                                                                                    <h5>Drop-box</h5>
+                                                                                    <small class="text-muted">Store large amount of data in one-box only
+                                                                                    </small>
+                                                                                </div>
+                                                                            </a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a href="#" class="media">
+                                                                                <div class="media-left">
+                                                                                    <i class="ti-location-pin"></i>
+                                                                                </div>
+                                                                                <div class="media-body">
+                                                                                    <h5>Location</h5>
+                                                                                    <small class="text-muted">Find Your Location with ease of use</small>
+                                                                                </div>
+                                                                            </a>
+                                                                        </li>
+                                                                    </ul>
+                                                                </li>
+                                                                <li class="col-sm-3">
+                                                                    <h6 class="mega-menu-title">Gallery</h6>
+                                                                    <div class="row m-b-20">
+                                                                        <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/01.jpg" alt="Gallery-1">
+                                                                        </div>
+                                                                        <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/02.jpg" alt="Gallery-2">
+                                                                        </div>
+                                                                        <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/03.jpg" alt="Gallery-3">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row m-b-20">
+                                                                        <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/04.jpg" alt="Gallery-4">
+                                                                        </div>
+                                                                        <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/05.jpg" alt="Gallery-5">
+                                                                        </div>
+                                                                        <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/06.jpg" alt="Gallery-6">
+                                                                        </div>
+                                                                    </div>
+                                                                    <button class="btn btn-primary btn-sm btn-block">Browse Gallery</button>
+                                                                </li>
+                                                                <li class="col-sm-3">
+                                                                    <h6 class="mega-menu-title">Contact Us</h6>
+                                                                    <div class="mega-menu-contact">
+                                                                        <div class="form-group row">
+                                                                            <label for="example-text-input" class="col-3 col-form-label">Name</label>
+                                                                            <div class="col-9">
+                                                                                <input class="form-control" type="text" placeholder="Artisanal kale" id="example-text-input">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row">
+                                                                            <label for="example-search-input" class="col-3 col-form-label">Email</label>
+                                                                            <div class="col-9">
+                                                                                <input class="form-control" type="email" placeholder="Enter your E-mail Id" id="example-search-input">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row">
+                                                                            <label for="example-search-input" class="col-3 col-form-label">Contact</label>
+                                                                            <div class="col-9">
+                                                                                <input class="form-control" type="number" placeholder="+91-9898989898" id="example-search-input">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row">
+                                                                            <label for="exampleTextarea" class="col-3 col-form-label">Message</label>
+                                                                            <div class="col-9">
+                                                                                <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                        </li>-->
                         </ul>
                         <?php
                         if (strlen(request('token')) < 4) {
@@ -375,7 +375,7 @@ function toast(message) {
                                         <?php } ?>
                                         <li><a href="{{ route('logout') }}"
                                                onclick="event.preventDefault();
-                                                           document.getElementById('logout-form').submit();"><i class="ti-layout-sidebar-left"></i> Logout</a></li>
+                                                       document.getElementById('logout-form').submit();"><i class="ti-layout-sidebar-left"></i> Logout</a></li>
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                             {{ csrf_field() }}
                                         </form>
@@ -464,14 +464,14 @@ function toast(message) {
 
                         <hr style="background:white"/>
 
-                            <li class="nav-item">
-                                <a href="#!">
-                                    <i class="ti-home"></i>
-                                    <span data-i18n="nav.dash.main">Dashboard</span>
-                                </a>
-                                <ul class="tree-1 has-class">
+                        <li class="nav-item">
+                            <a href="#!">
+                                <i class="ti-home"></i>
+                                <span data-i18n="nav.dash.main">Dashboard</span>
+                            </a>
+                            <ul class="tree-1 has-class">
                                 <?php if (can_access('manage_users')) { ?>
-                                 <li>
+                                    <li>
                                         <a href="<?= url('analyse/index') ?>" data-i18n="nav.dash.default"> Home </a></li>
 
                                 <?php } if (can_access('manage_users') || Auth::user()->department == 2) { ?>
@@ -479,17 +479,17 @@ function toast(message) {
                                     <li><a href="<?= url('analyse/marketing') ?>" data-i18n="nav.dash.ecommerce"> Marketing </a></li>
                                 <?php } if (can_access('manage_users') || Auth::user()->department == 2) { ?>
                                     <li><a href="<?= url('analyse/sales') ?>" data-i18n="nav.dash.ecommerce"> Sales</a></li>
-                                <?php } if (can_access('manage_users')  || Auth::user()->department == 4) { ?>
+                                <?php } if (can_access('manage_users') || Auth::user()->department == 4) { ?>
                                     <li><a href="<?= url('analyse/accounts') ?>" data-i18n="nav.dash.crm">Accounts</a></li>
-                                <?php } if (can_access('manage_users')  || Auth::user()->department == 1) { ?>
+                                <?php } if (can_access('manage_users') || Auth::user()->department == 1) { ?>
                                     <li><a href="<?= url('analyse/customers') ?>" data-i18n="nav.dash.analytics">Customers</a>
                                         <label class="label label-info menu-caption">NEW</label>
-                                        </li>
-                                <?php } if (can_access('manage_users')  || Auth::user()->department == 3) { ?>
+                                    </li>
+                                <?php } if (can_access('manage_users') || Auth::user()->department == 3) { ?>
                                     <li><a href="<?= url('analyse/software') ?>" data-i18n="nav.dash.project">Software Dev</a></li>
                                 <?php } ?>
-                                </ul>
-                            </li>
+                            </ul>
+                        </li>
                         <?php if (can_access('manage_customers')) { ?>
                             <li class="nav-title" data-i18n="nav.category.navigation">
                                 <i class="ti-line-dashed"></i>
@@ -503,7 +503,7 @@ function toast(message) {
                                 </a>
                                 <ul class="tree-1">
 
-                                <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.bottom-menu">System Setup</a></li>
+                                    <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.bottom-menu">System Setup</a></li>
                                     <li>
                                         <a href="<?= url('Phone_call/index') ?>" data-i18n="nav.navigate.navbar">phone Calls</a>
                                     </li>
@@ -598,6 +598,7 @@ function toast(message) {
                                     <li><a href="<?= url('Marketing/Events') ?>" data-i18n="nav.extra-components.session-idle-timeout">Events</a></li>
                                     <li><a href="<?= url('Marketing/moduleUsage') ?>" data-i18n="nav.extra-components.session-idle-timeout">Module Usage</a></li>
                                     <li><a href="<?= url('Marketing/systemUser') ?>" data-i18n="nav.extra-components.session-idle-timeout">System Users</a></li>
+                                    <li><a href="<?= url('Marketing/Communication') ?>" data-i18n="nav.extra-components.session-idle-timeout">Communication</a></li>
                                 </ul>
                             </li>
                         <?php } ?>
@@ -784,8 +785,8 @@ function toast(message) {
                                 <?php
                                 foreach ($users as $user) {
                                     ?>
-                                    <div class="media userlist-box" onclick="get_user(<?=$user->id?>)" data-id="1" data-status="online" data-username="<?= $user->firstname . ' ' . $user->lastname ?>" data-toggle="tooltip" data-placement="left" title="<?= $user->firstname . ' ' . $user->lastname ?>">
-                                    <input id="to_user_id<?=$user->id?>" value="<?=$user->id?>" type="hidden">
+                                    <div class="media userlist-box" onclick="get_user(<?= $user->id ?>)" data-id="1" data-status="online" data-username="<?= $user->firstname . ' ' . $user->lastname ?>" data-toggle="tooltip" data-placement="left" title="<?= $user->firstname . ' ' . $user->lastname ?>">
+                                        <input id="to_user_id<?= $user->id ?>" value="<?= $user->id ?>" type="hidden">
                                         <a class="media-left" href="#!">
                                             <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="<?= $user->firstname . ' ' . $user->lastname ?>">
                                             <div class="live-status bg-success"></div>
@@ -812,7 +813,7 @@ function toast(message) {
             </div>
             <!-- Sidebar inner chat start-->
             <div class="showChat_inner">
-            <div id="usermessage"  style="overflow-y: auto; height: 100%;">
+                <div id="usermessage"  style="overflow-y: auto; height: 100%;">
 
                 </div>
             </div>
@@ -925,126 +926,126 @@ function toast(message) {
         <script src="<?= $root ?>bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
         <script src="<?= $root ?>bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
         @yield('footer')
-       
+
     </body>
     <?php
     if (request('type_id') != 'subject' && !preg_match('/emailsms/', url()->current()) && !preg_match('/sales/', url()->current()) && !preg_match('/logs/', url()->current()) && !preg_match('/activity/', url()->current()) && !preg_match('/payment_history/i', url()->current()) && !preg_match('/api/', url()->current())) {
         ?>
-<script type="text/javascript">
-    send_message = function (id) {
-    var to_user_id = $('#to_user_id' + id).val();
-    var body =  $('#body').val();
-    $.ajax({
-    type: 'POST',
-    url: '<?=url('Users/storeChat/null')?>',
-    data: {to_user_id: to_user_id, body: body},
-    dataType: "html",
-    success: function (data) {
-        $('input[type="text"],textarea').val('');
-      $('#usermessage').html(data);
-    }
-  });
-}
-
-        get_user = function (id) {
-            var to_user_id = $('#to_user_id' + id).val();
-            $.ajax({
-            type: 'get',
-            url: '<?=url('Users/getUser/null')?>',
-            data: {to_user_id: to_user_id},
-            dataType: "html",
-            success: function (data) {
-            $('#usermessage').html(data);
-            }
-        });
-    }
-
-                            $(document).ready(function () {
-                                $('.dataTable').DataTable({
-                                    dom: 'Bfrtip',
-                                    responsive: false,
-                                    paging: true,
-                                    info: false,
-                                    "pageLength": 10,
-                                    buttons: [
-                                        {
-                                            text: 'PDF',
-                                            extend: 'pdfHtml5',
-                                            message: '',
-                                            orientation: 'landscape',
-                                            exportOptions: {
-                                                columns: ':visible'
-                                            },
-                                            customize: function (doc) {
-                                                doc.pageMargins = [10, 10, 10, 10];
-                                                doc.defaultStyle.fontSize = 7;
-                                                doc.styles.tableHeader.fontSize = 7;
-                                                doc.styles.title.fontSize = 9;
-                                                // Remove spaces around page title
-                                                doc.content[0].text = doc.content[0].text.trim();
-                                                // Create a footer
-                                                doc['footer'] = (function (page, pages) {
-                                                    return {
-                                                        columns: [
-                                                            'www.shulesoft.com',
-                                                            {
-                                                                // This is the right column
-                                                                alignment: 'right',
-                                                                text: ['page ', {text: page.toString()}, ' of ', {text: pages.toString()}]
-                                                            }
-                                                        ],
-                                                        margin: [10, 0]
-                                                    }
-                                                });
-                                                // Styling the table: create style object
-                                                var objLayout = {};
-                                                // Horizontal line thickness
-                                                objLayout['hLineWidth'] = function (i) {
-                                                    return .5;
-                                                };
-                                                // Vertikal line thickness
-                                                objLayout['vLineWidth'] = function (i) {
-                                                    return .5;
-                                                };
-                                                // Horizontal line color
-                                                objLayout['hLineColor'] = function (i) {
-                                                    return '#aaa';
-                                                };
-                                                // Vertical line color
-                                                objLayout['vLineColor'] = function (i) {
-                                                    return '#aaa';
-                                                };
-                                                // Left padding of the cell
-                                                objLayout['paddingLeft'] = function (i) {
-                                                    return 4;
-                                                };
-                                                // Right padding of the cell
-                                                objLayout['paddingRight'] = function (i) {
-                                                    return 4;
-                                                };
-                                                // Inject the object in the document
-                                                doc.content[1].layout = objLayout;
+        <script type="text/javascript">
+                                    send_message = function (id) {
+                                        var to_user_id = $('#to_user_id' + id).val();
+                                        var body = $('#body').val();
+                                        $.ajax({
+                                            type: 'POST',
+                                            url: '<?= url('Users/storeChat/null') ?>',
+                                            data: {to_user_id: to_user_id, body: body},
+                                            dataType: "html",
+                                            success: function (data) {
+                                                $('input[type="text"],textarea').val('');
+                                                $('#usermessage').html(data);
                                             }
-                                        },
+                                        });
+                                    }
 
-                                        {extend: 'excelHtml5', footer: true},
-                                        {extend: 'csvHtml5', customize: function (csv) {
-                                                return "ShuleSoft" + csv + "ShuleSoft";
-                                            }},
-                                        {extend: 'print', footer: true}
+                                    get_user = function (id) {
+                                        var to_user_id = $('#to_user_id' + id).val();
+                                        $.ajax({
+                                            type: 'get',
+                                            url: '<?= url('Users/getUser/null') ?>',
+                                            data: {to_user_id: to_user_id},
+                                            dataType: "html",
+                                            success: function (data) {
+                                                $('#usermessage').html(data);
+                                            }
+                                        });
+                                    }
 
-                                    ]
-                                });
-                            });
+                                    $(document).ready(function () {
+                                        $('.dataTable').DataTable({
+                                            dom: 'Bfrtip',
+                                            responsive: false,
+                                            paging: true,
+                                            info: false,
+                                            "pageLength": 10,
+                                            buttons: [
+                                                {
+                                                    text: 'PDF',
+                                                    extend: 'pdfHtml5',
+                                                    message: '',
+                                                    orientation: 'landscape',
+                                                    exportOptions: {
+                                                        columns: ':visible'
+                                                    },
+                                                    customize: function (doc) {
+                                                        doc.pageMargins = [10, 10, 10, 10];
+                                                        doc.defaultStyle.fontSize = 7;
+                                                        doc.styles.tableHeader.fontSize = 7;
+                                                        doc.styles.title.fontSize = 9;
+                                                        // Remove spaces around page title
+                                                        doc.content[0].text = doc.content[0].text.trim();
+                                                        // Create a footer
+                                                        doc['footer'] = (function (page, pages) {
+                                                            return {
+                                                                columns: [
+                                                                    'www.shulesoft.com',
+                                                                    {
+                                                                        // This is the right column
+                                                                        alignment: 'right',
+                                                                        text: ['page ', {text: page.toString()}, ' of ', {text: pages.toString()}]
+                                                                    }
+                                                                ],
+                                                                margin: [10, 0]
+                                                            }
+                                                        });
+                                                        // Styling the table: create style object
+                                                        var objLayout = {};
+                                                        // Horizontal line thickness
+                                                        objLayout['hLineWidth'] = function (i) {
+                                                            return .5;
+                                                        };
+                                                        // Vertikal line thickness
+                                                        objLayout['vLineWidth'] = function (i) {
+                                                            return .5;
+                                                        };
+                                                        // Horizontal line color
+                                                        objLayout['hLineColor'] = function (i) {
+                                                            return '#aaa';
+                                                        };
+                                                        // Vertical line color
+                                                        objLayout['vLineColor'] = function (i) {
+                                                            return '#aaa';
+                                                        };
+                                                        // Left padding of the cell
+                                                        objLayout['paddingLeft'] = function (i) {
+                                                            return 4;
+                                                        };
+                                                        // Right padding of the cell
+                                                        objLayout['paddingRight'] = function (i) {
+                                                            return 4;
+                                                        };
+                                                        // Inject the object in the document
+                                                        doc.content[1].layout = objLayout;
+                                                    }
+                                                },
+
+                                                {extend: 'excelHtml5', footer: true},
+                                                {extend: 'csvHtml5', customize: function (csv) {
+                                                        return "ShuleSoft" + csv + "ShuleSoft";
+                                                    }},
+                                                {extend: 'print', footer: true}
+
+                                            ]
+                                        });
+                                    });
 
 
 
 
-                            $('.clockpicker').clockpicker({
-                                donetext: 'Done'
-                            }).find('input').change(function () {
-                                console.log(this.value);
-                            });
+                                    $('.clockpicker').clockpicker({
+                                        donetext: 'Done'
+                                    }).find('input').change(function () {
+                                        console.log(this.value);
+                                    });
         </script>
     <?php } ?>
 </html>
