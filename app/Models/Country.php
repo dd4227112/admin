@@ -11,4 +11,7 @@ class Country extends Model {
     protected $table = 'constant.refer_countries';
     protected $fillable = ['id', 'dialling_code', 'country_code', 'country'];
 
+    public function regions() {
+        return $this->hasMany(\App\Models\Region::class, 'country_id', 'id');
+    }
 }
