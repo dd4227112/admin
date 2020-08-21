@@ -19,5 +19,12 @@ class PartnerBranch extends Model {
     public function district() {
             return $this->belongsTo(\App\Models\District::class, 'district_id', 'id');
         }
-
+    
+        public function school() {
+            return $this->hasMany(\App\Models\PartnerSchool::class, 'branch_id', 'id');
+        }
+            
+        public function user() {
+            return $this->hasMany(\App\Models\PartnerUser::class, 'branch_id', 'id');
+        }
 }

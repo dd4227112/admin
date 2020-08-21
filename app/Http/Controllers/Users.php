@@ -395,5 +395,41 @@ class Users extends Controller {
 
     }
 
+    public function partners() {
+        $id = request()->segment(3);
+        if((int)$id>0){
+            $this->data['partners'] = \App\Models\PartnerBranch::where('partner_id', $id)->get();
+        }else{
+            $this->data['partners'] = \App\Models\Partner::all();
+        }
+        $this->data['set'] = $id;
+        return view('users.partners.index', $this->data);
+    }
+    
+    public function addPartner() {
+        $this->data['countries'] = \App\Models\Country::all();
+        $id = request()->segment(3);
+        if((int)$id>0){
+            $this->data['partner'] = $partner = \App\Models\Partner::find($id);
+            $this->data['regions'] = \App\Models\Region::where('country_id', $partner->country_id)->get();
+            if($_POST){
+                $partner =  \App\Models\Partner::create(request()->all());
+                   $user = new User(array_merge(request()->all(), ['password' => bcrypt(request('email')), 'firstname' => request('name'), 'phone' => request('phone_number'), 'role_id' => 7, 'department' => 10, 'created_by' => Auth::user()->id]));
+                   $user->save();
+                   $this->sendEmailAndSms($partner);
+                   return redirect('users/partners')->with('success', 'Partner ' . $partner->name . ' created successfully');
+               }
+        return view('users.partners.add_branch', $this->data);
+        }else{
+            if($_POST){
+             $partner =  \App\Models\Partner::create(request()->all());
+                $user = new User(array_merge(request()->all(), ['password' => bcrypt(request('email')), 'firstname' => request('name'), 'phone' => request('phone_number'), 'role_id' => 7, 'department' => 10, 'created_by' => Auth::user()->id]));
+                $user->save();
+                $this->sendEmailAndSms($partner);
+                return redirect('users/partners')->with('success', 'Partner ' . $partner->name . ' created successfully');
+            }
+            return view('users.partners.add', $this->data);
+        }
+    }
 
 }
