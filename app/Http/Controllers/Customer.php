@@ -957,7 +957,7 @@ class Customer extends Controller {
         $user_id = $id = null ? request('user_id') : $id;
         $task_user = \App\Models\TaskUser::where('user_id', $user_id)->orderBy('id', 'desc')->first();
         $task_date = count($task_user) == 1 ? $task_user->task->end_date : date('Y-m-d');
-        $end_date =  date('Y-m-d');
+        $end_date = date('Y-m-d');
         $option = '<option></option>';
         for ($i = 0; $i <= 10; $i++) {
             $date = date('Y-m-d', strtotime('+' . $i . ' days', strtotime($end_date)));
@@ -986,6 +986,24 @@ class Customer extends Controller {
             $option .= '<option value="' . $slot->id . '">' . $slot->start_time . ' - ' . $slot->end_time . '</option>';
         }
         echo $option;
+    }
+
+    public function download() {
+        $client = request()->segment(3);
+        $this->data['show_download'] = request()->segment(4);
+        $this->data['client'] = \App\Models\Client::find($client);
+        $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->get();
+        $view = view('customer.training.jobcard', $this->data);
+        if ((int) $this->data['show_download'] == 1) {
+            echo $view;
+            $file_name = $this->data['client']->username . '.doc';
+            $headers = array(
+                "Content-type" => "text/html",
+                "Content-Disposition" => "attachment;Filename=$file_name"
+            );
+            return response()->download('storage/app/' . $file_name, $file_name, $headers);
+        }
+        return $view;
     }
 
 }
