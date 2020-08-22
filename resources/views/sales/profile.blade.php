@@ -61,20 +61,25 @@
                         </div>
                         <div class="user-body" style="min-height: 625px;">
                             <?php
-                            $school_clients=DB::table('client_schools')->where('school_id',$school->id)->first();
-                            if(count($school_clients)==0){
-                            ?>
-                            <div class="card-block">
-                                <button class="btn btn-danger btn-block" id="onboard_school">Onboard School</button>
-                            </div>
-                            <?php }else{
-                                $client_id=$school_clients->client_id;
+                            $school_clients = DB::table('client_schools')->where('school_id', $school->id)->first();
+                            if (count($school_clients) == 0) {
                                 ?>
-                            <br/>
-                            <div class="card-block alert alert-warning">
-                                <b class="">Already Onboarded</b>
-                            </div>
-                            <?php } ?>
+                                <div class="card-block">
+                                    <button class="btn btn-danger btn-block" id="onboard_school">Onboard School</button>
+                                </div>
+                            <?php
+                            } else {
+                                $client_id = $school_clients->client_id;
+                                ?>
+                                <br/>
+                                <div class="card-block alert alert-warning">
+                                    <b class="">Already Onboarded</b>
+                                </div>
+
+                                <div class="card-block">
+                                    <a href="<?= url('customer/download/' . $client_id) ?>" class="btn btn-warning btn-sx">Download Implentation Plan</a>
+                                </div>
+<?php } ?>
                             <ul class="page-list">
                                 <li class="active">
                                     <div class="mail-section"  onclick="show_tabs('activities')">
@@ -98,13 +103,13 @@
                                         </a>
                                     </div>
                                 </li>
-<!--                                <li>
-                                    <div class="mail-section"  onclick="show_tabs('contracts')">
-                                        <a href="#" >
-                                            <i class="icofont icofont-paper-plane"></i> Contracts
-                                        </a>
-                                    </div>
-                                </li>-->
+                                <!--                                <li>
+                                                                    <div class="mail-section"  onclick="show_tabs('contracts')">
+                                                                        <a href="#" >
+                                                                            <i class="icofont icofont-paper-plane"></i> Contracts
+                                                                        </a>
+                                                                    </div>
+                                                                </li>-->
                                 <script type="text/javascript">
                                     show_tabs = function (a) {
                                         $('.live_tabs').hide(function () {
@@ -175,7 +180,7 @@
                                                                             foreach ($types as $type) {
                                                                                 ?>
                                                                                 <option value="<?= $type->id ?>"><?= $type->name ?></option>
-                                                                            <?php } ?>
+<?php } ?>
 
                                                                         </select>
                                                                     </div>
@@ -214,7 +219,7 @@
                                                             <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
                                                         </div>
                                                         <input type="hidden" value="<?= $school->id ?>" name="client_id"/>
-                                                        <?= csrf_field() ?>
+<?= csrf_field() ?>
                                                     </form>
                                                 </div>
                                             </div>
@@ -223,7 +228,7 @@
                                             <?php
                                             $tasks = \App\Models\Task::whereIn('id', \App\Models\TaskSchool::where('school_id', $school->id)->get(['task_id']))->orderBy('created_at', 'desc')->get();
                                             // dd($tasks);
-                                            echo '<input type="hidden" value="'.count($tasks).'" id="task_count"/>';
+                                            echo '<input type="hidden" value="' . count($tasks) . '" id="task_count"/>';
                                             foreach ($tasks as $task) {
                                                 ?>
                                                 <div class="social-timelines p-relative o-hidden" id="removetag<?= $task->id ?>">
@@ -245,7 +250,7 @@
                                                                 <div class="card-block post-timelines">
 
                                                                     <div class="social-time text-muted">
-                                                                        <?= date("d M Y", strtotime($task->created_at)) ?>
+    <?= date("d M Y", strtotime($task->created_at)) ?>
                                                                     </div>
                                                                 </div>
 
@@ -300,7 +305,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            <?php } ?>
+<?php } ?>
 
                                         </div>
                                     </div>
@@ -326,7 +331,7 @@
                                                         <div class="text-muted social-designation"><?= $contact->email ?></div>
                                                     </div>
                                                 </div>
-                                            <?php } ?>
+<?php } ?>
 
 
                                             <a href="#" class="waves-effect" data-toggle="modal" data-target="#large-Modal-add-person">Add Key Person</a>
@@ -367,31 +372,30 @@
                                                 </form>
                                                 <br/>
                                                 <?php
-                                                if(isset($client_id) && (int) $client_id>0){
+                                                if (isset($client_id) && (int) $client_id > 0) {
                                                     $client = DB::table('admin.clients')->where('id', $client_id)->first();
-                                                
-                                                ?>
-                                                <h3>Onboarding Details</h3>
-                                                  <table class="table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>#</th>
-                                                            <th>Name</th>
-                                                            <th>Client Phone</th>
-                                                            <th>Client Try Code</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <th scope="row">1</th>
-                                                            <td><?=$client->name?></td>
-                                                            <td><?=$client->phone?></td>
-                                                            <td><?=$client->code?></td>
-                                                        </tr>
-                                                  
-                                                    </tbody>
-                                                </table>
-                                                <?php }?>
+                                                    ?>
+                                                    <h3>Onboarding Details</h3>
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Name</th>
+                                                                <th>Client Phone</th>
+                                                                <th>Client Try Code</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <th scope="row">1</th>
+                                                                <td><?= $client->name ?></td>
+                                                                <td><?= $client->phone ?></td>
+                                                                <td><?= $client->code ?></td>
+                                                            </tr>
+
+                                                        </tbody>
+                                                    </table>
+                                                <?php } ?>
                                             </div>
                                         </div>
 
@@ -417,7 +421,7 @@
                                                             <td>Otto</td>
                                                             <td>@mdo</td>
                                                         </tr>
-                                                  
+
                                                     </tbody>
                                                 </table>
                                             </div>
