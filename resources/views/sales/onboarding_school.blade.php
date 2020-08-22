@@ -70,6 +70,12 @@
                     </select>
                 </div>
             </div>
+              <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Implementation Start Date</label>
+                <div class="col-sm-10">
+                    <input type="datetime-local" class="form-control" value="" name="implementation_date" required="">
+                </div>
+            </div>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Available Tasks Roles</label>
                 <div class="col-sm-10">
@@ -78,6 +84,7 @@
                             <tr>
                                 <th>Tasks</th>
                                 <th>Person Role Responsible at School</th>
+                               
                             </tr>
                         </thead> 
                         <tbody>
@@ -97,12 +104,7 @@
 
                 </div>
             </div>
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Implementation Start Date</label>
-                <div class="col-sm-10">
-                    <input type="datetime-local" class="form-control" value="" name="implementation_date" required="">
-                </div>
-            </div>
+          
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Agreement Type</label>
                 <div class="col-sm-10">
