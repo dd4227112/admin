@@ -723,7 +723,9 @@ function check_status($table, $where = null) {
                                                     <div class="card-header">
                                                         <h5>Project Implementation Schedule</h5>
                                                         <span>This part have to be followed effectively </span>
-
+                                                        <p align="right">
+                                                            <a href="<?=url('customer/download/'.$client_id)?>" class="btn btn-warning btn-sx">Download Implentation Plan</a>
+                                                        </p>
                                                     </div>
                                                     <div class="card-block table-border-style">
                                                         <div class="table-responsive">
