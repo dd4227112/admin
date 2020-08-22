@@ -742,7 +742,7 @@ function check_status($table, $where = null) {
                                                                 <tbody>
                                                                     <?php
                                                                     $x = 1;
-
+$customer=new \App\Http\Controllers\Customer();
                                                                     $trainings = \App\Models\TrainItemAllocation::where('client_id', $client_id)->orderBy('id', 'asc')->get();
                                                                     foreach ($trainings as $training) {
                                                                         ?>
@@ -752,7 +752,7 @@ function check_status($table, $where = null) {
                                                                             <td> 
                                                                                 <?php
                                                                                 ?>   
-                                                                                <select class="task_allocated_id"  name="" task-id="<?= $training->task->id ?>">
+                                                                                <select class="task_allocated_id"  name="" task-id="<?= $training->task->id ?>" id="task_user<?= $training->task->id ?>">
                                                                                     <?php
                                                                                     if (count($shulesoft_users) > 0) {
                                                                                         foreach ($shulesoft_users as $user) {
@@ -772,8 +772,16 @@ function check_status($table, $where = null) {
                                                                                 </select>
                                                                             </td>
                                                                             <td> <b data-attr="school_person" task-id="<?= $training->task->id ?>"  contenteditable="true" class="task_group"> <?= strlen($training->school_person_allocated) > 4 ? $training->school_person_allocated : 'Not Allocated' ?></b> </td>
-                                                                            <td><b data-attr="start_date" task-id="<?= $training->task->id ?>"  contenteditable="true"  class="task_group"><?= $training->task->start_date ?> </b> </td>
-                                                                            <td><b data-attr="end_date" task-id="<?= $training->task->id ?>" contenteditable="true"  class="task_group"><?= $training->task->end_date ?> </b> </td>
+                                                                            <td>
+
+                                                                                <select id="<?=$training->task->id?>" class="task_group" data-task-id="<?=$training->task->id?>" data-user_id="<?=$training->task->user_id?>"><?=$customer->getDate($training->task->user_id,$training->task->start_date)?></select>
+                                                                                <select data-id="<?=$training->task->id?>" id="start_slot<?=$training->task->id?>"  data-task-id="<?=$training->task->id?>"  data-attr="start_date" class="slot"><?='<option>'.date('H:i',strtotime($training->task->start_date)).'</option>'?></select>
+                                                                            </td>
+                                                                            <td>
+                                                                                
+                                                                                <b data-attr="end_date" id="task_end_date_id<?= $training->task->id ?>"><?= $training->task->end_date ?> </b>
+                                                                                
+                                                                                 </td>
                                                                             <td> <?= $training->task->status ?> </td>
                                                                         </tr>
                                                                         <?php
@@ -1397,19 +1405,36 @@ if (count($logs) > 0) {
             });
         }
         task_group = function () {
-            $('.task_group').blur(function () {
-                var val = $(this).text();
-                var data_attr = $(this).attr('data-attr');
-                var task_id = $(this).attr('task-id');
+            $('.task_group').change(function () {
+                var val = $(this).val();
+               
+                var task_id = $(this).attr('data-task-id');
+                 var data_attr = $('#task_user'+task_id).val();
+                $.ajax({
+                    url: '<?= url('customer/getAvailableSlot') ?>/null',
+                    method: 'get',
+                    data: {start_date: val, user_id: data_attr},
+                    success: function (data) {
+                      $('#start_slot'+task_id).html(data);
+                    }
+                });
+            });
+              $('.slot').change(function () {
+                var val = $(this).val();         
+                //var data_attr = $(this).attr('data-attr');
+                var task_id = $(this).attr('data-id');
+                 var date=$('#'+task_id).val();
                 $.ajax({
                     url: '<?= url('customer/editTrain') ?>/null',
                     method: 'get',
-                    data: {task_id: task_id, value: val, attr: data_attr},
+                    dataType:'json',
+                    data: {task_id: task_id, value: date, slot_id:val, attr: 'start_date'},
                     success: function (data) {
-                       notify('Success', data, 'success');
+                         $('#task_end_date_id'+data.task_id).html(data.end_date);
+                       notify('Success','Success', 'success');
                     }
                 });
-            })
+            });
             $('.task_allocated_id').change(function () {
                 var task_allocated_id = $(this).val();
                 var task_id = $(this).attr('task-id');

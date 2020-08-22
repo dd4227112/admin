@@ -174,10 +174,17 @@ class Customer extends Controller {
             ]);
         }
         if ($attr == 'start_date' && (int) $task_id > 0) {
-           \App\Models\Task::find($task_id)->update(['start_date' => $value]) ;
+            $slot_id = request('slot_id');
+            $slot = DB::table('admin.slots')->where('id', $slot_id)->first();
+            $obj = [
+                'start_date' => date('Y-m-d H:i', strtotime($value . ' ' . $slot->start_time)),
+                'end_date' => date('Y-m-d H:i', strtotime($value . ' ' . $slot->end_time)),
+                'slot_id' => $slot_id];
+            \App\Models\Task::find($task_id)->update($obj);
+            die(json_encode(array_merge(array('task_id' => $task_id), $obj)));
         }
         if ($attr == 'end_date' && (int) $task_id > 0) {
-           \App\Models\Task::find($task_id)->update(['end_date' => $value]);
+            \App\Models\Task::find($task_id)->update(['end_date' => $value]);
         }
         //insert into training allocation
         echo 'success';
@@ -938,6 +945,47 @@ class Customer extends Controller {
         }
         return view('customer.task_group', $this->data);
         return view('layouts.file_view', $this->data);
+    }
+
+    /**
+     * 1. we check available date start from the end date of the respective csr
+     * 2. We loop through dates, and return a range of next 10 days
+     * 3. We skip sunday and saturday, otherwise if a person accept that
+     * 4. we return range of available dates
+     */
+    public function getDate($id = null, $default_dates = null) {
+        $user_id = $id = null ? request('user_id') : $id;
+        $task_user = \App\Models\TaskUser::where('user_id', $user_id)->orderBy('id', 'desc')->first();
+        $task_date = count($task_user) == 1 ? $task_user->task->end_date : date('Y-m-d');
+        $end_date =  date('Y-m-d');
+        $option = '<option></option>';
+        for ($i = 0; $i <= 10; $i++) {
+            $date = date('Y-m-d', strtotime('+' . $i . ' days', strtotime($end_date)));
+            if (date('D', strtotime($date)) == 'Sat' || date('l', strtotime($date)) == 'Sunday') {
+                continue;
+            }
+            $selected = $default_dates != null && date('Y-m-d', strtotime($default_dates)) == $date ? 'selected' : '';
+            $option .= '<option value="' . $date . '" ' . $selected . '>' . $date . '</option>';
+        }
+        echo $option;
+    }
+
+    /**
+     * 1. check available date
+     * 2. find active slots that are not available in the that day and show it to users
+     * 3.
+     */
+    public function getAvailableSlot() {
+        $user_id = request('user_id');
+        $start_date = request('start_date');
+        $sql = "select * from admin.slots where status=1 and id not in (select slot_id from admin.tasks where slot_id is not null and start_date::date='{$start_date}' and id in (select task_id from admin.tasks_users where user_id={$user_id}) ) ";
+        $slots = \DB::select($sql);
+        $option = '<option></option>';
+        foreach ($slots as $slot) {
+
+            $option .= '<option value="' . $slot->id . '">' . $slot->start_time . ' - ' . $slot->end_time . '</option>';
+        }
+        echo $option;
     }
 
 }

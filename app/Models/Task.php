@@ -13,7 +13,7 @@ class Task extends Model {
 
     //put your code here
     protected $table = 'tasks';
-    protected $fillable = ['id','activity', 'action', 'date', 'time', 'user_id', 'priority', 'created_at', 'updated_at', 'task_type_id', 'to_user_id','start_date','end_date','status'];
+    protected $fillable = ['id','activity', 'action', 'date', 'time', 'user_id', 'priority', 'created_at', 'updated_at', 'task_type_id', 'to_user_id','start_date','end_date','status','slot_id'];
 
     public function user() {
         return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Not allocated']);
@@ -43,4 +43,7 @@ class Task extends Model {
         return $this->hasMany(\App\Models\TaskUser::class, 'task_id', 'id');
     }
 
+      public function slot() {
+        return $this->belongsTo(\App\Models\Slot::class, 'slot_id', 'id')->withDefault(['start_time' => 'Not defined']);
+    }
 }
