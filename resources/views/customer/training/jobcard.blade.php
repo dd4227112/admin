@@ -49,7 +49,7 @@ $root = url('/') . '/public/'
                             <p align='right' id="print"><a href="#" onclick="window.print()"><i class="fa fa-print" ></i> Print</a></p>
                             <div class="card">
                                 <div class="card-header">
-                                    <h5><img src="<?= url('storage/uploads/images/shulesoft.png') ?>" width="50" height="" style=""/> ShuleSoft Job card</h5>
+                                    <h5><img src="https://admin.shulesoft.com/public/assets/images/auth/shulesoft_logo.png" width="50" height="" style=""/> ShuleSoft Job card</h5>
                                     
                                 </div>
                                 <div class="card-block">
