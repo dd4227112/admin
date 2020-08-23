@@ -724,7 +724,7 @@ function check_status($table, $where = null) {
                                                         <h5>Project Implementation Schedule</h5>
                                                         <span>This part have to be followed effectively </span>
                                                         <p align="right">
-                                                            <a href="<?=url('customer/download/'.$client_id)?>" class="btn btn-warning btn-sx">Download Implentation Plan</a>
+                                                            <a href="<?= url('customer/download/' . $client_id) ?>" class="btn btn-warning btn-sx">Download Implementation Plan</a>
                                                         </p>
                                                     </div>
                                                     <div class="card-block table-border-style">
@@ -744,7 +744,7 @@ function check_status($table, $where = null) {
                                                                 <tbody>
                                                                     <?php
                                                                     $x = 1;
-$customer=new \App\Http\Controllers\Customer();
+                                                                    $customer = new \App\Http\Controllers\Customer();
                                                                     $trainings = \App\Models\TrainItemAllocation::where('client_id', $client_id)->orderBy('id', 'asc')->get();
                                                                     foreach ($trainings as $training) {
                                                                         ?>
@@ -773,17 +773,17 @@ $customer=new \App\Http\Controllers\Customer();
                                                                                             ?>
                                                                                 </select>
                                                                             </td>
-                                                                            <td> <b data-attr="school_person" task-id="<?= $training->task->id ?>"  contenteditable="true" class="task_group"> <?= strlen($training->school_person_allocated) > 4 ? $training->school_person_allocated : 'Not Allocated' ?></b> </td>
+                                                                            <td> <b data-attr="school_person" task-id="<?= $training->task->id ?>"  contenteditable="true" class="task_school_group"> <?= strlen($training->school_person_allocated) > 4 ? $training->school_person_allocated : 'Not Allocated' ?></b> </td>
                                                                             <td>
 
-                                                                                <select id="<?=$training->task->id?>" class="task_group" data-task-id="<?=$training->task->id?>" data-user_id="<?=$training->task->user_id?>"><?=$customer->getDate($training->task->user_id,$training->task->start_date)?></select>
-                                                                                <select data-id="<?=$training->task->id?>" id="start_slot<?=$training->task->id?>"  data-task-id="<?=$training->task->id?>"  data-attr="start_date" class="slot"><?='<option>'.date('H:i',strtotime($training->task->start_date)).'</option>'?></select>
+                                                                                <select id="<?= $training->task->id ?>" class="task_group" data-task-id="<?= $training->task->id ?>" data-user_id="<?= $training->task->user_id ?>"><?= $customer->getDate($training->task->user_id, $training->task->start_date) ?></select>
+                                                                                <select data-id="<?= $training->task->id ?>" id="start_slot<?= $training->task->id ?>"  data-task-id="<?= $training->task->id ?>"  data-attr="start_date" class="slot"><?= '<option>' . date('H:i', strtotime($training->task->start_date)) . '</option>' ?></select>
                                                                             </td>
                                                                             <td>
-                                                                                
+
                                                                                 <b data-attr="end_date" id="task_end_date_id<?= $training->task->id ?>"><?= $training->task->end_date ?> </b>
-                                                                                
-                                                                                 </td>
+
+                                                                            </td>
                                                                             <td> <?= $training->task->status ?> </td>
                                                                         </tr>
                                                                         <?php
@@ -1340,116 +1340,132 @@ if (count($logs) > 0) {
     </div>
     <?php $root = url('/') . '/public/' ?>
 
-<!-- notify js Fremwork -->
-<link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.css">
-<link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.brighttheme.css">
-<link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.buttons.css">
-<link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.history.css">
-<link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.mobile.css">
-<link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/pnotify/notify.css">
+    <!-- notify js Fremwork -->
+    <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.css">
+    <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.brighttheme.css">
+    <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.buttons.css">
+    <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.history.css">
+    <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.mobile.css">
+    <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/pnotify/notify.css">
 
-<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.js"></script>
-<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.desktop.js"></script>
-<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.buttons.js"></script>
-<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.confirm.js"></script>
-<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.callbacks.js"></script>
-<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.animate.js"></script>
-<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.history.js"></script>
-<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.mobile.js"></script>
-<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.nonblock.js"></script>
-<script type="text/javascript" src="<?= $root ?>assets/pages/pnotify/notify.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.desktop.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.buttons.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.confirm.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.callbacks.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.animate.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.history.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.mobile.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.nonblock.js"></script>
+    <script type="text/javascript" src="<?= $root ?>assets/pages/pnotify/notify.js"></script>
     <script type="text/javascript">
-    
-    notify = function (title, message, type) {
-        new PNotify({
-            title: title,
-            text: message,
-            type: type,
-            hide: 'false',
-            icon: 'icofont icofont-info-circle'
-        });
-    }
 
-        allocate = function (a, role_id) {
-            $.ajax({
-                url: '<?= url('customer/allocate/null') ?>',
-                data: {user_id: a, school_id: '<?= $school->school_id ?>', role_id: role_id, schema: '<?= $schema ?>'},
-                dataType: 'html',
-                success: function (data) {
-                    if (data == 1) {
-                        alert('success');
-                    }
-                }
-            });
-        }
-        $('#school_id').click(function () {
-            var val = $(this).val();
-            $.ajax({
-                url: '<?= url('customer/search/null') ?>',
-                data: {val: val, type: 'school', schema: '<?= $schema ?>'},
-                dataType: 'html',
-                success: function (data) {
+notify = function (title, message, type) {
+    new PNotify({
+        title: title,
+        text: message,
+        type: type,
+        hide: 'false',
+        icon: 'icofont icofont-info-circle'
+    });
+}
 
-                    $('#search_result').html(data);
-                }
-            });
+allocate = function (a, role_id) {
+    $.ajax({
+        url: '<?= url('customer/allocate/null') ?>',
+        data: {user_id: a, school_id: '<?= $school->school_id ?>', role_id: role_id, schema: '<?= $schema ?>'},
+        dataType: 'html',
+        success: function (data) {
+            if (data == 1) {
+                alert('success');
+            }
+        }
+    });
+}
+$('#school_id').click(function () {
+    var val = $(this).val();
+    $.ajax({
+        url: '<?= url('customer/search/null') ?>',
+        data: {val: val, type: 'school', schema: '<?= $schema ?>'},
+        dataType: 'html',
+        success: function (data) {
+
+            $('#search_result').html(data);
+        }
+    });
+});
+removeTag = function (a) {
+    $.ajax({
+        url: '<?= url('customer/removeTag') ?>/null',
+        method: 'get',
+        data: {id: a},
+        success: function (data) {
+            if (data == '1') {
+                $('#removetag' + a).fadeOut();
+            }
+        }
+    });
+}
+task_group = function () {
+    $('.task_group').change(function () {
+        var val = $(this).val();
+
+        var task_id = $(this).attr('data-task-id');
+        var data_attr = $('#task_user' + task_id).val();
+        $.ajax({
+            url: '<?= url('customer/getAvailableSlot') ?>/null',
+            method: 'get',
+            data: {start_date: val, user_id: data_attr},
+            success: function (data) {
+                $('#start_slot' + task_id).html(data);
+            }
         });
-        removeTag = function (a) {
-            $.ajax({
-                url: '<?= url('customer/removeTag') ?>/null',
-                method: 'get',
-                data: {id: a},
-                success: function (data) {
-                    if (data == '1') {
-                        $('#removetag' + a).fadeOut();
-                    }
-                }
-            });
-        }
-        task_group = function () {
-            $('.task_group').change(function () {
-                var val = $(this).val();
-               
-                var task_id = $(this).attr('data-task-id');
-                 var data_attr = $('#task_user'+task_id).val();
-                $.ajax({
-                    url: '<?= url('customer/getAvailableSlot') ?>/null',
-                    method: 'get',
-                    data: {start_date: val, user_id: data_attr},
-                    success: function (data) {
-                      $('#start_slot'+task_id).html(data);
-                    }
-                });
-            });
-              $('.slot').change(function () {
-                var val = $(this).val();         
-                //var data_attr = $(this).attr('data-attr');
-                var task_id = $(this).attr('data-id');
-                 var date=$('#'+task_id).val();
-                $.ajax({
-                    url: '<?= url('customer/editTrain') ?>/null',
-                    method: 'get',
-                    dataType:'json',
-                    data: {task_id: task_id, value: date, slot_id:val, attr: 'start_date'},
-                    success: function (data) {
-                         $('#task_end_date_id'+data.task_id).html(data.end_date);
-                       notify('Success','Success', 'success');
-                    }
-                });
-            });
-            $('.task_allocated_id').change(function () {
-                var task_allocated_id = $(this).val();
-                var task_id = $(this).attr('task-id');
-                $.ajax({
-                    url: '<?= url('customer/editTrain') ?>/null',
-                    method: 'get',
-                    data: {task_id: task_id, user_id: task_allocated_id},
-                    success: function (data) {
-                    notify('Success', data, 'success');
-                    }
-                });
-            })
-        }
-        $(document).ready(task_group);
+    });
+    $('.task_school_group').blur(function () {
+        var val = $(this).text();
+        var data_attr = $(this).attr('data-attr');
+        var task_id = $(this).attr('task-id');
+        // var date=$('#'+task_id).val();
+        $.ajax({
+            url: '<?= url('customer/editTrain') ?>/null',
+            method: 'get',
+            dataType: 'json',
+            data: {task_id: task_id, value: val, attr: data_attr},
+            success: function (data) {
+                // $(this).after(data).addClass('label label-success');
+                notify('Success', 'Success', 'success');
+            }
+        });
+    });
+    $('.slot').change(function () {
+        var val = $(this).val();
+        //var data_attr = $(this).attr('data-attr');
+        var task_id = $(this).attr('data-id');
+        var date = $('#' + task_id).val();
+        $.ajax({
+            url: '<?= url('customer/editTrain') ?>/null',
+            method: 'get',
+            dataType: 'json',
+            data: {task_id: task_id, value: date, slot_id: val, attr: 'start_date'},
+            success: function (data) {
+                $('#task_end_date_id' + data.task_id).html(data.end_date);
+                notify('Success', 'Success', 'success');
+            }
+        });
+    });
+    $('.task_allocated_id').change(function () {
+        var task_allocated_id = $(this).val();
+        var task_id = $(this).attr('task-id');
+        $.ajax({
+            url: '<?= url('customer/editTrain') ?>/null',
+            method: 'get',
+            data: {task_id: task_id, user_id: task_allocated_id},
+            success: function (data) {
+                notify('Success', data, 'success');
+            }
+        });
+    });
+}
+$(document).ready(task_group);
     </script>
     @endsection
