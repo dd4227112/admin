@@ -55,6 +55,12 @@ class Customer extends Controller {
         return view('customer.faq', $this->data);
     }
 
+    public function getSlot($user_id, $date) {
+        $start_date = date('Y-m-d', strtotime($date));
+        $sql = "select * from admin.slots where status=1 and id not in (select slot_id from admin.tasks where slot_id is not null and start_date::date='{$start_date}' and id in (select task_id from admin.tasks_users where user_id={$user_id}) ) order by id asc limit 1 ";
+        return \collect(\DB::select($sql))->first();
+    }
+
     function config() {
         $status_id = request('id'); //1=complete, 2 =pending, 3 =not yet
         $schema = request('school_id');
@@ -74,7 +80,8 @@ class Customer extends Controller {
             $time += $train_item->time;
             $end = \App\Models\Task::where('user_id', Auth::user()->id)->orderBy('end_date', 'desc')->first();
 
-            $start_date = count($end) == 0 ? date('Y-m-d H:i') : date('Y-m-d H:i', strtotime("+{$time} minutes", strtotime($end->end_date)));
+            $start_date = count($end) == 1 && strtotime($end->end_date) > time() ? date('Y-m-d H:i', strtotime("+{$time} minutes", strtotime($end->end_date))) : date('Y-m-d H:i');
+
             if (date('H', strtotime($start_date)) > 16) {
                 //its end of the time, just add a new day
                 $sat_add_time = (int) $time + 16 * 60;
@@ -95,14 +102,19 @@ class Customer extends Controller {
 
             $end_date = date('Y-m-d H:i', strtotime("+{$time} minutes", strtotime($start_date)));
         }
+        $slot = $this->getSlot(Auth::user()->id, $start_date);
+        $date = date('Y-m-d', strtotime($start_date));
         $data = [
             'activity' => $activity,
             'date' => date('Y-m-d'),
             'user_id' => Auth::user()->id,
             'status' => ucfirst($status_id),
-            'start_date' => $start_date,
-            'end_date' => $end_date
+            'task_type_id' => preg_match('/data/i', $activity) ? 3 : 4,
+            'start_date' => date('Y-m-d H:i', strtotime($date . ' ' . $slot->start_time)),
+            'end_date' => date('Y-m-d H:i', strtotime($date . ' ' . $slot->end_time)),
+            'slot_id' => $slot->id
         ];
+
         $is_selected = $train_item->trainItemAllocation()->where('client_id', $client->id)->orderBy('id', 'desc')->first();
         if (count($is_selected) == 1) {
             \App\Models\Task::where('id', $is_selected->task->id)->update([
@@ -520,8 +532,8 @@ class Customer extends Controller {
             return view('customer/addtask', $this->data);
         } elseif ($tab == 'show' && $id > 0) {
             $this->data['activity'] = \App\Models\Task::find($id);
-            $this->data['client'] = \App\Models\TaskClient::where('task_id',$id)->first();
-            $this->data['school'] = \App\Models\TaskSchool::where('task_id',$id)->first();
+            $this->data['client'] = \App\Models\TaskClient::where('task_id', $id)->first();
+            $this->data['school'] = \App\Models\TaskSchool::where('task_id', $id)->first();
             return view('customer/view_task', $this->data);
         } else {
             $date = request('taskdate');
@@ -583,7 +595,7 @@ class Customer extends Controller {
         $id = request('id');
         $action = request('action');
         \App\Models\Task::where('id', $id)->update(['status' => $action]);
-       echo '<small style="color: red">Success</small>';
+        echo '<small style="color: red">Success</small>';
     }
 
     public function allocate() {
@@ -661,11 +673,11 @@ class Customer extends Controller {
     public function modules() {
         //    $schemas = $this->data['schools'] = DB::select("SELECT distinct table_schema as schema_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public')");
         //    Remove comment if you want support person to see only schools allocated to them
-      //  if (Auth::user()->department == 1) {
-           // $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public') and schema_name in (select schema_name from users_schools where user_id=" . Auth::user()->id . "  and status=1)");
-     //   } else {
-            $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public') ");
-      //  }
+        //  if (Auth::user()->department == 1) {
+        // $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public') and schema_name in (select schema_name from users_schools where user_id=" . Auth::user()->id . "  and status=1)");
+        //   } else {
+        $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public') ");
+        //  }
 
         $sch = [];
         foreach ($schemas as $schema) {
@@ -957,12 +969,12 @@ class Customer extends Controller {
      * 4. we return range of available dates
      */
     public function getDate($id = null, $default_dates = null) {
-        $user_id = $id = null ? request('user_id') : $id;
+        $user_id = $id = null || (int) $id==0? request('user_id') : $id;
         $task_user = \App\Models\TaskUser::where('user_id', $user_id)->orderBy('id', 'desc')->first();
         $task_date = count($task_user) == 1 ? $task_user->task->end_date : date('Y-m-d');
         $end_date = date('Y-m-d');
         $option = '<option></option>';
-        for ($i = 0; $i <= 10; $i++) {
+        for ($i = 1; $i <= 10; $i++) {
             $date = date('Y-m-d', strtotime('+' . $i . ' days', strtotime($end_date)));
             if (date('D', strtotime($date)) == 'Sat' || date('l', strtotime($date)) == 'Sunday') {
                 continue;
