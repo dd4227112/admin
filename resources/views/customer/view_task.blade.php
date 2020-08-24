@@ -74,7 +74,6 @@
                                                                     if(isset($school) && count($school)){
                                                                         echo '<a href="'. url('sales/profile/'.$school->school_id) .'">'. $school->school->name .' - '. $school->school->type .'</a>';
                                                                     }elseif(isset($client) && count($client)){
-                                                                        echo $client->client->name;
                                                                         echo '<a href="'. url('customer/profile/'.$client->client->username) .'">'. $client->client->name .'</a>';
                                                                     }else{
                                                                         echo '<a href="'. url('customer/profile/'.$activity->client->username) .'">'. $activity->client->name .'</a>';
