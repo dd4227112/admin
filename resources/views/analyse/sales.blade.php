@@ -268,6 +268,7 @@ $no_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.
                                         if(count($schoolz)){
                                             foreach($schoolz as $school){ 
                                                 ?>
+                                                <tr>
                                                 <td><?=$i++?></td>
                                                 <td><?=ucfirst($school->sname)?></td>
                                                 <td><?=ucfirst($school->address)?></td>
@@ -275,7 +276,9 @@ $no_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.
                                                 <td>
                                                 <?php
                                                 echo '<a href="'. url('customer/profile/'.$school->schema_name) .'">View</a>';
-                                                ?></td>
+                                                ?>
+                                                </td>
+                                                </tr>
 
                                       <?php
                                             }
