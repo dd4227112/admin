@@ -263,6 +263,7 @@ $no_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.
                                                 </thead>
                                                 <tbody>
                                                 <?php
+                                                $i = 1;
                                             $schoolz = DB::select('select * from admin.all_setting a WHERE  ' . $where);
                                         if(count($schoolz)){
                                             foreach($schoolz as $school){ 
