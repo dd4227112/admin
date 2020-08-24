@@ -17,7 +17,7 @@ class Guide extends Model
     }
 
     public function createdBy() {
-        return $this->belongsTo(\App\Model\User::class,'created_by','id');
+        return $this->belongsTo(\App\Models\User::class,'created_by','id')->withDefault(['firstname'=>'Not Defined','lastname'=>'Not Defined']);
     }
     
     public function guidePageVisit() {

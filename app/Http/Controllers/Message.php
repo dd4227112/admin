@@ -436,22 +436,22 @@ Kind regards,';
             $karibusms->API_SECRET = $sms->api_secret;
             $result = (object) json_decode($karibusms->check_phone_status());
 //2020-08-06 20:07:28
-            $last_online = $result->last_online;
+            $last_online = isset($result->last_online) ? $result->last_online : date('d-m-Y H:i');
 
             $time = strtotime($last_online);
             $tz_date = strtotime('-7 hours', $time);
 
 
-            $current_time = date('d-m-Y H:i', strtotime('+3 hours',time()));
+            $current_time = date('d-m-Y H:i', strtotime('+3 hours', time()));
             $sms_time = date('d-m-Y H:i', $tz_date);
 
 
             $to_time = strtotime($current_time);
             $from_time = strtotime($sms_time);
             $minutes = round(abs($to_time - $from_time) / 60, 2);
-            
+
             if ((int) $minutes > 120) {
-               // echo $last_online . 'More than 120min the device is offline';
+                // echo $last_online . 'More than 120min the device is offline';
 //                $message = "Hello, Your phone appears to be offline for more than 2 hours. For SMS to be sent from karibuSMS, kindly make sure your phone is connected with internet and you have logged in, or try to logout and login again. Thank you";
 //                $users = DB::table('admin.all_users')->where('schema_name', $sms->schema_name)->where('usertype', 'Admin')->get();
 //                
