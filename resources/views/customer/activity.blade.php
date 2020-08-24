@@ -39,7 +39,7 @@
                             <a class="btn btn-success btn-sm" href="<?= url('customer/activity/add') ?>"> Add New Task</a>
                             <?php
                             if (Auth::user()->role_id == 1) {
-                                $users = \App\Models\User::where('status', 1)->get();
+                                $users = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get();
                                 ?>
                                 <span style="float: right">
                                     <select class="form-control" style="width:300px;"  id='taskdate'>
