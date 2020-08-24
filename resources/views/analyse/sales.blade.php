@@ -243,6 +243,49 @@ $no_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.
                 </div>
             </div>
             <!-- counter-card-3 end -->
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card">
+                        <div class="card-header">
+                        <h5>Monthly On Boarded Schools</h5>
+                        </div>
+                        <div class="card-block">
+                        <div class="table-responsive dt-responsive">
+                                            <table id="dt-ajax-array" class="table table-striped table-bordered nowrap">
+                                                <thead>
+                                                    <tr>
+                                                        <th>No.</th>
+                                                        <th>Client</th>
+                                                        <th>Address</th>
+                                                        <th>Added Date</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                <?php
+                                            $schoolz = DB::select('select * from admin.all_setting a WHERE  ' . $where);
+                                        if(count($schoolz)){
+                                            foreach($schoolz as $school){ 
+                                                ?>
+                                                <td><?=$i++?></td>
+                                                <td><?=ucfirst($school->sname)?></td>
+                                                <td><?=ucfirst($school->address)?></td>
+                                                <td><?=$school->created_at?></td>
+                                                <td>
+                                                <?php
+                                                echo '<a href="'. url('customer/profile/'.$school->schema_name) .'">View</a>';
+                                                ?></td>
+
+                                      <?php
+                                            }
+                                        }
+                                        ?>
+                            </tbody>
+                                </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- Monthly Growth Chart end-->
             <!-- Monthly Growth Chart start-->
             <div class="row">
                 <div class="col-xl-6">
