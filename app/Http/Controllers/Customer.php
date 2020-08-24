@@ -520,6 +520,8 @@ class Customer extends Controller {
             return view('customer/addtask', $this->data);
         } elseif ($tab == 'show' && $id > 0) {
             $this->data['activity'] = \App\Models\Task::find($id);
+            $this->data['client'] = \App\Models\TaskClient::where('task_id',$id)->first();
+            $this->data['school'] = \App\Models\TaskSchool::where('task_id',$id)->first();
             return view('customer/view_task', $this->data);
         } else {
             $date = request('taskdate');
