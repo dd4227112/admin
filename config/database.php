@@ -54,12 +54,11 @@ return [
         ],
 
         'pgsql' => [
-            'driver' => 'pgsql',
-            'host' => '127.0.0.1',
+            'host' => '51.91.251.252',
             'port' =>5432,
-           'database' => 'back22may',
+            'database' => 'shulesoft_2017',
             'username' => 'postgres',
-            'password' =>'newpassword',
+            'password' =>'Jesus_ShuleSoft@2020_y',
             'charset' => 'utf8',
             'prefix' => '',
             'schema' =>'admin',

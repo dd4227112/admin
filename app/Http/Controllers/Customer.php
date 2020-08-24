@@ -582,8 +582,8 @@ class Customer extends Controller {
     public function updateTask() {
         $id = request('id');
         $action = request('action');
-        \App\Models\Task::where('id', $id)->update(['action' => $action]);
-        return redirect()->back()->with('success', 'success');
+        \App\Models\Task::where('id', $id)->update(['status' => $action]);
+       echo '<small style="color: red">Success</small>';
     }
 
     public function allocate() {
