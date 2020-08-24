@@ -520,6 +520,8 @@ class Customer extends Controller {
             return view('customer/addtask', $this->data);
         } elseif ($tab == 'show' && $id > 0) {
             $this->data['activity'] = \App\Models\Task::find($id);
+            $this->data['client'] = \App\Models\TaskClient::where('task_id',$id)->first();
+            $this->data['school'] = \App\Models\TaskSchool::where('task_id',$id)->first();
             return view('customer/view_task', $this->data);
         } else {
             $date = request('taskdate');
@@ -580,8 +582,8 @@ class Customer extends Controller {
     public function updateTask() {
         $id = request('id');
         $action = request('action');
-        \App\Models\Task::where('id', $id)->update(['action' => $action]);
-        return redirect()->back()->with('success', 'success');
+        \App\Models\Task::where('id', $id)->update(['status' => $action]);
+       echo '<small style="color: red">Success</small>';
     }
 
     public function allocate() {

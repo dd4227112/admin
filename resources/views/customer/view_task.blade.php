@@ -45,8 +45,8 @@
                                                         <table class="table m-0">
                                                             <tbody>
                                                                 <tr>
-                                                                    <th scope="row">Deadline Date</th>
-                                                                    <th>{{ $activity->date }} <?= $activity->time ?></th>
+                                                                    <th scope="row">Task Period</th>
+                                                                    <th>Start {{ $activity->start_date }} to  <?= $activity->end_date ?></th>
                                                                 </tr>
                                                                 <tr>
                                                                     <th scope="row">Staff Members</th>
@@ -69,11 +69,19 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <th> Client Name</th>
-                                                                    <th><?= $activity->client->name ?></th>
+                                                                    <th><?php
+                                                                    if(isset($school) && count($school)){
+                                                                        echo '<a href="'. url('sales/profile/'.$school->school_id) .'">'. $school->school->name .' - '. $school->school->type .'</a>';
+                                                                    }elseif(isset($client) && count($client)){
+                                                                        echo '<a href="'. url('customer/profile/'.$client->client->username) .'">'. $client->client->name .'</a>';
+                                                                    }else{
+                                                                        echo '<a href="#">'. $activity->client->name .'</a>';
+                                                                    }
+                                                                     ?></th>
                                                                 </tr>
                                                                 <tr>
                                                                     <th scope="row">Task Type</th>
-                                                                    <th> <?= $activity->taskType->name ?></th>
+                                                                    <th> <?= $activity->taskType->name ?></th> 
                                                                 </tr>
                                                                 <tr>
                                                                     <th>Modules</th>
@@ -114,14 +122,16 @@
                                         <div class="card-block user-desc">
                                             <div class="view-desc">
                                                 <h4>About This Activity </h4>
-                                                <span style="float: right;"><b>Task Excuted:</b>
+                                                <p style="float: right;"> <span style="float: right;" id="added_"> </span>
+                                                <b>Task Excuted:</b>
                                                     <select id="action" class="form-control">
-                                                        <option value='{{ $activity->action }}'>{{ $activity->action }}</option>
-                                                        <option value='Yes'>Yes</option>
-                                                        <option value='No'>No</option>
+                                                        <option value='{{ $activity->action }}'>{{ $activity->status }}</option>
+                                                        <option value='Complete'>Complete</option>
+                                                        <option value='Pending'>Pending</option>
+                                                        <option value='on progress'>Progress</option>
                                                         <option value='Resolved'>Resolved</option>
                                                     </select>
-                                                </span>
+                                                </p>
                                                 <p> <?= $activity->activity ?></p>
 
                                             </div>
@@ -192,7 +202,7 @@
             data: "id=" + <?= $activity->id ?> + "&action=" + val,
             dataType: "html",
             success: function (data) {
-                window.location.href = '#';
+                $('#added_').html(data);
             }
         });
     });
