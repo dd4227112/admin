@@ -306,37 +306,20 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                 <!-- Monthly Growth Chart end-->
                 <!-- Google Chart start-->
                 <div class="col-xl-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Sales Distribution Activities</h5>
-                        </div>
-                        <div class="card-block">
-                            <?php
-                            $sales_group = "select count(*),b.name as task_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id WHERE  a.task_type_id in (select id from admin.task_types where department=2) and " . $where . " group by task_name";
-                            echo $insight->createChartBySql($sales_group, 'task_name', 'Sales Group Activity', 'bar', false);
-                            ?>
-                        </div>
-                    </div>
+                <div class="card">
+                                        <div class="card-header">
+                                            <h5>Website Join Requests</h5>
+                                        </div>
+                                        <div class="card-block">
+                                            <?php
+                                            $new_schools = 'select count(*),extract(month from created_at) as month from admin.website_join_shulesoft a
+                                                where extract(year from a.created_at)=' . $year . '  group by month order by month';
+                                            echo $insight->createChartBySql($new_schools, 'month', 'Website Requests', 'line', false);
+                                            ?>
+                                        </div>
+                                    </div>
                 </div>
             </div>
-            <!-- Google Chart end-->
-            <!-- Recent Order table start -->
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Sales Distribution Activities</h5>
-                        </div>
-                        <div class="card-block">
-                            <?php
-                            $sales_group = "select count(*),b.name as task_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id WHERE   a.user_id in (select id from admin.users where department=2) and " . $where . " group by task_name";
-                            echo $insight->createChartBySql($sales_group, 'task_name', 'Sales Group Activity', 'bar', false);
-                            ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Google Chart end-->
             <!-- Recent Order table start -->
 
 
@@ -355,63 +338,27 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                             </div>
                         </div>
                     </div>
-
-                        <div class="col-lg-6 col-sm-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5>Daily Tasks</h5>
-                                <label class="label label-success"><?= $on ?></label>
-                            </div>
-                    <div class="card-block">
-                        <div class="table-responsive">
-                            <table class="table dataTable">
-                                <thead>
-                                                <tr class="text-capitalize">
-
-                                                    <th>Activity</th>
-                                                    <th>Count</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php
-                                                $sqls = "select count(a.*),b.name,b.id from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.task_types c on c.id=a.task_type_id where $where  and c.department=2  group by b.name,b.id ";
-                                                $tasks = DB::select($sqls);
-                                                foreach ($tasks as $task) {
-                                                    ?>
-                                                    <tr>
-
-                                                    <td><a href="<?=url('customer/taskGroup/task/'.$task->id)?>"><?= $task->name ?></a></td>
-                                                        <td><?= $task->count ?></td>
-
-                                                    </tr>
-                                                <?php } ?>
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
+                    <div class="col-xl-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Sales Distribution Activities</h5>
+                        </div>
+                        <div class="card-block">
+                            <?php
+                            $sales_group = "select count(*),b.name as task_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id WHERE  a.task_type_id in (select id from admin.task_types where department=2) and " . $where . " group by task_name";
+                            echo $insight->createChartBySql($sales_group, 'task_name', 'Sales Group Activity', 'bar', false);
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                        
+                                           
                             </div>
                         </div>
                       </div>
                     </div>
                 </div>
-                <!-- Todo card end -->
-                <div class="row">
-                            <div class="col-lg-12">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h5>Website Join Requests</h5>
-                                        </div>
-                                        <div class="card-block">
-                                            <?php
-                                            $new_schools = 'select count(*),extract(month from created_at) as month from admin.website_join_shulesoft a
-                                                where extract(year from a.created_at)=' . $year . '  group by month order by month';
-                                            echo $insight->createChartBySql($new_schools, 'month', 'Website Requests', 'line', false);
-                                            ?>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+             
                     <!-- .events-content -->
                     <!-- Todo card start -->
                     <div class="row">
