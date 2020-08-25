@@ -127,15 +127,15 @@ group by ownership');
         $id = request()->segment(3);
         if ($id == 'shulesoft') {
             $this->data['title'] = "Schools Alreardy Onboarded";
-            $user = Auth::user()->id;            
+            $user = Auth::user()->id;
             $this->data['branch'] = $branch = \App\Models\PartnerUser::where('user_id', $user)->first();
             $this->data['all_schools'] = \App\Models\School::whereIn('ward_id', \App\Models\Ward::where('district_id', $branch->branch->district_id)->get(['id']))->whereNotNull('schema_name')->orderBy('schema_name', 'ASC')->get();
         }
         if ($id == 'bank') {
-            $user = Auth::user()->id;            
+            $user = Auth::user()->id;
             $this->data['branch'] = $branch = \App\Models\PartnerUser::where('user_id', $user)->first();
             $this->data['title'] = "Schools With Bank Payment Integrarion";
-            $this->data['all_schools'] = DB::select('select * from admin.schools WHERE schema_name IN (select distinct schema_name from admin.all_bank_accounts where refer_bank_id=22) and ward_id in (select id from admin.wards where district_id = '. $branch->branch->district_id.')');
+            $this->data['all_schools'] = DB::select('select * from admin.schools WHERE schema_name IN (select distinct schema_name from admin.all_bank_accounts where refer_bank_id=22) and ward_id in (select id from admin.wards where district_id = ' . $branch->branch->district_id . ')');
         }
         return view('sales.school_status', $this->data);
     }
@@ -260,12 +260,12 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
                 break;
             case 'tasks':
 
-                $user_id=(int) request('user_id') > 0 ? request('user_id'):Auth::user()->id;
+                $user_id = (int) request('user_id') > 0 ? request('user_id') : Auth::user()->id;
                 $sql = "select t.id,substring(t.activity from 1 for 75) as activity,t.date, t.start_date,t.end_date, t.created_at,p.school_name,p.client,u.firstname||' '||u.lastname as user_name, substring(tt.name from 1 for 10) as task_name, t.status,t.priority from admin.tasks t left join (
                     select a.task_id, c.name as school_name,'Client' as client from admin.tasks_clients a join admin.clients c on c.id=a.client_id
                     UNION ALL
-                SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks_schools b join admin.schools s on s.id=b.school_id ) p on p.task_id=t.id join admin.users u on u.id=t.user_id LEFT join admin.task_types tt on tt.id=t.task_type_id where u.id=" .$user_id. " OR t.id in (select task_id from admin.tasks_users where user_id=" .$user_id . " )";
-                return $this->ajaxTable('tasks', ['activity', 'u.firstname', 'p.school_name', 't.created_at', 't.date', 'u.lastname','t.start_date','t.end_date'], $sql);
+                SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks_schools b join admin.schools s on s.id=b.school_id ) p on p.task_id=t.id join admin.users u on u.id=t.user_id LEFT join admin.task_types tt on tt.id=t.task_type_id where u.id=" . $user_id . " OR t.id in (select task_id from admin.tasks_users where user_id=" . $user_id . " )";
+                return $this->ajaxTable('tasks', ['activity', 'u.firstname', 'p.school_name', 't.created_at', 't.date', 'u.lastname', 't.start_date', 't.end_date'], $sql);
 
                 break;
             case 'school_status':
@@ -515,27 +515,33 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
                 $sat_add_time = (int) $time + 48 * 60;
                 $start_date = date('Y-m-d H:i', strtotime("+{$sat_add_time} minutes", strtotime(request('implementation_date'))));
             }
-            
+
             if (date('l', strtotime($start_date)) == 'Sunday') {
                 // its sunday, so add 24 hours
                 $sun_add_time = (int) $time + 24 * 60;
                 $start_date = date('Y-m-d H:i', strtotime("+{$sun_add_time} minutes", strtotime(request('implementation_date'))));
             }
             //later we will check if user attend, holiday etc
-            
+
             $end_date = date('Y-m-d H:i', strtotime("+{$section->time} minutes", strtotime($start_date)));
+
+            $slot = \App\Models\Slot::find(request('slot_id' . $section->id));
+            $date = date('Y-m-d', strtotime(request('slot_date' . $section->id)));
+            
             $data = [
                 'activity' => $section->content,
                 'date' => date('Y-m-d', strtotime($start_date)),
                 'user_id' => request('support_user_id'),
-                'start_date' => $start_date,
-                'end_date' => $end_date
+                'task_type_id' => preg_match('/data/i', $section->content) ? 3 : 4,
+                'start_date' => date('Y-m-d H:i', strtotime($date . ' ' . $slot->start_time)),
+                'end_date' => date('Y-m-d H:i', strtotime($date . ' ' . $slot->end_time)),
+                'slot_id' => $slot->id
             ];
             $time += $section->time;
             $task = \App\Models\Task::create($data);
             DB::table('tasks_users')->insert([
                 'task_id' => $task->id,
-                'user_id' => request('support_user_id'),
+                'user_id' => (int) request('person' . $section->id),
             ]);
 
             DB::table('tasks_clients')->insert([
@@ -544,11 +550,11 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
             ]);
             \App\Models\TrainItemAllocation::create([
                 'task_id' => $task->id,
-                'client_id'=>$client_id,
-                'user_id' => request('support_user_id'),
+                'client_id' => $client_id,
+                'user_id' => (int) request('person' . $section->id),
                 'train_item_id' => $section->id,
                 'school_person_allocated' => request("train_item{$section->id}"),
-                'max_time'=>$section->time
+                'max_time' => $section->time
             ]);
         }
     }
