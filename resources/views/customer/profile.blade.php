@@ -1429,7 +1429,7 @@ task_group = function () {
         $.ajax({
             url: '<?= url('customer/editTrain') ?>/null',
             method: 'get',
-            dataType: 'json',
+            dataType: 'html',
             data: {task_id: task_id, value: val, attr: data_attr},
             success: function (data) {
                 // $(this).after(data).addClass('label label-success');
