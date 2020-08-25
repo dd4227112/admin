@@ -29,8 +29,6 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
     $out_of = \collect(DB::select('select count(*) from admin.all_setting a   '.$where_setting))->first()->count;
     $active_customers = \collect(DB::select('select count(distinct "schema_name") from admin.all_login_locations a  WHERE "table" in (\'setting\',\'users\',\'teacher\') and ' . $where))->first()->count;
     $total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=1) and ' . $where .' and a.status not in(\'Pending\',\'New\')'))->first()->count;
-    $yes_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=1) and action=(\'Yes\') and ' . $where))->first()->count;
-    $no_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=1) and action=(\'No\') and ' . $where))->first()->count;
 
 ?>
 </div>
@@ -53,13 +51,12 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
 
         <div class="page-body">
             <div class="row">
-                <div class="col-lg-4 text-left">
-                   <p class="btn btn-success"> Yes - <?= $yes_activity ?> out of <?= $total_activity ?> <span style="padding-left: 40px;"> No - <?= $no_activity ?>  out of <?= $total_activity ?> </span></p>
+                <div class="col-lg-3 text-left">
 
                 </div>
-                <div class="col-lg-4"></div>
+                <div class="col-lg-3"></div>
 
-                <div class="col-lg-4 text-right">
+                <div class="col-lg-6 text-right">
                     <select class="form-control" id="check_custom_date">
                         <option value="today" <?= $today == 1 ? 'selected' : '' ?>>Today</option>
                         <option value="custom"  <?= $today == 0 ? 'selected' : '' ?>>Custom</option>

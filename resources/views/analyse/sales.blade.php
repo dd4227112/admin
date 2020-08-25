@@ -23,10 +23,8 @@ $sqls1 = "select count(a.*),b.username from admin.tasks a join admin.tasks_clien
                                                 WHERE a.user_id in (select id from admin.users where department=2) and $where group by b.name";
 $taskss = DB::select($sqls1);
 
-$total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and ' . $where))->first()->count;
-$yes_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and action=(\'Yes\') and ' . $where))->first()->count;
-$no_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and action=(\'No\') and ' . $where))->first()->count;
-?><div class="main-body">
+$total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and ' . $where))->first()->count;?>
+<div class="main-body">
     <div class="page-wrapper">
         <div class="page-header">
             <div class="page-header-title">
@@ -50,7 +48,6 @@ $no_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.
 
         <div class="row">
             <div class="col-lg-4">
-                <p class="btn btn-success"> Yes - <?= $yes_activity ?> out of <?= $total_activity ?> <span style="padding-left: 40px;"> No - <?= $no_activity ?>  out of <?= $total_activity ?> </span></p>
             </div>
             <div class="col-lg-4"></div>
             <div class="col-lg-4 text-right">
@@ -345,7 +342,7 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
 
             <!-- Recent Order table end -->
             <div class="row">
-            <div class="col-lg-6 col-sm-12">
+                    <div class="col-lg-6 col-sm-12">
                         <div class="card">
                             <div class="card-header">
                                 <h5>Sales Person Activity Ratio</h5>
@@ -356,8 +353,8 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                                 echo $insight->createChartBySql($sales_distribution, 'user_name', 'Sales Activity', 'bar', false);
                                 ?>
                             </div>
-                          </div>
                         </div>
+                    </div>
 
                         <div class="col-lg-6 col-sm-12">
                         <div class="card">
@@ -365,7 +362,7 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                                 <h5>Daily Tasks</h5>
                                 <label class="label label-success"><?= $on ?></label>
                             </div>
-                            <div class="card-block">
+                    <div class="card-block">
                         <div class="table-responsive">
                             <table class="table dataTable">
                                 <thead>
@@ -397,7 +394,24 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                         </div>
                       </div>
                     </div>
-
+                </div>
+                <!-- Todo card end -->
+                <div class="row">
+                            <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5>Website Join Requests</h5>
+                                        </div>
+                                        <div class="card-block">
+                                            <?php
+                                            $new_schools = 'select count(*),extract(month from created_at) as month from admin.website_join_shulesoft a
+                                                where extract(year from a.created_at)=' . $year . '  group by month order by month';
+                                            echo $insight->createChartBySql($new_schools, 'month', 'Website Requests', 'line', false);
+                                            ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                     <!-- .events-content -->
                     <!-- Todo card start -->
                     <div class="row">
@@ -465,23 +479,7 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                     <!-- User activities chart end -->
                 </div>
 
-            <!-- Todo card end -->
-          <div class="row">
-              <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Website Join Requests</h5>
-                        </div>
-                        <div class="card-block">
-                            <?php
-                            $new_schools = 'select count(*),extract(month from created_at) as month from admin.website_join_shulesoft a
-where extract(year from a.created_at)=' . $year . '  group by month order by month';
-                            echo $insight->createChartBySql($new_schools, 'month', 'Website Requests', 'line', false);
-                            ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          
         </div>
     </div>
 </div>
