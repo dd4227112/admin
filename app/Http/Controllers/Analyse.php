@@ -48,7 +48,15 @@ class Analyse extends Controller {
 //       created_at < date_trunc('week', CURRENT_TIMESTAMP)
 //      )"))->first()->aggregate;
         //$this->data['log_graph'] = $this->createBarGraph();
-        if(Auth::user()->department == 10){
+        if(Auth::user()->id == 36){
+            $id = Auth::user()->id;
+           // $this->data['branch'] = $branch = \App\Models\PartnerUser::where('user_id', $id)->first();
+            $this->data['use_shulesoft'] = DB::table('admin.all_setting')->count() - 5;
+            $this->data['nmb_schools'] = DB::table('admin.nmb_schools')->count();
+            $this->data['schools'] = DB::table('admin.schools')->where('ownership','<>', 'Government')->get();
+            $this->data['nmb_shulesoft_schools'] = \collect(DB::select("select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22"))->first()->count;
+            return view('analyse.nmb', $this->data);
+        }elseif(Auth::user()->department == 10 && Auth::user()->id != 36){
             $id = Auth::user()->id;
             $this->data['branch'] = $branch = \App\Models\PartnerUser::where('user_id', $id)->first();
             $this->data['use_shulesoft'] = \App\Models\School::whereIn('ward_id', \App\Models\Ward::where('district_id', $branch->branch->district_id)->get(['id']))->whereNotNull('schema_name')->count();

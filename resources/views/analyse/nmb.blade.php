@@ -93,7 +93,12 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
+                        <?php
+                        if(isset($branch) && count($branch)){ ?>
                             <h5>List of Private Schools in <?=$branch->branch->district->name?>, <?= $branch->branch->district->region->name?></h5>
+                        <?php }else{ ?>
+                            <h5>List of Private Schools in <?=Auth::user()->name?></h5>
+                      <?php  } ?>
                         </div>
                         <div class="card-block">
                                     <div class="table-responsive">
@@ -121,8 +126,8 @@
                                             echo '<td>'.$school->type.'</td>';
                                             echo '<td>';
                                             if($school->schema_name != ''){
-                                             $ss = DB::table('admin.all_bank_accounts')->where('schema_name', $school->schema_name)->first();
-                                             if(count($ss) ==0){
+                                             $school_with_bank = DB::table('admin.all_bank_accounts')->where('schema_name', $school->schema_name)->first();
+                                             if(count($school_with_bank) == 0){
                                                 echo '<span class="btn btn-info btn-sm"> Partial onboarded </span>';
                                              }else{
                                                 echo '<span class="btn btn-success btn-sm"> Fully onboarded </span>';
@@ -147,6 +152,11 @@
                 </div>
                     </div>
                   </div>
+                 <?php if(isset($branch) && count($branch)){ 
+                    // echo bcrypt('khairaatislamic20');
+                  }else{ ?>
+
+                  
                   <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
@@ -168,7 +178,7 @@
                         </div>
                     </div>
                 </div>
-
+                  <?php } ?>
                 </div>
             </div>
         </div>
