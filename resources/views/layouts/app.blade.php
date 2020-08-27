@@ -585,8 +585,15 @@ function toast(message) {
                                                         <li><a href="offline.html" data-i18n="nav.extra-components.offline">Offline</a></li>
                                                     </ul>-->
                         </li>
-
-                        <?php if (can_access('manage_marketing') || Auth::user()->id == 37) { ?>
+                        <?php if (Auth::user()->role_id == 14){ ?>
+                        <li class="nav-item">
+                            <a href="<?= url('sales/school') ?>">
+                                <i class="ti-list "></i>
+                                <span data-i18n="nav.extra-components.main"> List of Schools</span>
+                            </a>
+                        </li>
+                        <?php } ?>
+                        <?php if (can_access('manage_marketing')) { ?>
                             <li class="nav-item">
                                 <a href="#!">
                                     <i class="ti-bell "></i>
