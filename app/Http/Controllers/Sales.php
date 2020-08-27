@@ -407,7 +407,7 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
 
         $this->data['school'] = $school = DB::table('admin.schools')->where('id', $school_id)->first();
         $username = preg_replace('/[^a-z]/', null, strtolower($school->name));
-        $this->data['staffs'] = DB::table('users')->where('status', 1)->get();
+        $this->data['staffs'] = DB::table('users')->where('status', 1)->where('role_id', '<>', 7)->get();
         if ($_POST) {
             $code = rand(343, 32323);
 
@@ -541,9 +541,9 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
                 'date' => date('Y-m-d', strtotime($start_date)),
                 'user_id' => request('support_user_id'),
                 'task_type_id' => preg_match('/data/i', $section->content) ? 3 : 4,
-                'start_date' => date('Y-m-d H:i', strtotime($date . ' ' . $slot->start_time)),
-                'end_date' => date('Y-m-d H:i', strtotime($date . ' ' . $slot->end_time)),
-                'slot_id' => $slot->id
+                'start_date' => date('Y-m-d H:i', strtotime($date . ' ' . isset($slot->start_time) ? $slot->start_time : '11:01:00')),
+                'end_date' => date('Y-m-d H:i', strtotime($date . ' ' . isset($slot->end_time) ? $slot->end_time : '12:00:00')),
+                'slot_id' => (int)$slot->id > 0 ? $slot->id : 5
             ];
             $time += $section->time;
             $task = \App\Models\Task::create($data);
