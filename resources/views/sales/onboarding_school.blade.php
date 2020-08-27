@@ -145,7 +145,7 @@
                                     <td>
 
                                         <select class="task_group" name="slot_date<?= $training->id ?>" id="slot_for<?= $training->id ?>" data-task-id="<?= $training->id ?>"><?= $customer->getDate($staff->id) ?></select>
-                                        <select data-attr="start_date" class="slot" id="start_slot<?= $training->id ?>" name="slot_id<?= $training->id ?>"></select>
+                                        <input type="time" data-attr="start_date" class="slot" id="start_slot<?= $training->id ?>" name="slot_id<?= $training->id ?>">
                                     </td>
                                     <td>
 
@@ -187,7 +187,7 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Contract Start Date</label>
+                <label class="col-sm-2 col-form-label">Contract End Date</label>
                 <div class="col-sm-10">
                     <input type="date" class="form-control" name="end_date" required="">
                 </div>
