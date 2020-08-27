@@ -41,12 +41,12 @@ class Kernel extends ConsoleKernel {
             (new Message())->sendSms();
         })->everyMinute();
 
-       $schedule->call(function () {
-         (new Message())->checkPhoneStatus();
-       })->hourly();
-       
-       
-       
+        $schedule->call(function () {
+            (new Message())->checkPhoneStatus();
+        })->hourly();
+
+
+
         $schedule->call(function () {
             $this->curlServer(['action' => 'payment'], 'http://51.77.212.234:8081/api/cron');
             (new Message())->sendEmail();
@@ -66,8 +66,6 @@ class Kernel extends ConsoleKernel {
             $this->sendTaskReminder();
             // $this->sendSequenceReminder();
         })->dailyAt('04:40'); // Eq to 07:40 AM 
-
-
 //        $schedule->call(function() {
 //            //send login reminder to parents in all schema
 //            $this->sendLoginReminder();
@@ -93,6 +91,11 @@ class Kernel extends ConsoleKernel {
             //  (new HomeController())->createTodayReport();
             (new Background())->officeDailyReport();
         })->dailyAt('14:50'); // Eq to 17:50 h 
+
+        $schedule->call(function () {
+            //  (new HomeController())->createTodayReport();
+            (new Background())->schoolMonthlyReport();
+        })->monthlyOn(28, '06:00');
     }
 
     function checkPaymentPattern($user, $schema) {
