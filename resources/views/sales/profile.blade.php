@@ -227,7 +227,8 @@
                 <div class="col-md-12 timeline-dot">
                   <?php
                   $tasks = \App\Models\Task::whereIn('id', \App\Models\TaskSchool::where('school_id', $school->id)->get(['task_id']))->orderBy('created_at', 'desc')->get();
-                  // dd($tasks);
+                  if(count($tasks)){
+                    // dd($tasks);
                   echo '<input type="hidden" value="' . count($tasks) . '" id="task_count"/>';
                   foreach ($tasks as $task) {
                     ?>
@@ -306,7 +307,7 @@
                         </div>
                       </div>
                     </div>
-                    <?php } ?>
+                    <?php } } ?>
 
                   </div>
                 </div>
@@ -317,7 +318,7 @@
                   <div class="card-block user-box">
                     <?php
                     $contacts = $school->contacts()->get();
-
+                      if(count($contacts)){
                     foreach ($contacts as $contact) {
                       ?>
                       <div class="media m-b-10">
@@ -332,7 +333,8 @@
                           <div class="text-muted social-designation"><?= $contact->email ?></div>
                         </div>
                       </div>
-                    <?php } ?>
+                    <?php }
+                    } ?>
 
 
                     <a href="#" class="waves-effect" data-toggle="modal" data-target="#large-Modal-add-person">Add Key Person</a>
@@ -526,6 +528,7 @@
           $school_info = DB::table('schools')->where('id', $school->id)->first();
 
           $vars = get_object_vars($school_info);
+          if(count($vars)){
           ?>
           <?php
           foreach ($vars as $key => $variable) {
@@ -550,6 +553,7 @@
               <?php
             }
           }
+        }
           ?>
         </div>
         <div class="modal-footer">
