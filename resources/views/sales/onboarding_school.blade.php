@@ -145,7 +145,7 @@
                                     <td>
 
                                         <select class="task_group" name="slot_date<?= $training->id ?>" id="slot_for<?= $training->id ?>" data-task-id="<?= $training->id ?>"><?= $customer->getDate($staff->id) ?></select>
-                                        <input type="time" data-attr="start_date" class="slot" id="start_slot<?= $training->id ?>" name="slot_id<?= $training->id ?>">
+                                        <select type="text" data-attr="start_date" class="slot" id="start_slot<?= $training->id ?>"  name="slot_id<?= $training->id ?>"></select>
                                     </td>
                                     <td>
 
