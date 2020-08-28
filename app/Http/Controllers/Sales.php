@@ -602,7 +602,7 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
     public function customerSuccess() {
 
         $id = request()->segment(3);
-        if ((int) $id == 2) {
+     //    if ((int) $id == 2) {
             $this->data['trial_code'] = request()->segment(4);
             $this->data['client'] = DB::table('admin.clients')->where('id', $this->data['trial_code'])->first();
             if (count($this->data['client']) == 1) {
@@ -611,7 +611,7 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
 
                 die('Invalid URL');
             }
-        } /*else {
+         /* }else {
             $client_id = request()->segment(4);
             $this->data['client'] = $client = \App\Models\Client::where('id', $client_id)->first();
             $this->data['siteinfos'] = DB::table($this->data['client']->username . '.setting')->first();
