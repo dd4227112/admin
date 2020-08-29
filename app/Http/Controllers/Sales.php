@@ -484,7 +484,7 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
                     $booking = DB::table('admin.invoices')->where('order_id', $order_id)->first();
                 }
                 $this->scheduleActivities($client_id);
-                return redirect('sales/customerSuccess/1/' . $booking->id);
+                return redirect('sales/customerSuccess/1/' . $$client_id);
             } else {
                 //create a trial code for this school
                 $trial_code = $client_id . time();
@@ -495,7 +495,7 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
                 $this->send_sms($user->phone, $message, 1);
                 $this->send_email($user->email, 'Success: School Onboarded Successfully', $message);
                 $this->scheduleActivities($client_id);
-                return redirect('sales/customerSuccess/2/' . $trial_code);
+                return redirect('sales/customerSuccess/2/' . $client_id);
             }
             return redirect('https://' . $username . '.shulesoft.com');
         }
@@ -602,16 +602,16 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
     public function customerSuccess() {
 
         $id = request()->segment(3);
-        if ((int) $id == 2) {
+     //    if ((int) $id == 2) {
             $this->data['trial_code'] = request()->segment(4);
-            $this->data['client'] = DB::table('admin.clients')->where('code', $this->data['trial_code'])->first();
+            $this->data['client'] = DB::table('admin.clients')->where('id', $this->data['trial_code'])->first();
             if (count($this->data['client']) == 1) {
                 return view('sales.customer_success', $this->data);
             } else {
 
                 die('Invalid URL');
             }
-        } else {
+         /* }else {
             $client_id = request()->segment(4);
             $this->data['client'] = $client = \App\Models\Client::where('id', $client_id)->first();
             $this->data['siteinfos'] = DB::table($this->data['client']->username . '.setting')->first();
@@ -623,7 +623,7 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
             }
 
             return view('account.invoice.shulesoft', $this->data);
-        }
+        } */
     }
 
     public function curlPrivate($fields, $url = null) {
