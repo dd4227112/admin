@@ -95,7 +95,7 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             //  (new HomeController())->createTodayReport();
             (new Background())->schoolMonthlyReport();
-        })->monthlyOn(28, '06:00');
+        })->monthlyOn(29, '06:36');
     }
 
     function checkPaymentPattern($user, $schema) {
