@@ -199,19 +199,33 @@
                           </div>
                           <div class="form-group">
                             <div class="row">
+                                                                                <div class="col-md-6">
+                                                                                <strong> Start Date</strong> 
+                                                                                <input type="datetime-local" class="form-control" placeholder="Deadline" name="start_date">
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <strong> End Date </strong> 
+                                                                                <input type="datetime-local" class="form-control" placeholder="Time" name="end_date">
+                                                                            </div>
+                                                                        </div>
+                                                                      </div>
 
-                              <div class="col-md-6">
-                                Activity Deadline Date
-                                <input type="date" class="form-control" placeholder="Deadline" name="date">
-                              </div>
-                              <div class="col-md-6">
-                                Deadline Time
-                                <input type="time" class="form-control" placeholder="Time" name="time">
-                              </div>
-                            </div>
-                          </div>
 
+                                                                  <div class="form-group">
+                                                                                <div class="row">
 
+                                                                                    <div class="col-md-12">
+                                                                                        <strong> Task Executed Successfully</strong> 
+                                                                                    <select name="status" class="form-control" required>
+
+                                                                                        <option value='new'> Select Task Status Here...</option>
+                                                                                        <option value='complete'> Yes and Completed </option>
+                                                                                        <option value='on progress'> Yes but on Progress </option>
+                                                                                        <option value='schedule'> Not yet (Schedule) </option>
+                                                                                    </select>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
 
                         </div>
                         <div class="modal-footer">
@@ -232,36 +246,34 @@
                   echo '<input type="hidden" value="' . count($tasks) . '" id="task_count"/>';
                   foreach ($tasks as $task) {
                     ?>
-                    <div class="social-timelines p-relative o-hidden" id="removetag<?= $task->id ?>">
-                      <div class="row timeline-right p-t-35">
-                        <div class="col-xs-2 col-sm-1">
-                          <div class="social-timelines-left">
-                            <img class="img-circle timeline-icon" src="<?= Auth::user()->photo ?>" alt="">
-                          </div>
-                        </div>
-                        <div class="col-xs-10 col-sm-11">
-                          <div class="card m-0">
-                            <div class="card-header">
-                              Select
-                              <span class="dropdown-toggle addon-btn text-muted f-right service-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" role="tooltip"></span>
-                              <div class="dropdown-menu dropdown-menu-right b-none services-list">
-                                <a class="dropdown-item" href="#" onmousedown="removeTag(<?= $task->id ?>)">Remove tag</a>
-                                <a class="dropdown-item" href="#">Report Photo</a>
-                                <a class="dropdown-item" href="#">Hide From Timeline</a>
-                                <a class="dropdown-item" href="#">Blog User</a>
-                              </div>
-                            </div>
-
+                   
+                   <div class="social-timelines p-relative o-hidden" id="removetag<?= $task->id ?>">
+                                                                    <div class="row timeline-right p-t-35">
+                                                                        <div class="col-xs-2 col-sm-1">
+                                                                            <div class="social-timelines-left">
+                                                                                <img class="img-circle timeline-icon" src="<?= Auth::user()->photo ?>" alt="">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-xs-10 col-sm-11 p-l-5 p-b-35">
+                                                                            <div class="card m-0">
+                                                                                <span class="dropdown-toggle addon-btn text-muted f-right service-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" role="tooltip">Actions</span>
+                                                                                <div class="dropdown-menu dropdown-menu-right b-none services-list">
+                                                                                    <a class="dropdown-item" href="#" onmousedown="removeTag(<?= $task->id ?>)">Remove tag</a>
+                                                                                    <a class="dropdown-item" href="#">Report Photo</a>
+                                                                                    <a class="dropdown-item" href="#">Hide From Timeline</a>
+                                                                                    <a class="dropdown-item" href="#">Blog User</a>
+                                                                                </div>
 
 
                             <div class="card-block">
                               <div class="timeline-details">
 
                                 <div class="social-time text-muted">
-                                  <?= date("d M Y", strtotime($task->created_at)) ?>
+                                  <?= date("d M Y", strtotime($task->created_at)) ?> (<code><?=$task->status?></code>)
                                 </div>
                                 <div class="chat-header"><?= $task->user->name ?></div>
                                 <p class="text-muted"><?= $task->activity ?></p>
+                                <p>Start Date- <?=$task->start_date?>  &nbsp; &nbsp; | &nbsp; &nbsp; End Date - <?=$task->end_date?></p>
                               </div>
 
                               <div class="card-block user-box">

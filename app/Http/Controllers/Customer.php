@@ -393,7 +393,7 @@ class Customer extends Controller {
     public function profile() {
         $school = $this->data['schema'] = request()->segment(3);
         $id = request()->segment(4);
-        $this->data['shulesoft_users'] = \App\Models\User::all();
+        $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get();
 
         $is_client = 0;
         if ($school == 'school') {
@@ -431,7 +431,7 @@ class Customer extends Controller {
                         . '<ul>'
                         . '<li>Task: ' . $task->activity . '</li>'
                         . '<li>Type: ' . $task->taskType->name . '</li>'
-                        . '<li>Deadline: ' . $task->date . '</li>'
+                        . '<li>Deadline: ' . $task->start_date . '</li>'
                         . '</ul>';
                 $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
             }
@@ -833,7 +833,20 @@ class Customer extends Controller {
             }
         }
     }
-
+    public function resetPassword() {
+        $schema = request()->segment(3);
+            if ($schema != '') {
+                $pass = $schema . rand(5697, 33);
+                $username = $schema.date('Hi');
+                DB::table($schema . '.setting')->update(['password' => bcrypt($pass), 'username' => $username]);
+                $this->data['school'] =  DB::table($schema . '.setting')->first();
+                $this->data['schema'] =  $schema;
+                $this->data['pass'] =  $pass;
+                return view('customer.view', $this->data)->with('success', 'Password Updated Successfully');
+            }else{
+                return redirect()->back()->with('warning', 'Please Define Specific School');
+            }
+    }
     public function map() {
         $schema = request()->segment(3);
         $school_id = request()->segment(4);
