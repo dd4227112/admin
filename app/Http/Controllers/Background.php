@@ -352,10 +352,10 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
         $key_id = DB::table('public.sms_keys')->first()->id;
         foreach ($users as $user) {
             $message = 'Dear Sir/Madam '
-                    . 'Kindly find ' . number_to_words(date('m')) . ' Month Report to analyse your school performance since January '
+                    . 'Kindly find ' . number_to_words(date('m')) . ' Month Report from 1st Jan to ' . date('d M Y') . ' and analyse your school performance '
                     . 'specifically on Students/parents/teachers Registered this Year and per Month, Amount of Fee collected Total and on Each month,'
                     . 'Academic performances per classes, subjects and teachers, Best students/teachers etc.'
-                    . 'Click this link to open https://' . $user->schema_name . '.shulesoft.com/report/quarter/' . $user->sid . '  . Dont share this message. Thank you';
+                    . 'Open this link to open https://' . $user->schema_name . '.shulesoft.com/report/quarter/' . $user->sid . '  . Dont share this message. Thank you';
             DB::table('public.sms')->insert([
                 'body' => $message,
                 'phone_number' => $user->phone,
@@ -367,7 +367,7 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
                 $subject = 'ShuleSoft ' . number_to_words(date('m')) . ' Months Report';
                 $obj = array('body' => $message, 'subject' => $subject, 'email' => $user->email);
 
-                DB::table($user->schema_name . 'email')->insert($obj);
+                DB::table($user->schema_name . '.email')->insert($obj);
             }
         }
     }
