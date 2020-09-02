@@ -987,7 +987,7 @@ class Customer extends Controller {
         $task_date = count($task_user) == 1 ? $task_user->task->end_date : date('Y-m-d');
         $end_date = date('Y-m-d');
         $option = '<option></option>';
-        for ($i = 1; $i <= 10; $i++) {
+        for ($i = 0; $i <= 10; $i++) {
             $date = date('Y-m-d', strtotime('+' . $i . ' days', strtotime($end_date)));
             if (date('D', strtotime($date)) == 'Sat' || date('l', strtotime($date)) == 'Sunday') {
                 continue;
