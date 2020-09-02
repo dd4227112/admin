@@ -59,7 +59,17 @@
                             <!-- Nav tabs -->
                             <ul class="nav nav-tabs  tabs" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active" data-toggle="tab" href="#home1" role="tab">Tasks</a>
+                                    <a class="nav-link active" data-toggle="tab" href="#home1" role="tab">All Tasks</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#Completed" role="tab">Completed</a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#Progress" role="tab">On Progress</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#Pending" role="tab">Pending</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" data-toggle="tab" href="#profile1" role="tab">Calender & Schedules</a>
@@ -100,6 +110,44 @@
                                         </div>
                                     </div>
                                 </div>
+                                <!-- Completed Tasks -->
+                                <div class="tab-pane" id="Completed" role="tabpanel">
+                                <div class="table-responsive dt-responsive">
+                                            <table id="dt-ajax-array" class="table table-striped table-bordered nowrap">
+                                                <thead>
+                                                    <tr>
+                                                        <th>No.</th>
+                                                        <th>Task type</th>
+                                                        <th>Activity</th>
+                                                        <th>End Date</th>
+                                                        <th>Status</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                <?php
+                                                $i = 1;
+
+                                                $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->orderBy('created_at', 'desc')->get();
+                                                if (count($tasks) > 0) {
+                                                    foreach ($tasks as $act){
+                                                     ?>
+                                                  <tr>
+                                                  <td><?=$i++?></td>
+                                                  <td><?=$act->type?></td>
+                                                  <td><?=$act->activity?>..</td>
+                                                  <td><?=$act->end_date?></td>
+                                                  <td> <a href="<?=url('customer/activity/show/'.$act->id)?>">View</a> </td>
+                                                </tr>
+                                                  <?php } ?>
+                                                  <?php } ?>
+                                                </tbody>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                <!-- Completed Tasks -->
+
                                 <div class="tab-pane" id="profile1" role="tabpanel">
                                     <p class="m-0"><div id='calendar'></div></p>
                                 </div>

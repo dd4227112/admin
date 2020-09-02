@@ -828,7 +828,7 @@ class Customer extends Controller {
             $schema = request('schema_name');
             $status = request('status');
             if ((int) $status > 0) {
-                DB::table($schema . '.setting')->update(['status' => $status]);
+                DB::table($schema . '.setting')->update(['school_status' => $status]);
                 return redirect()->back()->with('success', $schema . ' Status Updated successfuly');
             }
         }

@@ -121,13 +121,13 @@ function check_status($table, $where = null) {
                                                                 <div class="txt-primary">School Status</div>
                                                                 <?php
                                                                 $st = DB::table($schema . '.setting')->first();
-                                                                if ($st->status == 1) {
+                                                                if ($st->school_status == 1) {
                                                                     echo '<div class="btn btn-primary">Active Paid</div>';
-                                                                } elseif ($st->status == 2) {
+                                                                } elseif ($st->school_status == 2) {
                                                                     echo '<div class="btn btn-success">Active</div>';
-                                                                } elseif ($st->status == 3) {
+                                                                } elseif ($st->school_status == 3) {
                                                                     echo '<div class="btn btn-warning">Resale</div>';
-                                                                } elseif ($st->status == 4) {
+                                                                } elseif ($st->school_status == 4) {
                                                                     echo '<div class="btn btn-warning">Inactive</div>';
                                                                 } else {
                                                                     echo '<div>not defined</div>';
