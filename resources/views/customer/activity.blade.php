@@ -112,8 +112,8 @@
                                 </div>
                                 <!-- Completed Tasks -->
                                 <div class="tab-pane" id="Completed" role="tabpanel">
-                                <div class="table-responsive dt-responsive">
-                                            <table id="dt-ajax-array" class="table table-striped table-bordered nowrap">
+                                <div class="table-responsive">
+                                            <table class="table table-striped table-bordered nowrap">
                                                 <thead>
                                                     <tr>
                                                         <th>No.</th>
@@ -128,21 +128,21 @@
                                                 <?php
                                                 $i = 1;
 
-                                                $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->orderBy('created_at', 'desc')->get();
+                                                $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'complete')->orderBy('created_at', 'desc')->get();
                                                 if (count($tasks) > 0) {
                                                     foreach ($tasks as $act){
                                                      ?>
                                                   <tr>
                                                   <td><?=$i++?></td>
-                                                  <td><?=$act->type?></td>
-                                                  <td><?=$act->activity?>..</td>
+                                                  <td><?=$act->tasktype->name?></td>
+                                                  <td><?=substr($act->activity, 0, 60)?></td>
+                                                  <td><?=$act->end_date?></td>
                                                   <td><?=$act->end_date?></td>
                                                   <td> <a href="<?=url('customer/activity/show/'.$act->id)?>">View</a> </td>
                                                 </tr>
                                                   <?php } ?>
                                                   <?php } ?>
                                                 </tbody>
-                                                </tfoot>
                                             </table>
                                         </div>
                                     </div>
