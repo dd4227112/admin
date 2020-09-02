@@ -112,15 +112,15 @@
                                 </div>
                                 <!-- Completed Tasks -->
                                 <div class="tab-pane" id="Completed" role="tabpanel">
+                                
                                 <div class="table-responsive">
-                                            <table class="table table-striped table-bordered nowrap">
+                                    <table class="table dataTable">
                                                 <thead>
                                                     <tr>
                                                         <th>No.</th>
                                                         <th>Task type</th>
                                                         <th>Activity</th>
                                                         <th>End Date</th>
-                                                        <th>Status</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -137,17 +137,114 @@
                                                   <td><?=$act->tasktype->name?></td>
                                                   <td><?=substr($act->activity, 0, 60)?></td>
                                                   <td><?=$act->end_date?></td>
+                                                  <td> <a href="<?=url('customer/activity/show/'.$act->id)?>">View</a> </td>
+                                                </tr>
+                                                  <?php } ?>
+                                                  <?php } ?>
+                                                </tbody>
+                                                <tfooter>
+                                                    <tr>
+                                                        <th>No.</th>
+                                                        <th>Task type</th>
+                                                        <th>Activity</th>
+                                                        <th>End Date</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </tfooter>
+                                            </table>
+                                        </div>
+                                    </div>
+                                <!-- Completed Tasks -->
+<!-- Completed Tasks -->
+<div class="tab-pane" id="Progress" role="tabpanel">
+                                
+                                <div class="table-responsive">
+                                    <table class="table dataTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>No.</th>
+                                                        <th>Task type</th>
+                                                        <th>Activity</th>
+                                                        <th>End Date</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                <?php
+                                                $i = 1;
+
+                                                $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'on progress')->orderBy('created_at', 'desc')->get();
+                                                if (count($tasks) > 0) {
+                                                    foreach ($tasks as $act){
+                                                     ?>
+                                                  <tr>
+                                                  <td><?=$i++?></td>
+                                                  <td><?=$act->tasktype->name?></td>
+                                                  <td><?=substr($act->activity, 0, 60)?></td>
                                                   <td><?=$act->end_date?></td>
                                                   <td> <a href="<?=url('customer/activity/show/'.$act->id)?>">View</a> </td>
                                                 </tr>
                                                   <?php } ?>
                                                   <?php } ?>
                                                 </tbody>
+                                                <tfooter>
+                                                    <tr>
+                                                        <th>No.</th>
+                                                        <th>Task type</th>
+                                                        <th>Activity</th>
+                                                        <th>End Date</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </tfooter>
                                             </table>
                                         </div>
                                     </div>
                                 <!-- Completed Tasks -->
+                                <!-- Completed Tasks -->
+                                <div class="tab-pane" id="Pending" role="tabpanel">
+                                
+                                <div class="table-responsive">
+                                    <table class="table dataTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>No.</th>
+                                                        <th>Task type</th>
+                                                        <th>Activity</th>
+                                                        <th>End Date</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                <?php
+                                                $i = 1;
 
+                                                $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'new')->orderBy('created_at', 'desc')->get();
+                                                if (count($tasks) > 0) {
+                                                    foreach ($tasks as $act){
+                                                     ?>
+                                                  <tr>
+                                                  <td><?=$i++?></td>
+                                                  <td><?=$act->tasktype->name?></td>
+                                                  <td><?=substr($act->activity, 0, 60)?></td>
+                                                  <td><?=$act->end_date?></td>
+                                                  <td> <a href="<?=url('customer/activity/show/'.$act->id)?>">View</a> </td>
+                                                </tr>
+                                                  <?php } ?>
+                                                  <?php } ?>
+                                                </tbody>
+                                                <tfooter>
+                                                    <tr>
+                                                        <th>No.</th>
+                                                        <th>Task type</th>
+                                                        <th>Activity</th>
+                                                        <th>End Date</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </tfooter>
+                                            </table>
+                                        </div>
+                                    </div>
+                                <!-- Completed Tasks -->
                                 <div class="tab-pane" id="profile1" role="tabpanel">
                                     <p class="m-0"><div id='calendar'></div></p>
                                 </div>

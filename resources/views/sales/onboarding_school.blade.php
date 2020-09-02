@@ -7,7 +7,13 @@
     <div class="card-block">
         <h4 class="sub-title">Basic Inputs</h4>
         <form action="<?= url('sales/onboard/' . $school->id) ?>" method="POST" enctype="multipart/form-data">
-
+        <div class="form-group row">
+        <label class="col-sm-2 col-form-label">School Username</label>
+                <div class="col-sm-10">
+                <input type="username" class="form-control" placeholder="Add School username eg, canossa" name="username" required="" autofocus>
+                
+                </div>
+            </div>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Sales Person</label>
                 <div class="col-sm-10">

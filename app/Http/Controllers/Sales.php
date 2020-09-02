@@ -431,7 +431,7 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
                 'email_verified' => 0,
                 'phone_verified' => 0,
                 'created_by' => Auth::user()->id,
-                'username' => $username
+                'username' => request('username') !='' ? request('username') : $username
             ]);
 //client school
             DB::table('admin.client_schools')->insert([
