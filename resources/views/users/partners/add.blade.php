@@ -1,14 +1,9 @@
 @extends('layouts.app')
+@section('content')
 <?php $root = url('/') . '/public/' ?>
 
-        <!-- Style.css -->
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css">
-
-        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2.css">
-
-        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2-bootstrap.css">
-        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css">    
-@section('content')
+<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
+  
 <div class="main-body">
   <div class="page-wrapper">
     <!-- Page-header start -->

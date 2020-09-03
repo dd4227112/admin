@@ -295,9 +295,11 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
             'user_id' => $user_id,
             'activity' => $commit_message,
             'date' => date('Y-m-d'),
+            'start_date' => date("Y-m-d H:i:s", strtotime("-1 hours")),
+            'end_date' => date("Y-m-d H:i:s"),
             'to_user_id' => $user_id,
             'task_type_id' => $task_id,
-            'action' => 'Yes',
+            'status' => 'complete',
             'time' => '1',
         ];
 

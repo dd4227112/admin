@@ -50,7 +50,7 @@
                           <th>Name</th>
                           <th>Email</th>
                           <th>Phone</th>
-                          <th><?=$set >0 ? 'Staffs' : 'Branches'; ?></th>
+                          <th><?=$set > 0 ? 'Staffs' : 'Branches'; ?></th>
                           <th>Schools</th>
                           <th>Action</th>
                         </tr>
@@ -79,9 +79,12 @@
                           </td>
                             <?php } ?>
                           <td>
-                          <?php if($set > 0 ){ $path = 'Staffs'; }else{  $path = 'partners'; }?>
+                          <?php 
+                                if($set > 0 ){ $path = 'Staffs'; }else{  $path = 'partners'; }
+                                $school == 1 ? $school1 = $partner->id.'/branch' :  $school1 = $partner->id;
+                            ?>
                           <a class="btn btn-info btn-sm" href="{{ url('users/'. $path . '/'.$partner->id) }}"><?=$path?></a>
-                          <a class="btn btn-info btn-sm" href="{{ url('users/showpartner/'.$partner->id) }}">View Schools</a>
+                          <a class="btn btn-info btn-sm" href="{{ url('users/partnerSchool/'.$school1) }}">View Schools</a>
                           <a class="btn btn-warning btn-sm" href="{{ url('users/deletepartner/'.$partner->id) }}">Delete</a>
                           </td>
                         </tr>
