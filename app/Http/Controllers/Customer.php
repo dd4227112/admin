@@ -237,15 +237,15 @@ class Customer extends Controller {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
-
-        DB::table('constant.guides')->insert([
-            'permission_id' => $request->permission_id,
-            'content' => $request->content,
+    public function createGuide() {
+$obj=[
+            'permission_id' => request()->permission_id,
+            'content' => str_replace('src="../../storage/images','src="'.url('/').'/storage/images',request()->content),
             'created_by' => Auth::user()->id,
             'language' => 'eng'
-        ]);
-        return redirect('support/guide');
+        ];
+        DB::table('constant.guides')->insert($obj);
+        return redirect('customer/guide');
     }
 
     public function psms($param) {
@@ -288,7 +288,14 @@ class Customer extends Controller {
             $page = 'edit_guide';
             if ($_POST) {
                 $request = request()->all();
-                \App\Model\Guide::find(request('guide_id'))->update($request);
+
+               $obj=[
+            'permission_id' => request()->permission_id,
+            'content' => str_replace('src="../../../storage/images','src="'.url('/').'/storage/images',request()->content),
+            "is_edit" => request()->is_edit,
+            'language' => 'eng'
+        ];
+                \App\Model\Guide::find(request('guide_id'))->update($obj);
                 return redirect('customer/guide');
             }
         } else {
@@ -1020,5 +1027,7 @@ class Customer extends Controller {
         }
         return $view;
     }
+
+
 
 }

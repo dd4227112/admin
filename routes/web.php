@@ -33,6 +33,7 @@ Route::get('/student/getschools/null', function() {
         die(json_encode(DB::select($sql)));
     }
 });
+
 //dd(createRoute());
 if (createRoute() != NULL) {
 
