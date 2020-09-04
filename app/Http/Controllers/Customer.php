@@ -400,7 +400,7 @@ $obj=[
     public function profile() {
         $school = $this->data['schema'] = request()->segment(3);
         $id = request()->segment(4);
-        $this->data['shulesoft_users'] = \App\Models\User::all();
+        $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get();
 
         $is_client = 0;
         if ($school == 'school') {
@@ -438,7 +438,7 @@ $obj=[
                         . '<ul>'
                         . '<li>Task: ' . $task->activity . '</li>'
                         . '<li>Type: ' . $task->taskType->name . '</li>'
-                        . '<li>Deadline: ' . $task->date . '</li>'
+                        . '<li>Deadline: ' . $task->start_date . '</li>'
                         . '</ul>';
                 $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
             }
@@ -835,12 +835,25 @@ $obj=[
             $schema = request('schema_name');
             $status = request('status');
             if ((int) $status > 0) {
-                DB::table($schema . '.setting')->update(['status' => $status]);
+                DB::table($schema . '.setting')->update(['school_status' => $status]);
                 return redirect()->back()->with('success', $schema . ' Status Updated successfuly');
             }
         }
     }
-
+    public function resetPassword() {
+        $schema = request()->segment(3);
+            if ($schema != '') {
+                $pass = $schema . rand(5697, 33);
+                $username = $schema.date('Hi');
+                DB::table($schema . '.setting')->update(['password' => bcrypt($pass), 'username' => $username]);
+                $this->data['school'] =  DB::table($schema . '.setting')->first();
+                $this->data['schema'] =  $schema;
+                $this->data['pass'] =  $pass;
+                return view('customer.view', $this->data)->with('success', 'Password Updated Successfully');
+            }else{
+                return redirect()->back()->with('warning', 'Please Define Specific School');
+            }
+    }
     public function map() {
         $schema = request()->segment(3);
         $school_id = request()->segment(4);
@@ -981,7 +994,7 @@ $obj=[
         $task_date = count($task_user) == 1 ? $task_user->task->end_date : date('Y-m-d');
         $end_date = date('Y-m-d');
         $option = '<option></option>';
-        for ($i = 1; $i <= 10; $i++) {
+        for ($i = 0; $i <= 10; $i++) {
             $date = date('Y-m-d', strtotime('+' . $i . ' days', strtotime($end_date)));
             if (date('D', strtotime($date)) == 'Sat' || date('l', strtotime($date)) == 'Sunday') {
                 continue;

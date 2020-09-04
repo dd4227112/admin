@@ -93,10 +93,11 @@
 
                                                 <div class="col-md-6">
                                                     <strong> Task Executed Successfully</strong> 
-                                                    <select name="action" class="form-control" required>
-                                                        <option value=''> Select Task Status Here...</option>
-                                                        <option value='Yes'> Yes and Completed </option>
-                                                        <option value='No'> Yes but on Progress </option>
+                                                    <select name="status" class="form-control" required>
+                                                        <option value='new'> Select Task Status Here...</option>
+                                                        <option value='new'> New Task </option>
+                                                        <option value='complete'> Yes and Completed </option>
+                                                        <option value='on progress'> Yes but on Progress </option>
                                                         <option value='schedule'> Not yet (Schedule) </option>
                                                     </select>
                                                 </div>

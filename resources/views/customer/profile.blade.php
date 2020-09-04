@@ -121,13 +121,13 @@ function check_status($table, $where = null) {
                                                                 <div class="txt-primary">School Status</div>
                                                                 <?php
                                                                 $st = DB::table($schema . '.setting')->first();
-                                                                if ($st->status == 1) {
+                                                                if ($st->school_status == 1) {
                                                                     echo '<div class="btn btn-primary">Active Paid</div>';
-                                                                } elseif ($st->status == 2) {
+                                                                } elseif ($st->school_status == 2) {
                                                                     echo '<div class="btn btn-success">Active</div>';
-                                                                } elseif ($st->status == 3) {
+                                                                } elseif ($st->school_status == 3) {
                                                                     echo '<div class="btn btn-warning">Resale</div>';
-                                                                } elseif ($st->status == 4) {
+                                                                } elseif ($st->school_status == 4) {
                                                                     echo '<div class="btn btn-warning">Inactive</div>';
                                                                 } else {
                                                                     echo '<div>not defined</div>';
@@ -240,8 +240,8 @@ function check_status($table, $where = null) {
                                             <div class="tab-pane active" id="timeline" aria-expanded="false">
                                                 <div class="row">
                                                     <div class="card-block">
-                                                        <!--  <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#large-Modal">Create Task</button>-->
-                                                        <a href="<?= url('Customer/activity/add') ?>" class="btn btn-primary waves-effect">Create Task</a>
+                                                         <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#large-Modal">Create Task</button>
+                                                        <!-- <a href="<?= url('Customer/activity/add') ?>" class="btn btn-primary waves-effect">Create Task</a> -->
                                                         <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
                                                             <div class="modal-dialog modal-lg" role="document">
                                                                 <div class="modal-content">
@@ -257,7 +257,7 @@ function check_status($table, $where = null) {
                                                                                 Create a task for this school with implementation deadline</span>
 
                                                                             <div class="form-group">
-                                                                                <textarea class="form-control" placeholder="Create Task" name="activity"></textarea>
+                                                                                <textarea class="form-control" rows="4" placeholder="Create Task" name="activity"></textarea>
                                                                             </div>
                                                                             <div class="form-group">
                                                                                 <div class="row">
@@ -282,7 +282,7 @@ function check_status($table, $where = null) {
                                                                                         Person Allocated to do
                                                                                         <select name="to_user_id" class="form-control select2">
                                                                                             <?php
-                                                                                            $staffs = DB::table('users')->where('status', 1)->get();
+                                                                                            $staffs = DB::table('users')->where('status', 1)->where('role_id', '<>', 7)->get();
                                                                                             if (count($staffs) > 0) {
                                                                                                 foreach ($staffs as $staff) {
                                                                                                     ?>
@@ -298,15 +298,14 @@ function check_status($table, $where = null) {
                                                                             </div>
                                                                             <div class="form-group">
                                                                                 <div class="row">
-
-                                                                                    <div class="col-md-6">
-                                                                                        Deadline Date
-                                                                                        <input type="date" class="form-control" placeholder="Deadline" name="date">
-                                                                                    </div>
-                                                                                    <div class="col-md-6">
-                                                                                        Deadline Time
-                                                                                        <input type="time" class="form-control" placeholder="Time" name="time">
-                                                                                    </div>
+                                                                                <div class="col-md-6">
+                                                                                <strong> Start Date</strong> 
+                                                                                <input type="datetime-local" class="form-control" placeholder="Deadline" name="start_date">
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <strong> End Date </strong> 
+                                                                                <input type="datetime-local" class="form-control" placeholder="Time" name="end_date">
+                                                                            </div>
                                                                                 </div>
                                                                             </div>
 
@@ -330,13 +329,15 @@ function check_status($table, $where = null) {
                                                                             <div class="form-group">
                                                                                 <div class="row">
 
-                                                                                    <div class="col-md-6">
+                                                                                    <div class="col-md-12">
                                                                                         <strong> Task Executed Successfully</strong> 
-                                                                                        <select name="action" class="form-control" required>
-                                                                                            <option value=''> Select Task Status Here...</option>
-                                                                                            <option value='Yes'> Yes </option>
-                                                                                            <option value='No'> No </option>
-                                                                                        </select>
+                                                                                    <select name="status" class="form-control" required>
+
+                                                                                        <option value='new'> Select Task Status Here...</option>
+                                                                                        <option value='complete'> Yes and Completed </option>
+                                                                                        <option value='on progress'> Yes but on Progress </option>
+                                                                                        <option value='schedule'> Not yet (Schedule) </option>
+                                                                                    </select>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -383,53 +384,54 @@ function check_status($table, $where = null) {
                                                                                             <?= $task->user->firstname ?> - <span class="text-muted"><?= date("d M Y", strtotime($task->created_at)) ?></span>
                                                                                         </div>
                                                                                         <p class="text-muted"><?= $task->activity ?></p>
+                                                                                        <p>Start Date- <?=$task->start_date?>  &nbsp; &nbsp; | &nbsp; &nbsp; End Date - <?=$task->end_date?></p>
+
                                                                                     </div>
 
                                                                                     <div class="user-box">
-                                                                                        <div class="p-b-30"> <span class="f-14"><a href="#">What have been done</a></span></div>
-                                                                                        <?php
-                                                                                        $comments = $task->taskComments()->get();
-                                                                                        if (count($comments) > 0) {
-                                                                                            foreach ($comments as $comment) {
-                                                                                                ?>
-                                                                                                <div class="media m-b-1" style="margin: 0px; padding: 0px">
-                                                                                                    <a class="media-left" href="#">
-                                                                                                        <img class="media-object img-circle m-r-2" src="<?= $root ?>assets/images/avatar-1.png" alt="Image">
-                                                                                                    </a>
-                                                                                                    <div class="media-body b-b-muted social-client-description">
-                                                                                                        <div class="chat-header"><?= $comment->user->firstname ?> - <span class="text-muted"><?= date('d M Y', strtotime($comment->created_at)) ?></span></div>
-                                                                                                        <p class="text-muted"><?= $comment->content ?></p>
-                                                                                                    </div>
-                                                                                                </div>
+                                                                                        
+                                <?php
+                                $comments = $task->taskComments()->get();
+                                if (count($comments) > 0) { ?>
+                                        <div class="p-b-30"> <span class="f-14"><a href="#">What have been done</a></span></div>
+                                  <?php
+                                  foreach ($comments as $comment) {
+                                    ?>
+                                    <div class="media" style="padding-bottom: 2px;">
+                                      <a class="media-left" href="#">
+                                        <img class="media-object img-circle m-r-20" src="<?=$root.'/assets/images/avatar-2.png'; ?>" alt="Image">
+                                      </a>
+                                      <div class="media-body b-b-muted social-client-description">
+                                        <div class="chat-header"><?= $comment->user->name ?><span class="text-muted"><?= date('d M Y', strtotime($comment->created_at)) ?></span></div>
+                                        <p class="text-muted"><?= $comment->content ?></p>
+                                      </div>
+                                    </div>
 
-                                                                                                <?php
-                                                                                            }
-                                                                                        }
-                                                                                        ?>
-                                                                                        <div class="new_comment<?= $task->id ?>"></div>
-                                                                                        <div class="media">
-                                                                                            <a class="media-left" href="#">
-                                                                                                <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-blank.jpg" alt="Image">
-                                                                                            </a>
-                                                                                            <div class="media-body">
-                                                                                                <form class="">
-                                                                                                    <div class="">
-                                                                                                        <textarea rows="5" cols="5" id="task_comment<?= $task->id ?>" class="form-control" placeholder="Write Something here..."></textarea>
-                                                                                                        <div class="text-right m-t-20"><a href="#" class="btn btn-primary waves-effect waves-light" onclick="return false" onmousedown="$.get('<?= url('customer/taskComment/null') ?>', {content: $('#task_comment<?= $task->id ?>').val(), task_id:<?= $task->id ?>}, function (data) {
-                                                                                                                    $('.new_comment<?= $task->id ?>').after(data);
-                                                                                                                    $('#task_comment<?= $task->id ?>').val('')
-                                                                                                                })">Post</a></div>
-                                                                                                    </div>
-                                                                                                </form>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <?php
+                                    <?php
+                                  }
+                                }
+                                ?>
+                                <div class="new_comment<?= $task->id ?>"></div>
+                                <div class="media">
+                                  <a href="#" class="btn btn-success btn-xs right" onclick="return false" onmousedown="$('#comment_area').toggle()"><i class="ti-comments"> </i> Comment  </a>
+                                  <div class="media-body"  id="comment_area" style="display:none">
+                                    <form class="">
+                                      <div class="">
+                                        <textarea rows="5" cols="5" id="task_comment<?= $task->id ?>" class="form-control" placeholder="Write Something here..."></textarea>
+                                        <div class="text-right m-t-20"><a href="#" class="btn btn-primary waves-effect waves-light" onclick="return false" onmousedown="$.get('<?= url('customer/taskComment/null') ?>', {content: $('#task_comment<?= $task->id ?>').val(), task_id:<?= $task->id ?>}, function (data) {
+                                          $('.new_comment<?= $task->id ?>').after(data);
+                                          $('#task_comment<?= $task->id ?>').val('')
+                                        })">Post</a></div>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            </div>
+                            </div>
+                            </div>
+                            </div>                           <?php
                                                             }
                                                         }
                                                         ?>
@@ -482,7 +484,15 @@ function check_status($table, $where = null) {
                                                                                                 }
                                                                                                 ?></td>
                                                                                         </tr>
-
+                                                                                        <tr>
+                                                                                            <th class="social-label b-none p-b-0">School Access</th>
+                                                                                            <td class="social-user-name b-none p-b-0 text-muted">
+                                                                                            <?php
+                                                                                            echo 'Username - '.$school->username.'
+                                                                                            <br><a href="'. url('customer/resetPassword/'. $schema) .'" class="btn btn-success btn-sm" ><i class="icofont icofont-refresh"></i> Reset Password</a>';
+                                                                                                
+                                                                                                ?></td>
+                                                                                        </tr>
                                                                                     <?php } ?>
                                                                                 </tbody></table>
                                                                         </form>
