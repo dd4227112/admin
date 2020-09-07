@@ -37,7 +37,7 @@
            <h3> <?=isset($branch) ? 'List of Schools At '. $branch->name.' Branch' : 'Shulesoft Partners School Lists'; ?> 
 
           <span style="float:right">
-          <a class="btn btn-info btn-sm" href="<?= url('users/addSchool') ?>"> Add New School</a>
+          <a class="btn btn-info btn-sm" href="<?= url('users/addSchool/'.$set) ?>"> Add New School</a>
           </span>
           </h3>
            </div>

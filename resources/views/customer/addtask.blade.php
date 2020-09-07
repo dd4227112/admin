@@ -16,21 +16,16 @@
                         <div class="card-block">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title">Create Task/Activity </h4>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
+                                    <h4 class="modal-title">Create a task with implementation deadline</h4>
                                 </div>
                                 <form action="#" method="post">
                                     <div class="modal-body">
-                                        <span>
-                                            Create a task with implementation deadline</span>
-                                            <br>
+                                        
                                         <div class="form-group">
                                             <strong> Department</strong> 
                                             <select name="dep_id" id="department" class="form-control " required>
                                                 <?php
-                                                $departments = DB::table('departments')->get();
+                                                
                                                 foreach ($departments as $department) {
                                                     ?>
                                                     <option value="<?= $department->id ?>"><?= $department->name ?></option>
@@ -54,10 +49,8 @@
                                             <select name="client_id"  class="form-control select2">
                                                 <option value=''> Select Client Here...</option>
                                                 <?php
-                                                foreach ($clients as $client) {
-                                                    ?>
-                                                    <option value='<?php echo $client->id; ?>'><?= $client->name ?>  (<?= $client->username ?>)</option>
-                                                <?php } ?>
+                                               // foreach ($clients as $client) {
+                                                 ?>
                                             </select>
                                         </div> -->
                                         <div class="form-group">
@@ -66,7 +59,6 @@
                                             <select name="task_type_id" id="task_type_id" required class="form-control select2">
                                                 <option value=''> Select Here...</option>
                                                 <?php
-                                                $types = DB::table('task_types')->where('department', Auth::user()->department)->get();
                                                 foreach ($types as $type) {
                                                     ?>
                                                     <option value="<?= $type->id ?>"> <?= $type->name ?></option>
