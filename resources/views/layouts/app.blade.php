@@ -565,7 +565,9 @@ function toast(message) {
                                     <li>
                                         <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">Schools</a>
                                     </li>
-
+                                    <li>
+                                        <a href="<?= url('sales/salesStatus') ?>" data-i18n="nav.navigate.navbar">Sales Status</a>
+                                    </li>
 
 
                                 </ul>

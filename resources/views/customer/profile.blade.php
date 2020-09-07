@@ -902,8 +902,8 @@ function check_status($table, $where = null) {
                                                                                     } else {
                                                                                         //check terms for this defined year
                                                                                         $terms = DB::table($schema . '.semester')->where('academic_year_id', $academic_year->id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->count();
-
-                                                                                        echo $terms == 0 ? '<b class="label label-warning">No Terms Defined for ' . $level->name . ' (' . date('Y') . ')</b><br/>' : '';
+                                                                                         
+                                                                                        echo $terms == 0 ? '<b class="label label-warning">No Terms Defined for ' . $level->name . ' (' . date('Y') . ')</b><br/>' : '<label class="label label-success">' .$level->name. ' ('. $academic_year->name .') at ' . date('F d, Y', strtotime($academic_year->created_at)) . '</label>';
                                                                                     }
                                                                                 }
                                                                             } else {
