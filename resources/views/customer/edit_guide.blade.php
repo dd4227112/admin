@@ -97,7 +97,7 @@
 
 <!-- This Page JS -->
 <!--<script src="<?= $root ?>plugins/bower_components/tinymce/tinymce.min.js"></script>-->
-<script src="https://cloud.tinymce.com/5/tinymce.min.js"></script>
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5.4.2-90/tinymce.min.js"></script>
  <!--<script>tinymce.init({ selector:'textarea' });</script>-->
 <script type="text/javascript">
 

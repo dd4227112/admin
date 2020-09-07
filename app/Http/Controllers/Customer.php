@@ -467,8 +467,8 @@ class Customer extends Controller {
         $tab = request()->segment(3);
         $id = request()->segment(4);
         if ($tab == 'add') {
-            $this->data['clients'] = \App\Models\Client::all();
-            $this->data['schools'] = \DB::table('schools')->get();
+            $this->data['types'] = DB::table('task_types')->where('department', Auth::user()->department)->get();
+            $this->data['departments'] = DB::table('departments')->get();
             if ($_POST) {
 
                 $data = array_merge(request()->except('to_user_id'), ['user_id' => Auth::user()->id]);

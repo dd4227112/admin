@@ -5,13 +5,33 @@ namespace App\Http\Controllers;
 use App\Jobs\PushSMS;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Charts\SimpleChart;
 use DB;
 use Auth;
 
 class Sales extends Controller {
 
+    /**
+     *
+     * @var Graph title 
+     */
+    public $graph_title = '';
+
+    /**
+     *
+     * @var x axis 
+     */
+    public $x_axis = '';
+
+    /**
+     *
+     * @var y axis 
+     */
+    public $y_axis = '';
+
     public function __construct() {
         $this->middleware('auth');
+        $this->data['insight'] = $this;
     }
 
     /**
@@ -646,5 +666,91 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
         curl_close($ch);
         return $result;
     }
+    public function salesStatus(){
+        $page = request()->segment(3);
+        if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
+            //current day
+            $this->data['today']  = 1;
+            $start_date = date('Y-m-d');
+            $end_date = date('Y-m-d');   
+            $where = '  a.created_at::date=CURRENT_DATE';
+         
+        } else {
+            $this->data['today']  = 2;
+            $start_date = date('Y-m-d', strtotime(request('start')));
+            $end_date = date('Y-m-d', strtotime(request('end')));
+            $where = "  a.created_at::date >='" . $start_date . "' AND a.created_at::date <='" . $end_date . "'";
 
+        }
+        $this->data['schools'] = \App\Models\TaskSchool::whereIn('task_id', \App\Models\Task::whereIn('user_id', \App\Models\User::where('department', 2)->get(['id']))->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date." 00:00:00", $end_date." 23:59:59"])->get(['id']))->orderBy('created_at', 'desc')->get();
+        $this->data['new_schools'] = \App\Models\TaskSchool::whereIn('task_id', \App\Models\Task::whereIn('user_id', \App\Models\User::where('department', 2)->get(['id']))->where('next_action', 'new')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date." 00:00:00", $end_date." 23:59:59"])->get(['id']))->orderBy('created_at', 'desc')->get();
+        $this->data['pipelines'] = \App\Models\TaskSchool::whereIn('task_id', \App\Models\Task::whereIn('user_id', \App\Models\User::where('department', 2)->get(['id']))->where('next_action', 'pipeline')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date." 00:00:00", $end_date." 23:59:59"])->get(['id']))->orderBy('created_at', 'desc')->get();
+        $this->data['closeds'] = \App\Models\TaskSchool::whereIn('task_id', \App\Models\Task::whereIn('user_id', \App\Models\User::where('department', 2)->get(['id']))->where('next_action', 'closed')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date." 00:00:00", $end_date." 23:59:59"])->get(['id']))->orderBy('created_at', 'desc')->get();
+        $this->data['query'] =  'SELECT count(next_action), next_action from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and ' . $where .' group by next_action order by count(next_action) desc';
+        $this->data['types'] =  'SELECT count(b.name), b.name as type from admin.tasks a, admin.task_types b  where a.task_type_id=b.id AND a.user_id in (select id from admin.users where department=2) and ' . $where .' group by b.name order by count(b.name) desc';
+        return view('sales.sales_status.index', $this->data);
+    }
+ public function addLead(){
+    $this->data['schools']  = \App\Models\School::where('ownership', 'Non-Government')->orderBy('schema_name', 'ASC')->get();
+    if ($_POST) {
+
+        $data = array_merge(request()->except('to_user_id'), ['user_id' => Auth::user()->id, 'status'=>'new', 'date' => date('Y-m-d')]);
+        $task = \App\Models\Task::create($data);
+       
+                DB::table('tasks_users')->insert([
+                    'task_id' => $task->id,
+                    'user_id' => Auth::user()->id
+                ]);
+                
+        $schools = request('school_id');
+        if (count($schools) > 0) {
+            foreach ($schools as $school_id) {
+            DB::table('tasks_schools')->insert([
+                'task_id' => $task->id,
+                'school_id' => (int) $school_id
+            ]);
+            }
+        }
+        return redirect('Sales/salesStatus/1')->with('success', 'success');
+    }
+    
+    return view('sales.sales_status.add', $this->data);
+
+ }
+
+    private function createGraph($data, $firstpart, $table, $chart_type, $custom = false, $call_back_sql = false) {
+        $k = [];
+        $l = [];
+        foreach ($data as $value) {
+            array_push($k, $value->{$firstpart});
+            array_push($l, (int) $value->count);
+        }
+        $chart = new SimpleChart;
+        $chart->labels($k);
+        $chart->dataset($this->x_axis == '' ? $table : $this->x_axis, $chart_type, $l);
+
+        if ($call_back_sql != false) {
+            foreach ($call_back_sql as $key => $sql) {
+                $call = $this->createCallBack(DB::select($sql), $firstpart);
+                $chart->labels($call[0]);
+                $chart->dataset($key, $chart_type, $call[1]);
+            }
+        }
+        $title = $this->graph_title == '' ?
+                ucwords('Relationship Between ' . $table . ' and ' . str_replace('_', ' ', $firstpart)) : $this->graph_title;
+        $chart->title($title);
+        $this->data['chart'] = $chart;
+        return $custom == true ? $this->createCustomChart($data, $chart_type, $firstpart) : view('analyse.charts.chart', $this->data);
+    }
+
+        private function createCustomChart($data, $chart_type, $base_column) {
+            $insight = $this;
+            return view('insight.highcharts', compact('data', 'chart_type', 'base_column', 'insight'));
+        }
+
+        public function createChartBySql($sql, $firstpart, $table, $chart_type, $custom = false, $call_back_sql = false) {
+            $data = DB::select($sql);
+            return $this->createGraph($data, $firstpart, $table, $chart_type, $custom, $call_back_sql);
+        }
+    
 }
