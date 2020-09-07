@@ -44,8 +44,8 @@
 
 <div class="modal-content">
     <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-        <h4 class="modal-title" id="exampleModalLabel1">Add New FAQ</h4> </div>
+       
+    </div>
     <form method="post" action="<?= url('customer/guide/edit/'.$guide->id) ?>">
         <div class="modal-body" id="message_result">
 
@@ -113,8 +113,51 @@
                 "save table contextmenu directionality emoticons template paste textcolor"
             ],
             toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
+                     images_upload_url: '<?=url('upload.php')?>',
+  //images_upload_credentials: true,
+  images_upload_base_path: '/storage/images/',
+  images_upload_handler: function (blobInfo, success, failure, progress) {
+    var xhr, formData;
+
+    xhr = new XMLHttpRequest();
+    xhr.withCredentials = false;
+    xhr.open('POST', '<?=url('upload.php')?>');
+
+    xhr.upload.onprogress = function (e) {
+      progress(e.loaded / e.total * 100);
+    };
+
+    xhr.onload = function() {
+      var json;
+
+      if (xhr.status < 200 || xhr.status >= 300) {
+        failure('HTTP Error: ' + xhr.status);
+        return;
+      }
+console.log(xhr);
+     json = JSON.parse(xhr.responseText);
+
+      if (!json || typeof json.location != 'string') {
+        failure('Invalid JSON: ' + xhr.responseText);
+        return;
+      }
+
+      success('<?=url('/')?>/'+json.location);
+    };
+
+    xhr.onerror = function () {
+      failure('Image upload failed due to a XHR Transport error. Code: ' + xhr.status);
+    };
+
+    formData = new FormData();
+    formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+    xhr.send(formData);
+  }
 
         });
+
+
 
     }
 

@@ -91,6 +91,14 @@ WHERE CONSTRAINT_TYPE = '$constrains'
 AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
     }
 
+    public function getDefinedFunctions(){
+        $sql=DB::select("select distinct routine_name from (SELECT routines.routine_name, parameters.data_type, parameters.ordinal_position
+        FROM information_schema.routines
+            LEFT JOIN information_schema.parameters ON routines.specific_name=parameters.specific_name
+        WHERE routines.specific_schema='public'
+        ORDER BY routines.routine_name, parameters.ordinal_position ) a");
+    }
+
     public function loadSchema() {
         return DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant','admin','api','app','skysat','dodoso')");
     }
