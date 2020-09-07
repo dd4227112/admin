@@ -80,7 +80,7 @@
     </div>
 </div>
 
-  <script src="https://cdn.tiny.cloud/1/2gqq0kpparc1h4zbcjfq3x1dujou8embyt6epe0jymn1gibn/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+  <script src="https://cdn.tiny.cloud/1/invalid-origin/tinymce/5.4.2-90/tinymce.min.js" referrerpolicy="origin"></script>
 <script type="text/javascript">
 
     wywg = function () {
