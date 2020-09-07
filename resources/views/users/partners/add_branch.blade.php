@@ -1,6 +1,9 @@
 @extends('layouts.app')
+@section('content')
 <?php $root = url('/') . '/public/' ?>
 
+<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
+  
         <!-- Style.css -->
         <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css">
 
@@ -8,13 +11,12 @@
 
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2-bootstrap.css">
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css">    
-@section('content')
 <div class="main-body">
   <div class="page-wrapper">
     <!-- Page-header start -->
     <div class="page-header">
       <div class="page-header-title">
-        <h4 class="box-title">Company Minute </h4>
+        <h4 class="box-title">Add Partner Branch </h4>
         <span>Register all users who are supposed to be in the system</span>
       </div>
       <div class="page-header-breadcrumb">

@@ -399,13 +399,40 @@ class Users extends Controller {
         $id = request()->segment(3);
         if((int)$id>0){
             $this->data['partners'] = \App\Models\PartnerBranch::where('partner_id', $id)->get();
+            $this->data['school'] = 1;
         }else{
             $this->data['partners'] = \App\Models\Partner::all();
+            $this->data['school'] = 2;
         }
         $this->data['set'] = $id;
         return view('users.partners.index', $this->data);
     }
-    
+ 
+    public function partnerStaff() {
+        $id = request()->segment(3);
+        if((int)$id>0){
+            $this->data['staffs'] = \App\Models\PartnerUser::whereIn('branch_id', \App\Models\PartnerBranch::where('partner_id', $id)->get(['partner_id']))->get();
+        }else{
+            $this->data['staffs'] = \App\Models\PartnerUser::whereIn('branch_id', \App\Models\PartnerBranch::where('partner_id', $id)->get(['partner_id']))->get();
+        }
+        $this->data['set'] = $id;
+        return view('users.partners.staffs', $this->data);
+    }
+
+    public function partnerSchool() {
+        $id = request()->segment(3);
+        $branch = request()->segment(4);
+        if((int)$id>0 && $branch ==''){
+            $this->data['schools'] = \App\Models\PartnerSchool::whereIn('branch_id', \App\Models\PartnerBranch::where('partner_id', $id)->get(['id']))->get();
+        }
+        if((int)$id>0 && $branch !=''){
+            $this->data['schools'] = \App\Models\PartnerSchool::where('branch_id', $id)->get();
+            $this->data['branch'] = \App\Models\PartnerBranch::where('id', $id)->first();
+        }
+        $this->data['set'] = $id;
+        return view('users.partners.schools', $this->data);
+    }
+   
     public function addPartner() {
         $this->data['countries'] = \App\Models\Country::all();
         $id = request()->segment(3);
@@ -432,4 +459,27 @@ class Users extends Controller {
         }
     }
 
+    public function addSchool() {
+        $id = request()->segment(3);
+        $partner = \App\Models\Partner::find($id);
+        $this->data['branches'] = \App\Models\PartnerBranch::where('partner_id', $id)->get();
+        $this->data['regions'] = \App\Models\Region::where('country_id', $partner->country_id)->get();
+            if($_POST){
+
+            }
+        return view('users.partners.add_school', $this->data);
+    }
+   
+    public function getBranch() {
+        $id = request('region');
+        
+        $branches = \App\Models\PartnerBranch::whereIn('district_id', \App\Models\District::where('region_id', $id)->get(['id']))->get();
+        if (count($branches) > 0) {
+            $select = '';
+            foreach ($branches as $branch) {
+                $select .= '<option value="' . $branch->id . '"> ' . $branch->name . '</option>';
+            }
+            echo $select;
+        }
+    }
 }

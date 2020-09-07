@@ -57,9 +57,15 @@ return [
             'driver' => 'pgsql',
             'host' => '51.91.251.252',
             'port' =>5432,
+<<<<<<< HEAD
             'database' => 'shulesoft_2017',
             'username' => 'postgres',
             'password' =>'Jesus_ShuleSoft@2020_',
+=======
+            'database' => 'shulesoft',
+            'username' => 'postgres',
+            'password' =>'tabita',
+>>>>>>> 20b7bf0dc3883d101ffdee5f034efbfcb1f2aeae
             'charset' => 'utf8',
             'prefix' => '',
             'schema' =>'admin',

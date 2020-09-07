@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use DB;
 /**
  * used to perform all CRUD for general database tables
  */
@@ -10,6 +11,15 @@ class General extends Controller
 {
     
     public $table;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct() {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -38,8 +48,8 @@ class General extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        
+;    }
 
     /**
      * Display the specified resource.
@@ -49,7 +59,13 @@ class General extends Controller
      */
     public function show($id)
     {
-        //
+      $this->table=request()->segment(3); 
+      $this->data['headers']=DB::table($this->table)->first();
+       $this->data['contents']=DB::table($this->table)->get();
+       if($_POST){
+        dd(request()->all());
+       }
+       return view('general.show',$this->data);
     }
 
     /**
