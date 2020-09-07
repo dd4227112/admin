@@ -7,7 +7,7 @@
   /*********************************************
    * Change this line to set the upload folder *
    *********************************************/
-  $imageFolder = "storage/images/";
+  $imageFolder = "storage/uploads/images/";
 
   reset ($_FILES);
   $temp = current($_FILES);
