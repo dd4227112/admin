@@ -86,8 +86,10 @@
                                                 <thead>
                                                     <tr>
                                                         <th>No.</th>
+                                                        <th>School</th>
                                                         <th>Task type</th>
                                                         <th>Activity</th>
+                                                          <th>Start Date</th>
                                                         <th>End Date</th>
                                                         <th>Status</th>
                                                         <th>Action</th>
@@ -99,8 +101,10 @@
                                                 <tfoot>
                                                     <tr>
                                                         <th>No</th>
+                                                          <th>School</th>
                                                         <th>Task type</th>
                                                         <th>Activity</th>
+                                                        <th>Start Date</th>
                                                         <th>End Date</th>
                                                         <th>Status</th>
                                                         <th>Action</th>
@@ -283,16 +287,17 @@
                 "columns": [
 
                     {"data": "id"},
+                        {"data": "school_name"},
                     {"data": "task_name"},
                     {"data": "activity"},
-                 //   {"data": "start_date"},
+                   {"data": "start_date"},
                     {"data": "end_date"},
                     {"data": ""},
                     {"data": ""}
                 ],
                 "columnDefs": [
                     {
-                        "targets": 5,
+                        "targets": 7,
                         "data": null,
                         "render": function (data, type, row, meta) {
                        
@@ -301,7 +306,7 @@
 
                     },
                     {
-                        "targets": 4,
+                        "targets": 6,
                         "data": null,
                         "render": function (data, type, row, meta) {
                             var status;

@@ -46,18 +46,18 @@
                                                         <tr>
                                                             <td></td>
                                                             <td class="text-left">
-                                                                <a href="<?php echo url('expense/financial_index/1') ?>">income_statement</a>
+                                                                <a href="<?php echo url('expense/financial_index/1') ?>">income statement</a>
                                                             </td>
 
                                                         </tr>
                                                         <tr>
                                                             <td></td>
-                                                            <td class="text-left"><a href="<?php echo url('expense/financial_index/3'); ?>">cash_flow</a></td>
+                                                            <td class="text-left"><a href="<?php echo url('expense/financial_index/3'); ?>">cash flow</a></td>
 
                                                         </tr>
                                                         <tr>
                                                             <td></td>
-                                                            <td class="text-left">     <a href="<?php echo url('expense/financial_index/2'); ?>">report_balance</td>
+                                                            <td class="text-left">     <a href="<?php echo url('expense/financial_index/2'); ?>">report balance</td>
 
                                                         </tr>
                                                         <tr>
@@ -87,14 +87,10 @@
                                                         <tr>
                                                             <td></td>
                                                             <td class="text-left">
-                                                                <a href=" <?php echo url('account/index'); ?>">non_invoiced_revenue</a></td>
+                                                                <a href=" <?php echo url('account/index'); ?>">non invoiced revenue</a></td>
 
                                                         </tr>
-                                                        <tr>
-                                                            <td></td>
-                                                            <td class="text-left"><a href="<?php echo url('account/wallet'); ?>">Advanced Payment</a></td>
-
-                                                        </tr>
+                                                       
 
                                                     </tbody>
                                                 </table>
@@ -117,15 +113,15 @@
                                                         <tr>
                                                             <td></td>
                                                             <td class="text-left">
-                                                                <a href="<?= url('expense/summary'); ?>">expense revenue</a>
+                                                                <a href="<?= url('account/summary'); ?>">Expense Vs revenue</a>
                                                             </td>
 
                                                         </tr>
-                                                        <tr>
+                                                      <!--   <tr>
                                                             <td></td>
                                                             <td class="text-left"><a href="<?php url('fee_detail/due_amount') ?>"> Due Amount </a></td>
 
-                                                        </tr>
+                                                        </tr> -->
                                                         <tr>
                                                             <td></td>
                                                             <td class="text-left"></td>
