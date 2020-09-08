@@ -9,6 +9,7 @@ use \App\Models\InvoiceFee;
 use Illuminate\Validation\Rule;
 use \App\Models\ReferExpense;
 use \App\Models\Expense;
+use App\Charts\SimpleChart;
 use Excel;
 use DB;
 use Auth;
@@ -22,6 +23,7 @@ class Account extends Controller {
      */
     public function __construct() {
         $this->middleware('auth');
+        $this->data['insight'] = $this;
     }
 
     public function index() {
@@ -697,13 +699,13 @@ class Account extends Controller {
                 $refer_expense = \App\Model\ReferExpense::find(request("from_expense"));
                 $total_amount = 0;
                 if ((int) $refer_expense->predefined && $refer_expense->predefined > 0) {
-                    $total_bank = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_bank from ' . set_schema_name() . ' bank_transactions WHERE bank_account_id=' . $refer_expense->predefined . ' and payment_type_id <> 1 '))->first();
+                    $total_bank = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_bank from admin. bank_transactions WHERE bank_account_id=' . $refer_expense->predefined . ' and payment_type_id <> 1 '))->first();
 
-                    $total_current_assets = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_current from ' . set_schema_name() . ' current_asset_transactions WHERE refer_expense_id=' . $refer_expense->predefined . ''))->first();
+                    $total_current_assets = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_current from admin. current_asset_transactions WHERE refer_expense_id=' . $refer_expense->predefined . ''))->first();
                     $total_amount = $total_bank->total_bank + $total_current_assets->total_current;
                 } else if (strtoupper($refer_expense->name) == 'CASH') {
 
-                    $total_cash_transaction = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_cash from ' . set_schema_name() . ' bank_transactions WHERE  payment_type_id =1'))->first();
+                    $total_cash_transaction = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_cash from admin. bank_transactions WHERE  payment_type_id =1'))->first();
 
                     $total_current_assets_cash = \collect(DB::SELECT('select sum(coalesce(amount,0)) as amount from bank_transactions where payment_type_id=1 '))->first();
                     $total_amount = $total_cash_transaction->total_cash + $total_current_assets_cash->amount;
@@ -877,34 +879,34 @@ class Account extends Controller {
 
         if ($refer_id == 5) {
             if (strtoupper($refer_expense->name) == 'CASH') {
-                $this->data['expenses'] = DB::SELECT('SELECT * from ' . set_schema_name() . ' bank_transactions WHERE  payment_type_id =1 and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . '');
-                $this->data['current_assets'] = DB::SELECT('SELECT * from ' . set_schema_name() . ' current_asset_transactions WHERE refer_expense_id=' . $id . ' and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . ' ');
+                $this->data['expenses'] = DB::SELECT('SELECT * from admin. bank_transactions WHERE  payment_type_id =1 and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . '');
+                $this->data['current_assets'] = DB::SELECT('SELECT * from admin. current_asset_transactions WHERE refer_expense_id=' . $id . ' and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . ' ');
             }
 
             if (strtoupper($refer_expense->name) == 'ACCOUNT RECEIVABLE') {
 
                 $this->data['expenses'] = array();
-                $this->data['current_assets'] = DB::SELECT('SELECT * from ' . set_schema_name() . ' current_asset_transactions WHERE refer_expense_id=' . $id . ' and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . ' ');
-                $this->data['fees'] = DB::select('select sum(a.balance + coalesce((c.amount-c.due_paid_amount),0)) as total_amount,b.name from ' . set_schema_name() . ' invoice_balances a join ' . set_schema_name() . ' student b on b.student_id=a.student_id LEFT JOIN ' . set_schema_name() . ' dues_balance c on c.student_id=b.student_id WHERE  a.balance <> 0.00 AND a."created_at" between \'' . $from_date . '\' AND \'' . $to_date . '\' group by b.name');
-                $this->data['bank_opening_balance'] = \collect(DB::select('select sum(coalesce(opening_balance,0)) as opening_balance from ' . set_schema_name() . ' bank_accounts'))->first();
+                $this->data['current_assets'] = DB::SELECT('SELECT * from admin. current_asset_transactions WHERE refer_expense_id=' . $id . ' and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . ' ');
+                $this->data['fees'] = DB::select('select sum(a.balance + coalesce((c.amount-c.due_paid_amount),0)) as total_amount,b.name from admin. invoice_balances a join admin. student b on b.student_id=a.student_id LEFT JOIN admin. dues_balance c on c.student_id=b.student_id WHERE  a.balance <> 0.00 AND a."created_at" between \'' . $from_date . '\' AND \'' . $to_date . '\' group by b.name');
+                $this->data['bank_opening_balance'] = \collect(DB::select('select sum(coalesce(opening_balance,0)) as opening_balance from admin. bank_accounts'))->first();
             } else if ((int) $bank_id) {
-                $this->data['expenses'] = DB::SELECT('SELECT transaction_id,date,amount,' . "'Bank'" . ' as payment_method , note from ' . set_schema_name() . ' bank_transactions WHERE bank_account_id=' . $bank_id . ' and payment_type_id <> 1 and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . 'order by date desc');
+                $this->data['expenses'] = DB::SELECT('SELECT transaction_id,date,amount,' . "'Bank'" . ' as payment_method , note from admin. bank_transactions WHERE bank_account_id=' . $bank_id . ' and payment_type_id <> 1 and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . 'order by date desc');
 
-                $this->data['current_assets'] = DB::SELECT('SELECT * from ' . set_schema_name() . ' current_asset_transactions WHERE refer_expense_id=' . $id . ' and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . 'order by date desc');
+                $this->data['current_assets'] = DB::SELECT('SELECT * from admin. current_asset_transactions WHERE refer_expense_id=' . $id . ' and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . 'order by date desc');
             } else {
                 $this->data['expenses'] = array();
-                $this->data['current_assets'] = DB::SELECT('SELECT * from ' . set_schema_name() . ' current_asset_transactions WHERE refer_expense_id=' . $id . ' and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . ' ');
+                $this->data['current_assets'] = DB::SELECT('SELECT * from admin. current_asset_transactions WHERE refer_expense_id=' . $id . ' and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . ' ');
             }
         } else if (preg_match('/EC-1001/', $refer_expense->code) && $id = 4 && (int) $refer_expense->predefined > 0) {
-            $sql = 'select sum(b.employer_amount) as amount ,payment_date as date,\'' . $refer_expense->name . '\' as note,\' ' . $refer_expense->name . '\' as name, \'Payroll\' as payment_method,null as "expenseID",extract(month from payment_date)||\'\'||extract(year from payment_date) as ref_no, 1 AS predefined, null as id  from ' . set_schema_name() . 'salaries a join ' . set_schema_name() . 'salary_pensions b on a.id=b.salary_id where b.pension_id=' . $refer_expense->predefined . '  group by a.payment_date UNION ALL (SELECT a.amount, a.date, a.note, b.name, a.payment_method, a."expenseID", a.ref_no, null as predefined, b.id FROM ' . set_schema_name() . 'expense a JOIN ' . set_schema_name() . 'refer_expense b ON a.refer_expense_id=b.id WHERE b.id=' . $refer_expense->id . ' ORDER BY a.date DESC)';
+            $sql = 'select sum(b.employer_amount) as amount ,payment_date as date,\'' . $refer_expense->name . '\' as note,\' ' . $refer_expense->name . '\' as name, \'Payroll\' as payment_method,null as "expenseID",extract(month from payment_date)||\'\'||extract(year from payment_date) as ref_no, 1 AS predefined, null as id  from admin.salaries a join admin.salary_pensions b on a.id=b.salary_id where b.pension_id=' . $refer_expense->predefined . '  group by a.payment_date UNION ALL (SELECT a.amount, a.date, a.note, b.name, a.payment_method, a."expenseID", a.ref_no, null as predefined, b.id FROM admin.expense a JOIN admin.refer_expense b ON a.refer_expense_id=b.id WHERE b.id=' . $refer_expense->id . ' ORDER BY a.date DESC)';
             $this->data['expenses'] = DB::SELECT($sql);
         } else if (strtoupper($refer_expense->name) == 'DEPRECIATION') {
 
-            $this->data['expenses'] = DB::select('select coalesce(sum(b.open_balance::numeric * b.depreciation*(\'' . $to_date . '\'::date-a.date::date)/365),0) as open_balance,sum(amount-amount* a.depreciation *(\'' . $to_date . '\'::date-a.date::date)/365) as total,sum(amount* a.depreciation*(\'' . $to_date . '\'::date-a.date::date)/365) as amount, refer_expense_id,a.date,a.note,a.recipient,b.name,a."expenseID",b.predefined from ' . set_schema_name() . 'expense a join ' . set_schema_name() . 'refer_expense b  on b.id=a.refer_expense_id where b.financial_category_id=4 AND  a.date  <= \'' . $to_date . '\' group by a.refer_expense_id,b.open_balance,a.date,a.note,b.name,a."expenseID",b.predefined  ORDER BY a.date desc');
+            $this->data['expenses'] = DB::select('select coalesce(sum(b.open_balance::numeric * b.depreciation*(\'' . $to_date . '\'::date-a.date::date)/365),0) as open_balance,sum(amount-amount* a.depreciation *(\'' . $to_date . '\'::date-a.date::date)/365) as total,sum(amount* a.depreciation*(\'' . $to_date . '\'::date-a.date::date)/365) as amount, refer_expense_id,a.date,a.note,a.recipient,b.name,a."expenseID",b.predefined from admin.expense a join admin.refer_expense b  on b.id=a.refer_expense_id where b.financial_category_id=4 AND  a.date  <= \'' . $to_date . '\' group by a.refer_expense_id,b.open_balance,a.date,a.note,b.name,a."expenseID",b.predefined  ORDER BY a.date desc');
             $this->data['depreciation'] = 1;
         } else {
 
-            //$this->data['expenses'] = DB::SELECT('SELECT b.*,a.* FROM ' . set_schema_name() . 'expense a JOIN ' . set_schema_name() . 'refer_expense b ON a.refer_expense_id=b.id WHERE b.id=' . $id . ' and a."date" >= ' . "'$from_date'" . ' AND a."date" <= ' . "'$to_date'" . ' ');
+            //$this->data['expenses'] = DB::SELECT('SELECT b.*,a.* FROM admin.expense a JOIN admin.refer_expense b ON a.refer_expense_id=b.id WHERE b.id=' . $id . ' and a."date" >= ' . "'$from_date'" . ' AND a."date" <= ' . "'$to_date'" . ' ');
 
             $this->data['expenses'] = \App\Models\ReferExpense::where('refer_expense.id', $id)->join('expense', 'expense.refer_expense_id', 'refer_expense.id')->select('payment_types.name as payment_method', 'expense.recipient as recipient', 'expense.date', 'expense.amount', 'expense.note', 'expense.transaction_id', 'expense.id', 'refer_expense.predefined')->leftJoin('payment_types', 'payment_types.id', 'expense.payment_type_id')->where('expense.date', '>=', $from_date)->where('expense.date', '<=', $to_date)->get();
             // dd($this->data['expenses']);
@@ -981,7 +983,7 @@ class Account extends Controller {
         $id = clean_htmlentities(($this->uri->segment(3)));
         $cat_id = clean_htmlentities(($this->uri->segment(4)));
         if ($cat_id == 5) {
-            $this->data['voucher'] = \collect(DB::SELECT('SELECT * from ' . set_schema_name() . ' current_assets WHERE id=' . $id . ''))->first();
+            $this->data['voucher'] = \collect(DB::SELECT('SELECT * from admin. current_assets WHERE id=' . $id . ''))->first();
         } else {
             $this->data['voucher'] = \App\Model\Expense::find($id);
         }
@@ -1250,6 +1252,62 @@ class Account extends Controller {
 
     public function epayment() {
         
+    }
+
+        public function getExpenseRevenueByMonth() {
+        return DB::select("with tempa as (
+    select a.date,a.revenue, b.expense from 
+    (
+select  sum(amount) as revenue,date_trunc('month', date) as date from admin.revenues group by date_trunc('month', date) order by date_trunc('month', date) asc
+    )
+    as a left join 
+    (
+  select  sum(amount::numeric) as expense,date_trunc('month', date) as date from admin.expense group by date_trunc('month', date) order by date_trunc('month', date) asc
+    ) as b on date_trunc('month', b.date)= date_trunc('month', a.date) ),
+tempb as ( select * from tempa ) 
+select * from tempb");
+    }
+
+  public function customSummary() {
+        $report_type = $this->data['report_type'] = request('report_type');
+        $start = $this->data['from'] = request('from_date');
+        $end = $this->data['to'] = request('to_date');
+        if ((int)$report_type == 1) {
+            //expenses 
+            $this->data['type'] = 'Expense';
+            $transactions = \App\Model\Expense::whereBetween('date', [$start, $end])->get();
+        } else if ((int)$report_type == 2) {
+            //payments 
+            $this->data['type'] = 'Payments';
+            $transactions = \App\Model\Payment::whereBetween('date', [$start, $end])->orderBy('id', 'desc')->get();
+        } else{
+            //revenues 
+            $this->data['type'] = 'Revenues';
+            $transactions = \App\Model\Revenue::whereBetween('date', [$start, $end])->get();
+        }
+        $this->data['transactions'] = $transactions;
+        $this->data["subview"] = "fee/custom_summary";
+        $this->load->view('_layout_main', $this->data);
+    }
+
+     function summary() {
+        if ($_POST) {
+            return $this->customSummary();
+        }
+        $this->data['today_amount'] = \collect(DB::select("select sum(amount) from admin.revenues where date::date='" . date('Y-m-d') . "'"))->first();
+        $this->data['weekly_amount'] = \collect(DB::select("select sum(amount) from admin.revenues where date_trunc('week', date) = date_trunc('week', current_date)"))->first();
+        $this->data['monthly_amount'] = \collect(DB::select("select sum(amount) from admin.revenues where date_trunc('month', date) = date_trunc('month', current_date)"))->first();
+        $this->data['revenue'] = $this->getExpenseRevenueByMonth();
+        $this->data['expected_amount'] = \collect(DB::select('select sum(amount) as sum from admin.invoices'))->first();
+        $this->data['collected_amount'] = \collect(DB::select('select sum(amount) from admin.revenues'))->first();
+
+        $this->data['expected_expense'] = \collect(DB::select('select sum(amount::numeric) from admin.expense'))->first();;
+        $this->data['expense'] = \collect(DB::select('select sum(amount::numeric) from admin.expense'))->first();
+$this->data['no_invoice'] = 0;
+$this->data['no_payments'] = 0;
+$this->data['payments_received'] = 0;
+$this->data['revenue_received'] = 0;
+       return view('account.report.summary',$this->data);
     }
 
 }

@@ -89,6 +89,7 @@
                                                         <th>School</th>
                                                         <th>Task type</th>
                                                         <th>Activity</th>
+                                                          <th>Start Date</th>
                                                         <th>End Date</th>
                                                         <th>Status</th>
                                                         <th>Action</th>
@@ -103,6 +104,7 @@
                                                         <th>School</th>
                                                         <th>Task type</th>
                                                         <th>Activity</th>
+                                                        <th>Start Date</th>
                                                         <th>End Date</th>
                                                         <th>Status</th>
                                                         <th>Action</th>
@@ -287,7 +289,7 @@
                     {"data": "school_name"},
                     {"data": "task_name"},
                     {"data": "activity"},
-                 //   {"data": "start_date"},
+                   {"data": "start_date"},
                     {"data": "end_date"},
                     {"data": ""},
                     {"data": ""}
