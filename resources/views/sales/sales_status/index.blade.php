@@ -54,15 +54,16 @@
                                 <li class="nav-item">
                                     <a class="nav-link active" data-toggle="tab" href="#home1" role="tab">All Schools</a>
                                 </li>
+                                
                                 <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#Closed" role="tab">  <i class="ti-check"> </i> Closed </a>
+                                    <a class="nav-link" data-toggle="tab" href="#New" role="tab"> <i class="ti-plus"> </i> New</a>
                                 </li>
-
                                 <li class="nav-item">
                                     <a class="nav-link" data-toggle="tab" href="#Pipeline" role="tab">  <i class="ti-bell"> </i>Pipeline </a>
                                 </li>
+                                
                                 <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#New" role="tab"> <i class="ti-plus"> </i> New</a>
+                                    <a class="nav-link" data-toggle="tab" href="#Closed" role="tab">  <i class="ti-check"> </i> Closed </a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" data-toggle="tab" href="#profile1" role="tab">  <i class="ti-layout-cta-right"> </i> Reports</a>
