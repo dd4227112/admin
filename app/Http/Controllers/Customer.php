@@ -551,7 +551,11 @@ $obj=[
     }
 
     public function changeStatus() {
-        \App\Models\Task::where('id', request('id'))->update(['status' => request('status')]);
+        if(request('status') == 'complete'){
+        \App\Models\Task::where('id', request('id'))->update(['status' => request('status'), 'end_date' => date("Y-m-d H:i:s"),  'updated_at' => date("Y-m-d H:i:s")]);
+        }else{
+            \App\Models\Task::where('id', request('id'))->update(['status' => request('status'),  'updated_at' => date("Y-m-d H:i:s")]);
+        }
         $users = DB::table('tasks_users')->where('task_id', request('id'))->get();
         if (count($users) > 0) {
 

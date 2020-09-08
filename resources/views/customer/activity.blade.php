@@ -55,6 +55,7 @@
 
                         </div>
                         <div class="col-lg-12 col-xl-12">
+                        <div class="card-block">
 
                             <!-- Nav tabs -->
                             <ul class="nav nav-tabs  tabs" role="tablist">
@@ -77,15 +78,15 @@
 
                             </ul>
                             <!-- Tab panes -->
-                            <div class="tab-content tabs card-block">
+                            <div class="tab-content tabs">
                                 <div class="tab-pane active" id="home1" role="tabpanel">
-                                    <div class="card-block">
 
                                         <div class="table-responsive dt-responsive">
                                             <table id="dt-ajax-array" class="table table-striped table-bordered nowrap">
                                                 <thead>
                                                     <tr>
                                                         <th>No.</th>
+                                                        <th>School</th>
                                                         <th>Task type</th>
                                                         <th>Activity</th>
                                                         <th>End Date</th>
@@ -99,6 +100,7 @@
                                                 <tfoot>
                                                     <tr>
                                                         <th>No</th>
+                                                        <th>School</th>
                                                         <th>Task type</th>
                                                         <th>Activity</th>
                                                         <th>End Date</th>
@@ -109,7 +111,6 @@
                                             </table>
                                         </div>
                                     </div>
-                                </div>
                                 <!-- Completed Tasks -->
                                 <div class="tab-pane" id="Completed" role="tabpanel">
                                 
@@ -128,7 +129,7 @@
                                                 <?php
                                                 $i = 1;
 
-                                                $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'complete')->orderBy('created_at', 'desc')->get();
+                                                $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'complete')->orderBy('created_at', 'desc')->limit(100)->get();
                                                 if (count($tasks) > 0) {
                                                     foreach ($tasks as $act){
                                                      ?>
@@ -173,7 +174,7 @@
                                                 <?php
                                                 $i = 1;
 
-                                                $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'on progress')->orderBy('created_at', 'desc')->get();
+                                                $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'on progress')->orderBy('created_at', 'desc')->limit(100)->get();
                                                 if (count($tasks) > 0) {
                                                     foreach ($tasks as $act){
                                                      ?>
@@ -218,7 +219,7 @@
                                                 <?php
                                                 $i = 1;
 
-                                                $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'new')->orderBy('created_at', 'desc')->get();
+                                                $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'new')->orderBy('created_at', 'desc')->limit(100)->get();
                                                 if (count($tasks) > 0) {
                                                     foreach ($tasks as $act){
                                                      ?>
@@ -283,6 +284,7 @@
                 "columns": [
 
                     {"data": "id"},
+                    {"data": "school_name"},
                     {"data": "task_name"},
                     {"data": "activity"},
                  //   {"data": "start_date"},
@@ -292,7 +294,7 @@
                 ],
                 "columnDefs": [
                     {
-                        "targets": 5,
+                        "targets": 6,
                         "data": null,
                         "render": function (data, type, row, meta) {
                        
@@ -301,7 +303,7 @@
 
                     },
                     {
-                        "targets": 4,
+                        "targets": 5,
                         "data": null,
                         "render": function (data, type, row, meta) {
                             var status;

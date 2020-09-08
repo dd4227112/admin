@@ -117,9 +117,6 @@
                             <option value="new">New</option>
                             <option value="pipeline">Pipeline</option>
                             <option value="closed">Closed</option>
-                            <option value="call">Call to remind</option>
-                            <option value="agreement form">Send Agreement Form</option>
-                            <option value="school visit">School Visit</option>
                           </select>
                         </div>
                       </div>
