@@ -716,7 +716,7 @@ function toast(message) {
                             </li>
 
 
-                            <li class="nav-item">
+                          <!--   <li class="nav-item">
                                 <a href="#!">
                                     <i class="ti-layout-cta-right"></i>
                                     <span data-i18n="nav.navigate.main">Office Administrator</span>
@@ -730,12 +730,13 @@ function toast(message) {
 
 
                                 </ul>
-                            </li>     
+                            </li> -->     
                             <?php
                         }
                         ?>
                         <?php
-                        if (can_access('manage_schools')) {
+                       // if (can_access('manage_schools')) {
+                        if (false) {
                             $has_class = preg_match('/exam/', url()->current()) ? 'has-class open' : '';
                             ?>
                             <li class="nav-item <?= $has_class ?>">
