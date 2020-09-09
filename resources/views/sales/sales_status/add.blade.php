@@ -54,8 +54,15 @@
                       <select type="text" multiple="" name="school_id[]"  style="text-transform:uppercase" required class="form-control select2">
                       <option value="1">Select Here...</option>
                         <?php
-                        foreach ($schools as $school) { ?>
-                          <option value="<?= $school->id ?>"><?= $school->name . ' (' . substr($school->type, 0,3) .') - '. substr($school->region, 0, 3)  ?></option>
+                        foreach ($schools as $school) { 
+                          if($school->schema_name !=''){ ?>
+                            <option value="<?= $school->id ?>"><?= $school->name . ' (Client) - '. substr($school->region, 0, 3)  ?></option>
+                        <?php  }else{ ?>
+                            <option value="<?= $school->id ?>"><?= $school->name . ' (' . substr($school->type, 0,3) .') - '. substr($school->region, 0, 3)  ?></option>
+                        <?php
+                          }
+                          ?>
+
                         <?php } ?>
                       </select>
                       <!-- <input type="text" class="form-control" id="get_schools" name="school_id" value="<?= old('school_id') ?>" > -->

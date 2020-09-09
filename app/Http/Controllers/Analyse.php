@@ -129,9 +129,10 @@ class Analyse extends Controller {
 
         foreach ($schools as $school) {
             $url = $school->is_schema == 1 ? url('customer/profile/' . $school->schema_name) : url('sales/profile/' . $school->is_schema);
+            $type = $school->is_schema == 1 ? ' (Already Client)' : '';
             $school_list .= ' <a class="dummy-media-object" href="' . $url . '">
                                         <img src="' . url('public/assets/images/avatar-1.png') . '" alt="' . $school->schema_name . '" />
-                                        <h3>' . $school->sname . '</h3>
+                                        <h3>' . $school->sname . $type .'</h3>
                                     </a>';
         }
         $activity_list = '';
