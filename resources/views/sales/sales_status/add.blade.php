@@ -19,7 +19,7 @@
               <i class="icofont icofont-home"></i>
             </a>
           </li>
-          <li class="breadcrumb-item"><a href="<?= url('/') ?>/Users/minutes">Sales Leads</a>
+          <li class="breadcrumb-item"><a href="<?= url('/') ?>/Sales/salesStatus/1">Sales Leads</a>
           </li>
           <li class="breadcrumb-item"><a href="#!">Create</a>
           </li>
@@ -65,26 +65,47 @@
 
                         <?php } ?>
                       </select>
-                      <!-- <input type="text" class="form-control" id="get_schools" name="school_id" value="<?= old('school_id') ?>" > -->
 
                     </div>
                   </div>
 
-                  <!-- <div class="col-xs-12 col-sm-12 col-md-12">
+                 <div class="col-xs-12 col-sm-12 col-md-12">
 
                     <div class="form-group">
                       <div class="row">
-                        <div class="col-md-6">
-                          <strong>Person Name:</strong>
-                          <input type="text" class="form-control" placeholder="Enter Partner name here..." autofocus="1" name="account_name" required>
+                        <div class="col-md-3">
+                          <strong>Key Person Name:</strong>
+                          <input type="text" class="form-control" placeholder="Enter Person name here..." autofocus="1" name="school_name" required>
                         </div>
-                        <div class="col-md-6">
+
+                        <div class="col-md-3">
                           <strong>Contact Details:</strong>
-                          <input type="text" class="form-control" placeholder="Type Phone Number or Emails..." name="account_number" required>
+                          <input type="text" class="form-control" placeholder="Type Phone Number or Emails..." name="school_phone" required>
+                        </div>
+                        
+                        <div class="col-md-3">
+                          Title
+                          <select name="school_title" class="form-control">
+
+                            <option value="director">Director/Owner</option>
+                            <option value="manager">School Manager</option>
+                            <option value="head teacher">Head Teacher</option>
+                            <option value="Second Master/Mistress">Second Master/Mistress</option>
+                            <option value="academic master">Academic Master</option>
+                            <option value="teacher">Normal Teacher</option>
+                            <option value="Accountant">Accountant</option>
+                            <option value="Other Staff">Other Non Teaching Staff</option>
+
+
+                          </select>
+                        </div>
+                        <div class="col-md-3">
+                          <strong>Number of Students:</strong>
+                          <input type="number" class="form-control" placeholder="Enter number of students..." name="students" required>
                         </div>
                       </div>
                     </div>
-                  </div> -->
+                  </div>
 
                   <div class="col-xs-12 col-sm-12 col-md-12">
 
