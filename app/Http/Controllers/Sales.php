@@ -451,7 +451,7 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
                 'email_verified' => 0,
                 'phone_verified' => 0,
                 'created_by' => Auth::user()->id,
-                'username' => request('username') !='' ? request('username') : $username
+                'username' => request('username') !='' ? strtolower(request('username')) : $username
             ]);
 //client school
             DB::table('admin.client_schools')->insert([
@@ -709,8 +709,20 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
                 'task_id' => $task->id,
                 'school_id' => (int) $school_id
             ]);
+            if (count($schools) == 1) {
+                \App\Models\SchoolContact::create([
+                    'name' => request('school_name'),
+                    'phone' => request('school_phone'),
+                    'school_id' => (int) $school_id,
+                    'user_id' => Auth::user()->id,
+                    'title' => request('school_title')
+                ]);
+                DB::table('admin.schools')->where('id', (int)$school_id)->update(['students' => request('students')]);
+        
+               }
             }
         }
+
         return redirect('Sales/salesStatus/1')->with('success', 'success');
     }
     
