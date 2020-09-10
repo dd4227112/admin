@@ -9,23 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class Analyse extends Controller {
 
-    /**
-     *
-     * @var Graph title 
-     */
-    public $graph_title = '';
-
-    /**
-     *
-     * @var x axis 
-     */
-    public $x_axis = '';
-
-    /**
-     *
-     * @var y axis 
-     */
-    public $y_axis = '';
 
     /**
      * Create a new controller instance.
@@ -49,13 +32,26 @@ class Analyse extends Controller {
 //      )"))->first()->aggregate;
         //$this->data['log_graph'] = $this->createBarGraph();
         if(Auth::user()->id == 36){
+            $id = Auth::user()->id;
+           // $this->data['branch'] = $branch = \App\Models\PartnerUser::where('user_id', $id)->first();
             $this->data['use_shulesoft'] = DB::table('admin.all_setting')->count() - 5;
             $this->data['nmb_schools'] = DB::table('admin.nmb_schools')->count();
-            $this->data['schools'] = DB::table('admin.schools')->where('ownership','<>', 'Government')->count();
+            $this->data['schools'] = DB::table('admin.schools')->where('ownership','<>', 'Government')->get();
             $this->data['nmb_shulesoft_schools'] = \collect(DB::select("select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22"))->first()->count;
             return view('analyse.nmb', $this->data);
+        }elseif(Auth::user()->department == 10 && Auth::user()->id != 36){
+            $id = Auth::user()->id;
+            $this->data['branch'] = $branch = \App\Models\PartnerUser::where('user_id', $id)->first();
+            $this->data['use_shulesoft'] = \App\Models\School::whereIn('ward_id', \App\Models\Ward::where('district_id', $branch->branch->district_id)->get(['id']))->whereNotNull('schema_name')->count();
+            $this->data['nmb_schools'] = DB::table('admin.partner_schools')->where('branch_id', $branch->branch_id)->count();
+            $this->data['schools'] = \App\Models\School::whereIn('ward_id', \App\Models\Ward::where('district_id', $branch->branch->district_id)->get(['id']))->where('ownership','<>', 'Government')->orderBy('schema_name', 'ASC')->get();
+            $this->data['nmb_shulesoft_schools'] = \collect(DB::select('select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22 and schema_name in(select schema_name from admin.schools where schema_name is not null and ward_id in (select id from admin.wards where district_id = '. $branch->branch->district_id.'))'))->first()->count;
+            return view('analyse.nmb', $this->data);
         }else{
-        $this->data['activity'] = \App\Models\Task::where('user_id', Auth::user()->id)->orderBy('id', 'DESC')->get();
+            $user = Auth::user()->id;
+            $sql = "select a.id, a.end_date, substring(a.activity from 1 for 80) as activity,a.created_at::date, a.date,d.name as user ,e.name as type  from admin.tasks a join admin.tasks_clients c on a.id=c.task_id
+            join admin.users d on d.id=a.user_id join admin.task_types e on a.task_type_id=e.id WHERE a.user_id = $user order by a.created_at::date desc";
+            $this->data['activities'] = DB::select($sql);
         return view('analyse.index', $this->data);
         }
     }
@@ -133,9 +129,10 @@ class Analyse extends Controller {
 
         foreach ($schools as $school) {
             $url = $school->is_schema == 1 ? url('customer/profile/' . $school->schema_name) : url('sales/profile/' . $school->is_schema);
+            $type = $school->is_schema == 1 ? ' (Already Client)' : '';
             $school_list .= ' <a class="dummy-media-object" href="' . $url . '">
                                         <img src="' . url('public/assets/images/avatar-1.png') . '" alt="' . $school->schema_name . '" />
-                                        <h3>' . $school->sname . '</h3>
+                                        <h3>' . $school->sname . $type .'</h3>
                                     </a>';
         }
         $activity_list = '';
@@ -168,166 +165,7 @@ class Analyse extends Controller {
         return view('insight.index', $this->data);
     }
 
-    /**
-     * 
-     * @param type $pg_id
-     */
-    public function getPageCalled($pg_id) {
-        $page_id = $this->data['page_id'] = $pg_id == null ? 1 : $pg_id;
-        switch ($page_id) {
-            case 1:
-                $pg = 'student';
-                $ar_list = [
-                    'overview', 'locations', 'previus_school', 'age', 'health', 'religion', 'other_reports'
-                ];
-                break;
-            case 2:
-                $pg = 'parent';
-                $ar_list = [
-                    'overview', 'relation', 'age', 'locations', 'career', 'health'
-                ];
-                break;
-            case 3:
 
-                $pg = 'teacher';
-                $ar_list = [
-                    'overview', 'locations', 'age', 'career', 'health', 'religion', 'salary'
-                ];
-                $this->getUsers('teacher');
-                break;
-            case 4:
-                $pg = 'staff';
-                $ar_list = [
-                    'overview', 'locations', 'age', 'career', 'health', 'religion', 'joining_date', 'salary'
-                ];
-
-                break;
-            case 5:
-                $pg = 'academic';
-                $ar_list = [
-                    'overview', 'class_average', 'subject_average', 'student_information', 'teachers_performance', 'activity_with_performance'
-                ];
-
-                break;
-            case 6:
-
-                $pg = 'accounts';
-                $ar_list = [
-                    'overview', 'Installments', 'parent_information', 'student_performance', 'financial_ratios'
-                ];
-                break;
-            default:
-                $pg = 'student';
-                $ar_list = [
-                    'overview', 'locations', 'previus_school', 'age', 'health', 'religion', 'other_reports'
-                ];
-                break;
-        }
-        $this->data['pg'] = $pg;
-        $this->data['ar_list'] = $ar_list;
-    }
-
-    /**
-     * 
-     * @param type $sql
-     * @param type $firstpart
-     * @param type $table
-     * @param type $chart_type
-     * @param type $custom
-     * @return type
-     */
-    public function createChartBySql($sql, $firstpart, $table, $chart_type, $custom = false, $call_back_sql = false) {
-        $data = DB::select($sql);
-        return $this->createGraph($data, $firstpart, $table, $chart_type, $custom, $call_back_sql);
-    }
-
-    /**
-     * 
-     * @param type $table
-     * @param type $base_column
-     * @param type $join_table
-     * @param type $join_table_array
-     * @param type $chart_type
-     * @param type $custom
-     * @param type $as_alias
-     * @return type
-     */
-    public function createChart($table, $base_column, $join_table = false, $join_table_array = false, $chart_type = 'bar', $custom = false, $as_alias = false) {
-
-        $data = $join_table == false ? DB::table($table)
-                        ->select(DB::raw('count(*)'), DB::raw($base_column))
-                        ->groupBy(DB::raw($as_alias == FALSE ? $base_column : $as_alias))->get() :
-                DB::table($table)
-                        ->join($join_table, array_keys($join_table_array)[0] . '.' . array_values($join_table_array)[0], array_keys($join_table_array)[1] . '.' . array_values($join_table_array)[1])
-                        ->select(DB::raw('count(*)'), DB::raw($base_column))
-                        ->groupBy(DB::raw($as_alias == FALSE ? $base_column : $as_alias))->get();
-        $column = preg_replace('/^([^::]*).*$/', '$1', $as_alias == FALSE ? $base_column : $as_alias);
-        list($firstpart) = explode(',', $column);
-        return $this->createGraph($data, $firstpart, $table, $chart_type, $custom);
-    }
-
-    /**
-     * 
-     * @param type $data
-     * @param type $chart_type
-     * @param type $base_column
-     * @return type
-     */
-    private function createCustomChart($data, $chart_type, $base_column) {
-        $insight = $this;
-        return view('insight.highcharts', compact('data', 'chart_type', 'base_column', 'insight'));
-    }
-
-    /**
-     * 
-     * @param type $data
-     * @param type $firstpart
-     * @param type $table
-     * @param type $chart_type
-     * @param type $custom
-     * @param type $call_back_sql
-     * @return type
-     */
-    private function createGraph($data, $firstpart, $table, $chart_type, $custom = false, $call_back_sql = false) {
-        $k = [];
-        $l = [];
-        foreach ($data as $value) {
-            array_push($k, $value->{$firstpart});
-            array_push($l, (int) $value->count);
-        }
-        $chart = new SimpleChart;
-        $chart->labels($k);
-        $chart->dataset($this->x_axis == '' ? $table : $this->x_axis, $chart_type, $l);
-
-        if ($call_back_sql != false) {
-            foreach ($call_back_sql as $key => $sql) {
-                $call = $this->createCallBack(DB::select($sql), $firstpart);
-                $chart->labels($call[0]);
-                $chart->dataset($key, $chart_type, $call[1]);
-            }
-        }
-        $title = $this->graph_title == '' ?
-                ucwords('Relationship Between ' . $table . ' and ' . str_replace('_', ' ', $firstpart)) : $this->graph_title;
-        $chart->title($title);
-        $this->data['chart'] = $chart;
-        return $custom == true ? $this->createCustomChart($data, $chart_type, $firstpart) : view('analyse.charts.chart', $this->data);
-    }
-
-    /**
-     * 
-     * @param type $data
-     * @param type $firstpart
-     * @return type
-     */
-    private function createCallBack($data, $firstpart) {
-        $k = [];
-        $l = [];
-        foreach ($data as $value) {
-            array_push($k, $value->{$firstpart});
-            array_push($l, (int) $value->count);
-        }
-        return [$k, $l];
-    }
 
     /**
      * 

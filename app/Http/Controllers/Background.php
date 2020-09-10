@@ -245,37 +245,34 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
     }
 
     public function officeDailyReport() {
-        $users=\App\Models\User::where('status',1)->get();
+        $users = \App\Models\User::where('status', 1)->get();
         foreach ($users as $user) {
-            $tasks=DB::select("select b.name, count(a.*) from admin.tasks a join admin.task_types b on b.id=a.task_type_id where a.created_at::date=CURRENT_DATE AND user_id=".$user->id." group by b.name");
-            $tr='';
+            $tasks = DB::select("select b.name, count(a.*) from admin.tasks a join admin.task_types b on b.id=a.task_type_id where a.created_at::date=CURRENT_DATE AND user_id=" . $user->id . " group by b.name");
+            $tr = '';
             foreach ($tasks as $task) {
-               $tr.='<tr><td>'.$task->name.'</td><td>'.$task->count.'</td></tr>'; 
+                $tr .= '<tr><td>' . $task->name . '</td><td>' . $task->count . '</td></tr>';
             }
-            $message=''
+            $message = ''
                     . '<h2>Todays Report</h2>'
                     . '<p>This report specify what you have done today and it is used by management to evaluate your performance and contribution to the company</p>'
-                    . '<table><thead><tr><th>Activity Name</th><th>Number of Activities</th></tr></thead><tbody>'.$tr.'</tbody></table>';
+                    . '<table><thead><tr><th>Activity Name</th><th>Number of Activities</th></tr></thead><tbody>' . $tr . '</tbody></table>';
             DB::table('public.email')->insert([
-                'subject'=> date('Y M d').' Report',
-                'body'=>$message,
-                'email'=>$user->email
+                'subject' => date('Y M d') . ' Report',
+                'body' => $message,
+                'email' => $user->email
             ]);
         }
     }
 
-
-
-    public function tech_task()
-    {
+    public function tech_task() {
         // $data1          = json_decode(file_get_contents(base_path() . '/task.json'));
         $data1 = request()->all();
-    
-        $repo           = isset($data1['repository']['full_name'])? $data1['repository']['full_name']:'';
-        $user           = isset($data1['push']['changes'][0]['commits'][0])? $data1['push']['changes'][0]['commits'][0]['author']['user']['display_name']:'' ;
+
+        $repo = isset($data1['repository']['full_name']) ? $data1['repository']['full_name'] : '';
+        $user = isset($data1['push']['changes'][0]['commits'][0]) ? $data1['push']['changes'][0]['commits'][0]['author']['user']['display_name'] : '';
         $commit_message = isset($data1['push']['changes'][0]['commits'][0]) ? $data1['push']['changes'][0]['commits'][0]['message'] : '';
         $commit_message_in_words = explode(' ', trim($commit_message));
-        $activity_type  = strtolower($commit_message_in_words[0]);
+        $activity_type = strtolower($commit_message_in_words[0]);
 
         // after getting message then taking Id for identifying type
         // firstly getting activity type from database
@@ -283,9 +280,8 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
         if (DB::table('admin.task_types')->whereRaw('LOWER(name) LIKE ?', ['%' . ($activity_type) . '%'])->count()) {
             $id = DB::table('admin.task_types')->whereRaw('LOWER(name) LIKE ?', ['%' . ($activity_type) . '%'])->first();
             $task_id = $id->id;
-
         } else {
-            $task_id =  27;
+            $task_id = 27;
             #sending message to the Commiter that the entered activity type is not correct
         }
 
@@ -296,13 +292,15 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
         }
         #data to be sent to the database
         $data = [
-            'user_id'  => $user_id,
+            'user_id' => $user_id,
             'activity' => $commit_message,
-            'date'     => date('Y-m-d'),
+            'date' => date('Y-m-d'),
+            'start_date' => date("Y-m-d H:i:s", strtotime("-1 hours")),
+            'end_date' => date("Y-m-d H:i:s"),
             'to_user_id' => $user_id,
             'task_type_id' => $task_id,
-            'action'  => 'Yes',
-            'time'    => '1',
+            'status' => 'complete',
+            'time' => '1',
         ];
 
         // Then pushing to the database(Task) from Repository after push
@@ -310,23 +308,70 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
 
         // Then pushing to the database(Table tasks_user) from Repository after push
         $send_task_to_user_task = DB::table('tasks_users')->insert(
-            [
-                'user_id' => $user_id,
-                'task_id' =>  $send_task->id
-
-            ]
+                [
+                    'user_id' => $user_id,
+                    'task_id' => $send_task->id
+                ]
         );
 
-        if($send_task_to_user_task){
+        if ($send_task_to_user_task) {
             print("task has been saved to the database");
-        }
-        else{
+        } else {
             print("sorry an error occured failed to save ");
         }
- 
     }
 
+    public function epayment() {
+        $invoice_id = request()->segment(3);
+        $booking = \App\Models\Invoice::where('id', $invoice_id)->first();
+        if (strlen($booking->token) < 4) {
+            $order_id = strlen($booking->order_id) < 4 ? rand(454, 4557) . time() : $booking->order_id;
+            $amount = $booking->amount;
+            $phone_number = validate_phone_number($booking->client->phone);
+            if (is_array($phone_number)) {
+                $phone = str_replace('+', null, validate_phone_number($booking->client->phone)[1]);
+            } else {
+                $phone = '255754406004';
+            }
+            $order = array("order_id" => $order_id, "amount" => $amount,
+                'buyer_name' => $booking->client->name, 'buyer_phone' => $phone, 'end_point' => '/checkout/create-order', 'action' => 'createOrder', 'client_id' => $booking->client_id, 'source' => $booking->client_id);
 
+            $this->curlPrivate($order);
+        }
+        $paid = 0;
+        if ($booking->payments()->sum('amount') == $booking->amount || $booking->payments()->sum('amount') == $booking->invoiceFees()->sum('amount')) {
+            $paid = 1;
+        }
 
+        $balance = $booking->payments()->sum('amount');
+
+        return view('account.invoice.pay', compact('booking', 'balance', 'paid'));
+    }
+
+    //Notify all admin about monthly reports
+    public function schoolMonthlyReport() {
+        $users = DB::select("select * from admin.all_users where lower(usertype)='admin' and status=1");
+        $key_id = DB::table('public.sms_keys')->first()->id;
+        foreach ($users as $user) {
+            $message = 'Dear Sir/Madam '
+                    . 'Kindly find ' . number_to_words(date('m')) . ' Month Report from 1st Jan to ' . date('d M Y') . ' and analyse your school performance '
+                    . 'specifically on Students/parents/teachers Registered this Year and per Month, Amount of Fee collected Total and on Each month,'
+                    . 'Academic performances per classes, subjects and teachers, Best students/teachers etc.'
+                    . 'Open this link to open https://' . $user->schema_name . '.shulesoft.com/report/quarter/' . $user->sid . '  . Dont share this message. Thank you';
+            DB::table('public.sms')->insert([
+                'body' => $message,
+                'phone_number' => $user->phone,
+                'type' => 0,
+                'sms_keys_id' => $key_id
+            ]);
+            if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email) && !in_array($user->email, ['inetscompany@gmail.com'])) {
+
+                $subject = 'ShuleSoft ' . number_to_words(date('m')) . ' Months Report';
+                $obj = array('body' => $message, 'subject' => $subject, 'email' => $user->email);
+
+                DB::table($user->schema_name . '.email')->insert($obj);
+            }
+        }
+    }
 
 }

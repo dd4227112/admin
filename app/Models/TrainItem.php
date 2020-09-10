@@ -19,11 +19,10 @@ class TrainItem extends Model {
 
     //put your code here
     protected $table = 'train_items';
-    protected $fillable = ['id', 'training_id', 'content', 'created_at', 'updated_at'];
-
-
-    public function training() {
-        return $this->belongsTo(\App\Models\Training::class, 'training_id', 'id');
+    protected $fillable = ['id', 'time', 'content', 'created_at', 'updated_at'];
+    
+    public function trainItemAllocation() {
+        return $this->hasMany(\App\Models\TrainItemAllocation::class);
     }
 
 }

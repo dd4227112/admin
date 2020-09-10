@@ -5,13 +5,33 @@ namespace App\Http\Controllers;
 use App\Jobs\PushSMS;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Charts\SimpleChart;
 use DB;
 use Auth;
 
 class Sales extends Controller {
 
+    /**
+     *
+     * @var Graph title 
+     */
+    public $graph_title = '';
+
+    /**
+     *
+     * @var x axis 
+     */
+    public $x_axis = '';
+
+    /**
+     *
+     * @var y axis 
+     */
+    public $y_axis = '';
+
     public function __construct() {
         $this->middleware('auth');
+        $this->data['insight'] = $this;
     }
 
     /**
@@ -125,13 +145,25 @@ group by ownership');
 
     function schoolStatus() {
         $id = request()->segment(3);
-        if($id == 'shulesoft'){
+        if ($id == 'shulesoft') {
             $this->data['title'] = "Schools Alreardy Onboarded";
-        $this->data['all_schools'] = DB::table('admin.schools')->whereNotNull('schema_name')->get();
+            $user = Auth::user()->id;
+            $this->data['branch'] = $branch = \App\Models\PartnerUser::where('user_id', $user)->first();
+            if(count($branch) > 0){
+                $this->data['all_schools'] = \App\Models\School::whereIn('ward_id', \App\Models\Ward::where('district_id', $branch->branch->district_id)->get(['id']))->whereNotNull('schema_name')->orderBy('schema_name', 'ASC')->get();
+            }else{
+                $this->data['all_schools'] = \App\Models\School::whereNotNull('schema_name')->orderBy('schema_name', 'ASC')->get();
+            }
         }
-        if($id == 'bank'){
+        if ($id == 'bank') {
+            $user = Auth::user()->id;
+            $this->data['branch'] = $branch = \App\Models\PartnerUser::where('user_id', $user)->first();
             $this->data['title'] = "Schools With Bank Payment Integrarion";
-            $this->data['all_schools'] = DB::select('select * from admin.schools WHERE schema_name IN (select distinct schema_name from admin.all_bank_accounts where refer_bank_id=22)');
+            if(count($branch) > 0){
+                $this->data['all_schools'] = DB::select('select * from admin.schools WHERE schema_name IN (select distinct schema_name from admin.all_bank_accounts where refer_bank_id=22) and ward_id in (select id from admin.wards where district_id = ' . $branch->branch->district_id . ')');
+            }else{
+                $this->data['all_schools'] = DB::select('select * from admin.schools WHERE schema_name IN (select distinct schema_name from admin.all_bank_accounts where refer_bank_id=22)');
+            }
         }
         return view('sales.school_status', $this->data);
     }
@@ -255,11 +287,24 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
                 return $this->ajaxTable('payments', ['a.id', 'amount', 'name', 'a.created_at'], $sql);
                 break;
             case 'tasks':
-                $sql = "select t.id,substring(t.activity from 1 for 70) as activity,t.date, t.created_at,p.school_name,p.client,u.firstname||' '||u.lastname as user_name, substring(tt.name from 1 for 10) as task_name, t.status,t.priority from admin.tasks t left join (
-select a.task_id, c.name as school_name,'Client' as client from admin.tasks_clients a join admin.clients c on c.id=a.client_id
-UNION ALL
-SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks_schools b join admin.schools s on s.id=b.school_id ) p on p.task_id=t.id join admin.users u on u.id=t.user_id join admin.task_types tt on tt.id=t.task_type_id where u.id=" . Auth::user()->id . " OR t.id in (select task_id from admin.tasks_users where user_id=" . Auth::user()->id . " )";
-                return $this->ajaxTable('tasks', ['activity', 'u.firstname', 'p.school_name', 't.created_at', 't.date', 'u.lastname'], $sql);
+
+                $user_id = (int) request('user_id') > 0 ? request('user_id') : Auth::user()->id;
+                $sql = "select t.id,substring(t.activity from 1 for 50) as activity,t.date, t.start_date,t.end_date, t.created_at,p.school_name,p.client,u.firstname||' '||u.lastname as user_name, substring(tt.name from 1 for 20) as task_name, t.status,t.priority from admin.tasks t left join (
+                    select a.task_id, substring(c.name from 1 for 20) as school_name,'Client' as client from admin.tasks_clients a join admin.clients c on c.id=a.client_id
+                    UNION ALL
+                SELECT b.task_id,  substring(s.name from 1 for 20) as school_name, 'Not Client' as client from admin.tasks_schools b join admin.schools s on s.id=b.school_id ) p on p.task_id=t.id join admin.users u on u.id=t.user_id LEFT join admin.task_types tt on tt.id=t.task_type_id where u.id=" . $user_id . " OR t.id in (select task_id from admin.tasks_users where user_id=" . $user_id . " )";
+                return $this->ajaxTable('tasks', ['activity', 'u.firstname', 'p.school_name', 't.created_at', 't.date', 'u.lastname', 't.start_date', 't.end_date'], $sql);
+
+                break;
+            case 'school_status':
+                if ((int) request('type') == 3) {
+                    $sql = "select * from (select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a   where lower(a.ownership) <>'government') a where activities >0";
+                } else if ((int) request('type') == 2) {
+                    $sql = "select a.*, (select count(*) from admin.tasks where client_id in (select id from admin.clients where username in (select schema_name from admin.all_setting where school_id=a.id))) as activities from admin.schools a   where lower(a.ownership) <>'government' and a.id in (select school_id from admin.all_setting)";
+                } else {
+                    $sql = "select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a   where lower(a.ownership) <>'government'";
+                }
+                return $this->ajaxTable('schools', ['a.name', 'a.region', 'a.ward', 'a.district'], $sql);
                 break;
             default:
                 break;
@@ -368,13 +413,8 @@ SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks
 
             $array = [
                 'name' => strtoupper(request('name')),
-                'ward' => request('ward'),
-                'zone' => request('zone'),
-                'type' => request('type'),
-                'region' => request('region'),
-                'district' => request('district'),
-                'ownership' => request('ownership'),
-                'nmb_zone' => request('zone')
+                'ward_id' => request('ward'),
+                'ownership' => request('ownership')
             ];
             DB::table('admin.schools')->insert($array);
             return redirect('sales/school')->with('success', request('name') . ' successfully');
@@ -387,10 +427,10 @@ SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks
 
         $this->data['school'] = $school = DB::table('admin.schools')->where('id', $school_id)->first();
         $username = preg_replace('/[^a-z]/', null, strtolower($school->name));
-        $this->data['staffs'] = DB::table('users')->where('status', 1)->get();
+        $this->data['staffs'] = DB::table('users')->where('status', 1)->where('role_id', '<>', 7)->get();
         if ($_POST) {
             $code = rand(343, 32323);
- 
+
             $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
             if (count($school_contact) == 0) {
                 DB::table('admin.school_contacts')->insert([
@@ -411,7 +451,7 @@ SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks
                 'email_verified' => 0,
                 'phone_verified' => 0,
                 'created_by' => Auth::user()->id,
-                'username' => $username
+                'username' => request('username') !='' ? request('username') : $username
             ]);
 //client school
             DB::table('admin.client_schools')->insert([
@@ -463,7 +503,8 @@ SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks
                     $this->curlPrivate($order);
                     $booking = DB::table('admin.invoices')->where('order_id', $order_id)->first();
                 }
-                return redirect('sales/customerSuccess/1/' . $booking->id);
+                $this->scheduleActivities($client_id);
+                return redirect('sales/customerSuccess/1/' . $$client_id);
             } else {
                 //create a trial code for this school
                 $trial_code = $client_id . time();
@@ -473,11 +514,106 @@ SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks
                 $message = 'Hello ' . $user->name . '. Your Trial Code is ' . $trial_code;
                 $this->send_sms($user->phone, $message, 1);
                 $this->send_email($user->email, 'Success: School Onboarded Successfully', $message);
-                return redirect('sales/customerSuccess/2/' . $trial_code);
+                $this->scheduleActivities($client_id);
+                return redirect('sales/customerSuccess/2/' . $client_id);
             }
             return redirect('https://' . $username . '.shulesoft.com');
         }
         return view('sales.onboarding_school', $this->data);
+    }
+
+    /**
+     * Make this very easy for users to get a specific schedule
+     * @param type $client_id
+     */
+    public function scheduleActivities($client_id) {
+        $time = 0;
+        $sections = \App\Models\TrainItem::orderBy('id', 'asc')->get();
+        foreach ($sections as $section) {
+
+            $start_date = date('Y-m-d H:i', strtotime("+{$time} minutes", strtotime(request('implementation_date'))));
+            //check if start_date is greater than 17 hours
+            if (((int) date('H', strtotime($start_date))) >= 16 && (int) $section->time >= 30) {
+                // we cannot add a task here, so switch this tomorrow
+                $add_time = (int) $time + 16 * 60;
+                $start_date = date('Y-m-d H:i', strtotime("+{$add_time} minutes", strtotime(request('implementation_date'))));
+            }
+            if (date('D', strtotime($start_date)) == 'Sat') {
+                //its saturday, so add 48 hours
+                $sat_add_time = (int) $time + 48 * 60;
+                $start_date = date('Y-m-d H:i', strtotime("+{$sat_add_time} minutes", strtotime(request('implementation_date'))));
+            }
+
+            if (date('l', strtotime($start_date)) == 'Sunday') {
+                // its sunday, so add 24 hours
+                $sun_add_time = (int) $time + 24 * 60;
+                $start_date = date('Y-m-d H:i', strtotime("+{$sun_add_time} minutes", strtotime(request('implementation_date'))));
+            }
+            //later we will check if user attend, holiday etc
+
+            $end_date = date('Y-m-d H:i', strtotime("+{$section->time} minutes", strtotime($start_date)));
+
+            $slot = \App\Models\Slot::find(request('slot_id' . $section->id));
+            $date = date('Y-m-d', strtotime(request('slot_date' . $section->id)));
+            
+            $data = [
+                'activity' => $section->content,
+                'date' => date('Y-m-d', strtotime($start_date)),
+                'user_id' => request('support_user_id'),
+                'task_type_id' => preg_match('/data/i', $section->content) ? 3 : 4,
+                'start_date' => date('Y-m-d H:i', strtotime($date . ' ' . isset($slot->start_time) ? $slot->start_time : '11:01:00')),
+                'end_date' => date('Y-m-d H:i', strtotime($date . ' ' . isset($slot->end_time) ? $slot->end_time : '12:00:00')),
+                'slot_id' => (int)$slot->id > 0 ? $slot->id : 5
+            ];
+            $time += $section->time;
+            $task = \App\Models\Task::create($data);
+            DB::table('tasks_users')->insert([
+                'task_id' => $task->id,
+                'user_id' => (int) request('person' . $section->id),
+            ]);
+
+            DB::table('tasks_clients')->insert([
+                'task_id' => $task->id,
+                'client_id' => (int) $client_id
+            ]);
+            \App\Models\TrainItemAllocation::create([
+                'task_id' => $task->id,
+                'client_id' => $client_id,
+                'user_id' => (int) request('person' . $section->id),
+                'train_item_id' => $section->id,
+                'school_person_allocated' => request("train_item{$section->id}"),
+                'max_time' => $section->time
+            ]);
+        }
+    }
+
+    //algorithm is very very simple
+    /**
+     * 1. check that user if he has a task at that particular time
+     * 2. if user has a time, return an error to adjust
+     * 3. if user does have a time, then fix that initial time there
+     * 4. check the specific task has been allocated how many minutes to be accomplished
+     * 5. add that minutes to the time specified and fix end datetime
+     * 6. if you find occupied time slot in between, add that time slot in between to extend time for end datetime
+     * 7. return both, start datetime and end datetime respectively
+     */
+    public function taskStartTime($start_date, $timeframe, $iterate = false) {
+
+        $end_time = date('d-m-Y H:i', strtotime("+{$timeframe} minutes", time()));
+        $start_time = date('d-m-Y H:i', strtotime($start_date));
+        $slot_available = \collect(DB::select("SELECT * FROM   admin.tasks WHERE  start_date::timestamp <='" . $start_time . "'::timestamp and end_date::timestamp >='" . $end_time . "'::timestamp"))->first();
+        if (count($slot_available) == 1) {
+            //slot not available
+            // so check the last slot and add next slot for the person to work
+
+            return FALSE;
+        } else {
+            //slot available
+            return array($start_date, $end_time);
+        }
+        if ($iterate == true) {
+            
+        }
     }
 
     /**
@@ -486,28 +622,28 @@ SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks
     public function customerSuccess() {
 
         $id = request()->segment(3);
-        if ((int) $id == 2) {
+     //    if ((int) $id == 2) {
             $this->data['trial_code'] = request()->segment(4);
-            $this->data['client'] = DB::table('admin.clients')->where('code', $this->data['trial_code'])->first();
+            $this->data['client'] = DB::table('admin.clients')->where('id', $this->data['trial_code'])->first();
             if (count($this->data['client']) == 1) {
                 return view('sales.customer_success', $this->data);
             } else {
 
                 die('Invalid URL');
             }
-        } else {
-             $client_id = request()->segment(4);
+         /* }else {
+            $client_id = request()->segment(4);
             $this->data['client'] = $client = \App\Models\Client::where('id', $client_id)->first();
             $this->data['siteinfos'] = DB::table($this->data['client']->username . '.setting')->first();
-            $this->data['students'] =  $this->data['client']->estimated_students;
+            $this->data['students'] = $this->data['client']->estimated_students;
             if (count($client) == 1) {
-              $this->data['booking'] =   $this->data['invoice'] = Invoice::where('client_id', $client->id)->first();
+                $this->data['booking'] = $this->data['invoice'] = Invoice::where('client_id', $client->id)->first();
             } else {
                 $this->data['booking'] = $this->data['invoice'] = [];
             }
 
             return view('account.invoice.shulesoft', $this->data);
-        }
+        } */
     }
 
     public function curlPrivate($fields, $url = null) {
@@ -530,5 +666,91 @@ SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks
         curl_close($ch);
         return $result;
     }
+    public function salesStatus(){
+        $page = request()->segment(3);
+        if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
+            //current day
+            $this->data['today']  = 1;
+            $start_date = date('Y-m-d');
+            $end_date = date('Y-m-d');   
+            $where = '  a.created_at::date=CURRENT_DATE';
+         
+        } else {
+            $this->data['today']  = 2;
+            $start_date = date('Y-m-d', strtotime(request('start')));
+            $end_date = date('Y-m-d', strtotime(request('end')));
+            $where = "  a.created_at::date >='" . $start_date . "' AND a.created_at::date <='" . $end_date . "'";
 
+        }
+        $this->data['schools'] = \App\Models\TaskSchool::whereIn('task_id', \App\Models\Task::whereIn('user_id', \App\Models\User::where('department', 2)->get(['id']))->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date." 00:00:00", $end_date." 23:59:59"])->get(['id']))->orderBy('created_at', 'desc')->get();
+        $this->data['new_schools'] = \App\Models\TaskSchool::whereIn('task_id', \App\Models\Task::whereIn('user_id', \App\Models\User::where('department', 2)->get(['id']))->where('next_action', 'new')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date." 00:00:00", $end_date." 23:59:59"])->get(['id']))->orderBy('created_at', 'desc')->get();
+        $this->data['pipelines'] = \App\Models\TaskSchool::whereIn('task_id', \App\Models\Task::whereIn('user_id', \App\Models\User::where('department', 2)->get(['id']))->where('next_action', 'pipeline')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date." 00:00:00", $end_date." 23:59:59"])->get(['id']))->orderBy('created_at', 'desc')->get();
+        $this->data['closeds'] = \App\Models\TaskSchool::whereIn('task_id', \App\Models\Task::whereIn('user_id', \App\Models\User::where('department', 2)->get(['id']))->where('next_action', 'closed')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date." 00:00:00", $end_date." 23:59:59"])->get(['id']))->orderBy('created_at', 'desc')->get();
+        $this->data['query'] =  'SELECT count(next_action), next_action from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and ' . $where .' group by next_action order by count(next_action) desc';
+        $this->data['types'] =  'SELECT count(b.name), b.name as type from admin.tasks a, admin.task_types b  where a.task_type_id=b.id AND a.user_id in (select id from admin.users where department=2) and ' . $where .' group by b.name order by count(b.name) desc';
+        return view('sales.sales_status.index', $this->data);
+    }
+ public function addLead(){
+    $this->data['schools']  = \App\Models\School::where('ownership', '<>', 'Government')->orderBy('schema_name', 'ASC')->get();
+    if ($_POST) {
+
+        $data = array_merge(request()->except('to_user_id'), ['user_id' => Auth::user()->id, 'status'=>'new', 'date' => date('Y-m-d')]);
+        $task = \App\Models\Task::create($data);
+       
+                DB::table('tasks_users')->insert([
+                    'task_id' => $task->id,
+                    'user_id' => Auth::user()->id
+                ]);
+                
+        $schools = request('school_id');
+        if (count($schools) > 0) {
+            foreach ($schools as $school_id) {
+            DB::table('tasks_schools')->insert([
+                'task_id' => $task->id,
+                'school_id' => (int) $school_id
+            ]);
+            }
+        }
+        return redirect('Sales/salesStatus/1')->with('success', 'success');
+    }
+    
+    return view('sales.sales_status.add', $this->data);
+
+ }
+
+    private function createGraph($data, $firstpart, $table, $chart_type, $custom = false, $call_back_sql = false) {
+        $k = [];
+        $l = [];
+        foreach ($data as $value) {
+            array_push($k, $value->{$firstpart});
+            array_push($l, (int) $value->count);
+        }
+        $chart = new SimpleChart;
+        $chart->labels($k);
+        $chart->dataset($this->x_axis == '' ? $table : $this->x_axis, $chart_type, $l);
+
+        if ($call_back_sql != false) {
+            foreach ($call_back_sql as $key => $sql) {
+                $call = $this->createCallBack(DB::select($sql), $firstpart);
+                $chart->labels($call[0]);
+                $chart->dataset($key, $chart_type, $call[1]);
+            }
+        }
+        $title = $this->graph_title == '' ?
+                ucwords('Relationship Between ' . $table . ' and ' . str_replace('_', ' ', $firstpart)) : $this->graph_title;
+        $chart->title($title);
+        $this->data['chart'] = $chart;
+        return $custom == true ? $this->createCustomChart($data, $chart_type, $firstpart) : view('analyse.charts.chart', $this->data);
+    }
+
+        private function createCustomChart($data, $chart_type, $base_column) {
+            $insight = $this;
+            return view('insight.highcharts', compact('data', 'chart_type', 'base_column', 'insight'));
+        }
+
+        public function createChartBySql($sql, $firstpart, $table, $chart_type, $custom = false, $call_back_sql = false) {
+            $data = DB::select($sql);
+            return $this->createGraph($data, $firstpart, $table, $chart_type, $custom, $call_back_sql);
+        }
+    
 }

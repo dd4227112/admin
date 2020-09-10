@@ -7,7 +7,12 @@
         <div class="page-header">
             <div class="page-header-title">
                 <h4 class="box-title">Schools</h4>
-                <span>List of private schools in Tanzania</span>
+                <?php
+                        if(isset($branch) && count($branch)){ ?>
+                            <span>List of Private Schools in <?=$branch->branch->district->name?>, <?= $branch->branch->district->region->name?></span>
+                        <?php }else{ ?>
+                            <span>List of Private Schools in <?=Auth::user()->name?></span>
+                      <?php  } ?>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">

@@ -6,8 +6,10 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Charts\SimpleChart;
 use DB;
 use Auth;
+
 class Controller extends BaseController {
 
     use AuthorizesRequests,
@@ -15,6 +17,25 @@ class Controller extends BaseController {
         ValidatesRequests;
 
     public $data;
+
+    
+    /**
+     *
+     * @var Graph title 
+     */
+    public $graph_title = '';
+
+    /**
+     *
+     * @var x axis 
+     */
+    public $x_axis = '';
+
+    /**
+     *
+     * @var y axis 
+     */
+    public $y_axis = '';
 
     public function createBarGraph() {
         $sql = 'select count(created_at::date), "user"  as dataname,created_at::date as timeline from all_log where "user" is not null group by "user",created_at::date order by created_at::date desc limit 10 ';
@@ -112,4 +133,127 @@ class Controller extends BaseController {
         }
     }
 
+    public function curlPrivate($fields, $url = null) {
+        // Open connection
+        $url = 'http://51.77.212.234:8081/api/payment';
+        $ch = curl_init();
+// Set the url, number of POST vars, POST data
+
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'application/x-www-form-urlencoded'
+        ));
+
+        curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+        return $result;
+    }
+
+
+    /**
+     * 
+     * @param type $sql
+     * @param type $firstpart
+     * @param type $table
+     * @param type $chart_type
+     * @param type $custom
+     * @return type
+     */
+    public function createChartBySql($sql, $firstpart, $table, $chart_type, $custom = false, $call_back_sql = false) {
+        $data = DB::select($sql);
+        return $this->createGraph($data, $firstpart, $table, $chart_type, $custom, $call_back_sql);
+    }
+
+    /**
+     * 
+     * @param type $table
+     * @param type $base_column
+     * @param type $join_table
+     * @param type $join_table_array
+     * @param type $chart_type
+     * @param type $custom
+     * @param type $as_alias
+     * @return type
+     */
+    public function createChart($table, $base_column, $join_table = false, $join_table_array = false, $chart_type = 'bar', $custom = false, $as_alias = false) {
+
+        $data = $join_table == false ? DB::table($table)
+                        ->select(DB::raw('count(*)'), DB::raw($base_column))
+                        ->groupBy(DB::raw($as_alias == FALSE ? $base_column : $as_alias))->get() :
+                DB::table($table)
+                        ->join($join_table, array_keys($join_table_array)[0] . '.' . array_values($join_table_array)[0], array_keys($join_table_array)[1] . '.' . array_values($join_table_array)[1])
+                        ->select(DB::raw('count(*)'), DB::raw($base_column))
+                        ->groupBy(DB::raw($as_alias == FALSE ? $base_column : $as_alias))->get();
+        $column = preg_replace('/^([^::]*).*$/', '$1', $as_alias == FALSE ? $base_column : $as_alias);
+        list($firstpart) = explode(',', $column);
+        return $this->createGraph($data, $firstpart, $table, $chart_type, $custom);
+    }
+
+    /**
+     * 
+     * @param type $data
+     * @param type $chart_type
+     * @param type $base_column
+     * @return type
+     */
+    private function createCustomChart($data, $chart_type, $base_column) {
+        $insight = $this;
+        return view('insight.highcharts', compact('data', 'chart_type', 'base_column', 'insight'));
+    }
+
+    /**
+     * 
+     * @param type $data
+     * @param type $firstpart
+     * @param type $table
+     * @param type $chart_type
+     * @param type $custom
+     * @param type $call_back_sql
+     * @return type
+     */
+    private function createGraph($data, $firstpart, $table, $chart_type, $custom = false, $call_back_sql = false) {
+        $k = [];
+        $l = [];
+        foreach ($data as $value) {
+            array_push($k, $value->{$firstpart});
+            array_push($l, (int) $value->count);
+        }
+        $chart = new SimpleChart;
+        $chart->labels($k);
+        $chart->dataset($this->x_axis == '' ? $table : $this->x_axis, $chart_type, $l);
+
+        if ($call_back_sql != false) {
+            foreach ($call_back_sql as $key => $sql) {
+                $call = $this->createCallBack(DB::select($sql), $firstpart);
+                $chart->labels($call[0]);
+                $chart->dataset($key, $chart_type, $call[1]);
+            }
+        }
+        $title = $this->graph_title == '' ?
+                ucwords('Relationship Between ' . $table . ' and ' . str_replace('_', ' ', $firstpart)) : $this->graph_title;
+        $chart->title($title);
+        $this->data['chart'] = $chart;
+        return $custom == true ? $this->createCustomChart($data, $chart_type, $firstpart) : view('analyse.charts.chart', $this->data);
+    }
+
+    /**
+     * 
+     * @param type $data
+     * @param type $firstpart
+     * @return type
+     */
+    private function createCallBack($data, $firstpart) {
+        $k = [];
+        $l = [];
+        foreach ($data as $value) {
+            array_push($k, $value->{$firstpart});
+            array_push($l, (int) $value->count);
+        }
+        return [$k, $l];
+    }
 }

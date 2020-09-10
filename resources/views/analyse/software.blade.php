@@ -85,7 +85,7 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
                             <div class="card-block-big">
                                 <div>
                                     <?php
-                                    $total_reacherd = \collect(DB::select('select count(*) from admin.error_logs a  WHERE ' . $where))->first()->count;
+                                    $total_reacherd = \collect(DB::select('SELECT count(*) from admin.error_logs a  WHERE a.route is not null AND ' . $where))->first()->count;
                                     ?>
                                     <h3><?= $total_reacherd ?></h3>
                                     <p>Total Errors
@@ -109,7 +109,7 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
                             <div class="card-block-big">
                                 <div>
                                     <?php
-                                    $total_schools = \collect(DB::select('select count(*) from admin.error_logs a WHERE deleted_at is not null and  ' . $where))->first()->count;
+                                    $total_schools = \collect(DB::select('select count(*) from admin.error_logs a WHERE  a.deleted_at is not null and  a.route is not null and  ' . $where))->first()->count;
                                     ?>
                                     <h3><?= $total_schools ?></h3>
                                     <p>Error Resolved
@@ -159,8 +159,8 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
                             </div>
                             <div class="card-block">
                                 <?php
-                                $new_schools = 'select count(*),extract(month from created_at) as month from admin.error_logs a
-where extract(year from a.created_at)=' . $year . '  group by month order by month';
+                                $new_schools = 'SELECT count(*),extract(month from created_at) as month from admin.error_logs a
+where extract(year from a.created_at)=' . $year . ' AND a.route is not null  group by month order by month';
                                 echo $insight->createChartBySql($new_schools, 'month', 'Software Issues Recorded', 'line', false);
                                 ?>
                             </div>
@@ -270,13 +270,13 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                                                 </thead>
                                                 <tbody>
                                                     <?php
-                                                    $sqls = "select count(a.*),b.name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.task_types c on c.id=a.task_type_id where $where  and c.department=3  group by b.name";
+                                                    $sqls = "select count(a.*),b.name,b.id from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.task_types c on c.id=a.task_type_id where $where  and c.department=3  group by b.name,b.id";
                                                     $tasks = DB::select($sqls);
                                                     foreach ($tasks as $task) {
                                                         ?>
                                                         <tr>
 
-                                                            <td><?= $task->name ?></td>
+                                                        <td><a href="<?=url('customer/taskGroup/task/'.$task->id)?>"><?= $task->name ?></a></td>
                                                             <td><?= $task->count ?></td>
 
                                                         </tr>

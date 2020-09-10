@@ -55,7 +55,102 @@ class Customer extends Controller {
         return view('customer.faq', $this->data);
     }
 
+    public function getSlot($user_id, $date) {
+        $start_date = date('Y-m-d', strtotime($date));
+        $sql = "select * from admin.slots where status=1 and id not in (select slot_id from admin.tasks where slot_id is not null and start_date::date='{$start_date}' and id in (select task_id from admin.tasks_users where user_id={$user_id}) ) order by id asc limit 1 ";
+        return \collect(\DB::select($sql))->first();
+    }
+
+    function config() {
+        $status_id = request('id'); //1=complete, 2 =pending, 3 =not yet
+        $schema = request('school_id');
+        $train_item_id = request('training_id');
+        $client = \App\Models\Client::where('username', $schema)->first();
+        $train_item = \App\Models\TrainItem::find($train_item_id);
+        //create a tasks in task table
+        $time = 0;
+        $activity = '';
+        if (strtolower($status_id) == 'complete') {
+            $activity = 'Complete : ' . $train_item->content;
+            $start_date = date('Y-m-d H:i');
+            $end_date = date('Y-m-d H:i', strtotime("+{$time} minutes", strtotime($start_date)));
+        } else {
+            //not yet and pending are tasks needed to be allocated
+            $activity = 'Pending Tasks: ' . $train_item->content;
+            $time += $train_item->time;
+            $end = \App\Models\Task::where('user_id', Auth::user()->id)->orderBy('end_date', 'desc')->first();
+
+            $start_date = count($end) == 1 && strtotime($end->end_date) > time() ? date('Y-m-d H:i', strtotime("+{$time} minutes", strtotime($end->end_date))) : date('Y-m-d H:i');
+
+            if (date('H', strtotime($start_date)) > 16) {
+                //its end of the time, just add a new day
+                $sat_add_time = (int) $time + 16 * 60;
+                $start_date = date('Y-m-d H:i', strtotime("+{$sat_add_time} minutes", strtotime($start_date)));
+            }
+
+            if (date('D', strtotime($start_date)) == 'Sat') {
+                //its saturday, so add 48 hours
+                $sat_add_time = (int) $time + 48 * 60;
+                $start_date = date('Y-m-d H:i', strtotime("+{$sat_add_time} minutes", strtotime($start_date)));
+            }
+
+            if (date('l', strtotime($start_date)) == 'Sunday') {
+                // its sunday, so add 24 hours
+                $sun_add_time = (int) $time + 24 * 60;
+                $start_date = date('Y-m-d H:i', strtotime("+{$sun_add_time} minutes", strtotime($start_date)));
+            }
+
+            $end_date = date('Y-m-d H:i', strtotime("+{$time} minutes", strtotime($start_date)));
+        }
+        $slot = $this->getSlot(Auth::user()->id, $start_date);
+        $date = date('Y-m-d', strtotime($start_date));
+        $data = [
+            'activity' => $activity,
+            'date' => date('Y-m-d'),
+            'user_id' => Auth::user()->id,
+            'status' => ucfirst($status_id),
+            'task_type_id' => preg_match('/data/i', $activity) ? 3 : 4,
+            'start_date' => date('Y-m-d H:i', strtotime($date . ' ' . $slot->start_time)),
+            'end_date' => date('Y-m-d H:i', strtotime($date . ' ' . $slot->end_time)),
+            'slot_id' => $slot->id
+        ];
+
+        $is_selected = $train_item->trainItemAllocation()->where('client_id', $client->id)->orderBy('id', 'desc')->first();
+        if (count($is_selected) == 1) {
+            \App\Models\Task::where('id', $is_selected->task->id)->update([
+                'activity' => $activity,
+                'user_id' => Auth::user()->id,
+                'status' => ucfirst($status_id)
+            ]);
+            echo 'updated';
+        } else {
+            $task = \App\Models\Task::create($data);
+
+            DB::table('tasks_users')->insert([
+                'task_id' => $task->id,
+                'user_id' => Auth::user()->id,
+            ]);
+
+            DB::table('tasks_clients')->insert([
+                'task_id' => $task->id,
+                'client_id' => (int) $client->id
+            ]);
+            \App\Models\TrainItemAllocation::create([
+                'task_id' => $task->id,
+                'client_id' => $client->id,
+                'user_id' => Auth::user()->id,
+                'train_item_id' => $train_item->id,
+                'school_person_allocated' => '',
+                'max_time' => $train_item->time
+            ]);
+            //insert into training allocation
+            $this->send_email(Auth::user()->email, 'Task Allocation', $activity . ' <br/>Start Date: ' . $start_date . ' <br/>End Date: ' . $end_date);
+            echo 'success';
+        }
+    }
+
     function setup() {
+
         if (request('type')) {
             echo json_encode(array('data' =>
                 array(
@@ -67,6 +162,44 @@ class Customer extends Controller {
             $this->data['schools'] = DB::select("SELECT distinct table_schema as schema_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','beta_testing','accounts','pg_catalog','constant','api','information_schema','public')");
             return view('customer.setup', $this->data);
         }
+    }
+
+    public function editTrain() {
+        $task_id = request('task_id');
+        $user_id = request('user_id');
+        $start_date = request('start_date');
+        $end_date = request('end_date');
+        $attr = request('attr');
+        $value = request('value');
+        if ((int) $user_id > 0 && (int) $task_id > 0) {
+            $task = \App\Models\Task::find($task_id)->update(['user_id' => $user_id]);
+            DB::table('tasks_users')->where('task_id', $task_id)->update([
+                'user_id' => $user_id,
+            ]);
+            \App\Models\TrainItemAllocation::where('task_id', $task_id)->update([
+                'user_id' => $user_id,
+            ]);
+        }
+        if ($attr == 'school_person' && (int) $task_id > 0) {
+            \App\Models\TrainItemAllocation::where('task_id', $task_id)->update([
+                'school_person_allocated' => $value,
+            ]);
+        }
+        if ($attr == 'start_date' && (int) $task_id > 0) {
+            $slot_id = request('slot_id');
+            $slot = DB::table('admin.slots')->where('id', $slot_id)->first();
+            $obj = [
+                'start_date' => date('Y-m-d H:i', strtotime($value . ' ' . $slot->start_time)),
+                'end_date' => date('Y-m-d H:i', strtotime($value . ' ' . $slot->end_time)),
+                'slot_id' => $slot_id];
+            \App\Models\Task::find($task_id)->update($obj);
+            die(json_encode(array_merge(array('task_id' => $task_id), $obj)));
+        }
+        if ($attr == 'end_date' && (int) $task_id > 0) {
+            \App\Models\Task::find($task_id)->update(['end_date' => $value]);
+        }
+        //insert into training allocation
+        echo 'success';
     }
 
     public function getData() {
@@ -104,15 +237,15 @@ class Customer extends Controller {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
-
-        DB::table('constant.guides')->insert([
-            'permission_id' => $request->permission_id,
-            'content' => $request->content,
+    public function createGuide() {
+$obj=[
+            'permission_id' => request()->permission_id,
+            'content' => str_replace('src="../../storage/images','src="'.url('/').'/storage/images',request()->content),
             'created_by' => Auth::user()->id,
             'language' => 'eng'
-        ]);
-        return redirect('support/guide');
+        ];
+        DB::table('constant.guides')->insert($obj);
+        return redirect('customer/guide');
     }
 
     public function psms($param) {
@@ -155,7 +288,14 @@ class Customer extends Controller {
             $page = 'edit_guide';
             if ($_POST) {
                 $request = request()->all();
-                \App\Model\Guide::find(request('guide_id'))->update($request);
+
+               $obj=[
+            'permission_id' => request()->permission_id,
+            'content' => str_replace('src="../../../storage/images','src="'.url('/').'/storage/images',request()->content),
+            "is_edit" => request()->is_edit,
+            'language' => 'eng'
+        ];
+                \App\Model\Guide::find(request('guide_id'))->update($obj);
                 return redirect('customer/guide');
             }
         } else {
@@ -260,7 +400,7 @@ class Customer extends Controller {
     public function profile() {
         $school = $this->data['schema'] = request()->segment(3);
         $id = request()->segment(4);
-        $this->data['shulesoft_users'] = \App\Models\User::all();
+        $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get();
 
         $is_client = 0;
         if ($school == 'school') {
@@ -298,7 +438,7 @@ class Customer extends Controller {
                         . '<ul>'
                         . '<li>Task: ' . $task->activity . '</li>'
                         . '<li>Type: ' . $task->taskType->name . '</li>'
-                        . '<li>Deadline: ' . $task->date . '</li>'
+                        . '<li>Deadline: ' . $task->start_date . '</li>'
                         . '</ul>';
                 $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
             }
@@ -334,8 +474,8 @@ class Customer extends Controller {
         $tab = request()->segment(3);
         $id = request()->segment(4);
         if ($tab == 'add') {
-            $this->data['clients'] = \App\Models\Client::all();
-            $this->data['schools'] = \DB::table('schools')->get();
+            $this->data['types'] = DB::table('task_types')->where('department', Auth::user()->department)->get();
+            $this->data['departments'] = DB::table('departments')->get();
             if ($_POST) {
 
                 $data = array_merge(request()->except('to_user_id'), ['user_id' => Auth::user()->id]);
@@ -386,12 +526,21 @@ class Customer extends Controller {
                         }
                     }
                 }
+//                tasks_schedules::create([
+//                    'task_id',
+//                    'training_section_id',
+//                    'client_role',
+//                ]);
+                //If we schedule this task, save this into schedule and add details to label it
+
                 return redirect('customer/activity')->with('success', 'success');
             }
 
             return view('customer/addtask', $this->data);
         } elseif ($tab == 'show' && $id > 0) {
             $this->data['activity'] = \App\Models\Task::find($id);
+            $this->data['client'] = \App\Models\TaskClient::where('task_id', $id)->first();
+            $this->data['school'] = \App\Models\TaskSchool::where('task_id', $id)->first();
             return view('customer/view_task', $this->data);
         } else {
             $date = request('taskdate');
@@ -402,7 +551,11 @@ class Customer extends Controller {
     }
 
     public function changeStatus() {
-        \App\Models\Task::where('id', request('id'))->update(['status' => request('status')]);
+        if(request('status') == 'complete'){
+        \App\Models\Task::where('id', request('id'))->update(['status' => request('status'), 'end_date' => date("Y-m-d H:i:s"),  'updated_at' => date("Y-m-d H:i:s")]);
+        }else{
+            \App\Models\Task::where('id', request('id'))->update(['status' => request('status'),  'updated_at' => date("Y-m-d H:i:s")]);
+        }
         $users = DB::table('tasks_users')->where('task_id', request('id'))->get();
         if (count($users) > 0) {
 
@@ -452,8 +605,8 @@ class Customer extends Controller {
     public function updateTask() {
         $id = request('id');
         $action = request('action');
-        \App\Models\Task::where('id', $id)->update(['action' => $action]);
-        return redirect()->back()->with('success', 'success');
+        \App\Models\Task::where('id', $id)->update(['status' => $action]);
+        echo '<small style="color: red">Success</small>';
     }
 
     public function allocate() {
@@ -530,7 +683,13 @@ class Customer extends Controller {
 
     public function modules() {
         //    $schemas = $this->data['schools'] = DB::select("SELECT distinct table_schema as schema_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public')");
+        //    Remove comment if you want support person to see only schools allocated to them
+        //  if (Auth::user()->department == 1) {
+        // $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public') and schema_name in (select schema_name from users_schools where user_id=" . Auth::user()->id . "  and status=1)");
+        //   } else {
         $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public') ");
+        //  }
+
         $sch = [];
         foreach ($schemas as $schema) {
             array_push($sch, $schema->schema_name);
@@ -609,6 +768,20 @@ class Customer extends Controller {
         return view('customer.logsummary', $this->data);
     }
 
+    public function karibu() {
+
+        $this->data['clients'] = DB::connection('karibusms')->table('client')->whereNotNull('keyname')->get();
+        $this->data['shulesoft'] = DB::connection('karibusms')->table('client')->where('client_id', 318)->first();
+        if ((int) request()->segment(3) > 0) {
+            $client_id = request()->segment(3);
+            DB::connection('karibusms')->table('client')->where('client_id', $client_id)->update([
+                'gcm_id' => $this->data['shulesoft']->gcm_id
+            ]);
+            return redirect()->back()->with('success', 'success');
+        }
+        return view('customer.karibusms', $this->data);
+    }
+
     public function feedbacks() {
         $feedbacks = \App\Model\Feedback::orderBy('id', 'desc')->paginate();
         return view('customer.feedback', compact('feedbacks'));
@@ -666,12 +839,25 @@ class Customer extends Controller {
             $schema = request('schema_name');
             $status = request('status');
             if ((int) $status > 0) {
-                DB::table($schema . '.setting')->update(['status' => $status]);
+                DB::table($schema . '.setting')->update(['school_status' => $status]);
                 return redirect()->back()->with('success', $schema . ' Status Updated successfuly');
             }
         }
     }
-
+    public function resetPassword() {
+        $schema = request()->segment(3);
+            if ($schema != '') {
+                $pass = $schema . rand(5697, 33);
+                $username = $schema.date('Hi');
+                DB::table($schema . '.setting')->update(['password' => bcrypt($pass), 'username' => $username]);
+                $this->data['school'] =  DB::table($schema . '.setting')->first();
+                $this->data['schema'] =  $schema;
+                $this->data['pass'] =  $pass;
+                return view('customer.view', $this->data)->with('success', 'Password Updated Successfully');
+            }else{
+                return redirect()->back()->with('warning', 'Please Define Specific School');
+            }
+    }
     public function map() {
         $schema = request()->segment(3);
         $school_id = request()->segment(4);
@@ -763,8 +949,8 @@ class Customer extends Controller {
     }
 
     public function viewContract() {
-        $contract_id=request()->segment(3);
-        $contract=\App\Models\Contract::find($contract_id);
+        $contract_id = request()->segment(3);
+        $contract = \App\Models\Contract::find($contract_id);
         $this->data['path'] = $contract->companyFile->path;
         return view('layouts.file_view', $this->data);
     }
@@ -781,7 +967,84 @@ class Customer extends Controller {
         DB::table('admin.client_contracts')->insert([
             'contract_id' => $contract_id, 'client_id' => $client_id
         ]);
-        return redirect()->back()->with('success','Succeess');
+        return redirect()->back()->with('success', 'Succeess');
     }
+
+    public function taskGroup() {
+        $type = request()->segment(3);
+        $id = request()->segment(4);
+        if ($type == 'user') {
+            $sql = "select a.id, a.activity,a.created_at::date, a.date,d.name as user ,e.name as type  from admin.tasks a join admin.tasks_clients c on a.id=c.task_id
+            join admin.users d on d.id=a.user_id join admin.task_types e on a.task_type_id=e.id WHERE a.user_id = $id order by a.id asc";
+            $this->data['activities'] = \App\Models\Task::where('user_id', $id)->orderBy('id', 'DESC')->get();
+        } elseif ($type == 'task') {
+            $this->data['activities'] = \App\Models\Task::where('task_type_id', $id)->orderBy('id', 'DESC')->get();
+        } else {
+            $this->data['activities'] = \App\Models\Task::where('task_type_id', $id)->orderBy('id', 'DESC')->get();
+        }
+        return view('customer.task_group', $this->data);
+        return view('layouts.file_view', $this->data);
+    }
+
+    /**
+     * 1. we check available date start from the end date of the respective csr
+     * 2. We loop through dates, and return a range of next 10 days
+     * 3. We skip sunday and saturday, otherwise if a person accept that
+     * 4. we return range of available dates
+     */
+    public function getDate($id = null, $default_dates = null) {
+        $user_id = $id = null || (int) $id==0? request('user_id') : $id;
+        $task_user = \App\Models\TaskUser::where('user_id', $user_id)->orderBy('id', 'desc')->first();
+        $task_date = count($task_user) == 1 ? $task_user->task->end_date : date('Y-m-d');
+        $end_date = date('Y-m-d');
+        $option = '<option></option>';
+        for ($i = 0; $i <= 10; $i++) {
+            $date = date('Y-m-d', strtotime('+' . $i . ' days', strtotime($end_date)));
+            if (date('D', strtotime($date)) == 'Sat' || date('l', strtotime($date)) == 'Sunday') {
+                continue;
+            }
+            $selected = $default_dates != null && date('Y-m-d', strtotime($default_dates)) == $date ? 'selected' : '';
+            $option .= '<option value="' . $date . '" ' . $selected . '>' . $date . '</option>';
+        }
+        echo $option;
+    }
+
+    /**
+     * 1. check available date
+     * 2. find active slots that are not available in the that day and show it to users
+     * 3.
+     */
+    public function getAvailableSlot() {
+        $user_id = request('user_id');
+        $start_date = request('start_date');
+        $sql = "select * from admin.slots where status=1 and id not in (select slot_id from admin.tasks where slot_id is not null and start_date::date='{$start_date}' and id in (select task_id from admin.tasks_users where user_id={$user_id}) ) ";
+        $slots = \DB::select($sql);
+        $option = '<option></option>';
+        foreach ($slots as $slot) {
+
+            $option .= '<option value="' . $slot->id . '">' . $slot->start_time . ' - ' . $slot->end_time . '</option>';
+        }
+        echo $option;
+    }
+
+    public function download() {
+        $client = request()->segment(3);
+        $this->data['show_download'] = request()->segment(4);
+        $this->data['client'] = \App\Models\Client::find($client);
+        $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->get();
+        $view = view('customer.training.jobcard', $this->data);
+        if ((int) $this->data['show_download'] == 1) {
+            echo $view;
+            $file_name = $this->data['client']->username . '.doc';
+            $headers = array(
+                "Content-type" => "text/html",
+                "Content-Disposition" => "attachment;Filename=$file_name"
+            );
+            return response()->download('storage/app/' . $file_name, $file_name, $headers);
+        }
+        return $view;
+    }
+
+
 
 }

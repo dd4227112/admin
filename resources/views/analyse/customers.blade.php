@@ -28,9 +28,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
     $where_setting=(int) $today==1 ?' ':" WHERE a.created_at::date <='".$end_date."'";
     $out_of = \collect(DB::select('select count(*) from admin.all_setting a   '.$where_setting))->first()->count;
     $active_customers = \collect(DB::select('select count(distinct "schema_name") from admin.all_login_locations a  WHERE "table" in (\'setting\',\'users\',\'teacher\') and ' . $where))->first()->count;
-    $total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=1) and ' . $where))->first()->count;
-    $yes_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=1) and action=(\'Yes\') and ' . $where))->first()->count;
-    $no_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=1) and action=(\'No\') and ' . $where))->first()->count;
+    $total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=1) and ' . $where .' and a.status not in(\'Pending\',\'New\')'))->first()->count;
 
 ?>
 </div>
@@ -53,13 +51,12 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
 
         <div class="page-body">
             <div class="row">
-                <div class="col-lg-4 text-left">
-                   <p class="btn btn-success"> Yes - <?= $yes_activity ?> out of <?= $total_activity ?> <span style="padding-left: 40px;"> No - <?= $no_activity ?>  out of <?= $total_activity ?> </span></p>
+                <div class="col-lg-3 text-left">
 
                 </div>
-                <div class="col-lg-4"></div>
+                <div class="col-lg-3"></div>
 
-                <div class="col-lg-4 text-right">
+                <div class="col-lg-6 text-right">
                     <select class="form-control" id="check_custom_date">
                         <option value="today" <?= $today == 1 ? 'selected' : '' ?>>Today</option>
                         <option value="custom"  <?= $today == 0 ? 'selected' : '' ?>>Custom</option>
@@ -200,12 +197,12 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                                         </thead>
                                         <tbody>
                                             <?php
-                                            $tasks = DB::select('select count(a.*),b.name from admin.tasks a join admin.task_types b on b.id=a.task_type_id where   a.user_id in (select id from admin.users where department=1) and ' . $where . '  group by b.name');
+                                            $tasks = DB::select('select count(a.*),b.name,b.id from admin.tasks a join admin.task_types b on b.id=a.task_type_id where   a.user_id in (select id from admin.users where department=1) and ' . $where . '  group by b.name, b.id');
                                             foreach ($tasks as $task) {
                                                 ?>
                                                 <tr>
 
-                                                    <td><?= $task->name ?></td>
+                                                    <td><a href="<?=url('customer/taskGroup/task/'.$task->id)?>"><?= $task->name ?></a></td>
                                                     <td><?= $task->count ?></td>
                                                 </tr>
                                             <?php } ?>
@@ -247,12 +244,12 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                                 <tbody>
 
                                     <?php
-                                    $activities = DB::select("select a.id, a.activity,a.created_at,b.name as task_name, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id WHERE   a.user_id in (select id from admin.users where department=1) and " . $where);
+                                    $activities = DB::select("select a.id, a.activity,a.created_at,b.name as task_name,a.user_id, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id WHERE   a.user_id in (select id from admin.users where department=1) and " . $where);
                                     foreach ($activities as $activity) {
                                         ?>
                                         <tr>
                                             <td class="img-pro">
-                                                <?= $activity->user_name ?>
+                                            <a href="<?=url('customer/taskGroup/user/'.$activity->user_id)?>"><?= $activity->user_name ?></a>
                                             </td>
                                         <!--    <td class="pro-name"><?= $activity->activity ?>
                                             </td>-->
@@ -293,11 +290,11 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                                 </thead>
                                 <tbody>
                                     <?php
-                                            $sqls = "select count(a.*),b.username from admin.tasks a join admin.tasks_clients c on a.id=c.task_id join admin.clients b on b.id=c.client_id
-                                            WHERE a.user_id in (select id from admin.users where department=1) and $where group by b.username
+                                            $sqls = "SELECT count(a.*),b.username from admin.tasks a join admin.tasks_clients c on a.id=c.task_id join admin.clients b on b.id=c.client_id
+                                            WHERE a.user_id in (select id from admin.users where department=1) and ". $where . " and a.status not in('Pending','New') group by b.username
                                             UNION ALL
                                             select count(a.*),b.name from admin.tasks a join admin.tasks_schools c on a.id=c.task_id join admin.schools b on b.id=c.school_id
-                                            WHERE a.user_id in (select id from admin.users where department=1) and $where group by b.name";
+                                            WHERE a.user_id in (select id from admin.users where department=1) and ". $where ." and a.status not in('Pending','New') group by b.name";
                                     $tasks = DB::select($sqls);
                                     foreach ($tasks as $task) {
                                         ?>
@@ -351,7 +348,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
             <!-- Horizontal Timeline end -->
 
             <?php
-                                $support_distribution = "select count(*) as count, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.users c on c.id=a.user_id WHERE   a.user_id in (select id from admin.users where department=1) and " . $where . " group by user_name";
+                                $support_distribution = "select count(*) as count, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.users c on c.id=a.user_id WHERE   a.user_id in (select id from admin.users where department=1) and " . $where . " and a.status not in('Pending','New') group by user_name";
                                 echo $insight->createChartBySql($support_distribution, 'user_name', 'Support Activity', 'bar', false);
                                 ?>
 

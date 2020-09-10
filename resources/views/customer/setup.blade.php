@@ -26,6 +26,21 @@
 //foreach ($levels as $level) {
 //    $classlevel_status[$level->schema_name] = $level->schema_name;
 //}
+$train = \App\Models\TrainItemAllocation::get();
+$school_allocations = DB::select('select a.schema_name,c.source, c.sname,b.firstname, b.lastname from admin.users_schools a join admin.users b on b.id=a.user_id join admin.all_setting c on c."schema_name"=a."schema_name" where a.role_id=8 and a.status=1 and c.schema_name is not null');
+$allocation = [];
+$users_allocation = [];
+
+foreach ($school_allocations as $school_allocation) {
+    $allocation[$school_allocation->schema_name] = $school_allocation->firstname . ' ' . $school_allocation->lastname;
+}
+
+$t_allocations = [];
+$trains = DB::select('select * from admin.train_items_allocations a join admin.clients b on b.id=a.client_id join admin.tasks c on c.id=a.task_id join admin.train_items d on d.id=a.train_item_id');
+foreach ($trains as $train) {
+
+    $t_allocations[$train->username][$train->id] = $train->status;
+}
 ?>
 <!-- Sidebar inner chat end-->
 <!-- Main-body start -->
@@ -36,6 +51,7 @@
             <div class="page-header-title">
                 <h4>Schools Setup</h4>
                 <span>Once school is registered in the system, all mandatory parts must be specified</span>
+
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -61,11 +77,8 @@
                         <div class="card-header">
                             <h5>School Basic Information</h5>
                             <span>This part shows areas to be defined in specific school. Your task is to ensure all parameters are defined effectively on each school</span>
-                            <div class="card-header-right">
-                                <i class="icofont icofont-rounded-down"></i>
-                                <i class="icofont icofont-refresh"></i>
-                                <i class="icofont icofont-close-circled"></i>
-                            </div>
+                            <b>Please Observe</b>
+                            <p class="alert alert-info">If you allocate status to Any School, that task will be assigned to your account, not to someone else</p>
 
                         </div>
 
@@ -77,103 +90,149 @@
                                         <tr>
                                             <th>School Name</th>
 
-                                            <th>Class Levels</th>
-                                            <th>Academic Years</th>
-                                            <th>Terms</th>
+                                            <th>Person Allocated</th>
+                                            <?php
+                                            $x = 1;
+                                            $trainings = \App\Models\TrainItem::orderBy('id', 'asc')->get();
+                                            foreach ($trainings as $training) {
+                                                ?>
 
-                                            <th>Sections</th>
-
-                                            <th>School Stamp</th>
+                                                <th><?= $training->content ?></th>
+                                            <?php } ?>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
+                                        $complete = '';
+                                        $pending = '';
+                                        $new = '';
                                         foreach ($schools as $school) {
                                             ?>
                                             <tr>
                                                 <td><?= $school->schema_name ?></td>
-
-                                                <td>   <?php
-                                                    //classlevel
-                                                    $levels = DB::table($school->schema_name . '.classlevel')->get();
-                                                    if (count($levels) == 0) {
-                                                        echo '<b class="label label-warning">Not Defined</b>';
-                                                    }
-                                                    ?>
-                                                    
-                                                </td>
-                                                <td>
-                                                    <?php
-                                                    //academic year
-                                                    if (count($levels) > 0) {
-                                                        foreach ($levels as $level) {
-
-                                                            $academic_year = DB::table($school->schema_name . '.academic_year')->where('class_level_id', $level->classlevel_id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->first();
-                                                            if (count($academic_year) == 0) {
-                                                                echo '<b class="label label-warning">Not Defined for ' . $level->name . ' (' . date('Y') . ')</b>';
-                                                            }
-                                                        }
+                                                <td><?php
+                                                    if (isset($allocation[$school->schema_name])) {
+                                                        echo $allocation[$school->schema_name];
+                                                        //$a = 1;
+                                                        $a = 0;
                                                     } else {
-                                                        echo '<b class="label label-warning">Not Defined</b>';
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td>
-                                                    <?php
-                                                    //academic year
-                                                    if (count($levels) > 0) {
-                                                        foreach ($levels as $level) {
-
-                                                            $academic_year = DB::table($school->schema_name . '.academic_year')->where('class_level_id', $level->classlevel_id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->first();
-                                                            if (count($academic_year) == 0) {
-                                                                echo '<b class="label label-warning">No Terms Defined for ' . $level->name . ' (' . date('Y') . ')</b>';
-                                                            } else {
-                                                                //check terms for this defined year
-                                                                $terms = DB::table($school->schema_name . '.semester')->where('academic_year_id', $academic_year->id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->count();
-
-                                                                echo $terms == 0 ? '<b class="label label-warning">No Terms Defined for ' . $level->name . ' (' . date('Y') . ')</b>' : '';
-                                                            }
-                                                        }
-                                                    } else {
-                                                        echo '<b class="label label-warning">Not Defined</b>';
-                                                    }
-                                                    ?>  
-
-                                                </td>
-
-                                                <td class="get_data" schema='<?= $school->schema_name ?>' tag='section'><span id="<?= $school->schema_name ?>section"></span></td>
-
-
-
-                                                <td ><?php
-                                                    //stamp
-                                                    if (count($levels) > 0) {
-                                                        foreach ($levels as $level) {
-                                                            if (strlen($level->stamp) < 3) {
-                                                                echo '<b class="label label-warning">No Stamp for ' . $level->name . '</b>';
-                                                            }
-                                                        }
+                                                        $a = 0;
+                                                        echo '<b class="label label-warning">No Person Allocated</b>';
                                                     }
                                                     ?></td>
+                                                <?php
+                                                foreach ($trainings as $training) {
+                                                    $status = isset($t_allocations[$school->schema_name][$training->id]) ? $t_allocations[$school->schema_name][$training->id] : '';
+                                                    ?>
+                                                    <td>
+                                                        <select name="<?= $training->id ?>" class="training" data-id="<?= $training->id ?>" data-school-id="<?= $school->schema_name ?>">
+                                                            <option value="">Select status</option>
+                                                            <option value="complete" <?= strtolower($status) == 'complete' ? 'selected' : '' ?> >Complete</option>
+                                                            <option value="pending"  <?= strtolower($status) == 'pending' ? 'selected' : '' ?>>Pending</option>
+                                                            <option value="new"  <?= strtolower($status) == 'new' ? 'selected' : '' ?>>Not Yet</option>
+                                                        </select>
+                                                        <span id="train_status<?= $training->id . '_client' . $school->schema_name ?>"></span>
+                                                    </td>
+
+                                                <?php } ?>
+
                                                 <td><a href="<?= url('customer/profile/' . $school->schema_name) ?>" class="btn btn-mini waves-effect waves-light btn-primary"><i class="icofont icofont-eye-alt"></i> View</a></td>
                                             </tr>
                                         <?php } ?>
                                     </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>School Name</th>
-                                            <th>Class Levels</th>
-                                            <th>Academic Years</th>
-                                            <th>Terms</th>
 
-                                            <th>Sections</th>
-
-                                            <th>School Stamp</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </tfoot>
                                 </table>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-block table-border-style">
+                                <div class="card-header">
+                                    <h5>Task Summary</h5>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Tasks</th>
+                                                <th>New</th>
+                                                <th>Complete</th>
+                                                <th>Pending</th>   
+                                                <th>Not Allocated</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            $x = 1;
+                                            $total_schools = \DB::table('admin.all_setting')->count();
+                                            foreach ($trainings as $training) {
+                                                $counts_complete = $training->trainItemAllocation()->whereIn('task_id', \App\Models\Task::where('status', 'Complete')->get(['id']))->count();
+                                                $counts_pending = $training->trainItemAllocation()->whereIn('task_id', \App\Models\Task::where('status', 'Pending')->get(['id']))->count();
+                                                $counts_new = $training->trainItemAllocation()->whereIn('task_id', \App\Models\Task::where('status', 'New')->get(['id']))->count();
+                                                ?>
+                                                <tr>
+                                                    <th scope="row"><?= $x ?></th>
+                                                    <td><?= $training->content ?></td>
+                                                    <td><?= $counts_new ?></td>
+                                                    <td><?= $counts_complete ?></td>
+                                                    <td><?= $counts_pending ?></td>
+                                                    <td><?= $total_schools - ($counts_complete + $counts_new + $counts_pending) ?></td>
+
+                                                </tr>
+                                                <?php
+                                                $x++;
+                                            }
+                                            ?>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="card">
+                            <div class="card-block table-border-style">
+                                <div class="card-header">
+                                    <h5>Person Task Summary</h5>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Person</th>
+                                                <th>New</th>
+                                                <th>Complete</th>
+                                                <th>Pending</th>   
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            $u = 1;
+                                            $users_tasks = \App\Models\User::where('status', 1)->where('department','<>',10)->get();
+                                            foreach ($users_tasks as $user) {
+                                                ?>
+                                                <tr>
+                                                    <th scope="row"><?= $u ?></th>
+                                                    <td><?= $user->firstname ?></td>
+                                                    <td><?= $user->tasks()->where('status', 'New')->count() ?></td>
+                                                    <td><?= $user->tasks()->where('status', 'Complete')->count() ?></td>
+                                                    <td><?= $user->tasks()->where('status', 'Pending')->count() ?></td>
+
+                                                </tr>
+                                                <?php
+                                                $u++;
+                                            }
+                                            ?>
+
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -190,8 +249,26 @@
     <?php $root = url('/') . '/public/' ?>
 
     <script type="text/javascript">
-      
+
         get_statistic = function () {
+            $('.training').change(function () {
+                var id = $(this).val();
+                var training_id = $(this).attr('data-id');
+                var school = $(this).attr('data-school-id');
+                $.ajax({
+                    type: 'get',
+                    url: '<?= url('customer/config/null/') ?>',
+                    data: {id: id, school_id: school, training_id: $(this).attr('data-id')},
+                    success: function (data) {
+                        console.log(data);
+                        $('#train_status' + training_id + '_client' + school).html(data).addClass('label label-success');
+                    },
+                    error: function () {
+                        return 2;
+                    }
+
+                });
+            });
             // var data = getData();
             // console.log(data);
             //        $(".get_data").each(function (index) {

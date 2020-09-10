@@ -31,9 +31,7 @@ function tagEdit($schema_name, $column, $value) {
             </ul>
         </div>
     </div>
-    <?php
-    $schemas = DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','beta_testing','accounts','public','pg_catalog','constant','api','information_schema')");
-    ?>
+ 
     <div class="page-body">
         <div class="row">
             <div class="col-md-12 col-xl-12">
@@ -46,12 +44,12 @@ function tagEdit($schema_name, $column, $value) {
                                 <div class="sub-title">Budget & Projections</div>                                        
                                 <!-- Nav tabs -->
                                 <ul class="nav nav-tabs md-tabs " role="tablist">
-                                    <li class="nav-item">
+<!--                                    <li class="nav-item">
                                         <a class="nav-link active" data-toggle="tab" href="#home7" role="tab"><i class="icofont icofont-home"></i>Google Sheet</a>
                                         <div class="slide"></div>
-                                    </li>
+                                    </li>-->
                                     <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#profile7" role="tab"><i class="icofont icofont-ui-user "></i>Actuals</a>
+                                        <a class="nav-link active" data-toggle="tab" href="#profile7" role="tab"><i class="icofont icofont-ui-user "></i>Actuals</a>
                                         <div class="slide"></div>
                                     </li>
                                     <li class="nav-item">
@@ -62,7 +60,7 @@ function tagEdit($schema_name, $column, $value) {
                                 </ul>
                                 <!-- Tab panes -->
                                 <div class="tab-content card-block">
-                                    <div class="tab-pane active" id="home7" role="tabpanel">
+<!--                                    <div class="tab-pane " id="home7" role="tabpanel">
                                         <div class="card-header">
                                             <h5>Revenue Projections</h5>
                                             <span>This part shows list of customers and expected amount to be collected per each customer. These information are loaded from Google Sheet </span>
@@ -71,8 +69,8 @@ function tagEdit($schema_name, $column, $value) {
                                         <div class="card-block"  style="height: 35em">
                                             <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTUgl5FL_1xQswE7AahA4eoZ3jlDD4_wzSZxo4xo4iDot83kAG17NsqmYF522vvQ6hPSC1hVs5Pum6Z/pubhtml?widget=true&amp;headers=false" height='100%' width="100%"></iframe>
                                         </div>
-                                    </div>
-                                    <div class="tab-pane" id="profile7" role="tabpanel">
+                                    </div>-->
+                                    <div class="tab-pane active" id="profile7" role="tabpanel">
                                         <div class="card-block">
                                             <input type="checkbox" <?=(int) request('skip')==1 ?'checked':''?> id="skip_field" onmousedown="skip_field()"/> Hide Inputs Fields
                                             <div class="table-responsive dt-responsive">
@@ -80,7 +78,7 @@ function tagEdit($schema_name, $column, $value) {
                                                     <thead>
                                                         <tr>
                                                             <th>School Name</th>
-
+ <th>Date Registered</th>
                                                             <th>Students</th>
                                                             <th>Price</th>
                                                             <th>Paid Amount</th>
@@ -96,17 +94,15 @@ function tagEdit($schema_name, $column, $value) {
                                                         <?php
                                                         $total_students = 0;
                                                         $total_price = 0;
+                                                        $schemas=DB::table('admin.all_setting')->get();
                                                         foreach ($schemas as $schema) {
-                                                            $setting = DB::table($schema->table_schema . '.setting')->first();
-                                                            if (count($setting) == 0) {
-                                                                continue;
-                                                            }
+                                                      
                                                             ?>
                                                             <tr>
-                                                                <td><?= $schema->table_schema ?></td>
-
+                                                                <td><?= $schema->schema_name?></td>
+<td><?= date('d M Y',strtotime($schema->created_at)) ?></td>
                                                                 <td>   <?php
-                                                                    $students = DB::table($schema->table_schema . '.student')->where('status', 1)->count();
+                                                                    $students = DB::table($schema->schema_name. '.student')->where('status', 1)->count();
                                                                     $total_students += $students;
                                                                     echo $students;
                                                                     ?>
@@ -114,13 +110,13 @@ function tagEdit($schema_name, $column, $value) {
                                                                 <td>
 
                                                                     <?php
-                                                                    $price = count($setting) == 1 ? $setting->price_per_student : 0;
+                                                                    $price = count($schema) == 1 ? $schema->price_per_student : 0;
                                                                     $total_price += $price * $students;
-                                                                    echo tagEdit($schema->table_schema, 'price_per_student', $price);
+                                                                    echo tagEdit($schema->schema_name, 'price_per_student', $price);
                                                                     ?>
                                                                 </td>
                                                                 <td>
-                                                                    <?= tagEdit($schema->table_schema, 'total_paid_amount', $setting->total_paid_amount) ?>
+                                                                    <?php echo '' ?>
                                                                 </td>
 
                                                                 <td>  
@@ -129,31 +125,29 @@ function tagEdit($schema_name, $column, $value) {
 
 
                                                                 <td> 
-                                                                    <?= tagEdit($schema->table_schema, 'payment_status', $setting->payment_status) ?>
+                                                                    <?= tagEdit($schema->schema_name, 'payment_status', $schema->payment_status) ?>
                                                                 </td>
                                                                 <td> 
-                                                                    <?= tagEdit($schema->table_schema, 'payment_deadline_date', $setting->payment_deadline_date) ?> 
+                                                                    <?= tagEdit($schema->schema_name, 'payment_deadline_date', $schema->payment_deadline_date) ?> 
                                                                 </td>
 
                                                                 <td>
-                                                                    <?= tagEdit($schema->table_schema, 'estimated_students', $setting->estimated_students) ?>
+                                                                    <?= tagEdit($schema->schema_name, 'estimated_students', isset($schema->estimated_students) ? $schema->estimated_students:'') ?>
                                                                 </td>
 
 
-                                                                <td >                    <a href="<?= url('account/invoiceView/' . $schema->table_schema) ?>" class="btn btn-sm btn-success">View</a></td>
+                                                                <td >                    <a href="<?= url('account/invoiceView/' . $schema->schema_name) ?>" class="btn btn-sm btn-success">View</a></td>
                                                             </tr>
                                                         <?php } ?>
                                                     </tbody>
                                                     <tfoot>
                                                         <tr>
-                                                            <th>Total</th>
+                                                            <th colspan="2">Total</th>
+                                                            
                                                             <th><?= $total_students ?></th>
                                                             <th><?= $total_price ?></th>
-                                                            <th>Terms</th>
+                                                            <th colspan="5"></th>
 
-                                                            <th>Sections</th>
-
-                                                            <th>School Stamp</th>
                                                         </tr>
                                                     </tfoot>
                                                 </table>

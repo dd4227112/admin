@@ -16,17 +16,15 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
     $year = date('Y', strtotime(request('start')));
     $where = "  a.created_at::date >='" . $start_date . "' AND a.created_at::date <='" . $end_date . "'";
 }
-$sqls1 = "select count(a.*),b.username from admin.tasks a join admin.tasks_clients c on a.id=c.task_id join admin.clients b on b.id=c.client_id 
+$sqls1 = "select count(a.*),b.username from admin.tasks a join admin.tasks_clients c on a.id=c.task_id join admin.clients b on b.id=c.client_id
                                                 WHERE a.user_id in (select id from admin.users where department=2) and $where group by b.username
-                                                UNION ALL 
-                                                select count(a.*),b.name from admin.tasks a join admin.tasks_schools c on a.id=c.task_id join admin.schools b on b.id=c.school_id 
+                                                UNION ALL
+                                                select count(a.*),b.name from admin.tasks a join admin.tasks_schools c on a.id=c.task_id join admin.schools b on b.id=c.school_id
                                                 WHERE a.user_id in (select id from admin.users where department=2) and $where group by b.name";
 $taskss = DB::select($sqls1);
 
-$total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and ' . $where))->first()->count;
-$yes_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and action=(\'Yes\') and ' . $where))->first()->count;
-$no_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and action=(\'No\') and ' . $where))->first()->count;
-?><div class="main-body">
+$total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and ' . $where))->first()->count;?>
+<div class="main-body">
     <div class="page-wrapper">
         <div class="page-header">
             <div class="page-header-title">
@@ -50,7 +48,6 @@ $no_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.
 
         <div class="row">
             <div class="col-lg-4">
-                <p class="btn btn-success"> Yes - <?= $yes_activity ?> out of <?= $total_activity ?> <span style="padding-left: 40px;"> No - <?= $no_activity ?>  out of <?= $total_activity ?> </span></p>
             </div>
             <div class="col-lg-4"></div>
             <div class="col-lg-4 text-right">
@@ -133,7 +130,7 @@ $no_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.
                         </div>
                     </div>
                 </div>
-                <!-- New clients card end --> 
+                <!-- New clients card end -->
                 <!-- New files card start -->
                 <div class="col-md-6 col-xl-3">
                     <div class="card client-blocks success-border">
@@ -243,6 +240,53 @@ $no_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.
                 </div>
             </div>
             <!-- counter-card-3 end -->
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card">
+                        <div class="card-header">
+                        <h5>Monthly On Boarded Schools</h5>
+                        </div>
+                        <div class="card-block">
+                        <div class="table-responsive dt-responsive">
+                                            <table id="dt-ajax-array" class="table table-striped table-bordered nowrap">
+                                                <thead>
+                                                    <tr>
+                                                        <th>No.</th>
+                                                        <th>Client</th>
+                                                        <th>Address</th>
+                                                        <th>Added Date</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                <?php
+                                                $i = 1;
+                                            $schoolz = DB::select('select * from admin.all_setting a WHERE  ' . $where);
+                                        if(count($schoolz)){
+                                            foreach($schoolz as $school){ 
+                                                ?>
+                                                <tr>
+                                                <td><?=$i++?></td>
+                                                <td><?=ucfirst($school->sname)?></td>
+                                                <td><?=ucfirst($school->address)?></td>
+                                                <td><?=$school->created_at?></td>
+                                                <td>
+                                                <?php
+                                                echo '<a href="'. url('customer/profile/'.$school->schema_name) .'">View</a>';
+                                                ?>
+                                                </td>
+                                                </tr>
+
+                                      <?php
+                                            }
+                                        }
+                                        ?>
+                            </tbody>
+                                </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- Monthly Growth Chart end-->
             <!-- Monthly Growth Chart start-->
             <div class="row">
                 <div class="col-xl-6">
@@ -262,44 +306,26 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                 <!-- Monthly Growth Chart end-->
                 <!-- Google Chart start-->
                 <div class="col-xl-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Sales Distribution Activities</h5>
-                        </div>
-                        <div class="card-block">
-                            <?php
-                            $sales_group = "select count(*),b.name as task_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id WHERE  a.task_type_id in (select id from admin.task_types where department=2) and " . $where . " group by task_name";
-                            echo $insight->createChartBySql($sales_group, 'task_name', 'Sales Group Activity', 'bar', false);
-                            ?>
-                        </div>
-                    </div>
+                <div class="card">
+                                        <div class="card-header">
+                                            <h5>Website Join Requests</h5>
+                                        </div>
+                                        <div class="card-block">
+                                            <?php
+                                            $new_schools = 'select count(*),extract(month from created_at) as month from admin.website_join_shulesoft a
+                                                where extract(year from a.created_at)=' . $year . '  group by month order by month';
+                                            echo $insight->createChartBySql($new_schools, 'month', 'Website Requests', 'line', false);
+                                            ?>
+                                        </div>
+                                    </div>
                 </div>
             </div>
-            <!-- Google Chart end-->
-            <!-- Recent Order table start -->
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Sales Distribution Activities</h5>
-                        </div>
-                        <div class="card-block">
-                            <?php
-                            $sales_group = "select count(*),b.name as task_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id WHERE   a.user_id in (select id from admin.users where department=2) and " . $where . " group by task_name";
-                            echo $insight->createChartBySql($sales_group, 'task_name', 'Sales Group Activity', 'bar', false);
-                            ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Google Chart end-->
             <!-- Recent Order table start -->
 
 
             <!-- Recent Order table end -->
-            <div class="col-sm-12 col-xl-12">
-                <div class="row">
-                    <div class="col-sm-12">
+            <div class="row">
+                    <div class="col-lg-6 col-sm-12">
                         <div class="card">
                             <div class="card-header">
                                 <h5>Sales Person Activity Ratio</h5>
@@ -312,93 +338,76 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-
-
-
-
-            <div class="col-md-12 col-xl-12">
-                <div class="row">
-                    <div class="col-md-12 col-xl-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5>Daily Tasks</h5>
-                                <label class="label label-success"><?= $on ?></label>
-                            </div>
-                            <div class="card-block">
-                                <div class="new-task">
-                                    <div class="table-responsive">
-                                        <table class="table dataTable">
-                                            <thead>
-                                                <tr class="text-capitalize">
-
-                                                    <th>Activity</th>
-                                                    <th>Count</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php
-                                                $sqls = "select count(a.*),b.name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.task_types c on c.id=a.task_type_id where $where  and c.department=2  group by b.name";
-                                                $tasks = DB::select($sqls);
-                                                foreach ($tasks as $task) {
-                                                    ?>
-                                                    <tr>
-
-                                                        <td><?= $task->name ?></td>
-                                                        <td><?= $task->count ?></td>
-
-                                                    </tr>
-                                                <?php } ?>
-
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="col-xl-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Sales Distribution Activities</h5>
+                        </div>
+                        <div class="card-block">
+                            <?php
+                            $sales_group = "select count(*),b.name as task_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id WHERE  a.task_type_id in (select id from admin.task_types where department=2) and " . $where . " group by task_name";
+                            echo $insight->createChartBySql($sales_group, 'task_name', 'Sales Group Activity', 'bar', false);
+                            ?>
                         </div>
                     </div>
-
+                </div>
+                        
+                                           
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+             
                     <!-- .events-content -->
                     <!-- Todo card start -->
-                    <div class="col-md-12 col-xl-4">
-                        <div class="card">
+                    <div class="row">
+
+                    <!-- Horizontal Timeline end -->
+                    <div class="col-lg-8 col-sm-12">
+                        <div class="card widget-chat-box">
                             <div class="card-header">
-                                <h5> Tasks count per School</h5>
-                                <label class="label label-success"><?= $on ?></label>
-                            </div>
-                            <div class="card-block">
-                                <div class="new-task">
-                                    <div class="table-responsive">
-                                        <table class="table dataTable">
-                                            <thead>
-                                                <tr class="text-capitalize">                                            <th>Activity</th>
-                                                    <th>Count</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php
-                                                
-                                                foreach ($taskss as $task) {
-                                                    ?>
-                                                    <tr>
-                                                        <td><?= substr($task->username, 0, 30) ?></td>
-                                                        <td><?= $task->count ?></td>
-
-                                                    </tr>
-                                                <?php } ?>
-
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                        <h5>
+                                            Tasks Activities
+                                        </h5>
                                 </div>
+                                <div class="card-block">
+                                 <table id="res-config" class="table table-bordered w-100 dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Task Type</th>
+                                            <th>Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <?php
+                                        $activities = DB::select("select a.id, a.activity,a.created_at,b.name as task_name,a.user_id, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id WHERE   a.user_id in (select id from admin.users where department=2) and " . $where);
+                                        foreach ($activities as $activity) {
+                                            ?>
+                                            <tr>
+                                                <td class="img-pro">
+                                                <a href="<?=url('customer/taskGroup/user/'.$activity->user_id)?>"><?= $activity->user_name ?></a>
+                                                </td>
+                                            <!--    <td class="pro-name"><?= $activity->activity ?>
+                                                </td>-->
+                                                <td> <a href="<?= url('customer/activity/show/'.$activity->id) ?>"> <?= $activity->task_name ?></a> </td>
+                                                <td>
+                                                    <label class="text-danger">  <?= $activity->created_at ?></label>
+                                                </td>
+
+                                            </tr>
+                                        <?php } ?>
+
+
+                                    </tbody>
+                                </table>
+
                             </div>
                         </div>
                     </div>
-                    <!-- Horizontal Timeline end -->
-
-
-                    <div class="col-md-12 col-xl-4">
+                    <div class="col-lg-4 col-sm-12">
                         <!-- User activities chart start -->
                         <div class="card analytic-user">
                             <div class="card-block-big text-center">
@@ -416,23 +425,8 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                     </div>
                     <!-- User activities chart end -->
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Website Join Requests</h5>
-                        </div>
-                        <div class="card-block">
-                            <?php
-                            $new_schools = 'select count(*),extract(month from created_at) as month from admin.website_join_shulesoft a
-where extract(year from a.created_at)=' . $year . '  group by month order by month';
-                            echo $insight->createChartBySql($new_schools, 'month', 'Website Requests', 'line', false);
-                            ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+          
         </div>
     </div>
 </div>

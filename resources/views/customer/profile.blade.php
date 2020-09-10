@@ -4,9 +4,9 @@
 $root = url('/') . '/public/';
 define('SCHEMA', $schema);
 
-function check_status($table,$where=null) {
+function check_status($table, $where = null) {
     $schema = SCHEMA;
-    $report = \collect(DB::select('select created_at::date from ' . $schema . '.' . $table . '  '.$where.' order by created_at::date desc limit 1'))->first();
+    $report = \collect(DB::select('select created_at::date from ' . $schema . '.' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first();
 
     if (count($report) == 1) {
 
@@ -121,13 +121,13 @@ function check_status($table,$where=null) {
                                                                 <div class="txt-primary">School Status</div>
                                                                 <?php
                                                                 $st = DB::table($schema . '.setting')->first();
-                                                                if ($st->status == 1) {
+                                                                if ($st->school_status == 1) {
                                                                     echo '<div class="btn btn-primary">Active Paid</div>';
-                                                                } elseif ($st->status == 2) {
+                                                                } elseif ($st->school_status == 2) {
                                                                     echo '<div class="btn btn-success">Active</div>';
-                                                                } elseif ($st->status == 3) {
+                                                                } elseif ($st->school_status == 3) {
                                                                     echo '<div class="btn btn-warning">Resale</div>';
-                                                                } elseif ($st->status == 4) {
+                                                                } elseif ($st->school_status == 4) {
                                                                     echo '<div class="btn btn-warning">Inactive</div>';
                                                                 } else {
                                                                     echo '<div>not defined</div>';
@@ -149,27 +149,27 @@ function check_status($table,$where=null) {
                                                     </div>
                                                     <div class="card-block user-box">
                                                         <?php
-                                                        if(count($top_users) > 0){
-                                                        foreach ($top_users as $log) {
-                                                            ?>
-                                                            <div class="media m-b-10">
-                                                                <a class="media-left" href="#!">
-                                                                    <?php
-                                                                    $user_image = 'storage/uploads/images/defualt.png';
-                                                                    ?>
+                                                        if (count($top_users) > 0) {
+                                                            foreach ($top_users as $log) {
+                                                                ?>
+                                                                <div class="media m-b-10">
+                                                                    <a class="media-left" href="#!">
+                                                                        <?php
+                                                                        $user_image = 'storage/uploads/images/defualt.png';
+                                                                        ?>
 
-                                                                    <img class="media-object img-circle" src="https://demo.shulesoft.com/<?= $user_image ?>" alt="Image">
-                                                                    <div class="live-status bg-danger"></div>
-                                                                </a>
-                                                                <div class="media-body">
-                                                                    <div class="chat-header"><?= $log->name ?></div>
-                                                                    <div class="text-muted social-designation"><?= $log->usertype ?></div>
+                                                                        <img class="media-object img-circle" src="https://demo.shulesoft.com/<?= $user_image ?>" alt="Image">
+                                                                        <div class="live-status bg-danger"></div>
+                                                                    </a>
+                                                                    <div class="media-body">
+                                                                        <div class="chat-header"><?= $log->name ?></div>
+                                                                        <div class="text-muted social-designation"><?= $log->usertype ?></div>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        <?php 
+                                                                <?php
+                                                            }
                                                         }
-                                                        }
-                                                         ?>
+                                                        ?>
 
                                                     </div>
                                                 </div>
@@ -213,11 +213,15 @@ function check_status($table,$where=null) {
                                         <div class="card social-tabs">
                                             <ul class="nav nav-tabs md-tabs tab-timeline" role="tablist">
                                                 <li class="nav-item">
-                                                    <a class="nav-link" data-toggle="tab" href="#timeline" role="tab" aria-expanded="false">Activities</a>
+                                                    <a class="nav-link active" data-toggle="tab" href="#timeline" role="tab" aria-expanded="false">Activities</a>
                                                     <div class="slide"></div>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link active" data-toggle="tab" href="#about" role="tab" aria-expanded="false">About</a>
+                                                    <a class="nav-link" data-toggle="tab" href="#about" role="tab" aria-expanded="false">About</a>
+                                                    <div class="slide"></div>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" data-toggle="tab" href="#implementation" role="tab" aria-expanded="false"> Implementation</a>
                                                     <div class="slide"></div>
                                                 </li>
                                                 <li class="nav-item">
@@ -233,11 +237,11 @@ function check_status($table,$where=null) {
                                         <!-- Tab panes -->
                                         <div class="tab-content">
                                             <!-- Timeline tab start -->
-                                            <div class="tab-pane" id="timeline" aria-expanded="false">
+                                            <div class="tab-pane active" id="timeline" aria-expanded="false">
                                                 <div class="row">
                                                     <div class="card-block">
-                                                        <!--  <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#large-Modal">Create Task</button>-->
-                                                        <a href="<?= url('Customer/activity/add') ?>" class="btn btn-primary waves-effect">Create Task</a>
+                                                         <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#large-Modal">Create Task</button>
+                                                        <!-- <a href="<?= url('Customer/activity/add') ?>" class="btn btn-primary waves-effect">Create Task</a> -->
                                                         <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
                                                             <div class="modal-dialog modal-lg" role="document">
                                                                 <div class="modal-content">
@@ -253,7 +257,7 @@ function check_status($table,$where=null) {
                                                                                 Create a task for this school with implementation deadline</span>
 
                                                                             <div class="form-group">
-                                                                                <textarea class="form-control" placeholder="Create Task" name="activity"></textarea>
+                                                                                <textarea class="form-control" rows="4" placeholder="Create Task" name="activity"></textarea>
                                                                             </div>
                                                                             <div class="form-group">
                                                                                 <div class="row">
@@ -263,11 +267,14 @@ function check_status($table,$where=null) {
                                                                                         <select name="task_type_id"  class="form-control select2">
                                                                                             <?php
                                                                                             $types = DB::table('task_types')->where('department', Auth::user()->department)->get();
-                                                                                            if(count($types)>0){
-                                                                                            foreach ($types as $type) {
-                                                                                                ?>
-                                                                                                <option value="<?= $type->id ?>"><?= $type->name ?></option>
-                                                                                            <?php } }?>
+                                                                                            if (count($types) > 0) {
+                                                                                                foreach ($types as $type) {
+                                                                                                    ?>
+                                                                                                    <option value="<?= $type->id ?>"><?= $type->name ?></option>
+                                                                                                    <?php
+                                                                                                }
+                                                                                            }
+                                                                                            ?>
 
                                                                                         </select>
                                                                                     </div>
@@ -275,12 +282,15 @@ function check_status($table,$where=null) {
                                                                                         Person Allocated to do
                                                                                         <select name="to_user_id" class="form-control select2">
                                                                                             <?php
-                                                                                            $staffs = DB::table('users')->where('status', 1)->get();
-                                                                                            if(count($staffs) > 0){
-                                                                                            foreach ($staffs as $staff) {
-                                                                                                ?>
-                                                                                                <option value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
-                                                                                            <?php } } ?>
+                                                                                            $staffs = DB::table('users')->where('status', 1)->where('role_id', '<>', 7)->get();
+                                                                                            if (count($staffs) > 0) {
+                                                                                                foreach ($staffs as $staff) {
+                                                                                                    ?>
+                                                                                                    <option value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
+                                                                                                    <?php
+                                                                                                }
+                                                                                            }
+                                                                                            ?>
 
                                                                                         </select>
                                                                                     </div>
@@ -288,15 +298,14 @@ function check_status($table,$where=null) {
                                                                             </div>
                                                                             <div class="form-group">
                                                                                 <div class="row">
-
-                                                                                    <div class="col-md-6">
-                                                                                        Deadline Date
-                                                                                        <input type="date" class="form-control" placeholder="Deadline" name="date">
-                                                                                    </div>
-                                                                                    <div class="col-md-6">
-                                                                                        Deadline Time
-                                                                                        <input type="time" class="form-control" placeholder="Time" name="time">
-                                                                                    </div>
+                                                                                <div class="col-md-6">
+                                                                                <strong> Start Date</strong> 
+                                                                                <input type="datetime-local" class="form-control" placeholder="Deadline" name="start_date">
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <strong> End Date </strong> 
+                                                                                <input type="datetime-local" class="form-control" placeholder="Time" name="end_date">
+                                                                            </div>
                                                                                 </div>
                                                                             </div>
 
@@ -306,24 +315,29 @@ function check_status($table,$where=null) {
                                                                                 <hr>
                                                                                 <?php
                                                                                 $modules = DB::table('modules')->get();
-                                                                                if(count($modules) >0){
-                                                                                foreach ($modules as $module) {
-                                                                                    ?>
-                                                                                    <input type="checkbox" id="feature<?= $module->id ?>" value="{{$module->id}}" name="module_id[]" >  <?php echo $module->name; ?>  &nbsp; &nbsp;
+                                                                                if (count($modules) > 0) {
+                                                                                    foreach ($modules as $module) {
+                                                                                        ?>
+                                                                                        <input type="checkbox" id="feature<?= $module->id ?>" value="{{$module->id}}" name="module_id[]" >  <?php echo $module->name; ?>  &nbsp; &nbsp;
 
-                                                                                <?php } } ?>
+                                                                                        <?php
+                                                                                    }
+                                                                                }
+                                                                                ?>
                                                                             </div>
 
                                                                             <div class="form-group">
                                                                                 <div class="row">
 
-                                                                                    <div class="col-md-6">
+                                                                                    <div class="col-md-12">
                                                                                         <strong> Task Executed Successfully</strong> 
-                                                                                        <select name="action" class="form-control" required>
-                                                                                            <option value=''> Select Task Status Here...</option>
-                                                                                            <option value='Yes'> Yes </option>
-                                                                                            <option value='No'> No </option>
-                                                                                        </select>
+                                                                                    <select name="status" class="form-control" required>
+
+                                                                                        <option value='new'> Select Task Status Here...</option>
+                                                                                        <option value='complete'> Yes and Completed </option>
+                                                                                        <option value='on progress'> Yes but on Progress </option>
+                                                                                        <option value='schedule'> Not yet (Schedule) </option>
+                                                                                    </select>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -344,89 +358,90 @@ function check_status($table,$where=null) {
                                                         <?php
                                                         $tasks_ids = \App\Models\TaskSchool::whereIn('school_id', \App\Models\ClientSchool::where('client_id', $client_id)->get(['school_id']))->get(['task_id']);
                                                         $tasks = \App\Models\Task::whereIn('id', \App\Models\TaskClient::where('client_id', $client_id)->get(['task_id']))->orWhereIn('id', $tasks_ids)->orderBy('created_at', 'desc')->get();
-                                                        if(count($tasks) > 0){
-                                                        foreach ($tasks as $task) {
-                                                            ?>
-                                                            <div class="social-timelines p-relative o-hidden" id="removetag<?= $task->id ?>">
-                                                                <div class="row timeline-right p-t-35">
-                                                                    <div class="col-xs-2 col-sm-1">
-                                                                        <div class="social-timelines-left">
-                                                                            <img class="img-circle timeline-icon" src="<?= Auth::user()->photo ?>" alt="">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-xs-10 col-sm-11 p-l-5 p-b-35">
-                                                                        <div class="card m-0">
-                                                                            <span class="dropdown-toggle addon-btn text-muted f-right service-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" role="tooltip">Actions</span>
-                                                                            <div class="dropdown-menu dropdown-menu-right b-none services-list">
-                                                                                <a class="dropdown-item" href="#" onmousedown="removeTag(<?= $task->id ?>)">Remove tag</a>
-                                                                                <a class="dropdown-item" href="#">Report Photo</a>
-                                                                                <a class="dropdown-item" href="#">Hide From Timeline</a>
-                                                                                <a class="dropdown-item" href="#">Blog User</a>
+                                                        if (count($tasks) > 0) {
+                                                            foreach ($tasks as $task) {
+                                                                ?>
+                                                                <div class="social-timelines p-relative o-hidden" id="removetag<?= $task->id ?>">
+                                                                    <div class="row timeline-right p-t-35">
+                                                                        <div class="col-xs-2 col-sm-1">
+                                                                            <div class="social-timelines-left">
+                                                                                <img class="img-circle timeline-icon" src="<?= Auth::user()->photo ?>" alt="">
                                                                             </div>
-
-                                                                            <div class="card-block">
-                                                                                <div class="timeline-details">
-                                                                                    <div class="chat-header">
-                                                                                        <?= $task->user->firstname ?> - <span class="text-muted"><?= date("d M Y", strtotime($task->created_at)) ?></span>
-                                                                                    </div>
-                                                                                    <p class="text-muted"><?= $task->activity ?></p>
+                                                                        </div>
+                                                                        <div class="col-xs-10 col-sm-11 p-l-5 p-b-35">
+                                                                            <div class="card m-0">
+                                                                                <span class="dropdown-toggle addon-btn text-muted f-right service-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" role="tooltip">Actions</span>
+                                                                                <div class="dropdown-menu dropdown-menu-right b-none services-list">
+                                                                                    <a class="dropdown-item" href="#" onmousedown="removeTag(<?= $task->id ?>)">Remove tag</a>
+                                                                                    <a class="dropdown-item" href="#">Report Photo</a>
+                                                                                    <a class="dropdown-item" href="#">Hide From Timeline</a>
+                                                                                    <a class="dropdown-item" href="#">Blog User</a>
                                                                                 </div>
 
-                                                                                <div class="user-box">
-                                                                                    <div class="p-b-30"> <span class="f-14"><a href="#">What have been done</a></span></div>
-                                                                                    <?php
-                                                                                    $comments = $task->taskComments()->get();
-                                                                                    if (count($comments) > 0) {
-                                                                                        foreach ($comments as $comment) {
-                                                                                            ?>
-                                                                                            <div class="media m-b-1" style="margin: 0px; padding: 0px">
-                                                                                                <a class="media-left" href="#">
-                                                                                                    <img class="media-object img-circle m-r-2" src="<?= $root ?>assets/images/avatar-1.png" alt="Image">
-                                                                                                </a>
-                                                                                                <div class="media-body b-b-muted social-client-description">
-                                                                                                    <div class="chat-header"><?= $comment->user->firstname ?> - <span class="text-muted"><?= date('d M Y', strtotime($comment->created_at)) ?></span></div>
-                                                                                                    <p class="text-muted"><?= $comment->content ?></p>
-                                                                                                </div>
-                                                                                            </div>
-
-                                                                                            <?php
-                                                                                        }
-                                                                                    }
-                                                                                    ?>
-                                                                                    <div class="new_comment<?= $task->id ?>"></div>
-                                                                                    <div class="media">
-                                                                                        <a class="media-left" href="#">
-                                                                                            <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-blank.jpg" alt="Image">
-                                                                                        </a>
-                                                                                        <div class="media-body">
-                                                                                            <form class="">
-                                                                                                <div class="">
-                                                                                                    <textarea rows="5" cols="5" id="task_comment<?= $task->id ?>" class="form-control" placeholder="Write Something here..."></textarea>
-                                                                                                    <div class="text-right m-t-20"><a href="#" class="btn btn-primary waves-effect waves-light" onclick="return false" onmousedown="$.get('<?= url('customer/taskComment/null') ?>', {content: $('#task_comment<?= $task->id ?>').val(), task_id:<?= $task->id ?>}, function (data) {
-                                                                                                                $('.new_comment<?= $task->id ?>').after(data);
-                                                                                                                $('#task_comment<?= $task->id ?>').val('')
-                                                                                                            })">Post</a></div>
-                                                                                                </div>
-                                                                                            </form>
+                                                                                <div class="card-block">
+                                                                                    <div class="timeline-details">
+                                                                                        <div class="chat-header">
+                                                                                            <?= $task->user->firstname ?> - <span class="text-muted"><?= date("d M Y", strtotime($task->created_at)) ?></span>
                                                                                         </div>
+                                                                                        <p class="text-muted"><?= $task->activity ?></p>
+                                                                                        <p>Start Date- <?=$task->start_date?>  &nbsp; &nbsp; | &nbsp; &nbsp; End Date - <?=$task->end_date?></p>
+
                                                                                     </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        <?php
-                                                        } 
-                                                    }
-                                             ?>
+
+                                                                                    <div class="user-box">
+                                                                                        
+                                <?php
+                                $comments = $task->taskComments()->get();
+                                if (count($comments) > 0) { ?>
+                                        <div class="p-b-30"> <span class="f-14"><a href="#">What have been done</a></span></div>
+                                  <?php
+                                  foreach ($comments as $comment) {
+                                    ?>
+                                    <div class="media" style="padding-bottom: 2px;">
+                                      <a class="media-left" href="#">
+                                        <img class="media-object img-circle m-r-20" src="<?=$root.'/assets/images/avatar-2.png'; ?>" alt="Image">
+                                      </a>
+                                      <div class="media-body b-b-muted social-client-description">
+                                        <div class="chat-header"><?= $comment->user->name ?><span class="text-muted"><?= date('d M Y', strtotime($comment->created_at)) ?></span></div>
+                                        <p class="text-muted"><?= $comment->content ?></p>
+                                      </div>
+                                    </div>
+
+                                    <?php
+                                  }
+                                }
+                                ?>
+                                <div class="new_comment<?= $task->id ?>"></div>
+                                <div class="media">
+                                  <a href="#" class="btn btn-success btn-xs right" onclick="return false" onmousedown="$('#comment_area').toggle()"><i class="ti-comments"> </i> Comment  </a>
+                                  <div class="media-body"  id="comment_area" style="display:none">
+                                    <form class="">
+                                      <div class="">
+                                        <textarea rows="5" cols="5" id="task_comment<?= $task->id ?>" class="form-control" placeholder="Write Something here..."></textarea>
+                                        <div class="text-right m-t-20"><a href="#" class="btn btn-primary waves-effect waves-light" onclick="return false" onmousedown="$.get('<?= url('customer/taskComment/null') ?>', {content: $('#task_comment<?= $task->id ?>').val(), task_id:<?= $task->id ?>}, function (data) {
+                                          $('.new_comment<?= $task->id ?>').after(data);
+                                          $('#task_comment<?= $task->id ?>').val('')
+                                        })">Post</a></div>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            </div>
+                            </div>
+                            </div>
+                            </div>                           <?php
+                                                            }
+                                                        }
+                                                        ?>
                                                     </div>
                                                 </div>
 
                                             </div>
                                             <!-- Timeline tab end -->
                                             <!-- About tab start -->
-                                            <div class="tab-pane active" id="about" aria-expanded="true">
+                                            <div class="tab-pane " id="about" aria-expanded="true">
                                                 <div class="row">
                                                     <div class="col-sm-12">
                                                         <div class="card">
@@ -462,14 +477,22 @@ function check_status($table,$where=null) {
                                                                                         <tr>
                                                                                             <th class="social-label b-none p-b-0">School Level</th>
                                                                                             <td class="social-user-name b-none p-b-0 text-muted"><?php
-                                                                                                if(count($levels) > 0){
-                                                                                                foreach ($levels as $level) {
-                                                                                                    echo $level->name . ' - ' . $level->result_format . '<br/>';
+                                                                                                if (count($levels) > 0) {
+                                                                                                    foreach ($levels as $level) {
+                                                                                                        echo $level->name . ' - ' . $level->result_format . '<br/>';
+                                                                                                    }
                                                                                                 }
-                                                                                            }
                                                                                                 ?></td>
                                                                                         </tr>
-
+                                                                                        <tr>
+                                                                                            <th class="social-label b-none p-b-0">School Access</th>
+                                                                                            <td class="social-user-name b-none p-b-0 text-muted">
+                                                                                            <?php
+                                                                                            echo 'Username - '.$school->username.'
+                                                                                            <br><a href="'. url('customer/resetPassword/'. $schema) .'" class="btn btn-success btn-sm" ><i class="icofont icofont-refresh"></i> Reset Password</a>';
+                                                                                                
+                                                                                                ?></td>
+                                                                                        </tr>
                                                                                     <?php } ?>
                                                                                 </tbody></table>
                                                                         </form>
@@ -561,19 +584,20 @@ function check_status($table,$where=null) {
                                                                                         $school_allocations = \collect(DB::select("select b.id from admin.users_schools a join admin.users b on b.id=a.user_id join admin.schools c on c.id=a.school_id where a.role_id=8 and a.status=1 and c.schema_name='" . $schema . "'"))->first();
                                                                                         ?>    <select class="form-control" id="support_id" name="support_id">
                                                                                         <?php
-                                                                                        if(count($shulesoft_users)>0){
-                                                                                        foreach ($shulesoft_users as $user) { ?>
-                                                                                                <option value="<?= $user->id ?>" <?php
-                                                                                                if (count($school_allocations) == 1 && $user->id == $school_allocations->id) {
-                                                                                                    $support_person = $user->firstname . ' ' . $user->lastname;
-                                                                                                    echo 'selected="selected"';
-                                                                                                } else {
-                                                                                                    echo '';
-                                                                                                }
-                                                                                                ?>><?= $user->firstname . ' ' . $user->lastname ?></option>
-                                                                                            <?php
-                                                                                                     }
-                                                                                                }
+                                                                                        if (count($shulesoft_users) > 0) {
+                                                                                            foreach ($shulesoft_users as $user) {
+                                                                                                ?>
+                                                                                                    <option value="<?= $user->id ?>" <?php
+                                                                                                    if (count($school_allocations) == 1 && $user->id == $school_allocations->id) {
+                                                                                                        $support_person = $user->firstname . ' ' . $user->lastname;
+                                                                                                        echo 'selected="selected"';
+                                                                                                    } else {
+                                                                                                        echo '';
+                                                                                                    }
+                                                                                                    ?>><?= $user->firstname . ' ' . $user->lastname ?></option>
+                                                                                                            <?php
+                                                                                                        }
+                                                                                                    }
                                                                                                     ?>
                                                                                         </select>
 
@@ -588,19 +612,21 @@ function check_status($table,$where=null) {
                                                                                         $school_sales_allocations = \collect(DB::select("select b.id from admin.users_schools a join admin.users b on b.id=a.user_id join admin.schools c on c.id=a.school_id where a.role_id=3 and a.status=1 and c.schema_name='" . $schema . "'"))->first();
                                                                                         ?>                            <select class="form-control" id="sales_id" name="sales_id">
 
-                                                                                            <?php if(count($school_sales_allocations)){
-                                                                                                foreach ($shulesoft_users as $user) { ?>
-                                                                                                <option value="<?= $user->id ?>" <?php
-                                                                                                if (count($school_sales_allocations) == 1 && $user->id == $school_sales_allocations->id) {
-                                                                                                    $sales_person = $user->firstname . ' ' . $user->lastname;
-                                                                                                    echo 'selected="selected"';
-                                                                                                } else {
-                                                                                                    echo '';
-                                                                                                }
-                                                                                                ?>><?= $user->firstname . ' ' . $user->lastname ?></option>
-                                                                                                    <?php 
+                                                                                            <?php
+                                                                                            if (count($school_sales_allocations)) {
+                                                                                                foreach ($shulesoft_users as $user) {
+                                                                                                    ?>
+                                                                                                    <option value="<?= $user->id ?>" <?php
+                                                                                                    if (count($school_sales_allocations) == 1 && $user->id == $school_sales_allocations->id) {
+                                                                                                        $sales_person = $user->firstname . ' ' . $user->lastname;
+                                                                                                        echo 'selected="selected"';
+                                                                                                    } else {
+                                                                                                        echo '';
                                                                                                     }
-                                                                                            }
+                                                                                                    ?>><?= $user->firstname . ' ' . $user->lastname ?></option>
+                                                                                                            <?php
+                                                                                                        }
+                                                                                                    }
                                                                                                     ?>
                                                                                         </select>
 
@@ -670,23 +696,23 @@ function check_status($table,$where=null) {
                                                                                     <?php
                                                                                     $client_contracts = \App\Models\ClientContract::where('client_id', $client_id)->get();
                                                                                     $i = 1;
-                                                                                    if(count($client_contracts)>0){
-                                                                                    foreach ($client_contracts as $client_contract) {
-                                                                                        ?>
-                                                                                        <tr>
-                                                                                            <th scope="row"><?= $i ?></th>
-                                                                                            <td><?= $client_contract->contract->name ?></td>
-                                                                                            <td><?= $client_contract->contract->contractType->name ?></td>
-                                                                                            <td><?= $client_contract->contract->start_date ?></td>
-                                                                                            <td><?= $client_contract->contract->end_date ?></td>
-                                                                                            <td><?= $client_contract->contract->user->name ?></td>
-                                                                                            <td><a type="button" class="btn btn-primary btn-xs waves-effect" target="_blank" href="<?= url('customer/viewContract/' . $client_contract->contract->id) ?>">View</a></td>
-                                                                                        </tr>
+                                                                                    if (count($client_contracts) > 0) {
+                                                                                        foreach ($client_contracts as $client_contract) {
+                                                                                            ?>
+                                                                                            <tr>
+                                                                                                <th scope="row"><?= $i ?></th>
+                                                                                                <td><?= $client_contract->contract->name ?></td>
+                                                                                                <td><?= $client_contract->contract->contractType->name ?></td>
+                                                                                                <td><?= $client_contract->contract->start_date ?></td>
+                                                                                                <td><?= $client_contract->contract->end_date ?></td>
+                                                                                                <td><?= $client_contract->contract->user->name ?></td>
+                                                                                                <td><a type="button" class="btn btn-primary btn-xs waves-effect" target="_blank" href="<?= url('customer/viewContract/' . $client_contract->contract->id) ?>">View</a></td>
+                                                                                            </tr>
 
-                                                                                        <?php
-                                                                                        $i++;
+                                                                                            <?php
+                                                                                            $i++;
+                                                                                        }
                                                                                     }
-                                                                                }
                                                                                     ?>
                                                                                 </tbody>
                                                                             </table>
@@ -700,36 +726,119 @@ function check_status($table,$where=null) {
                                                 </div>
                                             </div>
 
+                                            <div class="tab-pane" id="implementation" aria-expanded="false">
+
+
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h5>Project Implementation Schedule</h5>
+                                                        <span>This part have to be followed effectively </span>
+                                                        <p align="right">
+                                                            <a href="<?= url('customer/download/' . $client_id) ?>" class="btn btn-warning btn-sx">Download Implementation Plan</a>
+                                                        </p>
+                                                    </div>
+                                                    <div class="card-block table-border-style">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-bordered dataTable">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>#</th>
+                                                                        <th>Task</th>
+                                                                        <th>ShuleSoft Person Allocated</th>
+                                                                        <th><?= ucfirst($schema) ?> Person Allocated</th>
+                                                                        <th>Start Date : Time</th>
+                                                                        <th>End Date : Time</th>
+                                                                        <th>Status</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <?php
+                                                                    $x = 1;
+                                                                    $customer = new \App\Http\Controllers\Customer();
+                                                                    $trainings = \App\Models\TrainItemAllocation::where('client_id', $client_id)->orderBy('id', 'asc')->get();
+                                                                    foreach ($trainings as $training) {
+                                                                        ?>
+                                                                        <tr>
+                                                                            <th scope="row"><?= $x ?></th>
+                                                                            <td><?= $training->trainItem->content ?></td>
+                                                                            <td> 
+                                                                                <?php
+                                                                                ?>   
+                                                                                <select class="task_allocated_id"  name="" task-id="<?= $training->task->id ?>" id="task_user<?= $training->task->id ?>">
+                                                                                    <?php
+                                                                                    if (count($shulesoft_users) > 0) {
+                                                                                        foreach ($shulesoft_users as $user) {
+                                                                                            ?>
+                                                                                            <option value="<?= $user->id ?>" <?php
+                                                                                            if ($user->id == $training->user->id) {
+
+                                                                                                echo 'selected="selected"';
+                                                                                            } else {
+                                                                                                echo '';
+                                                                                            }
+                                                                                            ?>><?= $user->firstname . ' ' . $user->lastname ?></option>
+                                                                                                    <?php
+                                                                                                }
+                                                                                            }
+                                                                                            ?>
+                                                                                </select>
+                                                                            </td>
+                                                                            <td> <b data-attr="school_person" task-id="<?= $training->task->id ?>"  contenteditable="true" class="task_school_group"> <?= strlen($training->school_person_allocated) > 4 ? $training->school_person_allocated : 'Not Allocated' ?></b> </td>
+                                                                            <td>
+
+                                                                                <select id="<?= $training->task->id ?>" class="task_group" data-task-id="<?= $training->task->id ?>" data-user_id="<?= $training->task->user_id ?>"><?= $customer->getDate($training->task->user_id, $training->task->start_date) ?></select>
+                                                                                <select data-id="<?= $training->task->id ?>" id="start_slot<?= $training->task->id ?>"  data-task-id="<?= $training->task->id ?>"  data-attr="start_date" class="slot"><?= '<option>' . date('H:i', strtotime($training->task->start_date)) . '</option>' ?></select>
+                                                                            </td>
+                                                                            <td>
+
+                                                                                <b data-attr="end_date" id="task_end_date_id<?= $training->task->id ?>"><?= $training->task->end_date ?> </b>
+
+                                                                            </td>
+                                                                            <td> <?= $training->task->status ?> </td>
+                                                                        </tr>
+                                                                        <?php
+                                                                        $x++;
+                                                                    }
+                                                                    ?>
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
                                             <!-- About tab end -->
                                             <!-- Photos tab start -->
                                             <div class="tab-pane" id="photos" aria-expanded="false">
-<!--                                                <div class="card">
-                                                    <div class="card-footer">
-                                                        <div class="row text-center">
-                                                            <div class="col-sm-4">
-                                                                <div class="social-media">
-                                                                    <span>Weekly Logins Users</span>
-                                                                    <i class="icofont  icofont-ui-user"></i>
-                                                                    <h5 class="counter">2587</h5>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-4">
-                                                                <div class="social-media">
-                                                                    <span>Weekly Logins Parents</span>
-                                                                    <i class="icofont icofont-ui-user"></i>
-                                                                    <h5 class="counter">5987</h5>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-4">
-                                                                <div class="social-media">
-                                                                    <span>Weekly Logins Users</span>
-                                                                    <i class="icofont  icofont-ui-user"></i>
-                                                                    <h5 class="counter">58,158</h5>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>-->
+                                                <!--                                                <div class="card">
+                                                                                                    <div class="card-footer">
+                                                                                                        <div class="row text-center">
+                                                                                                            <div class="col-sm-4">
+                                                                                                                <div class="social-media">
+                                                                                                                    <span>Weekly Logins Users</span>
+                                                                                                                    <i class="icofont  icofont-ui-user"></i>
+                                                                                                                    <h5 class="counter">2587</h5>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="col-sm-4">
+                                                                                                                <div class="social-media">
+                                                                                                                    <span>Weekly Logins Parents</span>
+                                                                                                                    <i class="icofont icofont-ui-user"></i>
+                                                                                                                    <h5 class="counter">5987</h5>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="col-sm-4">
+                                                                                                                <div class="social-media">
+                                                                                                                    <span>Weekly Logins Users</span>
+                                                                                                                    <i class="icofont  icofont-ui-user"></i>
+                                                                                                                    <h5 class="counter">58,158</h5>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>-->
+
                                                 <div class="card">
                                                     <div class="card-header">
                                                         <h5>Client Usage Stages</h5>
@@ -793,8 +902,8 @@ function check_status($table,$where=null) {
                                                                                     } else {
                                                                                         //check terms for this defined year
                                                                                         $terms = DB::table($schema . '.semester')->where('academic_year_id', $academic_year->id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->count();
-
-                                                                                        echo $terms == 0 ? '<b class="label label-warning">No Terms Defined for ' . $level->name . ' (' . date('Y') . ')</b><br/>' : '';
+                                                                                         
+                                                                                        echo $terms == 0 ? '<b class="label label-warning">No Terms Defined for ' . $level->name . ' (' . date('Y') . ')</b><br/>' : '<label class="label label-success">' .$level->name. ' ('. $academic_year->name .') at ' . date('F d, Y', strtotime($academic_year->created_at)) . '</label>';
                                                                                     }
                                                                                 }
                                                                             } else {
@@ -816,7 +925,7 @@ function check_status($table,$where=null) {
 
                                                                         </td>
                                                                         <td>
-                                                                          
+
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
@@ -848,14 +957,51 @@ function check_status($table,$where=null) {
                                                                     <tr>
                                                                         <th scope="row">6</th>
                                                                         <td>SMS sents</td>
-                                                                        <td> <?= check_status('sms'); ?></td>
+                                                                        <td> <?= check_status('sms'); ?>
+                                                                            <br/>
+                                                                            <?php
+                                                                            $karibu = DB::connection('karibusms')->table('client')->where('keyname', $schema)->first();
+                                                                            $karibu_shulesoft = DB::connection('karibusms')->table('client')->where('client_id', 318)->first();
+                                                                            if (count($karibu) == 1 && count($karibu_shulesoft) && $karibu->gcm_id = $karibu_shulesoft->gcm_id) {
+
+                                                                                $last_online = $karibu->last_reported_online;
+
+                                                                                $time = strtotime($last_online);
+                                                                                $tz_date = strtotime('-4 hours', $time);
+
+
+
+                                                                                $sms_time = date('d-m-Y H:i', $tz_date);
+                                                                                ?>
+                                                                                Sent From <label class="label label-success"> ShuleSoft Phone</label><br/>
+                                                                                Last Seen <label class="label label-info">
+                                                                                    <?= $sms_time ?>
+                                                                                </label>
+                                                                                <?php
+                                                                            } else if (count($karibu) == 1) {
+                                                                                $last_online = $karibu->last_reported_online;
+
+                                                                                $time = strtotime($last_online);
+                                                                                $tz_date = strtotime('-4 hours', $time);
+
+
+
+                                                                                $sms_time = date('d-m-Y H:i', $tz_date);
+                                                                                ?>
+                                                                                Sent From <label class="label label-success"> <?= $schema ?> Phone</label><br/>
+                                                                                Last Seen <label class="label label-info">
+                                                                                    <?= $sms_time ?>
+                                                                                </label>
+                                                                            <?php }
+                                                                            ?>
+                                                                        </td>
                                                                         <td></td>
                                                                     </tr>
-                                                                       <tr>
+                                                                    <tr>
                                                                         <th scope="row">7</th>
-                                                                        <td>SMS sents</td>
-                                                                        <td> Expenses: <?= check_status('expense',' WHERE refer_expense_id in (select id from '.$schema.'.refer_expense where financial_category_id in (2,3)) '); ?>
-                                                                        <br/></td>
+                                                                        <td>Expenses</td>
+                                                                        <td> <?= check_status('expense', ' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id in (2,3)) '); ?>
+                                                                            <br/></td>
                                                                         <td></td>
                                                                     </tr>
                                                                     <tr>
@@ -876,8 +1022,8 @@ function check_status($table,$where=null) {
                                                                         <th scope="row">2</th>
                                                                         <td>Electronic Payments</td>
                                                                         <td>
-                                                                            Integration Date: <?=check_status('bank_accounts_integrations'); ?><br/>
-                                                                             Last Online Transaction Date: <?=check_status('payments',' WHERE token is not null'); ?>
+                                                                            Integration Date: <?= check_status('bank_accounts_integrations'); ?><br/>
+                                                                            Last Online Transaction Date: <?= check_status('payments', ' WHERE token is not null'); ?>
                                                                         </td>
                                                                         <td></td>
                                                                     </tr>
@@ -886,7 +1032,7 @@ function check_status($table,$where=null) {
                                                                         <td>Inventory Usage</td>
                                                                         <td>Vendors Registered: <?= check_status('vendors'); ?><br/>
                                                                             Items Registered:<?= check_status('items'); ?> 
-                                                                            
+
                                                                         </td>
                                                                         <td></td>
                                                                     </tr>
@@ -894,12 +1040,12 @@ function check_status($table,$where=null) {
                                                                         <th scope="row">4</th>
                                                                         <td>Other Transactions</td>
                                                                         <td>
-                                                                        Revenue: <?= check_status('revenues',' WHERE refer_expense_id in (select id from '.$schema.'.refer_expense where financial_category_id=1) '); ?>
-                                                                        <br/>
-                                                                      
-                                                                        Capital : <?= check_status('revenues',' WHERE refer_expense_id in (select id from '.$schema.'.refer_expense where financial_category_id=7) '); ?><br/>
-                                                                        Fixed Assets: <?= check_status('expense',' WHERE refer_expense_id in (select id from '.$schema.'.refer_expense where financial_category_id=4) '); ?><br/>
-                                                                        Liabilities : <?= check_status('expense',' WHERE refer_expense_id in (select id from '.$schema.'.refer_expense where financial_category_id=6) '); ?><br/>
+                                                                            Revenue: <?= check_status('revenues', ' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id=1) '); ?>
+                                                                            <br/>
+
+                                                                            Capital : <?= check_status('revenues', ' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id=7) '); ?><br/>
+                                                                            Fixed Assets: <?= check_status('expense', ' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id=4) '); ?><br/>
+                                                                            Liabilities : <?= check_status('expense', ' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id=6) '); ?><br/>
                                                                         </td>
                                                                         <td></td>
                                                                     </tr>
@@ -1001,22 +1147,22 @@ function check_status($table,$where=null) {
                                                                                                         data: [
 <?php
 $logs = DB::select('select count(*), extract(month from created_at) as month from ' . $schema . '.log where user_id is not null and extract(year from created_at)=' . date('Y') . '  group by extract(month from created_at) order by extract(month from created_at) asc');
-if(count($logs) > 0){
-foreach ($logs as $log) {
-    $dateObj = DateTime::createFromFormat('!m', $log->month);
-    $month = $dateObj->format('F');
-    ?>
-                                                                                                                {
-                                                                                                                    name: '<?= ucwords($month) ?>',
-                                                                                                                    y: <?php
-    echo $log->count;
-    ?>,
-                                                                                                                    drilldown: ''
-                                                                                                                },
-    <?php
-        }
-        }
-    ?>
+if (count($logs) > 0) {
+    foreach ($logs as $log) {
+        $dateObj = DateTime::createFromFormat('!m', $log->month);
+        $month = $dateObj->format('F');
+        ?>
+                                                                                                                    {
+                                                                                                                        name: '<?= ucwords($month) ?>',
+                                                                                                                        y: <?php
+        echo $log->count;
+        ?>,
+                                                                                                                        drilldown: ''
+                                                                                                                    },
+        <?php
+    }
+}
+?>
                                                                                                         ]
                                                                                                     }]
                                                                                             });
@@ -1050,17 +1196,20 @@ foreach ($logs as $log) {
                                                             <tbody>
                                                                 <?php
                                                                 $users = DB::table($schema . '.user')->where('status', 1)->get();
-                                                                if(count($users) > 0){
-                                                                foreach ($users as $user) {
-                                                                    ?>
-                                                                    <tr>
-                                                                        <td></td>
-                                                                        <td><?= $user->name ?></td>
-                                                                        <td><?= $user->phone ?></td>
-                                                                        <td><?= $user->email ?></td>
-                                                                        <td><?= $user->usertype ?></td>
-                                                                    </tr>
-                                                            <?php } } ?>
+                                                                if (count($users) > 0) {
+                                                                    foreach ($users as $user) {
+                                                                        ?>
+                                                                        <tr>
+                                                                            <td></td>
+                                                                            <td><?= $user->name ?></td>
+                                                                            <td><?= $user->phone ?></td>
+                                                                            <td><?= $user->email ?></td>
+                                                                            <td><?= $user->usertype ?></td>
+                                                                        </tr>
+                                                                        <?php
+                                                                    }
+                                                                }
+                                                                ?>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -1147,11 +1296,14 @@ foreach ($logs as $log) {
 
                                 <?php
                                 $ctypes = DB::table('admin.contracts_types')->get();
-                                if(count($ctypes)>0){
-                                foreach ($ctypes as $ctype) {
-                                    ?>
-                                    <option value="<?= $ctype->id ?>"><?= $ctype->name ?></option>
-                                    <?php } } ?>
+                                if (count($ctypes) > 0) {
+                                    foreach ($ctypes as $ctype) {
+                                        ?>
+                                        <option value="<?= $ctype->id ?>"><?= $ctype->name ?></option>
+                                        <?php
+                                    }
+                                }
+                                ?>
 
                             </select>
                         </div>
@@ -1184,7 +1336,7 @@ foreach ($logs as $log) {
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label"></label>
                         <div class="col-sm-10">
-                                <?= csrf_field() ?>
+                            <?= csrf_field() ?>
                             <button type="submit" class="btn btn-success" placeholder="Default textarea">Submit</button>
                         </div>
                     </div>
@@ -1192,47 +1344,138 @@ foreach ($logs as $log) {
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-              </div>
+                </div>
             </div>
         </div>
     </div>
+    <?php $root = url('/') . '/public/' ?>
+
+    <!-- notify js Fremwork -->
+    <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.css">
+    <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.brighttheme.css">
+    <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.buttons.css">
+    <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.history.css">
+    <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.mobile.css">
+    <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/pnotify/notify.css">
+
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.desktop.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.buttons.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.confirm.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.callbacks.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.animate.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.history.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.mobile.js"></script>
+    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.nonblock.js"></script>
+    <script type="text/javascript" src="<?= $root ?>assets/pages/pnotify/notify.js"></script>
     <script type="text/javascript">
-        allocate = function (a, role_id) {
-            $.ajax({
-                url: '<?= url('customer/allocate/null') ?>',
-                data: {user_id: a, school_id: '<?= $school->school_id ?>', role_id: role_id, schema: '<?= $schema ?>'},
-                dataType: 'html',
-                success: function (data) {
-                    if (data == 1) {
-                        alert('success');
-                    }
-                }
-            });
-        }
-        $('#school_id').click(function () {
-            var val = $(this).val();
-            $.ajax({
-                url: '<?= url('customer/search/null') ?>',
-                data: {val: val, type: 'school', schema: '<?= $schema ?>'},
-                dataType: 'html',
-                success: function (data) {
 
-                    $('#search_result').html(data);
-                }
-            });
+notify = function (title, message, type) {
+    new PNotify({
+        title: title,
+        text: message,
+        type: type,
+        hide: 'false',
+        icon: 'icofont icofont-info-circle'
+    });
+}
+
+allocate = function (a, role_id) {
+    $.ajax({
+        url: '<?= url('customer/allocate/null') ?>',
+        data: {user_id: a, school_id: '<?= $school->school_id ?>', role_id: role_id, schema: '<?= $schema ?>'},
+        dataType: 'html',
+        success: function (data) {
+            if (data == 1) {
+                alert('success');
+            }
+        }
+    });
+}
+$('#school_id').click(function () {
+    var val = $(this).val();
+    $.ajax({
+        url: '<?= url('customer/search/null') ?>',
+        data: {val: val, type: 'school', schema: '<?= $schema ?>'},
+        dataType: 'html',
+        success: function (data) {
+
+            $('#search_result').html(data);
+        }
+    });
+});
+removeTag = function (a) {
+    $.ajax({
+        url: '<?= url('customer/removeTag') ?>/null',
+        method: 'get',
+        data: {id: a},
+        success: function (data) {
+            if (data == '1') {
+                $('#removetag' + a).fadeOut();
+            }
+        }
+    });
+}
+task_group = function () {
+    $('.task_group').change(function () {
+        var val = $(this).val();
+
+        var task_id = $(this).attr('data-task-id');
+        var data_attr = $('#task_user' + task_id).val();
+        $.ajax({
+            url: '<?= url('customer/getAvailableSlot') ?>/null',
+            method: 'get',
+            data: {start_date: val, user_id: data_attr},
+            success: function (data) {
+                $('#start_slot' + task_id).html(data);
+            }
         });
-
-        removeTag = function (a) {
-            $.ajax({
-                url: '<?= url('customer/removeTag') ?>/null',
-                method: 'get',
-                data: {id: a},
-                success: function (data) {
-                    if (data == '1') {
-                        $('#removetag' + a).fadeOut();
-                    }
-                }
-            });
-        }
+    });
+    $('.task_school_group').blur(function () {
+        var val = $(this).text();
+        var data_attr = $(this).attr('data-attr');
+        var task_id = $(this).attr('task-id');
+        // var date=$('#'+task_id).val();
+        $.ajax({
+            url: '<?= url('customer/editTrain') ?>/null',
+            method: 'get',
+            dataType: 'html',
+            data: {task_id: task_id, value: val, attr: data_attr},
+            success: function (data) {
+                // $(this).after(data).addClass('label label-success');
+                notify('Success', 'Success', 'success');
+            }
+        });
+    });
+    $('.slot').change(function () {
+        var val = $(this).val();
+        //var data_attr = $(this).attr('data-attr');
+        var task_id = $(this).attr('data-id');
+        var date = $('#' + task_id).val();
+        $.ajax({
+            url: '<?= url('customer/editTrain') ?>/null',
+            method: 'get',
+            dataType: 'json',
+            data: {task_id: task_id, value: date, slot_id: val, attr: 'start_date'},
+            success: function (data) {
+                $('#task_end_date_id' + data.task_id).html(data.end_date);
+                notify('Success', 'Success', 'success');
+            }
+        });
+    });
+    $('.task_allocated_id').change(function () {
+        var task_allocated_id = $(this).val();
+        var task_id = $(this).attr('task-id');
+        $.ajax({
+            url: '<?= url('customer/editTrain') ?>/null',
+            method: 'get',
+            data: {task_id: task_id, user_id: task_allocated_id},
+            success: function (data) {
+                notify('Success', data, 'success');
+            }
+        });
+    });
+}
+$(document).ready(task_group);
     </script>
     @endsection

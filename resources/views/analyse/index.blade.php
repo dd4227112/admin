@@ -175,12 +175,15 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <button class="btn btn-primary btn-sm">Week</button>
-                            <button class="btn btn-primary btn-sm">Month</button>
-                            <button class="btn btn-primary btn-sm">Year</button>
+                        <?php $year = date('Y') ?>
+                            <h4> Monthly Success Onboarded Schools</h4>
                         </div>
                         <div class="card-block">
-                            <div id="container2"></div>
+                        <?php
+                            $new_schools = 'select count(*),extract(month from created_at) as month from admin.all_setting a
+where extract(year from a.created_at)=' . $year . '  group by month order by month';
+                            echo $insight->createChartBySql($new_schools, 'month', 'Onboarded Schools', 'line', false);
+                            ?>
                         </div>
                     </div>
                 </div>
@@ -201,30 +204,26 @@
                                                         <th>No.</th>
                                                         <th>Task type</th>
                                                         <th>School</th>
-                                                        <th>Deadline</th>
+                                                        <th>Added On</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                   <?php
-                                                  $user = Auth::user()->id;
-                                                  $sql = "(select a.id, a.activity,a.created_at::date, a.date,b.name as client,d.name as user ,e.name as type  from admin.tasks a join admin.tasks_clients c on a.id=c.task_id join admin.clients b on b.id=c.client_id
-                                                  join admin.users d on d.id=a.user_id join admin.task_types e on a.task_type_id=e.id WHERE a.user_id = $user order by a.created_at::date desc)
-                                                  UNION ALL
-                                                  (select a.id, a.activity,a.created_at::date, a.date,b.name as client,d.name as user ,e.name as type  from admin.tasks a join admin.tasks_schools c on a.id=c.task_id join admin.schools b on b.id=c.school_id
-                                                 join admin.users d on d.id=a.user_id join admin.task_types e on a.task_type_id=e.id WHERE a.user_id = $user order by a.created_at::date desc)";
-                                                $activities = DB::select($sql);
+                                               
                                                  $i = 1;
-                                                  foreach ($activities as $act):
+                                                 if(count($activities)){
+                                                  foreach ($activities as $act){
                                                      ?>
                                                   <tr>
                                                   <td><?=$i++?></td>
                                                   <td><?=$act->type?></td>
-                                                  <td><?=$act->client?></td>
-                                                  <td><?=$act->date?></td>
+                                                  <td><?=$act->activity?>..</td>
+                                                  <td><?=$act->end_date?></td>
                                                   <td> <a href="<?=url('customer/activity/show/'.$act->id)?>">View</a> </td>
                                                 </tr>
-                                              <?php endforeach; ?>
+                                                  <?php } ?>
+                                                  <?php } ?>
                                                 </tbody>
 
                                             </table>
@@ -233,7 +232,7 @@
                                     </div>
                   </div>
 
-              <?php    if (can_access('manage_users')) { ?>
+              <?php  /*  if (can_access('manage_users')) { ?>
 
                 <div class="col-lg-6">
                     <div class="row">
@@ -268,19 +267,19 @@
                         </div>
                     </div>
                 </div>
-              <?php } ?>
+              <?php } */?>
 
                 </div>
             </div>
         </div>
 </div>
     <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
-
+<!-- 
     <script src="<?= url('/public') ?>/code/highcharts.js"></script>
     <script src="<?= url('/public') ?>/code/modules/exporting.js"></script>
     <script src="<?= url('/public') ?>/code/modules/export-data.js"></script>
     <script src="<?= url('/public') ?>/code/modules/series-label.js"></script>
-    <script src="<?= url('/public') ?>/code/modules/data.js"></script>
+    <script src="<?= url('/public') ?>/code/modules/data.js"></script> -->
     <table id="users_table" style="display:none">
         <thead>
             <tr>
@@ -332,6 +331,7 @@ where extract(year from created_at)=' . date('Y') . ' group by month order by mo
 
 
     <script type="text/javascript">
+    /*
         Highcharts.chart('container', {
             data: {
                 table: 'users_table'
@@ -379,7 +379,9 @@ where extract(year from created_at)=' . date('Y') . ' group by month order by mo
                 }
             }
         });
-        dashboard_summary = function () {
+        */
+        $(document).ready(function () {
+     //   dashboard_summary = function () {
             $.ajax({
                 url: '<?= url('analyse/summary/null') ?>',
                 data: {},
@@ -399,8 +401,8 @@ where extract(year from created_at)=' . date('Y') . ' group by month order by mo
                     $('#active_teachers').html(data.active_teachers);
                 }
             });
-        }
-        $(document).ready(dashboard_summary);
+        });
+        //$(document).ready(dashboard_summary);
 
 
     </script>

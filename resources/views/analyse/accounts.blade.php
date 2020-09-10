@@ -98,24 +98,39 @@
                 </div>
                 <!-- counter-card-3 end -->
                 <!-- Monthly Growth Chart start-->
-                <div class="col-xl-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Revenue Vs Expense</h5>
-                        </div>
-                        <div class="card-block">
-                            <div id="chart4" class="c3" style="max-height: 320px; position: relative;">
-                                
-                               <div class="c3-tooltip-container" style="position: absolute; pointer-events: none; display: none; top: 17.7031px; left: 96.5px;">
+    
+            </div>
+
+                <div class="row">
+                    <div class="col-xl-6">
+                          
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Average Collection Per Month </h5>
+                    </div>
+                    <div class="card-block">
+                        <div class="cd-horizontal-timeline loaded">
+
+                            <!-- .timeline -->
+                            <div class="events-content">
+                                <div class="card">
+
+                                    <div class="card-block">
+
+                                        <?php
+                                 $sql_2 = "select sum(amount) as count, extract(month from created_at) as month from admin.payments a   where extract(year from created_at)=".date('Y')."  group by month order by month asc ";
+
+                               echo $insight->createChartBySql($sql_2, 'month', 'Payments Collection Per Month', 'line', false);
+                                        ?>
+                                    </div>
                                 </div>
-                                    
-                                
                             </div>
+                            <!-- .events-content -->
                         </div>
                     </div>
                 </div>
-                <!-- Monthly Growth Chart end-->
-                <!-- Google Chart start-->
+            
+                    </div>
                 <div class="col-xl-6">
                     <div class="card">
                         <div class="card-header">
@@ -140,36 +155,13 @@
                         </div>
                     </div>
                 </div>
-
-            </div>
+</div>
         </div>
     <?php } ?>
+
 </div>
 <?php if (can_access('manage_users')) { ?>
-    <script type="text/javascript">
-        dashboard_summary = function () {
-            $.ajax({
-                url: '<?= url('analyse/summary/null') ?>',
-                data: {},
-                dataType: 'JSONP',
-                success: function (data) {
-                    console.log(data);
-                    $('#all_users').html(data.users);
-                    $('#all_students').html(data.students);
-                    $('#all_parents').html(data.parents);
-                    $('#all_teachers').html(data.teachers);
-                    $('#schools_with_shulesoft').html(data.total_schools);
-                    $('#schools_with_students').html(data.total_schools - data.schools_with_students);
-                    //
-                    $('#active_users').html(data.active_users);
-                    $('#active_students').html(data.active_students);
-                    $('#active_parents').html(data.active_parents);
-                    $('#active_teachers').html(data.active_teachers);
-                }
-            });
-        }
-        $(document).ready(dashboard_summary);
-    </script>
+
 <?php } ?>
 @endsection
 

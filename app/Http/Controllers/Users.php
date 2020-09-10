@@ -20,7 +20,7 @@ class Users extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $this->data['users'] = User::where('status', 1)->get();
+        $this->data['users'] = User::where('status', 1)->where('role_id', '<>', 7)->get();
         return view('users.index', $this->data);
     }
 
@@ -311,4 +311,175 @@ class Users extends Controller {
         return view('users.tasks', $this->data);
     }
 
+
+    public function storeChat() {
+        $root = url('/') . '/public/';
+        $id = Auth::user()->id;
+        $to = request('to_user_id');
+        $message = \App\Models\Chat::create(['body' => request('body'), 'status' => 1]);
+        \App\Models\ChatUser::create(['user_id' => $id, 'to_user_id' => $to, 'message_id' => $message->id]);
+        $this->getUser($to);
+      //  return redirect()->back()->with('success', 'Message Sent');
+    }
+
+    public function getUser($id) {
+        if(request('to_user_id') != ''){
+            $id = request('to_user_id');
+        }else{
+            $id = $id;
+        }
+        $to = Auth::user()->id;
+        $user = \App\Models\User::where('id', $id)->first();
+        $send = "'send'::text AS sends";
+        $rec = "'receive'::text AS sends";
+        $results = DB::SELECT('SELECT a.body,a.created_at,b.user_id as user_id, '.$send .' from admin.chats a, admin.chat_users b where a.id=b.message_id and b.user_id ='. $id .' AND b.to_user_id='.$to.' UNION ALL SELECT a.body,a.created_at,b.to_user_id as user_id, '.$rec.' from admin.chats a, admin.chat_users b where a.id=b.message_id and b.user_id ='. $to .' AND b.to_user_id='.$id);
+        //  \App\Models\ChatUser::where('user_id', $id)->where('to_user_id', $to)->get();
+        $root = url('/') . '/public/';
+        $message1 = '';
+        $message1 .= '<div class="media chat-inner-header">
+        <a class="back_chatBox">
+        <input id="to_user_id'.$user->id.'" value="'.$user->id.'" type="hidden">
+            <i class="icofont icofont-rounded-left"></i>'. $user->firstname .' ' .$user->lastname .'
+        </a>
+    </div>';
+        if(count($results) > 0){
+                    foreach($results as $message){ 
+                if($message->sends == 'send'){
+                    $message1  .= '<div class="media chat-messages">
+                                    <a class="media-left photo-table" href="#!">
+                                    <img class="media-object img-circle m-t-5" src="'. $root .'assets/images/avatar-1.png" alt="Image">
+                                    </a>
+                                    <div class="media-body chat-menu-content">
+                                        <div class="">
+                                            <p class="chat-cont">'.$message->body .'<br>
+                                            <b>'.$message->created_at.'</b></p>
+                                        </div>
+                                    </div>
+                                </div>';
+                            }else{ 
+                                $message1 .= '<div class="media chat-messages">
+                                    <div class="media-body chat-menu-reply">
+                                        <div class="">
+                                        <p class="chat-cont">'.$message->body .'
+                                        <br>
+                                            <b>'.$message->created_at.'</b>
+                                        </p>
+                                        </div>
+                                    </div>
+                                    <div class="media-right photo-table">
+                                        <a href="#!">
+                                            <img class="media-object img-circle m-t-5" src="'. $root .'assets/images/avatar-2.png" alt="Image">
+                                        </a>
+                                    </div>
+                                </div>';
+                            } 
+                          }
+                      }else{
+                         $message1 .= '<div class="media chat-messages">
+                         <div class="media-body chat-menu">
+                             <div class="">
+                             <p class="chat-cont"> No new message...</p>
+                             </div>
+                             </div>
+                         </div>';
+                      }
+                      $message1 .= '<div class="chat-reply-box p-b-20">
+                      <div class="right-icon-control">
+                      <textarea rows="4" id="body" class="form-control search-text" placeholder="Type Here.."></textarea>
+                      <button type="button" class="btn btn-primary btn-sm" onmousedown="send_message('.$id.')"> Send </button>
+
+                      </div>
+                  </div>';
+
+        echo $message1;
+
+    }
+
+    public function partners() {
+        $id = request()->segment(3);
+        if((int)$id>0){
+            $this->data['partners'] = \App\Models\PartnerBranch::where('partner_id', $id)->get();
+            $this->data['school'] = 1;
+        }else{
+            $this->data['partners'] = \App\Models\Partner::all();
+            $this->data['school'] = 2;
+        }
+        $this->data['set'] = $id;
+        return view('users.partners.index', $this->data);
+    }
+ 
+    public function partnerStaff() {
+        $id = request()->segment(3);
+        if((int)$id>0){
+            $this->data['staffs'] = \App\Models\PartnerUser::whereIn('branch_id', \App\Models\PartnerBranch::where('partner_id', $id)->get(['partner_id']))->get();
+        }else{
+            $this->data['staffs'] = \App\Models\PartnerUser::whereIn('branch_id', \App\Models\PartnerBranch::where('partner_id', $id)->get(['partner_id']))->get();
+        }
+        $this->data['set'] = $id;
+        return view('users.partners.staffs', $this->data);
+    }
+
+    public function partnerSchool() {
+        $id = request()->segment(3);
+        $branch = request()->segment(4);
+        if((int)$id>0 && $branch ==''){
+            $this->data['schools'] = \App\Models\PartnerSchool::whereIn('branch_id', \App\Models\PartnerBranch::where('partner_id', $id)->get(['id']))->get();
+        }
+        if((int)$id>0 && $branch !=''){
+            $this->data['schools'] = \App\Models\PartnerSchool::where('branch_id', $id)->get();
+            $this->data['branch'] = \App\Models\PartnerBranch::where('id', $id)->first();
+        }
+        $this->data['set'] = $id;
+        return view('users.partners.schools', $this->data);
+    }
+   
+    public function addPartner() {
+        $this->data['countries'] = \App\Models\Country::all();
+        $id = request()->segment(3);
+        if((int)$id>0){
+            $this->data['partner'] = $partner = \App\Models\Partner::find($id);
+            $this->data['regions'] = \App\Models\Region::where('country_id', $partner->country_id)->get();
+            if($_POST){
+                $partner =  \App\Models\Partner::create(request()->all());
+                   $user = new User(array_merge(request()->all(), ['password' => bcrypt(request('email')), 'firstname' => request('name'), 'phone' => request('phone_number'), 'role_id' => 7, 'department' => 10, 'created_by' => Auth::user()->id]));
+                   $user->save();
+                   $this->sendEmailAndSms($partner);
+                   return redirect('users/partners')->with('success', 'Partner ' . $partner->name . ' created successfully');
+               }
+        return view('users.partners.add_branch', $this->data);
+        }else{
+            if($_POST){
+             $partner =  \App\Models\Partner::create(request()->all());
+                $user = new User(array_merge(request()->all(), ['password' => bcrypt(request('email')), 'firstname' => request('name'), 'phone' => request('phone_number'), 'role_id' => 7, 'department' => 10, 'created_by' => Auth::user()->id]));
+                $user->save();
+                $this->sendEmailAndSms($partner);
+                return redirect('users/partners')->with('success', 'Partner ' . $partner->name . ' created successfully');
+            }
+            return view('users.partners.add', $this->data);
+        }
+    }
+
+    public function addSchool() {
+        $id = request()->segment(3);
+        $partner = \App\Models\Partner::find($id);
+        $this->data['branches'] = \App\Models\PartnerBranch::where('partner_id', $id)->get();
+        $this->data['regions'] = \App\Models\Region::where('country_id', $partner->country_id)->get();
+            if($_POST){
+
+            }
+        return view('users.partners.add_school', $this->data);
+    }
+   
+    public function getBranch() {
+        $id = request('region');
+        
+        $branches = \App\Models\PartnerBranch::whereIn('district_id', \App\Models\District::where('region_id', $id)->get(['id']))->get();
+        if (count($branches) > 0) {
+            $select = '';
+            foreach ($branches as $branch) {
+                $select .= '<option value="' . $branch->id . '"> ' . $branch->name . '</option>';
+            }
+            echo $select;
+        }
+    }
 }

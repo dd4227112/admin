@@ -16,21 +16,16 @@
                         <div class="card-block">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="modal-title">Create Task/Activity <?php echo Auth::user()->department; ?></h4>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
+                                    <h4 class="modal-title">Create a task with implementation deadline</h4>
                                 </div>
                                 <form action="#" method="post">
                                     <div class="modal-body">
-                                        <span>
-                                            Create a task with implementation deadline</span>
-                                            <br>
+                                        
                                         <div class="form-group">
                                             <strong> Department</strong> 
                                             <select name="dep_id" id="department" class="form-control " required>
                                                 <?php
-                                                $departments = DB::table('departments')->get();
+                                                
                                                 foreach ($departments as $department) {
                                                     ?>
                                                     <option value="<?= $department->id ?>"><?= $department->name ?></option>
@@ -54,10 +49,8 @@
                                             <select name="client_id"  class="form-control select2">
                                                 <option value=''> Select Client Here...</option>
                                                 <?php
-                                                foreach ($clients as $client) {
-                                                    ?>
-                                                    <option value='<?php echo $client->id; ?>'><?= $client->name ?>  (<?= $client->username ?>)</option>
-                                                <?php } ?>
+                                               // foreach ($clients as $client) {
+                                                 ?>
                                             </select>
                                         </div> -->
                                         <div class="form-group">
@@ -66,7 +59,6 @@
                                             <select name="task_type_id" id="task_type_id" required class="form-control select2">
                                                 <option value=''> Select Here...</option>
                                                 <?php
-                                                $types = DB::table('task_types')->where('department', Auth::user()->department)->get();
                                                 foreach ($types as $type) {
                                                     ?>
                                                     <option value="<?= $type->id ?>"> <?= $type->name ?></option>
@@ -82,7 +74,7 @@
                                                     <strong> Person Allocated to do</strong> 
                                                     <select multiple="" name="to_user_id[]" class="form-control select2" required>
                                                         <?php
-                                                        $staffs = DB::table('users')->where('status', 1)->get();
+                                                        $staffs = DB::table('users')->where('status', 1)->where('role_id', '<>', 7)->get();
                                                         foreach ($staffs as $staff) {
                                                             ?>
                                                             <option value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
@@ -93,10 +85,12 @@
 
                                                 <div class="col-md-6">
                                                     <strong> Task Executed Successfully</strong> 
-                                                    <select name="action" class="form-control" required>
-                                                        <option value=''> Select Task Status Here...</option>
-                                                        <option value='Yes'> Yes </option>
-                                                        <option value='No'> No </option>
+                                                    <select name="status" class="form-control" required>
+                                                        <option value='new'> Select Task Status Here...</option>
+                                                        <option value='new'> New Task </option>
+                                                        <option value='complete'> Yes and Completed </option>
+                                                        <option value='on progress'> Yes but on Progress </option>
+                                                        <option value='schedule'> Not yet (Schedule) </option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -105,12 +99,12 @@
                                             <div class="row">
 
                                                 <div class="col-md-6">
-                                                    <strong> Deadline Date</strong> 
-                                                    <input type="date" class="form-control" placeholder="Deadline" name="date">
+                                                    <strong> Start Date</strong> 
+                                                    <input type="datetime-local" class="form-control" placeholder="Deadline" name="start_date">
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <strong> Estimated Hours</strong> 
-                                                    <input type="number" class="form-control" placeholder="Time" name="time">
+                                                    <strong> End Date </strong> 
+                                                    <input type="datetime-local" class="form-control" placeholder="Time" name="end_date">
                                                 </div>
                                             </div>
                                         </div>

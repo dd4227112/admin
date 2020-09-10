@@ -10,9 +10,14 @@ use Auth;
 
 class Marketing extends Controller {
 
-     public function __construct() {
+    public $patterns = array(
+        '/#name/i', '/#username/i', '/#default_password/i', '/#email/i', '/#phone/i', '/#role/i', '/#student_name/i', '/#invoice/i', '/#balance/i', '/#student_username/i'
+    );
+
+    public function __construct() {
         $this->middleware('auth');
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -178,34 +183,32 @@ group by ownership');
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    
     public function socialMedia() {
         $tab = request()->segment(3);
         $id = request()->segment(4);
         if ($tab == 'add') {
             if ($_POST) {
-                $data = 
-                    [
-                        'user_id' => Auth::user()->id,
-                        'type' => request('type'),
-                        'category' => request('category'),
-                        'note' => request('note'),
-                        'title' => request('title')
-                    ];
+                $data = [
+                    'user_id' => Auth::user()->id,
+                    'type' => request('type'),
+                    'category' => request('category'),
+                    'note' => request('note'),
+                    'title' => request('title')
+                ];
                 //    dd($data);
                 $post = \App\Models\MediaPost::create($data);
-                      /*  $user = \App\Models\User::find($user_id);
-                        $message = 'Hello ' . $user->firstname . '<br/>'
-                                . 'A task has been allocated to you'
-                                . '<ul>'
-                                . '<li>Task: ' . $post->activity . '</li>'
-                                . '<li>Type: ' . $post->taskType->name . '</li>'
-                                . '<li>Deadline: ' . $post->date . '</li>'
-                                . '</ul>';
-                        $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
-                        */                        
-                        
-                        
+                /*  $user = \App\Models\User::find($user_id);
+                  $message = 'Hello ' . $user->firstname . '<br/>'
+                  . 'A task has been allocated to you'
+                  . '<ul>'
+                  . '<li>Task: ' . $post->activity . '</li>'
+                  . '<li>Type: ' . $post->taskType->name . '</li>'
+                  . '<li>Deadline: ' . $post->date . '</li>'
+                  . '</ul>';
+                  $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+                 */
+
+
                 if (count($post->id) > 0 && request('socialmedia_id')) {
                     $modules = request('socialmedia_id');
                     foreach ($modules as $key => $value) {
@@ -235,21 +238,21 @@ group by ownership');
     }
 
     public function socialMediaUpdate() {
-            $media = request("socialmedia_id");
-            $post = request("post_id");
-            $type = request("type_id");
-            $number = request("inputs");
-            if($number == ''){
-                $number = 0;
-            }
-            $now = date('Y=m-d H:i:s');
-            if ((float) request("inputs") >= 0 && request("post_id") !='' && request("socialmedia_id") !='') {
-                    \App\Models\SocialMediaPost::where('post_id', $post)->where('socialmedia_id', $media)->update([$type => $number, 'updated_at' => $now]);
-                    echo "success";
-                } else {
-                    echo "Class can not be empty";
-                }
+        $media = request("socialmedia_id");
+        $post = request("post_id");
+        $type = request("type_id");
+        $number = request("inputs");
+        if ($number == '') {
+            $number = 0;
         }
+        $now = date('Y=m-d H:i:s');
+        if ((float) request("inputs") >= 0 && request("post_id") != '' && request("socialmedia_id") != '') {
+            \App\Models\SocialMediaPost::where('post_id', $post)->where('socialmedia_id', $media)->update([$type => $number, 'updated_at' => $now]);
+            echo "success";
+        } else {
+            echo "Class can not be empty";
+        }
+    }
 
     public function addEvent() {
 
@@ -282,40 +285,39 @@ group by ownership');
 
     public function Events() {
         $id = request()->segment(3);
-        if((int)$id>0){
-            
-        if ($_POST) {
-            $body = request('message');
-            $sms = request('sms');
-            $email = request('email');
-            $events = \App\Models\EventAttendee::where('event_id', $id)->get();
-            $workshop = \App\Models\Events::where('id', $id)->first();
-            
-            foreach($events as $event){
-                if($event->email != '' && (int)$email>0 ){
-            $message = '<h4>Dear ' . $event->name .  '</h4>'
-            .'<h4>I trust this email finds you well.</h4>'
-            .'<h4>'.$body.'</h4>'
-                .'<p><br>Looking forward to hearing your contribution in the discussion.</p>'
-                .'<br>'
-                .'<p>Thanks and regards,</p>'
-                .'<p><b>Shulesoft Team</b></p>'
-                .'<p>Call: +255 655 406 004 </p>';
-                $this->send_email($event->email, 'ShuleSoft Webinar on '. $workshop->title, $message);
-            }
-            if($event->phone != '' && (int)$sms > 0 ){
-                $message1 = 'Dear ' . $event->name .  '.'
-                .chr(10).$body
-                .chr(10)
-                .chr(10).'Shulesoft Team'
-                .chr(10).'Call: +255 655 406 004 ';
-                $sql = "insert into public.sms (body,user_id, type,phone_number) values ('$message1', 1, '0', '$event->phone')";
-                DB::statement($sql);
-            }
-        }
-        return redirect()->back()->with('success', 'Message Sent Successfully to '. count($events). ' Attendees.');
+        if ((int) $id > 0) {
 
-    }
+            if ($_POST) {
+                $body = request('message');
+                $sms = request('sms');
+                $email = request('email');
+                $events = \App\Models\EventAttendee::where('event_id', $id)->get();
+                $workshop = \App\Models\Events::where('id', $id)->first();
+
+                foreach ($events as $event) {
+                    if ($event->email != '' && (int) $email > 0) {
+                        $message = '<h4>Dear ' . $event->name . '</h4>'
+                                . '<h4>I trust this email finds you well.</h4>'
+                                . '<h4>' . $body . '</h4>'
+                                . '<p><br>Looking forward to hearing your contribution in the discussion.</p>'
+                                . '<br>'
+                                . '<p>Thanks and regards,</p>'
+                                . '<p><b>Shulesoft Team</b></p>'
+                                . '<p>Call: +255 655 406 004 </p>';
+                        $this->send_email($event->email, 'ShuleSoft Webinar on ' . $workshop->title, $message);
+                    }
+                    if ($event->phone != '' && (int) $sms > 0) {
+                        $message1 = 'Dear ' . $event->name . '.'
+                                . chr(10) . $body
+                                . chr(10)
+                                . chr(10) . 'Shulesoft Team'
+                                . chr(10) . 'Call: +255 655 406 004 ';
+                        $sql = "insert into public.sms (body,user_id, type,phone_number) values ('$message1', 1, '0', '$event->phone')";
+                        DB::statement($sql);
+                    }
+                }
+                return redirect()->back()->with('success', 'Message Sent Successfully to ' . count($events) . ' Attendees.');
+            }
             $this->data['event'] = \App\Models\Events::where('id', $id)->first();
             return view('market.view_event', $this->data);
         }
@@ -328,9 +330,350 @@ group by ownership');
         \App\Models\Minutes::where('id', $id)->delete();
         return redirect()->back()->with('success', 'Minute Deleted');
     }
+
     public function tasks() {
         $this->data['users'] = 1;
         return view('users.tasks', $this->data);
+    }
+
+    public function getDistrict() {
+        $id = request('region');
+        $districts = \App\Models\District::where('region_id', $id)->get();
+        if (count($districts) > 0) {
+            $select = '';
+            foreach ($districts as $type) {
+                $select .= '<option value="' . $type->id . '"> ' . $type->name . '</option>';
+            }
+            echo $select;
+        } else {
+            $districts = \App\Models\District::all();
+            $select = '';
+            foreach ($districts as $type) {
+                $select .= '<option value="' . $type->id . '"> ' . $type->name . '</option>';
+            }
+            echo $select;
+        }
+    }
+
+    public function getWard() {
+        $id = request('district');
+        $districts = \App\Models\Ward::where('district_id', $id)->get();
+        if (count($districts) > 0) {
+            $select = '';
+            foreach ($districts as $type) {
+                $select .= '<option value="' . $type->id . '"> ' . $type->name . '</option>';
+            }
+            echo $select;
+        }
+    }
+
+    public function school() {
+        $end_date = date('Y-m-01');
+        $where = "a.created_at::date >='" . $end_date . "'";
+
+        $this->data['use_shulesoft'] = DB::table('admin.all_setting')->count() - 5;
+        $this->data['active_school'] = \collect(DB::select('SELECT count(distinct "schema_name") from admin.all_login_locations a  WHERE "table" in (\'setting\',\'users\',\'teacher\') and ' . $where))->first()->count;
+        $this->data['zero_student'] = DB::select('SELECT distinct("schema_name") as tables from admin.all_setting a  WHERE a.status= 1 and "schema_name" not in (select distinct "schema_name" from admin.all_student group by "schema_name")');
+        $this->data['never_use'] = DB::table('admin.nmb_schools')->count();
+        $this->data['never_use'] = DB::table('admin.nmb_schools')->count();
+        $this->data['nmb_shulesoft_schools'] = \collect(DB::select("select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22"))->first()->count;
+        $this->data['school_types'] = DB::select("select type, count(*) from admin.schools where ownership='Non-Government' group by type,ownership");
+        $this->data['ownerships'] = DB::select('select ownership, COUNT(*) as count, SUM(COUNT(*)) over() as total_schools, 
+        (COUNT(*) * 1.0) / SUM(COUNT(*)) over() as percent FROM admin.schools group by ownership');
+
+        return view('market.schools', $this->data);
+    }
+
+    public function moduleUsage() {
+        $end_date = date('Y-m-01');
+        $where = "a.created_at::date >='" . $end_date . "'";
+        $this->data['use_shulesoft'] = DB::table('admin.all_setting')->count() - 5;
+        $this->data['active_school'] = \collect(DB::select('SELECT count(distinct "schema_name") from admin.all_login_locations a  WHERE "table" in (\'setting\',\'users\',\'teacher\') and ' . $where))->first()->count;
+        $this->data['zero_student'] = DB::select('SELECT distinct("schema_name") as tables from admin.all_setting a  WHERE a.status= 1 and "schema_name" not in (select distinct "schema_name" from admin.all_student group by "schema_name")');
+        $this->data['never_use'] = DB::table('admin.nmb_schools')->count();
+        $this->data['never_use'] = DB::table('admin.nmb_schools')->count();
+        $this->data['nmb_shulesoft_schools'] = \collect(DB::select("select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22"))->first()->count;
+        $this->data['school_types'] = DB::select("select type, count(*) from admin.schools where ownership='Non-Government' group by type,ownership");
+        $this->data['ownerships'] = DB::select('select ownership, COUNT(*) as count, SUM(COUNT(*)) over() as total_schools, 
+        (COUNT(*) * 1.0) / SUM(COUNT(*)) over() as percent FROM admin.schools group by ownership');
+
+        return view('market.module_usage', $this->data);
+    }
+
+    public function systemUser() {
+        $this->data['type'] = $type = request()->segment(4);
+        $this->data['status'] = $status = request()->segment(3);
+        $end_date = date('Y-m-01');
+        $this->data['where'] = $where = "a.created_at::date >='" . $end_date . "'";
+        // $this->data['active_users'] = DB::SELECT('SELECT "table", count(*) as count from admin.all_users where status=1 and ("table",id) in (select "table", user_id from admin.all_log a where ' . $where .' group by "table",user_id) group by "table"  order by "table"');
+        //$this->data['notactive_users'] = DB::SELECT('SELECT "table", count(*) as count from admin.all_users where status=1 and ("table",id) in (select "table", user_id from admin.all_log a where ' . $where .'group by "table",user_id) group by "table"  order by "table"');
+        $this->data['users'] = DB::SELECT('SELECT "table", count(*) as count from admin.all_users where status=1  group by "table" order by "table"');
+        if ($type != '' && $status != '') {
+            $table = "'" . $type . "'";
+            if ($status == 'active') {
+                $this->data['list_of_users'] = DB::SELECT('SELECT schema_name, count(*) as count from admin.all_users where status=1 and ("table",id) in (select a."table", a.user_id from admin.all_log a where ' . $where . '  and "table" = ' . $table . ' group by a."table", a.user_id) group by schema_name order by count(schema_name) desc');
+            }if ($status == 'notactive') {
+                $this->data['list_of_users'] = DB::SELECT('SELECT schema_name, count(*) as count from admin.all_users where status=1 and  ("table",id) not in (select a."table", a.user_id from admin.all_log a where ' . $where . '  and "table" = ' . $table . '  group by a."table", a.user_id) group by schema_name order by count(schema_name) desc');
+            }if ($status == 'all') {
+                $this->data['list_of_users'] = DB::SELECT('SELECT schema_name, count(*) as count from admin.all_users where status=1 and "table" = ' . $table . ' group by schema_name order by count(schema_name) desc');
+            }
+        }
+
+        return view('market.system_user', $this->data);
+    }
+
+    public function Users() {
+        $type = request()->segment(3);
+        $id = request()->segment(4);
+        $end_date = date('Y-m-01');
+        $where = "a.created_at::date >='" . $end_date . "'";
+
+        $this->data['active_parents'] = \collect(DB::select('select count(*) as count from admin.all_parent where status=1'))->first()->count;
+        $this->data['active_students'] = \collect(DB::select('select count(*) as count from admin.all_student where status=1'))->first()->count;
+        $this->data['active_teachers'] = \collect(DB::select('select count(*) as count from admin.all_teacher where status=1'))->first()->count;
+        $this->data['active_users'] = DB::SELECT('select "table", count(*) as count from admin.all_users where status=1 and ("table",id) in (select "table", user_id from admin.all_log where ' . $where . ' group by "table"');
+
+        $this->data['parents'] = \collect(DB::select('select count(*) as count from admin.all_parent where status=1'))->first()->count;
+        $this->data['students'] = \collect(DB::select('select count(*) as count from admin.all_student  where status=1'))->first()->count;
+        $this->data['teachers'] = \collect(DB::select('select count(*) as count from admin.all_teacher  where status=1'))->first()->count;
+        $this->data['users'] = \collect(DB::select('select count(*) as count from admin.all_users  where status=1'))->first()->count;
+
+        echo json_call($this->data);
+    }
+
+    public function Communication() {
+        $this->data['never_use'] = DB::table('admin.nmb_schools')->count();
+        if ($_POST) {
+
+            $this->validate(request(), [
+                'message' => 'required'
+            ]);
+
+            $fee_id = request("fee_id");
+            $message = request("message");
+            $module_id = request("module_id");
+            $section_id = 0;
+            $criteria = request('criteria');
+            $firstCriteria = request('firstCriteria');
+            $student_type = request('student_type');
+            $student_type_value = request('student_type_value');
+            $payment_status = request('payment_status');
+
+
+
+            /* --- --- --- firstCriteria is parents - Send SMS to parents --- --- */
+            if ($firstCriteria == 00) {
+                //customers First
+                return $this->sendCustomSmsToCustomers($criteria, $section_id, $module_id, $fee_id, $student_type_value, $payment_status, $message);
+            } else if ($firstCriteria == '02') {
+                $custom_numbers = request('custom_numbers');
+                $sms = request('message');
+                $numbers = [];
+                if (preg_match('/,/', $custom_numbers)) {
+                    $numbers = explode(',', $custom_numbers);
+                } else if (preg_match('/ /', $custom_numbers)) {
+                    $numbers = explode(' ', $custom_numbers);
+                } else {
+                    $numbers = [$custom_numbers];
+                }
+                $sent_to = 0;
+                $wrong = 0;
+                $invalid_numbers = '';
+
+                foreach ($numbers as $number) {
+                    $valid = validate_phone_number($number);
+                    if (is_array($valid)) {
+                        $sent_to++;
+                        $this->send_sms($valid[1], $sms);
+                    } else {
+                        $wrong++;
+                        $invalid_numbers .= $number . ',';
+                    }
+                }
+                return redirect(base_url("mailandsms/add"))->with('success', 'sent successfully to ' . $sent_to . ' people. ' . $wrong . ' invalid number (' . $invalid_numbers . ')');
+            } else {
+                /* --- --- ---Send message to prospects--- --- --- */
+                return $this->sendCustomSmsToTeachers($patterns, $section_id, $class_id, $message);
+            }
+        }
+        return view('market.communication.index', $this->data);
+    }
+
+    public function sendCustomSmsToCustomers($criteria, $section_id = 0, $class_id = null, $fee_id = null, $student_type_value = null, $payment_status = null, $message = null) {
+        switch ($criteria) {
+            case 0:
+                $parents = DB::select('select p.*, s.username as student_username, s.name as student_name from ' . set_schema_name() . 'student_parents sp join ' . set_schema_name() . 'parent p on p."parentID"=sp.parent_id join ' . set_schema_name() . 'student s on s."student_id"=sp.student_id where s.status=1');
+                break;
+            case 1:
+                //all active customers with specific module
+
+                $module_id = $class_id;
+                $module = \DB::table('admin.modules')->where('id', $module_id)->first();
+                if (count($module) == 1) {
+                    $check = DB::select("select * from information_schema.tables where table_name='all_student' and table_schema='admin'  limit 1");
+                    if (count($check) == 0) {
+                        DB::statement("select * from admin.join_all({$module->table},'created_at')");
+                    }
+                    $sql = "select name,phone,email,schema_name,username from admin.all_users where status=1 and lower(usertype)='admin' and schema_name in (select  distinct schema_name from admin.all_{$module->table} where created_at >= date_trunc('month', now()) - interval '1 month' and created_at < date_trunc('month', now()))";
+                    $parents = DB::select($sql);
+                }
+                break;
+            case 2:
+                //Not active modules
+                $module_id = $class_id;
+                $module = \DB::table('admin.modules')->where('id', $module_id)->first();
+                if (count($module) == 1 && strlen($module->table)>3) {
+                    $check = \collect(DB::select("select * from information_schema.tables where table_name='all_student' and table_schema='admin'  limit 1"))->first();
+                    if (count($check) == 0) {
+                        DB::statement("select * from admin.join_all({$module->table},'created_at')");
+                    }
+                    $sql = "select name,phone,email,schema_name,username from admin.all_users where status=1 and lower(usertype)='admin' and schema_name NOT in (select distinct schema_name from admin.all_{$module->table} where created_at >= date_trunc('month', now()) - interval '3 month' and created_at < date_trunc('month', now()))";
+                    $parents = DB::select($sql);
+                   
+                }
+
+
+                break;
+            case 3:
+
+                if ($payment_status == 0) {
+                    //payments not being done
+                    return $this->smsWithPendingBalance($message);
+                } else if ($payment_status == 1) {
+                    //parents with discount
+                    $parents = DB::select('select * from ' . set_schema_name() . 'parent WHERE "parentID" IN (SELECT parent_id from ' . set_schema_name() . 'student_parents WHERE student_id IN (SELECT "student_id" from ' . set_schema_name() . 'discount where discount>0  ' . $this->getLeastAmount('discount') . '))');
+                } else if ($payment_status == 2) {
+                    //with discount
+                    return $this->smsWithPendingBalance($message);
+                    //return $this->smsWithPendingBalance($message);
+                }
+                break;
+            case 4:
+
+                $parents = DB::select('select * from ' . set_schema_name() . 'parent where "parentID" IN (' . implode(',', request('parents')) . ')');
+                break;
+            case 5:
+                //based on transport routes
+
+                $parents = DB::select('select * from ' . set_schema_name() . 'parent where "parentID" IN (select parent_id from ' . set_schema_name() . 'student_parents where student_id in (select "student_id" FROM ' . set_schema_name() . 'tmembers where transport_route_id in (' . implode(',', request('transport_id')) . ' ) ))');
+                break;
+            case 6:
+                //based on hostel routes
+
+                $sql = 'select * from ' . set_schema_name() . 'parent where "parentID" IN (select parent_id from ' . set_schema_name() . 'student_parents where student_id in (select a."student_id" FROM ' . set_schema_name() . 'hmembers a join ' . set_schema_name() . 'student b on b.student_id=a.student_id  where hostel_id in (select id from ' . set_schema_name() . 'hostels where id in (' . implode(',', request('hostel_id')) . ' )) and b.status=1 ))';
+
+
+
+                $parents = DB::select($sql);
+
+                break;
+            case 9:
+
+                $parents = DB::select('select * from ' . set_schema_name() . 'parent where "parentID" IN (' . implode(',', request('parents')) . ')');
+                break;
+
+            case 10:
+                $parents = DB::select('select * from ' . set_schema_name() . 'parent where "parentID" IN (' . implode(',', request('parents')) . ')');
+                break;
+
+            default:
+                break;
+        }
+
+        if (isset($parents) && count($parents) > 0) {
+            foreach ($parents as $parent) {
+
+                $replacements = array(
+                    $parent->name, $parent->username, $parent->schema_name
+                );
+
+                $sms = $this->getCleanSms($replacements, $message, array(
+                    '/#name/i', '/#username/i', '/#schema_name/i',
+                ));
+
+                $this->send_sms($parent->phone, $sms);
+            }
+
+            return redirect()->back()->with('success', 'Message sent successfuly');
+        } else {
+            return redirect()->back()->with('error', 'Message Failed to be sent');
+        }
+    }
+
+    public function getCleanSms($replacements, $message, $pattern = null) {
+
+        $sms = preg_replace($pattern != null ? $pattern : $this->patterns, $replacements, $message);
+        if (preg_match('/#/', $sms)) {
+            //try to replace that character
+            return preg_replace('/\#[a-zA-Z]+/i', '', $sms);
+        } else {
+            return $sms;
+        }
+    }
+
+    public function sendCustomSmsToTeachers($patterns, $section_id = 0, $class_id = null, $message = null) {
+
+
+        $teachersCriteria = request('teachersCriteria');
+        $success_message = [];
+
+        switch ($teachersCriteria) {
+
+
+            case 001:
+
+                //Send SMS to all teachers
+                $teachers = Teacher::where('status', 1)->get();
+
+                $success_message = 'SMS successfully sent to all teachers';
+
+                break;
+            case 002:
+
+                //Send SMS to teachers of a specified $section_id section
+                if ($section_id == 0) {
+                    $class = \App\Model\Classes::find($class_id);
+                    $classlevel_id = $class->classlevel->classlevel_id;
+                    $academic_id = $this->academic_year_m->get_current_year($classlevel_id)->id;
+                    $teachers = \App\Model\SectionSubjectTeacher::whereIn("sectionID", \App\Model\Section::where('classesID', $class_id)->get(['sectionID']))
+                            ->join('teacher as t', "section_subject_teacher.teacherID", '=', 't.teacherID')
+                            ->where("t.status", 1)
+                            ->get();
+                } else {
+                    $teachers = \App\Model\SectionSubjectTeacher::where("sectionID", $section_id)
+                            ->join('teacher as t', "section_subject_teacher.teacherID", '=', 't.teacherID')
+                            ->where("t.status", 1)
+                            ->get();
+                }
+                $success_message = 'SMS successfully sent to all teachers teaching ' . \App\Model\Section::where(['sectionID' => $section_id])->value('section');
+                break;
+
+            case 003:
+
+                //Send SMS to specified teachers according to phone number or names
+                $teachers = DB::select('select * from ' . set_schema_name() . 'teacher where "teacherID" IN (' . implode(',', request('teachers')) . ') and status=1');
+                $success_message = 'SMS successfully sent to selected teacher(s)';
+                break;
+            default:
+                break;
+        }
+
+
+        if (isset($teachers) && count($teachers) > 0) {
+            foreach ($teachers as $teacher) {
+                $default_password = $teacher->default_password == '' ? random_string() : $teacher->default_password;
+                $replacements = array(
+                    $teacher->name, $teacher->username, $default_password
+                );
+
+                $sms = $this->getCleanSms($replacements, $message);
+                $this->send_sms($teacher->phone, $sms);
+            }
+            return redirect()->back()->with('success', $success_message);
+        } else {
+
+            return redirect()->back()->with('error', $this->lang->line('no_teachers_error'));
+        }
     }
 
 }

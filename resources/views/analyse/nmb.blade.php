@@ -36,7 +36,7 @@
                                         <div class="card counter-card-<?= $i ?>">
                                             <div class="card-block-big">
                                                 <div>
-                                                    <h3><?= $schools ?></h3>
+                                                    <h3><?= count($schools) ?></h3>
                                                     <p>Private Schools</p>
                                                     <div class="progress ">
                                                         <div class="progress-bar progress-bar-striped progress-xs progress-bar-<?= $i == 1 ? 'pink' : 'success' ?>" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
@@ -82,36 +82,23 @@
                             </div>
                         </div>
                 </div>
+                
+                </div>
                     
                 </div>
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-header">
-                        <div class="card-header">
-                            <h5>Monthly Onboarded Schools</h5>
-                        <!--    <div style="float: right;">
-                            <button class="btn btn-primary btn-sm">Week</button>
-                            <button class="btn btn-primary btn-sm">Month</button>
-                            <button class="btn btn-primary btn-sm">Year</button>
-                            </div> -->
-                            </div>
-                        <div class="card-block">
-                        <?php
-                            $year = date('Y-m-d');
-                            $new_schools = 'select count(*),extract(month from created_at) as month from admin.all_setting a
-                                where extract(year from a.created_at)=' . $year . '  group by month order by month';
-                            echo $insight->createChartBySql($new_schools, 'month', 'Onboarded Schools', 'line', false);
-                            ?>
-                        </div>
-                    </div>
-                </div>
+ 
 
             <!-- Monthly Growth Chart start-->
             <div class="row" id="schools">
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <h5>List of Private Schools</h5>
+                        <?php
+                        if(isset($branch) && count($branch)){ ?>
+                            <h5>List of Private Schools in <?=$branch->branch->district->name?>, <?= $branch->branch->district->region->name?></h5>
+                        <?php }else{ ?>
+                            <h5>List of Private Schools in <?=Auth::user()->name?></h5>
+                      <?php  } ?>
                         </div>
                         <div class="card-block">
                                     <div class="table-responsive">
@@ -120,8 +107,8 @@
                                                 <tr>
                                                     <th>#</th>
                                                     <th>School Name</th>
-                                                    <th>Region</th>
                                                     <th>District</th>
+                                                    <th>Ward</th>
                                                     <th>Type</th>
                                                     <th>Status</th>
                                                     <th>Action</th>
@@ -129,19 +116,18 @@
                                             </thead>
                                             <tbody>
                                            <?php 
-                                                $all_schools = DB::table('admin.schools')->where('ownership','<>', 'Government')->orderBy('schema_name', 'ASC')->get();
                                                 $i = 1;
-                                            foreach($all_schools as $school){
+                                            foreach($schools as $school){
                                             echo '<tr>';
                                             echo '<td>'.$i++.'</td>';
                                             echo '<td>'.$school->name.'</td>';
-                                            echo '<td>'.$school->region.'</td>';
                                             echo '<td>'.$school->district.'</td>';
+                                            echo '<td>'.$school->ward.'</td>';
                                             echo '<td>'.$school->type.'</td>';
                                             echo '<td>';
                                             if($school->schema_name != ''){
-                                             $ss = DB::table('admin.all_bank_accounts')->where('schema_name', $school->schema_name)->first();
-                                             if(count($ss) ==0){
+                                             $school_with_bank = DB::table('admin.all_bank_accounts')->where('schema_name', $school->schema_name)->first();
+                                             if(count($school_with_bank) == 0){
                                                 echo '<span class="btn btn-info btn-sm"> Partial onboarded </span>';
                                              }else{
                                                 echo '<span class="btn btn-success btn-sm"> Fully onboarded </span>';
@@ -163,14 +149,36 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                </div>
-                        </div>
-                    </div>
                 </div>
                     </div>
                   </div>
+                 <?php if(isset($branch) && count($branch)){ 
+                    // echo bcrypt('khairaatislamic20');
+                  }else{ ?>
 
-
+                  
+                  <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                        <div class="card-header">
+                            <h5>Monthly Onboarded Schools</h5>
+                        <!--    <div style="float: right;">
+                            <button class="btn btn-primary btn-sm">Week</button>
+                            <button class="btn btn-primary btn-sm">Month</button>
+                            <button class="btn btn-primary btn-sm">Year</button>
+                            </div> -->
+                            </div>
+                        <div class="card-block">
+                        <?php
+                            $year = date('Y-m-d');
+                            $new_schools = 'select count(*),extract(month from created_at) as month from admin.all_setting a
+                                where extract(year from a.created_at)=' . $year . '  group by month order by month';
+                            echo $insight->createChartBySql($new_schools, 'month', 'Onboarded Schools', 'line', false);
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                  <?php } ?>
                 </div>
             </div>
         </div>

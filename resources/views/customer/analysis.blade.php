@@ -125,7 +125,7 @@
 
                               <div class="col-md-6">
                                 <strong>  Select School</strong>
-                                <input type="text" class="form-control" id="get_schools" name="school_id" value="<?= old('school_id') ?>" >
+                                <input type="number" class="form-control" id="get_schools" name="school_id" required >
                               </div>
                               <div class="col-md-6">
                                 <strong>School Contacts Phone/Email</strong>
@@ -137,7 +137,7 @@
                                 <strong> Person Allocated to do</strong>
                                 <select name="to_user_id" class="form-control select2" required>
                                   <?php
-                                  $staffs = DB::table('users')->where('status', 1)->get();
+                                  $staffs = DB::table('users')->where('status', 1)->where('role_id', '<>', 7)->get();
                                   foreach ($staffs as $staff) {
                                     ?>
                                     <option value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
