@@ -691,7 +691,7 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
         return view('sales.sales_status.index', $this->data);
     }
  public function addLead(){
-    $this->data['schools']  = \App\Models\School::where('ownership', '<>', 'Government')->orderBy('schema_name', 'ASC')->get();
+    //$this->data['schools']  = \App\Models\School::where('ownership', '<>', 'Government')->orderBy('schema_name', 'ASC')->get();
     if ($_POST) {
 
         $data = array_merge(request()->except('to_user_id'), ['user_id' => Auth::user()->id, 'status'=>'new', 'date' => date('Y-m-d')]);
@@ -702,14 +702,14 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
                     'user_id' => Auth::user()->id
                 ]);
                 
-        $schools = request('school_id');
-        if (count($schools) > 0) {
-            foreach ($schools as $school_id) {
+        $$school_id = request('school_id');
+        // if (count($schools) > 0) {
+        //     foreach ($schools as $school_id) {
             DB::table('tasks_schools')->insert([
                 'task_id' => $task->id,
-                'school_id' => (int) $school_id
+                'school_id' => (int) $$school_id
             ]);
-            if (count($schools) == 1) {
+            if (request('school_name') != '' && request('school_phone') != '') {
                 \App\Models\SchoolContact::create([
                     'name' => request('school_name'),
                     'phone' => request('school_phone'),
@@ -719,9 +719,7 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
                 ]);
                 DB::table('admin.schools')->where('id', (int)$school_id)->update(['students' => request('students')]);
         
-               }
             }
-        }
 
         return redirect('Sales/salesStatus/1')->with('success', 'success');
     }

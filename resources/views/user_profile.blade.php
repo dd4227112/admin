@@ -95,7 +95,7 @@
                     <h2 class="text-dark my-4">
                       <span class="d-block">ShuleSoft <strong class="font-weight-bold">School Management System</strong></span>
                     </h2>
-                    <p class="lead text-dark">ShuleSoft is an extensible, scalable and easy to use school management system that  simplifies school operations <br>and interconnects parents, teachers, students and other school stakeholders</p>
+                    <!-- <p class="lead text-dark">ShuleSoft is an extensible, scalable and easy to use school management system that  simplifies school operations <br>and interconnects parents, teachers, students and other school stakeholders</p> -->
                     <div class="mt-5">
                     </div>
                   </div>
@@ -105,6 +105,8 @@
           </div>
 
           <div class="col-lg-12 col-xl-12">
+          <br>
+            <br>
             <br>
             <br>
             <br>

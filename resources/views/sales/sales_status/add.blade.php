@@ -50,21 +50,8 @@
                   <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
                     <hr>
-                      <strong>Select Multiple Schools:</strong>
-                      <select type="text" multiple="" name="school_id[]"  style="text-transform:uppercase" required class="form-control select2">
-                      <option value="1">Select Here...</option>
-                        <?php
-                        foreach ($schools as $school) { 
-                          if($school->schema_name !=''){ ?>
-                            <option value="<?= $school->id ?>"><?= $school->name . ' (Client) - '. substr($school->region, 0, 3)  ?></option>
-                        <?php  }else{ ?>
-                            <option value="<?= $school->id ?>"><?= $school->name . ' (' . substr($school->type, 0,3) .') - '. substr($school->region, 0, 3)  ?></option>
-                        <?php
-                          }
-                          ?>
-
-                        <?php } ?>
-                      </select>
+                      <strong>Select  School:</strong>
+                      <input type="text" class="form-control" id="get_schools" name="school_id" value="<?= old('school_id') ?>" >
 
                     </div>
                   </div>
@@ -199,6 +186,39 @@ $('#region').change(function () {
     }
   });
 });
+ 
+get_schools = function () {
+    $("#get_schools").select2({
+        minimumInputLength: 2,
+       // tags: [],
+        ajax: {
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+            url: '<?= url('student/getschools/null') ?>',
+            dataType: 'json',
+            type: "GET",
+            quietMillis: 50,
+            data: function (term) {
+                return {
+                    term: term,
+                    token: $('meta[name="csrf-token"]').attr('content')
+                };
+            },
+            results: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            text: item.name,
+                            id: item.id
+                        };
+                    })
+                };
+            }
+        }
+    });
+}
 
+$(document).ready(get_schools);
 </script>
 @endsection

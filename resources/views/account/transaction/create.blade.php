@@ -72,7 +72,7 @@
                                 Payer Name <span class="red">*</span>
                                   <?php
                                   $uarray = array('0' => __("select expense"));
-                                  $users = \App\Models\User::all();
+                                  $users = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get();
                                   if (count($users)) {
                                     foreach ($users as $user) {
                                       $uarray[$user->id] = $user->firstname.' '.$user->lastname;

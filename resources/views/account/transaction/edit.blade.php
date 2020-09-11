@@ -79,7 +79,7 @@
                                             <div class="col-sm-6">
                                                 <?php
                                                 $uarray = array('0' => "select User");
-                                                $users = \App\Models\User::all();
+                                                $users = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get();
                                                 if (count($users)) {
 
 
