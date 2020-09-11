@@ -302,5 +302,35 @@ if(in_array(Auth::user()->id, [2,3,7])){
 <?php if (can_access('manage_users')) { ?>
 
 <?php } ?>
+
+<script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
+
+<script src="<?= url('/public') ?>/code/highcharts.js"></script>
+<script src="<?= url('/public') ?>/code/modules/exporting.js"></script>
+<script src="<?= url('/public') ?>/code/modules/export-data.js"></script>
+<script src="<?= url('/public') ?>/code/modules/series-label.js"></script>
+<script src="<?= url('/public') ?>/code/modules/data.js"></script>
+
+<script>
+    check = function () {
+        $('#check_custom_date').change(function () {
+            var val = $(this).val();
+            if (val == 'today') {
+                window.location.href = '<?= url('analyse/accounts/') ?>/1';
+            } else {
+                $('#show_date').show();
+            }
+        });
+    }
+    submit_search = function () {
+        $('#search_custom').mousedown(function () {
+            var start_date = $('#start_date').val();
+            var end_date = $('#end_date').val();
+            window.location.href = '<?= url('analyse/accounts/') ?>/5?start=' + start_date + '&end=' + end_date;
+        });
+    }
+    $(document).ready(check);
+    $(document).ready(submit_search);
+</script>
 @endsection
 

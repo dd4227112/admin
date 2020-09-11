@@ -311,13 +311,6 @@ $today = 0;
     @section('footer')
     <!-- data-table js -->
     <?php $root = url('/') . '/public/' ?>
-    <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
-
-<script src="<?= url('/public') ?>/code/highcharts.js"></script>
-<script src="<?= url('/public') ?>/code/modules/exporting.js"></script>
-<script src="<?= url('/public') ?>/code/modules/export-data.js"></script>
-<script src="<?= url('/public') ?>/code/modules/series-label.js"></script>
-<script src="<?= url('/public') ?>/code/modules/data.js"></script>
 
     <script type="text/javascript">
 
