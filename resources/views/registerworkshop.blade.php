@@ -58,7 +58,7 @@
 }
 </style>
 </head>
-<body class="fix-menu"   style="overflow: scroll">
+<body class="fix-menu"   style=" overflow-y:auto; height: auto;">
             <!-- Container-fluid starts -->
             <div class="container-fluid">
                  <div class="page-wrapper">
@@ -165,6 +165,6 @@
           <!-- Authentication card end -->
         </div>
         <!-- end of col-sm-12 -->
- 
+
 </body>
 </html>
