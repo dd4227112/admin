@@ -27,7 +27,7 @@
 //    $classlevel_status[$level->schema_name] = $level->schema_name;
 //}
 $train = \App\Models\TrainItemAllocation::get();
-$school_allocations = DB::select('select a.schema_name,c.source, c.sname,b.firstname, b.lastname from admin.users_schools a join admin.users b on b.id=a.user_id join admin.all_setting c on c."schema_name"=a."schema_name" where a.role_id=8 and a.status=1 and c.schema_name is not null');
+$school_allocations = DB::select('select a.schema_name,c.source, c.sname,b.firstname, b.lastname from admin.users_schools a join admin.users b on b.id=a.user_id join admin.all_setting c on c."schema_name"::text=a."schema_name"::text where a.role_id=8 and a.status=1 and c.schema_name is not null');
 $allocation = [];
 $users_allocation = [];
 
@@ -41,6 +41,12 @@ foreach ($trains as $train) {
 
     $t_allocations[$train->username][$train->id] = $train->status;
 }
+
+$root = url('/') . '/public/';
+$page = request()->segment(3);
+$today = 0;
+
+
 ?>
 <!-- Sidebar inner chat end-->
 <!-- Main-body start -->
@@ -70,6 +76,32 @@ foreach ($trains as $train) {
         <!-- Page-header end -->
         <!-- Page-body start -->
         <div class="page-body">
+                          <div class="row">
+            <div class="col-lg-4">
+            </div>
+            <div class="col-lg-4"></div>
+            <div class="col-lg-4 text-right">
+                <select class="form-control" id="check_custom_date">
+                    <option value="today" >Today</option>
+                    <option value="custom" >Custom</option>
+                </select>
+
+            </div>
+        </div>
+        <div class="row" style="display: none" id="show_date">
+
+            <div class="col-lg-4"></div>
+            <div class="col-lg-8 text-right">
+                <h4 class="sub-title">Date Time Picker</h4>
+                <div class="input-daterange input-group" id="datepicker">
+                    <input type="date" class="input-sm form-control calendar" name="start" id="start_date">
+                    <span class="input-group-addon">to</span>
+                    <input type="date" class="input-sm form-control" name="end" id="end_date">
+                    <input type="submit" class="input-sm btn btn-sm btn-success" id="search_custom"/>
+                </div>
+            </div>
+
+        </div>
             <div class="row">
                 <div class="col-sm-12">
                     <!-- Ajax data source (Arrays) table start -->
@@ -220,9 +252,41 @@ foreach ($trains as $train) {
                                                 <tr>
                                                     <th scope="row"><?= $u ?></th>
                                                     <td><?= $user->firstname ?></td>
-                                                    <td><?= $user->tasks()->where('status', 'New')->count() ?></td>
-                                                    <td><?= $user->tasks()->where('status', 'Complete')->count() ?></td>
-                                                    <td><?= $user->tasks()->where('status', 'Pending')->count() ?></td>
+                                                    <td><?php
+                                                    if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
+   
+   echo  $user->tasks()->where('status', 'New')->whereDate('created_at','<=', date('Y-m-d'))->count();
+} else {
+    $start_date = date('Y-m-d', strtotime(request('start')));
+    $end_date = date('Y-m-d', strtotime(request('end')));
+  echo  $user->tasks()->where('status', 'New')->whereDate('created_at','<=',$end_date)->whereDate('created_at','>=',$start_date)->count();
+}
+
+
+                                                     ?></td>
+                                                    <td><?php 
+ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
+   
+   echo  $user->tasks()->where('status', 'Complete')->whereDate('created_at','<=', date('Y-m-d'))->count();
+} else {
+    $start_date = date('Y-m-d', strtotime(request('start')));
+    $end_date = date('Y-m-d', strtotime(request('end')));
+  echo  $user->tasks()->where('status', 'Complete')->whereDate('created_at','<=',$end_date)->whereDate('created_at','>=',$start_date)->count();
+}
+
+                                                  
+                                                     ?></td>
+                                                    <td><?php 
+
+ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
+   
+   echo  $user->tasks()->where('status', 'Pending')->whereDate('created_at','<=', date('Y-m-d'))->count();
+} else {
+    $start_date = date('Y-m-d', strtotime(request('start')));
+    $end_date = date('Y-m-d', strtotime(request('end')));
+  echo  $user->tasks()->where('status', 'Pending')->whereDate('created_at','<=',$end_date)->whereDate('created_at','>=',$start_date)->count();
+}
+                          ?>                       </td>
 
                                                 </tr>
                                                 <?php
@@ -309,5 +373,26 @@ foreach ($trains as $train) {
             });
         }
         $(document).ready(get_statistic);
-    </script>
+
+
+    check = function () {
+        $('#check_custom_date').change(function () {
+            var val = $(this).val();
+            if (val == 'today') {
+                window.location.href = '<?= url('customer/setup/') ?>/1';
+            } else {
+                $('#show_date').show();
+            }
+        });
+    }
+    submit_search = function () {
+        $('#search_custom').mousedown(function () {
+            var start_date = $('#start_date').val();
+            var end_date = $('#end_date').val();
+            window.location.href = '<?= url('customer/setup/') ?>/5?start=' + start_date + '&end=' + end_date;
+        });
+    }
+    $(document).ready(check);
+    $(document).ready(submit_search);
+</script>
     @endsection
