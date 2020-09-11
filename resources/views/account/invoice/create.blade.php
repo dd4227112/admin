@@ -222,11 +222,11 @@
                             </div>
 
 
-                            <div class="tab-pane active "  id="invoice" role="tabpanel" aria-expanded="true">
+                            <div class="tab-pane active " id="invoice" role="tabpanel" aria-expanded="true">
                                 <div class="card-block">
 
                                     <header class="panel-heading">
-                                       Create 10% Invoice
+                                        Create 10% Invoice
 
                                     </header>
                                     <div class="panel-body">
@@ -248,11 +248,6 @@
                                                         <?php echo form_error($errors, 'user_in_shulesoft'); ?>
                                                     </span>
                                                 </div>
-
-
-
-
-
                                                 <div class='form-group'>
                                                     <label for="amount" class="col-sm-2 control-label">
                                                         <?= __("Amount") ?><span class="red">*</span>
@@ -274,17 +269,16 @@
                                                         <select name="payment_type_id" id="payment_method_status" class="form-control" required="">
                                                             <option value="">Select Payment type</option>
                                                             <?php
-                                                            /*
+                                                            $payment_types =  \App\Models\PaymentType::all();
                                                             if (count($payment_types) > 0) {
 
                                                                 foreach ($payment_types as $payment_type) {
-                                                            
-
+                                                            ?>
                                                                     <option value="<?= $payment_type->id ?>"><?= $payment_type->name ?></option>
 
                                                             <?php
                                                                 }
-                                                            } */
+                                                            }
                                                             ?>
                                                         </select>
                                                     </div>
@@ -300,7 +294,7 @@
                                                                 <option value=""></option>
 
                                                                 <?php
-                                                                /*
+                                                                $banks = \App\Models\BankAccount::all();
                                                                 if (count($banks) > 0) {
 
                                                                     foreach ($banks as $bank) {
@@ -310,14 +304,14 @@
 
                                                                 <?php
                                                                     }
-                                                                } */
+                                                                }
                                                                 ?>
 
                                                             </select>
                                                         </div>
                                                         <span class="col-sm-4 control-label">
-                                                            <?php 
-                                                            //echo form_error($errors, 'bank_name'); 
+                                                            <?php
+                                                            echo form_error($errors, 'bank_name');
                                                             ?>
                                                         </span>
                                                     </div>
@@ -332,10 +326,10 @@
                                                             <input type="text" placeholder="Enter ref number/cheque number" class="form-control" id="ref_no" name="transaction_id" value="<?= old('transaction_id', time()) ?>">
                                                         </div>
                                                         <span class="col-sm-4 control-label">
-                                                            <!--<span id="ref_no_status"></span>-->
-                                                            <?php 
-                                                            // echo form_error($errors, 'transaction_id');
-                                                             ?>
+                                                            <span id="ref_no_status"></span>
+                                                            <?php
+                                                            echo form_error($errors, 'transaction_id');
+                                                            ?>
                                                         </span>
                                                     </div>
                                                 </div>
@@ -623,5 +617,53 @@
     }
     $(document).ready(checkClient);
     $(document).ready(single_no_excel_submit);
+</script>
+
+<script>
+    payment_method_status = function() {
+        $('#payment_method_status').change(function() {
+            var val = $(this).val();
+            if (val !== 'cash') {
+                $('#refer_no').show();
+            } else {
+                $('#refer_no').hide();
+            }
+        });
+
+
+        $('#status').click(function() {
+            var depreciation = $('#status').val();
+            if (depreciation == '0') {
+                $('#dep').show();
+            } else {
+                $('#dep').hide();
+            }
+
+
+
+        });
+        $('#user_in_shulesoft').change(function() {
+            var val = $(this).val();
+            if (val === '1') {
+                $('#user_in_shulesoft_tag').show();
+                $('#user_not_in_shulesoft_tag').hide();
+            } else if (val === '2') {
+                $('#user_in_shulesoft_tag').hide();
+                $('#user_not_in_shulesoft_tag').show();
+            } else {
+                $('#user_in_shulesoft_tag').hide();
+                $('#user_not_in_shulesoft_tag').hide();
+            }
+        });
+
+    };
+    $(document).ready(payment_method_status)
+
+    $(".select2").select2({
+        theme: "bootstrap",
+        dropdownAutoWidth: false,
+        allowClear: false,
+        debug: true
+    });
 </script>
 @endsection

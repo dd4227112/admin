@@ -201,6 +201,7 @@ class Account extends Controller {
                 $user_invoice = Invoice::where('client_id', $client_id)->first();
                 $reference = 'SASA11' . date('Y') . $client_record->id;
             }
+            $this->data["payment_types"] = \App\Models\PaymentType::all();
 
 
             if (count($user_invoice) == 0) {
@@ -1246,7 +1247,10 @@ class Account extends Controller {
         $note = request('note');
 
         $data_to_be_inserted = [
-            ''
+            '' => request('payer_name'),
+            '' => request('amount'),
+            '' => request('payment_method'),
+            '' => request('inssued_date'),
         ];
     }
 

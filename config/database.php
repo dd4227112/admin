@@ -57,9 +57,10 @@ return [
             'driver' => 'pgsql',
             'host' => '127.0.0.1',
             'port' =>5432,
-            'database' => 'shulesoft',
+
+            'database' => 'shulesoft_system',
             'username' => 'postgres',
-            'password' =>'tabita',
+            'password' =>'Namwinyu1995',
             'charset' => 'utf8',
             'prefix' => '',
             'schema' =>'admin',
