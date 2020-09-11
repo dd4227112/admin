@@ -289,10 +289,10 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
             case 'tasks':
 
                 $user_id = (int) request('user_id') > 0 ? request('user_id') : Auth::user()->id;
-                $sql = "select t.id,substring(t.activity from 1 for 75) as activity,t.date, t.start_date,t.end_date, t.created_at,p.school_name,p.client,u.firstname||' '||u.lastname as user_name, substring(tt.name from 1 for 10) as task_name, t.status,t.priority from admin.tasks t left join (
-                    select a.task_id, c.name as school_name,'Client' as client from admin.tasks_clients a join admin.clients c on c.id=a.client_id
+                $sql = "select t.id,substring(t.activity from 1 for 50) as activity,t.date, t.start_date,t.end_date, t.created_at,p.school_name,p.client,u.firstname||' '||u.lastname as user_name, substring(tt.name from 1 for 20) as task_name, t.status,t.priority from admin.tasks t left join (
+                    select a.task_id, substring(c.name from 1 for 20) as school_name,'Client' as client from admin.tasks_clients a join admin.clients c on c.id=a.client_id
                     UNION ALL
-                SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks_schools b join admin.schools s on s.id=b.school_id ) p on p.task_id=t.id join admin.users u on u.id=t.user_id LEFT join admin.task_types tt on tt.id=t.task_type_id where u.id=" . $user_id . " OR t.id in (select task_id from admin.tasks_users where user_id=" . $user_id . " )";
+                SELECT b.task_id,  substring(s.name from 1 for 20) as school_name, 'Not Client' as client from admin.tasks_schools b join admin.schools s on s.id=b.school_id ) p on p.task_id=t.id join admin.users u on u.id=t.user_id LEFT join admin.task_types tt on tt.id=t.task_type_id where u.id=" . $user_id . " OR t.id in (select task_id from admin.tasks_users where user_id=" . $user_id . " )";
                 return $this->ajaxTable('tasks', ['activity', 'u.firstname', 'p.school_name', 't.created_at', 't.date', 'u.lastname', 't.start_date', 't.end_date'], $sql);
 
                 break;
@@ -451,7 +451,7 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
                 'email_verified' => 0,
                 'phone_verified' => 0,
                 'created_by' => Auth::user()->id,
-                'username' => request('username') !='' ? request('username') : $username
+                'username' => request('username') !='' ? strtolower(request('username')) : $username
             ]);
 //client school
             DB::table('admin.client_schools')->insert([
@@ -691,7 +691,7 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
         return view('sales.sales_status.index', $this->data);
     }
  public function addLead(){
-    $this->data['schools']  = \App\Models\School::where('ownership', 'Non-Government')->orderBy('schema_name', 'ASC')->get();
+    //$this->data['schools']  = \App\Models\School::where('ownership', '<>', 'Government')->orderBy('schema_name', 'ASC')->get();
     if ($_POST) {
 
         $data = array_merge(request()->except('to_user_id'), ['user_id' => Auth::user()->id, 'status'=>'new', 'date' => date('Y-m-d')]);
@@ -702,15 +702,25 @@ select a.id,a.payer_name as name, a.amount, 'cash' as method, a.created_at, a.tr
                     'user_id' => Auth::user()->id
                 ]);
                 
-        $schools = request('school_id');
-        if (count($schools) > 0) {
-            foreach ($schools as $school_id) {
+        $$school_id = request('school_id');
+        // if (count($schools) > 0) {
+        //     foreach ($schools as $school_id) {
             DB::table('tasks_schools')->insert([
                 'task_id' => $task->id,
-                'school_id' => (int) $school_id
+                'school_id' => (int) $$school_id
             ]);
+            if (request('school_name') != '' && request('school_phone') != '') {
+                \App\Models\SchoolContact::create([
+                    'name' => request('school_name'),
+                    'phone' => request('school_phone'),
+                    'school_id' => (int) $school_id,
+                    'user_id' => Auth::user()->id,
+                    'title' => request('school_title')
+                ]);
+                DB::table('admin.schools')->where('id', (int)$school_id)->update(['students' => request('students')]);
+        
             }
-        }
+
         return redirect('Sales/salesStatus/1')->with('success', 'success');
     }
     

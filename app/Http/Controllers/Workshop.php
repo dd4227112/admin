@@ -70,4 +70,11 @@ echo "<script>
 }
     }
 
+    public function profile(){
+        $id = request()->segment(2);
+        $this->data['id'] = $id;
+        $this->data['profile'] = \App\Models\User::where(DB::raw("md5(email)") , $this->data['id'])->first();
+        return view('user_profile', $this->data);
+    }
+
 }

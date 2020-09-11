@@ -51,7 +51,7 @@ foreach ($user_permission as $permis) {
                         </div>
                         <?php
                         if (Auth::user()->role->name != 'NMB') {
-                            ?>
+                        ?>
                             <div class="col-md-6 col-xl-4">
                                 <div class="card counter-card-2">
                                     <div class="card-block-big">
@@ -118,13 +118,13 @@ foreach ($user_permission as $permis) {
                                         <div>
                                             <h3>
                                                 <?php
-                                                $b= \collect(\DB::select('select count(distinct branch) as count from admin.nmb_schools'))->first();
+                                                $b = \collect(\DB::select('select count(distinct branch) as count from admin.nmb_schools'))->first();
                                                 echo $b->count;
                                                 ?></h3>
                                             <p>Branches with Schools
                                                 <span class="f-right text-default">
                                                     <i class="icofont icofont-arrow-up"></i>
-                                                    
+
                                                 </span></p>
                                             <div class="progress ">
                                                 <div class="progress-bar progress-bar-striped progress-xs progress-bar-default" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
@@ -157,9 +157,13 @@ foreach ($user_permission as $permis) {
                                 <a class="nav-link" data-toggle="tab" href="#review" role="tab">Activities</a>
                                 <div class="slide"></div>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#Qr_code" role="tab">QR Code</a>
+                                <div class="slide"></div>
+                            </li>
                             <?php
                             if (Auth::user()->id == 2) {
-                                ?>
+                            ?>
                                 <li class="nav-item">
                                     <a class="nav-link" data-toggle="tab" href="#permissions" role="tab">Permissions</a>
                                     <div class="slide"></div>
@@ -178,7 +182,7 @@ foreach ($user_permission as $permis) {
                                     <h5 class="card-header-text">About</h5>
                                     <?php
                                     if ($user->id == 2) {
-                                        ?>
+                                    ?>
                                         <a id="edit-btn" href="<?= url('users/edit/' . $user->id) ?>" class="btn btn-sm btn-primary waves-effect waves-light f-right">
                                             <i class="icofont icofont-edit"></i>
                                         </a>
@@ -215,7 +219,7 @@ foreach ($user_permission as $permis) {
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">Academic Certificates</th>
-                                                                        <td><a href="<?= url('/storage/uploads/images/' . $user->academic_certificates)?>" class="btn btn-primary btn-sm"> View Certificate</a></td>
+                                                                        <td><a href="<?= url('/storage/uploads/images/' . $user->academic_certificates) ?>" class="btn btn-primary btn-sm"> View Certificate</a></td>
                                                                     </tr>
                                                                     <tr>
                                                                         <td><a href="<?= url('users/resetPassword/' . $user->id) ?>" class="btn btn-warning btn-sm">Reset Password</a></td>
@@ -249,7 +253,7 @@ foreach ($user_permission as $permis) {
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">Medical Report</th>
-                                                                        <td><a href="<?= url('/storage/uploads/images/' . $user->medical_report)?>" class="btn btn-info btn-sm"> View Report</a></td>
+                                                                        <td><a href="<?= url('/storage/uploads/images/' . $user->medical_report) ?>" class="btn btn-info btn-sm"> View Report</a></td>
                                                                     </tr>
 
 
@@ -391,7 +395,7 @@ foreach ($user_permission as $permis) {
                                     <!-- end of edit-info -->
                                     <?php
                                     if (Auth::user()->id == 2) {
-                                        ?>
+                                    ?>
                                         <form class="form-horizontal form-material" method="post" action="<?= url('user/changePhoto/' . $user->id) ?>" enctype="multipart/form-data">
 
                                             <div class="form-group">
@@ -418,13 +422,13 @@ foreach ($user_permission as $permis) {
                                         <div class="card-header">
                                             <h5 class="card-header-text">Description About Me</h5>
                                             <button id="edit-info-btn" type="button" class="btn btn-sm btn-primary waves-effect waves-light f-right">
-                                            <a href="<?= url('users/edit/' . $user->id)?>"> <i class="icofont icofont-edit"></i> Edit</a>
+                                                <a href="<?= url('users/edit/' . $user->id) ?>"> <i class="icofont icofont-edit"></i> Edit</a>
                                             </button>
                                         </div>
                                         <div class="card-block user-desc">
                                             <div class="view-desc">
                                                 <p><?= $user->about ?></p>
-                                        <hr />
+                                                <hr />
                                                 <b>Skills: <?php echo $user->skills; ?></b>
                                             </div>
                                             <div class="edit-desc" style="display: none;">
@@ -472,8 +476,10 @@ foreach ($user_permission as $permis) {
 
                                             </form>
                                         </div>
-                                        <br/>
-                                        <div class="card-block"><div id="report_section"></div></div>
+                                        <br />
+                                        <div class="card-block">
+                                            <div id="report_section"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -489,7 +495,7 @@ foreach ($user_permission as $permis) {
                                     <?php
                                     $tasks = \App\Models\Task::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
                                     foreach ($tasks as $task) {
-                                        ?>
+                                    ?>
                                         <div class="social-timelines p-relative o-hidden" id="removetag<?= $task->id ?>">
                                             <div class="row timeline-right p-t-35">
                                                 <div class="col-xs-2 col-sm-1">
@@ -509,7 +515,8 @@ foreach ($user_permission as $permis) {
                                                         <div class="card-block post-timelines">
 
                                                             <div class="social-time text-muted">
-                                                                <?php // date("d M Y", strtotime($task->created_at)) ?>
+                                                                <?php // date("d M Y", strtotime($task->created_at)) 
+                                                                ?>
                                                             </div>
                                                         </div>
 
@@ -527,7 +534,7 @@ foreach ($user_permission as $permis) {
                                                             $comments = $task->taskComments()->get();
                                                             if (count($comments) > 0) {
                                                                 foreach ($comments as $comment) {
-                                                                    ?>
+                                                            ?>
                                                                     <div class="media m-b-20">
                                                                         <a class="media-left" href="#">
                                                                             <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-1.png" alt="Image">
@@ -538,7 +545,7 @@ foreach ($user_permission as $permis) {
                                                                         </div>
                                                                     </div>
 
-                                                                    <?php
+                                                            <?php
                                                                 }
                                                             }
                                                             ?>
@@ -570,6 +577,58 @@ foreach ($user_permission as $permis) {
                             </div>
                         </div>
 
+                        <!-- tab pane info start -->
+                        <div class="tab-pane" id="Qr_code" role="tabpanel">
+                            <!-- info card start -->
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5 class="card-header-text">User QR CODE</h5>
+                                        </div>
+                                        <div class="card-block">
+                                            <form>
+
+                                                <div class="form-group row">
+
+                                                    <div class="col-sm-2">
+                                                        <a href="<?= url('QrCode/generate_qr_code/' . $user->email) ?>" class="form-control  btn btn-primary" id="search_report">Generate QR Code</a>
+
+                                                    </div>
+                                                    <?php if ($user->qr_code != '') { ?>
+                                                        <div class="col-sm-2">
+
+                                                            <a href="<?= $root ?><?= $user->qr_code ?>" class="btn btn-success">Download</a>
+                                                        </div>
+                                                    <?php } ?>
+                                                </div>
+
+
+                                            </form>
+                                            <div>
+                                                <?php if ($user->qr_code != '') { ?>
+                                                    <img src="<?= $root ?><?= $user->qr_code ?>" alt="">
+                                                    <bt>
+
+
+                                                    <?php } ?>
+                                            </div>
+                                        </div>
+
+                                        <br />
+                                        <div class="card-block">
+
+                                            <div id="report_section">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- info card end -->
+                        </div>
+
                         <div class="tab-pane" id="permissions" role="tabpanel" aria-expanded="false">
                             <div class="email-card p-0">
                                 <div class="card-block">
@@ -583,7 +642,7 @@ foreach ($user_permission as $permis) {
                                                 <?php
                                                 $permissions = \App\Models\Permission::all();
                                                 foreach ($permissions as $permission) {
-                                                    ?>
+                                                ?>
                                                     <?php
                                                     $checked = in_array($permission->id, $arr) ? 'checked' : '';
                                                     ?>
@@ -601,7 +660,7 @@ foreach ($user_permission as $permis) {
                                                         <td><a href="#!" class="email-name"><?= $permission->display_name ?></a></td>
                                                         <td><?= $permission->description ?></td>
                                                     </tr>
-                                                    <?php
+                                                <?php
                                                 }
                                                 ?>
                                             </tbody>
@@ -618,8 +677,8 @@ foreach ($user_permission as $permis) {
     </div>
 </div>
 <script type="text/javascript">
-    permission = function () {
-        $('.permission').click(function () {
+    permission = function() {
+        $('.permission').click(function() {
             var id = $(this).val();
             var role_id = '<?= $user->role_id ?>';
             if (parseInt(id)) {
@@ -632,9 +691,12 @@ foreach ($user_permission as $permis) {
                 $.ajax({
                     type: 'POST',
                     url: url_obj,
-                    data: {"id": id, role_id: role_id},
+                    data: {
+                        "id": id,
+                        role_id: role_id
+                    },
                     dataType: "html",
-                    success: function (data) {
+                    success: function(data) {
                         toast(data);
                     }
                 });
@@ -642,22 +704,25 @@ foreach ($user_permission as $permis) {
         });
     }
     $(document).ready(permission);
-    search_report = function () {
-        $('#search_report').mousedown(function () {
+    search_report = function() {
+        $('#search_report').mousedown(function() {
             var from = $('#from').val();
             var to = $('#to').val();
             $.ajax({
                 type: 'POST',
                 url: "<?= url('users/report') ?>",
-                data: {"from": from, to: to, user_id:<?= $user->id ?>},
+                data: {
+                    "from": from,
+                    to: to,
+                    user_id: <?= $user->id ?>
+                },
                 dataType: "html",
-                success: function (data) {
+                success: function(data) {
                     $('#report_section').html(data);
                 }
             });
         })
     };
     $(document).ready(search_report);
-
 </script>
 @endsection
