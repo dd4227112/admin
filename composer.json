@@ -14,8 +14,9 @@
         "laracademy/generators": "^1.5",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
-        "pragmarx/tracker": "^3.3",
         "league/flysystem-aws-s3-v3": "^1.0",
+        "pragmarx/tracker": "^3.3",
+        "tecnickcom/tc-lib-barcode": "^1.15",
         "zizaco/entrust": "5.2.x-dev"
     },
     "require-dev": {
