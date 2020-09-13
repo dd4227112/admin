@@ -517,57 +517,7 @@
 
     </div>
 </div>
-<div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Define Invoice Start & Date</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <form action="#" method="post">
-                <div class="modal-body">
-                    <form action="#" method="post">
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    Invoice Start Date
-                                    <input type="date" class="form-control"  name="last_payment_date" required>
-                                </div>
-                                <div class="col-md-6">
-                                    Invoice Due Date
-                                    <input type="date" class="form-control"  name="next_payment_date" required>
-                                </div>
-                            </div>
-                        </div>
 
-                        <div class="form-group">
-                            <div class="row">
-                            <div class="col-md-6">
-                                    Number of Students
-                                    <input type="number" class="form-control"  name="student" value="<?= $students ?>" required>
-                                    <input type="hidden" name="school" value="<?= $client->username ?>"> 
-                                </div>
-                                <div class="col-md-6">
-                                Total Paid Amount
-                                    <input type="number" class="form-control"  name="total_paid_amount" value="<?= $siteinfos->total_paid_amount ?>" required>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
-                        </div>
-                        <?= csrf_field() ?>
-                    </form>
-                </div>
-        </div>
-    </div>
-</div>
 <script src="{{url('public/assets/shulesoft/jquery.PrintArea.js')}}" type="text/JavaScript"></script>
 
 <script type="text/javascript">

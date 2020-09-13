@@ -102,7 +102,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                                          <?php
                                 $invoice_paid = 0;;
                                 ?>
-                                    <?php echo $invoice_paid; ?>
+                                    <?php echo $all_setting; ?>
                                 </li>
                                 <span class="small"><?= ' percentage (' . round(43 * 100 / ((int) 434 == 0 ? 1 : 4), 1) ?>%)</span>
                             </ul>
