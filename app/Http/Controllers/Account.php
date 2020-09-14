@@ -356,7 +356,7 @@ public function createShuleSoftInvoice() {
         if (count($invoice) > 0) {
 // This is when a bank return payment status to us
 //save it in the database
-            $this->validate(request(), ['amount' => 'required|numeric', 'payment_type' => 'required']);
+            $this->validate(request(), ['amount' => 'required|numeric', 'payment_type' => 'required','date'=>'required']);
             $transaction_id = (int) request('transaction_id') == 0 ? time() : request('transaction_id');
             $payments = \App\Models\Payment::where('transaction_id', $transaction_id)->first();
             if (count($payments) > 0) {
@@ -375,13 +375,13 @@ public function createShuleSoftInvoice() {
             }
             $refer_expense_id = request('refer_expense_id');
             $payment_type = \App\Models\PaymentType::find(request('payment_type'));
-            $payment = $this->acceptPayment(request('amount'), $invoice->id, $payment_type->name, $transaction_id, $mobile_transaction_id, request('name'), request('bank_account_id'), request('transaction_time'), request('token'), $invoice->client_id, $refer_expense_id);
+            $payment = $this->acceptPayment(request('amount'), $invoice->id, $payment_type->name, $transaction_id, $mobile_transaction_id, request('name'), request('bank_account_id'), request('transaction_time'), request('token'), $invoice->client_id, $refer_expense_id,request('date'));
         }
         // $this->sendNotification($invoice);
-        return redirect('account/invoice')->with('success', json_decode($payment)->description);
+        return redirect('account/invoice/1/'.$invoice->account_year_id)->with('success', json_decode($payment)->description);
     }
 
-    public function acceptPayment($amount, $invoice_id, $payment_method, $receipt, $mobile_transaction_id, $customer_name, $bank_account_id, $timestamp, $token, $client_id, $refer_expense_id) {
+    public function acceptPayment($amount, $invoice_id, $payment_method, $receipt, $mobile_transaction_id, $customer_name, $bank_account_id, $timestamp, $token, $client_id, $refer_expense_id,$date=null) {
 
         //$financial_id = count($this->api_info) == 1 ? $this->api_info->financial_entity_id : \App\Model\Financial_entity::where('name', request('method'))->first()->id;
         $payment_array = array(
@@ -395,6 +395,7 @@ public function createShuleSoftInvoice() {
             'note' => $customer_name,
             'transaction_time' => $timestamp,
             'token' => $token,
+             'date' => date('Y-m-d',strtotime($date)),
                 // 'financial_entity_id' => $financial_id,
                 //special case for CRDB payments only
 //            'checksum' => request('checksum'),
