@@ -46,7 +46,18 @@ $root = url('/') . '/public/';
 $page = request()->segment(3);
 $today = 0;
 
-
+function getStatus($user,$status='New'){ 
+    $page = request()->segment(3);
+           if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
+   
+   $result=$user->tasks()->where('status', $status)->whereDate('updated_at','<=', date('Y-m-d'))->count();
+} else {
+    $start_date = date('Y-m-d', strtotime(request('start')));
+    $end_date = date('Y-m-d', strtotime(request('end')));
+ $result= $user->tasks()->where('status',$status)->whereDate('updated_at','<=',$end_date)->whereDate('updated_at','>=',$start_date)->count();
+}
+return $result;
+}
 ?>
 <!-- Sidebar inner chat end-->
 <!-- Main-body start -->
@@ -248,45 +259,15 @@ $today = 0;
                                             $u = 1;
                                             $users_tasks = \App\Models\User::where('status', 1)->where('department','<>',10)->get();
                                             foreach ($users_tasks as $user) {
+
+
                                                 ?>
                                                 <tr>
                                                     <th scope="row"><?= $u ?></th>
                                                     <td><?= $user->firstname ?></td>
-                                                    <td><?php
-                                                    if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
-   
-   echo  $user->tasks()->where('status', 'New')->whereDate('created_at','<=', date('Y-m-d'))->count();
-} else {
-    $start_date = date('Y-m-d', strtotime(request('start')));
-    $end_date = date('Y-m-d', strtotime(request('end')));
-  echo  $user->tasks()->where('status', 'New')->whereDate('created_at','<=',$end_date)->whereDate('created_at','>=',$start_date)->count();
-}
-
-
-                                                     ?></td>
-                                                    <td><?php 
- if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
-   
-   echo  $user->tasks()->where('status', 'Complete')->whereDate('created_at','<=', date('Y-m-d'))->count();
-} else {
-    $start_date = date('Y-m-d', strtotime(request('start')));
-    $end_date = date('Y-m-d', strtotime(request('end')));
-  echo  $user->tasks()->where('status', 'Complete')->whereDate('created_at','<=',$end_date)->whereDate('created_at','>=',$start_date)->count();
-}
-
-                                                  
-                                                     ?></td>
-                                                    <td><?php 
-
- if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
-   
-   echo  $user->tasks()->where('status', 'Pending')->whereDate('created_at','<=', date('Y-m-d'))->count();
-} else {
-    $start_date = date('Y-m-d', strtotime(request('start')));
-    $end_date = date('Y-m-d', strtotime(request('end')));
-  echo  $user->tasks()->where('status', 'Pending')->whereDate('created_at','<=',$end_date)->whereDate('created_at','>=',$start_date)->count();
-}
-                          ?>                       </td>
+                                                    <td><?=getStatus($user,'New')?></td>
+                                                    <td><?=getStatus($user,'Complete')?></td>
+                                                    <td><?=getStatus($user,'Pending')?>                       </td>
 
                                                 </tr>
                                                 <?php

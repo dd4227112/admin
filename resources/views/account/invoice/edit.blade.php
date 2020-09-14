@@ -51,7 +51,7 @@
                                     <div class="panel-body">
                                         <div id="error_area"></div>
                                         <div class=" form">
-                                            <form class="cmxform form-horizontal " id="commentForm" method="post" action="<?= url('account/createInvoice') ?>">
+                                            <form class="cmxform form-horizontal " id="commentForm" method="post" action="<?= url('account/editShuleSoftInvoice/'.$invoice->id) ?>">
                                                 <div class="form-group ">
                                                     <label for="type" class="control-label col-lg-3">Client Name</label>
                                                     <div class="col-lg-6">
@@ -61,11 +61,20 @@
                                                     <?php echo form_error($errors, 'client'); ?>
                                                     <div class="col-lg-6"> <span id="project_id_error"></span></div>
                                                 </div>
-
-                                                <div class="form-group ">
-                                                    <label for="number" class="control-label col-lg-3">Date (Required)</label>
+                                                 <div class="form-group ">
+                                                    <label for="type" class="control-label col-lg-3">Amount</label>
                                                     <div class="col-lg-6">
-                                                        <input type="date" value="<?= $invoice->date ?>" name="date" id="date" class="form-control"/>
+                                                        <input type="text" class="form-control"  value="<?= $invoice->invoiceFees()->sum('amount') ?>" disabled=""/>
+
+                                                    </div>
+                                                    <?php echo form_error($errors, 'amount'); ?>
+                                                    <div class="col-lg-6"> <span id="project_id_error"></span></div>
+                                                </div>
+
+<div class="form-group ">
+                                                    <label for="number" class="control-label col-lg-3">Students</label>
+                                                    <div class="col-lg-6">
+                                                        <input type="number" value="<?= $invoice->client->estimated_students ?>" name="estimated_students" id="date" class="form-control"/>
 
                                                     </div>
                                                     <?php echo form_error($errors, 'date'); ?>
@@ -73,62 +82,34 @@
                                                 </div>
 
                                                 <div class="form-group ">
-                                                    <label for="cname" class="control-label col-lg-3">Add Fee Details</label>
+                                                    <label for="number" class="control-label col-lg-3">Price</label>
                                                     <div class="col-lg-6">
-                                                        <div class="card">
+                                                        <input type="text" value="<?= $invoice->client->price_per_student ?>" name="price_per_student" id="date" class="form-control"/>
 
-                                                            <div class="card-body">
-                                                                <div id="table" class="table-editable">
-                                                                    <span onclick="addRow(this)"  class="table-add float-right mb-3 mr-2">
-                                                                        <a href="#!" class=" btn btn-sx"><i class="fa fa-plus fa-2x" aria-hidden="true"></i>Add</a></span>
-                                                                    <div id="table_error_area"></div>
-
-                                                                    <table class="table table-bordered table-responsive-md table-striped text-center" id='table'>
-                                                                        <thead>
-                                                                            <tr>
-                                                                                <th class="text-center">Service Name</th>
-                                                                                <th class="text-center">Quantity</th>
-                                                                                <th class="text-center">Price Per Unit</th>
-                                                                                <th class="text-center">Project</th>
-
-                                                                                <th class="text-center">Remove</th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody id='user_area'>
-                                                                            <?php
-                                                                            $invoice_fees = $invoice->invoiceFees()->get();
-                                                                            foreach ($invoice_fees as $fee) {
-                                                                                ?>
-                                                                                <tr class=''>
-                                                                                    <td class="name" contenteditable="true" >ShuleSoft Service </td>
-
-                                                                                    <td class="quantity" contenteditable="true">21</td>
-
-                                                                                    <td class="unit_price" contenteditable="true">10,000</td>
-
-                                                                                    <td class="project" contenteditable="true">shulesoft</td>
-                                                                                    <td>
-                                                                                        <span class="table-remove"><button type="button"
-                                                                                                                           class="btn btn-danger btn-rounded btn-sm my-0">Remove</button></span>
-                                                                                    </td>
-                                                                                </tr>
-
-<?php } ?>
-
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <!-- Editable table -->
                                                     </div>
+                                                    <?php echo form_error($errors, 'date'); ?>
+                                                    <div class="col-lg-6"> <span id="date_error"></span></div>
                                                 </div>
+
+                                               
+
+                                                <div class="form-group ">
+                                                    <label for="number" class="control-label col-lg-3">Due Date</label>
+                                                    <div class="col-lg-6">
+                                                        <input type="text" value="<?= date('Y-m-d',strtotime($invoice->due_date)) ?>" name="due_date" id="date" class="form-control"/>
+
+                                                    </div>
+                                                    <?php echo form_error($errors, 'date'); ?>
+                                                    <div class="col-lg-6"> <span id="date_error"></span></div>
+                                                </div>
+
+                                               
 
 
                                                 <div class="form-group">
                                                     <div class="col-lg-offset-3 col-lg-6">
 <?= csrf_field() ?>
-                                                        <button class="btn btn-primary" type="button" id="noexcel">Create Invoice</button>
+                                                        <button class="btn btn-primary" type="submit" >Update Invoice</button>
                                                     </div>
                                                 </div>
                                             </form>
@@ -369,7 +350,7 @@
 
     }
     $(document).ready(checkClient);
-    $(document).ready(single_no_excel_submit);
+    ///$(document).ready(single_no_excel_submit);
 </script>
 @endsection
 

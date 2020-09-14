@@ -323,29 +323,19 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
 
     public function epayment() {
         $invoice_id = request()->segment(3);
-        $booking = \App\Models\Invoice::where('id', $invoice_id)->first();
+        $booking =$invoice= \App\Models\Invoice::where('id', $invoice_id)->first();
         if (strlen($booking->token) < 4) {
-            $order_id = strlen($booking->order_id) < 4 ? rand(454, 4557) . time() : $booking->order_id;
-            $amount = $booking->amount;
-            $phone_number = validate_phone_number($booking->client->phone);
-            if (is_array($phone_number)) {
-                $phone = str_replace('+', null, validate_phone_number($booking->client->phone)[1]);
-            } else {
-                $phone = '255754406004';
-            }
-            $order = array("order_id" => $order_id, "amount" => $amount,
-                'buyer_name' => $booking->client->name, 'buyer_phone' => $phone, 'end_point' => '/checkout/create-order', 'action' => 'createOrder', 'client_id' => $booking->client_id, 'source' => $booking->client_id);
-
-            $this->curlPrivate($order);
+           $account=new \App\Http\Controllers\Account();
+           $account->createSelcomControlNumber($invoice_id);
         }
         $paid = 0;
-        if ($booking->payments()->sum('amount') == $booking->amount || $booking->payments()->sum('amount') == $booking->invoiceFees()->sum('amount')) {
+        if ($booking->payments()->sum('amount') == $booking->invoiceFees()->sum('amount')) {
             $paid = 1;
         }
 
         $balance = $booking->payments()->sum('amount');
 
-        return view('account.invoice.pay', compact('booking', 'balance', 'paid'));
+        return view('account.invoice.pay', compact('booking', 'balance', 'paid','invoice'));
     }
 
     //Notify all admin about monthly reports
