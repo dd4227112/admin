@@ -309,7 +309,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     Phone Number
-                                    <input type="text" class="form-control"  name="phone" required>
+                                    <input type="text" class="form-control"  name="phone_number" required>
                                 </div>
                             </div>
                         </div>
@@ -318,7 +318,7 @@
                             <div class="row">
                            <div class="col-md-12">
                                     Message
- <textarea name="message" required="" class="form-control" >Hello #name
+ <textarea name="message" required="" class="form-control" >Hello #name,
 Thank you for choosing ShuleSoft in your school. We really appreciate working with your school.
 To help us continue offering this service to your school, kindly find our invoice for Tsh #amount. You can also pay electronically via masterpass with reference number #invoice
 Thank you</textarea> 
