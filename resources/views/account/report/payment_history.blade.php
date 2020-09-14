@@ -27,8 +27,8 @@
               <div class="row">
                 <!-- counter-card-1 start-->
                  <?php
-                               
-                                $payments = DB::select('select sum(amount), method from admin.payments group by method');
+                               $total=DB::table('admin.payments')->whereYear('date',date('Y'))->sum('amount');
+                                $payments = DB::select('select sum(amount), method from admin.payments where extract(year from date)='.date('Y').' group by method');
                                 foreach ($payments as  $value) {
                                
                                                 
@@ -40,10 +40,10 @@
                                
                                 <h3>Tsh <?= number_format($value->sum) ?></h3>
                                 <p><?=ucfirst($value->method)?> Collections
-                                    <!-- <span class="f-right text-primary">
+                                     <span class="f-right text-primary">
                                         <i class="icofont icofont-arrow-up"></i>
-                                        37.89%
-                                    </span> -->
+                                        <?=round(100*$value->sum/$total,2)?> %
+                                    </span> 
                                 </p>
                                 <div class="progress ">
                                     <div class="progress-bar progress-bar-striped progress-xs progress-bar-pink" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
