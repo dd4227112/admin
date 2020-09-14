@@ -598,7 +598,6 @@ foreach ($user_permission as $permis) {
                                                     </div>
                                                     <?php if ($user->qr_code != '') { ?>
                                                         <div class="col-sm-2">
-
                                                             <a href="<?= $root ?><?= $user->qr_code ?>" class="btn btn-success">Download</a>
                                                         </div>
                                                     <?php } ?>
