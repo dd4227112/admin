@@ -187,10 +187,10 @@ if((int) $request_control >0){
                     $invoice=Invoice::find(request('invoice_id'));
                 }
                 $replacements = array(
-                    $invoice->client->name, $invoice->invoiceFees()->sum('amount'), $invoice->number
+                    $invoice->client->name, money($invoice->invoiceFees()->sum('amount')-$invoice->payments()->sum('amount')), $invoice->token
                 );
  $sms =preg_replace(array(
-                    '/#name/i', '/#amount/i', '/#invocice/i'
+                    '/#name/i', '/#amount/i', '/#invoice/i'
                 ), $replacements, $message);
 
 if (preg_match('/#/', $sms)) {
@@ -200,8 +200,8 @@ if (preg_match('/#/', $sms)) {
 
 $button='<p align="center"><a style="padding:8px 16px;color:#ffffff;white-space:nowrap;font-weight:500;display:inline-block;text-decoration:none;border-color:#0073b1;background-color:green;border-radius:2px;border-width:1px;border-style:solid;margin-bottom:4px" href="'.url('epayment/i/' . $invoice->id).'" target="_blank">Click to View Your Invoice</a></p>';
 
-                $this->send_sms(request('phone_number'), $sms.' Open '.url('epayment/i/' . $invoice->id).' to view Invoice');
-                $this->send_email(request('email'),'ShuleSoft Invoice of Service', $sms.'<br/>'.$button);
+                $this->send_sms(validate_phone_number(request('phone_number'))[1], $sms.'. Open '.url('epayment/i/' . $invoice->id).' to view Invoice');
+                $this->send_email(request('email'),'ShuleSoft Invoice of Service', nl2br($sms).'<br/><br/>'.$button);
                 return redirect()->back()->with('success', 'success');
     }
     public function editShuleSoftInvoice() {

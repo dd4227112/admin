@@ -151,7 +151,7 @@
                                                 <tbody>
                                                     <tr>
                                                         
-                                                        <td style="">
+                                                        <td>
                                                             <ul>
                                                                 <li><p style="font-size: 1rem;"> To</p></li>
                                                                 <address>
@@ -203,6 +203,7 @@
                                                     $invoice_fee = $invoice->invoiceFees()->get();
                                                     ?>
                                                     <br/>
+                                                    <div class="table-responsive dt-responsive">
                                                     <table class="table table-bordered">
                                                         <thead>
                                                             <tr>
@@ -236,6 +237,7 @@
 
                                                         </tbody>
                                                     </table>
+                                                </div>
                                         </div>
                                         <!-- /.col -->
                                     </div>
@@ -243,6 +245,7 @@
 
                                     <div class="row">
                                        <div class="col-xs-12 col-sm-12 ">
+                                        <div class="table-responsive dt-responsive">
 <table class="table ">
     <tbody>
         <tr>
@@ -293,6 +296,7 @@
         </tr>
     </tbody>
 </table>
+</div>
                                        
                                         </div>
                                     </div>

@@ -100,11 +100,14 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                                 </li>
                                 <li class="text-right text-warning">
                                          <?php
-                                $invoice_paid = 0;;
+                                           $account_year=DB::table('admin.account_years')->where('name',date('Y'))->first();
+                                           $total_invoice = DB::table('admin.invoices')->where('account_year_id', $account_year_id)->count();
+
+                                $invoice_paid =count(DB::select('select count(distinct invoice_id) from admin.invoice_fees where invoice_id in (select id from admin.invoices where account_year_id='.$account_year->id.')'));
                                 ?>
-                                    <?php echo $all_setting; ?>
+                                    <?php echo $invoice_paid ?>
                                 </li>
-                                <span class="small"><?= ' percentage (' . round(43 * 100 / ((int) 434 == 0 ? 1 : 4), 1) ?>%)</span>
+                                <span class="small"><?= ' percentage (' . round($invoice_paid * 100 / ((int) $total_invoice  == 0 ? 1 : 4), 1) ?>%)</span>
                             </ul>
                         </div>
                     </div>
