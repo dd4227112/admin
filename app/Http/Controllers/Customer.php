@@ -552,9 +552,9 @@ $obj=[
 
     public function changeStatus() {
         if(request('status') == 'complete'){
-        \App\Models\Task::where('id', request('id'))->update(['status' => request('status'), 'end_date' => date("Y-m-d H:i:s"),  'updated_at' => date("Y-m-d H:i:s")]);
+        \App\Models\Task::where('id', request('id'))->update(['status' => request('status'), 'end_date' => date("Y-m-d H:i:s"),  'updated_at' =>'now()']);
         }else{
-            \App\Models\Task::where('id', request('id'))->update(['status' => request('status'),  'updated_at' => date("Y-m-d H:i:s")]);
+            \App\Models\Task::where('id', request('id'))->update(['status' => request('status'),  'updated_at' => 'now()']);
         }
         $users = DB::table('tasks_users')->where('task_id', request('id'))->get();
         if (count($users) > 0) {
@@ -795,15 +795,15 @@ $obj=[
     public function updateProfile() {
         $schema = request('schema');
         $tag = request('tag');
-        $table = request('table');
+        $table = 'clients';
         $user_id = request('user_id');
         $value = request('val');
-        $column = $table == 'student' ? 'student_id' : $table . 'ID';
+        $column = 'username';
         if ($table == 'bank') {
             return $this->setBankParameters();
         } else {
             $table == 'setting' ? DB::table($schema . '.' . $table)->update([$tag => $value]) :
-                            DB::table($schema . '.' . $table)->where($column, $user_id)->update([$tag => $value]);
+                            DB::table($table)->where($column, $schema)->update([$tag => $value]);
             if ($tag == 'institution_code') {
                 //update existing invoices
                 DB::statement('UPDATE ' . $schema . '.invoices SET "reference"=\'' . $value . '\'||"reference"');
