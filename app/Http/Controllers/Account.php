@@ -419,7 +419,7 @@ public function createShuleSoftInvoice() {
             'date' => 'now()',
             'note' => ''
         ];
-        \App\Models\Revenue::create($data);
+       // \App\Models\Revenue::create($data);
         $invoice_fee = \App\Models\InvoiceFee::where('invoice_id', $invoice_id);
         $status = 1;
 

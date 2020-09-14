@@ -101,7 +101,7 @@
                                     <div class="card-block">
 
                                         <?php
-                                 $sql_2 = "select sum(amount) as count, extract(month from created_at) as month from admin.payments a   where extract(year from created_at)=".date('Y')."  group by month order by month asc ";
+                                 $sql_2 = "select sum(amount) as count, extract(month from date) as month from admin.payments a   where extract(year from date)=".date('Y')."  group by month order by month asc ";
 
                                echo $insight->createChartBySql($sql_2, 'month', 'Payments Collection Per Month', 'line', false);
                                         ?>
