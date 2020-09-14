@@ -119,8 +119,8 @@
 
                                     <!-- title row -->
                                     <div class="row">
-                                        <div class="table-responsive dt-responsive">
-                                            <table id="dt-ajax-array" class="table">
+                                        <div class="col-lg-6 col-sm-8">
+                                            <address id="dt-ajax-array" class="table">
                                                 <tbody>
                                                     <tr>
                                                         <td>
@@ -135,37 +135,35 @@
                                                                 <li>Mobile no: +255 655/754 406004</li>
                                                             </ul>
                                                         </td>
-                                                        <td>
-                                                            <h1 class="pull-right invoice-title" style="font-size: rem; float: right; margin-left: 60%">Invoice</h1>
-                                                        </td>
+                                                       
                                                     </tr>
                                                 <tbody>
-                                            </table>
+                                            </address>
                                             <!-- /.col -->
+                                        </div>
+                                        <div class="col-lg-6 col-sm-4">
+                                             <td>
+                                                            <h1 class="pull-right invoice-title" style="font-size: rem; float: right; margin-left: 60%">Invoice</h1>
+                                                        </td>
                                         </div>
                                     </div>
                                     <!-- info row -->
-                                    <div class="row ">
-                                        <div class="table-responsive dt-responsive">
-                                            <table id="dt-ajax-array" class="table">
-                                                <tbody>
-                                                    <tr>
-                                                        
-                                                        <td>
+                                    <div class="row">
+                                        <div class="col-lg-6 col-sm-6">
+                                             <address>
                                                             <ul>
                                                                 <li><p style="font-size: 1rem;"> To</p></li>
-                                                                <address>
+                                                               
                                                                     <li><strong><?=  $invoice->client->name ?></strong></li>
                                                                     
                                                                     <li>Phone: <?=  $invoice->client->phone ?></li>
                                                                     <li>Email: <?=  $invoice->client->email ?></li>
                                                             </ul>
-                                                            </address>
-                                                        </td>
-                                                        <td></td>
-                                                        <td>
-                                                              <table class="table table-bordered">
-                                                                <tbody>
+                                                           
+                                                   </address>
+                                               </div>
+                                                 <div class="col-lg-6 col-sm-6 ">
+                                                    <table  class="table">
                                                                     <tr>
                                                                         <td>Control #</td>
                                                                         <td><?= strlen($invoice->token) <4 ?$invoice->reference:$invoice->token ?></td>
@@ -185,26 +183,22 @@
                                                                     $unpaid = $am - $paid;
                                                                     ?><b class="amnt-value">Tsh <?= number_format($unpaid) ?></b></td>
                                                                     </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                                              </table> 
+                                                    </div>
 
-                                        </div>
+                                        
                                     </div>
                                     <!-- /.row -->
 
                                     <!-- Table row -->
                                     <div class="row">
-                                        <div class="col-xs-12 col-sm-12 ">
+                                        <div class="col-xs-12 col-sm-12 col-lg-12 ">
                                              <?php
                                                     $invoice_fee = $invoice->invoiceFees()->get();
                                                     ?>
                                                     <br/>
-                                                    <div class="table-responsive dt-responsive">
-                                                    <table class="table table-bordered">
+                                                    <div class="col-xs-12 col-sm-12 col-lg-12">
+                                                    <table class="table table-bordered table-colapse">
                                                         <thead>
                                                             <tr>
                                                                 <th>#</th>
@@ -240,22 +234,21 @@
                                                 </div>
                                         </div>
                                         <!-- /.col -->
+                                          <p class="well-sm "><b>Amount in words:</b> <?= number_to_words($unpaid) ?></p>
                                     </div>
                                     <!-- /.row -->
 
                                     <div class="row">
-                                       <div class="col-xs-12 col-sm-12 ">
-                                        <div class="table-responsive dt-responsive">
-<table class="table ">
-    <tbody>
-        <tr>
-            <td>
-                                            <p class="well-sm "><b>Amount in words:</b> <?= number_to_words($unpaid) ?></p>
+                                       <div class="col-lg-6 col-sm-6 col-xs-6">
+                                      
+<table class="table">
+  
+                                          
                                             <br/>
 
                                             <p class="lead">Payment Methods:</p>
                                             
-                                            <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
+                                            <p  >
                                                 <b>Account Details :</b><br/>
                                                 <b>Account Name:</b> INETS COMPANY LIMITED <br/> <b>Bank Name:</b> NMB BANK PLC <br/>  <b>Account Number:</b> 22510028669
                                                 <br/>
@@ -266,16 +259,20 @@
                                         <?php }?>
                                            <!-- <br/>
                                             <b>If you make a bank deposit, you will have to notify us to activate your account</b> -->
-                                            <p class="text-muted well well-sm no-shadow" style="margin-top: 10px;">
+                                            <p class="text-muted well well-sm no-shadow">
 
                                                 Thank you for your business. we're glad to serve you
                                             </p>
-                                        </td>
-            <td> 
+                                  
+                            </table>
+                        </div>
+
+           <div class="col-lg-6  col-sm-6 col-xs-6">
+                                            <br/>
                                             <p class="lead">Summary</p>
                                            
                                                      <table class="table ">
-                                                                <thead>
+                                                                <tbody>
                                                                     <tr>
                                                                         <th>Sub - Total amount :</th>
                                                                         <th>Tsh <?= number_format($am) ?></th>
@@ -289,16 +286,13 @@
                                                                         <th>Tsh <?= number_format($unpaid) ?></th>
                                                                     </tr>
                                                                    
-                                                                </thead>
+                                                                </tbody>
                                                             </table>
                                            
-                                        </td>
-        </tr>
-    </tbody>
-</table>
+    
 </div>
                                        
-                                        </div>
+                                      
                                     </div>
                                     <!-- /.row -->
 
