@@ -956,7 +956,7 @@ function check_status($table, $where = null) {
                       <tr>
                         <th scope="row">6</th>
                         <td>SMS sents</td>
-                        <td> <?php /*= check_status('sms'); ?>
+                        <td> <?= check_status('sms'); ?>
                         <br/>
                         <?php
                         $karibu = DB::connection('karibusms')->table('client')->where('keyname', $schema)->first();
@@ -991,7 +991,7 @@ function check_status($table, $where = null) {
                       Last Seen <label class="label label-info">
                       <?= $sms_time ?>
                       </label>
-                      <?php } */
+                      <?php }
                       ?>
                     </td>
                     <td></td>
