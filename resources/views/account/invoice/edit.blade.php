@@ -103,7 +103,15 @@
                                                     <div class="col-lg-6"> <span id="date_error"></span></div>
                                                 </div>
 
-                                               
+                                                  <div class="form-group ">
+                                                    <label for="number" class="control-label col-lg-3">Client Start Date</label>
+                                                    <div class="col-lg-6">
+                                                        <input type="text" value="<?= date('Y-m-d',strtotime($invoice->client->created_at)) ?>" name="onboard_date" id="onboard_date" class="form-control"/>
+
+                                                    </div>
+                                                    <?php echo form_error($errors, 'date'); ?>
+                                                    <div class="col-lg-6"> <span id="date_error"></span></div>
+                                                </div>
 
 
                                                 <div class="form-group">
