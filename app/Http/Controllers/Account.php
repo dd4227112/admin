@@ -238,8 +238,16 @@ public function createShuleSoftInvoice() {
     //both price per students and Estimated students cannot be 0
     return redirect()->back()->with('error','Both price per students and Estimated students cannot be 0, please set them first');
  }
-  $amount = $client->price_per_student*$client->estimated_students;
- \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' =>1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' =>$client->estimated_students, 'unit_price' => $client->price_per_student]);
+ if((int) $client->price_per_student==10000){
+
+$months_remains=12 - (int) date('m',strtotime($client->created_at))+1;
+$unit_price=$months_remains*$client->price_per_student/12;
+$amount=$unit_price*$client->estimated_students; 
+}else{
+    $unit_price= $client->price_per_student;
+  $amount =  $unit_price*$client->estimated_students;  
+}
+ \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' =>1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' =>$client->estimated_students, 'unit_price' =>$unit_price]);
 
     return redirect()->back()->with('success','Invoice Created Successfully');
 }
