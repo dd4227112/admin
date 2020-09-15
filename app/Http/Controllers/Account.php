@@ -210,8 +210,18 @@ $invoice=Invoice::find($invoice_id);
 $invoice->update(['due_date' => date('d M Y', strtotime(request('due_date')))]);
 $client=\App\Models\Client::find($invoice->client_id);
 $client->update(['price_per_student'=>request('price_per_student'),'estimated_students'=>request('estimated_students')]);
-  $amount = request('price_per_student')*request('estimated_students');
- \App\Models\InvoiceFee::where('invoice_id', $invoice->id)->where('project_id',1)->update(['amount' => $amount,  'quantity' =>$client->estimated_students, 'unit_price' => $client->price_per_student]);
+
+if((int) request('price_per_student')==10000){
+
+$months_remains=12 - (int) date('m',strtotime(request('onboard_date')))+1;
+$unit_price=$months_remains*request('price_per_student')/12;
+$amount=$unit_price*request('estimated_students'); 
+}else{
+    $unit_price= request('price_per_student');
+  $amount =  $unit_price*request('estimated_students');  
+}
+
+ \App\Models\InvoiceFee::where('invoice_id', $invoice->id)->where('project_id',1)->update(['amount' => $amount,  'quantity' =>$client->estimated_students, 'unit_price' =>  $unit_price]);
  return redirect(url('account/invoice/1/'.$invoice->account_year_id))->with('success','Invoice updated Successfully');
     }
 
@@ -228,8 +238,16 @@ public function createShuleSoftInvoice() {
     //both price per students and Estimated students cannot be 0
     return redirect()->back()->with('error','Both price per students and Estimated students cannot be 0, please set them first');
  }
-  $amount = $client->price_per_student*$client->estimated_students;
- \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' =>1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' =>$client->estimated_students, 'unit_price' => $client->price_per_student]);
+ if((int) $client->price_per_student==10000){
+
+$months_remains=12 - (int) date('m',strtotime($client->created_at))+1;
+$unit_price=$months_remains*$client->price_per_student/12;
+$amount=$unit_price*$client->estimated_students; 
+}else{
+    $unit_price= $client->price_per_student;
+  $amount =  $unit_price*$client->estimated_students;  
+}
+ \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' =>1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' =>$client->estimated_students, 'unit_price' =>$unit_price]);
 
     return redirect()->back()->with('success','Invoice Created Successfully');
 }
