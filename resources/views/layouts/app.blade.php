@@ -424,7 +424,7 @@ function toast(message) {
 
 
                                 </div>
-                                <div class="dummy-column">
+                                <div class="dummy-column" style="overflow-y: scroll;">
                                     <h2>Schools</h2>
                                     <span id="search_schools"></span>
 
