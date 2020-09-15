@@ -495,14 +495,26 @@ group by ownership');
                 if (count($check_booking) == 1) {
                     $booking = $check_booking;
                 } else {
-                    $order_id = time() . $client_id;
-                    $client = DB::table('admin.clients')->where('id', $client_id)->first();
-                    $total_price = (int) request('students') < 100 ? 100000 : $client->estimated_students * 1000;
+                    // $order_id = time() . $client_id;
+                    // $client = DB::table('admin.clients')->where('id', $client_id)->first();
+                    // $total_price = (int) request('students') < 100 ? 100000 : $client->estimated_students * 1000;
 
-                    $order = array("order_id" => $order_id, "amount" => $total_price,
-                        'buyer_name' => $client->name, 'buyer_phone' => $client->phone, 'end_point' => '/checkout/create-order', 'action' => 'createOrder', 'client_id' => $client->id, 'source' => $client->id);
-                    $this->curlPrivate($order);
-                    $booking = DB::table('admin.invoices')->where('order_id', $order_id)->first();
+                    // $order = array("order_id" => $order_id, "amount" => $total_price,
+                    //     'buyer_name' => $client->name, 'buyer_phone' => $client->phone, 'end_point' => '/checkout/create-order', 'action' => 'createOrder', 'client_id' => $client->id, 'source' => $client->id);
+                    // $this->curlPrivate($order);
+                   
+ $client=\App\Models\Client::find($client_id);
+ $year = \App\Models\AccountYear::where('name',date('Y'))->first();
+ $reference=time(); // to be changed for selcom ID
+ $invoice = Invoice::create(['reference' => $reference, 'client_id' => $client_id, 'date' => date('d M Y'), 'due_date' => date('d M Y', strtotime(' +30 day')), 'year' => date('Y'),  'user_id' => Auth::user()->id,'account_year_id'=>$year->id]);
+ //once we introduce packages (module pricing), we will just loop here for modules selected by specific user
+
+$months_remains=12 - (int) date('m',strtotime($client->created_at))+1;
+$unit_price=$months_remains*$client->price_per_student/12;
+$amount=$unit_price*$client->estimated_students; 
+
+ \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' =>1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' =>$client->estimated_students, 'unit_price' =>$unit_price]);
+
                 }
                 $this->scheduleActivities($client_id);
                 return redirect('sales/customerSuccess/1/' . $$client_id);
