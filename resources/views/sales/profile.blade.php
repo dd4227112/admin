@@ -187,9 +187,9 @@
                               <div class="col-md-6">
                                 Next action
                                 <select name="next_action" class="form-control">
-                                <option value="new">New</option>
-                                <option value="pipeline">Pipeline</option>
-                                <option value="closed">Closed</option>
+                                  <option value="new">New</option>
+                                  <option value="pipeline">Pipeline</option>
+                                  <option value="closed">Closed</option>
                                   <option value="call">Call to remind</option>
                                   <option value="agreement form">Send Agreement Form</option>
                                   <option value="school visit">School Visit</option>
@@ -199,33 +199,33 @@
                           </div>
                           <div class="form-group">
                             <div class="row">
-                                  <div class="col-md-6">
-                                  <strong> Start Date</strong> 
-                                  <input type="datetime-local" class="form-control" placeholder="Deadline" name="start_date">
+                              <div class="col-md-6">
+                                <strong> Start Date</strong>
+                                <input type="datetime-local" class="form-control" placeholder="Deadline" name="start_date">
                               </div>
                               <div class="col-md-6">
-                                  <strong> End Date </strong> 
-                                  <input type="datetime-local" class="form-control" placeholder="Time" name="end_date">
+                                <strong> End Date </strong>
+                                <input type="datetime-local" class="form-control" placeholder="Time" name="end_date">
                               </div>
+                            </div>
                           </div>
-                        </div>
 
 
-                        <div class="form-group">
-                                      <div class="row">
+                          <div class="form-group">
+                            <div class="row">
 
-                                          <div class="col-md-12">
-                                              <strong> Task Executed Successfully</strong> 
-                                          <select name="status" class="form-control" required>
+                              <div class="col-md-12">
+                                <strong> Task Executed Successfully</strong>
+                                <select name="status" class="form-control" required>
 
-                                              <option value='new'> Select Task Status Here...</option>
-                                              <option value='complete'> Yes and Completed </option>
-                                              <option value='on progress'> Yes but on Progress </option>
-                                              <option value='schedule'> Not yet (Schedule) </option>
-                                          </select>
-                                          </div>
-                                      </div>
-                                  </div>
+                                  <option value='new'> Select Task Status Here...</option>
+                                  <option value='complete'> Yes and Completed </option>
+                                  <option value='on progress'> Yes but on Progress </option>
+                                  <option value='schedule'> Not yet (Schedule) </option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
 
                         </div>
                         <div class="modal-footer">
@@ -243,82 +243,82 @@
                   $tasks = \App\Models\Task::whereIn('id', \App\Models\TaskSchool::where('school_id', $school->id)->get(['task_id']))->orderBy('created_at', 'desc')->get();
                   if(count($tasks)){
                     // dd($tasks);
-                  echo '<input type="hidden" value="' . count($tasks) . '" id="task_count"/>';
-                  foreach ($tasks as $task) {
-                    ?>
-                   
-                   <div class="social-timelines p-relative o-hidden" id="removetag<?= $task->id ?>">
-                    <div class="row timeline-right p-t-35">
-                        <div class="col-xs-2 col-sm-1">
+                    echo '<input type="hidden" value="' . count($tasks) . '" id="task_count"/>';
+                    foreach ($tasks as $task) {
+                      ?>
+
+                      <div class="social-timelines p-relative o-hidden" id="removetag<?= $task->id ?>">
+                        <div class="row">
+                          <div class="col-xs-2 col-sm-1">
                             <div class="social-timelines-left">
-                                <img class="img-circle timeline-icon" src="<?= Auth::user()->photo ?>" alt="">
+                              <img class="img-circle timeline-icon" src="<?= Auth::user()->photo ?>" alt="">
                             </div>
-                        </div>
-                        <div class="col-xs-10 col-sm-11 p-l-5 p-b-35">
+                          </div>
+                          <div class="col-xs-10 col-sm-11 p-l-5 p-b-35">
                             <div class="card m-0">
-                                <span class="dropdown-toggle addon-btn text-muted f-right service-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" role="tooltip">Actions</span>
-                                <div class="dropdown-menu dropdown-menu-right b-none services-list">
-                                    <a class="dropdown-item" href="#" onmousedown="removeTag(<?= $task->id ?>)">Remove tag</a>
-                                    <a class="dropdown-item" href="#">Report Photo</a>
-                                    <a class="dropdown-item" href="#">Hide From Timeline</a>
-                                    <a class="dropdown-item" href="#">Blog User</a>
-                                </div>
-
-
-                            <div class="card-block">
-                              <div class="timeline-details">
-
-                                <div class="social-time text-muted">
-                                  <?= date("d M Y", strtotime($task->created_at)) ?> (<code><?=$task->status?></code>)
-                                </div>
-                                <div class="chat-header"><?= $task->user->name ?></div>
-                                <p class="text-muted"><?= $task->activity ?></p>
-                                <p>Start Date- <?=$task->start_date?>  &nbsp; &nbsp; | &nbsp; &nbsp; End Date - <?=$task->end_date?></p>
+                              <span class="dropdown-toggle addon-btn text-muted f-right service-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" role="tooltip">Actions</span>
+                              <div class="dropdown-menu dropdown-menu-right b-none services-list">
+                                <a class="dropdown-item" href="#" onmousedown="removeTag(<?= $task->id ?>)">Remove tag</a>
+                                <a class="dropdown-item" href="#">Report Photo</a>
+                                <a class="dropdown-item" href="#">Hide From Timeline</a>
+                                <a class="dropdown-item" href="#">Blog User</a>
                               </div>
 
-                              <div class="card-block user-box">
-                                <?php
-                                $comments = $task->taskComments()->get();
-                                if (count($comments) > 0) { ?>
-                                  <div class="p-b-30"> <span class="f-14"><a href="#">Comments</a></span></div>
+
+                              <div class="card-block">
+                                <div class="timeline-details">
+
+                                  <div class="social-time text-muted">
+                                    <?= date("d M Y", strtotime($task->created_at)) ?> (<code><?=$task->status?></code>)
+                                  </div>
+                                  <div class="chat-header"><?= $task->user->name ?></div>
+                                  <p class="text-muted"><?= $task->activity ?></p>
+                                  <p>Start Date- <?=$task->start_date?>  &nbsp; &nbsp; | &nbsp; &nbsp; End Date - <?=$task->end_date?></p>
+                                </div>
+
                                   <?php
-                                  foreach ($comments as $comment) {
-                                    ?>
-                                    <div class="media m-b-20">
+                                  $comments = $task->taskComments()->get();
+                                  if (count($comments) > 0) { ?>
+                                    <div class="p-b-30"> <span class="f-14"><a href="#">Comments</a></span></div>
+                                    <?php
+                                    foreach ($comments as $comment) {
+                                      ?>
+
+                                      <div class="media" style="padding-bottom: 2px;">
                                       <a class="media-left" href="#">
-                                        <img class="media-object img-circle m-r-20" src="<?=$root.'/assets/images/avatar-2.png'; ?>" alt="Image">
+                                        <img class="media-object img-circle m-r-10" src="<?=$root.'/assets/images/avatar-2.png'; ?>" alt="Image">
                                       </a>
                                       <div class="media-body b-b-muted social-client-description">
                                         <div class="chat-header"><?= $comment->user->name ?><span class="text-muted"><?= date('d M Y', strtotime($comment->created_at)) ?></span></div>
                                         <p class="text-muted"><?= $comment->content ?></p>
                                       </div>
                                     </div>
-
-                                    <?php
+                                      <?php
+                                    }
                                   }
-                                }
-                                ?>
-                                <div class="new_comment<?= $task->id ?>"></div>
-                                <div class="media">
-                                  <a href="#" class="btn btn-success btn-xs right" onclick="return false" onmousedown="$('#comment_area').toggle()"><i class="ti-comments"> </i>  Write Comment  </a>
-                                  <div class="media-body"  id="comment_area" style="display:none">
-                                    <form class="">
-                                      <div class="">
-                                        <textarea rows="5" cols="5" id="task_comment<?= $task->id ?>" class="form-control" placeholder="Write Something here..."></textarea>
-                                        <div class="text-right m-t-20"><a href="#" class="btn btn-primary waves-effect waves-light" onclick="return false" onmousedown="$.get('<?= url('customer/taskComment/null') ?>', {content: $('#task_comment<?= $task->id ?>').val(), task_id:<?= $task->id ?>}, function (data) {
-                                          $('.new_comment<?= $task->id ?>').after(data);
-                                          $('#task_comment<?= $task->id ?>').val('')
-                                        })">Post</a></div>
-                                      </div>
-                                    </form>
+                                  ?>
+                                  <div class="new_comment<?= $task->id ?>"></div>
+                                  <div class="media">
+                                    <a href="#" class="btn btn-success btn-sm right" onclick="return false" onmousedown="$('#comment_area<?= $task->id ?>').toggle()"><i class="ti-comment"></i>  Comment </a>
+                                    <div class="media-body"  id="comment_area<?= $task->id ?>" style="display:none">
+                                      <form class="">
+                                        <div class="">
+                                          <textarea rows="4" class="form-control" id="task_comment<?= $task->id ?>" placeholder="Write Your comment Here......"></textarea>
+                                          <input type="hidden" class="form-control" value="<?= $task->id ?>" id="task_id<?= $task->id ?>" />
+                                          <span class="input-group-btn">
+                                            <button type="button" class="btn btn-primary" onmousedown="save_comment(<?= $task->id ?>)">Send</button>
+                                          </span>
+
+                                          <span class="fs1 text-info" aria-hidden="true" data-icon=""></span>
+                                        </div>
+                                      </form>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
                     <?php } } ?>
 
                   </div>
@@ -330,22 +330,22 @@
                   <div class="card-block user-box">
                     <?php
                     $contacts = $school->contacts()->get();
-                      if(count($contacts)){
-                    foreach ($contacts as $contact) {
-                      ?>
-                      <div class="media m-b-10">
-                        <a class="media-left" href="#!">
-                          <img class="media-object img-circle" src="<?= Auth::user()->photo ?>" alt="Image">
-                          <div class="live-status bg-danger"></div>
-                        </a>
-                        <div class="media-body">
-                          <div class="chat-header"><?= $contact->name ?></div>
-                          <div class="text-muted social-designation"><?= ucfirst($contact->title) ?></div>
-                          <div class="text-muted social-designation"><?= $contact->phone ?></div>
-                          <div class="text-muted social-designation"><?= $contact->email ?></div>
+                    if(count($contacts)){
+                      foreach ($contacts as $contact) {
+                        ?>
+                        <div class="media m-b-10">
+                          <a class="media-left" href="#!">
+                            <img class="media-object img-circle" src="<?= Auth::user()->photo ?>" alt="Image">
+                            <div class="live-status bg-danger"></div>
+                          </a>
+                          <div class="media-body">
+                            <div class="chat-header"><?= $contact->name ?></div>
+                            <div class="text-muted social-designation"><?= ucfirst($contact->title) ?></div>
+                            <div class="text-muted social-designation"><?= $contact->phone ?></div>
+                            <div class="text-muted social-designation"><?= $contact->email ?></div>
+                          </div>
                         </div>
-                      </div>
-                    <?php }
+                      <?php }
                     } ?>
 
 
@@ -541,31 +541,31 @@
 
           $vars = get_object_vars($school_info);
           if(count($vars)){
-          ?>
-          <?php
-          foreach ($vars as $key => $variable) {
-            if (!in_array($key, array('id', 'created_at', 'updated_at', 'status', 'schema_name', 'registration_number'))) {
-              $name = ucfirst(str_replace('_', ' ', $key));
-              ?>
-              <div class="form-group">
-                <div class="row">
+            ?>
+            <?php
+            foreach ($vars as $key => $variable) {
+              if (!in_array($key, array('id', 'created_at', 'updated_at', 'status', 'schema_name', 'registration_number'))) {
+                $name = ucfirst(str_replace('_', ' ', $key));
+                ?>
+                <div class="form-group">
+                  <div class="row">
 
-                  <div class="col-md-12">
-                    <?php
-                    echo $name;
-                    ?>
+                    <div class="col-md-12">
+                      <?php
+                      echo $name;
+                      ?>
 
-                    <input type="text" name="<?= $key ?>" value="<?= $variable ?>" class="form-control"/>
+                      <input type="text" name="<?= $key ?>" value="<?= $variable ?>" class="form-control"/>
+
+                    </div>
 
                   </div>
-
                 </div>
-              </div>
 
-              <?php
+                <?php
+              }
             }
           }
-        }
           ?>
         </div>
         <div class="modal-footer">
@@ -580,6 +580,22 @@
   </div>
 </div>
 <script type="text/javascript">
+
+function save_comment(id) {
+  var content = $('#task_comment' + id).val();
+  var task_id = $('#task_id' + id).val();
+  $.ajax({
+    type: 'POST',
+    url: "<?= url('customer/taskComment/null') ?>",
+    data: {content : content, task_id: task_id},
+    dataType: "html",
+    success: function (data) {
+      $('input[type="text"],textarea').val('');
+      $('.new_comment' + id).after(data);
+    }
+  });
+}
+
 onboard = function () {
   $('#task_count_').html($('#task_count').val());
   $('#onboard_school').mousedown(function () {
