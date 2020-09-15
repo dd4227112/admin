@@ -222,7 +222,8 @@ $amount=$unit_price*request('estimated_students');
 }
 
 if(date('Y',strtotime($client->created_at))==1970){
-    $client->update(['created_at'=>date('Y-m-d',strtotime(request('onboard_date'))]);
+    $client->update([
+        'created_at'=>date('Y-m-d',strtotime(request('onboard_date')))]);
 }
  \App\Models\InvoiceFee::where('invoice_id', $invoice->id)->where('project_id',1)->update(['amount' => $amount,  'quantity' =>$client->estimated_students, 'unit_price' =>  $unit_price]);
  return redirect(url('account/invoice/1/'.$invoice->account_year_id))->with('success','Invoice updated Successfully');
