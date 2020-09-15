@@ -38,24 +38,21 @@
                                 </a>
                                 <div class="slide"></div>
                             </li>
-                            <li class="nav-item complete">
+                           <!--  <li class="nav-item complete">
                                 <a class="nav-link" data-toggle="tab" href="#profile3" role="tab" aria-expanded="false">Create Invoice From Excel</a>
                                 <div class="slide"></div>
-                            </li>
-                            <li class="nav-item complete">
+                            </li> -->
+                           <!--  <li class="nav-item complete">
                                 <a class="nav-link" data-toggle="tab" href="#invoice" role="tab" aria-expanded="false">Create 10% Invoice </a>
                                 <div class="slide"></div>
-                            </li>
+                            </li> -->
                         </ul>
                         <div class="tab-content">
 
                             <div class="tab-pane active" id="home3" role="tabpanel" aria-expanded="true">
                                 <div class="card-block">
 
-                                    <header class="panel-heading">
-                                        Create Reference number For Single User
-
-                                    </header>
+                                   
                                     <div class="panel-body">
                                         <div id="error_area"></div>
                                         <div class=" form">
@@ -96,7 +93,7 @@
                                                     <div class="col-lg-6"> <span id="date_error"></span></div>
                                                 </div>
 
-                                                <div class="form-group ">
+                                                <!-- <div class="form-group ">
                                                     <label for="cname" class="control-label col-lg-3">Add Fee Details</label>
                                                     <div class="col-lg-6">
                                                         <div class="card">
@@ -138,16 +135,16 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <!-- Editable table -->
+                                                        
                                                     </div>
-                                                </div>
-                                                <div class="form-group">
+                                                </div> -->
+                                              <!--   <div class="form-group">
                                                     <div class="col-lg-6"> <input type="checkbox" name="force_new" value="" id="force_new" /> Force to Create New Invoice if Exists
 
 
 
                                                     </div>
-                                                </div>
+                                                </div> -->
 
                                                 <div class="form-group">
                                                     <div class="col-lg-offset-3 col-lg-6">
@@ -162,7 +159,7 @@
                                 </div>
                             </div>
 
-
+<!-- 
                             <div class="tab-pane" id="profile3" role="tabpanel" aria-expanded="false">
                                 <div class="card-block">
 
@@ -219,10 +216,10 @@
 
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
 
 
-                            <div class="tab-pane active " id="invoice" role="tabpanel" aria-expanded="true">
+                          <!--   <div class="tab-pane active " id="invoice" role="tabpanel" aria-expanded="true">
                                 <div class="card-block">
 
                                     <header class="panel-heading">
@@ -371,7 +368,7 @@
 
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
 
                         </div>
                     </div>
@@ -586,7 +583,7 @@
                 dataType: "html",
                 success: function(data) {
 
-                    window.location.href = "<?= url('account/invoice') ?>/" + project_id;
+                    //window.location.href = "<?= url('account/invoice') ?>/" + project_id;
 
                 }
             });
@@ -659,11 +656,11 @@
     };
     $(document).ready(payment_method_status)
 
-    $(".select2").select2({
-        theme: "bootstrap",
-        dropdownAutoWidth: false,
-        allowClear: false,
-        debug: true
-    });
+    // $(".select2").select2({
+    //     theme: "bootstrap",
+    //     dropdownAutoWidth: false,
+    //     allowClear: false,
+    //     debug: true
+    // });
 </script>
 @endsection

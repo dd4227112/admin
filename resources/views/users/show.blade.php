@@ -593,16 +593,25 @@ foreach ($user_permission as $permis) {
                                                 <div class="form-group row">
 
                                                     <div class="col-sm-2">
-                                                        <a href="<?= url('QrCode/generate_qr_code/' . $user->email) ?>" class="form-control  btn btn-success" id="search_report">Generate QR Code</a>
+                                                        <a href="<?= url('QrCode/generate_qr_code/' . $user->email) ?>" class="form-control  btn btn-primary" id="search_report">Generate QR Code</a>
+
                                                     </div>
+                                                    <?php if ($user->qr_code != '') { ?>
+                                                        <div class="col-sm-2">
+                                                            <a href="<?= $root ?><?= $user->qr_code ?>" class="btn btn-success">Download</a>
+                                                        </div>
+                                                    <?php } ?>
                                                 </div>
 
 
                                             </form>
                                             <div>
                                                 <?php if ($user->qr_code != '') { ?>
-                                                    <img src="<?= $root ?><?=$user->qr_code?>" alt="">
-                                                <?php } ?>
+                                                    <img src="<?= $root ?><?= $user->qr_code ?>" alt="">
+                                                    <bt>
+
+
+                                                    <?php } ?>
                                             </div>
                                         </div>
 

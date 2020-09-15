@@ -7,7 +7,7 @@
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4>Company Invoices</h4>
+                <h4>ShuleSoft Invoices</h4>
                 <span>Show payments summary</span>
             </div>
             <div class="page-header-breadcrumb">
@@ -40,25 +40,26 @@
                                 <i class="icofont icofont-refresh"></i>
                             </div>
                             <br/>
-                            <a href="<?= url('account/createInvoice') ?>" class="btn btn-sm btn-primary">Create New Invoice</a>
+                            <a href="<?= url('account/projection') ?>" class="btn btn-sm btn-primary">Create New Invoice</a>
                         </div>
                         <div class="col-md-12 col-xl-12">
+                           
                             <div class="form-group row col-lg-offset-6">
                                 <label class="col-sm-4 col-form-label">Select Project</label>
                                 <div class="col-sm-4">
                                     <select name="select" class="form-control" id="schema_select">
                                         <option value="0">Select</option>
                                         <?php
-                                        $projects = \App\Models\Project::all();
-                                        foreach ($projects as $project) {
+                                       // $projects = \App\Models\Project::all();
+                                      //  foreach ($projects as $project) {
                                             ?>
-                                            <option value="<?= $project->id ?>" <?= $project_id == $project->id ? 'selected' : '' ?>><?= $project->name ?></option>
-                                        <?php }
+                                            <option value="1" selected>ShuleSoft</option>
+                                        <?php // }
                                         ?>
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group row col-lg-offset-6" <?= $project_id == 1 ? 'selected' : ' style="display:none;"' ?>  id="year_id">
+                            <div class="form-group row col-lg-offset-6"  selected id="year_id">
                                 <label class="col-sm-4 col-form-label">Select Year</label>
                                 <div class="col-sm-4">
                                     <select name="select" class="form-control" id="year_select">
@@ -74,8 +75,27 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card-block">
-                            <div class="dt-responsive table-responsive">
+                  <div class="card tab-card">
+                        <ul class="nav nav-tabs md-tabs" role="tablist">
+                            <li class="nav-item complete">
+                                <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true">
+                                    <strong>Invoice List</strong>
+                                </a>
+                                <div class="slide"></div>
+                            </li>
+                           <li class="nav-item complete">
+                                <a class="nav-link" data-toggle="tab" href="#profile3" role="tab" aria-expanded="false">Summary</a>
+                                <div class="slide"></div>
+                            </li> 
+
+                        </ul>
+                        <div class="tab-content">
+
+                            <div class="tab-pane active" id="home3" role="tabpanel" aria-expanded="true">
+                                <div class="card-block">
+
+                                   
+                                   <div class="dt-responsive table-responsive">
                                 <?php if ($project_id == 4) { ?>
                                     <table id="invoice_table" class="table table-striped table-bordered nowrap dataTable">
                                         <thead>
@@ -122,7 +142,8 @@
                                                     <td>
         <!--                                                        <a href="<?= url('account/invoiceView/' . $invoice->payment_id) ?>" class="btn btn-sm btn-success">View</a>
                                                         <a href="<?= url('account/invoice/edit/' . $invoice->payment_id) ?>" class="btn btn-sm btn-primary">Edit</a>-->
-                                                        <!--<a href="<?= url('account/invoice/delete/' . $invoice->payment_id) ?>" class="btn btn-sm btn-danger">Delete</a></td>-->
+                                                        <!--<a href="<?= url('account/invoice/delete/' . $invoice->payment_id) ?>" class="btn btn-sm btn-danger">Delete</a>-->
+                                                        </td>
                                                 </tr>
                                             <?php $x++; } ?>
                                         </tbody>
@@ -168,20 +189,35 @@
 
 
                                                 <tr>
-                                                    <td><?= $invoice->client->name ?></td>
+                                                    <td><?= $invoice->client->username ?></td>
                                                     <td><?= $invoice->reference ?></td>
                                                     <td><?= money($amount) ?></td>
                                                     <td><?= money($paid) ?></td>
                                                     <td><?= money($unpaid) ?></td>
                                                     <td><?= date('d M Y', strtotime($invoice->due_date)) ?></td>
                                                     <td>
-                                                        <a href="<?= url('account/invoiceView/' . $invoice->id) ?>" class="btn btn-sm btn-success">View</a>
-                                                        <a href="<?= url('account/invoice/edit/' . $invoice->id) ?>" class="btn btn-sm btn-primary">Edit</a>
-                                                        <a href="<?= url('account/invoice/delete/' . $invoice->id) ?>" class="btn btn-sm btn-danger">Delete</a>
-                                                        <?php if ((int) $unpaid > 0) { ?>  <a href="<?= url('account/payment/' . $invoice->id) ?>" class="btn btn-secondary btn-sm"><i class="fa fa-money"></i> Add Payment </a> <?php } ?>
+
+
+<div class="dropdown-secondary dropdown f-right"><button class="btn btn-success btn-mini dropdown-toggle waves-effect waves-light" type="button" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</button><div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoiceView/' . $invoice->id) ?>"  ><span class="point-marker bg-danger"></span>View</a> <a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoice/edit/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Edit</a><a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoice/delete/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Delete</a>
+<?php if ((int) $unpaid > 0) { ?>
+    <hr/>
+    <a class="dropdown-item waves-light waves-effect" href="<?= url('account/payment/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Add Payments</a>
+    <?php }  ?>
+    <?php if((int) $unpaid >0){ ?>
+        <a class="dropdown-item waves-light waves-effect" href="#" data-toggle="modal" data-target="#large-Modal" onclick="$('#invoice_id').val('<?=$invoice->id?>')"><span class="point-marker bg-warning"></span>Send Invoice</a>
+         <?php }  ?>
+          <?php if((int) $paid >0){ ?>
+<a class="dropdown-item waves-light waves-effect" href="<?= url('account/receipts/' . $invoice->id) ?>" target="_blank"><span class="point-marker bg-warning"></span>Receipt</a>
+                                                       <?php }
+                                                        ?>
+    </div></div>
+
+                                                       
+                                                     
+                                                    
                                                     </td>
                                                 </tr>
-                                            <?php } ?>
+                                            <?php $i++; } ?>
                                         </tbody>
                                         <tfoot>
                                             <tr>
@@ -195,6 +231,56 @@
                                     </table>
                                 <?php } ?>
                             </div>
+                                </div>
+                            </div>
+
+
+                            <div class="tab-pane" id="profile3" role="tabpanel" aria-expanded="false">
+                                <div class="card-block">
+
+                                    <div class="table-responsive dt-responsive">
+                                        <div class="card-header">
+                                            <div class="panel-body">
+                                                <?php if(isset($invoices) && count($invoices)>0){?>
+                                                <table class="table table-responsive table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Total Clients</th>
+                                                            <th>Total Invoices Created</th>
+                                                            <th>Invoices Not Created</th>
+                                                            <th>Total  Amount</th>
+                                                            <th>Total Collected </th>
+                                                            <th>Total Not Collected</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php $total_clients=\DB::table('admin.clients')->count();?>
+                                                        <tr>
+                                                            <td class="text-center"><?=$total_clients?></td>
+                                                            <td class="text-center"><?=$i?></td>
+                                                            <td class="text-center"><?=$total_clients-$i?></td>
+                                                            <td class="text-center">Tsh <?= money($total_amount) ?></td>
+                                                            <td class="text-center">
+                                                                Tsh <?= money($total_paid) ?>
+                                                                <br/>
+                                                                Equivalent to <?=round($total_paid*100/$total_amount)?>% collected
+                                                            </td>
+                                                            <td class="text-center">Tsh <?= money($total_unpaid) ?></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            <?php }?>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+                        <div class="card-block">
+
                         </div>
                     </div>
 
@@ -202,6 +288,54 @@
             </div>
         </div>
         <!-- Page-body end -->
+    </div>
+</div>
+<div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Send This Invoice</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                    <form action="<?=url('account/sendInvoice')?>" method="post">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    Email Address
+                                    <input type="email" class="form-control"  name="email" required>
+                                </div>
+                                <div class="col-md-6">
+                                    Phone Number
+                                    <input type="text" class="form-control"  name="phone_number" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                           <div class="col-md-12">
+                                    Message
+ <textarea name="message" required="" class="form-control" >Hello #name,
+Thank you for choosing ShuleSoft in your school. We really appreciate working with your school.
+To help us continue offering this service to your school, kindly find our invoice for Tsh #amount. You can also pay electronically via masterpass with reference number #invoice
+Thank you</textarea> 
+                                </div>
+                            </div>
+                        </div>
+                        
+
+                        <div class="modal-footer">
+                            <input type="hidden" name="invoice_id" id="invoice_id" value="">
+                            <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary waves-effect waves-light ">Send Invoice</button>
+                        </div>
+                        <?= csrf_field() ?>
+                    </form>
+                </div>
+        </div>
     </div>
 </div>
 <script type="text/javascript">

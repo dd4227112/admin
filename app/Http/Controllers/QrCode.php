@@ -22,14 +22,14 @@ class QrCode extends Controller
 
             $qr_code_name = 'images/qrcode/'.md5($user_email). '.png';
             $qr_code_push = $targetPath.$qr_code_name;
-            $qr_code->draw(150, $qr_code_push);
+            $generate_qr_code = $qr_code->draw(150, $qr_code_push);
             $update_user = User::where('email',$user_email)->update(['qr_code'=>$qr_code_name]);
     
-            if ($update_user){
+            if ($generate_qr_code){
                 return redirect()->back()->with('success', 'QR code has been Generated');
             }
             else{
-                return redirect()->back()->with('error', 'Sorry failed try again');
+                return redirect()->back()->with('error', 'Sorry failed Generate QR Code may be due to network problem,please try again');
             }
 
            

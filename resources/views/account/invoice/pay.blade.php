@@ -46,10 +46,13 @@
     .tab-pane{
         margin-left: 10%
     }
+    .navbar ,.header-navbar{
+        display: none;
+    }
 </style>
     </head>
         <body class="<?= strlen(request('token')) > 5 ? 'menu-collapsed menu-static' : 'fix-menu' ?>">
-            
+           
 <div class="panel panel-default">
 
     <div class="modal-dialog modal-lg">
@@ -70,9 +73,28 @@
                 </div>
             <?php } else {
                 ?>
-                <div class="modal-header">
+                 <div class="card tab-card">
+                        <ul class="nav nav-tabs md-tabs" role="tablist">
+                            
+                           <li class="nav-item complete">
+                                <a class="nav-link active" data-toggle="tab" href="#profile3" role="tab" aria-expanded="true">Invoice Page</a>
+                                <div class="slide"></div>
+                            </li> 
+                            <li class="nav-item complete">
+                                <a class="nav-link " data-toggle="tab" href="#home3" role="tab" aria-expanded="false">
+                                    <strong>How to Pay Electronically</strong>
+                                </a>
+                                <div class="slide"></div>
+                            </li>
 
-                    <h4 class="modal-title" id="myModalLabel">Payment Methods</h4>
+                        </ul>
+                         <div class="tab-content">
+
+                            <div class="tab-pane " id="home3" role="tabpanel" aria-expanded="false">
+                                <div class="card-block">
+                <div class="modal-header">
+<h4 class="modal-title" id="myModalLabel">Payment Methods</h4>
+                    
                 </div>
                 <div class="modal-body">
                     <h4>Choose your Preferred  method below</h4>
@@ -303,6 +325,18 @@
                     <a href="<?= url('epayment/i/' . $booking->id) ?>" class="btn btn-success" >Proceed </a>
 
                 </div>
+</div>
+ 
+</div>
+
+                            <div class="tab-pane active" id="profile3" role="tabpanel" aria-expanded="true">
+                                <div class="card-block">
+                                   @include('account.invoice.single')
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
             <?php } ?>
         </div>
     </div>

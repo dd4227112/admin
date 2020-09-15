@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Models\ModuleTask;
 use DB;
 
 class Background extends Controller {
@@ -273,6 +274,7 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
         $commit_message = isset($data1['push']['changes'][0]['commits'][0]) ? $data1['push']['changes'][0]['commits'][0]['message'] : '';
         $commit_message_in_words = explode(' ', trim($commit_message));
         $activity_type = strtolower($commit_message_in_words[0]);
+        $module_of_activity = strtolower($commit_message_in_words[1]);
 
         // after getting message then taking Id for identifying type
         // firstly getting activity type from database
@@ -283,6 +285,14 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
         } else {
             $task_id = 27;
             #sending message to the Commiter that the entered activity type is not correct
+        }
+
+        if (DB::table('admin.modules')->whereRaw('LOWER(name) LIKE ?', ['%' . ($module_of_activity) . '%'])->count()) {
+            $id = DB::table('admin.modules')->whereRaw('LOWER(name) LIKE ?', ['%' . ($module_of_activity) . '%'])->first();
+            $module_id = $id->id;
+        } else {
+            $module_id = '';
+           
         }
 
         #getting a user who push
@@ -305,6 +315,12 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
 
         // Then pushing to the database(Task) from Repository after push
         $send_task = \App\Models\Task::create($data);
+        // Then adding entry to module_tasks table
+        $module_tasks = new ModuleTask();
+        $module_tasks->module_id = $module_id;
+        $module_tasks->task_id = $send_task->id;
+        $module_tasks->save();
+
 
         // Then pushing to the database(Table tasks_user) from Repository after push
         $send_task_to_user_task = DB::table('tasks_users')->insert(
@@ -323,29 +339,19 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
 
     public function epayment() {
         $invoice_id = request()->segment(3);
-        $booking = \App\Models\Invoice::where('id', $invoice_id)->first();
+        $booking =$invoice= \App\Models\Invoice::where('id', $invoice_id)->first();
         if (strlen($booking->token) < 4) {
-            $order_id = strlen($booking->order_id) < 4 ? rand(454, 4557) . time() : $booking->order_id;
-            $amount = $booking->amount;
-            $phone_number = validate_phone_number($booking->client->phone);
-            if (is_array($phone_number)) {
-                $phone = str_replace('+', null, validate_phone_number($booking->client->phone)[1]);
-            } else {
-                $phone = '255754406004';
-            }
-            $order = array("order_id" => $order_id, "amount" => $amount,
-                'buyer_name' => $booking->client->name, 'buyer_phone' => $phone, 'end_point' => '/checkout/create-order', 'action' => 'createOrder', 'client_id' => $booking->client_id, 'source' => $booking->client_id);
-
-            $this->curlPrivate($order);
+           $account=new \App\Http\Controllers\Account();
+           $account->createSelcomControlNumber($invoice_id);
         }
         $paid = 0;
-        if ($booking->payments()->sum('amount') == $booking->amount || $booking->payments()->sum('amount') == $booking->invoiceFees()->sum('amount')) {
+        if ($booking->payments()->sum('amount') == $booking->invoiceFees()->sum('amount')) {
             $paid = 1;
         }
 
         $balance = $booking->payments()->sum('amount');
 
-        return view('account.invoice.pay', compact('booking', 'balance', 'paid'));
+        return view('account.invoice.pay', compact('booking', 'balance', 'paid','invoice'));
     }
 
     //Notify all admin about monthly reports

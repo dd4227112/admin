@@ -7,7 +7,7 @@ function tagEdit($schema_name, $column, $value) {
     if ((int) request('skip') == 1) {
         $return = $value;
     } else {
-        $return = '<input class="text-muted" type="text" schema="' . $schema_name . '" id="' . $column . '" value="' . $value . '" onblur="edit_records(\'' . $column . '\', this.value, \'' . $schema_name . '\')"/><span id="status_' . $column . $schema_name . '"></span>';
+        $return = '<input class="text-muted" type="text" schema="' . $schema_name . '" id="' . $column .$schema_name. '" value="' . $value . '" onblur="edit_records(\'' . $column . '\', this.value, \'' . $schema_name . '\')"/><br/><span id="status_' . $column . $schema_name . '"></span>';
     }
     return $return;
 }
@@ -15,7 +15,7 @@ function tagEdit($schema_name, $column, $value) {
 <div class="page-wrapper">
     <div class="page-header">
         <div class="page-header-title">
-            <h4>Projections </h4>
+            <h4>Invoice Management </h4>
         </div>
         <div class="page-header-breadcrumb">
             <ul class="breadcrumb-title">
@@ -24,9 +24,9 @@ function tagEdit($schema_name, $column, $value) {
                         <i class="icofont icofont-home"></i>
                     </a>
                 </li>
-                <li class="breadcrumb-item"><a href="#!">Pages</a>
+                <li class="breadcrumb-item"><a href="#!">Accounts</a>
                 </li>
-                <li class="breadcrumb-item"><a href="#!">Dashboard</a>
+                <li class="breadcrumb-item"><a href="#!">Invoices</a>
                 </li>
             </ul>
         </div>
@@ -41,7 +41,7 @@ function tagEdit($schema_name, $column, $value) {
                         <div class="row">
                             <div class="col-lg-12 col-xl-12">
                                 <!-- <h6 class="sub-title">Tab With Icon</h6> -->
-                                <div class="sub-title">Budget & Projections</div>                                        
+                                <div class="sub-title">Manage Invoices</div>                                        
                                 <!-- Nav tabs -->
                                 <ul class="nav nav-tabs md-tabs " role="tablist">
 <!--                                    <li class="nav-item">
@@ -49,13 +49,13 @@ function tagEdit($schema_name, $column, $value) {
                                         <div class="slide"></div>
                                     </li>-->
                                     <li class="nav-item">
-                                        <a class="nav-link active" data-toggle="tab" href="#profile7" role="tab"><i class="icofont icofont-ui-user "></i>Actuals</a>
+                                        <a class="nav-link active" data-toggle="tab" href="#profile7" role="tab"><i class="icofont icofont-ui-user "></i>Create Invoice</a>
                                         <div class="slide"></div>
                                     </li>
-                                    <li class="nav-item">
+                                    <!-- <li class="nav-item">
                                         <a class="nav-link" data-toggle="tab" href="#reports" role="tab"><i class="icofont icofont-list "></i>Reports</a>
                                         <div class="slide"></div>
-                                    </li>
+                                    </li> -->
 
                                 </ul>
                                 <!-- Tab panes -->
@@ -81,11 +81,11 @@ function tagEdit($schema_name, $column, $value) {
  <th>Date Registered</th>
                                                             <th>Students</th>
                                                             <th>Price</th>
-                                                            <th>Paid Amount</th>
+                                                            <!-- <th>Paid Amount</th> -->
 
-                                                            <th>Remained Amount</th>
-                                                            <th>Payment Status</th>
-                                                            <th>Payment Deadline</th>
+                                                            <!-- <th>Remained Amount</th> -->
+                                                            <!-- <th>Payment Status</th> -->
+                                                            <!--  <th>Payment Deadline</th> --> 
                                                             <th>Estimated Students</th>
                                                             <th>Action</th>
                                                         </tr>
@@ -94,15 +94,16 @@ function tagEdit($schema_name, $column, $value) {
                                                         <?php
                                                         $total_students = 0;
                                                         $total_price = 0;
-                                                        $schemas=DB::table('admin.all_setting')->get();
+                                                        $schemas=\DB::select("select * from admin.clients where id not in (select client_id from admin.invoices where account_year_id=(select id from admin.account_years where name='".date('Y')."'))" );
                                                         foreach ($schemas as $schema) {
                                                       
                                                             ?>
                                                             <tr>
-                                                                <td><?= $schema->schema_name?></td>
+                                                                <td><?= $schema->username?></td>
 <td><?= date('d M Y',strtotime($schema->created_at)) ?></td>
                                                                 <td>   <?php
-                                                                    $students = DB::table($schema->schema_name. '.student')->where('status', 1)->count();
+                                                                    // $students = DB::table($schema->username. '.student')->where('status', 1)->count();
+                                                                $students=3;
                                                                     $total_students += $students;
                                                                     echo $students;
                                                                     ?>
@@ -110,33 +111,25 @@ function tagEdit($schema_name, $column, $value) {
                                                                 <td>
 
                                                                     <?php
-                                                                    $price = count($schema) == 1 ? $schema->price_per_student : 0;
+                                                                    // $price = count($schema) == 1 ? $schema->price_per_student : 0;
+                                                                     $price =$schema->price_per_student;
                                                                     $total_price += $price * $students;
-                                                                    echo tagEdit($schema->schema_name, 'price_per_student', $price);
+                                                                    echo tagEdit($schema->username, 'price_per_student', $price);
                                                                     ?>
                                                                 </td>
-                                                                <td>
-                                                                    <?php echo '' ?>
-                                                                </td>
-
-                                                                <td>  
-
-                                                                </td>
-
-
-                                                                <td> 
-                                                                    <?= tagEdit($schema->schema_name, 'payment_status', $schema->payment_status) ?>
-                                                                </td>
-                                                                <td> 
-                                                                    <?= tagEdit($schema->schema_name, 'payment_deadline_date', $schema->payment_deadline_date) ?> 
-                                                                </td>
+                                                           
+                                                                <!-- <td> 
+                                                                    <?php
+$end_date='';
+                                                                    //echo tagEdit($schema->username, 'payment_deadline_date', $end_date) ?> 
+                                                                </td> -->
 
                                                                 <td>
-                                                                    <?= tagEdit($schema->schema_name, 'estimated_students', isset($schema->estimated_students) ? $schema->estimated_students:'') ?>
+                                                                    <?= tagEdit($schema->username, 'estimated_students', isset($schema->estimated_students) ? $schema->estimated_students:'') ?>
                                                                 </td>
 
 
-                                                                <td >                    <a href="<?= url('account/invoiceView/' . $schema->schema_name) ?>" class="btn btn-sm btn-success">View</a></td>
+                                                                <td >                    <a href="<?= url('account/createShuleSoftInvoice/' . $schema->id) ?>" class="btn btn-sm btn-success">Create Invoice</a></td>
                                                             </tr>
                                                         <?php } ?>
                                                     </tbody>
@@ -146,7 +139,7 @@ function tagEdit($schema_name, $column, $value) {
                                                             
                                                             <th><?= $total_students ?></th>
                                                             <th><?= $total_price ?></th>
-                                                            <th colspan="5"></th>
+                                                            <th colspan="1"></th>
 
                                                         </tr>
                                                     </tfoot>
