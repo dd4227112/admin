@@ -38,7 +38,7 @@
                                     <label class="control-label">Update For:</label>
                                     <div class="col-md-12">
                                         <?php foreach ($usertypes as $user) { ?>
-                                            <input type="checkbox" name="for[]" value="<?= $user->usertype ?>"><?= $user->usertype ?>
+                                            <input type="checkbox" name="for[]" value="<?= $user->usertype ?>"> <?= $user->usertype ?>
                                         <?php } ?>
                                         <span></span>
                                     </div>

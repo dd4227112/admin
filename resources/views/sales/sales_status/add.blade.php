@@ -62,12 +62,12 @@
                       <div class="row">
                         <div class="col-md-3">
                           <strong>Key Person Name:</strong>
-                          <input type="text" class="form-control" placeholder="Enter Person name here..." autofocus="1" name="school_name" required>
+                          <input type="text" class="form-control" placeholder="Enter Person name here..." autofocus="1" name="school_name">
                         </div>
 
                         <div class="col-md-3">
                           <strong>Contact Details:</strong>
-                          <input type="text" class="form-control" placeholder="Type Phone Number or Emails..." name="school_phone" required>
+                          <input type="text" class="form-control" placeholder="Type Phone Number or Emails..." name="school_phone">
                         </div>
                         
                         <div class="col-md-3">
@@ -88,7 +88,7 @@
                         </div>
                         <div class="col-md-3">
                           <strong>Number of Students:</strong>
-                          <input type="number" class="form-control" placeholder="Enter number of students..." name="students" required>
+                          <input type="number" class="form-control" placeholder="Enter number of students..." name="students" >
                         </div>
                       </div>
                     </div>
