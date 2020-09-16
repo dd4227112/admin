@@ -501,13 +501,15 @@ class Kernel extends ConsoleKernel {
     public function sendTodReminder() {
         $users = DB::select('select * from admin.all_teacher_on_duty');
         $all_users = [];
-        foreach ($users as $user) {
-            array_push($all_users, $user->name);
-        }
+        
         foreach ($users as $user) {
             unset($all_users[$user->name]);
-            $message = 'Hello  ' . $user->name . ' ,'
-                    . 'Leo upo katika zamu ya Shule pamoja na ' . implode(',', $all_users) . '  . Kumbuka kuandika repoti yako ya siku katika account yako ya ShuleSoft kwa ajili ya kumbukumbu. Asante';
+            $students = DB::SELECT('SELECT name FROM '. $user->schema_name . '.student where student_id in(select student_id from '. $user->schema_name . '.student_duties where duty_id='.$user->duty_id.')');
+            foreach ($students as $student) {
+                array_push($all_students, $student->name);
+            }
+            $message = 'Habari  ' . $user->name . ' ,'
+                    . 'Leo '.date("Y-m-d").' umewekwa kama walimu wa zamu Shuleni pamoja na ' . implode(',', $all_students) . ' (Viranja)  . Kumbuka kuandika repoti yako ya siku katika account yako ya ShuleSoft kwa ajili ya kumbukumbu. Asante';
 
             if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
                 DB::statement("insert into " . $user->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Ratiba Ya Zamu','" . $message . "')");
