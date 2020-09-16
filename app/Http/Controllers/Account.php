@@ -37,16 +37,17 @@ class Account extends Controller {
         return view('account.projection', $this->data);
     }
 
-public function getInvoices($project_id=null,$account_year_id=null){
-      $from = $this->data['from'] = request('from');
-                    $to = $this->data['to'] = request('to');
-                    $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
-                    $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
-                    $this->data['invoices'] = ($from != '' && $to != '') ?
-                            Invoice::whereBetween('date', [$from_date, $to_date])->where('project_id', $project_id)->get() :
-                            Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->get();
-                            return $this;
-}
+    public function getInvoices($project_id = null, $account_year_id = null) {
+        $from = $this->data['from'] = request('from');
+        $to = $this->data['to'] = request('to');
+        $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
+        $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
+        $this->data['invoices'] = ($from != '' && $to != '') ?
+                Invoice::whereBetween('date', [$from_date, $to_date])->where('project_id', $project_id)->get() :
+                Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->get();
+        return $this;
+    }
+
     public function invoice() {
         $this->data['budget'] = [];
         $project_id = $this->data['project_id'] = request()->segment(3);
@@ -55,7 +56,7 @@ public function getInvoices($project_id=null,$account_year_id=null){
             //create shulesoft invoices
             //check in client table if all schools with students and have generated reports are registered
             // if exists, check if invoice exists, else, create new invoice
-            $this->getInvoices($project_id,$account_year_id);
+            $this->getInvoices($project_id, $account_year_id);
         }
         if ($project_id == 'delete') {
             $invoice_id = request()->segment(4);
@@ -80,7 +81,7 @@ public function getInvoices($project_id=null,$account_year_id=null){
                     break;
 
                 default:
-                  $this->getInvoices($project_id,$account_year_id);
+                    $this->getInvoices($project_id, $account_year_id);
                     break;
             }
 
@@ -88,42 +89,40 @@ public function getInvoices($project_id=null,$account_year_id=null){
         }
     }
 
-
-
     public function invoiceView() {
         $invoice_id = request()->segment(3);
         $set = $this->data['set'] = 1;
         if ((int) $invoice_id > 0) {
-$request_control=request()->segment(4);
-if((int) $request_control >0){
-      $this->createSelcomControlNumber($invoice_id);
-      return redirect()->back()->with('success','success');
-}
+            $request_control = request()->segment(4);
+            if ((int) $request_control > 0) {
+                $this->createSelcomControlNumber($invoice_id);
+                return redirect()->back()->with('success', 'success');
+            }
             $this->data['invoice'] = Invoice::find($invoice_id);
             return view('account.invoice.single', $this->data);
-        } 
-
+        }
     }
+
 // This method only create selcom booking ID, we don't detect errors due to its
     //sensitivity but in the future, we can add error control in case of anything
-    public function createSelcomControlNumber($invoice_id){
+    public function createSelcomControlNumber($invoice_id) {
         $invoice = Invoice::find($invoice_id);
         $amount = $invoice->invoiceFees()->sum('amount');
-                    $order_id = rand(454, 4557) . time();
-                    if (strlen($invoice->token) < 4) {
-                        
-                        $phone_number = validate_phone_number($invoice->client->phone);
-                        if (is_array($phone_number)) {
-                            $phone = str_replace('+', null, validate_phone_number($invoice->client->phone)[1]);
-                        } else {
-                            $phone = '255754406004';
-                        }
-                        $order = array("order_id" => $order_id, "amount" => $amount,
-                            'buyer_name' => $invoice->client->name, 'buyer_phone' => $phone, 'end_point' => '/checkout/create-order', 'action' => 'createOrder', 'client_id' => $invoice->client_id, 'source' => $invoice->client_id);
+        $order_id = rand(454, 4557) . time();
+        if (strlen($invoice->token) < 4) {
 
-                        $this->curlPrivate($order);
-                    }
-                    return TRUE;
+            $phone_number = validate_phone_number($invoice->client->phone);
+            if (is_array($phone_number)) {
+                $phone = str_replace('+', null, validate_phone_number($invoice->client->phone)[1]);
+            } else {
+                $phone = '255754406004';
+            }
+            $order = array("order_id" => $order_id, "amount" => $amount,
+                'buyer_name' => $invoice->client->name, 'buyer_phone' => $phone, 'end_point' => '/checkout/create-order', 'action' => 'createOrder', 'client_id' => $invoice->client_id, 'source' => $invoice->client_id);
+
+            $this->curlPrivate($order);
+        }
+        return TRUE;
     }
 
     private function getShuleSoftInvoice() {
@@ -156,83 +155,100 @@ if((int) $request_control >0){
         return view('account.project', $this->data);
     }
 
-    public function receipt() {
-        $id = request()->segment(3);
-        $this->data['projects'] = Project::all();
-        return view('account.project', $this->data);
-    }
+    public function sendInvoice() {
 
-    public function sendInvoice(){
-      
-        $invoice=Invoice::find(request('invoice_id'));
-         $message=request('message');
+        $invoice = Invoice::find(request('invoice_id'));
+        $message = request('message');
         $arr = [
-                    'amount' => $invoice->invoiceFees()->sum('amount'),
-                    'schema_name' => $invoice->client->username,
-                    'user_id' => Auth::user()->id,
-                    'date' => date('Y-m-d'),
-                    'email'=>request('email'),
-                    'phone_number'=>request('phone_number'),
-                    'message'=> $message,
-                    'student' => $invoice->client->estimated_students
-                ];
-                \App\Models\InvoiceSent::create($arr);
-               // 
-                //detect if #invoice have been set, then ensure you have
-                //selcom control number and put it there
-                //generate a random link and include it in the email and 
-                //in the sms
-                if (preg_match('/invoice/i', $message)) {
-                   $this->createSelcomControlNumber(request('invoice_id'));
-                    $invoice=Invoice::find(request('invoice_id'));
-                }
-                $replacements = array(
-                    $invoice->client->name, money($invoice->invoiceFees()->sum('amount')-$invoice->payments()->sum('amount')), $invoice->token
-                );
- $sms =preg_replace(array(
-                    '/#name/i', '/#amount/i', '/#invoice/i'
+            'amount' => $invoice->invoiceFees()->sum('amount'),
+            'schema_name' => $invoice->client->username,
+            'user_id' => Auth::user()->id,
+            'date' => date('Y-m-d'),
+            'email' => request('email'),
+            'phone_number' => request('phone_number'),
+            'message' => $message,
+            'student' => $invoice->client->estimated_students
+        ];
+        \App\Models\InvoiceSent::create($arr);
+        // 
+        //detect if #invoice have been set, then ensure you have
+        //selcom control number and put it there
+        //generate a random link and include it in the email and 
+        //in the sms
+        if (preg_match('/invoice/i', $message)) {
+            $this->createSelcomControlNumber(request('invoice_id'));
+            $invoice = Invoice::find(request('invoice_id'));
+        }
+        $replacements = array(
+            $invoice->client->name, money($invoice->invoiceFees()->sum('amount') - $invoice->payments()->sum('amount')), $invoice->token
+        );
+        $sms = preg_replace(array(
+            '/#name/i', '/#amount/i', '/#invoice/i'
                 ), $replacements, $message);
 
-if (preg_match('/#/', $sms)) {
+        if (preg_match('/#/', $sms)) {
             //try to replace that character
-             $sms = preg_replace('/\#[a-zA-Z]+/i', '', $sms);
-        }              
+            $sms = preg_replace('/\#[a-zA-Z]+/i', '', $sms);
+        }
 
-$button='<p align="center"><a style="padding:8px 16px;color:#ffffff;white-space:nowrap;font-weight:500;display:inline-block;text-decoration:none;border-color:#0073b1;background-color:green;border-radius:2px;border-width:1px;border-style:solid;margin-bottom:4px" href="'.url('epayment/i/' . $invoice->id).'" target="_blank">Click to View Your Invoice</a></p>';
+        $button = '<p align="center"><a style="padding:8px 16px;color:#ffffff;white-space:nowrap;font-weight:500;display:inline-block;text-decoration:none;border-color:#0073b1;background-color:green;border-radius:2px;border-width:1px;border-style:solid;margin-bottom:4px" href="' . url('epayment/i/' . $invoice->id) . '" target="_blank">Click to View Your Invoice</a></p>';
 
-                $this->send_sms(validate_phone_number(request('phone_number'))[1], $sms.'. Open '.url('epayment/i/' . $invoice->id).' to view Invoice');
-                $this->send_email(request('email'),'ShuleSoft Invoice of Service', nl2br($sms).'<br/><br/>'.$button);
-                return redirect()->back()->with('success', 'success');
+        $this->send_sms(validate_phone_number(request('phone_number'))[1], $sms . '. Open ' . url('epayment/i/' . $invoice->id) . ' to view Invoice');
+        $this->send_email(request('email'), 'ShuleSoft Invoice of Service', nl2br($sms) . '<br/><br/>' . $button);
+        return redirect()->back()->with('success', 'success');
     }
+
     public function editShuleSoftInvoice() {
         $invoice_id = request()->segment(3);
-$invoice=Invoice::find($invoice_id);
-$invoice->update(['due_date' => date('d M Y', strtotime(request('due_date')))]);
-$client=\App\Models\Client::find($invoice->client_id);
-$client->update(['price_per_student'=>request('price_per_student'),'estimated_students'=>request('estimated_students')]);
-  $amount = request('price_per_student')*request('estimated_students');
- \App\Models\InvoiceFee::where('invoice_id', $invoice->id)->where('project_id',1)->update(['amount' => $amount,  'quantity' =>$client->estimated_students, 'unit_price' => $client->price_per_student]);
- return redirect(url('account/invoice/1/'.$invoice->account_year_id))->with('success','Invoice updated Successfully');
+        $invoice = Invoice::find($invoice_id);
+        $invoice->update(['due_date' => date('d M Y', strtotime(request('due_date')))]);
+        $client = \App\Models\Client::find($invoice->client_id);
+        $client->update(['price_per_student' => request('price_per_student'), 'estimated_students' => request('estimated_students')]);
+
+        if ((int) request('price_per_student') == 10000) {
+
+            $months_remains = 12 - (int) date('m', strtotime(request('onboard_date'))) + 1;
+            $unit_price = $months_remains * request('price_per_student') / 12;
+            $amount = $unit_price * request('estimated_students');
+        } else {
+            $unit_price = request('price_per_student');
+            $amount = $unit_price * request('estimated_students');
+        }
+
+        if (date('Y', strtotime($client->created_at)) == 1970) {
+            $client->update([
+                'created_at' => date('Y-m-d', strtotime(request('onboard_date')))]);
+        }
+        \App\Models\InvoiceFee::where('invoice_id', $invoice->id)->where('project_id', 1)->update(['amount' => $amount, 'quantity' => $client->estimated_students, 'unit_price' => $unit_price]);
+        return redirect(url('account/invoice/1/' . $invoice->account_year_id))->with('success', 'Invoice updated Successfully');
     }
 
-public function createShuleSoftInvoice() {
- $client_id = request()->segment(3);
- $client=\App\Models\Client::find($client_id);
- $year = \App\Models\AccountYear::where('name',date('Y'))->first();
- $reference=time(); // to be changed for selcom ID
- $invoice = Invoice::create(['reference' => $reference, 'client_id' => $client_id, 'date' => date('d M Y'), 'due_date' => date('d M Y', strtotime(' +30 day')), 'year' => date('Y'),  'user_id' => Auth::user()->id,'account_year_id'=>$year->id]);
- //once we introduce packages (module pricing), we will just loop here for modules selected by specific user
+    public function createShuleSoftInvoice() {
+        $client_id = request()->segment(3);
+        $client = \App\Models\Client::find($client_id);
+        $year = \App\Models\AccountYear::where('name', date('Y'))->first();
+        $reference = time(); // to be changed for selcom ID
+        $invoice = Invoice::create(['reference' => $reference, 'client_id' => $client_id, 'date' => date('d M Y'), 'due_date' => date('d M Y', strtotime(' +30 day')), 'year' => date('Y'), 'user_id' => Auth::user()->id, 'account_year_id' => $year->id]);
+        //once we introduce packages (module pricing), we will just loop here for modules selected by specific user
+        //validate for simple missing inputs
+        if ((int) $client->price_per_student == 0 || (int) $client->estimated_students == 0) {
+            //both price per students and Estimated students cannot be 0
+            return redirect()->back()->with('error', 'Both price per students and Estimated students cannot be 0, please set them first');
+        }
+        if ((int) $client->price_per_student == 10000) {
 
- //validate for simple missing inputs
- if((int) $client->price_per_student ==0 || (int) $client->estimated_students==0 ){
-    //both price per students and Estimated students cannot be 0
-    return redirect()->back()->with('error','Both price per students and Estimated students cannot be 0, please set them first');
- }
-  $amount = $client->price_per_student*$client->estimated_students;
- \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' =>1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' =>$client->estimated_students, 'unit_price' => $client->price_per_student]);
+            $months_remains = 12 - (int) date('m', strtotime($client->created_at)) + 1;
+            $unit_price = $months_remains * $client->price_per_student / 12;
+            $amount = $unit_price * $client->estimated_students;
+        } else {
+            $unit_price = $client->price_per_student;
+            $amount = $unit_price * $client->estimated_students;
+        }
+        \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' => $client->estimated_students, 'unit_price' => $unit_price]);
 
-    return redirect()->back()->with('success','Invoice Created Successfully');
-}
+        return redirect()->back()->with('success', 'Invoice Created Successfully');
+    }
+
     public function createInvoice() {
         $this->data['projects'] = Project::all();
 
@@ -356,7 +372,7 @@ public function createShuleSoftInvoice() {
         if (count($invoice) > 0) {
 // This is when a bank return payment status to us
 //save it in the database
-            $this->validate(request(), ['amount' => 'required|numeric', 'payment_type' => 'required','date'=>'required']);
+            $this->validate(request(), ['amount' => 'required|numeric', 'payment_type' => 'required', 'date' => 'required']);
             $transaction_id = (int) request('transaction_id') == 0 ? time() : request('transaction_id');
             $payments = \App\Models\Payment::where('transaction_id', $transaction_id)->first();
             if (count($payments) > 0) {
@@ -375,13 +391,13 @@ public function createShuleSoftInvoice() {
             }
             $refer_expense_id = request('refer_expense_id');
             $payment_type = \App\Models\PaymentType::find(request('payment_type'));
-            $payment = $this->acceptPayment(request('amount'), $invoice->id, $payment_type->name, $transaction_id, $mobile_transaction_id, request('name'), request('bank_account_id'), request('transaction_time'), request('token'), $invoice->client_id, $refer_expense_id,request('date'));
+            $payment = $this->acceptPayment(request('amount'), $invoice->id, $payment_type->name, $transaction_id, $mobile_transaction_id, request('name'), request('bank_account_id'), request('transaction_time'), request('token'), $invoice->client_id, $refer_expense_id, request('date'));
         }
         // $this->sendNotification($invoice);
-        return redirect('account/invoice/1/'.$invoice->account_year_id)->with('success', json_decode($payment)->description);
+        return redirect('account/invoice/1/' . $invoice->account_year_id)->with('success', json_decode($payment)->description);
     }
 
-    public function acceptPayment($amount, $invoice_id, $payment_method, $receipt, $mobile_transaction_id, $customer_name, $bank_account_id, $timestamp, $token, $client_id, $refer_expense_id,$date=null) {
+    public function acceptPayment($amount, $invoice_id, $payment_method, $receipt, $mobile_transaction_id, $customer_name, $bank_account_id, $timestamp, $token, $client_id, $refer_expense_id, $date = null) {
 
         //$financial_id = count($this->api_info) == 1 ? $this->api_info->financial_entity_id : \App\Model\Financial_entity::where('name', request('method'))->first()->id;
         $payment_array = array(
@@ -395,7 +411,7 @@ public function createShuleSoftInvoice() {
             'note' => $customer_name,
             'transaction_time' => $timestamp,
             'token' => $token,
-             'date' => date('Y-m-d',strtotime($date)),
+            'date' => date('Y-m-d', strtotime($date)),
                 // 'financial_entity_id' => $financial_id,
                 //special case for CRDB payments only
 //            'checksum' => request('checksum'),
@@ -420,7 +436,7 @@ public function createShuleSoftInvoice() {
             'date' => 'now()',
             'note' => ''
         ];
-       // \App\Models\Revenue::create($data);
+        // \App\Models\Revenue::create($data);
         $invoice_fee = \App\Models\InvoiceFee::where('invoice_id', $invoice_id);
         $status = 1;
 
@@ -530,13 +546,11 @@ public function createShuleSoftInvoice() {
         $id = request()->segment(3);
         if ((int) $id > 0) {
             $this->data['invoice'] = Invoice::find($id);
-            $this->data['revenue'] = \App\Models\Revenue::where('id', $id)->first();
-            return view('account.transaction.receipt', $this->data);
+            return view('account.transaction.receipt_sort', $this->data);
         } else {
             return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
         }
     }
-
 
     public function editRevenue() {
         $id = request()->segment(3);
@@ -561,7 +575,6 @@ public function createShuleSoftInvoice() {
             return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
         }
     }
-
 
     public function revenueAdd() {
         $this->data['projects'] = Project::all();
@@ -1021,22 +1034,22 @@ public function createShuleSoftInvoice() {
             \App\Models\Expense::find($expense_id)->delete();
             return redirect()->back()->with('success', 'success');
         } else if ($id == 'voucher') {
-            // return $this->voucher();
+            return $this->voucher();
         } else {
             echo 'page not found';
         }
     }
 
     public function voucher() {
-        $id = clean_htmlentities(($this->uri->segment(3)));
-        $cat_id = clean_htmlentities(($this->uri->segment(4)));
+        $id = request()->segment(4);
+        $cat_id = request()->segment(5);
         if ($cat_id == 5) {
             $this->data['voucher'] = \collect(DB::SELECT('SELECT * from admin. current_assets WHERE id=' . $id . ''))->first();
         } else {
-            $this->data['voucher'] = \App\Model\Expense::find($id);
+            $this->data['voucher'] = \App\Models\Expense::find($id);
         }
 
-        return view('expense.voucher.voucher', $this->data);
+        return view('account.transaction.voucher', $this->data);
     }
 
     public function payment_history() {
@@ -1305,7 +1318,7 @@ public function createShuleSoftInvoice() {
         
     }
 
-        public function getExpenseRevenueByMonth() {
+    public function getExpenseRevenueByMonth() {
         return DB::select("with tempa as (
     select a.date,a.revenue, b.expense from 
     (
@@ -1319,19 +1332,19 @@ tempb as ( select * from tempa )
 select * from tempb");
     }
 
-  public function customSummary() {
+    public function customSummary() {
         $report_type = $this->data['report_type'] = request('report_type');
         $start = $this->data['from'] = request('from_date');
         $end = $this->data['to'] = request('to_date');
-        if ((int)$report_type == 1) {
+        if ((int) $report_type == 1) {
             //expenses 
             $this->data['type'] = 'Expense';
             $transactions = \App\Model\Expense::whereBetween('date', [$start, $end])->get();
-        } else if ((int)$report_type == 2) {
+        } else if ((int) $report_type == 2) {
             //payments 
             $this->data['type'] = 'Payments';
             $transactions = \App\Model\Payment::whereBetween('date', [$start, $end])->orderBy('id', 'desc')->get();
-        } else{
+        } else {
             //revenues 
             $this->data['type'] = 'Revenues';
             $transactions = \App\Model\Revenue::whereBetween('date', [$start, $end])->get();
@@ -1341,7 +1354,7 @@ select * from tempb");
         $this->load->view('_layout_main', $this->data);
     }
 
-     function summary() {
+    function summary() {
         if ($_POST) {
             return $this->customSummary();
         }
@@ -1352,13 +1365,14 @@ select * from tempb");
         $this->data['expected_amount'] = \collect(DB::select('select sum(amount) as sum from admin.invoices'))->first();
         $this->data['collected_amount'] = \collect(DB::select('select sum(amount) from admin.revenues'))->first();
 
-        $this->data['expected_expense'] = \collect(DB::select('select sum(amount::numeric) from admin.expense'))->first();;
+        $this->data['expected_expense'] = \collect(DB::select('select sum(amount::numeric) from admin.expense'))->first();
+        ;
         $this->data['expense'] = \collect(DB::select('select sum(amount::numeric) from admin.expense'))->first();
-$this->data['no_invoice'] = 0;
-$this->data['no_payments'] = 0;
-$this->data['payments_received'] = 0;
-$this->data['revenue_received'] = 0;
-       return view('account.report.summary',$this->data);
+        $this->data['no_invoice'] = 0;
+        $this->data['no_payments'] = 0;
+        $this->data['payments_received'] = 0;
+        $this->data['revenue_received'] = 0;
+        return view('account.report.summary', $this->data);
     }
 
 }

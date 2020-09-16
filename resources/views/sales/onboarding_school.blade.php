@@ -59,6 +59,28 @@
                     <input type="number" class="form-control" value="10000" name="price" required="">
                 </div>
             </div>
+<!--            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">System Name</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" value="" name="username" required="">
+                </div>
+            </div>-->
+            <div class="form-group row" style="border: 1px dashed; ">
+                                        <label class="col-sm-2 col-form-label">Account Name</label>
+                                        <div class="row">
+                                            <div class="col-lg-2">  <b style="font-size: 1.4em;"> https://</b> </div>
+                                            <div id="col-lg-6">
+                                                <input style="max-width: 17em;
+                                                       resize: none" class="form-control " id="school_username" name="username" type="text" placeholder="school name" value="" required="" onkeyup="validateForm()"> 
+
+                                            </div>
+                                            <div id="col-lg-4">
+                                                <b style="font-size: 1.4em;">.shulesoft.com</b>
+                                            </div>
+                                        </div>
+                                        <small style="max-width: 13em;" id="username_message_reply"></small>
+                                    </div>
+            
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Estimated Students</label>
                 <div class="col-sm-10">
@@ -215,12 +237,12 @@
                 <div class="col-sm-10">
                     <div class="form-check form-check-inline">
                         <label class="form-check-label">
-                            <input class="form-check-input" type="radio" name="payment_status" id="gender-1" value="1" required=""> Create Invoice (10%)
+                            <input class="form-check-input" type="radio" name="payment_status" id="gender-1" value="1" required=""> Create Invoice 
                         </label>
                     </div>
                     <div class="form-check form-check-inline">
                         <label class="form-check-label">
-                            <input class="form-check-input" type="radio" name="payment_status" id="gender-2" value="2" required=""> Provide Free Trial
+                            <input class="form-check-input" type="radio" name="payment_status" id="gender-2" value="2" required=""> Provide Free Trial (Dont create invoice)
                         </label>
                     </div>
                     <span class="messages"></span>
@@ -309,5 +331,19 @@ task_group = function () {
         });
     });
 }
+        function validateForm() {
+                                                                    var regex = new RegExp("^[a-z]+$");
+                                                                    var x = $('#school_username').val();
+                                                                    if (x == null || x == "") {
+                                                                        $('#username_message_reply').html("Name must not be blank").addClass('alert alert-danger');
+                                                                        return false;
+                                                                    } else if (!regex.test(x)) {
+                                                                        $('#username_message_reply').html("Name contains invalid characters (Only letters with no spaces !)").addClass('alert alert-danger');
+                                                                        return false;
+                                                                    } else {
+                                                                        $('#username_message_reply').html('').removeClass('alert alert-danger');;
+                                                                        return true;
+                                                                    }
+                                                                }
 $(document).ready(task_group);
     </script>

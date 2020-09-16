@@ -15,6 +15,9 @@ class Payment extends Model {
     public function invoice() {
         return $this->belongsTo(\App\Models\Invoice::class, 'invoice_id', 'id');
     }
+    public function bankAccount() {
+        return $this->belongsTo(\App\Models\BankAccount::class, 'bank_account_id', 'id')->withDefault(['account_name'=>'NMB BANK']);
+    }
 
     public function invoiceFees() {
         return $this->belongsToMany(\App\Models\InvoiceFee::class, 'invoice_fees_payments', 'payment_id', 'invoice_fee_id');
