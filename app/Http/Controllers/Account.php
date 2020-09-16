@@ -1034,22 +1034,22 @@ class Account extends Controller {
             \App\Models\Expense::find($expense_id)->delete();
             return redirect()->back()->with('success', 'success');
         } else if ($id == 'voucher') {
-            // return $this->voucher();
+            return $this->voucher();
         } else {
             echo 'page not found';
         }
     }
 
     public function voucher() {
-        $id = clean_htmlentities(($this->uri->segment(3)));
-        $cat_id = clean_htmlentities(($this->uri->segment(4)));
+        $id = request()->segment(4);
+        $cat_id = request()->segment(5);
         if ($cat_id == 5) {
             $this->data['voucher'] = \collect(DB::SELECT('SELECT * from admin. current_assets WHERE id=' . $id . ''))->first();
         } else {
-            $this->data['voucher'] = \App\Model\Expense::find($id);
+            $this->data['voucher'] = \App\Models\Expense::find($id);
         }
 
-        return view('expense.voucher.voucher', $this->data);
+        return view('account.transaction.voucher', $this->data);
     }
 
     public function payment_history() {
