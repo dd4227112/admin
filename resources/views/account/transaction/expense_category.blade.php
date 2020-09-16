@@ -213,7 +213,7 @@
                                                                                 <?php echo '<a class="btn btn-sm btn-danger" href="'.url('account/expense/delete/' . $expense->id . '/' . $id).'">delete</a>'; ?>
 
 
-                                                                                <?php //echo '<a class="btn btn-sm btn-warning" href="'.url('account/expense/voucher/' . $expense->id . '/' . $id).'">Payment Voucher</a>'; ?>
+                                                                                <?php echo '<a class="btn btn-sm btn-warning" href="'.url('account/expense/voucher/' . $expense->id . '/' . $id).'">Payment Voucher</a>'; ?>
                                                                                 <?php
                                                                             }
                                                                         }
