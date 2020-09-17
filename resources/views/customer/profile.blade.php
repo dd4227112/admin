@@ -25,7 +25,7 @@ function check_status($table, $where = null) {
     <!-- Page-header start -->
     <div class="page-header">
       <div class="page-header-title">
-        <h4><?= $school->sname ?></h4>
+        <h4><?= substr($school->sname, 0, 25) ?></h4>
       </div>
       <div class="page-header-breadcrumb">
         <ul class="breadcrumb-title">
