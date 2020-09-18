@@ -130,9 +130,9 @@
                                                 <tr>
                                                     <th>#</th>
                                                     <th>School Name</th>
-                                                    <th>District</th>
-                                                    <th>Ward</th>
+                                                    <th>Region</th>
                                                     <th>Type</th>
+                                                    <th>Phone</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -145,10 +145,10 @@
                                                 echo '<td>'.$school->client->name.'</td>';
                                                 echo '<td>'.$school->school->region.'</td>';
                                                 echo '<td>'.$school->school->type.'</td>';
-                                                echo '<td>'.$school->client->name.'</td>';
+                                                echo '<td>'.$school->client->phone.'</td>';
                                                 echo '<td>';
-                                            if($school->school->schema_name != ''){
-                                                echo '<a href="'. url('customer/profile/'.$school->school->schema_name) .'" class="btn btn-success btn-sm"> View </a>';
+                                            if($school->client->username != ''){
+                                                echo '<a href="'. url('customer/profile/'.$school->client->username) .'" class="btn btn-success btn-sm"> View </a>';
                                             }else{
                                                 echo '<a href="'. url('sales/profile/'.$school->school->id) .'" class="btn btn-success btn-sm"> View</a>';
 
