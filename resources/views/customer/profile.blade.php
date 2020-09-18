@@ -34,7 +34,7 @@ function check_status($table, $where = null) {
               <i class="icofont icofont-home"></i>
             </a>
           </li>
-          <li class="breadcrumb-item"><a href="#!"><?= $school->sname ?> </a>
+          <li class="breadcrumb-item"><a href="#!"><?= substr($school->sname, 0, 20) ?> </a>
           </li>
           <li class="breadcrumb-item"><a href="#!">Profile</a>
           </li>
