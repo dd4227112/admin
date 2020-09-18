@@ -106,11 +106,8 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-<<<<<<< HEAD
-                            <h5>List of Schools Under <?=Auth::user()->name?></h5>
-=======
                             <h5>List of Schools Under <u><?=$staff->name?></u></h5>
->>>>>>> e508e53c597833f9dd723632362774c3cafd9af9
+
                             <?php
                             if (Auth::user()->role_id == 1) {
                                 $users = \App\Models\User::where('status', 1)->whereIn('role_id', [8,14])->get();
