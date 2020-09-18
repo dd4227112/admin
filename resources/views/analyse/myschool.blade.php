@@ -106,7 +106,11 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
+<<<<<<< HEAD
                             <h5>List of Schools Under <?=Auth::user()->name?></h5>
+=======
+                            <h5>List of Schools Under <u><?=$staff->name?></u></h5>
+>>>>>>> e508e53c597833f9dd723632362774c3cafd9af9
                             <?php
                             if (Auth::user()->role_id == 1) {
                                 $users = \App\Models\User::where('status', 1)->whereIn('role_id', [8,14])->get();
@@ -130,9 +134,15 @@
                                                 <tr>
                                                     <th>#</th>
                                                     <th>School Name</th>
+<<<<<<< HEAD
                                                     <th>District</th>
                                                     <th>Ward</th>
                                                     <th>Type</th>
+=======
+                                                    <th>Region</th>
+                                                    <th>Type</th>
+                                                    <th>Phone</th>
+>>>>>>> e508e53c597833f9dd723632362774c3cafd9af9
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -145,10 +155,17 @@
                                                 echo '<td>'.$school->client->name.'</td>';
                                                 echo '<td>'.$school->school->region.'</td>';
                                                 echo '<td>'.$school->school->type.'</td>';
+<<<<<<< HEAD
                                                 echo '<td>'.$school->client->name.'</td>';
                                                 echo '<td>';
                                             if($school->school->schema_name != ''){
                                                 echo '<a href="'. url('customer/profile/'.$school->school->schema_name) .'" class="btn btn-success btn-sm"> View </a>';
+=======
+                                                echo '<td>'.$school->client->phone.'</td>';
+                                                echo '<td>';
+                                            if($school->client->username != ''){
+                                                echo '<a href="'. url('customer/profile/'.$school->client->username) .'" class="btn btn-success btn-sm"> View </a>';
+>>>>>>> e508e53c597833f9dd723632362774c3cafd9af9
                                             }else{
                                                 echo '<a href="'. url('sales/profile/'.$school->school->id) .'" class="btn btn-success btn-sm"> View</a>';
 

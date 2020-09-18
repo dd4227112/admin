@@ -224,6 +224,7 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         $arrayTxt = implode( ',', $all_schools);
         $sql = 'select count(*) as count, "schema_name" from "admin"."all_log" where created_at::date>'.$days.' AND "schema_name" in ('.$arrayTxt.') group by "schema_name"';
         $this->data['logs'] = $sql;
+        $this->data['staff'] = \App\Models\User::where('id', $id)->first();
         //DB::table('admin.all_log')->select(DB::raw('count(*) as school_count, "schema_name"'))->whereIn('schema_name', $all_schools)->where('table', '<>', 'setting')->groupBy('schema_name')->get();
         return view('analyse.myschool', $this->data);
     }
