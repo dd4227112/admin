@@ -204,4 +204,28 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         return view('analyse.charts.logins', $this->data);
     }
 
+    public function myschools() {
+            if (request()->segment(3) !='') {
+                $id = request()->segment(3);
+            }else{
+                $id = Auth::user()->id;
+            }
+
+        $all_schools = [];
+        $all_schoolz = [];
+        $this->data['schools'] = $schools =  \App\Models\ClientSchool::whereIn('school_id', \App\Models\UsersSchool::where('user_id', $id)->get(['school_id']))->get();
+        foreach ($schools as $school) {
+            array_push($all_schools, "'".$school->client->username."'");
+            array_push($all_schoolz, $school->client->username);
+        }
+        $days = "'".date("Y-m-d", strtotime("-7 day"))."'";
+        $this->data['users'] = $users = DB::table('admin.all_users')->select(DB::raw('count(*) as user_count, "table"'))->whereIn('schema_name', $all_schoolz)->where('status', 1)->where('table', '<>', 'setting')->groupBy('table')->get();
+        $this->data['active'] =  DB::table('admin.all_log')->select(DB::raw('count(*) as school_count, "schema_name"'))->whereIn('schema_name', $all_schoolz)->where('table', '<>', 'setting')->whereDate('created_at','>', $days)->groupBy('schema_name')->get();
+        $arrayTxt = implode( ',', $all_schools);
+        $sql = 'select count(*) as count, "schema_name" from "admin"."all_log" where created_at::date>'.$days.' AND "schema_name" in ('.$arrayTxt.') group by "schema_name"';
+        $this->data['logs'] = $sql;
+        //DB::table('admin.all_log')->select(DB::raw('count(*) as school_count, "schema_name"'))->whereIn('schema_name', $all_schools)->where('table', '<>', 'setting')->groupBy('schema_name')->get();
+        return view('analyse.myschool', $this->data);
+    }
+
 }

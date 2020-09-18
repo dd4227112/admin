@@ -715,22 +715,15 @@ function toast(message) {
                                 </ul>
                             </li>
 
-
-                          <!--   <li class="nav-item">
-                                <a href="#!">
-                                    <i class="ti-layout-cta-right"></i>
-                                    <span data-i18n="nav.navigate.main">Office Administrator</span>
+                            <?php
+                        }
+                        if (can_access('manage_users') || in_array(Auth::user()->role_id, array(14,8))){ ?>
+                          <li class="nav-item">
+                                <a href="<?= url('Analyse/myschools') ?>">
+                                    <i class="ti-gift"> </i>
+                                    <span data-i18n="nav.navigate.main"> My Schools</span>
                                 </a>
-                                <ul class="tree-1">
-                                    <li>
-                                        <a href="<?= url('Visitor/index') ?>" data-i18n="nav.navigate.navbar">Visitors</a>
-                                    </li>
-
-
-
-
-                                </ul>
-                            </li> -->     
+                            </li>    
                             <?php
                         }
                         ?>
