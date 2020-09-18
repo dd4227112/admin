@@ -438,7 +438,7 @@ function select($value, $schema, $sources) {
                                                 </thead>
                                                 <tbody>
                                                     <?php
-                                                    $users = \App\Models\User::where('role_id', 8)->get();
+                                                    $users = \App\Models\User::whereIn('role_id', [14,8])->get();
                                                     foreach ($users as $user) {
                                                         $schools = $user->usersSchools()->where('role_id', 8);
                                                         ?>
