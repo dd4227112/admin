@@ -6,8 +6,11 @@ define('SCHEMA', $schema);
 
 function check_status($table, $where = null) {
   $schema = SCHEMA;
+  if($table == 'admin.vendors'){
+    $report = \collect(DB::select('select created_at::date from ' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first();
+  }else{
   $report = \collect(DB::select('select created_at::date from ' . $schema . '.' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first();
-
+  }
   if (count($report) == 1) {
 
     $echo = '<b class="label label-success">' . date('d M Y', strtotime($report->created_at)) . '</b>';
@@ -959,6 +962,7 @@ function check_status($table, $where = null) {
                         <td> <?= check_status('sms'); ?>
                         <br/>
                         <?php
+                        /*
                         $karibu = DB::connection('karibusms')->table('client')->where('keyname', $schema)->first();
                         $karibu_shulesoft = DB::connection('karibusms')->table('client')->where('client_id', 318)->first();
                         if (count($karibu) == 1 && count($karibu_shulesoft) && $karibu->gcm_id = $karibu_shulesoft->gcm_id) {
@@ -991,7 +995,7 @@ function check_status($table, $where = null) {
                       Last Seen <label class="label label-info">
                       <?= $sms_time ?>
                       </label>
-                      <?php }
+                      <?php } */
                       ?>
                     </td>
                     <td></td>
@@ -1029,8 +1033,8 @@ function check_status($table, $where = null) {
                     <tr>
                       <th scope="row">3</th>
                       <td>Inventory Usage</td>
-                      <td>Vendors Registered: <?= check_status('vendors'); ?><br/>
-                        Items Registered:<?= check_status('items'); ?>
+                      <td>Vendors Registered: <?= check_status('admin.vendors', "WHERE schema_name='" . $schema ."'"); ?><br/>
+                        Items Registered:<?= check_status('product_alert_quantity'); ?>
 
                       </td>
                       <td></td>
