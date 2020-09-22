@@ -130,16 +130,10 @@
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>School Name</th>
-<<<<<<< HEAD
-                                                    <th>District</th>
-                                                    <th>Ward</th>
-                                                    <th>Type</th>
-=======
+                                                  <th>School Name</th>
                                                     <th>Region</th>
                                                     <th>Type</th>
                                                     <th>Phone</th>
->>>>>>> e508e53c597833f9dd723632362774c3cafd9af9
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -152,17 +146,11 @@
                                                 echo '<td>'.$school->client->name.'</td>';
                                                 echo '<td>'.$school->school->region.'</td>';
                                                 echo '<td>'.$school->school->type.'</td>';
-<<<<<<< HEAD
-                                                echo '<td>'.$school->client->name.'</td>';
-                                                echo '<td>';
-                                            if($school->school->schema_name != ''){
-                                                echo '<a href="'. url('customer/profile/'.$school->school->schema_name) .'" class="btn btn-success btn-sm"> View </a>';
-=======
                                                 echo '<td>'.$school->client->phone.'</td>';
                                                 echo '<td>';
                                             if($school->client->username != ''){
                                                 echo '<a href="'. url('customer/profile/'.$school->client->username) .'" class="btn btn-success btn-sm"> View </a>';
->>>>>>> e508e53c597833f9dd723632362774c3cafd9af9
+
                                             }else{
                                                 echo '<a href="'. url('sales/profile/'.$school->school->id) .'" class="btn btn-success btn-sm"> View</a>';
 
