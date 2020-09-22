@@ -22,6 +22,9 @@
     </div>
     <div class="page-body">
     <div class="row">
+    <?php
+        if(count($schools)>0){ 
+    ?>
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-block">
@@ -75,7 +78,9 @@
                                     </div>
                                 </div>
                                     <?php 
-                                    foreach($users as $user){ ?>
+                                        if(count($users) > 0){
+                                        foreach($users as $user){
+                                     ?>
                                     <div class="col-md-12 col-xl-3">
                                         <div class="card counter-card-<?= $i ?>">
                                             <div class="card-block-big">
@@ -90,10 +95,14 @@
                                             </div>
                                         </div>
                                     </div>
-                                   <?php } ?>
+                                   <?php
+                                    }
+                                   }
+                                ?>
                               
                             </div>
                         </div>
+                    <?php } ?>
                 </div>
                 
                 </div>
