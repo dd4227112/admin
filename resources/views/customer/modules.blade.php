@@ -251,10 +251,10 @@ function select($value, $schema, $sources) {
 
                                                                 <td><?php
                                                                     if (isset($allocation[$school->schema_name])) {
-                                                                        echo '<b class="label label-success">' . $allocation[$school->schema_name] . '</b>';
+                                                                        echo $allocation[$school->schema_name];
                                                                     } else {
 
-                                                                        echo '<b class="label label-warning">No Person Allocated</b>';
+                                                                        echo '<b>No Person Allocated</b>';
                                                                     }
                                                                     ?></td>
                                                                     <?php
