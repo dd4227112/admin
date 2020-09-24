@@ -141,7 +141,7 @@ class Account extends Controller {
                                 \App\Models\InvoiceFee::where('invoice_id', $invoice->id)->update(['amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee For ' . $client->total_students . ' Students ', 'quantity' => $client->total_students, 'unit_price' => $client->price_per_student]) :
                                 \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee For ' . $client->total_students . ' Students ', 'quantity' => $client->total_students, 'unit_price' => $client->price_per_student]);
             } else {
-                $client_record = \App\Models\Client::create(['name' => $client->sname, 'email' => $client->email, 'phone' => $client->phone, 'address' => $client->address, 'username' => $client->schema_name]);
+                $client_record = \App\Models\Client::create(['name' => $client->sname, 'email' => $client->email, 'phone' => $client->phone, 'address' => $client->address, 'username' => $client->schema_name, 'created_at' => date('Y-m-d H:i:s')]);
                 $reference = 'SASA11' . $year->name . $client_record->id;
                 $invoice = Invoice::create(['reference' => $reference, 'client_id' => $client_record->id, 'date' => 'now()', 'year' => date('Y'), 'user_id' => Auth::user()->id, 'account_year_id' => $account_year_id, 'due_date' => date('Y-m-d', strtotime('+ 30 days'))]);
                 $amount = $client->total_students * $client->price_per_student;
@@ -1251,7 +1251,7 @@ class Account extends Controller {
                     $client = \App\Models\Client::where('email', strtolower($value['email']))->first();
 
                     $client_record = count($client) == 0 ?
-                            \App\Models\Client::create(['name' => $value['email'], 'email' => $value['email'], 'phone' => time(), 'address' => '', 'username' => $value['email']]) : $client;
+                            \App\Models\Client::create(['name' => $value['email'], 'email' => $value['email'], 'phone' => time(), 'address' => '', 'username' => $value['email'], 'created_at' => date('Y-m-d H:i:s')]) : $client;
 
 
                     $account_year = \App\Models\AccountYear::where('start_date', '<=', date('Y-m-d', strtotime($value['date'])))->where('end_date', '>=', date('Y-m-d', strtotime($value['date'])))->first();

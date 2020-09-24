@@ -172,17 +172,20 @@ class Customer extends Controller {
         $attr = request('attr');
         $value = request('value');
         if ((int) $user_id > 0 && (int) $task_id > 0) {
-            $task = \App\Models\Task::find($task_id)->update(['user_id' => $user_id]);
+            $task = \App\Models\Task::find($task_id)->update(['user_id' => $user_id, 'update_at' => date('Y-m-d H:i:s')]);
             DB::table('tasks_users')->where('task_id', $task_id)->update([
                 'user_id' => $user_id,
+                'update_at' => date('Y-m-d H:i:s')
             ]);
             \App\Models\TrainItemAllocation::where('task_id', $task_id)->update([
                 'user_id' => $user_id,
+                'update_at' => date('Y-m-d H:i:s')
             ]);
         }
         if ($attr == 'school_person' && (int) $task_id > 0) {
             \App\Models\TrainItemAllocation::where('task_id', $task_id)->update([
                 'school_person_allocated' => $value,
+                'update_at' => date('Y-m-d H:i:s')
             ]);
         }
         if ($attr == 'start_date' && (int) $task_id > 0) {
@@ -191,12 +194,13 @@ class Customer extends Controller {
             $obj = [
                 'start_date' => date('Y-m-d H:i', strtotime($value . ' ' . $slot->start_time)),
                 'end_date' => date('Y-m-d H:i', strtotime($value . ' ' . $slot->end_time)),
+                'update_at' => date('Y-m-d H:i:s'),
                 'slot_id' => $slot_id];
             \App\Models\Task::find($task_id)->update($obj);
             die(json_encode(array_merge(array('task_id' => $task_id), $obj)));
         }
         if ($attr == 'end_date' && (int) $task_id > 0) {
-            \App\Models\Task::find($task_id)->update(['end_date' => $value]);
+            \App\Models\Task::find($task_id)->update(['end_date' => $value, 'update_at' => date('Y-m-d H:i:s')]);
         }
         //insert into training allocation
         echo 'success';
@@ -415,7 +419,7 @@ $obj=[
             $client = \App\Models\Client::where('username', $school)->first();
             if (count($client) == 0) {
 
-                $client = \App\Models\Client::create(['name' => $this->data['school']->sname, 'email' => $this->data['school']->email, 'phone' => $this->data['school']->phone, 'address' => $this->data['school']->address, 'username' => $school]);
+                $client = \App\Models\Client::create(['name' => $this->data['school']->sname, 'email' => $this->data['school']->email, 'phone' => $this->data['school']->phone, 'address' => $this->data['school']->address, 'username' => $school, 'created_at' => date('Y-m-d H:i:s')]);
             }
             $this->data['client_id'] = $client->id;
 
@@ -615,6 +619,7 @@ $obj=[
         $user_id = request('user_id');
         $role_id = request('role_id');
         if (strlen($schema) > 2) {
+            $date = date("Y-m-d H:i:s");
             if ((int) $role_id == 5) {
                 $sch = DB::table($schema . '.setting')->update(['source' => request('val')]);
                 echo 1;
@@ -633,9 +638,9 @@ $obj=[
             if (count($school_info->first()) == 1) {
                 $check = DB::table('users_schools')->where('schema_name', $schema)->where('role_id', $role_id);
                 if ((int) $check->count() > 0) {
-                    $check->update(['user_id' => $user_id]);
+                    $check->update(['user_id' => $user_id, 'updated_at' => $date]);
                 } else {
-                    DB::table('users_schools')->insert(['school_id' => $school_id, 'user_id' => $user_id, 'role_id' => $role_id, 'schema_name' => $schema]);
+                    DB::table('users_schools')->insert(['school_id' => $school_id, 'user_id' => $user_id, 'role_id' => $role_id, 'schema_name' => $schema, 'created_at' => $date, 'updated_at' => $date]);
                 }
                 DB::table($schema . '.setting')->update(['school_id' => $school_id]);
             }

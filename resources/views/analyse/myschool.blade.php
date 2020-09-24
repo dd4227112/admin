@@ -143,6 +143,7 @@
                                                     <th>Region</th>
                                                     <th>Type</th>
                                                     <th>Phone</th>
+                                                    <th>Allocated</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -156,6 +157,22 @@
                                                 echo '<td>'.$school->school->region.'</td>';
                                                 echo '<td>'.$school->school->type.'</td>';
                                                 echo '<td>'.$school->client->phone.'</td>';
+                                                echo '<td>';
+                                                ?>
+                                                
+                                                    <select name="support_id" class="allocate">
+                                                        <option></option>
+                                                        <?php
+                                                        foreach ($staffs as $user) {
+                                                            ?>
+                                                            <option user_id="<?= $user->id ?>" role_id="8" schema="<?= $school->client->username ?>" school_id="" value="<?= $user->id ?>"><?= $user->firstname . ' ' . $user->lastname ?></option>
+                                                        <?php } ?>
+
+                                                    </select>
+                                                    <span id="status_result_8_<?= $school->client->username ?>"></span>
+
+                                            </td>
+                                            <?php
                                                 echo '<td>';
                                             if($school->client->username != ''){
                                                 echo '<a href="'. url('customer/profile/'.$school->client->username) .'" class="btn btn-success btn-sm"> View </a>';
@@ -180,7 +197,6 @@
                   <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                        <div class="card-header">
                             <h5>Weekly Schools Logs Activities</h5>
                         
                             </div>
@@ -198,12 +214,41 @@
 </div>
     <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript">
-$('#taskdate').change(function(event) {
+            $('#taskdate').change(function(event) {
                 var taskdate = $(this).val();
                 if (taskdate === '') {} else {
                     window.location.href = '<?= url('Analyse/myschools') ?>/' + taskdate;
                 }
             });
+
+        allocate = function () {
+            $('.allocate').change(function () {
+                var user_id = $('option:selected', this).attr('user_id');
+                var school_id = $('option:selected', this).attr('school_id');
+                var role_id = $('option:selected', this).attr('role_id');
+                var schema = $('option:selected', this).attr('schema');
+                var val = $(this).val();
+                $.ajax({
+                    type: 'post',
+                    url: '<?= url('customer/allocate') ?>',
+                    data: {
+                        user_id: user_id,
+                        school_id: school_id,
+                        role_id: role_id,
+                        schema: schema,
+                        val: val
+                    },
+                    dataType: 'html',
+                    success: function (data) {
+                        /// alert('success',data);
+                        $('#status_result_' + role_id + '_' + schema).html('<b class="label label-success">success</b>');
+
+                    }
+                });
+            });
+        }
+    $(document).ready(allocate);
+
 </script>
 
 

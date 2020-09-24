@@ -347,6 +347,34 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
             </div>
             <!-- Horizontal Timeline end -->
 
+             <div class="col-md-12 col-xl-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Activities per Module</h5>
+                    </div>
+                    <div class="card-block">
+                        <div class="cd-horizontal-timeline loaded">
+
+                            <!-- .timeline -->
+                            <div class="events-content">
+                                <div class="card">
+
+                                    <div class="card-block">
+                                        <?php
+                                       
+                                 $sql_2_activities = "select count(m.id) as count ,m.name as modules from admin.modules m, admin.module_tasks mt,admin.users u,admin.tasks a where m.id=mt.module_id and mt.task_id =a.id and u.id =a.user_id and u.role_id in (14,8)  and " . $where . " group by m.name";
+                                 echo $insight->createChartBySql($sql_2_activities, 'modules', 'Activities', 'bar', false);
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- .events-content -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Horizontal Timeline end -->
+
             <?php
                                 $support_distribution = "select count(*) as count, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.users c on c.id=a.user_id WHERE   a.user_id in (select id from admin.users where department=1) and " . $where . " and a.status not in('Pending','New') group by user_name";
                                 echo $insight->createChartBySql($support_distribution, 'user_name', 'Support Activity', 'bar', false);
