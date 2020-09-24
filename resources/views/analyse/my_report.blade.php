@@ -90,6 +90,8 @@ $today = 0;
          ?>
          
          </h5> 
+         <span style="float: right">Total Task <?=count($tasks)?></span>
+
         </div>
           <div class="card-block">
 
@@ -139,7 +141,18 @@ $today = 0;
   <div class="col-lg-12">
     <div class="card">
       <div class="card-header">
-        <h5>List of Tasks & Activities Under <u><?=$staff->name?></u></h5>
+        <h5>List of Tasks & Activities By 
+        <?php
+          if(count($task_users)>0){
+            foreach($task_users as $us){
+              echo '<u>'.$us->firstname . ' '. $us->lastname .' </u> &nbsp; &nbsp;';
+            }
+          }else{
+            echo '<u>'.Auth::user()->name .'</u>';
+          }
+         ?>
+         
+        </h5>
        
       </div>
       <div class="card-block">
