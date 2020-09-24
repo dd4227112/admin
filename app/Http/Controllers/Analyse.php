@@ -224,9 +224,42 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         $arrayTxt = implode( ',', $all_schools);
         $sql = 'select count(*) as count, "schema_name" from "admin"."all_log" where created_at::date>'.$days.' AND "schema_name" in ('.$arrayTxt.') group by "schema_name"';
         $this->data['logs'] = $sql;
+        $this->data['staffs'] = \App\Models\User::where('status', 1)->where('department', '<>', 10)->get();
         $this->data['staff'] = \App\Models\User::where('id', $id)->first();
         //DB::table('admin.all_log')->select(DB::raw('count(*) as school_count, "schema_name"'))->whereIn('schema_name', $all_schools)->where('table', '<>', 'setting')->groupBy('schema_name')->get();
         return view('analyse.myschool', $this->data);
     }
+
+    
+    public function myreport() {
+        $id = [];
+        if (request('user_ids') !='') {
+                foreach(request('user_ids') as $ids){
+                    array_push($id, $ids);
+            }
+        }else{
+            array_push($id, Auth::user()->id);
+        }
+        $page = request()->segment(3);
+        if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
+            $days = "'".date("Y-m-d", strtotime("-7 day"))."'";
+            $start ="'".date("Y-m-d", strtotime("-1 day"))."'";
+            $end = "'".date("Y-m-d", strtotime("1 day"))."'";
+        } else {
+          $start = "'".date('Y-m-d', strtotime(request('start')))."'";
+          $end = "'".date('Y-m-d', strtotime(request('end')))."'";
+        }
+        $this->data['staff'] = $user = \App\Models\User::where('id',  Auth::user()->id)->first();
+        $this->data['tasks'] =  \App\Models\Task::whereIn('user_id', $id)->whereIn('id', \App\Models\TrainItemAllocation::whereIn('user_id', $id)->get(['task_id']))
+        ->select(DB::raw('count(*) as count, status'))->groupBy('status')
+        ->whereRaw('created_at::date > '.$start)->whereRaw('updated_at::date < '.$end)
+        ->get();
+        $this->data['start'] = $start;
+        $this->data['end'] = $end;
+        $this->data['all_tasks'] =  \App\Models\TrainItemAllocation::whereIn('user_id', $id)->whereRaw('created_at::date > '.$start)->whereRaw('updated_at::date < '.$end)->get();
+        $this->data['activities'] =  \App\Models\Task::whereIn('user_id', $id)->whereNotIn('id', \App\Models\TrainItemAllocation::whereIn('user_id', $id)->get(['task_id']))->whereRaw('created_at::date > '.$start)->whereRaw('updated_at::date < '.$end)->get();
+        
+    return view('analyse.my_report', $this->data);
+}
 
 }
