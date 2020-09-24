@@ -90,7 +90,7 @@ $today = 0;
          ?>
          
          </h5> 
-         <span style="float: right">Total Task <?=count($tasks)?></span>
+         <span style="float: right">Total Task - <?=count($tasks)?></span>
 
         </div>
           <div class="card-block">

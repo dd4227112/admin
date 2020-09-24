@@ -723,12 +723,27 @@ group by ownership');
             ]);
 
             $school_id = request('school_id');
+            
+            if (preg_match('/c/i', $school_id)) {
+
+                DB::table('tasks_clients')->insert([
+                    'task_id' => $task->id,
+                    'client_id' => (int) $school_id
+                ]);
+            }
+            if ((int) $school_id > 0 && !preg_match('/c/i', $school_id)) {
+
+                DB::table('tasks_schools')->insert([
+                    'task_id' => $task->id,
+                    'school_id' => (int) $school_id
+                ]);
+            }
             // if (count($schools) > 0) {
             //     foreach ($schools as $school_id) {
-            DB::table('tasks_schools')->insert([
-                'task_id' => $task->id,
-                'school_id' => (int) $school_id
-            ]);
+            // DB::table('tasks_schools')->insert([
+            //     'task_id' => $task->id,
+            //     'school_id' => (int) $school_id
+            // ]);
             if (request('school_name') != '' && request('school_phone') != '') {
                 \App\Models\SchoolContact::create([
                     'name' => request('school_name'),
