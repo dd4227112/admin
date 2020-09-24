@@ -233,23 +233,29 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
     
     public function myreport() {
         $id = [];
-        if (request('user_ids') !='') {
+        if ($_POST) {
+            
+            if (request('user_ids') !='') {
                 foreach(request('user_ids') as $ids){
                     array_push($id, $ids);
             }
+            }else{
+                array_push($id, Auth::user()->id);
+            }
+            if(request('start') !='' &&  request('end') != ''){
+                $start = "'".date('Y-m-d', strtotime(request('start')))."'";
+                $end = "'".date('Y-m-d', strtotime(request('end')))."'";
+            }else{
+                $start ="'".date("Y-m-d", strtotime("-1 day"))."'";
+                $end = "'".date("Y-m-d", strtotime("1 day"))."'";
+            }
         }else{
             array_push($id, Auth::user()->id);
-        }
-        $page = request()->segment(3);
-        if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
-            $days = "'".date("Y-m-d", strtotime("-7 day"))."'";
             $start ="'".date("Y-m-d", strtotime("-1 day"))."'";
             $end = "'".date("Y-m-d", strtotime("1 day"))."'";
-        } else {
-          $start = "'".date('Y-m-d', strtotime(request('start')))."'";
-          $end = "'".date('Y-m-d', strtotime(request('end')))."'";
         }
         $this->data['staff'] = $user = \App\Models\User::where('id',  Auth::user()->id)->first();
+        $this->data['task_users'] = \App\Models\User::whereIn('id', $id)->get();
         $this->data['tasks'] =  \App\Models\Task::whereIn('user_id', $id)->whereIn('id', \App\Models\TrainItemAllocation::whereIn('user_id', $id)->get(['task_id']))
         ->select(DB::raw('count(*) as count, status'))->groupBy('status')
         ->whereRaw('created_at::date > '.$start)->whereRaw('updated_at::date < '.$end)

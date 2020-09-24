@@ -41,6 +41,7 @@ $today = 0;
         </div>
         <div class="col-lg-8 text-right">
           <div  style="display: none" id="show_date">
+          <form action="#" method="post" onsubmit="this.submit(); this.reset(); return false;">
             <div class="input-daterange input-group" id="datepicker">
               <input type="date" class="input-sm form-control" name="start" id="start_date">
               <span class="input-group-addon">to</span>
@@ -49,32 +50,46 @@ $today = 0;
               </div>
               <?php
               if (in_array(Auth::user()->role_id,  [1,8])) {
-              $users = \App\Models\User::where('status', 1)->whereIn('role_id', [8,14])->get();
+              $users = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get();
               foreach ($users as $user) { ?>
                 <input type="checkbox" class="user_ids" value="<?= $user->id ?>" name="user_ids[]" ><?= $user->firstname?> &nbsp; &nbsp;
               <?php } }?>
               <input type="submit" Value="Submit" class="input-sm btn btn-sm btn-success" id="search_custom"/>
-            
           </div>
+          <?= csrf_field() ?>
+            </form>
         
           <div  style="display: none" id="today_list">
+          <form action="#" method="post" onsubmit="this.submit(); this.reset(); return false;">
               <?php
               if (in_array(Auth::user()->role_id,  [1,8])) {
-              $users = \App\Models\User::where('status', 1)->whereIn('role_id', [8,14])->get();
-              foreach ($users as $user) { ?>
+              $users1 = \App\Models\User::where('status', 1)->whereIn('role_id', [8,14])->get();
+              foreach ($users1 as $user) { ?>
                 <input type="checkbox" id="user<?= $user->id ?>" value="<?= $user->id ?>" name="user_ids[]" ><?= $user->firstname?> &nbsp; &nbsp;
               <?php } }?>
-              <input type="submit" Value="Submit" class="input-sm btn btn-sm btn-success" id="search_user"/>
-            
+              <input type="submit" Value=" Submit " class="input-sm btn btn-sm btn-success" id="search_user"/>
+              <?= csrf_field() ?>
+            </form>
           </div>
         </div>
   </div>
   <div class="row">
-    
       <div class="col-lg-12">
         <div class="card">
         <div class="card-header">
-        <h5 style="float: right"> <u> <?=$staff->name?> </u> TASK SUMMARY</h5> 
+        <h5> 
+        TASK SUMMARY BY 
+         <?php
+          if(count($task_users)>0){
+            foreach($task_users as $us){
+              echo '<u>'.$us->firstname . ' '. $us->lastname .' </u> &nbsp; &nbsp;';
+            }
+          }else{
+            echo '<u>'.Auth::user()->name .'</u>';
+          }
+         ?>
+         
+         </h5> 
         </div>
           <div class="card-block">
 
@@ -214,32 +229,7 @@ check = function () {
         }
     });
 }
-submit_search = function () {
-    $('#search_custom').mousedown(function () {
-        var start_date = $('#start_date').val();
-        var end_date = $('#end_date').val();
-        var user_ids = $('.user_ids').val();
-        $.ajax({
-                    type: 'post',
-                    url: '<?= url('customer/allocate') ?>',
-                    data: {user_id: user_id, school_id: school_id, role_id: role_id, schema: schema, val: val
-                    },
-                    dataType: 'html',
-                    success: function (data) {
-                        /// alert('success',data);
-                        $('#status_result_' + role_id + '_' + schema).html('<b class="label label-success">success</b>');
 
-                    }
-                });
-
-    });
-}
-submit_users = function () {
-    $('#search_user').mousedown(function () {
-        var user_ids = $('.user_ids').val();
-        window.location.href = '<?= url('Analyse/myreport/') ?>/1/user?user_ids=' + user_ids;
-    });
-}
 $(document).ready(check);
 
 </script>
