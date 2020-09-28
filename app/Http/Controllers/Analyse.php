@@ -258,12 +258,12 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         $this->data['task_users'] = \App\Models\User::whereIn('id', $id)->get();
         $this->data['tasks'] =  \App\Models\Task::whereIn('user_id', $id)->whereIn('id', \App\Models\TrainItemAllocation::whereIn('user_id', $id)->get(['task_id']))
         ->select(DB::raw('count(*) as count, status'))->groupBy('status')
-        ->whereRaw('created_at::date > '.$start)->whereRaw('updated_at::date < '.$end)
+        ->whereRaw('updated_at::date > '.$start)->whereRaw('updated_at::date < '.$end)
         ->get();
         $this->data['start'] = $start;
         $this->data['end'] = $end;
-        $this->data['all_tasks'] =  \App\Models\TrainItemAllocation::whereIn('user_id', $id)->whereRaw('created_at::date > '.$start)->whereRaw('updated_at::date < '.$end)->get();
-        $this->data['activities'] =  \App\Models\Task::whereIn('user_id', $id)->whereNotIn('id', \App\Models\TrainItemAllocation::whereIn('user_id', $id)->get(['task_id']))->whereRaw('created_at::date > '.$start)->whereRaw('updated_at::date < '.$end)->get();
+        $this->data['all_tasks'] =  \App\Models\TrainItemAllocation::whereIn('user_id', $id)->whereRaw('updated_at::date > '.$start)->whereRaw('updated_at::date < '.$end)->get();
+        $this->data['activities'] =  \App\Models\Task::whereIn('user_id', $id)->whereNotIn('id', \App\Models\TrainItemAllocation::whereIn('user_id', $id)->get(['task_id']))->whereRaw('updated_at::date > '.$start)->whereRaw('updated_at::date < '.$end)->get();
         $this->checkTask($id);
     return view('analyse.my_report', $this->data);
 }
