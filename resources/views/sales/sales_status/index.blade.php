@@ -99,8 +99,8 @@
                                                      ?>
                                                   <tr>
                                                   <td><?=$i++?></td>
-                                                  <td><?=$school->school->name?>(<code><?=substr($school->school->type, 0,3)?></code>)</td>
-                                                  <td><?=$school->school->region?></td>
+                                                  <td><?=$school->username?>(<code><?=substr($school->school->type, 0,3)?></code>)</td>
+                                                  <td><?=$school->region?></td>
                                                   <td><?=$school->task->end_date?></td>
                                                   <td><?=$school->task->tasktype->name?></td>
                                                   <td><?=$school->task->next_action?></td>
