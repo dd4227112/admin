@@ -141,7 +141,7 @@ $today = 0;
   <div class="col-lg-12">
     <div class="card">
       <div class="card-header">
-        <h5>List of Tasks & Activities By 
+        <h5>  List of Tasks & Activities By 
         <?php
           if(count($task_users)>0){
             foreach($task_users as $us){
