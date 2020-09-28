@@ -107,6 +107,7 @@
                                                 <tr>
                                                     <th>#</th>
                                                     <th>School Name</th>
+                                                    <th>Region</th>
                                                     <th>District</th>
                                                     <th>Ward</th>
                                                     <th>Type</th>
@@ -121,6 +122,7 @@
                                             echo '<tr>';
                                             echo '<td>'.$i++.'</td>';
                                             echo '<td>'.$school->name.'</td>';
+                                            echo '<td>'.$school->region.'</td>';
                                             echo '<td>'.$school->district.'</td>';
                                             echo '<td>'.$school->ward.'</td>';
                                             echo '<td>'.$school->type.'</td>';

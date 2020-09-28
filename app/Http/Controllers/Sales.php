@@ -701,7 +701,14 @@ group by ownership');
             $end_date = date('Y-m-d', strtotime(request('end')));
             $where = "  a.created_at::date >='" . $start_date . "' AND a.created_at::date <='" . $end_date . "'";
         }
-        $this->data['schools'] = \App\Models\TaskSchool::whereIn('task_id', \App\Models\Task::whereIn('user_id', \App\Models\User::where('department', 2)->get(['id']))->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->get(['id']))->orderBy('created_at', 'desc')->get();
+        $this->data['schools'] = 
+
+        "select a.status, a.start_date::date, a.end_date::date, b.username from admin.tasks a join admin.tasks_clients c on a.id=c.task_id join admin.clients b on b.id=c.client_id
+        WHERE a.user_id in (select id from admin.users where department=2) and $where group by b.username
+        UNION ALL
+        select count(a.*),b.name from admin.tasks a join admin.tasks_schools c on a.id=c.task_id join admin.schools b on b.id=c.school_id
+        WHERE a.user_id in (select id from admin.users where department=2) and $where group by b.name";
+        \App\Models\TaskSchool::whereIn('task_id', \App\Models\Task::whereIn('user_id', \App\Models\User::where('department', 2)->get(['id']))->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->get(['id']))->orderBy('created_at', 'desc')->get();
         $this->data['new_schools'] = \App\Models\TaskSchool::whereIn('task_id', \App\Models\Task::whereIn('user_id', \App\Models\User::where('department', 2)->get(['id']))->where('next_action', 'new')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->get(['id']))->orderBy('created_at', 'desc')->get();
         $this->data['pipelines'] = \App\Models\TaskSchool::whereIn('task_id', \App\Models\Task::whereIn('user_id', \App\Models\User::where('department', 2)->get(['id']))->where('next_action', 'pipeline')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->get(['id']))->orderBy('created_at', 'desc')->get();
         $this->data['closeds'] = \App\Models\TaskSchool::whereIn('task_id', \App\Models\Task::whereIn('user_id', \App\Models\User::where('department', 2)->get(['id']))->where('next_action', 'closed')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->get(['id']))->orderBy('created_at', 'desc')->get();
@@ -738,12 +745,7 @@ group by ownership');
                     'school_id' => (int) $school_id
                 ]);
             }
-            // if (count($schools) > 0) {
-            //     foreach ($schools as $school_id) {
-            // DB::table('tasks_schools')->insert([
-            //     'task_id' => $task->id,
-            //     'school_id' => (int) $school_id
-            // ]);
+           
             if (request('school_name') != '' && request('school_phone') != '') {
                 \App\Models\SchoolContact::create([
                     'name' => request('school_name'),
