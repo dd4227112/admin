@@ -20,7 +20,7 @@ class Task extends Model {
     }
 
     public function client() {
-        return $this->belongsTo(\App\Models\Client::class, 'client_id', 'id')->withDefault(['name' => 'not allocated, sales request']);
+        return $this->belongsTo(\App\Models\Client::class, 'client_id', 'id')->withDefault(['name' => 'Not Defined']);
     }
 
     public function taskComments() {

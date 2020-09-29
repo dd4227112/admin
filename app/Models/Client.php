@@ -34,4 +34,8 @@ class Client extends Model {
         
     }
 
+    public function clientschool() {
+        return $this->hasMany(\App\Models\ClientSchool::class,'client_id', 'id');
+    }
+
 }
