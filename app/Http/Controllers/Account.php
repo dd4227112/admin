@@ -340,6 +340,7 @@ class Account extends Controller {
                 'email' => 'required|email|unique:clients,email']
             );
             $client = \App\Models\Client::create(request()->all());
+            \App\Models\Client::where('id', $client->id)->update(['created_at' => date("Y-m-d H:i:s")]);
             foreach (request('project_ids') as $project_id) {
                 \App\Models\ClientProject::create(['project_id' => $project_id, 'client_id' => $client->id]);
             }

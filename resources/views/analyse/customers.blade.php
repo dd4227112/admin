@@ -27,7 +27,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
         <?php
     $where_setting=(int) $today==1 ?' ':" WHERE a.created_at::date <='".$end_date."'";
     $out_of = \collect(DB::select('select count(*) from admin.all_setting a   '.$where_setting))->first()->count;
-    $active_customers = \collect(DB::select('select count(distinct "schema_name") from admin.all_login_locations a  WHERE "table" in (\'setting\',\'users\',\'teacher\') and ' . $where))->first()->count;
+    $active_customers = \collect(DB::select('select count(distinct "schema_name") from admin.all_login_locations a  WHERE "table" in (\'parent\',\'user\',\'teacher\') and ' . $where))->first()->count;
     $total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=1) and ' . $where .' and a.status not in(\'Pending\',\'New\')'))->first()->count;
 
 ?>

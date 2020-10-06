@@ -448,7 +448,7 @@ $obj=[
             }
 
             DB::table('tasks_clients')->insert([
-                'task_id' => $task->id,
+                'task_id' => $task->id, 
                 'client_id' => (int) request('client_id')
             ]);
 
@@ -636,7 +636,7 @@ $obj=[
             }
             $school_info = DB::table('schools')->where('id', $school_id);
             if (count($school_info->first()) == 1) {
-                $check = DB::table('users_schools')->where('schema_name', $schema)->where('role_id', $role_id);
+                $check = DB::table('users_schools')::where('role_id', $role_id);
                 if ((int) $check->count() > 0) {
                     $check->update(['user_id' => $user_id, 'updated_at' => $date]);
                 } else {
