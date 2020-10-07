@@ -623,7 +623,8 @@ $obj=[
             if ((int) $school_id == 0) {
                 $sch = DB::table('admin.all_setting')->where('schema_name', $schema)->first();
                 $obj = DB::table('schools')->where('name', 'ilike', '%' . substr($schema, 0, 4) . '%')->first();
-                $school_id = count($sch) == 1 ? $sch->school_id : count($obj) == 1 ? $obj->id : '';
+                $school_id = !empty($sch) ? $sch->school_id :  '';
+                //$school=count($obj) == 1 ? $obj->id :'';
             }
             if ((int) $school_id == 0) {
                 //this school does not exists, try to add it in a list of schols
@@ -995,7 +996,7 @@ $obj=[
     public function getDate($id = null, $default_dates = null) {
         $user_id = $id = null || (int) $id==0? request('user_id') : $id;
         $task_user = \App\Models\TaskUser::where('user_id', $user_id)->orderBy('id', 'desc')->first();
-        $task_date = count($task_user) == 1 ? $task_user->task->end_date : date('Y-m-d');
+        $task_date = !empty($task_user)? $task_user->task->end_date : date('Y-m-d');
         $end_date = date('Y-m-d');
         $option = '<option></option>';
         for ($i = 0; $i <= 10; $i++) {

@@ -48,7 +48,7 @@
 
                   <?php
                   $user_allocated = \App\Models\UsersSchool::where('school_id', $school->id)->where('role_id', '<>', 6)->first();
-                  if (count($user_allocated) == 1) {
+                  if (!empty($user_allocated)) {
                     echo '                  <a href="#" class="btn btn-outline-primary waves-effect text-white"><i class="icofont icofont-ui-user m-r-10"></i>' . $user_allocated->user->firstname . ' ' . $user_allocated->user->lastname . ' </a>';
                   } else {
                     echo 'No Person Allocated';
@@ -62,7 +62,7 @@
             <div class="user-body" style="min-height: 625px;">
               <?php
               $school_clients = DB::table('client_schools')->where('school_id', $school->id)->first();
-              if (count($school_clients) == 0) {
+              if (empty($school_clients)) {
                 ?>
                 <div class="card-block">
                   <button class="btn btn-danger btn-block" id="onboard_school">Onboard School</button>
