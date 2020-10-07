@@ -127,7 +127,7 @@ function check_status($table, $where = null) {
                                 } elseif ($st->school_status == 3) {
                                   echo '<div class="btn btn-warning">Resale</div>';
                                 } elseif ($st->school_status == 4) {
-                                  echo '<div class="btn btn-warning">Inactive</div>';
+                                  echo '<a class="btn btn-warning waves-effect waves-light f-right" data-toggle="modal" data-target="#status-Modal">Inactive</div>';
                                 } else {
                                   echo '<div>not defined</div>';
                                 }
@@ -746,7 +746,7 @@ function check_status($table, $where = null) {
                                         <tr>
                                           <th>#</th>
                                           <th>Task</th>
-                                          <th>ShuleSoft Person Allocated</th>
+                                          <th>ShuleSoft Person </th>
                                           <th><?= ucfirst($schema) ?> Person Allocated</th>
                                           <th>Start Date : Time</th>
                                           <th>End Date : Time</th>
@@ -905,7 +905,7 @@ function check_status($table, $where = null) {
                                 //check terms for this defined year
                                 $terms = DB::table($schema . '.semester')->where('academic_year_id', $academic_year->id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->count();
 
-                                echo $terms == 0 ? '<b class="label label-warning">No Terms Defined for ' . $level->name . ' (' . date('Y') . ')</b><br/>' : '<label class="label label-success">' .$level->name. ' ('. $academic_year->name .') at ' . date('F d, Y', strtotime($academic_year->created_at)) . '</label>';
+                                echo $terms == 0 ? '<b class="label label-warning">No Terms Defined for ' . $level->name . ' (' . date('Y') . ')</b><br/>' : '<label class="label label-success">' .$level->name. ' ('. $academic_year->name .') at ' . date('d M Y', strtotime($academic_year->created_at)) . '</label>';
                               }
                             }
                           } else {
@@ -961,8 +961,7 @@ function check_status($table, $where = null) {
                         <td>SMS sents</td>
                         <td> <?= check_status('sms'); ?>
                         <br/>
-                        <?php
-                        /*
+                        <?php /*
                         $karibu = DB::connection('karibusms')->table('client')->where('keyname', $schema)->first();
                         $karibu_shulesoft = DB::connection('karibusms')->table('client')->where('client_id', 318)->first();
                         if (count($karibu) == 1 && count($karibu_shulesoft) && $karibu->gcm_id = $karibu_shulesoft->gcm_id) {

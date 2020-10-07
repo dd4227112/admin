@@ -96,27 +96,55 @@
                                                 $i = 1;
                                                 if (count($schools) > 0) {
                                                     foreach ($schools as $school){
-                                                     ?>
+                                                        $check = \App\Models\TaskSchool::where('task_id', $school->id)->first();
+
+                                                        if(!empty($check)){
+                                                            ?>
                                                   <tr>
                                                   <td><?=$i++?></td>
-                                                  <td><?=$school->school->name?>(<code><?=substr($school->school->type, 0,3)?></code>)</td>
-                                                  <td><?=$school->school->region?></td>
-                                                  <td><?=$school->task->end_date?></td>
-                                                  <td><?=$school->task->tasktype->name?></td>
-                                                  <td><?=$school->task->next_action?></td>
+                                                  <td><?=$check->school->name?></td>
+                                                  <td><?=$check->school->region?></td>
+                                                  <td><?=$school->end_date?></td>
+                                                  <td><?=$school->type?></td>
+                                                  <td><?=$school->next_action?></td>
                                                   <td> 
                                                   <?php
-                                                   if($school->schema_name != ''){
-                                                    echo '<a href="'. url('customer/profile/'.$school->school->schema_name) .'" class="btn btn-success btn-sm"> View Client </a>';
+                                                   if($check->school->schema_name != ''){
+                                                    echo '<a href="'. url('customer/profile/'.$check->school->schema_name) .'" class="btn btn-success btn-sm"> View Client </a>';
                                                 }else{
-                                                    echo '<a href="'. url('sales/profile/'.$school->school->id) .'" class="btn btn-info btn-sm"> View Profile</a>';
+                                                    echo '<a href="'. url('sales/profile/'.$check->school_id) .'" class="btn btn-info btn-sm"> View Profile</a>';
     
                                                 }
                                                   ?>
                                                   </td>
                                                 </tr>
-                                                  <?php } ?>
-                                                  <?php } ?>
+                                                  <?php } else{
+                                                       $check_task = \App\Models\TaskClient::where('task_id', $school->id)->first();
+                                                       if(!empty($check_task)){
+                                                 ?>
+                                                    <tr>
+                                                  <td><?=$i++?></td>
+                                                  <td><?=$check_task->client->name?></td>
+                                                  <td><?=$check_task->client->phone?></td>
+                                                  <td><?=$school->end_date?></td>
+                                                  <td><?=$school->type?></td>
+                                                  <td><?=$school->next_action?></td>
+                                                  <td> 
+                                                  <?php
+                                                   if($check_task->client->username != ''){
+                                                    echo '<a href="'. url('customer/profile/'.$check_task->client->username) .'" class="btn btn-success btn-sm"> View Client </a>';
+                                                }else{
+                                                    echo '<a href="'. url('sales/profile/'.$school->id) .'" class="btn btn-info btn-sm"> View Profile</a>';
+                                                }
+                                                  ?>
+                                                  </td>
+                                                </tr>
+                                                  <?php
+                                                        } 
+                                                    }
+                                                    }
+                                                }
+                                                  ?>
                                                 </tbody>
                                                 <tfoot>
                                                     <tr>
@@ -154,27 +182,52 @@
                                                 $i = 1;
                                                 if (count($closeds) > 0) {
                                                     foreach ($closeds as $school){
+                                                        $check_task = \App\Models\TaskClient::where('task_id', $school->id)->first();
+                                                        if(!empty($check_task)){
                                                      ?>
                                                   <tr>
                                                   <td><?=$i++?></td>
-                                                  <td><?=$school->school->name?>(<code><?=substr($school->school->type, 0,3)?></code>)</td>
-                                                  <td><?=$school->school->region?></td>
-                                                  <td><?=$school->task->end_date?></td>
-                                                  <td><?=$school->task->tasktype->name?></td>
-                                                  <td><?=$school->task->next_action?></td>
+                                                  <td><?=$check_task->client->name?></td>
+                                                  <td><?=$check_task->client->phone?></td>
+                                                  <td><?=$school->end_date?></td>
+                                                  <td><?=$school->tasktype->name?></td>
+                                                  <td><?=$school->next_action?></td>
                                                   <td> 
                                                   <?php
-                                                   if($school->schema_name != ''){
-                                                    echo '<a href="'. url('customer/profile/'.$school->school->schema_name) .'" class="btn btn-success btn-sm"> View Client </a>';
+                                                   if($check_task->client->username != ''){
+                                                    echo '<a href="'. url('customer/profile/'.$check_task->client->username) .'" class="btn btn-success btn-sm"> View Client </a>';
                                                 }else{
-                                                    echo '<a href="'. url('sales/profile/'.$school->school->id) .'" class="btn btn-info btn-sm"> View Profile</a>';
+                                                    echo '<a href="'. url('sales/profile/'.$school->id) .'" class="btn btn-info btn-sm"> View Profile</a>';
     
                                                 }
                                                   ?>
                                                   </td>
                                                 </tr>
-                                                  <?php } ?>
-                                                  <?php } ?>
+                                                  <?php } else{ 
+                                                    $check = \App\Models\TaskSchool::where('task_id', $school->id)->first();
+                                                    if(!empty($check)){
+                                                    ?>
+                                                      <tr>
+                                                      <td><?=$i++?></td>
+                                                      <td><?=$check->school->name?></td>
+                                                      <td><?=$check->school->phone?></td>
+                                                      <td><?=$school->end_date?></td>
+                                                      <td><?=$school->tasktype->name?></td>
+                                                      <td><?=$school->next_action?></td>
+                                                      <td> 
+                                                      <?php
+                                                       if($check->school->schema_name != ''){
+                                                        echo '<a href="'. url('customer/profile/'.$check->school->schema_name) .'" class="btn btn-success btn-sm"> View Client </a>';
+                                                    }else{
+                                                        echo '<a href="'. url('sales/profile/'.$school->id) .'" class="btn btn-info btn-sm"> View Profile</a>';
+        
+                                                    }
+                                                      ?>
+                                                      </td>
+                                                    </tr>
+
+                                                  <?php  } } ?>
+                                                  <?php }} ?>
                                                 </tbody>
                                                 <tfoot>
                                                     <tr>
@@ -212,27 +265,52 @@
                                                 $i = 1;
                                                 if (count($pipelines) > 0) {
                                                     foreach ($pipelines as $school){
+                                                        $check_task = \App\Models\TaskClient::where('task_id', $school->id)->first();
+                                                        if(!empty($check_task)){
                                                      ?>
                                                   <tr>
                                                   <td><?=$i++?></td>
-                                                  <td><?=$school->school->name?>(<code><?=substr($school->school->type, 0,3)?></code>)</td>
-                                                  <td><?=$school->school->region?></td>
-                                                  <td><?=$school->task->end_date?></td>
-                                                  <td><?=$school->task->tasktype->name?></td>
-                                                  <td><?=$school->task->next_action?></td>
+                                                  <td><?=$check_task->client->name?></td>
+                                                  <td><?=$check_task->client->phone?></td>
+                                                  <td><?=$school->end_date?></td>
+                                                  <td><?=$school->tasktype->name?></td>
+                                                  <td><?=$school->next_action?></td>
                                                   <td> 
                                                   <?php
-                                                   if($school->schema_name != ''){
-                                                    echo '<a href="'. url('customer/profile/'.$school->school->schema_name) .'" class="btn btn-success btn-sm"> View Client </a>';
+                                                   if($check_task->client->username != ''){
+                                                    echo '<a href="'. url('customer/profile/'.$check_task->client->username) .'" class="btn btn-success btn-sm"> View Client </a>';
                                                 }else{
-                                                    echo '<a href="'. url('sales/profile/'.$school->school->id) .'" class="btn btn-info btn-sm"> View Profile</a>';
+                                                    echo '<a href="'. url('sales/profile/'.$school->id) .'" class="btn btn-info btn-sm"> View Profile</a>';
     
                                                 }
                                                   ?>
                                                   </td>
                                                 </tr>
-                                                  <?php } ?>
-                                                  <?php } ?>
+                                                  <?php } else{ 
+                                                    $check = \App\Models\TaskSchool::where('task_id', $school->id)->first();
+                                                    if(!empty($check)){
+                                                    ?>
+                                                      <tr>
+                                                      <td><?=$i++?></td>
+                                                      <td><?=$check->school->name?></td>
+                                                      <td><?=$check->school->phone?></td>
+                                                      <td><?=$school->end_date?></td>
+                                                      <td><?=$school->tasktype->name?></td>
+                                                      <td><?=$school->next_action?></td>
+                                                      <td> 
+                                                      <?php
+                                                       if($check->school->schema_name != ''){
+                                                        echo '<a href="'. url('customer/profile/'.$check->school->schema_name) .'" class="btn btn-success btn-sm"> View Client </a>';
+                                                    }else{
+                                                        echo '<a href="'. url('sales/profile/'.$school->id) .'" class="btn btn-info btn-sm"> View Profile</a>';
+        
+                                                    }
+                                                      ?>
+                                                      </td>
+                                                    </tr>
+
+                                                  <?php  } } ?>
+                                                  <?php }} ?>
                                                 </tbody>
                                                 <tfoot>
                                                     <tr>
@@ -270,27 +348,52 @@
                                                 $i = 1;
                                                 if (count($new_schools) > 0) {
                                                     foreach ($new_schools as $school){
+                                                        $check_task = \App\Models\TaskClient::where('task_id', $school->id)->first();
+                                                        if(!empty($check_task)){
                                                      ?>
                                                   <tr>
                                                   <td><?=$i++?></td>
-                                                  <td><?=$school->school->name?>(<code><?=substr($school->school->type, 0,3)?></code>)</td>
-                                                  <td><?=$school->school->region?></td>
-                                                  <td><?=$school->task->end_date?></td>
-                                                  <td><?=$school->task->tasktype->name?></td>
-                                                  <td><?=$school->task->next_action?></td>
+                                                  <td><?=$check_task->client->name?></td>
+                                                  <td><?=$check_task->client->phone?></td>
+                                                  <td><?=$school->end_date?></td>
+                                                  <td><?=$school->tasktype->name?></td>
+                                                  <td><?=$school->next_action?></td>
                                                   <td> 
                                                   <?php
-                                                   if($school->schema_name != ''){
-                                                    echo '<a href="'. url('customer/profile/'.$school->school->schema_name) .'" class="btn btn-success btn-sm"> View Client </a>';
+                                                   if($check_task->client->username != ''){
+                                                    echo '<a href="'. url('customer/profile/'.$check_task->client->username) .'" class="btn btn-success btn-sm"> View Client </a>';
                                                 }else{
-                                                    echo '<a href="'. url('sales/profile/'.$school->school->id) .'" class="btn btn-info btn-sm"> View Profile</a>';
+                                                    echo '<a href="'. url('sales/profile/'.$school->id) .'" class="btn btn-info btn-sm"> View Profile</a>';
     
                                                 }
                                                   ?>
                                                   </td>
                                                 </tr>
-                                                  <?php } ?>
-                                                  <?php } ?>
+                                                  <?php } else{ 
+                                                    $check = \App\Models\TaskSchool::where('task_id', $school->id)->first();
+                                                    if(!empty($check)){
+                                                    ?>
+                                                      <tr>
+                                                      <td><?=$i++?></td>
+                                                      <td><?=$check->school->name?></td>
+                                                      <td><?=$check->school->phone?></td>
+                                                      <td><?=$school->end_date?></td>
+                                                      <td><?=$school->tasktype->name?></td>
+                                                      <td><?=$school->next_action?></td>
+                                                      <td> 
+                                                      <?php
+                                                       if($check->school->schema_name != ''){
+                                                        echo '<a href="'. url('customer/profile/'.$check->school->schema_name) .'" class="btn btn-success btn-sm"> View Client </a>';
+                                                    }else{
+                                                        echo '<a href="'. url('sales/profile/'.$school->id) .'" class="btn btn-info btn-sm"> View Profile</a>';
+        
+                                                    }
+                                                      ?>
+                                                      </td>
+                                                    </tr>
+
+                                                  <?php  } } ?>
+                                                  <?php }} ?>
                                                 </tbody>
                                                 <tfoot>
                                                     <tr>
@@ -311,7 +414,7 @@
                                    <div id='calendar'>
                                    <?php
                          
-                            echo $insight->createChartBySql($query, 'next_action', 'Onboarded Schools', 'line', false);
+                            echo $insight->createChartBySql($query, 'next_action', 'Leads Activity', 'bar', false);
                             ?>
                                    </div>
                                    <hr><br>

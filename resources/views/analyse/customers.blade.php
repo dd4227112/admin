@@ -27,7 +27,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
         <?php
     $where_setting=(int) $today==1 ?' ':" WHERE a.created_at::date <='".$end_date."'";
     $out_of = \collect(DB::select('select count(*) from admin.all_setting a   '.$where_setting))->first()->count;
-    $active_customers = \collect(DB::select('select count(distinct "schema_name") from admin.all_login_locations a  WHERE "table" in (\'setting\',\'users\',\'teacher\') and ' . $where))->first()->count;
+    $active_customers = \collect(DB::select('select count(distinct "schema_name") from admin.all_login_locations a  WHERE "table" in (\'parent\',\'user\',\'teacher\') and ' . $where))->first()->count;
     $total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=1) and ' . $where .' and a.status not in(\'Pending\',\'New\')'))->first()->count;
 
 ?>
@@ -336,6 +336,34 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                                  $sql_2 = "select count(id) as count, controller as module from admin.all_log a   where controller not in ('background','SmsController','signin','dashboard') and ".$where."  group by controller order by count desc limit 10 ";
 
                                echo $insight->createChartBySql($sql_2, 'module', 'System Usability Per Modules', 'bar', false);
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- .events-content -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Horizontal Timeline end -->
+
+             <div class="col-md-12 col-xl-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Activities per Module</h5>
+                    </div>
+                    <div class="card-block">
+                        <div class="cd-horizontal-timeline loaded">
+
+                            <!-- .timeline -->
+                            <div class="events-content">
+                                <div class="card">
+
+                                    <div class="card-block">
+                                        <?php
+                                       
+                                 $sql_2_activities = "select count(m.id) as count ,m.name as modules from admin.modules m, admin.module_tasks mt,admin.users u,admin.tasks a where m.id=mt.module_id and mt.task_id =a.id and u.id =a.user_id and u.role_id in (14,8)  and " . $where . " group by m.name";
+                                 echo $insight->createChartBySql($sql_2_activities, 'modules', 'Activities', 'bar', false);
                                         ?>
                                     </div>
                                 </div>

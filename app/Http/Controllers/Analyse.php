@@ -224,9 +224,123 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         $arrayTxt = implode( ',', $all_schools);
         $sql = 'select count(*) as count, "schema_name" from "admin"."all_log" where created_at::date>'.$days.' AND "schema_name" in ('.$arrayTxt.') group by "schema_name"';
         $this->data['logs'] = $sql;
+        $this->data['staffs'] = \App\Models\User::where('status', 1)->where('department', '<>', 10)->get();
         $this->data['staff'] = \App\Models\User::where('id', $id)->first();
         //DB::table('admin.all_log')->select(DB::raw('count(*) as school_count, "schema_name"'))->whereIn('schema_name', $all_schools)->where('table', '<>', 'setting')->groupBy('schema_name')->get();
         return view('analyse.myschool', $this->data);
+    }
+
+    
+    public function myreport() {
+        $id = [];
+        if ($_POST) {
+            
+            if (request('user_ids') !='') {
+                foreach(request('user_ids') as $ids){
+                    array_push($id, $ids);
+            }
+            }else{
+                array_push($id, Auth::user()->id);
+            }
+            if(request('start') !='' &&  request('end') != ''){
+                $start = "'".date('Y-m-d', strtotime(request('start')))."'";
+                $end = "'".date('Y-m-d', strtotime(request('end')))."'";
+            }else{
+                $start ="'".date("Y-m-d", strtotime("-1 day"))."'";
+                $end = "'".date("Y-m-d", strtotime("1 day"))."'";
+            }
+        }else{
+            array_push($id, Auth::user()->id);
+            $start ="'".date("Y-m-d", strtotime("-1 day"))."'";
+            $end = "'".date("Y-m-d", strtotime("1 day"))."'";
+        }
+
+        // Update Task Status For Completed Tasks
+            $this->checkTask($id);
+
+            $this->data['staff'] = $user = \App\Models\User::where('id',  Auth::user()->id)->first();
+            $this->data['task_users'] = \App\Models\User::whereIn('id', $id)->get();
+            $this->data['tasks'] =  \App\Models\Task::whereIn('user_id', $id)->whereIn('id', \App\Models\TrainItemAllocation::whereIn('user_id', $id)->get(['task_id']))
+            ->select(DB::raw('count(*) as count, status'))->groupBy('status')
+            ->whereRaw('updated_at::date >= '.$start)->whereRaw('updated_at::date < '.$end)
+            ->get();
+            $this->data['start'] = $start;
+            $this->data['end'] = $end;
+            $this->data['all_tasks'] =  \App\Models\TrainItemAllocation::whereIn('user_id', $id)->whereRaw('updated_at::date > '.$start)->whereRaw('updated_at::date < '.$end)->get();
+            $this->data['activities'] =  \App\Models\Task::whereIn('user_id', $id)->whereNotIn('id', \App\Models\TrainItemAllocation::whereIn('user_id', $id)->get(['task_id']))->whereRaw('updated_at::date > '.$start)->whereRaw('updated_at::date < '.$end)->get();
+        return view('analyse.my_report', $this->data);
+    }
+
+    public function checkTask($id) {
+        $this->data['clients'] = $clients = \App\Models\TrainItemAllocation::whereIn('user_id', $id)->whereIn('task_id', \App\Models\Task::whereIn('user_id', $id)->where('status', '<>', 'complete')->get(['id']))->get();
+        if(count($clients)){
+            foreach($clients as $client){
+                $schema = strtolower($client->client->username);
+                $item = $client->tain_item_id;
+                if((int)$item == 1){
+                    $check = DB::table($schema .'.semester')->count();
+                    if($check > 0){
+                        \App\Models\Task::where('id', $client->task_id)->update(['status' => 'complete', 'updated_at' => date('Y-m-d H:i:s')]);
+                    }
+                }elseif((int)$item == 2){
+                    $check = DB::table($schema .'.sms_keys')->count();
+                    $check_sms = DB::table($schema .'.sms')->count();
+                    if($check > 0 || $check_sms > 0){
+                        \App\Models\Task::where('id', $client->task_id)->update(['status' => 'complete', 'updated_at' => date('Y-m-d H:i:s')]);
+                    }
+                }elseif((int)$item == 3){
+                    $check = DB::table($schema .'.student')->count();
+                    $check_teacher = DB::table($schema .'.teacher')->count();
+                    if($check > 0 || $check_teacher > 0){
+                        \App\Models\Task::where('id', $client->task_id)->update(['status' => 'complete', 'updated_at' => date('Y-m-d H:i:s')]);
+                    }
+                }elseif((int)$item == 4){
+                    $check = DB::table($schema .'.exam')->count();
+                    $check_class = DB::table($schema .'.class_exam')->count();
+                    if($check > 0 || $check_class > 0){
+                        \App\Models\Task::where('id', $client->task_id)->update(['status' => 'complete', 'updated_at' => date('Y-m-d H:i:s')]);
+                    }
+                }elseif((int)$item == 5){
+                    $check = DB::table($schema .'.mark')->count();
+                    if($check > 0){
+                        \App\Models\Task::where('id', $client->task_id)->update(['status' => 'complete', 'updated_at' => date('Y-m-d H:i:s')]);
+                    }
+                }elseif((int)$item == 6){
+                    $check = DB::table($schema .'.fees')->count();
+                    $check_installments = DB::table($schema .'.installments')->count();
+                    if($check > 0 || $check_installments > 0){
+                        \App\Models\Task::where('id', $client->task_id)->update(['status' => 'complete', 'updated_at' => date('Y-m-d H:i:s')]);
+                    }
+                }elseif((int)$item == 7){
+                    $check = DB::table($schema .'.invoices')->count();
+                    if($check > 0 || $invoices > 0){
+                        \App\Models\Task::where('id', $client->task_id)->update(['status' => 'complete', 'updated_at' => date('Y-m-d H:i:s')]);
+                    }
+                }elseif((int)$item == 8){
+                    $check = DB::table($schema .'.expense')->count();
+                    $check_revenue = DB::table($schema .'.expense')->count();
+                    if($check > 0 || $check_revenue > 0){
+                        \App\Models\Task::where('id', $client->task_id)->update(['status' => 'complete', 'updated_at' => date('Y-m-d H:i:s')]);
+                    }
+                }elseif((int)$item == 9){
+                    $check = DB::table($schema .'.salaries')->count();
+                    if($check > 0){
+                        \App\Models\Task::where('id', $client->task_id)->update(['status' => 'complete', 'updated_at' => date('Y-m-d H:i:s')]);
+                    }
+                }elseif((int)$item == 10){
+                    $check = DB::table($schema .'.product_alert_quantity')->count();
+                    if($check > 0){
+                        \App\Models\Task::where('id', $client->task_id)->update(['status' => 'complete', 'updated_at' => date('Y-m-d H:i:s')]);
+                    }
+                }else{
+                    return True; 
+                }
+            }
+            return True;
+        }else{
+            return True;
+        }
+        
     }
 
 }

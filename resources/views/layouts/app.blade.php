@@ -719,11 +719,16 @@ function toast(message) {
                         }
                         if (can_access('manage_users') || in_array(Auth::user()->role_id, array(14,8))){ ?>
                           <li class="nav-item">
-                                <a href="<?= url('Analyse/myschools') ?>">
-                                    <i class="ti-gift"> </i>
-                                    <span data-i18n="nav.navigate.main"> My Schools</span>
+                                <a href="#!">
+                                    <i class="ti-layers "></i>
+                                    <span data-i18n="nav.extra-components.main">My Schools</span>
                                 </a>
-                            </li>    
+                                <ul class="tree-1">
+                                    <li><a href="<?= url('Analyse/myschools') ?>" data-i18n="nav.extra-components.session-timeout"> List of Schools</a></li>
+                                    <li><a href="<?= url('Analyse/myreport') ?>" data-i18n="nav.extra-components.offline">Task Report</a></li>
+                                    <li><a href="#" data-i18n="nav.extra-components.session-timeout">Attendance</a></li>
+                                </ul>
+                            </li>
                             <?php
                         }
                         ?>
