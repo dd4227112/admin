@@ -93,7 +93,7 @@ class Handler extends ExceptionHandler {
      * @param  \Exception  $exception
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Exception $exception) {
+    public function render($request, Throwable $exception) {
         if ($exception instanceof \Illuminate\Session\TokenMismatchException) {
             return redirect()->back()->with('info', 'Your session expired, please login below to continue');
         }
