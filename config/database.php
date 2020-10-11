@@ -68,7 +68,11 @@ return [
 
         'karibusms' => [
 
-           'database' =>'other_app',
+             'driver' => 'pgsql',
+            //'url' => ':erb',
+            'host' => 'localhost',
+            'port' => '5432',
+            'database' => 'other_app',
             'username' => 'postgres',
             'password' =>'Jesus_ShuleSoft@2020_',
             'charset' => 'utf8',

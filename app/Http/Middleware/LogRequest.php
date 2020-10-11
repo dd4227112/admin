@@ -33,14 +33,14 @@ class LogRequest {
 
     function storeRequest() {
         if (Auth::check()) {
-            $id = count(Auth::user()) == 0 ? NULL : Auth::user()->id;
+            $id = empty(Auth::user()) ? NULL : Auth::user()->id;
             $ip = $_SERVER['REMOTE_ADDR'] ?: ($_SERVER['HTTP_X_FORWARDED_FOR'] ?: $_SERVER['HTTP_CLIENT_IP']);
             $loc = $this->getIsp($ip);
             preg_match('/([a-z]*)@/i', request()->route()->getActionName(), $matches);
             $controllerName = str_replace('Controller', null, isset($matches[1]) ? $matches[1] : null);
             $url = request()->path() . '/' . $controllerName;
-            $action=request('action')==null ?  request()->method() : request('action');
-            if (count($loc) > 0 && is_object($loc)) {
+            $action = request('action') == null ? request()->method() : request('action');
+            if (!empty($loc) && is_object($loc)) {
                 $log = array(
                     'url' => $url,
                     'user_agent' => $this->getBrowser(),
@@ -53,8 +53,8 @@ class LogRequest {
                     'region' => $this->getIsp()->region,
                     'isp' => $this->getIsp()->org,
                     'action' => $action,
-                    'is_ajax'=> request()->ajax(),
-                    'content'=>json_encode(request()->all())
+                    'is_ajax' => request()->ajax(),
+                    'content' => json_encode(request()->all())
                 );
             } else {
                 $log = array(
@@ -69,8 +69,8 @@ class LogRequest {
                     'region' => '',
                     'isp' => '',
                     'action' => $action,
-                    'is_ajax'=> request()->ajax(),
-                    'content'=>json_encode(request()->all())
+                    'is_ajax' => request()->ajax(),
+                    'content' => json_encode(request()->all())
                 );
             }
             return DB::table('logs')->insert($log);
