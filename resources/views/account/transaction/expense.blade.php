@@ -269,7 +269,7 @@
                             </thead>
                             <tbody>
                                 <?php
-                                $sql = 'select sum(amount) as total,extract(month from date) as month from admin.expense where extract(year from date)=' . date('Y', strtotime($to_date)) . ' and refer_expense_id in (' . implode($refer_ids, ',') . ') group by month order by month';
+                                $sql = 'select sum(amount) as total,extract(month from date) as month from admin.expense where extract(year from date)=' . date('Y', strtotime($to_date)) . ' and refer_expense_id in (' . implode( ',',$refer_ids) . ') group by month order by month';
                                 $logs = DB::select($sql);
                                 foreach ($logs as $log) {
                                     $monthNum = $log->month;
