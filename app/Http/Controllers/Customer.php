@@ -486,7 +486,7 @@ $obj=[
 
                 $task = \App\Models\Task::create($data);
                 $users = request('to_user_id');
-                if (count($users) > 0) {
+                if (!empty($users)) {
                     foreach ($users as $user_id) {
                         DB::table('tasks_users')->insert([
                             'task_id' => $task->id,
@@ -518,7 +518,7 @@ $obj=[
                         'school_id' => (int) $school_id
                     ]);
                 }
-                if (count($task->id) > 0 && request('module_id')) {
+                if (!empty($task->id) && request('module_id')) {
                     $modules = request('module_id');
                     foreach ($modules as $key => $value) {
                         if (request('module_id')[$key] != '') {
@@ -561,7 +561,7 @@ $obj=[
             \App\Models\Task::where('id', request('id'))->update(['status' => request('status'),  'updated_at' => 'now()']);
         }
         $users = DB::table('tasks_users')->where('task_id', request('id'))->get();
-        if (count($users) > 0) {
+        if (!empty($users)) {
 
             $task = \App\Models\Task::find(request('id'));
             foreach ($users as $user_task) {
@@ -584,7 +584,7 @@ $obj=[
         $dep_id = request('dep_id');
         $types = DB::table('task_types')->where('department', $dep_id)->get();
         $select = '';
-        if (count($types) > 0) {
+        if (!empty($types)) {
             foreach ($types as $type) {
                 $select .= '<option value="' . $type->id . '"> ' . $type->name . '</option>';
             }
@@ -710,7 +710,7 @@ $obj=[
                 $schema_name .= "'" . $val . "',";
             }
             $schema = trim(rtrim($schema_name, ','), ',');
-            if (count($usr) > 0) {
+            if (!empty($usr)) {
                 foreach ($usr as $val) {
                     $usr_type .= "'" . $val . "',";
                 }
@@ -829,7 +829,7 @@ $obj=[
         $schema = request('schema');
         if (strlen($val) > 3) {
             $schools = DB::select('select * from admin.schools where lower("name") like \'%' . strtolower($val) . '%\'');
-            if (count($schools) > 0) {
+            if (!empty($schools)) {
                 foreach ($schools as $school) {
 
                     echo '<p><a href="' . url('customer/map/' . $schema . '/' . $school->id) . '">' . $school->name . '( ' . $school->region . ' )</a></p>';
