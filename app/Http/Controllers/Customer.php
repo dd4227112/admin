@@ -80,7 +80,7 @@ class Customer extends Controller {
             $time += $train_item->time;
             $end = \App\Models\Task::where('user_id', Auth::user()->id)->orderBy('end_date', 'desc')->first();
 
-            $start_date = count($end) == 1 && strtotime($end->end_date) > time() ? date('Y-m-d H:i', strtotime("+{$time} minutes", strtotime($end->end_date))) : date('Y-m-d H:i');
+            $start_date = !empty($end) && strtotime($end->end_date) > time() ? date('Y-m-d H:i', strtotime("+{$time} minutes", strtotime($end->end_date))) : date('Y-m-d H:i');
 
             if (date('H', strtotime($start_date)) > 16) {
                 //its end of the time, just add a new day
@@ -116,7 +116,7 @@ class Customer extends Controller {
         ];
 
         $is_selected = $train_item->trainItemAllocation()->where('client_id', $client->id)->orderBy('id', 'desc')->first();
-        if (count($is_selected) == 1) {
+        if (!empty($is_selected)) {
             \App\Models\Task::where('id', $is_selected->task->id)->update([
                 'activity' => $activity,
                 'user_id' => Auth::user()->id,
@@ -417,7 +417,7 @@ $obj=[
             $this->data['school'] = DB::table($school . '.setting')->first();
             $this->data['levels'] = DB::table($school . '.classlevel')->get();
             $client = \App\Models\Client::where('username', $school)->first();
-            if (count($client) == 0) {
+            if (empty($client)) {
 
                 $client = \App\Models\Client::create(['name' => $this->data['school']->sname, 'email' => $this->data['school']->email, 'phone' => $this->data['school']->phone, 'address' => $this->data['school']->address, 'username' => $school, 'created_at' => date('Y-m-d H:i:s')]);
             }
@@ -453,13 +453,13 @@ $obj=[
             ]);
 
 
-            if (count($task->id) > 0 && request('module_id')) {
+            if (!empty($task->id) && request('module_id')) {
                 $modules = request('module_id');
                 foreach ($modules as $key => $value) {
                     if (request('module_id')[$key] != '') {
                         $array = ['module_id' => request('module_id')[$key], 'task_id' => $task->id];
                         $check_unique = \App\Models\ModuleTask::where($array);
-                        if (count($check_unique->first()) == 0) {
+                        if (!empty($check_unique->first())) {
                             \App\Models\ModuleTask::create($array);
                         }
                     }
@@ -486,7 +486,7 @@ $obj=[
 
                 $task = \App\Models\Task::create($data);
                 $users = request('to_user_id');
-                if (count($users) > 0) {
+                if (!empty($users)) {
                     foreach ($users as $user_id) {
                         DB::table('tasks_users')->insert([
                             'task_id' => $task->id,
@@ -518,13 +518,13 @@ $obj=[
                         'school_id' => (int) $school_id
                     ]);
                 }
-                if (count($task->id) > 0 && request('module_id')) {
+                if (!empty($task->id) && request('module_id')) {
                     $modules = request('module_id');
                     foreach ($modules as $key => $value) {
                         if (request('module_id')[$key] != '') {
                             $array = ['module_id' => request('module_id')[$key], 'task_id' => $task->id];
                             $check_unique = \App\Models\ModuleTask::where($array);
-                            if (count($check_unique->first()) == 0) {
+                            if (empty($check_unique->first())) {
                                 \App\Models\ModuleTask::create($array);
                             }
                         }
@@ -561,7 +561,7 @@ $obj=[
             \App\Models\Task::where('id', request('id'))->update(['status' => request('status'),  'updated_at' => 'now()']);
         }
         $users = DB::table('tasks_users')->where('task_id', request('id'))->get();
-        if (count($users) > 0) {
+        if (!empty($users)) {
 
             $task = \App\Models\Task::find(request('id'));
             foreach ($users as $user_task) {
@@ -584,7 +584,7 @@ $obj=[
         $dep_id = request('dep_id');
         $types = DB::table('task_types')->where('department', $dep_id)->get();
         $select = '';
-        if (count($types) > 0) {
+        if (!empty($types)) {
             foreach ($types as $type) {
                 $select .= '<option value="' . $type->id . '"> ' . $type->name . '</option>';
             }
@@ -602,7 +602,7 @@ $obj=[
     public function removeTag() {
         $id = request('id');
         $tag = \App\Models\Task::find($id);
-        count($tag) == 1 ? $tag->delete() : '';
+        !empty($tag) ? $tag->delete() : '';
         echo 1;
     }
 
@@ -636,7 +636,7 @@ $obj=[
                 $school_id = DB::table('schools')->insertGetId(['name' => $schema, 'ownership' => 'Non-Government', 'schema_name' => $schema]);
             }
             $school_info = DB::table('schools')->where('id', $school_id);
-            if (count($school_info->first()) == 1) {
+            if (!empty($school_info->first())) {
                 $check = DB::table('users_schools')::where('role_id', $role_id);
                 if ((int) $check->count() > 0) {
                     $check->update(['user_id' => $user_id, 'updated_at' => $date]);
@@ -710,7 +710,7 @@ $obj=[
                 $schema_name .= "'" . $val . "',";
             }
             $schema = trim(rtrim($schema_name, ','), ',');
-            if (count($usr) > 0) {
+            if (!empty($usr)) {
                 foreach ($usr as $val) {
                     $usr_type .= "'" . $val . "',";
                 }
@@ -829,7 +829,7 @@ $obj=[
         $schema = request('schema');
         if (strlen($val) > 3) {
             $schools = DB::select('select * from admin.schools where lower("name") like \'%' . strtolower($val) . '%\'');
-            if (count($schools) > 0) {
+            if (!empty($schools)) {
                 foreach ($schools as $school) {
 
                     echo '<p><a href="' . url('customer/map/' . $schema . '/' . $school->id) . '">' . $school->name . '( ' . $school->region . ' )</a></p>';
