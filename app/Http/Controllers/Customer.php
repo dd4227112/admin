@@ -80,7 +80,7 @@ class Customer extends Controller {
             $time += $train_item->time;
             $end = \App\Models\Task::where('user_id', Auth::user()->id)->orderBy('end_date', 'desc')->first();
 
-            $start_date = count($end) == 1 && strtotime($end->end_date) > time() ? date('Y-m-d H:i', strtotime("+{$time} minutes", strtotime($end->end_date))) : date('Y-m-d H:i');
+            $start_date = !empty($end) && strtotime($end->end_date) > time() ? date('Y-m-d H:i', strtotime("+{$time} minutes", strtotime($end->end_date))) : date('Y-m-d H:i');
 
             if (date('H', strtotime($start_date)) > 16) {
                 //its end of the time, just add a new day
@@ -116,7 +116,7 @@ class Customer extends Controller {
         ];
 
         $is_selected = $train_item->trainItemAllocation()->where('client_id', $client->id)->orderBy('id', 'desc')->first();
-        if (count($is_selected) == 1) {
+        if (!empty($is_selected)) {
             \App\Models\Task::where('id', $is_selected->task->id)->update([
                 'activity' => $activity,
                 'user_id' => Auth::user()->id,
@@ -602,7 +602,7 @@ $obj=[
     public function removeTag() {
         $id = request('id');
         $tag = \App\Models\Task::find($id);
-        count($tag) == 1 ? $tag->delete() : '';
+        !empty($tag) ? $tag->delete() : '';
         echo 1;
     }
 
@@ -636,7 +636,7 @@ $obj=[
                 $school_id = DB::table('schools')->insertGetId(['name' => $schema, 'ownership' => 'Non-Government', 'schema_name' => $schema]);
             }
             $school_info = DB::table('schools')->where('id', $school_id);
-            if (count($school_info->first()) == 1) {
+            if (!empty($school_info->first())) {
                 $check = DB::table('users_schools')::where('role_id', $role_id);
                 if ((int) $check->count() > 0) {
                     $check->update(['user_id' => $user_id, 'updated_at' => $date]);
