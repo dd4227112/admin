@@ -417,7 +417,7 @@ $obj=[
             $this->data['school'] = DB::table($school . '.setting')->first();
             $this->data['levels'] = DB::table($school . '.classlevel')->get();
             $client = \App\Models\Client::where('username', $school)->first();
-            if (!empty($client)) {
+            if (empty($client)) {
 
                 $client = \App\Models\Client::create(['name' => $this->data['school']->sname, 'email' => $this->data['school']->email, 'phone' => $this->data['school']->phone, 'address' => $this->data['school']->address, 'username' => $school, 'created_at' => date('Y-m-d H:i:s')]);
             }
@@ -524,7 +524,7 @@ $obj=[
                         if (request('module_id')[$key] != '') {
                             $array = ['module_id' => request('module_id')[$key], 'task_id' => $task->id];
                             $check_unique = \App\Models\ModuleTask::where($array);
-                            if (!empty($check_unique->first())) {
+                            if (empty($check_unique->first())) {
                                 \App\Models\ModuleTask::create($array);
                             }
                         }
