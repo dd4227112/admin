@@ -874,7 +874,7 @@ function check_status($table, $where = null) {
                           <?php
                           //classlevel
                           $levels = DB::table($schema . '.classlevel')->get();
-                          if (count($levels) == 0) {
+                          if (!empty($levels)) {
                             echo '<b class="label label-warning">Class Level Not Defined</b>';
                           }
                           /**
@@ -884,7 +884,7 @@ function check_status($table, $where = null) {
                             foreach ($levels as $level) {
 
                               $academic_year = DB::table($schema . '.academic_year')->where('class_level_id', $level->classlevel_id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->first();
-                              if (count($academic_year) == 0) {
+                              if (!empty($academic_year)) {
                                 echo '<b class="label label-warning">Academic Year Not Defined for ' . $level->name . ' (' . date('Y') . ')</b><br/>';
                               }
                             }
@@ -899,7 +899,7 @@ function check_status($table, $where = null) {
                             foreach ($levels as $level) {
 
                               $academic_year = DB::table($schema . '.academic_year')->where('class_level_id', $level->classlevel_id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->first();
-                              if (count($academic_year) == 0) {
+                              if (!empty($academic_year)) {
                                 echo '<b class="label label-warning">No Terms Defined for ' . $level->name . ' (' . date('Y') . ')</b><br/>';
                               } else {
                                 //check terms for this defined year
