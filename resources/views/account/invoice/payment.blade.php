@@ -87,7 +87,7 @@
                                                         }
                                                         echo form_dropdown("refer_expense_id", $array, old("refer_expense_id"), "id='refer_expense_id' class='form-control'");
                                                         ?>
-                                                        <?php if (count($category) > 0) { ?>
+                                                        <?php if (!empty($category)) { ?>
 
                                                         <?php } ?>
                                                     </div>
@@ -106,7 +106,7 @@
                                     <select class="form-control" required="true" name="payment_type" id="payment_type">
                                         <option value=" ">Select Payment type</option>
                                         <?php
-                                        if (count($payment_types) > 0) {
+                                        if (!empty($payment_types)) {
 
                                             foreach ($payment_types as $payment_type) {
                                                 ?>
@@ -164,7 +164,7 @@
                             <select class="form-control" required="true" name="bank_account_id" id="bank_name">
                                 <option value=" ">Select Bank</option>
                                 <?php
-                                if (count($banks) > 0) {
+                                if (!empty($banks)) {
 
                                     foreach ($banks as $bank) {
                                         ?>

@@ -54,7 +54,7 @@
                                             <div class="col-lg-12">
                                                 <div class="card card-border-primary">
                                                     <div class="card-header">
-                                                        <h5><?= count($user) == 1 ? $user->name : $feedback->username ?></h5>
+                                                        <h5><?= !empty($user) ? $user->name : $feedback->username ?></h5>
                                                         <!-- <span class="label label-default f-right"> 28 January, 2015 </span> -->
                                                         <div class="dropdown-secondary dropdown f-right">
                                                             <input type="checkbox" <?= (int) $feedback->shared == 1 ? 'checked' : '' ?> value="<?= $feedback->shared ?>" id="checkbox<?= $feedback->id ?>" onmousedown="show_to_school(<?= $feedback->id ?>)"/>Show to School <span id="replystatus<?= $feedback->id ?>"></span>
@@ -81,21 +81,19 @@
 
                                                         </div>
                                                         <?php
-                                                          $replies = $feedback->reply()->get();
+                                                        $replies = $feedback->reply()->get();
                                                         ?>
                                                         <!-- end of pull-right class -->
-                                                        <p>Replies (<?=count($replies)?>) </p>
+                                                        <p>Replies (<?= count($replies) ?>) </p>
                                                         <div>
                                                             <?php
-                                                          
-
                                                             foreach ($replies as $reply) {
                                                                 ?>
                                                                 <div class="col-lg-12 col-sm-12 col-xs-12 m-t-40">
                                                                     <span class="m-b-0"><b><?= \Carbon\Carbon::createFromTimeStamp(strtotime($reply->created_at))->diffForHumans() . ' by ' . $reply->user->firstname ?></b></span>
                                                                     <p class="text-muted"><?= $reply->message ?></p>
                                                                 </div>
-                                                            <?php } ?>
+    <?php } ?>
                                                         </div>
                                                         <div class="form-group" id="mess<?= $feedback->id ?>" style="display:none">
                                                             <textarea class="form-control" placeholder="write a message" id="message<?= $feedback->id ?>"></textarea>
@@ -109,15 +107,15 @@
 
 
 
-                                            <?php
-                                            $i++;
-                                            $feedback->update(array('opened' => 1));
-                                        }
-                                        ?>
+    <?php
+    $i++;
+    $feedback->update(array('opened' => 1));
+}
+?>
 
 
                                     </div>
-                                    <?= $feedbacks->links() ?>
+<?= $feedbacks->links() ?>
                                 </div>
                             </div>
                         </div>

@@ -60,7 +60,7 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                        if (count($bankaccounts)) {
+                                        if (!empty($bankaccounts)) {
                                             $i = 1;
                                             foreach ($bankaccounts as $account) {
                                                 ?>
