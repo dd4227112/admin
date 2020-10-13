@@ -149,7 +149,7 @@ group by ownership');
             $this->data['title'] = "Schools Alreardy Onboarded";
             $user = Auth::user()->id;
             $this->data['branch'] = $branch = \App\Models\PartnerUser::where('user_id', $user)->first();
-            if (count($branch) > 0) {
+            if (!empty($branch)) {
                 $this->data['all_schools'] = \App\Models\School::whereIn('ward_id', \App\Models\Ward::where('district_id', $branch->branch->district_id)->get(['id']))->whereNotNull('schema_name')->orderBy('schema_name', 'ASC')->get();
             } else {
                 $this->data['all_schools'] = \App\Models\School::whereNotNull('schema_name')->orderBy('schema_name', 'ASC')->get();
@@ -159,7 +159,7 @@ group by ownership');
             $user = Auth::user()->id;
             $this->data['branch'] = $branch = \App\Models\PartnerUser::where('user_id', $user)->first();
             $this->data['title'] = "Schools With Bank Payment Integrarion";
-            if (count($branch) > 0) {
+            if (!empty($branch)) {
                 $this->data['all_schools'] = DB::select('select * from admin.schools WHERE schema_name IN (select distinct schema_name from admin.all_bank_accounts where refer_bank_id=22) and ward_id in (select id from admin.wards where district_id = ' . $branch->branch->district_id . ')');
             } else {
                 $this->data['all_schools'] = DB::select('select * from admin.schools WHERE schema_name IN (select distinct schema_name from admin.all_bank_accounts where refer_bank_id=22)');
@@ -401,7 +401,7 @@ group by ownership');
         if ((int) $record->school_id > 0) {
             $data = ['user_id' => Auth::user()->id, 'school_id' => $record->school_id, 'task_type_id' => 6, 'next_action' => 'closed', 'activity' => 'School has been attended and closed'];
             $contact = \App\Models\SchoolContact::where('school_id', $record->school_id)->where('phone', $record->contact_phone)->first();
-            if (count($contact) == 0) {
+            if (!empty($contact)) {
                 \App\Models\SchoolContact::create(['name' => $record->contact_name, 'school_id' => $record->school_id, 'email' => $record->contact_email, 'phone' => $record->contact_phone, 'user_id' => Auth::user()->id, 'title' => $record->contact_title]);
             }
             \App\Models\Task::create($data);
@@ -433,7 +433,7 @@ group by ownership');
             $code = rand(343, 32323) . time();
 
             $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
-            if (count($school_contact) == 0) {
+            if (empty($school_contact)) {
                 DB::table('admin.school_contacts')->insert([
                     'name' => request('name'), 'email' => request('email'), 'phone' => request('phone'), 'school_id' => $school_id, 'user_id' => Auth::user()->id, 'title' => request('title')
                 ]);
@@ -443,7 +443,7 @@ group by ownership');
 
             $schema_name = request('username') != '' ? strtolower(trim(request('username'))) : $username;
             $check_client = DB::table('admin.clients')->where('username', $schema_name)->first();
-            if (count($check_client) == 1) {
+            if (!empty($check_client)) {
                 $client_id = $check_client->id;
             } else {
                 $client_id = DB::table('admin.clients')->insertGetId([
@@ -484,7 +484,7 @@ group by ownership');
 
             //add company file
             $check_contract = DB::table('admin.client_contracts')->where('client_id', $client_id)->first();
-            if (count($check_contract) == 0) {
+            if (empty($check_contract)) {
                 $file = request()->file('file');
                 $file_id = $this->saveFile($file, 'company/contracts');
                 //save contract
@@ -501,7 +501,7 @@ group by ownership');
             if (request('payment_status') == 1) {
                 // create an invoice for this school
                 $check_booking = DB::table('admin.invoices')->where('client_id', $client_id)->first();
-                if (count($check_booking) == 1) {
+                if (!empty($check_booking)) {
                     $booking = $check_booking;
                 } else {
                     // $order_id = time() . $client_id;
@@ -537,6 +537,8 @@ group by ownership');
                 $this->scheduleActivities($client_id);
                 return redirect('sales/customerSuccess/2/' . $client_id);
             }
+            //send onboarding message to customer directly
+            $this->onboardMessage($client);
             return redirect('https://' . $username . '.shulesoft.com');
         }
         return view('sales.onboarding_school', $this->data);
@@ -622,7 +624,7 @@ group by ownership');
         $end_time = date('d-m-Y H:i', strtotime("+{$timeframe} minutes", time()));
         $start_time = date('d-m-Y H:i', strtotime($start_date));
         $slot_available = \collect(DB::select("SELECT * FROM   admin.tasks WHERE  start_date::timestamp <='" . $start_time . "'::timestamp and end_date::timestamp >='" . $end_time . "'::timestamp"))->first();
-        if (count($slot_available) == 1) {
+        if (!empty($slot_available)) {
             //slot not available
             // so check the last slot and add next slot for the person to work
 
@@ -645,7 +647,7 @@ group by ownership');
         //    if ((int) $id == 2) {
         $this->data['trial_code'] = request()->segment(4);
         $this->data['client'] = DB::table('admin.clients')->where('id', $this->data['trial_code'])->first();
-        if (count($this->data['client']) == 1) {
+        if (!empty($this->data['client'])) {
             return view('sales.customer_success', $this->data);
         } else {
 
@@ -797,6 +799,10 @@ group by ownership');
     public function createChartBySql($sql, $firstpart, $table, $chart_type, $custom = false, $call_back_sql = false) {
         $data = DB::select($sql);
         return $this->createGraph($data, $firstpart, $table, $chart_type, $custom, $call_back_sql);
+    }
+
+    public function onboardMessage($client = null) {
+        
     }
 
 }

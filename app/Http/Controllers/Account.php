@@ -61,7 +61,7 @@ class Account extends Controller {
         if ($project_id == 'delete') {
             $invoice_id = request()->segment(4);
             $payments = \App\Models\Payment::where('invoice_id', $invoice_id)->first();
-            if (count($payments) == 1) {
+            if (!empty($payments)) {
                 \App\Models\Revenue::where('transaction_id', $payments->transaction_id)->delete();
             }
             \App\Models\Invoice::find($invoice_id)->delete();
@@ -134,7 +134,7 @@ class Account extends Controller {
 
                 $invoice_status = Invoice::where('client_id', $client->client_id)->where('account_year_id', $account_year_id)->first();
                 $reference = 'SASA11' . $year->name . $client->client_id;
-                $invoice = count($invoice_status) == 1 ? $invoice_status : Invoice::create(['reference' => $reference, 'client_id' => $client->client_id, 'date' => 'now()', 'year' => date('Y'), 'user_id' => Auth::user()->id, 'account_year_id' => $account_year_id, 'due_date' => date('Y-m-d', strtotime('+ 30 days'))]);
+                $invoice = !empty($invoice_status) ? $invoice_status : Invoice::create(['reference' => $reference, 'client_id' => $client->client_id, 'date' => 'now()', 'year' => date('Y'), 'user_id' => Auth::user()->id, 'account_year_id' => $account_year_id, 'due_date' => date('Y-m-d', strtotime('+ 30 days'))]);
 
                 $amount = $client->total_students * $client->price_per_student;
                 (int) \App\Models\InvoiceFee::where('invoice_id', $invoice->id)->count() > 0 ?
@@ -266,7 +266,7 @@ class Account extends Controller {
             $this->data["payment_types"] = \App\Models\PaymentType::all();
 
 
-            if (count($user_invoice) == 0) {
+            if (empty($user_invoice)) {
 
 
                 $invoice = Invoice::create(['reference' => $reference, 'client_id' => $client_record->id, 'date' => date('d M Y', strtotime(request('date'))), 'due_date' => date('d M Y', strtotime(' +30 day')), 'year' => date('Y', strtotime(request('date'))), 'sync', 'user_id' => Auth::user()->id]);
@@ -275,7 +275,7 @@ class Account extends Controller {
                     //check if this user has invoice already 
                     $project = Project::where('name', 'ílike', $value['project'])->first();
                     $amount = (float) $value['quantity'] * (float) $value['unit_price'];
-                    \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => count($project) == 1 ? $project->id : request('project_id'), 'item_name' => $value['name'], 'quantity' => (int) $value['quantity'], 'unit_price' => (float) $value['unit_price']]);
+                    \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => !empty($project) ? $project->id : request('project_id'), 'item_name' => $value['name'], 'quantity' => (int) $value['quantity'], 'unit_price' => (float) $value['unit_price']]);
                 }
                 echo 1;
             } else {
@@ -370,13 +370,13 @@ class Account extends Controller {
     public function addPayment($id) {
 
         $invoice = Invoice::find($id);
-        if (count($invoice) > 0) {
+        if (!empty($invoice)) {
 // This is when a bank return payment status to us
 //save it in the database
             $this->validate(request(), ['amount' => 'required|numeric', 'payment_type' => 'required', 'date' => 'required']);
             $transaction_id = (int) request('transaction_id') == 0 ? time() : request('transaction_id');
             $payments = \App\Models\Payment::where('transaction_id', $transaction_id)->first();
-            if (count($payments) > 0) {
+            if (!empty($payments)) {
                 $data = array(
                     'status' => 1,
                     'success' => 0,
@@ -875,7 +875,7 @@ class Account extends Controller {
                 // $account_group_id = request("group") > 0 ? request("group") : DB::table('account_groups')->insertGetId($obj);
             } else {
                 $check = DB::table('account_groups')->where($obj)->first();
-                $account_group_id = count($check) > 0 ? $check->id : DB::table('account_groups')->insertGetId($obj);
+                $account_group_id = !empty($check)? $check->id : DB::table('account_groups')->insertGetId($obj);
             }
             $array = array(
                 "name" => trim(request("subcategory")),
@@ -917,7 +917,7 @@ class Account extends Controller {
         $refer_id = ((request()->segment(4)));
         $bank_id = ((request()->segment(5)));
         $year = \App\Models\AccountYear::orderBy('start_date', 'asc')->first();
-        $account_year = count($year) == 0 ? \App\Models\AccountYear::create(['name' => date('Y'), 'status' => 1, 'start_date' => date('Y-01-01'), 'end_date' => date('Y-12-31')]) : $year;
+        $account_year = empty($year) ? \App\Models\AccountYear::create(['name' => date('Y'), 'status' => 1, 'start_date' => date('Y-01-01'), 'end_date' => date('Y-12-31')]) : $year;
         $from_date = $account_year->start_date;
         $to_date = date('Y-m-d');
 
@@ -1071,12 +1071,12 @@ class Account extends Controller {
                     return redirect()->back()->with('error', $check);
                 }
                 $refer_expense = \App\Models\ReferExpense::where('name', $value['revenue_name'])->first();
-                if (count($refer_expense) == 0) {
+                if (empty($refer_expense)) {
                     $status .= '<p class="alert alert-danger">Revenue not defined. This expense name <b>' . $value['revenue_name'] . '</b> must be defined first in charts of account. This record skipped to be uploaded</p>';
                     continue;
                 }
                 $check_unique = \App\Models\Revenue::where('transaction_id', $value['transaction_id'])->first();
-                if (count($check_unique) == 1) {
+                if (empty($check_unique)) {
                     $status .= '<p class="alert alert-danger">This transaction ID <b>' . $value['transaction_id'] . '</b> already being used. Information skipped</p>';
                     continue;
                 }
@@ -1088,7 +1088,7 @@ class Account extends Controller {
                     'payment_method' => $value['payment_method'],
                     'transaction_id' => $value['transaction_id'],
                     "refer_expense_id" => $refer_expense->id,
-                    "bank_account_id" => count($bank) == 1 ? $bank->id : NULL,
+                    "bank_account_id" => !empty($bank) ? $bank->id : NULL,
                     'date' => date("Y-m-d", strtotime($value['date'])),
                     'note' => $value['note']
                 ];
@@ -1096,7 +1096,7 @@ class Account extends Controller {
                 if ((int) $value['user_in_shulesoft'] == 1) {
 
                     $user = \App\Models\User::where('name', 'ilike', '%' . $value['payer_name'] . '%')->first();
-                    if (count($user) == 1) {
+                    if (!empty($user)) {
                         $data = array_merge($in_data, [
                             'payer_name' => $user->name,
                             'user_id' => $user->id,
@@ -1121,7 +1121,7 @@ class Account extends Controller {
                         'created_by_id' => session('id'),
                         'amount' => $value['amount'],
                         "refer_expense_id" => $refer_expense->id,
-                        "bank_account_id" => count($bank) == 1 ? $bank->id : NULL,
+                        "bank_account_id" => !empty($bank) ? $bank->id : NULL,
                         'payment_method' => $value['payment_method'],
                         'transaction_id' => $value['transaction_id'],
                         'date' => date("Y-m-d", strtotime($value['date'])),
@@ -1148,12 +1148,12 @@ class Account extends Controller {
                     return redirect()->back()->with('error', $check);
                 }
                 $refer_expense = \App\Models\ReferExpense::where(DB::raw('lower(name)'), strtolower($value['expense_name']))->first();
-                if (count($refer_expense) == 0) {
+                if (empty($refer_expense)) {
                     $status .= '<p class="alert alert-danger">Revenue not defined. This expense name <b>' . $value['expense_name'] . '</b> must be defined first in charts of account. This record skipped to be uploaded</p>';
                     continue;
                 }
                 $check_unique = \App\Models\Expense::where('transaction_id', $value['transaction_id'])->first();
-                if (count($check_unique) == 1) {
+                if (!empty($check_unique)) {
                     $status .= '<p class="alert alert-danger">This transaction ID <b>' . $value['transaction_id'] . '</b> already being used. Information skipped</p>';
                     continue;
                 }
@@ -1165,7 +1165,7 @@ class Account extends Controller {
                     'payment_method' => $value['payment_method'],
                     'transaction_id' => $value['transaction_id'],
                     "refer_expense_id" => $refer_expense->id,
-                    "bank_account_id" => count($bank) == 1 ? $bank->id : NULL,
+                    "bank_account_id" => !empty($bank)? $bank->id : NULL,
                     'date' => date("Y-m-d", strtotime($value['date'])),
                     'note' => $value['note'],
                     'ref_no' => $value['transaction_id'],
@@ -1176,7 +1176,7 @@ class Account extends Controller {
                 if ((int) $value['user_in_shulesoft'] == 1) {
 
                     $user = \App\Models\User::where('name', 'ilike', '%' . $value['payer_name'] . '%')->first();
-                    if (count($user) == 1) {
+                    if (!empty($user)) {
                         $data = array_merge($in_data, [
                             'payer_name' => $user->name,
                             'user_id' => $user->id,
@@ -1202,7 +1202,7 @@ class Account extends Controller {
                         'created_by_id' => session('id'),
                         'amount' => $value['amount'],
                         "refer_expense_id" => $refer_expense->id,
-                        "bank_account_id" => count($bank) == 1 ? $bank->id : NULL,
+                        "bank_account_id" => !empty($bank)? $bank->id : NULL,
                         'payment_method' => $value['payment_method'],
                         'transaction_id' => $value['transaction_id'],
                         'ref_no' => $value['transaction_id'],
@@ -1246,31 +1246,31 @@ class Account extends Controller {
                     return redirect()->back()->with('error', $check);
                 }
                 $invoice = Invoice::where(DB::raw('lower(reference)'), strtolower($value['invoice']))->first();
-                if (count($invoice) == 0) {
+                if (empty($invoice) ) {
                     //create invoice
 
                     $client = \App\Models\Client::where('email', strtolower($value['email']))->first();
 
-                    $client_record = count($client) == 0 ?
+                    $client_record = empty($client)  ?
                             \App\Models\Client::create(['name' => $value['email'], 'email' => $value['email'], 'phone' => time(), 'address' => '', 'username' => $value['email'], 'created_at' => date('Y-m-d H:i:s')]) : $client;
 
 
                     $account_year = \App\Models\AccountYear::where('start_date', '<=', date('Y-m-d', strtotime($value['date'])))->where('end_date', '>=', date('Y-m-d', strtotime($value['date'])))->first();
 
-                    $year = count($account_year) == 1 ? $account_year : \App\Models\AccountYear::create(['name' => date('Y', strtotime($value['date'])), 'status' => 1, 'start_date' => date('Y-01-01', strtotime($value['date'])), 'end_date' => date('Y-12-31', strtotime($value['date']))]);
+                    $year = !empty($account_year) ? $account_year : \App\Models\AccountYear::create(['name' => date('Y', strtotime($value['date'])), 'status' => 1, 'start_date' => date('Y-01-01', strtotime($value['date'])), 'end_date' => date('Y-12-31', strtotime($value['date']))]);
                     $invoice_id = \collect(DB::select('select max(id) as max_id from invoices limit 1'))->first();
                     $reference = 'SASA11' . ($invoice_id->max_id + 1);
 
                     $invoice = Invoice::create(['reference' => $reference, 'client_id' => $client_record->id, 'date' => 'now()', 'year' => date('Y'), 'user_id' => Auth::user()->id, 'account_year_id' => $year->id, 'due_date' => date('Y-m-d', strtotime('+ 30 days'))]);
                     $amount = $value['amount'];
                     $project = DB::table('projects')->where(DB::raw('lower(name)'), 'ilike', '%' . strtolower($value['revenue_name']) . '%')->first();
-                    $project_id = count($project) == 1 ? $project->id : 1; //default shulesoft
+                    $project_id = !empty($project)? $project->id : 1; //default shulesoft
                     \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => $project_id, 'item_name' => 'ShuleSoft Service Fee For ', 'quantity' => 1, 'unit_price' => 1]);
                 }
 
                 $transaction_id = (int) $value['transaction_id'] == 0 ? time() : $value['transaction_id'];
                 $payments = \App\Models\Payment::where('transaction_id', $transaction_id)->first();
-                if (count($payments) > 0) {
+                if (!empty($payments) ) {
                     $status .= '<p class="alert alert-danger">This transaction ID <b>' . $value['transaction_id'] . '</b> already being used. Information skipped</p>';
                     continue;
                 }
@@ -1282,12 +1282,12 @@ class Account extends Controller {
                     continue;
                 }
                 $refer_expense = \App\Models\ReferExpense::where(DB::raw('lower(name)'), 'ilike', '%' . $value['revenue_name'] . '%')->first();
-                if (count($refer_expense) == 0) {
+                if (empty($refer_expense) ) {
                     $status .= '<p class="alert alert-danger">Revenue not defined. This expense name <b>' . $value['revenue_name'] . '</b> must be defined first in charts of account. This record skipped to be uploaded</p>';
                     continue;
                 }
                 $check_unique = \App\Models\Revenue::where('transaction_id', $value['transaction_id'])->first();
-                if (count($check_unique) == 1) {
+                if (!empty($check_unique)) {
                     $status .= '<p class="alert alert-danger">This transaction ID <b>' . $value['transaction_id'] . '</b> already being used. Information skipped</p>';
                     continue;
                 }

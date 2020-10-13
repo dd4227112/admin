@@ -103,7 +103,7 @@ class Kernel extends ConsoleKernel {
         if ($user->table == 'parent') {
             $sql = 'select  coalesce(coalesce(sum(a.total_amount),0)-sum(a.discount_amount),0) as amount, coalesce(coalesce(sum(a.total_payment_invoice_fee_amount),0)+ coalesce(sum(a.total_advance_invoice_fee_amount)),0) as paid_amount, sum(a.balance) as balance, a.invoice_id as id,a.student_id, c.reference, b.name as student_name, a.created_at,f.phone,f.name as parent_name,f.username from ' . $schema . '. invoice_balances a join ' . $schema . '.student b on a.student_id=b.student_id JOIN  ' . $schema . '.student_parents e on e.student_id=b.student_id join ' . $schema . '.parent f on f."parentID"=e.parent_id JOIN  ' . $schema . '.invoices c on c.id=a.invoice_id where e.parent_id=' . $user->id . ' and  a.student_id in (select student_id from ' . $schema . '.student_archive where section_id in (select "sectionID" FROM ' . $schema . '.section ) )  group by a.invoice_id,a.created_at,b.name ,a.student_id,c.reference,f.phone,f.name,f.username ';
             $parent = \collect(DB::select($sql))->first();
-            if (count($parent) == 1) {
+            if (!empty($parent)) {
                 $pattern = [$parent->balance, $parent->student_name, $parent->reference];
             }
         }
@@ -217,7 +217,7 @@ class Kernel extends ConsoleKernel {
                 ->join($schema_name . '.fees', 'fees.id', 'fees_installments.fee_id')
                 ->get();
         $names = array();
-        if (count($fees) > 0) {
+        if (!empty($fees)) {
             foreach ($fees as $fee) {
 
                 array_push($names, $fee->name);
@@ -310,7 +310,7 @@ class Kernel extends ConsoleKernel {
 
     public function updateInvoice() {
         $invoices = DB::select('select * from api.invoices where sync=2 and amount >0 order by random() limit 10');
-        if (count($invoices) > 0) {
+        if (!empty($invoices)) {
             foreach ($invoices as $invoice) {
                 $token = $this->getToken($invoice);
                 if (strlen($token) > 4) {
@@ -366,7 +366,7 @@ class Kernel extends ConsoleKernel {
             //  $setting = DB::table('beta_testing.setting')->first();
             $url = 'https://wip.mpayafrica.com/v2/auth';
             $credentials = DB::table('admin.all_bank_accounts_integrations')->where('invoice_prefix', $invoice->prefix)->first();
-            if (count($credentials) == 1) {
+            if (!empty($credentials)) {
                 $user = trim($credentials->sandbox_api_username);
                 $pass = trim($credentials->sandbox_api_password);
             } else {
@@ -378,7 +378,7 @@ class Kernel extends ConsoleKernel {
             // $setting = DB::table($invoice->schema_name . '.setting')->first();
             $url = 'https://api.mpayafrica.co.tz/v2/auth';
             $credentials = DB::table($invoice->schema_name . '.bank_accounts_integrations')->where('invoice_prefix', $invoice->prefix)->first();
-            if (count($credentials) == 1) {
+            if (!empty($credentials)) {
                 $user = trim($credentials->api_username);
                 $pass = trim($credentials->api_password);
             } else {

@@ -27,70 +27,72 @@
         <!-- Page-header end -->
         <!-- Page-body start -->
         <?php if (can_access('manage_users')) { ?>
-        <div class="page-body">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div id="wrapper" class="card">
-                        <div id="editorForm">
-                            <div class="row">
-                                <div class="card-header">
-                                <a class="btn btn-success" href="<?= url('users/create') ?>"> Create New User</a>
-                            </div>
-                            @if ($message = Session::get('success'))
-                            <div class="alert alert-success">
-                                <p>{{ $message }}</p>
-                            </div>
-                            @endif
-                            <div class="card-block">
+            <div class="page-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="wrapper" class="card">
+                            <div id="editorForm">
+                                <div class="row">
+                                    <div class="card-header">
+                                        <a class="btn btn-success" href="<?= url('users/create') ?>"> Create New User</a>
+                                    </div>
+                                    @if ($message = Session::get('success'))
+                                    <div class="alert alert-success">
+                                        <p>{{ $message }}</p>
+                                    </div>
+                                    @endif
+                                    <div class="card-block">
 
-                                <div class="table-responsive dt-responsive ">
-                                    <table class="table table-bordered dataTable">
-                                        <thead>
-                                            <tr>
-                                                <th>No</th>
-                                                <th>Photo</th>
-                                                <th>Name</th>
-                                                <th>Phone</th>
-                                                 <th>Email</th>
-                                                <th width="280px">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php $i = 1; ?>
-                                            @foreach ($users as $key => $user)
-                                            <tr>
-                                    <td><?= $i ?></td>
-                                                <td><img src="{{$root.'images/'.$user->dp }}" class="img-circle" style="position: relative;
-                                                         width: 30px;
-                                                         height: 30px;
-                                                         border-radius: 50%;
-                                                         overflow: hidden;"></td>
-                                                <td>{{ $user->firstname }} {{ $user->lastname }}</td>
-                                                <td>{{ $user->phone }}</td>
-                                                <td>{{ $user->email }}</td>
-                                                <td>
-                                                    <a class="btn btn-info btn-sm" href="{{ url('users/show/'.$user->id) }}">Show</a>
-                                                  
-                                                        <a class="btn btn-primary btn-sm" href="{{ url('users/edit/'.$user->id) }}">Edit</a>
+                                        <div class="table-responsive dt-responsive ">
+                                            <table class="table table-bordered dataTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>No</th>
+                                                        <th>Photo</th>
+                                                        <th>Name</th>
+                                                        <th>Phone</th>
+                                                        <th>Email</th>
+                                                        <th>Joining Date</th>
+                                                        <th width="280px">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php $i = 1; ?>
+                                                    @foreach ($users as $key => $user)
+                                                    <tr>
+                                                        <td><?= $i ?></td>
+                                                        <td><img src="{{$root.'images/'.$user->dp }}" class="img-circle" style="position: relative;
+                                                                 width: 30px;
+                                                                 height: 30px;
+                                                                 border-radius: 50%;
+                                                                 overflow: hidden;"></td>
+                                                        <td>{{ $user->firstname }} {{ $user->lastname }}</td>
+                                                        <td>{{ $user->phone }}</td>
+                                                        <td>{{ $user->email }}</td>
+                                                         <td>{{ date('d M Y',strtotime($user->created_at)) }}</td>
+                                                        <td>
+                                                            <a class="btn btn-info btn-sm" href="{{ url('users/show/'.$user->id) }}">Show</a>
 
-                                                 
-                                                        <a class="btn btn-danger btn-sm" href="{{ url('users/destroy/'.$user->id) }}">Delete</a>
-                                                 
-                                                </td>
-                                            </tr>
-                                            <?php $i++; ?>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
+                                                            <a class="btn btn-primary btn-sm" href="{{ url('users/edit/'.$user->id) }}">Edit</a>
+
+
+                                                            <a class="btn btn-danger btn-sm" href="{{ url('users/destroy/'.$user->id) }}">Delete</a>
+
+                                                        </td>
+                                                    </tr>
+                                                    <?php $i++; ?>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                <?php } ?>
                             </div>
-        <?php } ?>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-@endsection
+    @endsection

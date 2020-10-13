@@ -101,7 +101,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                                 <li class="text-right text-warning">
                                          <?php
                                            $account_year=DB::table('admin.account_years')->where('name',date('Y'))->first();
-                                           $total_invoice = DB::table('admin.invoices')->where('account_year_id', $account_year_id)->count();
+                                           $total_invoice = DB::table('admin.invoices')->where('account_year_id', $account_year->id)->count();
 
                                 $invoice_paid =count(DB::select('select count(distinct invoice_id) from admin.invoice_fees where invoice_id in (select id from admin.invoices where account_year_id='.$account_year->id.')'));
                                 ?>
@@ -164,7 +164,8 @@ if(in_array(Auth::user()->id, [2,3,7])){
                                 <?php
                                 $total_revenue = DB::table('revenues')->whereYear('created_at', date('Y'))->sum('amount');
                                 $total_payments = DB::table('payments')->whereYear('created_at', date('Y'))->sum('amount');
-                                                 $total_sms_payments = DB::connection('karibusms')->table('payment')->whereYear('time', date('Y'))->sum('amount');
+                                                 //$total_sms_payments = DB::connection('karibusms')->table('payment')->whereYear('time', date('Y'))->sum('amount');
+                                                 $total_sms_payments=0;
                                 ?>
                                 <h3>Tsh <?= number_format($total_revenue + $total_payments+$total_sms_payments) ?></h3>
                                 <p>Revenue Collected This Year

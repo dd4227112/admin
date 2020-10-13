@@ -212,7 +212,7 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                                                   <?php
                                                
                                                  $i = 1;
-                                                 if(count($activities)){
+                                                 if(!empty($activities)){
                                                   foreach ($activities as $act){
                                                      ?>
                                                   <tr>

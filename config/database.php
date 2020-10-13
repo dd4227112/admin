@@ -57,7 +57,7 @@ return [
             'driver' => 'pgsql',
             'host' => '127.0.0.1',
             'port' =>5432,
-            'database' => 'shulesoft',
+            'database' => 'postgres',
             'username' => 'postgres',
             'password' =>'tabita',
             'charset' => 'utf8',
@@ -68,7 +68,7 @@ return [
 
         'karibusms' => [
              'driver' => 'pgsql',
-            'url' => ':erb',
+            //'url' => ':erb',
             'host' => 'localhost',
             'port' => '5432',
             'database' => 'other_app',
