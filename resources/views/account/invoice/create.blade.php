@@ -267,7 +267,7 @@
                                                             <option value="">Select Payment type</option>
                                                             <?php
                                                             $payment_types =  \App\Models\PaymentType::all();
-                                                            if (count($payment_types) > 0) {
+                                                            if (!empty($payment_types)) {
 
                                                                 foreach ($payment_types as $payment_type) {
                                                             ?>
@@ -292,7 +292,7 @@
 
                                                                 <?php
                                                                 $banks = \App\Models\BankAccount::all();
-                                                                if (count($banks) > 0) {
+                                                                if (!empty($banks)) {
 
                                                                     foreach ($banks as $bank) {
                                                                 ?>

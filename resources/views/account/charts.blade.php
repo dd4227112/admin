@@ -54,7 +54,7 @@
                                 <tbody>
                                     <?php
                                     $total_expense = 0;
-                                    if (count($expenses)) {
+                                    if (!empty($expenses)) {
                                         $i = 1;
                                         foreach ($expenses as $expense) {
                                             ?>
@@ -201,7 +201,7 @@
                                 <select name="account_group_id" class="form-control" id="account_group_id" >
                                     <option value=" ">Select Group</option>
                                     <?php
-                                    if (count($groups) > 0) {
+                                    if (!empty($groups)) {
                                         foreach ($groups as $group) {
                                             ?>
                                             <option value="<?= $group->id ?>"><?= $group->name ?></option>
