@@ -266,7 +266,7 @@ function check_status($table, $where = null) {
                                           <select name="task_type_id"  class="form-control select2">
                                             <?php
                                             $types = DB::table('task_types')->where('department', Auth::user()->department)->get();
-                                            if (count($types) > 0) {
+                                            if (!empty($types)) {
                                               foreach ($types as $type) {
                                                 ?>
                                                 <option value="<?= $type->id ?>"><?= $type->name ?></option>
@@ -282,7 +282,7 @@ function check_status($table, $where = null) {
                                           <select name="to_user_id" class="form-control select2">
                                             <?php
                                             $staffs = DB::table('users')->where('status', 1)->where('role_id', '<>', 7)->get();
-                                            if (count($staffs) > 0) {
+                                            if (!empty($staffs)) {
                                               foreach ($staffs as $staff) {
                                                 ?>
                                                 <option value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
@@ -314,7 +314,7 @@ function check_status($table, $where = null) {
                                       <hr>
                                       <?php
                                       $modules = DB::table('modules')->get();
-                                      if (count($modules) > 0) {
+                                      if (!empty($modules)) {
                                         foreach ($modules as $module) {
                                           ?>
                                           <input type="checkbox" id="feature<?= $module->id ?>" value="{{$module->id}}" name="module_id[]" >  <?php echo $module->name; ?>  &nbsp; &nbsp;
@@ -357,7 +357,7 @@ function check_status($table, $where = null) {
                           <?php
                           $tasks_ids = \App\Models\TaskSchool::whereIn('school_id', \App\Models\ClientSchool::where('client_id', $client_id)->get(['school_id']))->get(['task_id']);
                           $tasks = \App\Models\Task::whereIn('id', \App\Models\TaskClient::where('client_id', $client_id)->get(['task_id']))->orWhereIn('id', $tasks_ids)->orderBy('created_at', 'desc')->get();
-                          if (count($tasks) > 0) {
+                          if (!empty($tasks)) {
                             foreach ($tasks as $task) {
                               ?>
                               <div class="social-timelines p-relative o-hidden" id="removetag<?= $task->id ?>">
@@ -391,7 +391,7 @@ function check_status($table, $where = null) {
 
                                           <?php
                                           $comments = $task->taskComments()->get();
-                                          if (count($comments) > 0) { ?>
+                                          if (!empty($comments)) { ?>
                                             <div class="p-b-30"> <span class="f-14"><a href="#">What have been done</a></span></div>
                                             <?php
                                             foreach ($comments as $comment) {
@@ -479,7 +479,7 @@ function check_status($table, $where = null) {
                                         <tr>
                                           <th class="social-label b-none p-b-0">School Level</th>
                                           <td class="social-user-name b-none p-b-0 text-muted"><?php
-                                          if (count($levels) > 0) {
+                                          if (!empty($levels)) {
                                             foreach ($levels as $level) {
                                               echo $level->name . ' - ' . $level->result_format . '<br/>';
                                             }
@@ -586,7 +586,7 @@ function check_status($table, $where = null) {
                                             $school_allocations = \collect(DB::select("select b.id from admin.users_schools a join admin.users b on b.id=a.user_id join admin.schools c on c.id=a.school_id where a.role_id=8 and a.status=1 and c.schema_name='" . $schema . "'"))->first();
                                             ?>    <select class="form-control" id="support_id" name="support_id">
                                               <?php
-                                              if (count($shulesoft_users) > 0) {
+                                              if (!empty($shulesoft_users)) {
                                                 foreach ($shulesoft_users as $user) {
                                                   ?>
                                                   <option value="<?= $user->id ?>" <?php
@@ -615,7 +615,7 @@ function check_status($table, $where = null) {
                                             ?>                            <select class="form-control" id="sales_id" name="sales_id">
 
                                               <?php
-                                              if (count($school_sales_allocations)) {
+                                              if (!empty($school_sales_allocations)) {
                                                 foreach ($shulesoft_users as $user) {
                                                   ?>
                                                   <option value="<?= $user->id ?>" <?php
@@ -698,7 +698,7 @@ function check_status($table, $where = null) {
                                                 <?php
                                                 $client_contracts = \App\Models\ClientContract::where('client_id', $client_id)->get();
                                                 $i = 1;
-                                                if (count($client_contracts) > 0) {
+                                                if (!empty($client_contracts)) {
                                                   foreach ($client_contracts as $client_contract) {
                                                     ?>
                                                     <tr>
@@ -768,7 +768,7 @@ function check_status($table, $where = null) {
                                               ?>
                                               <select class="task_allocated_id"  name="" task-id="<?= $training->task->id ?>" id="task_user<?= $training->task->id ?>">
                                                 <?php
-                                                if (count($shulesoft_users) > 0) {
+                                                if (!empty($shulesoft_users)) {
                                                   foreach ($shulesoft_users as $user) {
                                                     ?>
                                                     <option value="<?= $user->id ?>" <?php
@@ -880,7 +880,7 @@ function check_status($table, $where = null) {
                           /**
                           * --Check if Academic Years defined
                           */
-                          if (count($levels) > 0) {
+                          if (!empty($levels)) {
                             foreach ($levels as $level) {
 
                               $academic_year = DB::table($schema . '.academic_year')->where('class_level_id', $level->classlevel_id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->first();
@@ -895,7 +895,7 @@ function check_status($table, $where = null) {
                           *
                           * Check if terms have been defined
                           */
-                          if (count($levels) > 0) {
+                          if (!empty($levels)) {
                             foreach ($levels as $level) {
 
                               $academic_year = DB::table($schema . '.academic_year')->where('class_level_id', $level->classlevel_id)->where('start_date', '<', date('Y-m-d'))->where('end_date', '>', date('Y-m-d'))->first();
@@ -916,7 +916,7 @@ function check_status($table, $where = null) {
                           * --check if stamp has been defined
                           *
                           */
-                          if (count($levels) > 0) {
+                          if (!empty($levels)) {
                             foreach ($levels as $level) {
                               if (strlen($level->stamp) < 3) {
                                 echo '<b class="label label-warning">No Stamp for ' . $level->name . '</b><br/>';
@@ -961,10 +961,10 @@ function check_status($table, $where = null) {
                         <td>SMS sents</td>
                         <td> <?= check_status('sms'); ?>
                         <br/>
-                        <?php /*
+                        <?php 
                         $karibu = DB::connection('karibusms')->table('client')->where('keyname', $schema)->first();
                         $karibu_shulesoft = DB::connection('karibusms')->table('client')->where('client_id', 318)->first();
-                        if (count($karibu) == 1 && count($karibu_shulesoft) && $karibu->gcm_id = $karibu_shulesoft->gcm_id) {
+                        if (!empty($karibu) && !empty($karibu_shulesoft) && $karibu->gcm_id = $karibu_shulesoft->gcm_id) {
 
                         $last_online = $karibu->last_reported_online;
 
@@ -980,7 +980,7 @@ function check_status($table, $where = null) {
                         <?= $sms_time ?>
                         </label>
                         <?php
-                      } else if (count($karibu) == 1) {
+                      } else if (!empty($karibu)) {
                       $last_online = $karibu->last_reported_online;
 
                       $time = strtotime($last_online);
@@ -994,7 +994,7 @@ function check_status($table, $where = null) {
                       Last Seen <label class="label label-info">
                       <?= $sms_time ?>
                       </label>
-                      <?php } */
+                      <?php } 
                       ?>
                     </td>
                     <td></td>
@@ -1149,7 +1149,7 @@ function check_status($table, $where = null) {
                         data: [
                           <?php
                           $logs = DB::select('select count(*), extract(month from created_at) as month from ' . $schema . '.log where user_id is not null and extract(year from created_at)=' . date('Y') . '  group by extract(month from created_at) order by extract(month from created_at) asc');
-                          if (count($logs) > 0) {
+                          if (!empty($logs)) {
                             foreach ($logs as $log) {
                               $dateObj = DateTime::createFromFormat('!m', $log->month);
                               $month = $dateObj->format('F');
@@ -1198,7 +1198,7 @@ function check_status($table, $where = null) {
                 <tbody>
                   <?php
                   $users = DB::table($schema . '.user')->where('status', 1)->get();
-                  if (count($users) > 0) {
+                  if (!empty($users)) {
                     foreach ($users as $user) {
                       ?>
                       <tr>
@@ -1298,7 +1298,7 @@ function check_status($table, $where = null) {
 
                 <?php
                 $ctypes = DB::table('admin.contracts_types')->get();
-                if (count($ctypes) > 0) {
+                if (!empty($ctypes)) {
                   foreach ($ctypes as $ctype) {
                     ?>
                     <option value="<?= $ctype->id ?>"><?= $ctype->name ?></option>
