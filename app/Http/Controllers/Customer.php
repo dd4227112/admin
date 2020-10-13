@@ -417,7 +417,7 @@ $obj=[
             $this->data['school'] = DB::table($school . '.setting')->first();
             $this->data['levels'] = DB::table($school . '.classlevel')->get();
             $client = \App\Models\Client::where('username', $school)->first();
-            if (count($client) == 0) {
+            if (!empty($client)) {
 
                 $client = \App\Models\Client::create(['name' => $this->data['school']->sname, 'email' => $this->data['school']->email, 'phone' => $this->data['school']->phone, 'address' => $this->data['school']->address, 'username' => $school, 'created_at' => date('Y-m-d H:i:s')]);
             }
@@ -453,13 +453,13 @@ $obj=[
             ]);
 
 
-            if (count($task->id) > 0 && request('module_id')) {
+            if (!empty($task->id) && request('module_id')) {
                 $modules = request('module_id');
                 foreach ($modules as $key => $value) {
                     if (request('module_id')[$key] != '') {
                         $array = ['module_id' => request('module_id')[$key], 'task_id' => $task->id];
                         $check_unique = \App\Models\ModuleTask::where($array);
-                        if (count($check_unique->first()) == 0) {
+                        if (!empty($check_unique->first())) {
                             \App\Models\ModuleTask::create($array);
                         }
                     }
@@ -524,7 +524,7 @@ $obj=[
                         if (request('module_id')[$key] != '') {
                             $array = ['module_id' => request('module_id')[$key], 'task_id' => $task->id];
                             $check_unique = \App\Models\ModuleTask::where($array);
-                            if (count($check_unique->first()) == 0) {
+                            if (!empty($check_unique->first())) {
                                 \App\Models\ModuleTask::create($array);
                             }
                         }
