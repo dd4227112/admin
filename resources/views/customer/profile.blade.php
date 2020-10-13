@@ -11,7 +11,7 @@ function check_status($table, $where = null) {
   }else{
   $report = \collect(DB::select('select created_at::date from ' . $schema . '.' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first();
   }
-  if (count($report) == 1) {
+  if (!empty($report)) {
 
     $echo = '<b class="label label-success">' . date('d M Y', strtotime($report->created_at)) . '</b>';
   } else {
@@ -148,7 +148,7 @@ function check_status($table, $where = null) {
                           </div>
                           <div class="card-block user-box">
                             <?php
-                            if (count($top_users) > 0) {
+                            if (!empty($top_users)) {
                               foreach ($top_users as $log) {
                                 ?>
                                 <div class="media m-b-10">
@@ -590,7 +590,7 @@ function check_status($table, $where = null) {
                                                 foreach ($shulesoft_users as $user) {
                                                   ?>
                                                   <option value="<?= $user->id ?>" <?php
-                                                  if (count($school_allocations) == 1 && $user->id == $school_allocations->id) {
+                                                  if (!empty($school_allocations) && $user->id == $school_allocations->id) {
                                                     $support_person = $user->firstname . ' ' . $user->lastname;
                                                     echo 'selected="selected"';
                                                   } else {
@@ -619,7 +619,7 @@ function check_status($table, $where = null) {
                                                 foreach ($shulesoft_users as $user) {
                                                   ?>
                                                   <option value="<?= $user->id ?>" <?php
-                                                  if (count($school_sales_allocations) == 1 && $user->id == $school_sales_allocations->id) {
+                                                  if (!empty($school_sales_allocations) && $user->id == $school_sales_allocations->id) {
                                                     $sales_person = $user->firstname . ' ' . $user->lastname;
                                                     echo 'selected="selected"';
                                                   } else {
