@@ -57,7 +57,7 @@
                                     <tbody>
                                         <?php
                                         $total_expense = 0;
-                                        if (count($groups) > 0) {
+                                        if (!empty($groups)) {
                                             $i = 1;
                                             foreach ($groups as $group) {
                                                 ?>

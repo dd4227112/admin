@@ -113,7 +113,7 @@ if (can_access('view_income_statement')) {
 <?php
 
 
-                            if(count($express_revenues)>0){
+                            if(!empty($express_revenues)){
     $express_revenue_total=0;
 
     foreach ($express_revenues_grouped as $express_revenue ) {  

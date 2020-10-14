@@ -73,7 +73,7 @@
                                   <?php
                                   $uarray = array('0' => __("select expense"));
                                   $users = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get();
-                                  if (count($users)) {
+                                  if (!empty($users)) {
                                     foreach ($users as $user) {
                                       $uarray[$user->id] = $user->firstname.' '.$user->lastname;
                                     }
@@ -123,7 +123,7 @@
                                 }
                                 echo form_dropdown("refer_expense_id", $array, old("refer_expense_id"), "id='refer_expense_id' class='form-control'");
                                 ?>
-                                <?php if (count($category) > 0) { ?>
+                                <?php if (!empty($category)) { ?>
 
                                 <?php } ?>
                                 <span class="col-sm-2 small"><a href="<?= url("expense/financial_category") ?>">Create New</a></span>
@@ -149,7 +149,7 @@
                                 <select name="payment_type_id" id="payment_method_status" class="form-control" required="">
                                   <option value="">Select Payment type</option>
                                   <?php
-                                  if (count($payment_types) > 0) {
+                                  if (!empty($payment_types)) {
                                     foreach ($payment_types as $payment_type) {
                                       ?>
                                       <option value="<?= $payment_type->id ?>"><?= $payment_type->name ?></option>
@@ -168,7 +168,7 @@
                                   <select class="select2_multiple form-control" name="bank_account_id" id="bank_name">
                                     <option value=""></option>
                                     <?php
-                                    if (count($banks) > 0) {
+                                    if (!empty($banks) ) {
                                       foreach ($banks as $bank) {
                                         ?>
                                         <option value="<?= $bank->id ?>"><?= $bank->referBank->name . ' (' . $bank->number . ')' ?></option>

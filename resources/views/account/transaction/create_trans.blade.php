@@ -145,7 +145,7 @@
                                                     <div class="col-sm-6">
                                                         <?php
                                                         $array = array('0' => "select expense");
-                                                        if (count($category) > 0) {
+                                                        if (!empty($category)) {
                                                             foreach ($category as $categ) {
                                                                 $array[$categ->id] = $categ->name;
                                                             }
