@@ -1,11 +1,17 @@
 @extends('layouts.app')
 @section('content')
 <?php $root = url('/') . '/public/' ?>
+<?php $root = url('/') . '/public/' ?>
 
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css" rel="stylesheet" />
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.9/select2-bootstrap.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.full.min.js"></script>
+<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
+  
+        <!-- Style.css -->
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css">
 
+        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2.css">
+
+        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2-bootstrap.css">
+        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css">    
 <div class="main-body">
   <div class="page-wrapper">
     <!-- Page-header start -->
