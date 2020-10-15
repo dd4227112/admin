@@ -962,6 +962,7 @@ function check_status($table, $where = null) {
                         <td> <?= check_status('sms'); ?>
                         <br/>
                         <?php 
+                        /*
                         $karibu = DB::connection('karibusms')->table('client')->where('keyname', $schema)->first();
                         $karibu_shulesoft = DB::connection('karibusms')->table('client')->where('client_id', 318)->first();
                         if (!empty($karibu) && !empty($karibu_shulesoft) && $karibu->gcm_id = $karibu_shulesoft->gcm_id) {
@@ -994,7 +995,7 @@ function check_status($table, $where = null) {
                       Last Seen <label class="label label-info">
                       <?= $sms_time ?>
                       </label>
-                      <?php } 
+                      <?php }  */
                       ?>
                     </td>
                     <td></td>
