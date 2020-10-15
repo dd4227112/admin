@@ -70,9 +70,9 @@
                                                                 <tr>
                                                                     <th> Client Name</th>
                                                                     <th><?php
-                                                                    if(isset($school) && count($school)){
+                                                                    if(isset($school) && !empty($school)){
                                                                         echo '<a href="'. url('sales/profile/'.$school->school_id) .'">'. $school->school->name .' - '. $school->school->type .'</a>';
-                                                                    }elseif(isset($client) && count($client)){
+                                                                    }elseif(isset($client) && !empty($client)){
                                                                         echo '<a href="'. url('customer/profile/'.$client->client->username) .'">'. $client->client->name .'</a>';
                                                                     }else{
                                                                         echo '<a href="#">'. $activity->client->name .'</a>';
@@ -88,7 +88,7 @@
                                                                     <td>
                                                                         <?php
                                                                         $modules = $activity->modules()->get();
-                                                                        if (count($modules) > 0) {
+                                                                        if (!empty($modules)) {
                                                                             foreach ($modules as $module) {
                                                                                 echo $module->module->name;
                                                                                 ?>  &nbsp;|
@@ -142,7 +142,7 @@
                                                     <div class="user-box">
                                                         <?php
                                                         $comments = $activity->taskComments()->get();
-                                                        if (count($comments) > 0) {
+                                                        if (!empty($comments)) {
                                                             foreach ($comments as $comment) {
                                                                 ?>
                                                                 <div class="media m-b-1" style="margin: 0px; padding: 0px">

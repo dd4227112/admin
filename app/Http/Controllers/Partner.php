@@ -141,6 +141,6 @@ class Partner extends Controller {
             $this->onboardMessage($client);
             return redirect('https://' . $username . '.shulesoft.com');
         }
-        return view('users.partners.onboarding', $this->data);
+        return view('users.partners.add_new', $this->data);
     }
 }

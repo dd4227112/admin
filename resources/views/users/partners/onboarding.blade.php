@@ -93,7 +93,7 @@
                             <div class="form-group row">
                               <div class="col-sm-6">
                                 Implementation Start Date
-                                <input type="datetime-local" class="form-control" value="" name="implementation_date" required="">
+                                <input type="datetime-local" class="form-control"  name="implementation_date" required="">
                               </div>
                               <div class="col-sm-6">
                                 Data Format Available
@@ -111,34 +111,34 @@
                         <fieldset>
                           <div class="form-card">
                             <div class="row">
-                              <div class="col-7">
-                                <h2 class="fs-title">Personal Information:</h2>
+                              <div class="col-6">
+                                <!-- <h2 class="fs-title">Key Personal Contacts:</h2> -->
                               </div>
-                              <div class="col-5">
-                                <h2 class="steps">Step 2 - 4</h2>
+                              <div class="col-6">
+                                <h2 class="steps">Key Personal Contacts:</h2>
                               </div>
                             </div>
 
 
                             <div class="form-group row">
                               <div class="col-sm-6">
-                                Name
-                                <input type="text" name="name" class="form-control"/>
+                                Fullname
+                                <input type="text" name="name" class="form-control" required/>
                               </div>
                               <div class="col-sm-6">
-                                Phone
-                                <input type="text" name="phone" class="form-control"/>
+                                Phone Number
+                                <input type="text" name="phone" class="form-control" required/>
                               </div>
                             </div>
 
                             <div class="form-group row">
                               <div class="col-sm-6">
-                                Email
-                                <input type="text" name="email" class="form-control"/>
+                                Email Address
+                                <input type="text" name="email" class="form-control" required/>
                               </div>
                               <div class="col-sm-6">
                                 Title
-                                <select name="title" class="form-control select2">
+                                <select name="title" class="form-control select2" required>
                                   <option value="director">Director/Owner</option>
                                   <option value="manager">School Manager</option>
                                   <option value="head teacher">Head Teacher</option>
@@ -169,7 +169,7 @@
                           <div class="form-card">
                             <div class="row">
                               <div class="col-7">
-                                <h2 class="fs-title">Image Upload:</h2>
+                                <h2 class="fs-title">Upload All Required Documents:</h2>
                               </div>
                               <div class="col-5">
                                 <h2 class="steps">Step 3 - 4</h2>
@@ -380,12 +380,7 @@
               }
             });
           });
-          $(".select2").select2({
-            theme: "bootstrap",
-            dropdownAutoWidth: false,
-            allowClear: false,
-            debug: true
-          });
+        
           </script>
         </div>
       </div>

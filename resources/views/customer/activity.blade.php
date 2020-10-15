@@ -132,7 +132,7 @@
                                                     $i = 1;
 
                                                     $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'complete')->orderBy('created_at', 'desc')->limit(100)->get();
-                                                    if (count($tasks) > 0) {
+                                                    if (!empty($tasks)) {
                                                         foreach ($tasks as $act) {
                                                     ?>
                                                             <tr>
@@ -177,7 +177,7 @@
                                                     $i = 1;
 
                                                     $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'on progress')->orderBy('created_at', 'desc')->limit(100)->get();
-                                                    if (count($tasks) > 0) {
+                                                    if (!empty($tasks)) {
                                                         foreach ($tasks as $act) {
                                                     ?>
                                                             <tr>
@@ -222,7 +222,7 @@
                                                     $i = 1;
 
                                                     $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'new')->orderBy('created_at', 'desc')->limit(100)->get();
-                                                    if (count($tasks) > 0) {
+                                                    if (!empty($tasks)) {
                                                         foreach ($tasks as $act) {
                                                     ?>
                                                             <tr>
