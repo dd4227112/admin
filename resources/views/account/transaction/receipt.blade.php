@@ -68,7 +68,7 @@ $bn_number = 888999;
                             <div class="ttl-amts">
                                 Received from
                                 <span style="padding-left:100px;padding-right: 30px; font-weight:bold; text-transform:uppercase">
-                                    <?= $revenue->client->name ?></span><hr/>
+                                    <?= isset($revenue->client->name) ?$revenue->client->name:''  ?></span><hr/>
                             </div>
 
                             <div class="ttl-amts">
