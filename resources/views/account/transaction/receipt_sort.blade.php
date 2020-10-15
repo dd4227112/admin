@@ -30,7 +30,7 @@
                               <div>
 
                                     Payer: 
-                                    <?= $payment_view->client->name ?>
+                                    <?= isset($payment_view->client->name) ? $payment_view->client->name:'' ?>
                                 </div>
                                 <div class="right">
 
