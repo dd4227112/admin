@@ -30,14 +30,7 @@
                         <!-- Default card start -->
                         <div class="card">                            
                             <div class="card-block">
-                            <?php
-                            $haystack = '.pdf';
-                            $needle = 'datasaam.pdf';
-
-                                function endsWithz( $haystack, $needle ) {
-                                    return (substr($haystack, -strlen($needle)) === $needle);
-                                }
-                            ?>
+                          
                                         <div>
                                             <embed src="<?= $path ?>" type="application/pdf" width="100%" height="700px" /></embed>
 

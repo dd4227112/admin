@@ -20,25 +20,57 @@ class Partner extends Controller {
      * @return \Illuminate\Http\Response
      */
         public function index() {
-            $this->data['users'] = User::where('status', 1)->where('role_id', '<>', 7)->get();
+            $this->data['requests'] = \App\Models\IntegrationRequest::get();
+            $this->data['invoices'] = \App\Models\Invoice::whereIn('client_id', \App\Models\IntegrationRequest::get(['client_id']))->get();
             return view('users.partners.requests', $this->data);
         }
         
+        public function show() {
+            $id = request()->segment(3);
+            $this->data['request'] = $request = \App\Models\IntegrationRequest::find($id);
+            $school = DB::table('admin.client_schools')->where('client_id', $request->client_id)->first();
+            $this->data['school'] = \App\Models\SchoolContact::where('school_id', $school->school_id)->first();
+            $this->data['client'] = \App\Models\ClientContract::where('client_id', $request->client_id)->first();
+            $this->data['bank'] = \App\Models\IntegrationBankAccount::where('integration_request_id', $request->id)->first();
+            return view('users.partners.view_request', $this->data);
+        }
+
     public function add() {
         $id = request()->segment(3);
-        $partner = \App\Models\District::get();
-        $this->data['districts'] = $partner;
+        $this->data['districts'] = \App\Models\District::get();
         if ($_POST) {
+            // $data = request()->all();
+            // dd($data);
             $code = rand(343, 32323) . time();
+            $district = \App\Models\District::find(request('district'));
+            $username = request('username');
+            $array = [
+                'name' => strtoupper(request('school_name')),
+                'ward' => request('district'),
+                'region' => $district->region->name,
+                'district' => $district->name,
+                'ownership' => request('ownership'),
+                'type' => request('type'),
+                'students' => request('students'),
+                'schema_name' => $username
+            ];
+            $check_school = DB::table('admin.schools')->where('name', strtoupper(request('school_name')))->where('schema_name', $username)->first();
+            if (empty($check_school)) {
+                $school_id = DB::table('admin.schools')->insertGetId($array);
+                $school = \App\Models\School::where('id', $school_id)->first();
+            }else{
+            $school = \App\Models\School::where('id', $check_school->id)->first();
+                $school_id = $school->id;
+            }
+            $school_id = $school->id;
 
             $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
             if (empty($school_contact)) {
                 DB::table('admin.school_contacts')->insert([
-                    'name' => request('name'), 'email' => request('email'), 'phone' => request('phone'), 'school_id' => $school_id, 'user_id' => Auth::user()->id, 'title' => request('title')
+                    'name' => request('fullname'), 'email' => request('email'), 'phone' => request('phone'), 'school_id' => $school_id, 'user_id' => Auth::user()->id, 'title' => request('title')
                 ]);
                 $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
             }
-            DB::table('admin.schools')->where('id', $school_id)->update(['students' => request('students')]);
 
             $schema_name = request('username') != '' ? strtolower(trim(request('username'))) : $username;
             $check_client = DB::table('admin.clients')->where('username', $schema_name)->first();
@@ -47,7 +79,7 @@ class Partner extends Controller {
             } else {
                 $client_id = DB::table('admin.clients')->insertGetId([
                     'name' => $school->name,
-                    'address' => $school->ward . ' ' . $school->district . ' ' . $school->region,
+                    'address' => $school->district . ' ' . $school->region,
                     'phone' => $school_contact->phone,
                     'email' => $school_contact->email,
                     'estimated_students' => request('students'),
@@ -57,21 +89,45 @@ class Partner extends Controller {
                     'phone_verified' => 0,
                     'created_by' => Auth::user()->id,
                     'username' => $schema_name,
-                    'created_at' => date('Y-m-d H:i:s')
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'price_per_student' => 12000
                 ]);
+               
                 //client school
                 DB::table('admin.client_schools')->insert([
                     'school_id' => $school_id, 'client_id' => $client_id
                 ]);
+                
                 //client projects
                 DB::table('admin.client_projects')->insert([
                     'project_id' => 1, 'client_id' => $client_id //default ShuleSoft project
                 ]);
-                //sales person
-                //support person
-                DB::table('admin.users_schools')->insert([
-                    'school_id' => $school_id, 'client_id' => $client_id, 'user_id' => request('support_user_id'), 'role_id' => 8, 'status' => 1
-                ]);
+            
+                //Bank Accounts Intergration Details
+                $check_req = DB::table('admin.integration_requests')->where('client_id', $client_id)->first();
+                    if (empty($check_req)) {
+                        $request_id = DB::table('admin.integration_requests')->insertGetId([
+                       'client_id' => $client_id, 'user_id' => Auth::user()->id, 'refer_bank_id' => 8, 'schema_name' => $schema_name, 'shulesoft_approved' => 0, 'shulesoft_approved' => 1, 'created_at' => date('Y-m-d H:i:s')
+                    ]);
+                    }else{
+                        $request_id = $check_req->id;
+                    }
+                    
+                 //Bank Accounts Details
+                    DB::table('admin.integration_bank_accounts')->insert([
+                        'account_number' => request('account_number'), 'branch' => request('branch_name'),  'account_name' => request('account_name'), 'refer_currency_id' => request('refer_currency_id'), 'opening_balance' => request('opening_balance'), 'integration_request_id' => $request_id,  'refer_bank_id' => 8 
+                    ]);
+                    
+                    //Install School Levels
+                    $levels = request('classlevel');
+                    if(!empty($levels)){
+                        foreach($levels as $level){
+                            DB::table('admin.school_levels')->insert([
+                                'name' => $level, 'client_id' => $client_id, 'schema_name' => $username 
+                            ]);
+                        }
+                    }
+                  
                 //post task, onboarded
                 $data = ['user_id' => Auth::user()->id, 'school_id' => $school_id, 'activity' => 'Onboarding', 'task_type_id' => request('task_type_id'), 'user_id' => Auth::user()->id];
                 $task = \App\Models\Task::create($data);
@@ -81,15 +137,14 @@ class Partner extends Controller {
                 ]);
             }
 
-
             //add company file
             $check_contract = DB::table('admin.client_contracts')->where('client_id', $client_id)->first();
             if (empty($check_contract)) {
-                $file = request()->file('file');
-                $file_id = $this->saveFile($file, 'company/contracts');
+                $file = request()->file('agreement_form');
+              //  $file_id = $this->saveFile($file, 'company/contracts');
                 //save contract
                 $contract_id = DB::table('admin.contracts')->insertGetId([
-                    'name' => 'ShuleSoft', 'company_file_id' => $file_id, 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'contract_type_id' => request('contract_type_id'), 'user_id' => Auth::user()->id
+                    'name' => 'ShuleSoft', 'company_file_id' => 2, 'start_date' => request('implementation_date'), 'end_date' =>  date('Y-m-d', strtotime('+1 years')), 'contract_type_id' => request('contract_type_id'), 'user_id' => Auth::user()->id
                 ]);
                 //client contracts
                 DB::table('admin.client_contracts')->insert([
@@ -98,19 +153,12 @@ class Partner extends Controller {
             }
 
             //once a school has been installed, now create an invoice for this school or create a promo code
-            if (request('payment_status') == 1) {
                 // create an invoice for this school
                 $check_booking = DB::table('admin.invoices')->where('client_id', $client_id)->first();
                 if (!empty($check_booking)) {
                     $booking = $check_booking;
                 } else {
-                    // $order_id = time() . $client_id;
-                    // $client = DB::table('admin.clients')->where('id', $client_id)->first();
-                    // $total_price = (int) request('students') < 100 ? 100000 : $client->estimated_students * 1000;
-                    // $order = array("order_id" => $order_id, "amount" => $total_price,
-                    //     'buyer_name' => $client->name, 'buyer_phone' => $client->phone, 'end_point' => '/checkout/create-order', 'action' => 'createOrder', 'client_id' => $client->id, 'source' => $client->id);
-                    // $this->curlPrivate($order);
-
+               
                     $client = \App\Models\Client::find($client_id);
                     $year = \App\Models\AccountYear::where('name', date('Y'))->first();
                     $reference = time(); // to be changed for selcom ID
@@ -123,24 +171,13 @@ class Partner extends Controller {
 
                     \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' => $client->estimated_students, 'unit_price' => $unit_price]);
                 }
-                $this->scheduleActivities($client_id);
-                return redirect('sales/customerSuccess/1/' . $client_id);
-            } else {
-                //create a trial code for this school
-                $trial_code = $client_id . time();
-                $client = DB::table('admin.clients')->where('id', $client_id);
-                DB::table('admin.clients')->where('id', $client_id)->update(['code' => $trial_code]);
-                $user = $client->first();
-                $message = 'Hello ' . $user->name . '. Your Trial Code is ' . $trial_code;
-                //$this->send_sms($user->phone, $message, 1);
-                //$this->send_email($user->email, 'Success: School Onboarded Successfully', $message);
-                $this->scheduleActivities($client_id);
-                return redirect('sales/customerSuccess/2/' . $client_id);
-            }
+
             //send onboarding message to customer directly
-            $this->onboardMessage($client);
-            return redirect('https://' . $username . '.shulesoft.com');
+            return redirect('https://' . $username . '.shulesoft.com/database/'.$username);
+           // }
         }
         return view('users.partners.add_new', $this->data);
     }
+    
+
 }

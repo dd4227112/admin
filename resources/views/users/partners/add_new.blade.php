@@ -3,13 +3,17 @@
 <?php $root = url('/') . '/public/' ?>
 
 <!-- Style.css -->
-<link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css">
 <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/bars.css">
+
+<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
+<!-- Style.css -->
+<link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css">
 
 <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2.css">
 
 <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2-bootstrap.css">
 <link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css">
+
 <style type="text/css">
 #regiration_form fieldset:not(:first-of-type) {
   display: none;
@@ -22,16 +26,14 @@
     <div class="page-body">
       <div class="row">
         <div class="col-lg-12">
-        <div>
-        <embed src="https://shulesoft.s3.amazonaws.com/shulesoft/62fTi6VB1tFBnnWadfaYzItF4eDpBozxmhVVK4sv.pdf" type="application/pdf" width="100%" height="600px" /></embed>
 
-        </div>
           <div class="card">
             <div class="card-block">
               <div class="px-0 pb-0 mt-1 mb-3">
                 <div class="text-center">
                   <h2 id="heading">Onboard New School</h2>
                   <p>Fill all form field to go to next step</p>
+
                 </div>
                 <div id="msform">
                   <!-- progressbar -->
@@ -47,7 +49,7 @@
                   <hr>
                 </div>
                 <!-- <div class="alert alert-success hide"></div> -->
-                <form id="regiration_form" novalidate>
+                <form id="regiration_form" action="" method='POST' validate>
                   <fieldset>
                     <div class="form-group row">
                       <div class="col-md-6">
@@ -102,7 +104,7 @@
                     <div class="form-group row">
                       <div class="col-sm-6">
                         Implementation Start Date
-                        <input type="datetime-local" class="form-control"  name="implementation_date" required="">
+                        <input type="date" class="form-control"  name="implementation_date" required="">
                       </div>
                       <div class="col-sm-6">
                         Data Format Available
@@ -117,12 +119,12 @@
                     <input type="button" name="password" class="next btn btn-info" value="Next" />
                   </fieldset>
                   <fieldset>
-                  <h4>Step 2. Key Personal Contact</h4>
+                    <h4>Step 2. Key Personal Contact</h4>
 
                     <div class="form-group row">
                       <div class="col-sm-6">
                         Fullname
-                        <input type="text" name="name" class="form-control" required/>
+                        <input type="text" name="fullname" class="form-control" required/>
                       </div>
                       <div class="col-sm-6">
                         Phone Number
@@ -154,11 +156,11 @@
                     <div class="form-group row">
                       <div class="col-sm-6">
                         ShuleSoft Agreement Form
-                        <input type="file" name="name" class="form-control"/>
+                        <input type="file" name="agreement_form" class="form-control"/>
                       </div>
                       <div class="col-sm-6">
                         Bank Application Form
-                        <input type="file" name="phone" class="form-control"/>
+                        <input type="file" name="bank_form" class="form-control"/>
                       </div>
                     </div>
 
@@ -167,35 +169,42 @@
                   </fieldset>
 
                   <fieldset>
-                    <h4> Step 3: Attach Required Documents</h4>
-
+                    <h4> Step 3: School Configuration </h4>
                     <div class="form-group row">
+
                       <div class="col-sm-6">
-                        ShuleaSoft Agreement Form
-                        <input type="file" name="name" class="form-control"/>
+                        School Levels
+                        <br>
+                        <input type="checkbox" name="classlevel[]" value="A-level"> A-level (Advanced Secondary Level - ACSEE exams)
+                        <br>
+                        <input type="checkbox" name="classlevel[]" value="O-level"> O-level (Ordinary Secondary Level - CSEE exams)
+                        <br>
+                        <input type="checkbox"  name="classlevel[]" value="Primary">Primary (Primary Education Level - PSLE exams)
+                        <br>
+                        <input type="checkbox"  name="classlevel[]" value="Nursery">Nursery (Pre-Primary)- (Pre-primary Education Level)
+
                       </div>
                       <div class="col-sm-6">
-                        Bank Application Form
-                        <input type="file" name="phone" class="form-control"/>
+
+                        School Exam Syllabus
+                        <br>
+                        <input type="checkbox" name="school_format" value="NECTA"> NECTA
+                        <br>
+                        <input type="checkbox" name="school_format" value="OTHER"> Others
                       </div>
                     </div>
-
-                    <div class="form-group row">
-                      <div class="col-sm-6">
-                        Implementation Start Date
-                        <input type="datetime-local" class="form-control" value="" name="implementation_date" required="">
+                    <div class="form-group row" style="border: 0.5px dashed; ">
+                      <div class="col-sm-3">Account Name  <b style="font-size: 1.4em;"> https://</b> </div>
+                      <div id="col-sm-6">
+                        <input style="max-width: 17em;
+                        resize: none" class="form-control " id="school_username" name="username" type="text" placeholder="school domain name"  required="" onkeyup="validateForm()">
                       </div>
-                      <div class="col-sm-6">
-                        Data Format Available
-                        <select name="data_type_id" class="form-control">
-                          <option value="1">Excel With Parent Phone Numbers</option>
-                          <option value="2">Physical Files Format</option>
-                          <option value="3">Softcopy but without parents phone numbers</option>
-
-                        </select>
+                      <div id="col-sm-3">
+                        <b style="font-size: 1.4em;">.shulesoft.com</b>
                       </div>
+                      <small style="max-width: 13em;" id="username_message_reply"></small>
                     </div>
-
+                    <hr>
 
                     <input type="button" name="previous" class="previous btn btn-default" value="Previous" />
                     <input type="button" name="next" class="next btn btn-info" value="Next" />
@@ -207,7 +216,7 @@
                     <div class="form-group row">
                       <div class="col-sm-12">
                         Account Name
-                        <input type="text" name="name" class="form-control"/>
+                        <input type="text" name="account_name" class="form-control"/>
                       </div>
 
                     </div>
@@ -215,99 +224,127 @@
                     <div class="form-group row">
                       <div class="col-sm-6">
                         Bank Account Number
-                        <input type="text" class="form-control"  name="implementation_date" required="">
+                        <input type="text" class="form-control"  name="account_number" required="">
                       </div>
                       <div class="col-sm-6">
-                        Invoice Prefix
-                        <input type="text" name="phone" class="form-control"/>
+                        Branch Name
+                        <input type="text" name="branch_name" class="form-control"/>
                       </div>
                     </div>
 
 
                     <div class="form-group row">
                       <div class="col-sm-6">
-                        Live username
-                        <input type="text" class="form-control"  name="implementation_date" required="">
+                        Currency
+                        <select name="refer_currency_id" class="form-control">
+                          <?php $curs = DB::table('constant.refer_currencies')->get();
+                          foreach($curs  as $cur){
+                            ?>
+                            <option value="<?=$cur->id?>"><?=$cur->currency?> (<?=$cur->symbol?>)</option>
+                          <?php } ?>
+                        </select>
                       </div>
                       <div class="col-sm-6">
-                        Live Password
-                        <input type="text" class="form-control"  name="implementation_date" required="">
+                        Opening Balance
+                        <input type="text" class="form-control"  name="opening_balance" required="">
                       </div>
                     </div>
 
-                    <div class="form-group">
-                      <label class="col-sm-2 col-form-label">Joining Status</label>
-                      <div class="col-sm-10">
-                        <div class="form-check form-check-inline">
-                          <label class="form-check-label">
-                            <input class="form-check-input" type="radio" name="payment_status" id="gender-1" value="1" required=""> All Information Verified
-                          </label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                          <label class="form-check-label">
-                            <input class="form-check-input" type="radio" name="payment_status" id="gender-2" value="2" required=""> School Still on-progress
-                          </label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                          <label class="form-check-label">
-                            <input class="form-check-input" type="radio" name="payment_status" id="gender-3" value="2" required=""> School Under ShuleSoft Follow-up
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                    <input type="button" name="previous" class="previous btn btn-default" value="Previous" />
-                    <input type="submit" name="submit" class="submit btn btn-success" value="Submit" />
-                  </fieldset>
-                </form>
-
-                <script type="text/javascript">
-
-                $(document).ready(function(){
-                  var current = 1,current_step,next_step,steps;
-                  steps = $("fieldset").length;
-                  $(".next").click(function(){
-                    current_step = $(this).parent();
-                    next_step = $(this).parent().next();
-                    next_step.show();
-                    current_step.hide();
-                    setProgressBar(++current);
-                  });
-                  $(".previous").click(function(){
-                    current_step = $(this).parent();
-                    next_step = $(this).parent().prev();
-                    next_step.show();
-                    current_step.hide();
-                    setProgressBar(--current);
-                  });
-                  setProgressBar(current);
-                  // Change progress bar action
-                  function setProgressBar(curStep){
-                    var percent = parseFloat(100 / steps) * curStep;
-                    percent = percent.toFixed();
-                    $(".progress-bar")
-                    .css("width",percent+"%")
-                    .html(percent+"%");
-                  }
-                });
-
-
-
-                $('#region').change(function () {
-                  var val = $(this).val();
-                  $.ajax({
-                    method: 'get',
-                    url: '<?= url('Marketing/getDistrict/null') ?>',
-                    data: {region: val},
-                    dataType: 'html',
-                    success: function (data) {
-                      $('#district').html(data);
-                    }
-                  });
-                });
-              </script>
+                    <!-- <div class="form-group">
+                    <label class="col-sm-2 col-form-label">Joining Status</label>
+                    <div class="col-sm-10">
+                    <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                    <input class="form-check-input" type="radio" name="payment_status" id="gender-1" value="1" required=""> All Information Verified
+                  </label>
+                </div>
+                <div class="form-check form-check-inline">
+                <label class="form-check-label">
+                <input class="form-check-input" type="radio" name="payment_status" id="gender-2" value="2" required=""> School Still on-progress
+              </label>
             </div>
-          </div>
+            <div class="form-check form-check-inline">
+            <label class="form-check-label">
+            <input class="form-check-input" type="radio" name="payment_status" id="gender-3" value="2" required=""> School Under ShuleSoft Follow-up
+          </label>
         </div>
       </div>
-    </div>
-    @endsection
+    </div> -->
+    <input type="button" name="previous" class="previous btn btn-default" value="Previous" />
+    <input type="submit" name="submit" class="submit btn btn-success" value="Submit" />
+  </fieldset>
+  {{ csrf_field() }}
+
+</form>
+
+<script type="text/javascript">
+
+$(".select2").select2({
+  theme: "bootstrap",
+  dropdownAutoWidth: false,
+  allowClear: false,
+  debug: true
+});
+$(document).ready(function(){
+  var current = 1,current_step,next_step,steps;
+  steps = $("fieldset").length;
+  $(".next").click(function(){
+    current_step = $(this).parent();
+    next_step = $(this).parent().next();
+    next_step.show();
+    current_step.hide();
+    setProgressBar(++current);
+  });
+  $(".previous").click(function(){
+    current_step = $(this).parent();
+    next_step = $(this).parent().prev();
+    next_step.show();
+    current_step.hide();
+    setProgressBar(--current);
+  });
+  setProgressBar(current);
+  // Change progress bar action
+  function setProgressBar(curStep){
+    var percent = parseFloat(100 / steps) * curStep;
+    percent = percent.toFixed();
+    $(".progress-bar")
+    .css("width",percent+"%")
+    .html(percent+"%");
+  }
+});
+
+function validateForm() {
+  var regex = new RegExp("^[a-z]+$");
+  var x = $('#school_username').val();
+  if (x == null || x == "") {
+    $('#username_message_reply').html("Name must not be blank").addClass('alert alert-danger');
+    return false;
+  } else if (!regex.test(x)) {
+    $('#username_message_reply').html("Name contains invalid characters (Only letters with no spaces !)").addClass('alert alert-danger');
+    return false;
+  } else {
+    $('#username_message_reply').html('').removeClass('alert alert-danger');
+    ;
+    return true;
+  }
+}
+
+$('#region').change(function () {
+  var val = $(this).val();
+  $.ajax({
+    method: 'get',
+    url: '<?= url('Marketing/getDistrict/null') ?>',
+    data: {region: val},
+    dataType: 'html',
+    success: function (data) {
+      $('#district').html(data);
+    }
+  });
+});
+</script>
+</div>
+</div>
+</div>
+</div>
+</div>
+@endsection
