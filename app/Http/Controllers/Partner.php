@@ -173,7 +173,9 @@ class Partner extends Controller {
                 }
 
             //send onboarding message to customer directly
-            return redirect('https://' . $username . '.shulesoft.com/database/'.$username);
+            
+            return redirect('account/InvoiceView/'.$invoice->id);
+            //return redirect('https://' . $username . '.shulesoft.com/database/'.$username);
            // }
         }
         return view('users.partners.add_new', $this->data);
