@@ -15,8 +15,10 @@
         "laravel/framework": "5.8.*",
         "laravel/tinker": "~1.0",
         "league/flysystem-aws-s3-v3": "^1.0",
+        "phpunit/phpunit": "^9.4",
         "pragmarx/tracker": "^3.3",
-        "tecnickcom/tc-lib-barcode": "^1.15"
+        "tecnickcom/tc-lib-barcode": "^1.15",
+        "zizaco/entrust": "5.2.x-dev"
     },
     "require-dev": {
     },
