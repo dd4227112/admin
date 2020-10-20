@@ -48,7 +48,7 @@ Route::get('/student/getschools/null', function() {
         die(json_encode(DB::select($sql)));
     }
 });
-Route::get('/', [Account::class, 'index']);
+
 //dd(createRoute());
 if (createRoute() != NULL) {
 
