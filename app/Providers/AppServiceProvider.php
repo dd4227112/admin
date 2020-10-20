@@ -18,17 +18,17 @@ class AppServiceProvider extends ServiceProvider {
      */
     public function boot() {
         // schema::defaultStringLenght(191);
-        Queue::before(function (JobProcessing $event) {
-            // $event->connectionName
-            // $event->job
-            // $event->job->payload()
-        });
-
-        Queue::after(function (JobProcessed $event) {
-            // $event->connectionName
-            // $event->job
-            // $event->job->payload()
-        });
+//        Queue::before(function (JobProcessing $event) {
+//            // $event->connectionName
+//            // $event->job
+//            // $event->job->payload()
+//        });
+//
+//        Queue::after(function (JobProcessed $event) {
+//            // $event->connectionName
+//            // $event->job
+//            // $event->job->payload()
+//        });
     }
 
     public static function mailConfig() {
