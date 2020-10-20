@@ -126,7 +126,7 @@
                                                 <b>Task Excuted:</b>
                                                     <select id="action" class="form-control">
                                                         <option value='{{ $activity->action }}'>{{ $activity->status }}</option>
-                                                        <option value='Complete'>Complete</option>
+                                                        <option value='complete'>Complete</option>
                                                         <option value='Pending'>Pending</option>
                                                         <option value='on progress'>Progress</option>
                                                         <option value='Resolved'>Resolved</option>
