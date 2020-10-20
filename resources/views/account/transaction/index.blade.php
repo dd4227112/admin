@@ -64,7 +64,7 @@
                                             <?php
                                             
                                             $total_amount = 0;
-                                            if (count($expenses) > 0) {
+                                            if (!empty($expenses)) {
                                                 $i = 1;
                                                 foreach ($expenses as $refer_expense) {
                                                     ?>

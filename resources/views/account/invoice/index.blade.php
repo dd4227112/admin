@@ -241,7 +241,7 @@
                                     <div class="table-responsive dt-responsive">
                                         <div class="card-header">
                                             <div class="panel-body">
-                                                <?php if(isset($invoices) && count($invoices)>0){?>
+                                                <?php if(isset($invoices) && !empty($invoices)){?>
                                                 <table class="table table-responsive table-bordered">
                                                     <thead>
                                                         <tr>

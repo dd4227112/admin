@@ -263,7 +263,7 @@ if (can_access('view_balance_sheet')) {
                <?php
 
 
-                            if(count($express_revenues_grouped)>0){
+                            if(!empty($express_revenues_grouped)){
     $total_express_revenue=0;
     foreach ($express_revenues_grouped as $express_revenue ) {  
         $total_express_revenue=$total_express_revenue + $express_revenue->total;

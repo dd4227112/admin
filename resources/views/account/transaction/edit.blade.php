@@ -122,7 +122,7 @@
                                         <?php
                                         
                                         $array = array('0' => "select expense");
-                                        if (count($category) > 0) {
+                                        if (!empty($category)) {
                                             foreach ($category as $categ) {
                                                 $array[$categ->id] = $categ->name;
                                             }
@@ -184,7 +184,7 @@
 
                                         <?php
                                         $array_ = array('0' => "select method");
-                                        if (count($payment_types) > 0) {
+                                        if (!empty($payment_types)) {
                                             foreach ($payment_types as $payment_type) {
                                                 $array_[$payment_type->id] = $payment_type->name;
                                             }
@@ -221,7 +221,7 @@
 
                                             <?php
                                             $arrayb_ = array('0' => "select expense");
-                                            if (count($banks) > 0) {
+                                            if (!empty($banks)) {
                                                 foreach ($banks as $bank) {
                                                     $arrayb_[$bank->id] = $bank->referBank->name . ' (' . $bank->number . ')';
                                                 }
