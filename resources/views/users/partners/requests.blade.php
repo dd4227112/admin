@@ -72,8 +72,8 @@
                     <th>School Name</th>
                     <th>System Status</th>
                     <th>Bank Integration</th>
-                    <th>Bank Approval</th>
-                    <th>Shulesoft Approval</th>
+                    <th>Bank Status</th>
+                    <th>Shulesoft Status</th>
                     <th>Added Date</th>
                     <th>Action</th>
                   </tr>
@@ -85,7 +85,7 @@
                     foreach($requests as $request){
                       echo '<tr>
                       <td>'.$i++.'</td>
-                      <td>'.$request->client->name.'</td>
+                      <td>'.substr($request->client->name, 0, 30).'</td>
                       <td>'.$request->schema_name.'</td>';
                       ?>
                       <td><?=$request->banks->integration_request_id >0 ? 'Integrated' : 'Not Integrated' ?></td>
@@ -139,7 +139,7 @@
                         <td><?=date('d M Y', strtotime($contract->contract->start_date))?></td>
                         <td>
                           <a href="<?=url('account/invoiceView/'.$invoice->id)?>" class="btn btn-info btn-sm"> View Invoice</a>
-                          <a href="https://<?=$invoice->client->username?>.shulesoft.com/database/<?=$invoice->client->username?>" target="_blank" class="btn btn-success btn-sm"> Install System</a>
+                          <!-- <a href="https://<?=$invoice->client->username?>.shulesoft.com/database/<?=$invoice->client->username?>" target="_blank" class="btn btn-success btn-sm"> Install System</a> -->
                       </td>
                       </tr>
                     <?php } } ?>
