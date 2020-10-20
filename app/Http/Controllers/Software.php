@@ -318,7 +318,7 @@ ORDER  BY conrelid::regclass::text, contype DESC";
 
         $constrain_params = $this->getConstrainByName($constrain);
 
-        if (count($constrain_params) > 0) {
+        if (!empty($constrain_params)) {
             $sql = 'ALTER TABLE ' . $schema . '.' . $table . ' ADD CONSTRAINT  "' . $constrain_params->conname . '"  ' . str_replace(self::$master_schema, $schema, $constrain_params->pg_get_constraintdef);
             DB::statement($sql);
             echo 1;
@@ -348,7 +348,7 @@ ORDER  BY conrelid::regclass::text, contype DESC";
     public function logsDelete() {
         $id = request('id');
         $tag = \App\Models\ErrorLog::find($id);
-        if (count($tag) == 1) {
+        if (!empty($tag)) {
             $tag->deleted_by = \Auth::user()->id;
             $tag->save();
             $tag->delete();
@@ -390,7 +390,7 @@ ORDER  BY conrelid::regclass::text, contype DESC";
 
     public function setBankParameters() {
         $check = DB::table(request('schema') . '.bank_accounts_integrations')->where('bank_account_id', request('bank_id'));
-        if (count($check->first()) == 1) {
+        if (!empty($check->first())) {
             $check->update([request('tag') => request('val')]);
             DB::statement('UPDATE ' . request('schema') . '.invoices SET "reference"=\'' . request('val') . '\'||"id", prefix=\'' . request('val') . '\'');
             DB::statement('UPDATE ' . request('schema') . '.setting SET "payment_integrated"=1');
