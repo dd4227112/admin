@@ -175,7 +175,7 @@ class Customer extends Controller {
             $task = \App\Models\Task::find($task_id)->update(['user_id' => $user_id, 'update_at' => date('Y-m-d H:i:s')]);
             DB::table('tasks_users')->where('task_id', $task_id)->update([
                 'user_id' => $user_id,
-                'update_at' => date('Y-m-d H:i:s')
+                'updated_at' => date('Y-m-d H:i:s')
             ]);
             \App\Models\TrainItemAllocation::where('task_id', $task_id)->update([
                 'user_id' => $user_id,
