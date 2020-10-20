@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,10 +13,6 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-// from repository to database after push
-
-Route::post('/bitbucket', 'Background@tech_task');
-
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
