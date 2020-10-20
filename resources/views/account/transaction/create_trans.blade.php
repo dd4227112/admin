@@ -230,7 +230,7 @@
                                                         <select name="payment_type_id" id="payment_method_status" class="form-control" required="">
                                                             <option value="">Select Payment type</option>
                                                             <?php
-                                                            if (count($payment_types) > 0) {
+                                                            if (!empty($payment_types)) {
 
                                                                 foreach ($payment_types as $payment_type) {
                                                                     ?>
@@ -270,7 +270,7 @@
                                                             <select class="select2_multiple form-control" name="bank_account_id" id="bank_name">               <option value=""></option>
 
                                                                 <?php
-                                                                if (count($banks) > 0) {
+                                                                if (!empty($banks) ) {
 
                                                                     foreach ($banks as $bank) {
                                                                         ?>

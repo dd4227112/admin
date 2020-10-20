@@ -39,7 +39,7 @@
                 ?>
                 <div id="printablediv">
 
-                    <?php if (isset($voucher) && count($voucher) > 0) { ?>
+                    <?php if (isset($voucher) && !empty($voucher)) { ?>
                         <section   class="content invoice" style=" margin: 0px auto; padding-left: 10%; padding-right: 10%; page-break-inside: avoid;">
                     
                             <div class="">

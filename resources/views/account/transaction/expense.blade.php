@@ -120,7 +120,7 @@
                                     $total_expense = 0;
                                     $i = 1;
                                     $refer_ids = [];
-                                    if (count($expenses) > 0) {
+                                    if (!empty($expenses)) {
 
 
                                         foreach ($expenses as $expense) {

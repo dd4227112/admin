@@ -61,7 +61,7 @@
         <div class="col-md-12 col-lg-12">
             <div class="white-box">
                 <div class="row">
-                    <?php if (isset($results) && count($results) > 0) { ?>
+                    <?php if (isset($results) && !empty($results)) { ?>
 
                         <div class="table-responsive">
                             <table class="table color-table inverse-table dataTable">
@@ -113,7 +113,7 @@
                         </div>
                     <?php }
                     ?> 
-                    <?php if (isset($results) && count($results) == 0) { ?>
+                    <?php if (isset($results) && empty($results)) { ?>
                         <h5 class="alert alert-warning">Invoice or Student Name does not exists</h5></div>
 
                 <?php } ?>

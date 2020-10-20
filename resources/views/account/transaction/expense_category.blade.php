@@ -152,7 +152,7 @@
                                                         $total_expense = 0;
                                                         $i = 1;
 
-                                                        if (isset($expenses) && count($expenses)) {
+                                                        if (isset($expenses) && !empty($expenses)) {
 
 
                                                             $i = 1;
@@ -235,7 +235,7 @@
 
 
 
-                                                        if (isset($current_assets) && count($current_assets) && $id == 5) {
+                                                        if (isset($current_assets) && !empty($current_assets) && $id == 5) {
 
                                                             foreach ($current_assets as $current_asset) {
                                                                 ?>
@@ -293,7 +293,7 @@
                                                         ?> 
 
                                                         <?php
-                                                        if (isset($fees) && count($fees) > 0 && $id == 5) {
+                                                        if (isset($fees) && !empty($fees) && $id == 5) {
 
 
                                                             foreach ($fees as $fee) {

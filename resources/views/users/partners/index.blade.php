@@ -57,7 +57,7 @@
                       </thead>
                       <tbody>
                       <?php 
-                      if(count($partners) > 0){
+                      if(!empty($partners)){
                         $i = 1;
                         foreach($partners as $partner){
                           ?>

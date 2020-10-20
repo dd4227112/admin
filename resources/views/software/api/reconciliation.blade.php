@@ -85,12 +85,12 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                        if (isset($returns) && count($returns) > 0) {
+                                        if (isset($returns) && !empty($returns)) {
                                             foreach ($returns as $return) {
 
 
                                                 $data = $return->transactions;
-                                                if (count($data) > 0) {
+                                                if (!empty($data)) {
                                                     $trans = (object) $data;
                                                     $i = 1;
                                                     foreach ($trans as $tran) {
@@ -109,7 +109,7 @@
                                                             <td><?= $tran->token ?></td>
                                                             <td>
                                                                 <?php
-                                                                if (count($check) == 0) {
+                                                                if (empty($check)) {
                                                                     ?>
                                                                     <a href="#" onclick="return false" onmousedown="reconcile('<?= url('software/syncMissingPayments/null?data=' . urlencode(json_encode($tran))) ?>')">Sync</a>
                                                                 <?php } ?>
