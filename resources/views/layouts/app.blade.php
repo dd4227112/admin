@@ -732,6 +732,22 @@ function toast(message) {
                             <?php
                         }
                         ?>
+                        <?php 
+                            if (can_access('manage_users') || in_array(Auth::user()->role_id, array(14,8))){ ?>
+                          <li class="nav-item">
+                                <a href="#!">
+                                    <i class="ti-layers "></i>
+                                    <span data-i18n="nav.extra-components.main">My Panel</span>
+                                </a>
+                                <ul class="tree-1">
+                                    <li><a href="<?= url('Partner/index') ?>" data-i18n="nav.extra-components.session-timeout"> List of Schools</a></li>
+                                    <li><a href="<?= url('Partner/add') ?>" data-i18n="nav.extra-components.offline">Onboard New School</a></li>
+                                    <li><a href="#" data-i18n="nav.extra-components.session-timeout">Reports</a></li>
+                                </ul>
+                            </li>
+                            <?php
+                        }
+                        ?>
                         <?php
                        // if (can_access('manage_schools')) {
                         if (false) {
