@@ -172,20 +172,20 @@ class Customer extends Controller {
         $attr = request('attr');
         $value = request('value');
         if ((int) $user_id > 0 && (int) $task_id > 0) {
-            $task = \App\Models\Task::find($task_id)->update(['user_id' => $user_id, 'update_at' => date('Y-m-d H:i:s')]);
+            $task = \App\Models\Task::find($task_id)->update(['user_id' => $user_id, 'updated_at' => date('Y-m-d H:i:s')]);
             DB::table('tasks_users')->where('task_id', $task_id)->update([
                 'user_id' => $user_id,
                 'updated_at' => date('Y-m-d H:i:s')
             ]);
             \App\Models\TrainItemAllocation::where('task_id', $task_id)->update([
                 'user_id' => $user_id,
-                'update_at' => date('Y-m-d H:i:s')
+                'updated_at' => date('Y-m-d H:i:s')
             ]);
         }
         if ($attr == 'school_person' && (int) $task_id > 0) {
             \App\Models\TrainItemAllocation::where('task_id', $task_id)->update([
                 'school_person_allocated' => $value,
-                'update_at' => date('Y-m-d H:i:s')
+                'updated_at' => date('Y-m-d H:i:s')
             ]);
         }
         if ($attr == 'start_date' && (int) $task_id > 0) {
@@ -194,13 +194,13 @@ class Customer extends Controller {
             $obj = [
                 'start_date' => date('Y-m-d H:i', strtotime($value . ' ' . $slot->start_time)),
                 'end_date' => date('Y-m-d H:i', strtotime($value . ' ' . $slot->end_time)),
-                'update_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
                 'slot_id' => $slot_id];
             \App\Models\Task::find($task_id)->update($obj);
             die(json_encode(array_merge(array('task_id' => $task_id), $obj)));
         }
         if ($attr == 'end_date' && (int) $task_id > 0) {
-            \App\Models\Task::find($task_id)->update(['end_date' => $value, 'update_at' => date('Y-m-d H:i:s')]);
+            \App\Models\Task::find($task_id)->update(['end_date' => $value, 'updated_at' => date('Y-m-d H:i:s')]);
         }
         //insert into training allocation
         echo 'success';
