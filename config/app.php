@@ -11,7 +11,7 @@ return [
       | any other location as required by the application or its packages.
      */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' =>'Laravel',
     /*
       |--------------------------------------------------------------------------
       | Application Environment
@@ -22,7 +22,7 @@ return [
       | services your application utilizes. Set this in your ".env" file.
       |
      */
-    'env' => env('APP_ENV', 'local'),
+    'env' =>'local',
     /*
       |--------------------------------------------------------------------------
       | Application Debug Mode
@@ -33,7 +33,7 @@ return [
       | application. If disabled, a simple generic error page is shown.
       |
      */
-    'debug' => env('APP_DEBUG', true),
+    'debug' => true,
     /*
       |--------------------------------------------------------------------------
       | Application URL
@@ -44,7 +44,7 @@ return [
       | your application so that it is used when running Artisan tasks.
       |
      */
-    'url' => env('APP_URL', 'http://localhost/shulesoft'),
+    'url' => 'https://admin.shulesoft.com'),
     /*
       |--------------------------------------------------------------------------
       | Application Timezone
@@ -88,7 +88,7 @@ return [
       | will not be safe. Please do this before deploying an application!
       |
      */
-    'key' => env('APP_KEY','base64:2yCQng1WzNFHhq28MJYwtxcyBo2VOue1YR+4oXJD5Ek=]'),
+    'key' => 'base64:2yCQng1WzNFHhq28MJYwtxcyBo2VOue1YR+4oXJD5Ek=]',
     'cipher' => 'AES-256-CBC',
     /*
       |--------------------------------------------------------------------------
@@ -102,8 +102,8 @@ return [
       | Available Settings: "single", "daily", "syslog", "errorlog"
       |
      */
-    'log' => env('APP_LOG', 'single'),
-    'log_level' => env('APP_LOG_LEVEL', 'debug'),
+    'log' => 'single',
+    'log_level' => 'debug',
     /*
       |--------------------------------------------------------------------------
       | Autoloaded Service Providers
