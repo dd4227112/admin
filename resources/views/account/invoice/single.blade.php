@@ -75,16 +75,7 @@
         <div class="col-lg-6">
 
           <p class="text-right" align="right">
-            <?php if (can_access('manage_finance')) { ?>
-              @if(!isset($balance))
-              <?php
-              if (strlen($invoice->token) < 4) {
-                ?><a href="<?= url()->current() . '/1' ?>" class="btn btn-warning btn-sm ">Create Control Number</a>
-              <?php } ?>
-              <?php if ($invoice->status <> 1) { ?>  <a href="<?= url('account/payment/' . $invoice->id) ?>" class="btn btn-danger btn-sm"><i class="fa fa-money"></i> Add Payment </a>
-            <?php } ?>
-            @endif
-          <?php } ?>
+          
           <a href="#" id="printInvoice" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Print </a>
 
         </p>

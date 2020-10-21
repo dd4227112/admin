@@ -339,7 +339,7 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
 
     public function epayment() {
         $invoice_id = request()->segment(3);
-        $booking =$invoice= \App\Models\Invoice::where('id', $invoice_id)->first();
+        $booking =$invoice= \App\Models\Invoice::find($invoice_id);
         if (strlen($booking->token) < 4) {
            $account=new \App\Http\Controllers\Account();
            $account->createSelcomControlNumber($invoice_id);

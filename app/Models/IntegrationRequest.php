@@ -10,8 +10,13 @@ class IntegrationRequest extends Model {
      * Generated
      */
     
+    /**
+     *
+     * WITH BASIC DESIGN, one table will be used, but in the future we will use two different tables to track approval
+     */
+    
     protected $table = 'integration_requests';
-    protected $fillable = ['id', 'client_id', 'user_id', 'shulesoft_approved', 'bank_approved', 'schema_name', 'created_at','updated_at'];
+    protected $fillable = ['id', 'client_id', 'user_id', 'shulesoft_approved', 'bank_approved', 'schema_name', 'created_at','updated_at','approval_user_id'];
 
     public function client() {
         return $this->belongsTo(\App\Models\Client::class, 'client_id', 'id');
