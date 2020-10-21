@@ -456,7 +456,7 @@ function toast(message) {
                     <img class="img-40" src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image">
                     <div class="user-details">
                         <span>{{ Auth::user()->name() }}</span>
-                        <span id="more-details"> {{ Auth::user()->role->display_name }}</span>
+                        <span id="more-details"> <?php // Auth::user()->role->display_name ?></span>
                     </div>
                 </div>
                 <div class="main-menu-content">

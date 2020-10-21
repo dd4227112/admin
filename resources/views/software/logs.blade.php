@@ -29,7 +29,7 @@
                 <div class="card table-card widget-danger-card col-lg-6">
                     <div class="card-footer">
                         <div class="task-list-table">
-                            <p class="task-due"><strong>School with highest Error Logs : </strong><strong class="label label-danger"><?= count($danger_schema) == 1 ? $danger_schema->schema_name : '' ?></strong></p>
+                            <p class="task-due"><strong>School with highest Error Logs : </strong><strong class="label label-danger"><?= !empty($danger_schema)? $danger_schema->schema_name : '' ?></strong></p>
                         </div>
                         <div class="task-board m-0">
                             <a href="#" class="btn btn-info btn-mini b-none" title="view"><i class="icofont icofont-eye-alt m-0"></i></a>

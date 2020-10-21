@@ -60,7 +60,7 @@
                       </thead>
                       <tbody>
                       <?php 
-                      if(count($schools) > 0){
+                      if(!empty($schools)){
                         
                         $i = 1;
                         foreach($schools as $school){

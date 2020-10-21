@@ -94,7 +94,7 @@
                     <div class="card">
                         <div class="card-header">
                         <?php
-                        if(isset($branch) && count($branch)){ ?>
+                        if(isset($branch) && !empty($branch)){ ?>
                             <h5>List of Private Schools in <?=$branch->branch->district->name?>, <?= $branch->branch->district->region->name?></h5>
                         <?php }else{ ?>
                             <h5>List of Private Schools in <?=Auth::user()->name?></h5>
@@ -129,7 +129,7 @@
                                             echo '<td>';
                                             if($school->schema_name != ''){
                                              $school_with_bank = DB::table('admin.all_bank_accounts')->where('schema_name', $school->schema_name)->first();
-                                             if(count($school_with_bank) == 0){
+                                             if(empty($school_with_bank)){
                                                 echo '<span class="btn btn-info btn-sm"> Partial onboarded </span>';
                                              }else{
                                                 echo '<span class="btn btn-success btn-sm"> Fully onboarded </span>';
@@ -154,7 +154,7 @@
                 </div>
                     </div>
                   </div>
-                 <?php if(isset($branch) && count($branch)){ 
+                 <?php if(isset($branch) && !empty($branch)){ 
                     // echo bcrypt('khairaatislamic20');
                   }else{ ?>
 

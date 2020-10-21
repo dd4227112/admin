@@ -2,32 +2,46 @@
 
 namespace App\Http\Middleware;
 
+use App\Providers\RouteServiceProvider;
 use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use DB;
 use App;
 use \App\Model\Tour;
 
-class RedirectIfAuthenticated {
-
+class RedirectIfAuthenticated
+{
     /**
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
-     * @param  string|null  $guard
+     * @param  string|null  ...$guards
      * @return mixed
      */
+<<<<<<< HEAD
     public function handle($request, Closure $next, $guard = null) {
         App::setLocale(session('lang'));
         $this->logRequest();
         if (!in_array($this->createRoute(), $this->exceptionUri()) && empty($_POST)) {
             if (empty(session('id'))) {
                 return $this->redirectToLogin($request);
+=======
+    public function handle(Request $request, Closure $next, ...$guards)
+    {
+        $guards = empty($guards) ? [null] : $guards;
+
+        foreach ($guards as $guard) {
+            if (Auth::guard($guard)->check()) {
+                return redirect(RouteServiceProvider::HOME);
+>>>>>>> 5c3f8c012f4bd5882b41a39b4beb2e06ceb1f4f1
             }
         }
+
         return $next($request);
     }
+<<<<<<< HEAD
 
     public function redirectToLogin($request) {
         if ($request->ajax()) {
@@ -244,4 +258,6 @@ class RedirectIfAuthenticated {
         return $browser;
     }
 
+=======
+>>>>>>> 5c3f8c012f4bd5882b41a39b4beb2e06ceb1f4f1
 }
