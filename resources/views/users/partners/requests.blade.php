@@ -136,7 +136,7 @@
                         <td><?=number_format(12000*$invoice->client->estimated_students)?></td>
                         <td><?=$invoice->status == 0 ? 'Unpaid' : 'Paid' ?></td>
                         <td><?=date('d M Y', strtotime($invoice->client->created_at))?></td>
-                        <td><?=date('d M Y', strtotime($contract->contract->start_date))?></td>
+                        <td><?php //date('d M Y', strtotime($contract->contract->start_date))?></td>
                         <td>
                           <a href="<?=url('account/invoiceView/'.$invoice->id)?>" class="btn btn-info btn-sm"> View Invoice</a>
                           <!-- <a href="https://<?=$invoice->client->username?>.shulesoft.com/database/<?=$invoice->client->username?>" target="_blank" class="btn btn-success btn-sm"> Install System</a> -->
