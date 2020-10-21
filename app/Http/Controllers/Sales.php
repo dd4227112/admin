@@ -704,13 +704,7 @@ group by ownership');
             $where = "  a.created_at::date >='" . $start_date . "' AND a.created_at::date <='" . $end_date . "'";
         }
 
-        //         $sql = "SELECT b.id, a.activity, a.next_action, a.status, b.address as region, a.start_date::date, a.end_date::date,b.name, b.username as schema_name, d.name as type from admin.tasks a join admin.tasks_clients c on a.id=c.task_id join admin.clients b on b.id=c.client_id
-        //         JOIN admin.task_types d on d.id=a.task_type_id WHERE a.user_id in (select id from admin.users where department=2) and $where
-        //         UNION ALL
-        //         select b.id, a.activity, a.next_action, b.region, a.status, a.start_date::date, a.end_date::date,b.name, b.schema_name, d.name as type from admin.tasks a join admin.tasks_schools c on a.id=c.task_id join admin.schools b on b.id=c.school_id
-        //         JOIN admin.task_types d on d.id=a.task_type_id WHERE a.user_id in (select id from admin.users where department=2) and $where";
-        // $this->data['schools'] = DB::select($sql);
-
+    
         $this->data['schools'] = \App\Models\Task::whereIn('user_id', \App\Models\User::where('department', 2)->get(['id']))->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
         $this->data['new_schools'] = \App\Models\Task::whereIn('user_id', \App\Models\User::where('department', 2)->get(['id']))->where('next_action', 'new')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
         $this->data['pipelines'] = \App\Models\Task::whereIn('user_id', \App\Models\User::where('department', 2)->get(['id']))->where('next_action', 'pipeline')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
@@ -801,8 +795,94 @@ group by ownership');
         return $this->createGraph($data, $firstpart, $table, $chart_type, $custom, $call_back_sql);
     }
 
-    public function onboardMessage($client = null) {
+
+    public function schoolVisit() {
+        $page = request()->segment(3);
+        if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
+            //current day
+            $this->data['today'] = 1;
+            $start_date = date('Y-m-d');
+            $end_date = date('Y-m-d');
+            $where = '  a.created_at::date=CURRENT_DATE';
+        } else {
+            $this->data['today'] = 2;
+            $start_date = date('Y-m-d', strtotime(request('start')));
+            $end_date = date('Y-m-d', strtotime(request('end')));
+            $where = "  a.created_at::date >='" . $start_date . "' AND a.created_at::date <='" . $end_date . "'";
+        }
+        $ids = [];
+
+        if (request('user_ids') !='') {
+            foreach(request('user_ids') as $ids){
+                array_push($ids, $ids);
+            }
+        }else{
+            array_push($ids, Auth::user()->id);
+        }
         
+        $task_ids = [];
+        $id = Auth::user()->id;
+        $tasks = \App\Models\Task::where('user_id', $id)->where('action', 'visit')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
+        foreach ($tasks as $value) {
+            array_push($task_ids, (int)$value->id);
+        }
+        $this->data['schools'] = \App\Models\TaskClient::whereIn('task_id', $task_ids)->get();
+        //$this->data['new_schools'] = \App\Models\Task::whereIn('user_id', $id)->where('next_action', 'new')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
+         $this->data['query'] =   'SELECT count(a.status), a.status from admin.tasks_clients a where task_id in(select id from admin.tasks where user_id in('.$id.')) and ' . $where . ' group by a.status order by count(a.status) desc';
+         $this->data['types'] = 'SELECT count(a.created_at::date), a.created_at::date as "Date" from admin.tasks_clients a where task_id in(select id from admin.tasks where user_id in('.$id.')) and a.status is not null and ' . $where . ' group by a.created_at::date order by count(a.created_at::date) desc';
+        return view('sales.sales_status.visitation_index', $this->data);
     }
+
+
+    public function addVisit() {
+         
+        $schools =  DB::table('all_setting')->orderBy('created_at', 'DESC')->get();
+         $all_school = [];
+         foreach ($schools as $school) {
+             array_push($all_school, $school->schema_name);
+         } 
+        
+        $this->data['schools']  = \App\Models\Client::whereIN('username', $all_school)->get();
+        
+        if ($_POST) {
+            // $data = request()->all();
+            // dd($data);
+            $data = array_merge(request()->except('_token'), ['user_id' => Auth::user()->id, 'status' => 'new', 'action'=> 'visit', 'date' => date('Y-m-d')]);
+            $task = \App\Models\Task::create($data);
+
+            DB::table('tasks_users')->insert([
+                'task_id' => $task->id,
+                'user_id' => Auth::user()->id
+            ]);
+
+            $clients = request('school_id');
+            foreach($clients as $client_id){
+                DB::table('tasks_clients')->insert([
+                    'task_id' => $task->id,
+                    'status' => 'new',
+                    'client_id' => (int) $client_id
+                ]);
+            }
+
+            if (!empty($task->id) && request('module_id')) {
+                $modules = request('module_id');
+                foreach ($modules as $key => $value) {
+                    if (request('module_id')[$key] != '') {
+                        $array = ['module_id' => request('module_id')[$key], 'task_id' => $task->id];
+                        $check_unique = \App\Models\ModuleTask::where($array);
+                        if (!empty($check_unique->first())) {
+                            \App\Models\ModuleTask::create($array);
+                        }
+                    }
+                }
+            }
+
+            return redirect('Sales/schoolVisit/1')->with('success', 'success');
+        }
+
+        return view('sales.sales_status.add_visit', $this->data);
+    }
+
+
 
 }
