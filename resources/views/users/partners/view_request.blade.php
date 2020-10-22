@@ -145,9 +145,13 @@
                           if(empty($bank)){
                             $bank = DB::table($request->client->username.'.bank_accounts')->where('refer_bank_id', 8)->first();
                            $refer_bank = $bank->name;
+                           $user = DB::table($request->client->username. '.users')->where($request->table, $request->table)->where('id', $request->user_id)->first();
+                           $user_name = $user->name;
+                              $usertype = ucfirst($user->usertype);
                           }else{
                             $refer_bank = $bank->referBank->name;
-
+                            $user_name = $bank->requests->user->name;
+                            $usertype = 'Sales Manager';
                           }
                       ?>
                     <div class="card-block user-desc">
@@ -268,10 +272,10 @@
                                   </thead>
                                   <tbody>
                                     <tr>
-                                      <td>Name:   &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; <?=$bank->requests->user->name?></td>
+                                      <td>Name:   &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; <?=$user_name?></td>
                                     </tr>
                                     <tr>
-                                      <td>Designation:   &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; <?=$bank->requests->user->name?></td>
+                                      <td>Designation:   &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; <?=$usertype?></td>
                                     </tr>
                                     <!-- <tr>
                                     <td>Department:</td>
