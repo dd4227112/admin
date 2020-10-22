@@ -6,7 +6,14 @@
 <!-- Main-body start -->
 <div class="main-body">
   <div class="page-wrapper">
-  <a  onclick="javascript:printDiv('print_all')" class="btn btn-primary">Print Here</a>
+  <div class="row">
+  <div class="col-sm-6">
+      <a  onclick="javascript:printDiv('print_all')" class="btn btn-primary">Print Here</a>
+  </div>
+  <div class="col-sm-6">
+      <a href="<?=url('Partner/InvoicePrefix/')?>" style="float: right;" class="btn btn-success">Validate This Application</a>
+  </div>
+  </div>
 
     <!-- Page-body start -->
     <div class="page-body" id="print_all">
@@ -44,20 +51,20 @@
                                 <th>
                                   <?php
                                   if ($request->user_id != '') {
-                                    echo $school->school->district. ' - '. $school->school->region;
+                                    echo $client->school->district. ' - '. $client->school->region;
                                   }
                                   ?>
                                 </tr>
                                 <tr>
-                                  <th> Ownership </th>
+                                  <th> Registration No. </th>
                                   <th>
                                     <?php
-                                    echo $school->school->ownership;
+                                    echo $client->school->ownership;
                                     ?>
                                   </th>
                                 </tr>
                                 <tr>
-                                  <th scope="row">No of Student</th>
+                                  <th scope="row">Number of Students</th>
                                   <th> <?= $request->client->estimated_students ?></th>
                                 </tr>
                                 <tr>
@@ -81,7 +88,7 @@
                               <tbody>
                                 <tr>
                                   <th scope="row">Full Name</th>
-                                  <th> {{ $school->name }} </th>
+                                  <th> <?=$school->name ?> </th>
                                 </tr>
                                 <tr>
                                   <th scope="row">Position</th>
@@ -133,7 +140,20 @@
                     <div class="card-header">
                       <h5>Bank Account Details</h5>
                     </div>
-
+                      <?php
+                          $bank = \App\Models\IntegrationBankAccount::where('integration_request_id', $request->id)->first();
+                          if(empty($bank)){
+                            $bank = DB::table($request->client->username.'.bank_accounts')->where('refer_bank_id', 8)->first();
+                           $refer_bank = $bank->name;
+                           $user = DB::table($request->client->username. '.users')->where("table", $request->table)->where('id', $request->user_id)->first();
+                           $user_name = $user->name;
+                              $usertype = ucfirst($user->usertype);
+                          }else{
+                            $refer_bank = $bank->referBank->name;
+                            $user_name = $bank->requests->user->name;
+                            $usertype = 'Sales Manager';
+                          }
+                      ?>
                     <div class="card-block user-desc">
                       <div class="view-desc">
 
@@ -145,59 +165,50 @@
                               <tbody>
                                 <tr>
                                   <th scope="row">Bank Name</th>
-                                  <th><?=$bank->referBank->name?></th>
+                                  <th><?=$refer_bank?></th>
                                 </tr>
                                 <tr>
                                   <th scope="row">Account Name</th>
                                   <th>
                                     <?php
                                     if ($request->user_id != '') {
-                                      echo $bank->account_name;
+                                      echo $bank->name;
                                     }
                                     ?>
                                   </tr>
                                   <tr>
                                     <th> Account Number </th>
-                                    <th><?php echo $bank->account_number; ?> </th>
+                                    <th><?php echo $bank->number; ?> </th>
                                   </tr>
 
                                   <tr>
-                                    <th>Open Balance</th>
-                                    <td>
-                                      <?php
-
-                                      echo '<b>'.$bank->referCurrency->currency.'('.$bank->referCurrency->symbol.')</b>';
-                                      ?>
-                                    </td>
+                                    <th>Currency</th>
+                                    <th> <?= $bank->branch ?></th>
                                   </tr>
                                 </tbody>
                               </table>
                             </div>
                             <div class="col-sm-6">
-                              <h3>Bank Person</h3>
+                              <h3> Application Docs Attachments</h3>
                               <table class="table m-0">
                                 <tbody>
                                   <tr>
-                                    <th scope="row">Full Name</th>
-                                    <th><?=$bank->referBank->name?></th>
+                                    <th scope="row">Bank Term of Services </th>
+                                    <th> <a href="http://" target="_blank" class="btn btn-info btn-sm" rel="noopener noreferrer"> <i class="ti-cloud"></i> View Doc</a> </th>
                                   </tr>
                                   <tr>
-                                    <th scope="row">Phone Number</th>
-                                    <th>
-                                      <?php
-                                      if ($request->user_id != '') {
-                                        echo $bank->account_name;
-                                      }
-                                      ?>
+                                      <th scope="row">Shulesoft Agreement Form</th>
+                                      <th> <a href="http://" target="_blank" class="btn btn-info btn-sm" rel="noopener noreferrer"> <i class="ti-cloud"></i> View Doc</a> </th>
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">Bank Application Form</th>
+                                    <th> <a href="http://" target="_blank" class="btn btn-info btn-sm" rel="noopener noreferrer"> <i class="ti-cloud"></i> View Doc</a> </th>
+                                     
                                     </tr>
-                                    <tr>
-                                      <th scope="row">Branch Name</th>
-                                      <th> <?= $bank->branch ?></th>
-                                    </tr>
-                                    <tr>
+                                    <!-- <tr>
                                       <th scope="row">Implemetantion Start</th>
-                                      <th> <?= $client->contract->start_date ?></th>
-                                    </tr>
+                                      <th> <?php // $client->contract->start_date ?></th>
+                                    </tr> -->
 
                                   </tbody>
                                 </table>
@@ -215,11 +226,13 @@
                                       <tr  style="border-bottom: 5px solid #8CDDCD;">
                                         <th colspan="2" style="background:#8CDDCD;text-align: center;
                                         font-size: 18px;
-                                        color: white;"><?=$bank->referBank->name?></th>
+                                        color: white;">
+                                        <?=$refer_bank?>
+                                        </th>
                                       </tr>
                                       <tr>
                                         <td>
-                                          <p>On behalf of <b> <?=$bank->referBank->name?></b> Limited, the aforementioned services headed by</p>
+                                          <p>On behalf of <b> <?=$refer_bank?></b> Limited, the aforementioned services headed by</p>
                                         </td>
                                       </tr>
                                     </thead>
@@ -259,10 +272,10 @@
                                   </thead>
                                   <tbody>
                                     <tr>
-                                      <td>Name:   &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; <?=$bank->requests->user->name?></td>
+                                      <td>Name:   &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; <?=$user_name?></td>
                                     </tr>
                                     <tr>
-                                      <td>Designation:   &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; <?=$bank->requests->user->role->name?></td>
+                                      <td>Designation:   &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; <?=$usertype?></td>
                                     </tr>
                                     <!-- <tr>
                                     <td>Department:</td>

@@ -726,7 +726,7 @@ function toast(message) {
                                 <ul class="tree-1">
                                     <li><a href="<?= url('Analyse/myschools') ?>" data-i18n="nav.extra-components.session-timeout"> List of Schools</a></li>
                                     <li><a href="<?= url('Analyse/myreport') ?>" data-i18n="nav.extra-components.offline">Task Report</a></li>
-                                    <li><a href="#" data-i18n="nav.extra-components.session-timeout">Attendance</a></li>
+                                    <li><a href="<?= url('sales/schoolVisit/1') ?>" data-i18n="nav.extra-components.session-timeout">School Visitation</a></li>
                                 </ul>
                             </li>
                             <?php

@@ -19,7 +19,7 @@ class TaskClient extends Model {
 
     //put your code here
     protected $table = 'tasks_clients';
-    protected $fillable = ['id', 'task_id', 'client_id', 'created_at', 'updated_at'];
+    protected $fillable = ['id', 'task_id', 'client_id', 'created_at', 'status', 'updated_at'];
 
     public function client() {
         return $this->belongsTo(\App\Models\Client::class, 'client_id', 'id');

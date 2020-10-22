@@ -49,19 +49,31 @@
                   <hr>
                 </div>
                 <!-- <div class="alert alert-success hide"></div> -->
-                <form id="regiration_form" action="" method='POST' validate>
+                <form id="regiration_form" action="" method='POST' enctype='multipart/form-data'>
                   <fieldset>
                     <div class="form-group row">
-                      <div class="col-md-6">
+                      <div class="col-sm-6">
                         School Name
-                        <input type="text" class="form-control" placeholder="school Name here.." name="school_name" required="">
+                        <input type="text" class="form-control" placeholder="School Name here.." name="school_name" required="">
+                        </div>
+                        <div class="col-sm-6">
+                        Registration No:
+                        <input type="text" class="form-control"  name="registration_number" required="">
                       </div>
-                      <div class="col-md-6">
-                        Estimated Students
-                        <input type="text" class="form-control" placeholder="Number of student here.." name="students" required="">
-                      </div>
+                      
                     </div>
 
+                    <div class="form-group row">
+                      
+                      <div class="col-sm-6">
+                        Estimated Students
+                        <input type="text" class="form-control" placeholder="Enter here..." name="students" required="">
+                      </div>
+                      <div class="col-sm-6">
+                        Implementation Start Date
+                        <input type="date" class="form-control"  name="implementation_date" required="">
+                      </div>
+                    </div>
                     <div class="form-group row">
                       <div class="col-md-6">
                         <strong> Select Ownership</strong>
@@ -99,23 +111,24 @@
                           <option value="">Select Here...</option>
                         </select>
                       </div>
-                    </div>
-
-                    <div class="form-group row">
-                      <div class="col-sm-6">
-                        Implementation Start Date
-                        <input type="date" class="form-control"  name="implementation_date" required="">
                       </div>
-                      <div class="col-sm-6">
-                        Data Format Available
-                        <select name="data_type_id" class="form-control">
-                          <option value="1">Excel With Parent Phone Numbers</option>
-                          <option value="2">Physical Files Format</option>
-                          <option value="3">Softcopy but without parents phone numbers</option>
-
+                      
+                    <div class="form-group row">
+                      <div class="col-md-6">
+                        Select Ward
+                        <select type="text" name="ward" id="ward" style="text-transform:uppercase" required class="form-control select2">
+                         
                         </select>
                       </div>
+                      <div class="col-sm-6">
+                        P.O Box Address
+                        <input type="text" class="form-control"  name="address" required="">
+
+                      </div>
                     </div>
+
+                    
+                    
                     <input type="button" name="password" class="next btn btn-info" value="Next" />
                   </fieldset>
                   <fieldset>
@@ -154,13 +167,17 @@
                     <hr>
 
                     <div class="form-group row">
-                      <div class="col-sm-6">
+                      <div class="col-sm-4">
                         ShuleSoft Agreement Form
-                        <input type="file" name="agreement_form" class="form-control"/>
+                        <input type="file" name="attachments[]" class="form-control"/>
                       </div>
-                      <div class="col-sm-6">
+                      <div class="col-sm-4">
                         Bank Application Form
-                        <input type="file" name="bank_form" class="form-control"/>
+                        <input type="file" name="attachments[]" class="form-control"/>
+                      </div>
+                      <div class="col-sm-4">
+                        Bank Terms of Services
+                        <input type="file" name="attachments[]" class="form-control"/>
                       </div>
                     </div>
 
@@ -236,7 +253,7 @@
                     <div class="form-group row">
                       <div class="col-sm-6">
                         Currency
-                        <select name="refer_currency_id" class="form-control">
+                        <select name="refer_currency_id" class="form-control select2">
                           <?php $curs = DB::table('constant.refer_currencies')->get();
                           foreach($curs  as $cur){
                             ?>
@@ -341,6 +358,18 @@ $('#region').change(function () {
     }
   });
 });
+$('#district').change(function () {
+            var val = $(this).val();
+            $.ajax({
+                method: 'get',
+                url: '<?= url('Marketing/getWard/null') ?>',
+                data: {district: val},
+                dataType: 'html',
+                success: function (data) {
+                    $('#ward').html(data);
+                }
+            });
+        });
 </script>
 </div>
 </div>
