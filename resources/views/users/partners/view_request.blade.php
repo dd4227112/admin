@@ -143,7 +143,7 @@
                       <?php
                           $bank = \App\Models\IntegrationBankAccount::where('integration_request_id', $request->id)->first();
                           if(empty($bank)){
-                            $bank = DB::table($request->client->username.'.bank_accounts_integrations')->where('refer_bank_id', 8)->first();
+                            $bank = DB::table($request->client->username.'.bank_accounts')->where('refer_bank_id', 8)->first();
                            $refer_bank = $bank->name;
                           }else{
                             $refer_bank = $bank->referBank->name;
