@@ -90,6 +90,20 @@ return [
             'sslmode' => 'prefer',
         ],
 
+        'karibusms' => [
+             'driver' => 'pgsql',
+            //'url' => ':erb',
+            'host' => 'localhost',
+            'port' => '5432',
+            'database' => 'other_app',
+            'username' => 'postgres',
+            'password' => 'tabita',
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'schema' => 'new_karibusms',
+            'sslmode' => 'prefer',
+        ],
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_URL'),

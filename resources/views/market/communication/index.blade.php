@@ -37,11 +37,11 @@ $usertype = session('usertype');
                     <?php
                     $client = DB::connection('karibusms')->table('client')->first();
 
-                    if (count($client) == 0) {
+                    if (empty($client)) {
                         
                     } else {
-                        $quick_sms = DB::connection('karibusms')->table('sms_status')->where('client_id', count($client) == 0 ? $client_id : $client->client_id)->first();
-                        $message_left = count($quick_sms) == 1 ? $quick_sms->message_left : 0;
+                        $quick_sms = DB::connection('karibusms')->table('sms_status')->where('client_id', empty($client) ? $client_id : $client->client_id)->first();
+                        $message_left = !empty($quick_sms) ? $quick_sms->message_left : 0;
                     }
                     ?>
 
@@ -144,7 +144,7 @@ $usertype = session('usertype');
                                     <?php endif ?>
                                 </div>
                             </div>
-                         
+
 
                             <div class="select2-wrapper" id="load_classes" style="display: none">
                                 <div class="form-group">
@@ -155,8 +155,8 @@ $usertype = session('usertype');
                                     <div class="col-sm-9">
                                         <?php
                                         $c_array = array("0" => 'Select Module');
-                                        $modules=DB::table('admin.modules')->get();
-                                        
+                                        $modules = DB::table('admin.modules')->get();
+
                                         if (!empty($modules)) {
                                             foreach ($modules as $module) {
                                                 $c_array[$module->id] = $module->name;
@@ -168,17 +168,17 @@ $usertype = session('usertype');
                                 </div>
                             </div>
 
-<!--                            <div id="load_section" class="form-group" style="display: none">
-                                <div class="form-group">
-                                    <div class="col-sm-2">
-                                        <label>
-                                            Select End Date
-                                    </div>
-                                    <div class="col-sm-9">
-                                        <input type="date" name="end_date" class="form-control" id="end_date"/>
-                                    </div>
-                                </div>
-                            </div>-->
+                            <!--                            <div id="load_section" class="form-group" style="display: none">
+                                                            <div class="form-group">
+                                                                <div class="col-sm-2">
+                                                                    <label>
+                                                                        Select End Date
+                                                                </div>
+                                                                <div class="col-sm-9">
+                                                                    <input type="date" name="end_date" class="form-control" id="end_date"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>-->
                             <div id="load_student_types" class="form-group" style="display: none">
                                 <div class="form-group">
                                     <div class="col-sm-2">
@@ -396,7 +396,8 @@ $usertype = session('usertype');
                                 $array = array(
                                     'select' => __('select Template'),
                                 );
-                                $templates = DB::table('admin.mailandsmstemplates')->get();
+                                //$templates = DB::table('public.mailandsmstemplates')->get();
+                                $templates = [];
                                 foreach ($templates as $etemplate) {
                                     strtolower($etemplate->type) == 'sms' ? $array[$etemplate->id] = $etemplate->name : '';
                                 }
@@ -617,7 +618,7 @@ $usertype = session('usertype');
     }
 
     function setCriteria(value1) {
-       
+
         switch (value1) {
 
             case '':
