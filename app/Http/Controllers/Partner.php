@@ -31,7 +31,6 @@ class Partner extends Controller {
             $school = DB::table('admin.schools')->where('schema_name', $request->client->username)->first();
             $this->data['school'] = \App\Models\SchoolContact::where('school_id', $school->id)->first();
             $this->data['client'] = \App\Models\ClientSchool::where('client_id', $request->client_id)->first();
-            $this->data['bank'] = \App\Models\IntegrationBankAccount::where('integration_request_id', $request->id)->first();
             return view('users.partners.view_request', $this->data);
         }
 
@@ -135,7 +134,7 @@ class Partner extends Controller {
                     
                  //Bank Accounts Details
                     DB::table('admin.bank_accounts_integrations')->insert([
-                        'account_number' => request('account_number'), 'branch' => request('branch_name'),  'account_name' => request('account_name'), 'refer_currency_id' => request('refer_currency_id'), 'opening_balance' => request('opening_balance'), 'integration_request_id' => $request_id,  'refer_bank_id' => 8 
+                        'number' => request('account_number'), 'branch' => request('branch_name'),  'name' => request('account_name'), 'refer_currency_id' => request('refer_currency_id'), 'opening_balance' => request('opening_balance'), 'integration_request_id' => $request_id,  'refer_bank_id' => 8 
                     ]);
                     
                     //Install School Levels

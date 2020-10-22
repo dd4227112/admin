@@ -18,7 +18,9 @@
         "laravel/ui": "^3.0",
         "laravelcollective/html": "^6.0",
         "league/flysystem-aws-s3-v3": "^1.0",
-        "nunomaduro/collision": "^5.0"
+        "nunomaduro/collision": "^5.0",
+        "zizaco/entrust": "^1.9"
+
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",

@@ -10,7 +10,7 @@ class IntegrationBankAccount extends Model {
      * Generated
      */
     protected $table = 'bank_accounts_integrations';
-    protected $fillable = ['id', 'account_number', 'branch', 'account_name', 'refer_currency_id', 'client_id', 'refer_bank_id', 'opening_balance','integration_request_id','schema_name', 'created_at', 'updated_at'];
+    protected $fillable = ['id', 'number', 'branch', 'name', 'refer_currency_id', 'client_id', 'refer_bank_id', 'opening_balance','integration_request_id','schema_name', 'created_at', 'updated_at'];
    
     public function referCurrency() {
         return $this->belongsTo(\App\Models\ReferCurrency::class, 'refer_currency_id', 'id');

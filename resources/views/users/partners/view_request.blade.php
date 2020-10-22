@@ -140,7 +140,16 @@
                     <div class="card-header">
                       <h5>Bank Account Details</h5>
                     </div>
+                      <?php
+                          $bank = \App\Models\IntegrationBankAccount::where('integration_request_id', $request->id)->first();
+                          if(empty($bank)){
+                            $bank = DB::table($request->client->username.'.bank_accounts_integrations')->where('refer_bank_id', 8)->first();
+                           $refer_bank = $bank->name;
+                          }else{
+                            $refer_bank = $bank->referBank->name;
 
+                          }
+                      ?>
                     <div class="card-block user-desc">
                       <div class="view-desc">
 
@@ -152,20 +161,20 @@
                               <tbody>
                                 <tr>
                                   <th scope="row">Bank Name</th>
-                                  <th><?=$bank->referBank->name?></th>
+                                  <th><?=$refer_bank?></th>
                                 </tr>
                                 <tr>
                                   <th scope="row">Account Name</th>
                                   <th>
                                     <?php
                                     if ($request->user_id != '') {
-                                      echo $bank->account_name;
+                                      echo $bank->name;
                                     }
                                     ?>
                                   </tr>
                                   <tr>
                                     <th> Account Number </th>
-                                    <th><?php echo $bank->account_number; ?> </th>
+                                    <th><?php echo $bank->number; ?> </th>
                                   </tr>
 
                                   <tr>
