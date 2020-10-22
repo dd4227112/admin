@@ -145,7 +145,7 @@
                           if(empty($bank)){
                             $bank = DB::table($request->client->username.'.bank_accounts')->where('refer_bank_id', 8)->first();
                            $refer_bank = $bank->name;
-                           $user = DB::table($request->client->username. '.users')->where($request->table, $request->table)->where('id', $request->user_id)->first();
+                           $user = DB::table($request->client->username. '.users')->where("table", $request->table)->where('id', $request->user_id)->first();
                            $user_name = $user->name;
                               $usertype = ucfirst($user->usertype);
                           }else{
