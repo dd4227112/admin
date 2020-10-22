@@ -44,20 +44,20 @@
                                 <th>
                                   <?php
                                   if ($request->user_id != '') {
-                                    echo $school->school->district. ' - '. $school->school->region;
+                                    echo $client->school->district. ' - '. $client->school->region;
                                   }
                                   ?>
                                 </tr>
                                 <tr>
-                                  <th> Ownership </th>
+                                  <th> Registration No. </th>
                                   <th>
                                     <?php
-                                    echo $school->school->ownership;
+                                    echo $client->school->ownership;
                                     ?>
                                   </th>
                                 </tr>
                                 <tr>
-                                  <th scope="row">No of Student</th>
+                                  <th scope="row">Number of Students</th>
                                   <th> <?= $request->client->estimated_students ?></th>
                                 </tr>
                                 <tr>
@@ -81,7 +81,7 @@
                               <tbody>
                                 <tr>
                                   <th scope="row">Full Name</th>
-                                  <th> {{ $school->name }} </th>
+                                  <th> <?=$school->name ?> </th>
                                 </tr>
                                 <tr>
                                   <th scope="row">Position</th>
@@ -162,41 +162,32 @@
                                   </tr>
 
                                   <tr>
-                                    <th>Open Balance</th>
-                                    <td>
-                                      <?php
-
-                                      echo '<b>'.$bank->referCurrency->currency.'('.$bank->referCurrency->symbol.')</b>';
-                                      ?>
-                                    </td>
+                                    <th>Currency</th>
+                                    <th> <?= $bank->branch ?></th>
                                   </tr>
                                 </tbody>
                               </table>
                             </div>
                             <div class="col-sm-6">
-                              <h3>Bank Person</h3>
+                              <h3> Application Docs Attachments</h3>
                               <table class="table m-0">
                                 <tbody>
                                   <tr>
-                                    <th scope="row">Full Name</th>
-                                    <th><?=$bank->referBank->name?></th>
+                                    <th scope="row">Bank Term of Services </th>
+                                    <th> <a href="http://" target="_blank" class="btn btn-info btn-sm" rel="noopener noreferrer"> <i class="ti-cloud"></i> View Doc</a> </th>
                                   </tr>
                                   <tr>
-                                    <th scope="row">Phone Number</th>
-                                    <th>
-                                      <?php
-                                      if ($request->user_id != '') {
-                                        echo $bank->account_name;
-                                      }
-                                      ?>
-                                    </tr>
-                                    <tr>
-                                      <th scope="row">Branch Name</th>
-                                      <th> <?= $bank->branch ?></th>
+                                      <th scope="row">Shulesoft Agreement Form</th>
+                                      <th> <a href="http://" target="_blank" class="btn btn-info btn-sm" rel="noopener noreferrer"> <i class="ti-cloud"></i> View Doc</a> </th>
+                                  </tr>
+                                  <tr>
+                                    <th scope="row">Bank Application Form</th>
+                                    <th> <a href="http://" target="_blank" class="btn btn-info btn-sm" rel="noopener noreferrer"> <i class="ti-cloud"></i> View Doc</a> </th>
+                                     
                                     </tr>
                                     <tr>
                                       <th scope="row">Implemetantion Start</th>
-                                      <th> <?= $client->contract->start_date ?></th>
+                                      <th> <?php // $client->contract->start_date ?></th>
                                     </tr>
 
                                   </tbody>
@@ -262,7 +253,7 @@
                                       <td>Name:   &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; <?=$bank->requests->user->name?></td>
                                     </tr>
                                     <tr>
-                                      <td>Designation:   &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; <?=$bank->requests->user->role->name?></td>
+                                      <td>Designation:   &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; <?=$bank->requests->user->name?></td>
                                     </tr>
                                     <!-- <tr>
                                     <td>Department:</td>

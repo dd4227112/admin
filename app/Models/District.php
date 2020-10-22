@@ -13,7 +13,7 @@ class District extends Model {
     protected $fillable = ['id', 'name', 'region_id', 'created_at', 'updated_at'];
     
     public function region() {
-        return $this->belongsTo(\App\Models\Region::class, 'region_id', 'id');
+        return $this->belongsTo(\App\Models\Region::class, 'region_id', 'id')->withDefault(['name' => 'Not Defined']);
     }
 
 }

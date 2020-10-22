@@ -118,7 +118,7 @@
                     <th>Amount</th>
                     <th>Status</th>
                     <th>Added Date</th>
-                    <th>Due Date</th>
+                    <!-- <th>Due Date</th> -->
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -127,7 +127,7 @@
                   if(!empty($invoices)){
                     $i=1;
                     foreach($invoices as $invoice){
-                      $contract = \App\Models\ClientContract::where('client_id', $invoice->client_id)->first();
+                      // $contract = \App\Models\ClientContract::where('client_id', $invoice->client_id)->first();
                       ?>
                       <tr>
                         <td><?=$i++?></td>
@@ -135,8 +135,7 @@
                         <td><?=$invoice->client->estimated_students?></td>
                         <td><?=number_format(12000*$invoice->client->estimated_students)?></td>
                         <td><?=$invoice->status == 0 ? 'Unpaid' : 'Paid' ?></td>
-                        <td><?=date('d M Y', strtotime($invoice->client->created_at))?></td>
-                        <td><?php //date('d M Y', strtotime($contract->contract->start_date))?></td>
+                        <!-- <td><?php //date('d M Y', strtotime($invoice->client->created_at))?></td> -->
                         <td>
                           <a href="<?=url('account/invoiceView/'.$invoice->id)?>" class="btn btn-info btn-sm"> View Invoice</a>
                           <!-- <a href="https://<?=$invoice->client->username?>.shulesoft.com/database/<?=$invoice->client->username?>" target="_blank" class="btn btn-success btn-sm"> Install System</a> -->

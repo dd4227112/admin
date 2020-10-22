@@ -30,7 +30,7 @@ class Partner extends Controller {
             $this->data['request'] = $request = \App\Models\IntegrationRequest::find($id);
             $school = DB::table('admin.client_schools')->where('client_id', $request->client_id)->first();
             $this->data['school'] = \App\Models\SchoolContact::where('school_id', $school->school_id)->first();
-            $this->data['client'] = \App\Models\ClientContract::where('client_id', $request->client_id)->first();
+            $this->data['client'] = \App\Models\ClientSchool::where('client_id', $request->client_id)->first();
             $this->data['bank'] = \App\Models\IntegrationBankAccount::where('integration_request_id', $request->id)->first();
             return view('users.partners.view_request', $this->data);
         }
@@ -39,20 +39,25 @@ class Partner extends Controller {
         $id = request()->segment(3);
         $this->data['districts'] = \App\Models\District::get();
         if ($_POST) {
-            // $data = request()->all();
-            // dd($data);
+            //   $data = request()->all();
+            //   dd($data);
+            //  exit;
             $code = rand(343, 32323) . time();
-            $district = \App\Models\District::find(request('district'));
+            if(!empty(request('ward'))){
+                $ward = \App\Models\Ward::find(request('ward'));
+            }
+           
             $username = request('username');
             $array = [
                 'name' => strtoupper(request('school_name')),
-                'ward' => request('district'),
-                'region' => $district->region->name,
-                'district' => $district->name,
+                'region' => $ward->district->region->name,
+                'district' => $ward->district->name,
                 'ownership' => request('ownership'),
                 'type' => request('type'),
                 'students' => request('students'),
-                'schema_name' => $username
+                'schema_name' => $username,
+                'ward_id' => request('ward'),
+                'ward' => $ward->name
             ];
             $check_school = DB::table('admin.schools')->where('name', strtoupper(request('school_name')))->where('schema_name', $username)->first();
             if (empty($check_school)) {
@@ -79,7 +84,7 @@ class Partner extends Controller {
             } else {
                 $client_id = DB::table('admin.clients')->insertGetId([
                     'name' => $school->name,
-                    'address' => $school->district . ' ' . $school->region,
+                    'address' => request('address'),
                     'phone' => $school_contact->phone,
                     'email' => $school_contact->email,
                     'estimated_students' => request('students'),
@@ -90,9 +95,24 @@ class Partner extends Controller {
                     'created_by' => Auth::user()->id,
                     'username' => $schema_name,
                     'created_at' => date('Y-m-d H:i:s'),
-                    'price_per_student' => 12000
+                    'price_per_student' => 12000,
+                    'registration_number' => request('registration_number')
                 ]);
-               
+                  //add company file
+            $check_contract = DB::table('admin.client_contracts')->where('client_id', $client_id)->first();
+            if (empty($check_contract)) {
+                $file =  request()->file('attachments')[0];
+                $file_id = $this->saveFile($file, 'company/contracts');
+                //save contract
+                $contract_id = DB::table('admin.contracts')->insertGetId([
+                    'name' => 'ShuleSoft', 'company_file_id' => $file_id, 'start_date' => request('implementation_date'), 'end_date' =>  date('Y-m-d', strtotime('+1 years')), 'contract_type_id' => request('contract_type_id'), 'user_id' => Auth::user()->id
+                ]);
+                //client contracts
+                DB::table('admin.client_contracts')->insert([
+                    'contract_id' => $contract_id, 'client_id' => $client_id
+                ]);
+
+             }
                 //client school
                 DB::table('admin.client_schools')->insert([
                     'school_id' => $school_id, 'client_id' => $client_id
@@ -107,14 +127,14 @@ class Partner extends Controller {
                 $check_req = DB::table('admin.integration_requests')->where('client_id', $client_id)->first();
                     if (empty($check_req)) {
                         $request_id = DB::table('admin.integration_requests')->insertGetId([
-                       'client_id' => $client_id, 'user_id' => Auth::user()->id, 'refer_bank_id' => 8, 'schema_name' => $schema_name, 'shulesoft_approved' => 0, 'shulesoft_approved' => 1, 'created_at' => date('Y-m-d H:i:s')
+                       'client_id' => $client_id, 'user_id' => Auth::user()->id, 'refer_bank_id' => 8, 'schema_name' => $schema_name, 'bank_approved' => 0, 'shulesoft_approved' => 1, 'created_at' => date('Y-m-d H:i:s')
                     ]);
                     }else{
                         $request_id = $check_req->id;
                     }
                     
                  //Bank Accounts Details
-                    DB::table('admin.integration_bank_accounts')->insert([
+                    DB::table('admin.bank_accounts_integrations')->insert([
                         'account_number' => request('account_number'), 'branch' => request('branch_name'),  'account_name' => request('account_name'), 'refer_currency_id' => request('refer_currency_id'), 'opening_balance' => request('opening_balance'), 'integration_request_id' => $request_id,  'refer_bank_id' => 8 
                     ]);
                     
@@ -138,20 +158,19 @@ class Partner extends Controller {
             }
 
             //add company file
-            $check_contract = DB::table('admin.client_contracts')->where('client_id', $client_id)->first();
-            if (empty($check_contract)) {
-                $file = request()->file('agreement_form');
-              //  $file_id = $this->saveFile($file, 'company/contracts');
-                //save contract
-                $contract_id = DB::table('admin.contracts')->insertGetId([
-                    'name' => 'ShuleSoft', 'company_file_id' => 2, 'start_date' => request('implementation_date'), 'end_date' =>  date('Y-m-d', strtotime('+1 years')), 'contract_type_id' => request('contract_type_id'), 'user_id' => Auth::user()->id
+            
+            $attachments = request()->file('attachments');
+             foreach($attachments as $file){
+                $file_id = $this->saveFile($file, 'company/contracts');
+                // Integration requests documents
+            
+                $bank_file_id = DB::table('admin.integration_bank_documents')->insertGetId([
+                    'refer_bank_id' => 8, 'company_file_id' => $file_id, 'created_by' => Auth::user()->id
                 ]);
-                //client contracts
-                DB::table('admin.client_contracts')->insert([
-                    'contract_id' => $contract_id, 'client_id' => $client_id
-                ]);
-            }
 
+                DB::table('admin.integration_requests_documents')->insertGetId(['integration_bank_document_id' => $bank_file_id, 'integration_request_id' => $request_id]);
+             }
+ 
             //once a school has been installed, now create an invoice for this school or create a promo code
                 // create an invoice for this school
                 $check_booking = DB::table('admin.invoices')->where('client_id', $client_id)->first();
