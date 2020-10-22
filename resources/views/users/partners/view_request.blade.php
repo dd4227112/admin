@@ -222,7 +222,9 @@
                                       <tr  style="border-bottom: 5px solid #8CDDCD;">
                                         <th colspan="2" style="background:#8CDDCD;text-align: center;
                                         font-size: 18px;
-                                        color: white;"><?=$bank->referBank->name?></th>
+                                        color: white;">
+                                        <?=$refer_bank?>
+                                        </th>
                                       </tr>
                                       <tr>
                                         <td>
