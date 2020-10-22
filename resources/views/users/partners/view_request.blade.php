@@ -190,6 +190,11 @@
                             </div>
                             <div class="col-sm-6">
                               <h3> Application Docs Attachments</h3>
+                              <?php
+                          $bank_docs = \App\Models\IntegrationRequestDocument::where('integration_request_id', $request->id)->get();
+                          if(!empty($bank_docs)){
+
+                            ?>
                               <table class="table m-0">
                                 <tbody>
                                   <tr>
@@ -212,6 +217,7 @@
 
                                   </tbody>
                                 </table>
+                          <?php } ?>
                               </div>
                             </div>
                             <hr>

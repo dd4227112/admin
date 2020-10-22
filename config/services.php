@@ -21,9 +21,5 @@ return [
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],
-    'ses' => [
-        'key' => 'AKIAIALYMWHQGU3OTFQQ',
-        'secret' => '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',
-        'region' => 'us-west-2',
-    ],
+    
 ];
