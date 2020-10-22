@@ -6,7 +6,14 @@
 <!-- Main-body start -->
 <div class="main-body">
   <div class="page-wrapper">
-  <a  onclick="javascript:printDiv('print_all')" class="btn btn-primary">Print Here</a>
+  <div class="row">
+  <div class="col-sm-6">
+      <a  onclick="javascript:printDiv('print_all')" class="btn btn-primary">Print Here</a>
+  </div>
+  <div class="col-sm-6">
+      <a href="<?=url('Partner/InvoicePrefix/')?>" style="float: right;" class="btn btn-success">Validate This Application</a>
+  </div>
+  </div>
 
     <!-- Page-body start -->
     <div class="page-body" id="print_all">
@@ -185,10 +192,10 @@
                                     <th> <a href="http://" target="_blank" class="btn btn-info btn-sm" rel="noopener noreferrer"> <i class="ti-cloud"></i> View Doc</a> </th>
                                      
                                     </tr>
-                                    <tr>
+                                    <!-- <tr>
                                       <th scope="row">Implemetantion Start</th>
                                       <th> <?php // $client->contract->start_date ?></th>
-                                    </tr>
+                                    </tr> -->
 
                                   </tbody>
                                 </table>

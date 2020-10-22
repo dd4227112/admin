@@ -28,8 +28,8 @@ class Partner extends Controller {
         public function show() {
             $id = request()->segment(3);
             $this->data['request'] = $request = \App\Models\IntegrationRequest::find($id);
-            $school = DB::table('admin.client_schools')->where('client_id', $request->client_id)->first();
-            $this->data['school'] = \App\Models\SchoolContact::where('school_id', $school->school_id)->first();
+            $school = DB::table('admin.schools')->where('schema_name', $request->client->username)->first();
+            $this->data['school'] = \App\Models\SchoolContact::where('school_id', $school->id)->first();
             $this->data['client'] = \App\Models\ClientSchool::where('client_id', $request->client_id)->first();
             $this->data['bank'] = \App\Models\IntegrationBankAccount::where('integration_request_id', $request->id)->first();
             return view('users.partners.view_request', $this->data);
@@ -199,6 +199,10 @@ class Partner extends Controller {
         }
         return view('users.partners.add_new', $this->data);
     }
-    
+    public function InvoicePrefix() {
+        $id = request()->segment(3);
+        DB::statement("select constant.create_invoice_prefix_trigger()");
+        return redirect()->back()->with('success', 'Bank Account Prefix updated successfully');
+    }
 
 }
