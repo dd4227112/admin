@@ -228,7 +228,7 @@
                                       </tr>
                                       <tr>
                                         <td>
-                                          <p>On behalf of <b> <?=$bank->referBank->name?></b> Limited, the aforementioned services headed by</p>
+                                          <p>On behalf of <b> <?=$refer_bank?></b> Limited, the aforementioned services headed by</p>
                                         </td>
                                       </tr>
                                     </thead>
