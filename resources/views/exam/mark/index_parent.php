@@ -5,7 +5,7 @@
         <div class="title_left">
             <h3>User Profile</h3>
         </div>
-        <?php if (count($allstudents) > 0) { ?>
+        <?php if (sizeof($allstudents) > 0) { ?>
             <div class="title_right">
                 <div class="list-group-item list-group-item-warning">
                     <form style="" class="form-horizontal" role="form" method="post">  
@@ -170,7 +170,7 @@
                                                 data: [
 <?php
 $i = 0;
-if (count($student_avg) > 0) {
+if (sizeof($student_avg) > 0) {
     foreach ($student_avg as $key => $value) {
         ?>
                                                             {
@@ -262,7 +262,7 @@ if (count($student_avg) > 0) {
                                                                                 } else {
                                                                                     $exams = \DB::select('select  a."examID", a.academic_year_id, a."classesID", b.date, b.exam from ' . set_schema_name() . 'student_exams a JOIN ' . set_schema_name() . 'exam b on a."examID"=b."examID"  WHERE a."student_id"=' . $archive->student_id . ' and b.semester_id=' . $semester->id . ' order by b.date');
                                                                                 }
-                                                                                if (count($exams) > 0) {
+                                                                                if (sizeof($exams) > 0) {
                                                                                     ?>
                                                                                     <div id="hide-table">
                                                                                         <table class="table table-striped table-bordered">
@@ -317,7 +317,7 @@ if (count($student_avg) > 0) {
                                                                             </div>
                                                                             <?php
                                                                             $qualitative_exams = \DB::select('select distinct b.exam, b."examID", b.date from ' . set_schema_name() . 'student_characters a JOIN ' . set_schema_name() . 'exam b on a.exam_id=b."examID"  WHERE a.student_id=' . $archive->student_id . ' and b.semester_id=' . $semester->id . ' order by b.date');
-                                                                            if (count($qualitative_exams) > 0) {
+                                                                            if (sizeof($qualitative_exams) > 0) {
                                                                                 ?>
                                                                                 <h2>Qualitative Assessment Reports</h2>
 
@@ -357,7 +357,7 @@ if (count($student_avg) > 0) {
                                                                             <div id="hide-table">
                                                                                 <?php
                                                                                 $exams_report = \DB::select('SELECT a.* from ' . set_schema_name() . 'exam_report a where a.classes_id in (select "classesID" FROM ' . set_schema_name() . 'section where "sectionID"=' . $archive->section_id . ') and a.combined_exams !=\'0\'  and a.academic_year_id=' . $archive->academic_year_id . ' and a.semester_id=' . $semester->id . '');
-                                                                                if (count($exams_report) > 0) {
+                                                                                if (sizeof($exams_report) > 0) {
                                                                                     ?>
                                                                                     <table class="table table-striped table-bordered">
                                                                                         <thead>

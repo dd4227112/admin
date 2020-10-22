@@ -54,7 +54,7 @@
                             <tbody>
                                 <?php
                                 $i = 1;
-                                if (count($exams) > 0) {
+                                if (sizeof($exams) > 0) {
                                     foreach ($exams as $exam) {
                                         ?>
                                         <tr>

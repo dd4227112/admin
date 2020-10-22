@@ -62,7 +62,7 @@
                                     <tbody>
                                         <?php
                                         $i = 1;
-                                        if (count($guides) > 0) {
+                                        if (sizeof($guides) > 0) {
                                             foreach ($guides as $value) {
                                                 ?>
                                                 <tr>

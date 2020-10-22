@@ -299,7 +299,7 @@ $usertype = session('usertype');
                                 <?php
                                 $array = array("0" => 'Select option');
                                 $parents = [];
-                                if (count($parents) > 0) {
+                                if (sizeof($parents) > 0) {
 
                                     foreach ($parents as $key => $parent) {
                                         $array[$parent->parentID] = $parent->name;
@@ -319,7 +319,7 @@ $usertype = session('usertype');
                             <div  class="col-sm-9">
                                 <?php
                                 $array = array("0" => 'Select option');
-                                if (count($parents) > 0) {
+                                if (sizeof($parents) > 0) {
 
                                     foreach ($parents as $key => $parent) {
                                         $array[$parent->parentID] = $parent->phone;
@@ -355,7 +355,7 @@ $usertype = session('usertype');
                                 <?php
                                 $array = array("0" => 'Select option');
                                 $teachers = [];
-                                if (count($teachers) > 0) {
+                                if (sizeof($teachers) > 0) {
 
                                     foreach ($teachers as $key => $teacher) {
                                         $array[$teacher->teacherID] = $teacher->name;
@@ -374,7 +374,7 @@ $usertype = session('usertype');
                             <div  class="col-sm-9">
                                 <?php
                                 $array = array("0" => 'Select option');
-                                if (count($teachers) > 0) {
+                                if (sizeof($teachers) > 0) {
 
                                     foreach ($teachers as $key => $teacher) {
                                         $array[$teacher->teacherID] = $teacher->phone;

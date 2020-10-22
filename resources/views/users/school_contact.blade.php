@@ -28,7 +28,7 @@
                         <?php
                         $i = 1;
 
-                        if (isset($settings) && count($settings) > 0) {
+                        if (isset($settings) && sizeof($settings) > 0) {
         
                             foreach ($settings as $school) {
                          

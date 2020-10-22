@@ -244,7 +244,7 @@
           <tr>
             <td  width="12%">
               <?php
-                if(count($student)) {
+                if(sizeof($student)) {
                     $array = array(
                         "src" => base_url('storage/uploads/images/'.$student->photo),
                         'width' => '80px',
@@ -291,7 +291,7 @@
 
           <tr>
               <th width="40%"><?=$data->lang->line("menu_section")?></th>
-              <td width="60%"><?php if(count($section)) { echo $section->section;} else { echo $student->section->section;} ?></td>
+              <td width="60%"><?php if(sizeof($section)) { echo $section->section;} else { echo $student->section->section;} ?></td>
           </tr>
 
           <tr>
@@ -388,7 +388,7 @@
                                     echo "<th>";
                                         echo $data->lang->line("mark_mark");
                                     echo "</th>";
-                                    if(count($grades) && $f == 1) {
+                                    if(sizeof($grades) && $f == 1) {
                                         echo "<th>";
                                             echo $data->lang->line("mark_point");
                                         echo "</th>";
@@ -413,7 +413,7 @@
                             echo "<td data-title='".$data->lang->line('mark_mark')."'>";
                                 echo $mark->mark;
                             echo "</td>";
-                            if(count($grades)) {
+                            if(sizeof($grades)) {
                                 foreach ($grades as $grade) {
                                     if($grade->gradefrom <= $mark->mark && $grade->gradeupto >= $mark->mark) {
                                         echo "<td data-title='".$data->lang->line('mark_point')."'>";

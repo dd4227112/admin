@@ -79,7 +79,7 @@
                             <tbody>
                               <?php
                             
-                              if(count($requirements) > 0){
+                              if(sizeof($requirements) > 0){
                               foreach ($requirements as $req) {
 
                               ?>

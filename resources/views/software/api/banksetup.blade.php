@@ -40,7 +40,7 @@
                                     <select class="form-control" id="check_key">
                                         <option></option>
                                         <?php
-                                        if (isset($settings) && count($settings) > 0) {
+                                        if (isset($settings) && sizeof($settings) > 0) {
 
                                             foreach ($settings as $school) {
                                                 ?>
@@ -71,7 +71,7 @@
                                                 <?php
                                                 $i = 1;
 
-                                                if (isset($banks) && count($banks) > 0) {
+                                                if (isset($banks) && sizeof($banks) > 0) {
                                                     foreach ($banks as $bank) {
                                                         ?>
                                                         <tr>

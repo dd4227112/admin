@@ -149,7 +149,7 @@
   <hr>
 </div>
 </div>
-<?php if(isset($schools) && count($schools) > 0){ ?>
+<?php if(isset($schools) && sizeof($schools) > 0){ ?>
 <script type="text/javascript">
   $(function () {
 
@@ -304,7 +304,7 @@
   <?php
 
 if(isset($users)){
-    if(count($users) > 0){
+    if(sizeof($users) > 0){
       foreach($users as $user){
         ?>
 
@@ -324,7 +324,7 @@ if(isset($users)){
 <hr>
   <?php
 if(isset($activities)){
-    if(count($activities) > 0){
+    if(sizeof($activities) > 0){
       foreach($activities as $activity){
         ?>
 

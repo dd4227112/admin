@@ -60,7 +60,7 @@
                                     <tbody>
                                         <?php
                                         $i = 1;
-                                        if (count($clients) > 0) {
+                                        if (sizeof($clients) > 0) {
                                             foreach ($clients as $client) {
                                                 ?>
                                                 <tr>

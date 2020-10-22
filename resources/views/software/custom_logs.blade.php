@@ -14,7 +14,7 @@
             </thead>
             <tbody>
                 <?php
-                if (isset($logs) && count($logs) > 0) {
+                if (isset($logs) && sizeof($logs) > 0) {
                     ?>
                     @foreach($logs as $log)
 

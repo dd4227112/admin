@@ -13,7 +13,7 @@
             <?php } ?>
         </select>
         <br/>
-        <?php if(count($setting)>0 && count($payments)>0){ ?>
+        <?php if(sizeof($setting)>0 && sizeof($payments)>0){ ?>
         <table id="example23" class="display nowrap table color-table success-table table-bordered">
             <thead>
                 <tr>

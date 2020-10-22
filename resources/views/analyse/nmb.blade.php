@@ -36,7 +36,7 @@
                                         <div class="card counter-card-<?= $i ?>">
                                             <div class="card-block-big">
                                                 <div>
-                                                    <h3><?= count($schools) ?></h3>
+                                                    <h3><?= sizeof($schools) ?></h3>
                                                     <p>Private Schools</p>
                                                     <div class="progress ">
                                                         <div class="progress-bar progress-bar-striped progress-xs progress-bar-<?= $i == 1 ? 'pink' : 'success' ?>" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>

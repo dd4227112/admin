@@ -25,7 +25,7 @@
                     <?php
                     $usertype = session("usertype");
                     $i = 1;
-                    //if (count($marks) > 0) {
+                    //if (sizeof($marks) > 0) {
                     ?>
                     <div class="heading2">
                         <h1 class="heading"><b></b></h1>
@@ -82,7 +82,7 @@
                                         <tr>
                                             <td><?= $class->classes->classes ?></td>
                                             <td><?= $exam->exam ?></td>
-                                            <td><?= count($students) ?></td>
+                                            <td><?= sizeof($students) ?></td>
                                             <td><?= $mark_remaining == 0 ? '<span class="label label-success">complete</span>' : ' <span class="label label-danger"><b id="mark_remaining">' . $mark_remaining . '</b> remains</span>' ?></td>
 
                                         </tr>
@@ -162,7 +162,7 @@
                                     <tr>
                                         <td><?= $class->classes->classes ?></td>
                                         <td><?= $exam->exam ?></td>
-                                        <td><?= count($marks) ?></td>
+                                        <td><?= sizeof($marks) ?></td>
                                         <td><?= $mark_remaining == 0 ? '<span class="label label-success">complete</span>' : ' <span class="label label-danger">' . $mark_remaining . ' remains</span>' ?></td>
                                     </tr>
                                     <tr>

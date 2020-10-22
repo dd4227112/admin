@@ -195,7 +195,7 @@
 
                                                         echo money($total_amount);
                                                     } else {
-                                                        $total_amount = count($expense->expenses()->get()) > 0 ? money($expense->expenses()->whereDate('date','>=',$from_date)->whereDate('date','<=',$to_date)->sum('amount')) : '';
+                                                        $total_amount = sizeof($expense->expenses()->get()) > 0 ? money($expense->expenses()->whereDate('date','>=',$from_date)->whereDate('date','<=',$to_date)->sum('amount')) : '';
                                                         echo $total_amount;
                                                     }
 

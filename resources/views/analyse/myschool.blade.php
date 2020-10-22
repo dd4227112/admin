@@ -23,7 +23,7 @@
     <div class="page-body">
     <div class="row">
     <?php
-        if(count($schools)>0){ 
+        if(sizeof($schools)>0){ 
     ?>
                 <div class="col-lg-12">
                     <div class="card">
@@ -39,7 +39,7 @@
                                         <div class="card counter-card-<?= $i ?>">
                                             <div class="card-block-big">
                                                 <div>
-                                                    <h3><?= count($schools) ?></h3>
+                                                    <h3><?= sizeof($schools) ?></h3>
                                                     <p>Private Schools</p>
                                                     <div class="progress ">
                                                         <div class="progress-bar progress-bar-striped progress-xs progress-bar-<?= $i == 1 ? 'pink' : 'success' ?>" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
@@ -53,7 +53,7 @@
                                     <div class="card counter-card-<?= $i ?>">
                                         <div class="card-block-big">
                                             <div>
-                                                <h3><?= count($users) ?></h3>
+                                                <h3><?= sizeof($users) ?></h3>
                                                 <p> With Zero Student</p>
                                                 <div class="progress ">
                                                     <div class="progress-bar progress-bar-striped progress-xs progress-bar-warning" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
@@ -67,10 +67,10 @@
                                     <div class="card counter-card-<?= $i ?>">
                                         <div class="card-block-big">
                                             <div>
-                                                <h3><?= count($active) ?></h3>
+                                                <h3><?= sizeof($active) ?></h3>
                                                 <p> Active Schools</p>
                                                 <div class="progress ">
-                                                    <div class="progress-bar progress-bar-striped progress-xs progress-bar-success" role="progressbar" style="width: 70%" aria-valuenow="<?=count($active)?>" aria-valuemin="0" aria-valuemax="<?=count($schools)?>"></div>
+                                                    <div class="progress-bar progress-bar-striped progress-xs progress-bar-success" role="progressbar" style="width: 70%" aria-valuenow="<?=sizeof($active)?>" aria-valuemin="0" aria-valuemax="<?=sizeof($schools)?>"></div>
                                                 </div>
                                             </div>
                                             <i class="icofont icofont-trophy-alt"></i>
@@ -78,7 +78,7 @@
                                     </div>
                                 </div>
                                     <?php 
-                                        if(count($users) > 0){
+                                        if(sizeof($users) > 0){
                                         foreach($users as $user){
                                      ?>
                                     <div class="col-md-12 col-xl-3">

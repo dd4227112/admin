@@ -67,7 +67,7 @@
                                       <td>
                                       <?php
                                       $users = $minute->minuteuser()->get();
-                                        if (count($users) > 0) {
+                                        if (sizeof($users) > 0) {
                                           foreach ($users as $user) {
                                              echo '<u>'.$user->user->name.'</u>'; ?>  &nbsp;|
                                               <?php

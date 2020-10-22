@@ -118,7 +118,7 @@
                                                     <div class="user-box">
                                                         <?php
                                                         $comments = $requirement->taskComments()->get();
-                                                        if (count($comments) > 0) {
+                                                        if (sizeof($comments) > 0) {
                                                             foreach ($comments as $comment) {
                                                                 ?>
                                                                 <div class="media m-b-1" style="margin: 0px; padding: 0px">

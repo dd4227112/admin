@@ -19,7 +19,7 @@
                     <?php
                     $i = 1;
 
-                    if (count($schools) > 0) {
+                    if (sizeof($schools) > 0) {
                         foreach ($schools as $school) {
                             ?>
                             <tr>

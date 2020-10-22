@@ -303,7 +303,7 @@ function toast(message) {
                                     <li class="header-notification">
                                         <a href="#!">
                                             <i class="ti-bell"></i>
-                                            <span class="badge"><?= count($tasks) ?></span>
+                                            <span class="badge"><?= sizeof($tasks) ?></span>
                                         </a>
                                         <ul class="show-notification">
                                             <li>
@@ -337,7 +337,7 @@ function toast(message) {
                                             <i class="ti-comments"></i>
                                             <span class="badge"><?php
                                                 $users = \App\Models\User::where('status', 1)->where('department', '<>', 10)->get();
-                                                echo count($users);
+                                                echo sizeof($users);
                                                 ?></span>
                                         </a>
                                     </li>

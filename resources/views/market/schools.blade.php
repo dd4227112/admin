@@ -83,7 +83,7 @@
                   <div class="card counter-card-<?= $i ?>">
                     <div class="card-block-big">
                       <div>
-                        <h3><?= count($zero_student) ?></h3>
+                        <h3><?= sizeof($zero_student) ?></h3>
                         <p>Inactive School</p>
                         <div class="progress ">
                           <div class="progress-bar progress-bar-striped progress-xs progress-bar-warning" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>

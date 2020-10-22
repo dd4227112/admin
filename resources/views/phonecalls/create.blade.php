@@ -33,7 +33,7 @@
         <div id="wrapper" class="layout" style="background-color: #fff; margin-bottom: 40px;">
             <div id="editorForm">
              
-                @if (count($errors) > 0)
+                @if (sizeof($errors) > 0)
                 <div class="alert alert-danger">
                     <strong>Whoops!</strong> There were some problems with your input.<br><br>
                     <ul>

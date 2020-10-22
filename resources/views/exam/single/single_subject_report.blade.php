@@ -124,7 +124,7 @@
                     </thead>
                     <tbody>
                         <?php
-                        if (count($reports)) {
+                        if (sizeof($reports)) {
                             $i = 1;
                             $student_pass = 0;
                             $total_average = 0;
@@ -297,7 +297,7 @@
 
                                             $total_marks += $student_sum->mark;
                                         }
-                                        $class_average_marks = $total_marks / count($students);
+                                        $class_average_marks = $total_marks / sizeof($students);
                                         $color = $class_average_marks < $pass_mark ? "pink" : "";
                                         echo '<td data-title="AVG" style="background: ' . $color . ';">';
                                         echo round($class_average_marks, 2);
@@ -501,13 +501,13 @@
                                 </tr>
                                 <tr>
                                     <td>Total</td>
-                                    <td><?= count($reports) ?></td>
+                                    <td><?= sizeof($reports) ?></td>
                                     <td><?= $absent ?></td>
-                                    <td><?= count($reports) ?></td>
+                                    <td><?= sizeof($reports) ?></td>
                                     <td><?= $student_pass ?></td>
 
-                                    <td><?= count($reports) - $student_pass ?></td>
-                                    <td><?= round($total_average / count(max($reports, 1)), 2) ?></td>	
+                                    <td><?= sizeof($reports) - $student_pass ?></td>
+                                    <td><?= round($total_average / sizeof(max($reports, 1)), 2) ?></td>	
                                 </tr>
                             </tbody>
                         </table>
@@ -614,7 +614,7 @@
                                     <th class="col-sm-2">FAIL</th>
                                     <th class="col-sm-2">Average</th>
                                     <?php
-                                    if (count($grades)) {
+                                    if (sizeof($grades)) {
                                         foreach ($grades as $grade) {
                                             ?>
                                             <th class="col-sm-2"><?= $grade->grade ?></th>
@@ -640,7 +640,7 @@
                                         <td><?= ucwords($subject->subject_name) ?></td>
                                         <td><?= 'Core' ?></td>
                                         <td><?= $total_sat ?></td>
-                                        <td><?= count($reports) - $total_sat ?></td>
+                                        <td><?= sizeof($reports) - $total_sat ?></td>
 
                                         <td><?= $pass[$subj] ?></td>
                                         <td><?= $fail[$subj] ?></td>
@@ -653,7 +653,7 @@
                                             ?></td>
 
                                         <?php
-                                        if (count($grades)) {
+                                        if (sizeof($grades)) {
                                             foreach ($grades as $grade) {
                                                 ?>
                                                 <td><?= ${$subj . '_' . $grade->grade} ?></td>
@@ -668,7 +668,7 @@
                                 <tr>
                                     <td colspan="8">Total</td>
                                     <?php
-                                    if (count($grades)) {
+                                    if (sizeof($grades)) {
                                         foreach ($grades as $grade) {
                                             ?>
                                             <td><?= $total_grade[$grade->grade] ?></td>
@@ -690,7 +690,7 @@
                                         <h2>Percentage Equivalent</h2>
                                     </td>
                                     <?php
-                                    if (count($grades)) {
+                                    if (sizeof($grades)) {
                                         foreach ($grades as $grade) {
                                             ?>
                                             <td></td>
@@ -711,14 +711,14 @@
                                         <td>AB12</td>
                                         <td><?= ucwords($subject->subject_name) ?></td>
                                         <td><?= 'Core' ?></td>
-                                        <td><?= round($total_sat * 100 / count($reports), 2) . '%' ?></td>
+                                        <td><?= round($total_sat * 100 / sizeof($reports), 2) . '%' ?></td>
                                         <td><?php
-                                            $absent = count($reports) - $total_sat;
-                                            echo round($absent * 100 / count($reports), 2) . '%';
+                                            $absent = sizeof($reports) - $total_sat;
+                                            echo round($absent * 100 / sizeof($reports), 2) . '%';
                                             ?></td>
 
-                                        <td><?= round($pass[$subj] * 100 / count($reports), 2) . '%' ?></td>
-                                        <td><?= round($fail[$subj] * 100 / count($reports), 2) . '%' ?></td>
+                                        <td><?= round($pass[$subj] * 100 / sizeof($reports), 2) . '%' ?></td>
+                                        <td><?= round($fail[$subj] * 100 / sizeof($reports), 2) . '%' ?></td>
                                         <td><?php
                                             if ($total_sat == 0) {
                                                 echo '0';
@@ -728,10 +728,10 @@
                                             ?></td>
 
                                         <?php
-                                        if (count($grades)) {
+                                        if (sizeof($grades)) {
                                             foreach ($grades as $grade) {
                                                 ?>
-                                                <td><?= round(${$subj . '_' . $grade->grade} * 100 / count($reports), 2) . '%' ?></td>
+                                                <td><?= round(${$subj . '_' . $grade->grade} * 100 / sizeof($reports), 2) . '%' ?></td>
 
                                                 <?php
                                             }

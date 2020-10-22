@@ -88,12 +88,12 @@
                         ?>
                         <?php if (can_access('manage_messages')) { ?>     
                             <li class="dropdown">
-                                <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"> <i class="mdi mdi-gmail"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b class="badge badge-danger"><?= count($feedbacks) ?></b>
+                                <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#"> <i class="mdi mdi-gmail"></i>&nbsp;&nbsp;&nbsp;&nbsp;<b class="badge badge-danger"><?= sizeof($feedbacks) ?></b>
                                     <div class="notify"> <span class="heartbit"></span> <span class="point"></span> </div>
                                 </a>
                                 <ul class="dropdown-menu mailbox animated bounceInDown">
                                     <li>
-                                        <div class="drop-title">You have <?= count($feedbacks) ?> new messages</div>
+                                        <div class="drop-title">You have <?= sizeof($feedbacks) ?> new messages</div>
                                     </li>
                                     <li>
                                         <div class="message-center">
@@ -107,7 +107,7 @@
                                                 <a href="#">
                                                     <div class="user-img"> <img src="<?= url('storage/uploads/images/' . Auth::user()->photo) ?>" alt="user" class="img-circle"> <span class="profile-status online pull-right"></span> </div>
                                                     <div class="mail-contnet">
-                                                        <h5><?php //count($user)==1 ? $user->name: ''    ?></h5>
+                                                        <h5><?php //sizeof($user)==1 ? $user->name: ''    ?></h5>
                                                         <span class="mail-desc"><?= $feedback->feedback ?></span>
                                                         <span class="time"><?= timeAgo($feedback->created_at) ?></span> </div>
                                                 </a>
