@@ -728,7 +728,7 @@ function toast(message) {
                         }
                         ?>
                         <?php 
-                            if (can_access('manage_users') || in_array(Auth::user()->role_id, array(14,8))){ ?>
+                            if (can_access('manage_users')){ ?>
                           <li class="nav-item">
                                 <a href="#!">
                                     <i class="ti-layers "></i>
@@ -741,8 +741,8 @@ function toast(message) {
                                 </ul>
                             </li>
                             <?php
-                        }
-                        if(Auth::user()->role_id == 10){
+                                }
+                                if(Auth::user()->department == 9){
                         ?>
                          <li class="nav-item"><a href="<?= url('sales/school') ?>" > <i class="ti-list "> </i> List of Schools</a></li>
                          <li class="nav-item"><a href="<?= url('Partner/index') ?>" > <i class="ti-layers "> </i> Onboarded Schools</a></li>
