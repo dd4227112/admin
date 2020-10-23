@@ -574,7 +574,7 @@ function toast(message) {
                             </li>
                         <?php } ?>
 
-                        <?php if (Auth::user()->role_id != 10 || Auth::user()->role_id == 14 ){ ?>
+                        <?php if (Auth::user()->role_id == 14 ){ ?>
 
                         <li class="nav-item">
                             <a href="<?= url('customer/activity') ?>">
