@@ -73,13 +73,13 @@
                   </a>
                 </h1>
                 <h4 class="text-center"><b>{{ $profile->name }}</b></h4>
-                <?php echo '<h3 class="text-center">Role: '. $profile->role->name .'</h3>'; ?>
-                <div class="text-center">
-                  <?php
+                <?php 
+                echo '<h3 class="text-center">Role: ';
                   $role = DB::table('departments')->where('id', $profile->department)->first();
-                  if(sizeof($role)){
-                    echo '<h4 class="text-center">Department: '. $role->name .'</h4>';
+                  if(!empty($role)){
+                    echo  $role->name;
                   }
+                  echo '</h4>';
                   ?>
                   <h4>Email: <?=$profile->email?></h4>
                   <h4>Phone: <?=$profile->phone?></h4>

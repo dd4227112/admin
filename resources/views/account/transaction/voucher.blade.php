@@ -93,7 +93,7 @@
                         </div>
 
                 <?php
-                if (isset($productexpenses) && sizeof($productexpenses) > 0) { ?>
+                if (isset($productexpenses) && count($productexpenses) > 0) { ?>
                  <div class="row text-center">
 			 <div class="col-lg-12 table">
 			     <p>1.Pay the under mentioned Amount to</p>

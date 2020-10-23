@@ -1,6 +1,9 @@
 @extends('layouts.app')
 @section('content')
 <?php $root = url('/') . '/public/' ?>
+<script type="text/javascript" src="http://thecodeplayer.com/uploads/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="http://thecodeplayer.com/uploads/js/jquery.easing.min.js"></script>
+<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 
 <!-- Style.css -->
 <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/bars.css">
@@ -32,7 +35,7 @@
               <div class="px-0 pb-0 mt-1 mb-3">
                 <div class="text-center">
                   <h2 id="heading">Onboard New School</h2>
-                  <p>Fill all form field to go to next step</p>
+                  <p>Please Fill all form field to go next step</p>
 
                 </div>
                 <div id="msform">
@@ -41,7 +44,7 @@
                     <li class="active" id="account"><strong>About School</strong></li>
                     <li class="active" id="personal"><strong>School Contact</strong></li>
                     <li class="active" id="payment"><strong>Application Attachments</strong></li>
-                    <li class="active" id="confirm"><strong>Bank Intagration</strong></li>
+                    <li class="active" id="confirm"><strong>Bank Integration</strong></li>
                   </ul>
                   <div class="progress">
                     <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
@@ -66,8 +69,8 @@
                     <div class="form-group row">
                       
                       <div class="col-sm-6">
-                        Estimated Students
-                        <input type="text" class="form-control" placeholder="Enter here..." name="students" required="">
+                          Number of Students
+                          <input type="text" class="form-control" placeholder="Enter here..." name="students" required="">
                       </div>
                       <div class="col-sm-6">
                         Implementation Start Date
@@ -140,18 +143,7 @@
                         <input type="text" name="fullname" class="form-control" required/>
                       </div>
                       <div class="col-sm-6">
-                        Phone Number
-                        <input type="text" name="phone" class="form-control" required/>
-                      </div>
-                    </div>
-
-                    <div class="form-group row">
-                      <div class="col-sm-6">
-                        Email Address
-                        <input type="text" name="email" class="form-control" required/>
-                      </div>
-                      <div class="col-sm-6">
-                        Title
+                      Title
                         <select name="title" class="form-control select2" required>
                           <option value="director">Director/Owner</option>
                           <option value="manager">School Manager</option>
@@ -162,65 +154,92 @@
                           <option value="Accountant">Accountant</option>
                           <option value="Other Staff">Other Non Teaching Staff</option>
                         </select>
+                        
                       </div>
                     </div>
-                    <hr>
 
                     <div class="form-group row">
-                      <div class="col-sm-4">
-                        ShuleSoft Agreement Form
-                        <input type="file" name="attachments[]" class="form-control"/>
+                      <div class="col-sm-6">
+                        Email Address
+                        <input type="text" name="email" class="form-control" required/>
                       </div>
-                      <div class="col-sm-4">
-                        Bank Application Form
-                        <input type="file" name="attachments[]" class="form-control"/>
-                      </div>
-                      <div class="col-sm-4">
-                        Bank Terms of Services
-                        <input type="file" name="attachments[]" class="form-control"/>
+                      <div class="col-sm-6">
+                      Phone Number
+                        <input type="text" name="phone" class="form-control" required/>
                       </div>
                     </div>
 
-                    <input type="button" name="previous" class="previous btn btn-default" value="Previous" />
-                    <input type="button" name="next" class="next btn btn-info" value="Next" />
-                  </fieldset>
-
-                  <fieldset>
-                    <h4> Step 3: School Configuration </h4>
                     <div class="form-group row">
-
-                      <div class="col-sm-6">
-                        School Levels
+                    <div class="col-sm-6">
+                        <strong>Select School Levels</strong>
                         <br>
-                        <input type="checkbox" name="classlevel[]" value="A-level"> A-level (Advanced Secondary Level - ACSEE exams)
+                        <input type="checkbox" name="classlevel[]" value="A-level">&nbsp; &nbsp; &nbsp; A-level (Advanced Secondary Level - ACSEE exams)
                         <br>
-                        <input type="checkbox" name="classlevel[]" value="O-level"> O-level (Ordinary Secondary Level - CSEE exams)
-                        <br>
-                        <input type="checkbox"  name="classlevel[]" value="Primary">Primary (Primary Education Level - PSLE exams)
-                        <br>
-                        <input type="checkbox"  name="classlevel[]" value="Nursery">Nursery (Pre-Primary)- (Pre-primary Education Level)
-
+                        <input type="checkbox" name="classlevel[]" value="O-level">&nbsp; &nbsp; &nbsp; O-level (Ordinary Secondary Level - CSEE exams)
+                       
                       </div>
-                      <div class="col-sm-6">
-
-                        School Exam Syllabus
+                    <div class="col-sm-6">
                         <br>
-                        <input type="checkbox" name="school_format" value="NECTA"> NECTA
+                        <input type="checkbox"  name="classlevel[]" value="Primary">&nbsp; &nbsp; &nbsp; Primary (Primary Education Level - PSLE exams)
                         <br>
-                        <input type="checkbox" name="school_format" value="OTHER"> Others
-                      </div>
+                        <input type="checkbox"  name="classlevel[]" value="Nursery">&nbsp; &nbsp; &nbsp; Nursery (Pre-Primary)- (Pre-primary Education Level)
+                        </div>
                     </div>
-                    <div class="form-group row" style="border: 0.5px dashed; ">
-                      <div class="col-sm-3">Account Name  <b style="font-size: 1.4em;"> https://</b> </div>
-                      <div id="col-sm-6">
-                        <input style="max-width: 17em;
-                        resize: none" class="form-control " id="school_username" name="username" type="text" placeholder="school domain name"  required="" onkeyup="validateForm()">
+
+                    <div class="form-group">
+                    <div class="row" style="border: 0.5px dashed;">
+                      <div class="col-sm-4">Account Name  <b style="font-size: 1.4em; float:right"> https://</b> </div>
+                      <div class="col-sm-6">
+                        <input  class="form-control " id="school_username" name="username" type="text" autofocus="" placeholder="Enter school keyname here.."  required="" onkeyup="validateForm()">
                       </div>
-                      <div id="col-sm-3">
+                      <div class="col-sm-2">
                         <b style="font-size: 1.4em;">.shulesoft.com</b>
                       </div>
-                      <small style="max-width: 13em;" id="username_message_reply"></small>
+                      <small id="username_message_reply"></small>
                     </div>
+                </div>
+                    
+                    <input type="button" name="previous" class="previous btn btn-default" value="Previous" />
+                    <input type="button" name="next" class="next btn btn-info" value="Next" />
+                  </fieldset>
+
+                  <fieldset>
+                    <!-- <h4> Step 3: School Application Attachments </h4> -->
+
+                    <div class="form-group row">
+                      <div class="col-sm-6">
+                        ShuleSoft Application Form
+                        <input type="file" name="attachments[]" class="form-control" required/>
+                      </div>
+                      <div class="col-sm-6">
+                        Bank Application Form
+                        <input type="file" name="attachments[]" class="form-control" required/>
+                      </div>
+                    </div>
+                    
+                    <div class="form-group row">
+                      <div class="col-sm-6">
+                        ShuleSoft Contract Document
+                        <input type="file" name="attachments[]" class="form-control"/>
+                      </div>
+                      <div class="col-sm-6">
+                      Standing Order Form
+                        <input type="file" name="attachments[]" class="form-control"/>
+                        </div>
+                      </div>
+
+                      <div class="form-group row">
+                      <div class="col-sm-6">
+                        Shulesoft Terms of Services
+                        <input type="file" name="attachments[]" class="form-control" required/>
+                      </div>
+                      <div class="col-sm-6">
+                      CRDB Terms and Conditions 
+                        <input type="file" name="attachments[]" class="form-control"/>
+                      </div>
+                    </div>
+                    
+                    
                     <hr>
 
                     <input type="button" name="previous" class="previous btn btn-default" value="Previous" />
@@ -228,14 +247,13 @@
                   </fieldset>
 
                   <fieldset>
-                    <h4>Step 4: Bank Integrations</h4>
+                    <h4>Step 4: Bank Integrations </h4>
 
                     <div class="form-group row">
                       <div class="col-sm-12">
                         Account Name
                         <input type="text" name="account_name" class="form-control"/>
                       </div>
-
                     </div>
 
                     <div class="form-group row">
@@ -243,6 +261,7 @@
                         Bank Account Number
                         <input type="text" class="form-control"  name="account_number" required="">
                       </div>
+
                       <div class="col-sm-6">
                         Branch Name
                         <input type="text" name="branch_name" class="form-control"/>
@@ -267,32 +286,23 @@
                       </div>
                     </div>
 
-                    <!-- <div class="form-group">
-                    <label class="col-sm-2 col-form-label">Joining Status</label>
+                    <div class="form-group row">
                     <div class="col-sm-10">
                     <div class="form-check form-check-inline">
-                    <label class="form-check-label">
-                    <input class="form-check-input" type="radio" name="payment_status" id="gender-1" value="1" required=""> All Information Verified
+                    <label class="form-check-label"> 
+                    <input class="form-check-input" type="radio" name="payment_status" id="gender-1" value="1" required=""> I Agree All Information Filled Here is True and Verified
                   </label>
-                </div>
-                <div class="form-check form-check-inline">
-                <label class="form-check-label">
-                <input class="form-check-input" type="radio" name="payment_status" id="gender-2" value="2" required=""> School Still on-progress
-              </label>
-            </div>
-            <div class="form-check form-check-inline">
-            <label class="form-check-label">
-            <input class="form-check-input" type="radio" name="payment_status" id="gender-3" value="2" required=""> School Under ShuleSoft Follow-up
-          </label>
-        </div>
-      </div>
-    </div> -->
-    <input type="button" name="previous" class="previous btn btn-default" value="Previous" />
-    <input type="submit" name="submit" class="submit btn btn-success" value="Submit" />
-  </fieldset>
-  {{ csrf_field() }}
+                  </div>
+                  </div>
+                  </div>
+                  <hr>
+                <input type="button" name="previous" class="previous btn btn-default" value="Previous" />
+                <input type="submit" name="submit" class="submit btn btn-success" value="Submit" />
+              </fieldset>
+                        
+            {{ csrf_field() }}
 
-</form>
+          </form>
 
 <script type="text/javascript">
 
@@ -306,6 +316,11 @@ $(document).ready(function(){
   var current = 1,current_step,next_step,steps;
   steps = $("fieldset").length;
   $(".next").click(function(){
+    
+    $('#regiration_form').validate();
+    if (!$('#regiration_form').valid()) {
+        return false;
+    }
     current_step = $(this).parent();
     next_step = $(this).parent().next();
     next_step.show();
