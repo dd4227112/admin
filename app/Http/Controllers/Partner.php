@@ -208,4 +208,10 @@ class Partner extends Controller {
         $this->data['path'] = \App\Models\CompanyFile::where('id', $id)->first();
         return view('users.partners.file_view', $this->data);
     }
+    
+    public function school() {
+        $this->data['use_shulesoft'] = DB::table('admin.all_setting')->count() - 5;
+        $this->data['school_types'] = DB::select("select type, count(*) from admin.schools where ownership='Non-Government' group by type,ownership");
+        return view('users.partners.school_list', $this->data);
+    }
 }

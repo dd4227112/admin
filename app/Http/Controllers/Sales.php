@@ -307,6 +307,17 @@ group by ownership');
                 }
                 return $this->ajaxTable('schools', ['a.name', 'a.region', 'a.ward', 'a.district'], $sql);
                 break;
+
+                case 'list_of_schools':
+                    if ((int) request('type') == 3) {
+                        $sql = "SELECT *  from admin.schools a where a.schema_name NOT IN  (select schema_name from admin.all_setting) AND  lower(a.ownership) <>'government'";
+                    } else if ((int) request('type') == 2) {
+                        $sql = "SELECT *  from admin.schools a where a.schema_name in  (select schema_name from admin.all_setting) AND  lower(a.ownership) <>'government'";
+                    } else {
+                        $sql = "SELECT * from admin.schools a  where lower(a.ownership) <>'government'";
+                    }
+                    return $this->ajaxTable('schools', ['a.name', 'a.region', 'a.ward', 'a.district'], $sql);
+                    break;
             default:
                 break;
         }
@@ -883,6 +894,41 @@ group by ownership');
         return view('sales.sales_status.add_visit', $this->data);
     }
 
+
+    public function viewVisit() {
+        $id = request()->segment(3);
+     
+        $this->data['activity'] = $task = \App\Models\TaskClient::where('id', $id)->first();
+        if($_POST){
+           // dd(request()->all());
+            if(!empty(request('staff_id'))){
+                foreach (request('staff_id') as $staff) {
+                    $user_id = explode(',', $staff);
+                    $check = \App\Models\TaskStaff::where('task_id', $task->task_id)->where('user_id', $user_id[0])->where('user_table', $user_id[1])->first();
+                    if(empty($check)){
+                    \App\Models\TaskStaff::create([
+                        'task_id' => $task->task_id,
+                        'start_time' => request('start_time'), 
+                        'end_time' => request('end_time'),
+                        'module' => request('module'),
+                        'user_id' => $user_id[0],
+                        'user_table' =>  $user_id[1],
+                        ]);
+                }else{
+                    \App\Models\TaskStaff::where('task_id', $task->task_id)->where('user_id', $user_id[0])->where('user_table', $user_id[1])
+                    ->update([
+                        'start_time' => request('start_time'), 
+                        'end_time' => request('end_time')
+                    ]);
+                }
+            }
+        }
+    }
+    $this->data['school'] = \App\Models\School::where('schema_name', $task->client->username)->first();
+    $this->data['users'] =  DB::SELECT('SELECT count(a."table"), a."table" from '.$task->client->username.'.users a where status=1 and "table" !=\'setting\'  group by a."table" order by count(a."table") desc');
+    // DB::table($task->client->username.'.users')->where('status', 1)->first();
+    return view('sales.sales_status.view_task', $this->data);
+    }
 
 
 }

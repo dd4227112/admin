@@ -744,7 +744,7 @@ function toast(message) {
                                 }
                                 if(Auth::user()->department == 9){
                         ?>
-                         <li class="nav-item"><a href="<?= url('sales/school') ?>" > <i class="ti-list "> </i> List of Schools</a></li>
+                         <li class="nav-item"><a href="<?= url('Partner/school') ?>" > <i class="ti-list "> </i> List of Schools</a></li>
                          <li class="nav-item"><a href="<?= url('Partner/index') ?>" > <i class="ti-layers "> </i> Onboarded Schools</a></li>
                          <li class="nav-item"><a href="<?= url('Partner/add') ?>" > <i class="ti-layout-grid2-alt"> </i> Onboard New School</a></li>
                          <li class="nav-item">

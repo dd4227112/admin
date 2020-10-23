@@ -102,7 +102,8 @@
                                                   <td><?=$school->task->next_action?></td>
                                                   <td> 
                                                   <?php
-                                                    echo '<a href="'. url('customer/profile/'.$school->client->username) .'" class="btn btn-success btn-sm"> View Client </a>';
+                                                    echo '<a href="'. url('customer/profile/'.$school->client->username) .'" class="label label-success btn-sm"> View Client </a> ';
+                                                    echo ' <a href="'. url('Sales/viewVisit/'.$school->task_id) .'" class="label label-info btn-sm"> View Task </a>';
                                                
                                                   ?>
                                                   </td>
@@ -167,7 +168,7 @@ check = function () {
     $('#check_custom_date').change(function () {
         var val = $(this).val();
         if (val == 'today') {
-            window.location.href = '<?= url('Sales/salesStatus/') ?>/1';
+            window.location.href = '<?= url('Sales/schoolVisit/') ?>/1';
         } else {
             $('#show_date').show();
         }
@@ -177,7 +178,7 @@ submit_search = function () {
     $('#search_custom').mousedown(function () {
         var start_date = $('#start_date').val();
         var end_date = $('#end_date').val();
-        window.location.href = '<?= url('Sales/salesStatus/') ?>/5?start=' + start_date + '&end=' + end_date;
+        window.location.href = '<?= url('Sales/schoolVisit/') ?>/5?start=' + start_date + '&end=' + end_date;
     });
 }
 $(document).ready(check);
