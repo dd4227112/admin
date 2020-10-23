@@ -52,7 +52,7 @@
                           <td><?=ucfirst($event->event_date)?></td>
                           <td><?=$event->start_time?></td>
                           <td><?=$event->end_time?></td>
-                          <td>Total - <?=count($medias)?></td>
+                          <td>Total - <?=sizeof($medias)?></td>
                           <tr>
                           </tbody>
                         </table>
@@ -83,7 +83,7 @@
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  <?php if (count($medias) > 0) {
+                                  <?php if (sizeof($medias) > 0) {
                                     $i = 1;
                                     foreach ($medias as $media) {
                                       $school = (int)($media->school_id) > 0 ? $media->school->name : $media->school_id;

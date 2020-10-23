@@ -33,7 +33,7 @@
                         <div class="">
                             <div class="row-table">
                             <?php
-                            if(count($users)){
+                            if(sizeof($users)){
                                 foreach($users as $user){
                                     $active_users =  \collect(DB::SELECT('SELECT  count(*) as count from admin.all_users where status=1 and ("table",id) in (select "table", user_id from admin.all_log a where ' . $where .' and "table"=\''.$user->table.'\' group by "table",user_id)'))->first()->count;
                                     if($active_users ==''){
@@ -89,7 +89,7 @@
                       <tbody>
                       <?php
                       $i = 1;
-                      if(isset($list_of_users) && count($list_of_users)){
+                      if(isset($list_of_users) && sizeof($list_of_users)){
                         foreach($list_of_users as $list){
                           echo '<tr>';
                           echo '<td>'.$i++.'</td>';

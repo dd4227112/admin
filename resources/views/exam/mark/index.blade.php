@@ -86,11 +86,11 @@
                                 <tbody>
                                     <?php
                                    
-                                    if (isset($exams) && count($exams)>0) {
+                                    if (isset($exams) && sizeof($exams)>0) {
                                          $subjects=\App\Models\Subject::where('class_id', $class_id)->count();
                                          $students=\DB::select('select distinct name from marks');
                                          
-                                         $total_subject_count=count($students)*$subjects;
+                                         $total_subject_count=sizeof($students)*$subjects;
                                         $i = 1;
                                         foreach ($exams as $exam) {
                                             ?>

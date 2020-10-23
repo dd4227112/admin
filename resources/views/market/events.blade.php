@@ -54,7 +54,7 @@
                       </thead>
                       <tbody>
                       <?php 
-                      if(count($events) > 0){
+                      if(sizeof($events) > 0){
                         $i = 1;
                         foreach($events as $event){
                           ?>

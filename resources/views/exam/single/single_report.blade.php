@@ -73,7 +73,7 @@
                                         <div class="col-sm-6">
                                             <?php
                                             $ac_array = array("0" => 'select Year');
-                                            if (isset($academic_years) && count($academic_years) > 0) {
+                                            if (isset($academic_years) && sizeof($academic_years) > 0) {
 
 //                                            foreach ($academic_years as $academic) {
 //                                                $ac_array[$academic->academic_year] = $academic->academic_year;
@@ -151,7 +151,7 @@
 
             <div class="card">
                 <h5 class="card-header">Exam Reports</h5>
-                <?php if (isset($exam_definition) && count($exam_definition) > 0) { ?>
+                <?php if (isset($exam_definition) && sizeof($exam_definition) > 0) { ?>
                     <div class="row">
                         <div class="col-sm-12 col-xl-3"></div>
                         <div class="col-sm-12 col-xl-6">
@@ -174,7 +174,7 @@
                                                 <td>
                                                     <?php
                                                     $report_published = DB::table('exam_reports')->where('token', sha1(md5($exam_definition->id)))->first();
-                                                    if (count($report_published) == 1) {
+                                                    if (sizeof($report_published) == 1) {
                                                         ?>
                                                         <a href="<?= url('exam/report/single/null?token=' . $report_published->token) ?>" class="label label-success label-sm waves-effect">Exam Published</a>  
                                                     <?php } else {
@@ -182,7 +182,7 @@
                                                         Not Published: <br/>
                                                         <a href="#" class="label label-warning label-sm waves-effect" data-toggle="modal" data-target="#large_modal">Click to Publish</a>
                                                         <?php
-                                                        if (isset($schools) && count($schools) > 0) {
+                                                        if (isset($schools) && sizeof($schools) > 0) {
                                                             ?>
                                                             <div class="modal fade" id="large_modal" tabindex="-1" role="dialog">
                                                                 <div class="modal-dialog modal-lg" role="document">
@@ -247,7 +247,7 @@
 
                     <?php
                 }
-                if (count($reports) > 0 && request('type_id') != 'subject') {
+                if (sizeof($reports) > 0 && request('type_id') != 'subject') {
 
                     $schools = [];
                     ?>

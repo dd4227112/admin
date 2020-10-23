@@ -77,7 +77,7 @@
                 <div class="text-center">
                   <?php
                   $role = DB::table('departments')->where('id', $profile->department)->first();
-                  if(count($role)){
+                  if(sizeof($role)){
                     echo '<h4 class="text-center">Department: '. $role->name .'</h4>';
                   }
                   ?>

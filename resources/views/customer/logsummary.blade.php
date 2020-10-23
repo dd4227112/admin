@@ -194,7 +194,7 @@
                                         $schema_user_data[$distinct_user->user] = [];
                                         foreach ($distinct_schema_users as $distinct_schema_user) {
                                             $data_in = $distinct_schema_user->user == $distinct_user->user ? $distinct_schema_user : [];
-                                            if (count($data_in) > 0) {
+                                            if (sizeof($data_in) > 0) {
                                                 array_push($schema_user_data[$distinct_user->user], $distinct_schema_user);
                                             }
                                         }

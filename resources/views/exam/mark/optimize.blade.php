@@ -31,7 +31,7 @@
 			</tr>
 		    </thead>
 		    <tbody>
-			<?php if (count($classes)) {
+			<?php if (sizeof($classes)) {
 			    $i = 1;
 			    foreach ($classes as $class) { ?>
 				<tr>

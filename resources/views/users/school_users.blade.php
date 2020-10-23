@@ -52,7 +52,7 @@
                                         <?php
                                         $i = 1;
 
-                                        if (isset($users) && count($users) > 0) {
+                                        if (isset($users) && sizeof($users) > 0) {
                                             $students = 0;
                                             $parents = 0;
                                             $teachers = 0;

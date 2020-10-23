@@ -37,7 +37,7 @@
                                         <a href="<?= url('sales/prospect/demo') ?>">
                                             <div class="card-block-big">
                                                 <div>
-                                                    <h3><?= count($demo_requests) ?></h3>
+                                                    <h3><?= sizeof($demo_requests) ?></h3>
                                                     <p>Demo Requests</p>
                                                     <div class="progress ">
                                                         <div class="progress-bar progress-bar-striped progress-xs progress-bar-pink" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
@@ -53,7 +53,7 @@
                                         <a href="<?= url('sales/prospect/join') ?>">
                                             <div class="card-block-big">
                                                 <div>
-                                                    <h3><?= count($join_requests) ?></h3>
+                                                    <h3><?= sizeof($join_requests) ?></h3>
                                                     <p>Join Requests</p>
                                                     <div class="progress ">
                                                         <div class="progress-bar progress-bar-striped progress-xs progress-bar-pink" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>

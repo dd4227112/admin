@@ -94,7 +94,7 @@
                                                 <tbody>
                                                 <?php
                                                 $i = 1;
-                                                if (count($schools) > 0) {
+                                                if (sizeof($schools) > 0) {
                                                     foreach ($schools as $school){
                                                         $check = \App\Models\TaskSchool::where('task_id', $school->id)->first();
 
@@ -180,7 +180,7 @@
                                                 <tbody>
                                                 <?php
                                                 $i = 1;
-                                                if (count($closeds) > 0) {
+                                                if (sizeof($closeds) > 0) {
                                                     foreach ($closeds as $school){
                                                         $check_task = \App\Models\TaskClient::where('task_id', $school->id)->first();
                                                         if(!empty($check_task)){
@@ -263,7 +263,7 @@
                                                 <tbody>
                                                 <?php
                                                 $i = 1;
-                                                if (count($pipelines) > 0) {
+                                                if (sizeof($pipelines) > 0) {
                                                     foreach ($pipelines as $school){
                                                         $check_task = \App\Models\TaskClient::where('task_id', $school->id)->first();
                                                         if(!empty($check_task)){
@@ -346,7 +346,7 @@
                                                 <tbody>
                                                 <?php
                                                 $i = 1;
-                                                if (count($new_schools) > 0) {
+                                                if (sizeof($new_schools) > 0) {
                                                     foreach ($new_schools as $school){
                                                         $check_task = \App\Models\TaskClient::where('task_id', $school->id)->first();
                                                         if(!empty($check_task)){

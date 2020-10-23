@@ -23,7 +23,7 @@ $sqls1 = "select count(a.*),b.username from admin.tasks a join admin.tasks_clien
                                                 WHERE a.user_id in (select id from admin.users where department=2) and $where group by b.name";
 $taskss = DB::select($sqls1);
 
-$total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and ' . $where))->first()->count;?>
+$total_activity = \collect(DB::select('select sizeof(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and ' . $where))->first()->count;?>
 <div class="main-body">
     <div class="page-wrapper">
         <div class="page-header">
@@ -176,7 +176,7 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
                                 <?php
                                // $total_reacherd = \collect(DB::select("select (count(distinct school_id) + count(distinct client_id)) as count from admin.tasks_schools a, admin.tasks_clients b where b.task_id in (select id from admin.tasks a where a.user_id in (select id from admin.users where department=2) and " . $where . ") and a.task_id in (select id from admin.tasks a where a.user_id in (select id from admin.users where department=2) and " . $where . ")"))->first()->count;
                                 ?>
-                                <h3><?php echo count($taskss); ?></h3>
+                                <h3><?php echo sizeof($taskss); ?></h3>
                                 <p>Total School Reached
 <!--                                    <span class="f-right text-primary">
                                         <i class="icofont icofont-arrow-up"></i>
@@ -262,7 +262,7 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
                                                 <?php
                                                 $i = 1;
                                             $schoolz = DB::select('select * from admin.all_setting a WHERE  ' . $where);
-                                        if(count($schoolz)){
+                                        if(sizeof($schoolz)){
                                             foreach($schoolz as $school){ 
                                                 ?>
                                                 <tr>

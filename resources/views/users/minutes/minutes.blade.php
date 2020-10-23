@@ -55,7 +55,7 @@
                       </thead>
                       <tbody>
                       <?php 
-                      if(count($minutes) > 0){
+                      if(sizeof($minutes) > 0){
                         $i = 1;
                         foreach($minutes as $minute){
                           ?>

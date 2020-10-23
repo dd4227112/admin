@@ -36,7 +36,7 @@
                                         <div class="card-block">
                                         <?php
                                                 $i = 1;
-                                                if(count($activities)){
+                                                if(sizeof($activities)){
                                                     foreach ($activities as $act){
                                                     ?>
                                         <div class="media chat-messages">

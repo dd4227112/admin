@@ -207,7 +207,7 @@
     <div class="col-sm-6">
 	<?php
 	$array = array("" => $data->lang->line("select_special_grades"));
-	if (count($special_grade_names)) {
+	if (sizeof($special_grade_names)) {
 	    foreach ($special_grade_names as $special_grade) {
 		$array[$special_grade->id] = $special_grade->name;
 	    }

@@ -29,7 +29,7 @@
                 <div class="card table-card widget-danger-card col-lg-6">
                     <div class="card-footer">
                         <div class="task-list-table">
-                            <p class="task-due"><strong>School with highest SMS logs: </strong><strong class="label label-danger"><?= count($danger_schema) == 1 ? $danger_schema->schema_name : '' ?></strong></p>
+                            <p class="task-due"><strong>School with highest SMS logs: </strong><strong class="label label-danger"><?= sizeof($danger_schema) == 1 ? $danger_schema->schema_name : '' ?></strong></p>
                         </div>
                         <div class="task-board m-0">
                             <a href="#" class="btn btn-info btn-mini b-none" title="view"><i class="icofont icofont-eye-alt m-0"></i></a>
@@ -51,7 +51,7 @@
                                     <i class="icofont icofont-document-folder"></i>
                                 </li>
                                 <li class="text-right">
-                                    <?= count($sms_logs) ?>
+                                    <?= sizeof($sms_logs) ?>
                                 </li>
                             </ul>
                         </div>
@@ -103,7 +103,7 @@
                         <ul class="nav nav-tabs md-tabs" role="tablist">
                             <li class="nav-item complete">
                                 <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true">
-                                    <strong>( <?= count($sms_logs) ?>)</strong> SMS
+                                    <strong>( <?= sizeof($sms_logs) ?>)</strong> SMS
                                 </a>
                                 <div class="slide"></div>
                             </li>

@@ -54,7 +54,7 @@
                       </thead>
                       <tbody>
                       <?php 
-                      if(count($posts) > 0){
+                      if(sizeof($posts) > 0){
                         $i = 1;
                         foreach($posts as $post){
                           ?>

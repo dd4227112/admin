@@ -53,7 +53,7 @@
                                      <th> <?=$post->user->name?></th>
                                       <th>
                                       <?php
-                                        if (count($medias) > 0) {
+                                        if (sizeof($medias) > 0) {
                                           foreach ($medias as $media) {
                                              echo '<u>'.$media->media->name.'</u>'; ?>  &nbsp;|
                                               <?php
@@ -90,7 +90,7 @@
                           </tr>
                           </thead>
                           <tbody>
-                             <?php if (count($medias) > 0) { 
+                             <?php if (sizeof($medias) > 0) { 
                                $i = 1;
                                 foreach ($medias as $media) {
                               ?>

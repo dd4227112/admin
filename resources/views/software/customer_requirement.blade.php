@@ -118,7 +118,7 @@
                         <ul class="nav nav-tabs md-tabs" role="tablist">
                             <li class="nav-item complete">
                                 <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true">
-                                    <strong>( <?= count($error_logs) ?>)</strong> Bugs
+                                    <strong>( <?= sizeof($error_logs) ?>)</strong> Bugs
                                 </a>
                                 <div class="slide"></div>
                             </li>

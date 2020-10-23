@@ -24,7 +24,7 @@
                                 <div class="col-sm-6">
                                     <?php
                                     $array = array("0" => $data->lang->line("mark_select_student"));
-                                    if (count($allstudents) > 0) {
+                                    if (sizeof($allstudents) > 0) {
                                         foreach ($allstudents as $allstudent) {
                                             $array[$allstudent->student->student_id] = $allstudent->student->name;
                                         }

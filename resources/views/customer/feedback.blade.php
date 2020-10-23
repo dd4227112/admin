@@ -84,7 +84,7 @@
                                                         $replies = $feedback->reply()->get();
                                                         ?>
                                                         <!-- end of pull-right class -->
-                                                        <p>Replies (<?= count($replies) ?>) </p>
+                                                        <p>Replies (<?= sizeof($replies) ?>) </p>
                                                         <div>
                                                             <?php
                                                             foreach ($replies as $reply) {

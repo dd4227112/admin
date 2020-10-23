@@ -121,7 +121,7 @@ class Partner extends Controller {
                 DB::table('admin.client_projects')->insert([
                     'project_id' => 1, 'client_id' => $client_id //default ShuleSoft project
                 ]);
-            
+            }
                 //Bank Accounts Intergration Details
                 $check_req = DB::table('admin.integration_requests')->where('client_id', $client_id)->first();
                     if (empty($check_req)) {
@@ -154,21 +154,21 @@ class Partner extends Controller {
                     'task_id' => $task->id,
                     'school_id' => $school_id
                 ]);
-            }
-
+                
             //add company file
             
             $attachments = request()->file('attachments');
-             foreach($attachments as $file){
-                $file_id = $this->saveFile($file, 'company/contracts');
-                // Integration requests documents
-            
-                $bank_file_id = DB::table('admin.integration_bank_documents')->insertGetId([
-                    'refer_bank_id' => 8, 'company_file_id' => $file_id, 'created_by' => Auth::user()->id
-                ]);
+            foreach($attachments as $file){
+               $file_id = $this->saveFile($file, 'company/contracts');
+               // Integration requests documents
+           
+               $bank_file_id = DB::table('admin.integration_bank_documents')->insertGetId([
+                   'refer_bank_id' => 8, 'company_file_id' => $file_id, 'created_by' => Auth::user()->id
+               ]);
 
-                DB::table('admin.integration_requests_documents')->insertGetId(['integration_bank_document_id' => $bank_file_id, 'integration_request_id' => $request_id]);
-             }
+               DB::table('admin.integration_requests_documents')->insertGetId(['integration_bank_document_id' => $bank_file_id, 'integration_request_id' => $request_id]);
+            }
+
  
             //once a school has been installed, now create an invoice for this school or create a promo code
                 // create an invoice for this school

@@ -50,7 +50,7 @@
                                 <tbody>
                                     <?php
                                    
-                                    if (isset($marks) && count($marks)>0) {
+                                    if (isset($marks) && sizeof($marks)>0) {
                                         $i = 1;
                                         foreach ($marks as $mark) {
                                             ?>

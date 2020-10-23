@@ -34,7 +34,7 @@
                             <div class="col-sm-6 col-xs-12">
                                 <?php
                                 $array = array("0" => $data->lang->line("mark_select_classes"));
-                                if (isset($classes) && count($classes) > 0) {
+                                if (isset($classes) && sizeof($classes) > 0) {
                                     foreach ($classes as $classa) {
                                         $array[$classa->classesID] = $classa->classes;
                                     }
@@ -56,7 +56,7 @@ else
                     <div class="col-sm-6 col-xs-12">
 <?php
 $ac_array = array("0" => $data->lang->line("exam_select_year"));
-if (isset($academic_year) && count($academic_years) > 0) {
+if (isset($academic_year) && sizeof($academic_years) > 0) {
     foreach ($academic_years as $academic) {
         $ac_array[$academic->id] = $academic->name;
     }
@@ -78,7 +78,7 @@ echo form_dropdown("academic_year_id", $ac_array, old("academic_year_id"), "id='
                 <div class="col-sm-6 col-xs-12">
                     <?php
                     $array = array("0" => $data->lang->line("mark_select_section"));
-                    if (isset($sections) && count($sections) > 0) {
+                    if (isset($sections) && sizeof($sections) > 0) {
                         foreach ($sections as $section) {
                             $array[$section->sectionID] = $section->section;
                         }
@@ -99,7 +99,7 @@ echo form_dropdown("academic_year_id", $ac_array, old("academic_year_id"), "id='
             <div class="col-sm-6 col-xs-12">
                 <?php
                 $array = array("0" => $data->lang->line("mark_select_semester"));
-                if (isset($semesters) && count($semesters) > 0) {
+                if (isset($semesters) && sizeof($semesters) > 0) {
                     foreach ($semesters as $semester) {
                         $array[$semester->id] = $semester->name;
                     }
@@ -143,7 +143,7 @@ else
     <div class="col-sm-6 col-xs-12">
         <?php
         $array = array();
-        if (isset($subjects) && count($subjects) > 0) {
+        if (isset($subjects) && sizeof($subjects) > 0) {
             foreach ($subjects as $subject) {
                 $array[$subject->subjectID] = $subject->subject;
             }
@@ -167,12 +167,12 @@ else
     <i class="fa fa-question-circle" data-container="body" data-toggle="popover" data-placement="right" data-trigger="hover" data-content="<?= $data->lang->line("marking") ?>" title="" data-original-title="<?= $data->lang->line("mark_instructions") ?>"></i></a>
 </div>
 
-<?php if (isset($exam_report) && count($exam_report) > 0) { ?>
+<?php if (isset($exam_report) && sizeof($exam_report) > 0) { ?>
     <div class="alert alert-warning"><?= $data->lang->line("published") ?></div>
 <?php } ?>
 </div>
 
-<?php if (isset($exam_info) && count($exam_info) == 1) { ?>
+<?php if (isset($exam_info) && sizeof($exam_info) == 1) { ?>
     <div class="row">
         <div class="col-sm-6 col-xs-12 col-sm-offset-3 list-group">
             <div class="list-group-item">
@@ -194,7 +194,7 @@ else
                             <td><?= isset($class->classes) ? $class->classes : '' ?>
     <?= isset($section) ? ' ' . $section->section : '' ?></td>
                             <td><?php
-    if (isset($subjects) && count($subjects) > 0) {
+    if (isset($subjects) && sizeof($subjects) > 0) {
         foreach ($subjects as $subj) {
             echo $subj->subject . ',';
         }
@@ -208,7 +208,7 @@ else
         <div class="col-sm-12">
 
 
-        <?php } if (count($students) > 0) { ?>
+        <?php } if (sizeof($students) > 0) { ?>
 
             <div id="alert"></div>
             <div class="table-responsive">
@@ -222,7 +222,7 @@ else
                             <th class="col-sm-2"><?= $data->lang->line('mark_name') ?></th>
                             <th class="col-sm-2"><?= $data->lang->line('mark_section') ?></th>
                             <?php
-                            if (count($subjects) > 0) {
+                            if (sizeof($subjects) > 0) {
                                 foreach ($subjects as $subj) {
                                     ?>
                                     <th class="col-sm-3"><?= $subj->subject ?>
@@ -234,7 +234,7 @@ else
                     </thead>
                     <tbody>
                         <?php
-                        if (count($students) > 0) {
+                        if (sizeof($students) > 0) {
 
                             $i = 1;
                             $student_mark = array();
@@ -271,13 +271,13 @@ else
                                     <?php echo $student->section; ?>
                                     </td>
                                     <?php
-                                    if (count($subjects) > 0) {
+                                    if (sizeof($subjects) > 0) {
                                         foreach ($subjects as $subj) {
                                             ?>
                                             <td data-title='Action'>
                                                 <input class="form-control mark" type="number" min="0" max="100" subject_id="<?= $subj->subjectID ?>" student_id="<?= $student_id ?>" exam_id="<?= $set_exam ?>" data-title="" name="<?= $student_id ?>"
                                                        id="<?= $student_id ?>"
-                                                       <?php if (isset($exam_report) && count($exam_report) > 0) { ?>
+                                                       <?php if (isset($exam_report) && sizeof($exam_report) > 0) { ?>
                                                            disabled="disabled"
                                                        <?php } ?>
                                                        value="<?php

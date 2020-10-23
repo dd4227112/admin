@@ -59,7 +59,7 @@
                                     <tbody>
                                         <?php
                                         $i = 1;
-                                        if (isset($sequences) && count($sequences) > 0) {
+                                        if (isset($sequences) && sizeof($sequences) > 0) {
                                             foreach ($sequences as $sequence) {
                                                 ?>
                                                 <tr>

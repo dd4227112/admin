@@ -241,9 +241,9 @@
                 <div class="col-md-12 timeline-dot">
                   <?php
                   $tasks = \App\Models\Task::whereIn('id', \App\Models\TaskSchool::where('school_id', $school->id)->get(['task_id']))->orderBy('created_at', 'desc')->get();
-                  if(count($tasks)){
+                  if(sizeof($tasks)){
                     // dd($tasks);
-                    echo '<input type="hidden" value="' . count($tasks) . '" id="task_count"/>';
+                    echo '<input type="hidden" value="' . sizeof($tasks) . '" id="task_count"/>';
                     foreach ($tasks as $task) {
                       ?>
 
@@ -278,7 +278,7 @@
 
                                   <?php
                                   $comments = $task->taskComments()->get();
-                                  if (count($comments) > 0) { ?>
+                                  if (sizeof($comments) > 0) { ?>
                                     <div class="p-b-30"> <span class="f-14"><a href="#">Comments</a></span></div>
                                     <?php
                                     foreach ($comments as $comment) {
@@ -330,7 +330,7 @@
                   <div class="card-block user-box">
                     <?php
                     $contacts = $school->contacts()->get();
-                    if(count($contacts)){
+                    if(sizeof($contacts)){
                       foreach ($contacts as $contact) {
                         ?>
                         <div class="media m-b-10">
@@ -540,7 +540,7 @@
           $school_info = DB::table('schools')->where('id', $school->id)->first();
 
           $vars = get_object_vars($school_info);
-          if(count($vars)){
+          if(sizeof($vars)){
             ?>
             <?php
             foreach ($vars as $key => $variable) {

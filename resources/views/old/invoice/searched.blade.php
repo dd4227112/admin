@@ -5,7 +5,7 @@
         <div class="col-md-12 col-lg-12">
             <div class="white-box">
                 <div class="row">
-                    <?php if (isset($results) && count($results) > 0) { ?>
+                    <?php if (isset($results) && sizeof($results) > 0) { ?>
 
                         <div class="table-responsive">
                             <table  class="table color-table inverse-table">

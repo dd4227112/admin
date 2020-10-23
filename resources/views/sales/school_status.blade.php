@@ -8,7 +8,7 @@
             <div class="page-header-title">
                 <h4 class="box-title">Schools</h4>
                 <?php
-                        if(isset($branch) && count($branch)){ ?>
+                        if(isset($branch) && sizeof($branch)){ ?>
                             <span>List of Private Schools in <?=$branch->branch->district->name?>, <?= $branch->branch->district->region->name?></span>
                         <?php }else{ ?>
                             <span>List of Private Schools in <?=Auth::user()->name?></span>
@@ -53,7 +53,7 @@
                                             <tbody>
                                            <?php 
                                                 $i = 1;
-                                                if(count($all_schools)){
+                                                if(sizeof($all_schools)){
                                             foreach($all_schools as $school){
                                             echo '<tr>';
                                             echo '<td>'.$i++.'</td>';
