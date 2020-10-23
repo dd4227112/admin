@@ -47,6 +47,10 @@ class Analyse extends Controller {
             $this->data['schools'] = \App\Models\School::whereIn('ward_id', \App\Models\Ward::where('district_id', $branch->branch->district_id)->get(['id']))->where('ownership','<>', 'Government')->orderBy('schema_name', 'ASC')->get();
             $this->data['nmb_shulesoft_schools'] = \collect(DB::select('select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22 and schema_name in(select schema_name from admin.schools where schema_name is not null and ward_id in (select id from admin.wards where district_id = '. $branch->branch->district_id.'))'))->first()->count;
             return view('analyse.nmb', $this->data);
+        }elseif(Auth::user()->role_id == 10){
+            $this->data['requests'] = \App\Models\IntegrationRequest::get();
+            $this->data['invoices'] = \App\Models\Invoice::whereIn('client_id', \App\Models\IntegrationRequest::get(['client_id']))->get();
+            return view('users.partners.requests', $this->data);
         }else{
             $user = Auth::user()->id;
             $sql = "select a.id, a.end_date, substring(a.activity from 1 for 80) as activity,a.created_at::date, a.date,d.name as user ,e.name as type  from admin.tasks a join admin.tasks_clients c on a.id=c.task_id

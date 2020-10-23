@@ -111,7 +111,7 @@ function tagEdit($schema_name, $column, $value) {
                                                                 <td>
 
                                                                     <?php
-                                                                    // $price = sizeof($schema) == 1 ? $schema->price_per_student : 0;
+                                                                    // $price = count($schema) == 1 ? $schema->price_per_student : 0;
                                                                      $price =$schema->price_per_student;
                                                                     $total_price += $price * $students;
                                                                     echo tagEdit($schema->username, 'price_per_student', $price);
@@ -171,7 +171,7 @@ $end_date='';
                                                         $total_students = 0;
                                                         $total_price = 0;
                                                         $schools = App\Models\InvoiceSent::orderBy('id', 'DESC')->get();
-                                                        if(sizeof($schools) > 0){
+                                                        if(count($schools)){
                                                         foreach ($schools as $school) {
                                                             
                                                             ?>

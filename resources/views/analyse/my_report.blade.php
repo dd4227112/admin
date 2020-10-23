@@ -80,7 +80,7 @@ $today = 0;
         <h5> 
         TASK SUMMARY BY 
          <?php
-          if(sizeof($task_users)>0){
+          if(count($task_users)>0){
             foreach($task_users as $us){
               echo '<u>'.$us->firstname . ' '. $us->lastname .' </u> &nbsp; &nbsp;';
             }
@@ -90,7 +90,7 @@ $today = 0;
          ?>
          
          </h5> 
-         <span style="float: right">Total Task - <?=sizeof($tasks)?></span>
+         <span style="float: right">Total Task - <?=count($tasks)?></span>
 
         </div>
           <div class="card-block">
@@ -120,10 +120,10 @@ $today = 0;
                 <div class="card counter-card-<?= $i ?>">
                   <div class="card-block-big">
                     <div>
-                      <h3><?= sizeof($activities) ?></h3>
+                      <h3><?= count($activities) ?></h3>
                       <p> Support Activities</p>
                       <div class="progress ">
-                        <div class="progress-bar progress-bar-striped progress-xs progress-bar-info" role="progressbar" style="width: 70%" aria-valuenow="<?=sizeof($tasks)?>" aria-valuemin="0" aria-valuemax="<?=sizeof($tasks)?>"></div>
+                        <div class="progress-bar progress-bar-striped progress-xs progress-bar-info" role="progressbar" style="width: 70%" aria-valuenow="<?=count($tasks)?>" aria-valuemin="0" aria-valuemax="<?=sizeof($tasks)?>"></div>
                       </div>
                     </div>
                     <i class="icofont icofont-list" id="blinkingg"></i>

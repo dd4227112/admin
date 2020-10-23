@@ -203,5 +203,9 @@ class Partner extends Controller {
         DB::statement("select constant.create_invoice_prefix_trigger()");
         return redirect()->back()->with('success', 'Bank Account Prefix updated successfully');
     }
-
+    public function viewFile() {
+        $id = request()->segment(3);
+        $this->data['path'] = \App\Models\CompanyFile::where('id', $id)->first();
+        return view('users.partners.file_view', $this->data);
+    }
 }

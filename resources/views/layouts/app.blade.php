@@ -574,20 +574,15 @@ function toast(message) {
                             </li>
                         <?php } ?>
 
+                        <?php if (Auth::user()->role_id != 10 || Auth::user()->role_id == 14 ){ ?>
 
                         <li class="nav-item">
                             <a href="<?= url('customer/activity') ?>">
                                 <i class="ti-gift "></i>
                                 <span data-i18n="nav.extra-components.main">Tasks Management</span>
                             </a>
-                            <!--                        <ul class="tree-1">
-                                                        <li><a href="session-timeout.html" data-i18n="nav.extra-components.session-timeout">Session Timeout</a></li>
-                                                        <li><a href="session-idle-timeout.html" data-i18n="nav.extra-components.session-idle-timeout">Session Idle Timeout</a>
-                                                        </li>
-                                                        <li><a href="offline.html" data-i18n="nav.extra-components.offline">Offline</a></li>
-                                                    </ul>-->
                         </li>
-                        <?php if (Auth::user()->role_id == 14){ ?>
+
                         <li class="nav-item">
                             <a href="<?= url('sales/school') ?>">
                                 <i class="ti-list "></i>
@@ -595,7 +590,7 @@ function toast(message) {
                             </a>
                         </li>
                         <?php } ?>
-                        <?php if (can_access('manage_marketing')) { ?>
+                        <?php if (can_access('manage_marketing') && Auth::user()->role_id != 10) { ?>
                             <li class="nav-item">
                                 <a href="#!">
                                     <i class="ti-bell "></i>
@@ -747,9 +742,24 @@ function toast(message) {
                             </li>
                             <?php
                         }
+                        if(Auth::user()->role_id == 10){
                         ?>
+                         <li class="nav-item"><a href="<?= url('sales/school') ?>" > <i class="ti-list "> </i> List of Schools</a></li>
+                         <li class="nav-item"><a href="<?= url('Partner/index') ?>" > <i class="ti-layers "> </i> Onboarded Schools</a></li>
+                         <li class="nav-item"><a href="<?= url('Partner/add') ?>" > <i class="ti-layout-grid2-alt"> </i> Onboard New School</a></li>
+                         <li class="nav-item">
+                                <a href="#!">
+                                    <i class="ti-gift "></i>
+                                    <span data-i18n="nav.extra-components.main">Other Resources</span>
+                                </a>
+                                <ul class="tree-1">
+                                    <li><a href="#" data-i18n="nav.extra-components.session-timeout"> Terms of Services</a></li>
+                                    <li><a href="#" data-i18n="nav.extra-components.offline">Digital Documents</a></li>
+                                    <li><a href="#" data-i18n="nav.extra-components.session-timeout">Upload New File</a></li>
+                                </ul>
+                            </li>
                         <?php
-                       // if (can_access('manage_schools')) {
+                        }
                         if (false) {
                             $has_class = preg_match('/exam/', url()->current()) ? 'has-class open' : '';
                             ?>

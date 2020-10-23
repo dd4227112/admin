@@ -62,7 +62,7 @@
                                         <tbody>
                                             <?php
                                             $total_amount = 0;
-                                            if (sizeof($revenues) > 0) {
+                                            if (count($revenues) > 0) {
                                                 $i = 1;
                                                 foreach ($revenues as $revenue) {
                                                     ?>

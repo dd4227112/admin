@@ -368,7 +368,7 @@ group by ownership');
 
                 $task = \App\Models\Task::create($data);
                 \App\Models\UsersSchool::create([
-                    'user_id' => Auth::user()->id, 'school_id' => request('client_id'), 'role_id' => Auth::user()->role->id, 'status' => 1,
+                    'user_id' => Auth::user()->id, 'school_id' => request('client_id'), 'role_id' => Auth::user()->role_id, 'status' => 1,
                 ]);
                 $school_id = request('client_id');
 
