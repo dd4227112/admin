@@ -27,6 +27,10 @@ class Task extends Model {
         return $this->hasMany(\App\Models\TaskComment::class, 'task_id', 'id');
     }
 
+    public function taskStaff() {
+        return $this->hasMany(\App\Models\TaskStaff::class, 'task_id', 'id');
+    }
+
     public function toUser() {
         return $this->belongsTo(\App\Models\User::class, 'to_user_id', 'id');
     }

@@ -22,11 +22,15 @@
         </div>
     </div>
     <div class="page-body">
+    <div class="card">
+    <div class="card-header">
+    <h5>List Of Schools To Visit</h5>
+    </div>
+    <div class="card-body">
             <div class="row">
-                <div class="col-sm-12">
+                <!-- <div class="col-sm-12">
 
-                    <!-- Ajax data source (Arrays) table start -->
-                    <div class="card">
+                    <!-- Ajax data source (Arrays) table start 
                         <div class="card-header">
                         <div class="row">
                 <div class="col-lg-4">
@@ -46,7 +50,7 @@
                     </div>
                     </div>
                     </div>
-                </div>
+                </div> -->
                         <div class="col-lg-12 col-xl-12">
 
                             <!-- Nav tabs -->
@@ -102,7 +106,8 @@
                                                   <td><?=$school->task->next_action?></td>
                                                   <td> 
                                                   <?php
-                                                    echo '<a href="'. url('customer/profile/'.$school->client->username) .'" class="btn btn-success btn-sm"> View Client </a>';
+                                                    echo '<a href="'. url('customer/profile/'.$school->client->username) .'" class="label label-success btn-sm"> View Client </a> ';
+                                                    echo ' <a href="'. url('Sales/viewVisit/'.$school->id) .'" class="label label-info btn-sm"> View Task </a>';
                                                
                                                   ?>
                                                   </td>
@@ -167,7 +172,7 @@ check = function () {
     $('#check_custom_date').change(function () {
         var val = $(this).val();
         if (val == 'today') {
-            window.location.href = '<?= url('Sales/salesStatus/') ?>/1';
+            window.location.href = '<?= url('Sales/schoolVisit/') ?>/1';
         } else {
             $('#show_date').show();
         }
@@ -177,7 +182,7 @@ submit_search = function () {
     $('#search_custom').mousedown(function () {
         var start_date = $('#start_date').val();
         var end_date = $('#end_date').val();
-        window.location.href = '<?= url('Sales/salesStatus/') ?>/5?start=' + start_date + '&end=' + end_date;
+        window.location.href = '<?= url('Sales/schoolVisit/') ?>/5?start=' + start_date + '&end=' + end_date;
     });
 }
 $(document).ready(check);
