@@ -22,11 +22,15 @@
         </div>
     </div>
     <div class="page-body">
+    <div class="card">
+    <div class="card-header">
+    <h5>List Of Schools To Visit</h5>
+    </div>
+    <div class="card-body">
             <div class="row">
-                <div class="col-sm-12">
+                <!-- <div class="col-sm-12">
 
-                    <!-- Ajax data source (Arrays) table start -->
-                    <div class="card">
+                    <!-- Ajax data source (Arrays) table start 
                         <div class="card-header">
                         <div class="row">
                 <div class="col-lg-4">
@@ -46,7 +50,7 @@
                     </div>
                     </div>
                     </div>
-                </div>
+                </div> -->
                         <div class="col-lg-12 col-xl-12">
 
                             <!-- Nav tabs -->
@@ -103,7 +107,7 @@
                                                   <td> 
                                                   <?php
                                                     echo '<a href="'. url('customer/profile/'.$school->client->username) .'" class="label label-success btn-sm"> View Client </a> ';
-                                                    echo ' <a href="'. url('Sales/viewVisit/'.$school->task_id) .'" class="label label-info btn-sm"> View Task </a>';
+                                                    echo ' <a href="'. url('Sales/viewVisit/'.$school->id) .'" class="label label-info btn-sm"> View Task </a>';
                                                
                                                   ?>
                                                   </td>

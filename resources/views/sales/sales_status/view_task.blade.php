@@ -71,32 +71,25 @@
                           echo 'Email: '.$activity->client->email .'</a>';
                           ?></th>
                         </tr>
+                        
                         <tr>
-                          <th scope="row">Total Students</th>
-                          <th> <?= $activity->task->taskType->name ?></th>
-                        </tr>
-                        <tr>
-                          <th>Modules</th>
+                          <th>Registered Users</th>
                           <th>
                             <?php
-                            $modules = $activity->task->modules()->get();
-                            if (!empty($modules)) {
-                              foreach ($modules as $module) {
-                                echo $module->module->name;
-                                ?>  &nbsp;|
-                                <?php
-                              }
-                            } else {
-                              echo "No Mudule Specified";
-                            }
                             if (!empty($users)) {
+                              $loop = 1;
                               foreach ($users as $user) {
-                                echo ucfirst($user->table).'s -' . $user->count;
-                                ?>  &nbsp;|
+
+                                echo $loop. '. '. ucfirst($user->table).'s - ' . $user->count;
+                                ?>  &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 
                                 <?php
+                                if($loop == 2){
+                                  echo '<br>';
+                                }
+                                $loop++;
                               }
                             } else {
-                              echo "No Mudule Specified";
+                              echo "No Registered User";
                             }
                             ?>
                           </th>
@@ -133,19 +126,10 @@
                           </tr>
                           <tr>
                             <th>Task Status</th>
+                            <th><u> <?= ucfirst($activity->status) ?></u></th>
+
                             <td>
-                              <?php
-                              $modules = $activity->task->modules()->get();
-                              if (!empty($modules)) {
-                                foreach ($modules as $module) {
-                                  echo $module->module->name;
-                                  ?>  &nbsp;|
-                                  <?php
-                                }
-                              } else {
-                                echo "No Mudule Specified";
-                              }
-                              ?>
+                            
                             </td>
                           </tr>
                         </tbody>
@@ -230,6 +214,21 @@
                         </select>
                       </p>
                       <p> <?= $activity->task->activity ?></p>
+                      <p><b>Training Modules</b> <br>
+                      <?php
+                              $modules = $activity->task->modules()->get();
+                              if (!empty($modules)) {
+                                $i =1;
+                                foreach ($modules as $module) {
+                                  echo $i++.'. '. $module->module->name;
+                                  ?>  &nbsp;|
+                                  <?php
+                                }
+                              } else {
+                                echo "No Mudule Specified";
+                              }
+                              ?>
+                              </p>
 
                     </div>
 
@@ -371,8 +370,8 @@ $('#action').change(function () {
   var val = $(this).val();
   $.ajax({
     type: 'POST',
-    url: "<?= url('Customer/updateTask') ?>",
-    data: "id=" + <?= $activity->task->id ?> + "&action=" + val,
+    url: "<?= url('Sales/updateTask') ?>",
+    data: "id=" + <?= $activity->id ?> + "&action=" + val,
     dataType: "html",
     success: function (data) {
       $('#added_').html(data);
