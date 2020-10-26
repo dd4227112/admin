@@ -472,6 +472,16 @@ function toast(message) {
                                 <span data-i18n="nav.dash.main">Dashboard</span>
                             </a>
                             <ul class="tree-1 has-class">
+                            <?php if (Auth::user()->role_id != 7 ){ ?>
+                                <li><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">Meeting Minutes</a></li>
+                                
+                                <li class="nav-item">
+                                    <a href="<?= url('customer/activity') ?>">
+                                        <i class="ti-gift "></i>
+                                        <span data-i18n="nav.extra-components.main">Tasks Management</span>
+                                    </a>
+                                </li>
+                            <?php }else{ ?>
                                 <?php if (can_access('manage_users')) { ?>
                                     <li>
                                         <a href="<?= url('analyse/index') ?>" data-i18n="nav.dash.default"> Home </a></li>
@@ -807,7 +817,7 @@ function toast(message) {
                             </li>
                         <?php } ?>
 
-
+                        <?php } ?>
                     </ul>
                 </div>
             </div>
