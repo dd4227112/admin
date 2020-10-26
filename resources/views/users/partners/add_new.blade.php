@@ -1,9 +1,10 @@
 @extends('layouts.app')
 @section('content')
 <?php $root = url('/') . '/public/' ?>
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 <script type="text/javascript" src="http://thecodeplayer.com/uploads/js/jquery-1.9.1.min.js"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 <script type="text/javascript" src="http://thecodeplayer.com/uploads/js/jquery.easing.min.js"></script>
-<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
 
 <!-- Style.css -->
 <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/bars.css">
