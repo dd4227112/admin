@@ -51,6 +51,10 @@ class Analyse extends Controller {
             $this->data['requests'] = \App\Models\IntegrationRequest::get();
             $this->data['invoices'] = \App\Models\Invoice::whereIn('client_id', \App\Models\IntegrationRequest::get(['client_id']))->get();
             return view('users.partners.requests', $this->data);
+        }elseif(Auth::user()->role_id == 12){
+
+            $this->data['minutes'] = \App\Models\Minutes::orderBy('id', 'DESC')->get();
+            return view('users.minutes.minutes', $this->data);
         }else{
             $user = Auth::user()->id;
             $sql = "select a.id, a.end_date, substring(a.activity from 1 for 80) as activity,a.created_at::date, a.date,d.name as user ,e.name as type  from admin.tasks a join admin.tasks_clients c on a.id=c.task_id
