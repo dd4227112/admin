@@ -574,7 +574,7 @@ function toast(message) {
                             </li>
                         <?php } ?>
 
-                        <?php if (Auth::user()->role_id == 14 ){ ?>
+                        <?php if (Auth::user()->role_id != 7 ){ ?>
 
                         <li class="nav-item">
                             <a href="<?= url('customer/activity') ?>">
@@ -582,7 +582,7 @@ function toast(message) {
                                 <span data-i18n="nav.extra-components.main">Tasks Management</span>
                             </a>
                         </li>
-
+                        <?php } if (Auth::user()->role_id == 14 ){ ?>
                         <li class="nav-item">
                             <a href="<?= url('sales/school') ?>">
                                 <i class="ti-list "></i>
