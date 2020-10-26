@@ -637,7 +637,7 @@ $obj=[
             }
             $school_info = DB::table('schools')->where('id', $school_id);
             if (!empty($school_info->first())) {
-                $check = DB::table('users_schools')::where('role_id', $role_id);
+                $check = DB::table('users_schools')->where('role_id', $role_id);
                 if ((int) $check->count() > 0) {
                     $check->update(['user_id' => $user_id, 'updated_at' => $date]);
                 } else {
