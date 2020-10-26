@@ -22,7 +22,8 @@
       </div>
       <div class="page-header-breadcrumb">
         <ul class="breadcrumb-title">
-          <li class="breadcrumb-item"><a  onclick="javascript:printDiv('print_all')" class="btn btn-primary"> <i class="icofont icofont-print"></i> Print Here</a></li>
+            <li class="breadcrumb-item"><a class="btn btn-info"  data-toggle="modal" data-target="#edit_task_model"> <i class="icofont icofont-edit"></i> Edit Here</a></li>
+            <li class="breadcrumb-item"><a  onclick="javascript:printDiv('print_all')" class="btn btn-primary"> <i class="icofont icofont-print"></i> Print Here</a></li>
         </ul>
       </div>
     </div>
@@ -143,8 +144,8 @@
                       <div class="card">
                         <div class="card-header">
                           <h5>List of Staffs Trained</h5>
-                          <span style="float: right">
-                            <a class="btn btn-success btn-sm" href="<?= url('Partner/add') ?>"  data-toggle="modal" data-target="#customer_contracts_model">  <i class="ti-plus"> </i> Add Staff</a>
+                          <span class="form-datas" style="float: right">
+                            <a class="btn btn-success btn-sm" href="#"  data-toggle="modal" data-target="#customer_contracts_model">  <i class="ti-plus"> </i> Add Staff</a>
                           </span>
                         </div>
                         <div class="card-body">
@@ -203,10 +204,10 @@
                   <div class="card-block user-desc">
                     <div class="view-desc">
                       <h4>About This Activity </h4>
-                      <p style="float: right;"> <span style="float: right;" id="added_"> </span>
+                      <p id="taskstatus" style="float: right;"> <span style="float: right;" id="added_"> </span>
                         <b>Task Excuted:</b>
                         <select id="action" class="form-control">
-                          <option value='{{ $activity->task->action }}'>{{ $activity->task->status }}</option>
+                          <option value='{{ $activity->task->status }}'>{{ $activity->task->status }}</option>
                           <option value='complete'>Complete</option>
                           <option value='Pending'>Pending</option>
                           <option value='on progress'>Progress</option>
@@ -253,10 +254,12 @@
 
                               <?php
                             }
+                          }else{
+                            echo 'No Comment..';
                           }
                           ?>
                           <div class="new_comment<?= $activity->task->id ?>"></div>
-                          <div class="media">
+                          <div class="media form-datas">
                             <a class="media-left" href="#">
                               <img class="media-object img-circle m-r-20" src="<?= $root ?>assets/images/avatar-blank.jpg" alt="Image">
                             </a>
@@ -272,6 +275,16 @@
                               </form>
                             </div>
                           </div>
+                          <!-- <table class="table">
+                          <tr>
+                            <td style="width: 60% !important;">
+                              <img src="<?= url('public/images/ShuleSoft-TM.png') ?>" width="350" height="" style=""/>
+                            </td>
+                            <td style="width: 60% !important;">
+                              <span>
+                                INETS is a Private Company Limited by shares and registered <br/>under the Company Act 2012 with registration number 9216.<br/> INETS deals solely with Software Development. <br/>Currently focused on a School Management System ShuleSoft </span></td>
+                              </tr>
+                            </table> -->
                         </div>
                       </div>
                     </div>
@@ -288,7 +301,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">Edit School</h4>
+        <h4 class="modal-title">Add School Staffs Trained</h4>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">×</span>
         </button>
@@ -304,6 +317,7 @@
               <div class="row">
 
                 <div class="col-md-12">
+                <strong> Select Staff Here(multiple).</strong>
                   <select id="action" name="staff_id[]" class="form-control" multiple required>
                     <?php
                     foreach ($school_staffs as $school_staff) {
@@ -335,7 +349,7 @@
             </div>
           </div>
           <div class="form-group">
-            <textarea class="form-control" rows="4" name="module" required></textarea>
+            <textarea class="form-control" rows="4" name="module" placeholder="Type Short Details Here..." required></textarea>
           </div>
         </div>
         <div class="modal-footer">
@@ -347,6 +361,85 @@
     </div>
   </div>
 </div>
+
+<!-- Update School Visitation Details -->
+
+
+<div class="modal fade" id="edit_task_model" role="dialog" style="z-index: 99999;" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Update Task Details</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <form action="<?=url('Sales/updateVisit')?>" method="post">
+        <div class="modal-body">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+          <div class="form-group">
+            <div class="row">
+
+              <div class="col-md-6">
+                <strong> Start Time</strong>
+                <input type="datetime-local" class="form-control" required name="start_time">
+              </div>
+
+              <div class="col-md-6">
+                <strong> End Time</strong>
+                <input type="datetime-local" class="form-control" required name="end_time">
+              </div>
+            </div>
+          </div>
+        </div>
+          
+<div class="col-xs-12 col-sm-12 col-md-12">
+<div class="form-group">
+  <div class="row">
+  <div class="col-md-12">
+      <strong> Select Task Status</strong>
+      <input type="hidden" name="task_id" value="<?=$activity->task_id?>"  class="form-control">
+
+      <select type="text" name="status"  required class="form-control select2">
+          <option value='{{ $activity->task->status }}'>{{ $activity->task->status }}</option>
+          <option value='complete'>Complete</option>
+          <option value='Pending'>Pending</option>
+          <option value='on progress'>Progress</option>
+          <option value='Resolved'>Resolved</option>
+      </select>
+    </div>
+  
+    </div>
+    </div>
+<div class="form-group">
+  <div class="row">
+
+    <div class="col-md-12">
+      <strong> Task Type</strong>
+      <input type="hidden" name="task_id" value="<?=$activity->task_id?>"  class="form-control">
+
+      <select type="text" name="task_type_id"  required class="form-control select2">
+        <option value="1">Select Here...</option>
+        <?php
+        $users = DB::table('task_types')->where('department', 1)->orderBy('id', 'DESC')->get();
+        foreach ($users as $school) { ?>
+          <option value="<?= $school->id ?>"><?= $school->name ?></option>
+        <?php } ?>
+      </select>
+    </div>
+  
+    </div>
+    </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-info waves-effect waves-light ">Submit Here</button>
+        </div>
+        {{ csrf_field() }}
+      </form>
+    </div>
+  </div>
+</div>
+
 
 <script>
 function printDiv(divID) {
@@ -361,6 +454,9 @@ function printDiv(divID) {
   '<html><head><title></title></head><body>' +
   divElements + '</body>';
   //Print Page
+  $('.form-datas').hide();
+  $('#taskstatus').hide();
+  $('.form-message').hide();
   window.print();
   //Restore orignal HTML
   document.body.innerHTML = oldPage;
