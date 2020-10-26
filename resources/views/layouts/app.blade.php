@@ -560,6 +560,13 @@ function toast(message) {
                                         <span data-i18n="nav.extra-components.main">Tasks Management</span>
                                     </a>
                                 </li>
+                                <li class="nav-item">
+                                <a href="<?= url('account/transaction/4') ?>"><i class="fa icon-expense"></i> 
+                                        <span data-i18n="nav.extra-components.main">Record Expense</span>
+                                    </a>
+                                </li>
+                                
+
                             <?php } ?>
 
 
