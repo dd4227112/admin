@@ -22,8 +22,8 @@
       </div>
       <div class="page-header-breadcrumb">
         <ul class="breadcrumb-title">
-            <li class="breadcrumb-item"><a class="btn btn-info"  data-toggle="modal" data-target="#edit_task_model"> <i class="icofont icofont-edit"></i> Edit Here</a></li>
-            <li class="breadcrumb-item"><a  onclick="javascript:printDiv('print_all')" class="btn btn-primary"> <i class="icofont icofont-print"></i> Print Here</a></li>
+            <li class="breadcrumb-item"><a class="btn btn-info"  data-toggle="modal" data-target="#edit_task_model"> <i class="icofont icofont-edit"></i> Edit</a></li>
+            <li class="breadcrumb-item"><a  onclick="javascript:printDiv('print_all')" class="btn btn-primary"> <i class="icofont icofont-print"></i> Print</a></li>
         </ul>
       </div>
     </div>
@@ -354,7 +354,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-info waves-effect waves-light ">Submit Here</button>
+          <button type="submit" class="btn btn-info waves-effect waves-light ">Submit</button>
         </div>
         {{ csrf_field() }}
       </form>
@@ -432,7 +432,7 @@
     </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-info waves-effect waves-light ">Submit Here</button>
+          <button type="submit" class="btn btn-info waves-effect waves-light "> Submit </button>
         </div>
         {{ csrf_field() }}
       </form>
