@@ -83,8 +83,9 @@
                                                         <th>No.</th>
                                                         <th>Schools</th>
                                                         <th>Region</th>
-                                                        <th>End Date</th>
                                                         <th>TaskType</th>
+                                                        <th>Start Date</th>
+                                                        <th>End Date</th>
                                                         <th>Status</th>
                                                         <th>Action</th>
                                                     </tr>
@@ -101,8 +102,9 @@
                                                   <td><?=$i++?></td>
                                                   <td><?=$school->client->name?></td>
                                                   <td><?=!empty($check) ? $check->region : "Not Defined" ?></td>
-                                                  <td><?=$school->task->end_date?></td>
                                                   <td><?=$school->task->tasktype->name?></td>
+                                                  <td><?=$school->task->start_date?></td>
+                                                  <td><?=$school->task->end_date?></td>
                                                   <td><?=$school->task->next_action?></td>
                                                   <td> 
                                                   <?php
@@ -122,8 +124,9 @@
                                                         <th>No</th>
                                                         <th>Schools </th>
                                                         <th>Region</th>
+                                                        <th>Task Type</th>                                                        
+                                                        <th>Start Date</th>
                                                         <th>End Date</th>
-                                                        <th>Status</th>
                                                         <th>Status</th>
                                                         <th>Action</th>
                                                     </tr>

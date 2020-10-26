@@ -938,5 +938,11 @@ group by ownership');
         \App\Models\TaskClient::where('id', $id)->update(['status' => $action, 'updated_at' => date('Y-m-d H:i:s')]);
         echo '<small style="color: red">Success</small>';
     }
+    
+    public function updateVisit() {
+        $id = request('task_id');
+        \App\Models\Task::where('id', $id)->update(['status' => request('status'), 'start_date' => request('start_time'), 'end_date' => request('end_time'), 'task_type_id' => request('task_type_id'), 'updated_at' => date('Y-m-d H:i:s')]);
+        return redirect()->back()->with('success', 'School record updated successfully');
+    }
 
 }
