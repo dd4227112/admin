@@ -314,6 +314,7 @@ $(".select2").select2({
   allowClear: false,
   debug: true
 });
+
 $(document).ready(function(){
   var current = 1,current_step,next_step,steps;
   steps = $("fieldset").length;
@@ -329,6 +330,7 @@ $(document).ready(function(){
     current_step.hide();
     setProgressBar(++current);
   });
+
   $(".previous").click(function(){
     current_step = $(this).parent();
     next_step = $(this).parent().prev();
@@ -336,6 +338,7 @@ $(document).ready(function(){
     current_step.hide();
     setProgressBar(--current);
   });
+  
   setProgressBar(current);
   // Change progress bar action
   function setProgressBar(curStep){
@@ -376,17 +379,17 @@ $('#region').change(function () {
   });
 });
 $('#district').change(function () {
-            var val = $(this).val();
-            $.ajax({
-                method: 'get',
-                url: '<?= url('Marketing/getWard/null') ?>',
-                data: {district: val},
-                dataType: 'html',
-                success: function (data) {
-                    $('#ward').html(data);
-                }
-            });
-        });
+    var val = $(this).val();
+    $.ajax({
+        method: 'get',
+        url: '<?= url('Marketing/getWard/null') ?>',
+        data: {district: val},
+        dataType: 'html',
+        success: function (data) {
+            $('#ward').html(data);
+        }
+    });
+  });
 </script>
 </div>
 </div>

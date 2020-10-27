@@ -52,7 +52,7 @@ class Analyse extends Controller {
             $this->data['invoices'] = \App\Models\Invoice::whereIn('client_id', \App\Models\IntegrationRequest::get(['client_id']))->get();
             return view('users.partners.requests', $this->data);
         }elseif(Auth::user()->role_id == 12){
-
+            
             $this->data['minutes'] = \App\Models\Minutes::orderBy('id', 'DESC')->get();
             return view('users.minutes.minutes', $this->data);
         }else{
@@ -281,7 +281,7 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
 
     public function checkTask($id) {
         $this->data['clients'] = $clients = \App\Models\TrainItemAllocation::whereIn('user_id', $id)->whereIn('task_id', \App\Models\Task::whereIn('user_id', $id)->where('status', '<>', 'complete')->get(['id']))->get();
-        if(count($clients)){
+        if(!empty($clients)){
             foreach($clients as $client){
                 $schema = strtolower($client->client->username);
                 $item = $client->tain_item_id;

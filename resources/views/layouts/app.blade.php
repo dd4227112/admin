@@ -505,7 +505,6 @@ function toast(message) {
                                     <span data-i18n="nav.page_layout.main">Customer Service</span>
                                 </a>
                                 <ul class="tree-1">
-
                                     <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.bottom-menu">System Setup</a></li>
                                     <li>
                                         <a href="<?= url('Phone_call/index') ?>" data-i18n="nav.navigate.navbar">phone Calls</a>
@@ -551,7 +550,7 @@ function toast(message) {
                             </li>
                         <?php } ?>
 
-                        <?php if (Auth::user()->role_id == 12 ){ ?>
+                                <?php if (Auth::user()->role_id == 12 ){ ?>
                                 <li><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">Meeting Minutes</a></li>
                                 
                                 <li class="nav-item">
@@ -561,15 +560,11 @@ function toast(message) {
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                <a href="<?= url('account/transaction/4') ?>"><i class="fa icon-expense"></i> 
+                                    <a href="<?= url('account/transaction/4') ?>"><i class="fa icon-expense"></i> 
                                         <span data-i18n="nav.extra-components.main">Record Expense</span>
                                     </a>
                                 </li>
-                                
-
                             <?php } ?>
-
-
 
                         <?php if (can_access('manage_sales')) { ?>
                             <li class="nav-item">

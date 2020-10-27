@@ -108,8 +108,8 @@
             </div>
           </div>
           <div class="tab-pane" id="invoices" role="tabpanel">
-            <div class="table-responsive dt-responsive">
-              <table id="dt-ajax-array" class="table table-striped table-bordered nowrap">
+            <div class="table-responsive">
+              <table class="table table-striped">
                 <thead>
                   <tr>
                     <th>No.</th>
@@ -127,7 +127,6 @@
                   if(!empty($invoices)){
                     $i=1;
                     foreach($invoices as $invoice){
-                      // $contract = \App\Models\ClientContract::where('client_id', $invoice->client_id)->first();
                       ?>
                       <tr>
                         <td><?=$i++?></td>
@@ -135,7 +134,7 @@
                         <td><?=$invoice->client->estimated_students?></td>
                         <td><?=number_format(12000*$invoice->client->estimated_students)?></td>
                         <td><?=$invoice->status == 0 ? 'Unpaid' : 'Paid' ?></td>
-                        <!-- <td><?php //date('d M Y', strtotime($invoice->client->created_at))?></td> -->
+                        <td><?php echo date('d M Y', strtotime($invoice->client->created_at)); ?></td> -->
                         <td>
                           <a href="<?=url('account/invoiceView/'.$invoice->id)?>" class="btn btn-info btn-sm"> View Invoice</a>
                           <!-- <a href="https://<?=$invoice->client->username?>.shulesoft.com/database/<?=$invoice->client->username?>" target="_blank" class="btn btn-success btn-sm"> Install System</a> -->
