@@ -637,12 +637,12 @@ $obj=[
             }
             $school_info = DB::table('schools')->where('id', $school_id);
             if (!empty($school_info->first())) {
-                $check = DB::table('users_schools')->where('role_id', $role_id)->where('school_id', $school_id)->count();
-                if ((int)$check > 0) {
-                    $check->update(['user_id' => $user_id, 'updated_at' => $date]);
+                $check = DB::table('users_schools')->where('role_id', $role_id)->where('school_id', $school_id)->first();
+                if (!empty($check)) {
+                    \App\Models\UsersSchool::where('role_id', $role_id)->where('school_id', $school_id)->update(['user_id' => $user_id, 'updated_at' => $date]);
                     echo "Success";
                 } else {
-                    DB::table('users_schools')->insert(['school_id' => $school_id, 'user_id' => $user_id, 'role_id' => $role_id, 'schema_name' => $schema, 'created_at' => $date, 'updated_at' => $date]);
+                    \App\Models\UsersSchool::create(['school_id' => $school_id, 'user_id' => $user_id, 'role_id' => $role_id, 'schema_name' => $schema, 'created_at' => $date, 'updated_at' => $date]);
                     echo "Success";
                 }
                 DB::table($schema . '.setting')->update(['school_id' => $school_id]);
