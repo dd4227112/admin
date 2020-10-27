@@ -618,8 +618,8 @@ $obj=[
         $schema = request('schema');
         $user_id = request('user_id');
         $role_id = request('role_id');
+        $date = date("Y-m-d H:i:s");
         if (strlen($schema) > 2) {
-            $date = date("Y-m-d H:i:s");
             if ((int) $role_id == 5) {
                 $sch = DB::table($schema . '.setting')->update(['source' => request('val')]);
                 echo 1;
@@ -637,18 +637,21 @@ $obj=[
             }
             $school_info = DB::table('schools')->where('id', $school_id);
             if (!empty($school_info->first())) {
-                $check = DB::table('users_schools')->where('role_id', $role_id)->where('id', $school_id);
-                if ((int) $check->count() > 0) {
+                $check = DB::table('users_schools')->where('role_id', $role_id)->where('school_id', $school_id)->count();
+                if ((int)$check > 0) {
                     $check->update(['user_id' => $user_id, 'updated_at' => $date]);
+                    echo "Success";
                 } else {
                     DB::table('users_schools')->insert(['school_id' => $school_id, 'user_id' => $user_id, 'role_id' => $role_id, 'schema_name' => $schema, 'created_at' => $date, 'updated_at' => $date]);
+                    echo "Success";
                 }
                 DB::table($schema . '.setting')->update(['school_id' => $school_id]);
+                $school_info->update(['schema_name' => $schema]);
+            }else{
+                echo "Failed";
             }
-
-            $school_info->update(['schema_name' => $schema]);
-
-            echo 1;
+        }else{
+            echo "Failed";
         }
     }
 
