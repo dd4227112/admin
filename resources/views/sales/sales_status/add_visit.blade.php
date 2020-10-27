@@ -9,8 +9,8 @@
     <!-- Page-header start -->
     <div class="page-header">
       <div class="page-header-title">
-        <h4 class="box-title">Sales Leads Definition </h4>
-        <span> This Part helps you keep track of your deal progress</span>
+        <h4 class="box-title">Shulesoft Visitation Definition </h4>
+        <span> This Part helps you keep track of visited schools</span>
       </div>
       <div class="page-header-breadcrumb">
         <ul class="breadcrumb-title">
@@ -29,10 +29,9 @@
     <!-- Page-header end -->
     <!-- Page-body start -->
     <div class="page-body">
+    <div class="card">
       <div class="row">
-        <div id="outer" class="container">
-          <div id="wrapper" class="layout" style="background-color: #fff; margin-bottom: 40px;">
-            <div id="editorForm">
+        <div id="editorForm">
 
               <form method="post" action="#" enctype='multipart/form-data'>
                 {{ csrf_field() }}
@@ -74,26 +73,19 @@
                     <div class="form-group">
                       <div class="row">
 
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                           <strong> Task Type</strong>
 
                           <select type="text" name="task_type_id"  style="text-transform:uppercase" required class="form-control select2">
                             <option value="1">Select Here...</option>
                             <?php
-                            $users = DB::table('task_types')->where('department', 1)->get();
+                            $users = DB::table('task_types')->where('department', 1)->orderBy('id', 'DESC')->get();
                             foreach ($users as $school) { ?>
                               <option value="<?= $school->id ?>"><?= $school->name ?></option>
                             <?php } ?>
                           </select>
                         </div>
-                        <div class="col-md-6">
-                          <strong> Select Pipeline stage</strong>
-                          <select name="next_action" class="form-control">
-                            <option value="new">New</option>
-                            <option value="pipeline">Pipeline</option>
-                            <option value="closed">Closed</option>
-                          </select>
-                        </div>
+                      
                       </div>
                     </div>
                   </div>
@@ -105,6 +97,8 @@
                       <textarea name="activity" rows="5" id="content_part" placeholder="Write More details Here .." class="form-control"> </textarea>
                     </div>
                   </div>
+
+                  <div class="col-xs-12 col-sm-12 col-md-12">
                   <div class="form-group" id="modules">
                     <strong>  Pick Modules where task will be Performed</strong> 
                     <hr>
@@ -117,9 +111,12 @@
                     <?php } ?>
 
                     </div>
+                  </div>
 
               <hr>
-              <div id="savebtnWrapper" class="form-group">
+              
+              <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="form-group">
                 <button type="submit" class="btn btn-primary">
                   &emsp;Submit&emsp;
                 </button>

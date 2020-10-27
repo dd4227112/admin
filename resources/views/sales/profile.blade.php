@@ -65,7 +65,12 @@
               if (empty($school_clients)) {
                 ?>
                 <div class="card-block">
-                  <button class="btn btn-danger btn-block" id="onboard_school">Onboard School</button>
+                  <?php if (Auth::user()->department == 9) {
+                  echo '<a href="'.url('Partner/add/'. $school->id).'" class="btn btn-danger btn-block" >Onboard School</button>';
+                  }else{
+                    echo '<button class="btn btn-danger btn-block" id="onboard_school">Onboard School</button>';
+                  }
+                  ?>
                 </div>
                 <?php
               } else {

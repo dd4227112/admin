@@ -104,7 +104,7 @@
                                                                 <?php
                                                                 $uarray = array('0' => "select User");
                                                                 $users = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get();
-                                                                if (sizeof($users)) {
+                                                                if (count($users)) {
 
 
                                                                     foreach ($users as $user) {

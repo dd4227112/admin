@@ -19,7 +19,7 @@
                 <hr/>
                 <?php
                 $all_payments = $invoice->payments()->get();
-                if (isset($all_payments) && sizeof($all_payments) > 0) {
+                if (isset($all_payments) && count($all_payments) > 0) {
 
 
                     //echo print_r($all_payments);exit;

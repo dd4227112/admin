@@ -47,6 +47,14 @@ class Analyse extends Controller {
             $this->data['schools'] = \App\Models\School::whereIn('ward_id', \App\Models\Ward::where('district_id', $branch->branch->district_id)->get(['id']))->where('ownership','<>', 'Government')->orderBy('schema_name', 'ASC')->get();
             $this->data['nmb_shulesoft_schools'] = \collect(DB::select('select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22 and schema_name in(select schema_name from admin.schools where schema_name is not null and ward_id in (select id from admin.wards where district_id = '. $branch->branch->district_id.'))'))->first()->count;
             return view('analyse.nmb', $this->data);
+        }elseif(Auth::user()->department == 9){
+            $this->data['requests'] = \App\Models\IntegrationRequest::get();
+            $this->data['invoices'] = \App\Models\Invoice::whereIn('client_id', \App\Models\IntegrationRequest::get(['client_id']))->get();
+            return view('users.partners.requests', $this->data);
+        }elseif(Auth::user()->role_id == 12){
+            
+            $this->data['minutes'] = \App\Models\Minutes::orderBy('id', 'DESC')->get();
+            return view('users.minutes.minutes', $this->data);
         }else{
             $user = Auth::user()->id;
             $sql = "select a.id, a.end_date, substring(a.activity from 1 for 80) as activity,a.created_at::date, a.date,d.name as user ,e.name as type  from admin.tasks a join admin.tasks_clients c on a.id=c.task_id
@@ -273,7 +281,7 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
 
     public function checkTask($id) {
         $this->data['clients'] = $clients = \App\Models\TrainItemAllocation::whereIn('user_id', $id)->whereIn('task_id', \App\Models\Task::whereIn('user_id', $id)->where('status', '<>', 'complete')->get(['id']))->get();
-        if(count($clients)){
+        if(!empty($clients)){
             foreach($clients as $client){
                 $schema = strtolower($client->client->username);
                 $item = $client->tain_item_id;

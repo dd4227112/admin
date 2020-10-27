@@ -50,7 +50,7 @@ foreach ($user_permission as $permis) {
                             </div>
                         </div>
                         <?php
-                        if (Auth::user()->role->name != 'NMB') {
+                        if (Auth::user()->role_id != 7) {
                         ?>
                             <div class="col-md-6 col-xl-4">
                                 <div class="card counter-card-2">
@@ -245,7 +245,7 @@ foreach ($user_permission as $permis) {
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">Role</th>
-                                                                        <td>{{ $user->role->display_name }}</td>
+                                                                        <td>{{ $user->role_id }}</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">Employment Category</th>

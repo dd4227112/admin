@@ -16,6 +16,8 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+
         <meta name="description" content="ShuleSoft Admin">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="keywords" content="ShuleSoft, Admin , Admin Panel">
@@ -456,7 +458,7 @@ function toast(message) {
                     <img class="img-40" src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image">
                     <div class="user-details">
                         <span>{{ Auth::user()->name() }}</span>
-                        <span id="more-details"> <?php // Auth::user()->role->display_name  ?></span>
+                        <span id="more-details"> <?php // Auth::user()->role->display_name   ?></span>
                     </div>
                 </div>
                 <div class="main-menu-content">
@@ -470,6 +472,7 @@ function toast(message) {
                                 <span data-i18n="nav.dash.main">Dashboard</span>
                             </a>
                             <ul class="tree-1 has-class">
+
                                 <?php if (can_access('manage_users')) { ?>
                                     <li>
                                         <a href="<?= url('analyse/index') ?>" data-i18n="nav.dash.default"> Home </a></li>
@@ -502,7 +505,6 @@ function toast(message) {
                                     <span data-i18n="nav.page_layout.main">Customer Service</span>
                                 </a>
                                 <ul class="tree-1">
-
                                     <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.bottom-menu">System Setup</a></li>
                                     <li>
                                         <a href="<?= url('Phone_call/index') ?>" data-i18n="nav.navigate.navbar">phone Calls</a>
@@ -548,9 +550,21 @@ function toast(message) {
                             </li>
                         <?php } ?>
 
+                        <?php if (Auth::user()->role_id == 12) { ?>
+                            <li><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">Meeting Minutes</a></li>
 
-
-
+                            <li class="nav-item">
+                                <a href="<?= url('customer/activity') ?>">
+                                    <i class="ti-gift "></i>
+                                    <span data-i18n="nav.extra-components.main">Tasks Management</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="<?= url('account/transaction/4') ?>"><i class="fa icon-expense"></i> 
+                                    <span data-i18n="nav.extra-components.main">Record Expense</span>
+                                </a>
+                            </li>
+                        <?php } ?>
 
                         <?php if (can_access('manage_sales')) { ?>
                             <li class="nav-item">
@@ -576,20 +590,22 @@ function toast(message) {
                             </li>
                         <?php } ?>
 
+                        <?php if (Auth::user()->role_id != 7) { ?>
 
-                        <li class="nav-item">
-                            <a href="<?= url('customer/activity') ?>">
-                                <i class="ti-gift "></i>
-                                <span data-i18n="nav.extra-components.main">Tasks Management</span>
-                            </a>
-                            <!--                        <ul class="tree-1">
-                                                        <li><a href="session-timeout.html" data-i18n="nav.extra-components.session-timeout">Session Timeout</a></li>
-                                                        <li><a href="session-idle-timeout.html" data-i18n="nav.extra-components.session-idle-timeout">Session Idle Timeout</a>
-                                                        </li>
-                                                        <li><a href="offline.html" data-i18n="nav.extra-components.offline">Offline</a></li>
-                                                    </ul>-->
-                        </li>
-                        <?php if (Auth::user()->role_id == 14) { ?>
+                            <li class="nav-item">
+                                <a href="<?= url('customer/activity') ?>">
+                                    <i class="ti-gift "></i>
+                                    <span data-i18n="nav.extra-components.main">Tasks Management</span>
+                                </a>
+                            </li>
+
+                        <?php } if (Auth::user()->role_id == 14) { ?>
+                            <li class="nav-item">
+                                <a href="<?= url('customer/modules') ?>">
+                                    <i class="ti-bell"></i>
+                                    <span data-i18n="nav.extra-components.main"> Customer Modules</span>
+                                </a>
+                            </li>
                             <li class="nav-item">
                                 <a href="<?= url('sales/school') ?>">
                                     <i class="ti-list "></i>
@@ -597,7 +613,8 @@ function toast(message) {
                                 </a>
                             </li>
                         <?php } ?>
-                        <?php if (can_access('manage_marketing')) { ?>
+
+                        <?php if (can_access('manage_marketing') && Auth::user()->role_id != 10) { ?>
                             <li class="nav-item">
                                 <a href="#!">
                                     <i class="ti-bell "></i>
@@ -749,9 +766,26 @@ function toast(message) {
                             </li>
                             <?php
                         }
-                        ?>
-                        <?php
+                        if (Auth::user()->department == 9) {
+                            ?>
+                            <li class="nav-item"><a href="<?= url('Partner/school') ?>" > <i class="ti-list "> </i> List of Schools</a></li>
+                            <li class="nav-item"><a href="<?= url('Partner/index') ?>" > <i class="ti-layers "> </i> Onboarded Schools</a></li>
+                            <li class="nav-item"><a href="<?= url('Partner/add') ?>" > <i class="ti-layout-grid2-alt"> </i> Onboard New School</a></li>
+                            <li class="nav-item">
+                                <a href="#!">
+                                    <i class="ti-gift "></i>
+                                    <span data-i18n="nav.extra-components.main">Other Resources</span>
+                                </a>
+                                <ul class="tree-1">
+                                    <li><a href="#" data-i18n="nav.extra-components.session-timeout"> Terms of Services</a></li>
+                                    <li><a href="#" data-i18n="nav.extra-components.offline">Digital Documents</a></li>
+                                    <li><a href="#" data-i18n="nav.extra-components.session-timeout">Upload New File</a></li>
+                                </ul>
+                            </li>
+                            <?php
+                        }
                         // if (can_access('manage_schools')) {
+
                         if (false) {
                             $has_class = preg_match('/exam/', url()->current()) ? 'has-class open' : '';
                             ?>
@@ -790,63 +824,62 @@ function toast(message) {
                             </li>
                         <?php } ?>
 
-
-                    </ul>
-                </div>
+                    <?php } ?>
+                </ul>
             </div>
-            <!-- Menu aside end -->
-            <!-- Sidebar chat start -->
-            <div id="sidebar" class="users p-chat-user showChat">
-                <div class="had-container">
-                    <div class="card card_main p-fixed users-main">
-                        <div class="user-box">
-                            <div class="card-block">
-                                <div class="right-icon-control">
-                                    <input type="text" class="form-control  search-text" placeholder="Search Friend" id="search-friends">
-                                    <div class="form-icon">
-                                        <i class="icofont icofont-search"></i>
-                                    </div>
+        </div>
+        <!-- Menu aside end -->
+        <!-- Sidebar chat start -->
+        <div id="sidebar" class="users p-chat-user showChat">
+            <div class="had-container">
+                <div class="card card_main p-fixed users-main">
+                    <div class="user-box">
+                        <div class="card-block">
+                            <div class="right-icon-control">
+                                <input type="text" class="form-control  search-text" placeholder="Search Friend" id="search-friends">
+                                <div class="form-icon">
+                                    <i class="icofont icofont-search"></i>
                                 </div>
                             </div>
-                            <div class="main-friend-list">
-                                <?php
-                                foreach ($users as $user) {
-                                    ?>
-                                    <div class="media userlist-box" onclick="get_user(<?= $user->id ?>)" data-id="1" data-status="online" data-username="<?= $user->firstname . ' ' . $user->lastname ?>" data-toggle="tooltip" data-placement="left" title="<?= $user->firstname . ' ' . $user->lastname ?>">
-                                        <input id="to_user_id<?= $user->id ?>" value="<?= $user->id ?>" type="hidden">
-                                        <a class="media-left" href="#!">
-                                            <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="<?= $user->firstname . ' ' . $user->lastname ?>">
-                                            <div class="live-status bg-success"></div>
-                                        </a>
-                                        <div class="media-body">
-                                            <div class="f-13 chat-header"><?= $user->firstname . ' ' . $user->lastname ?></div>
-                                        </div>
+                        </div>
+                        <div class="main-friend-list">
+                            <?php
+                            foreach ($users as $user) {
+                                ?>
+                                <div class="media userlist-box" onclick="get_user(<?= $user->id ?>)" data-id="1" data-status="online" data-username="<?= $user->firstname . ' ' . $user->lastname ?>" data-toggle="tooltip" data-placement="left" title="<?= $user->firstname . ' ' . $user->lastname ?>">
+                                    <input id="to_user_id<?= $user->id ?>" value="<?= $user->id ?>" type="hidden">
+                                    <a class="media-left" href="#!">
+                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="<?= $user->firstname . ' ' . $user->lastname ?>">
+                                        <div class="live-status bg-success"></div>
+                                    </a>
+                                    <div class="media-body">
+                                        <div class="f-13 chat-header"><?= $user->firstname . ' ' . $user->lastname ?></div>
                                     </div>
-                                <?php } ?>
-                                <!--                                <div class="media userlist-box" data-id="2" data-status="online" data-username="Lary Doe" data-toggle="tooltip" data-placement="left" title="Lary Doe">
-                                                                    <a class="media-left" href="#!">
-                                                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u1.jpg" alt="Image">
-                                                                        <div class="live-status bg-success"></div>
-                                                                    </a>
-                                                                    <div class="media-body">
-                                                                        <div class="f-13 chat-header">Lary Doe</div>
-                                                                    </div>
-                                                                </div>-->
+                                </div>
+                            <?php } ?>
+                            <!--                                <div class="media userlist-box" data-id="2" data-status="online" data-username="Lary Doe" data-toggle="tooltip" data-placement="left" title="Lary Doe">
+                                                                <a class="media-left" href="#!">
+                                                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u1.jpg" alt="Image">
+                                                                    <div class="live-status bg-success"></div>
+                                                                </a>
+                                                                <div class="media-body">
+                                                                    <div class="f-13 chat-header">Lary Doe</div>
+                                                                </div>
+                                                            </div>-->
 
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Sidebar inner chat start-->
-            <div class="showChat_inner">
-                <div id="usermessage"  style="overflow-y: auto; height: 100%;">
+        </div>
+        <!-- Sidebar inner chat start-->
+        <div class="showChat_inner">
+            <div id="usermessage"  style="overflow-y: auto; height: 100%;">
 
-                </div>
             </div>
-            <!-- Sidebar inner chat end-->
-            <!-- Main-body start-->
-        <?php } ?>
+        </div>
+        <!-- Sidebar inner chat end-->
+        <!-- Main-body start-->
         <div class="main-body">
             @include('layouts.notifications')
             @yield('content')

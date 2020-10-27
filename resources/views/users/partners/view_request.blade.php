@@ -182,7 +182,7 @@
                                   </tr>
 
                                   <tr>
-                                    <th>Currency</th>
+                                    <th>Branch Name</th>
                                     <th> <?= $bank->branch ?></th>
                                   </tr>
                                 </tbody>
@@ -190,21 +190,22 @@
                             </div>
                             <div class="col-sm-6">
                               <h3> Application Docs Attachments</h3>
+                              <?php
+                          $bank_docs = \App\Models\IntegrationRequestDocument::where('integration_request_id', $request->id)->get();
+                          if(!empty($bank_docs)){
+                            ?>
                               <table class="table m-0">
                                 <tbody>
+                                <?php
+                                foreach($bank_docs as $bank_doc){
+                                  ?>
                                   <tr>
-                                    <th scope="row">Bank Term of Services </th>
-                                    <th> <a href="http://" target="_blank" class="btn btn-info btn-sm" rel="noopener noreferrer"> <i class="ti-cloud"></i> View Doc</a> </th>
+                                    <th scope="row"><?=$bank_doc->bankdocs->companyfile->name?> </th>
+
+                                    <th> <a href="<?=url('Partner/viewfile/'.$bank_doc->bankdocs->company_file_id)?>" target="_blank" class="btn btn-info btn-sm" rel="noopener noreferrer"> <i class="ti-cloud"></i> View Doc</a> </th>
                                   </tr>
-                                  <tr>
-                                      <th scope="row">Shulesoft Agreement Form</th>
-                                      <th> <a href="http://" target="_blank" class="btn btn-info btn-sm" rel="noopener noreferrer"> <i class="ti-cloud"></i> View Doc</a> </th>
-                                  </tr>
-                                  <tr>
-                                    <th scope="row">Bank Application Form</th>
-                                    <th> <a href="http://" target="_blank" class="btn btn-info btn-sm" rel="noopener noreferrer"> <i class="ti-cloud"></i> View Doc</a> </th>
-                                     
-                                    </tr>
+                          <?php } ?>
+                                 
                                     <!-- <tr>
                                       <th scope="row">Implemetantion Start</th>
                                       <th> <?php // $client->contract->start_date ?></th>
@@ -212,6 +213,7 @@
 
                                   </tbody>
                                 </table>
+                          <?php } ?>
                               </div>
                             </div>
                             <hr>
