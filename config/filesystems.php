@@ -66,10 +66,10 @@ return [
         ],
               's3' => [
             'driver' => 's3',
-            'key' => env('AWS_KEY','AKIA5W6BO2M5CMNJJNEQ'),
-            'secret' => env('AWS_SECRET','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'),
-            'region' => env('AWS_REGION','us-east-1'),
-            'bucket' => env('AWS_BUCKET','shulesoft'),
+            'key' => 'AKIA5W6BO2M5CMNJJNEQ',
+            'secret' =>'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',
+            'region' =>'us-east-1',
+            'bucket' =>'shulesoft',
         ],
 
     ],

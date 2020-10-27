@@ -704,7 +704,7 @@ group by ownership');
             $where = "  a.created_at::date >='" . $start_date . "' AND a.created_at::date <='" . $end_date . "'";
         }
 
-    
+
         $this->data['schools'] = \App\Models\Task::whereIn('user_id', \App\Models\User::where('department', 2)->get(['id']))->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
         $this->data['new_schools'] = \App\Models\Task::whereIn('user_id', \App\Models\User::where('department', 2)->get(['id']))->where('next_action', 'new')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
         $this->data['pipelines'] = \App\Models\Task::whereIn('user_id', \App\Models\User::where('department', 2)->get(['id']))->where('next_action', 'pipeline')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
@@ -727,7 +727,7 @@ group by ownership');
             ]);
 
             $school_id = request('school_id');
-            
+
             if (preg_match('/c/i', $school_id)) {
 
                 DB::table('tasks_clients')->insert([
@@ -742,7 +742,7 @@ group by ownership');
                     'school_id' => (int) $school_id
                 ]);
             }
-           
+
             if (request('school_name') != '' && request('school_phone') != '') {
                 \App\Models\SchoolContact::create([
                     'name' => request('school_name'),
@@ -795,7 +795,6 @@ group by ownership');
         return $this->createGraph($data, $firstpart, $table, $chart_type, $custom, $call_back_sql);
     }
 
-
     public function schoolVisit() {
         $page = request()->segment(3);
         if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
@@ -812,42 +811,41 @@ group by ownership');
         }
         $ids = [];
 
-        if (request('user_ids') !='') {
-            foreach(request('user_ids') as $ids){
+        if (request('user_ids') != '') {
+            foreach (request('user_ids') as $ids) {
                 array_push($ids, $ids);
             }
-        }else{
+        } else {
             array_push($ids, Auth::user()->id);
         }
-        
+
         $task_ids = [];
         $id = Auth::user()->id;
         $tasks = \App\Models\Task::where('user_id', $id)->where('action', 'visit')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
         foreach ($tasks as $value) {
-            array_push($task_ids, (int)$value->id);
+            array_push($task_ids, (int) $value->id);
         }
         $this->data['schools'] = \App\Models\TaskClient::whereIn('task_id', $task_ids)->get();
         //$this->data['new_schools'] = \App\Models\Task::whereIn('user_id', $id)->where('next_action', 'new')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
-         $this->data['query'] =   'SELECT count(a.status), a.status from admin.tasks_clients a where task_id in(select id from admin.tasks where user_id in('.$id.')) and ' . $where . ' group by a.status order by count(a.status) desc';
-         $this->data['types'] = 'SELECT count(a.created_at::date), a.created_at::date as "Date" from admin.tasks_clients a where task_id in(select id from admin.tasks where user_id in('.$id.')) and a.status is not null and ' . $where . ' group by a.created_at::date order by count(a.created_at::date) desc';
+        $this->data['query'] = 'SELECT count(a.status), a.status from admin.tasks_clients a where task_id in(select id from admin.tasks where user_id in(' . $id . ')) and ' . $where . ' group by a.status order by count(a.status) desc';
+        $this->data['types'] = 'SELECT count(a.created_at::date), a.created_at::date as "Date" from admin.tasks_clients a where task_id in(select id from admin.tasks where user_id in(' . $id . ')) and a.status is not null and ' . $where . ' group by a.created_at::date order by count(a.created_at::date) desc';
         return view('sales.sales_status.visitation_index', $this->data);
     }
 
-
     public function addVisit() {
-         
-        $schools =  DB::table('all_setting')->orderBy('created_at', 'DESC')->get();
-         $all_school = [];
-         foreach ($schools as $school) {
-             array_push($all_school, $school->schema_name);
-         } 
-        
-        $this->data['schools']  = \App\Models\Client::whereIN('username', $all_school)->get();
-        
+
+        $schools = DB::table('all_setting')->orderBy('created_at', 'DESC')->get();
+        $all_school = [];
+        foreach ($schools as $school) {
+            array_push($all_school, $school->schema_name);
+        }
+
+        $this->data['schools'] = \App\Models\Client::whereIN('username', $all_school)->get();
+
         if ($_POST) {
             // $data = request()->all();
             // dd($data);
-            $data = array_merge(request()->except('_token'), ['user_id' => Auth::user()->id, 'status' => 'new', 'action'=> 'visit', 'date' => date('Y-m-d')]);
+            $data = array_merge(request()->except('_token'), ['user_id' => Auth::user()->id, 'status' => 'new', 'action' => 'visit', 'date' => date('Y-m-d')]);
             $task = \App\Models\Task::create($data);
 
             DB::table('tasks_users')->insert([
@@ -856,7 +854,7 @@ group by ownership');
             ]);
 
             $clients = request('school_id');
-            foreach($clients as $client_id){
+            foreach ($clients as $client_id) {
                 DB::table('tasks_clients')->insert([
                     'task_id' => $task->id,
                     'status' => 'new',
@@ -883,6 +881,16 @@ group by ownership');
         return view('sales.sales_status.add_visit', $this->data);
     }
 
+    public function analysis() {
 
+        $table = DB::select("select count(*)*400*10000 as total, lower(region) as region from admin.schools where lower(ownership) <>'government' group by lower(region) order by total desc ");
+        $title = array('region','total');
+        $this->data['records'] = $this->createTable($table, $title);
+        return view('sales.report', $this->data);
+    }
+    
+    function createTable($data, $titles){
+         return view('layouts.table', compact('data','titles'));
+    }
 
 }

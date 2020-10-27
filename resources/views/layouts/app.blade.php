@@ -375,7 +375,7 @@ function toast(message) {
                                         <?php } ?>
                                         <li><a href="{{ route('logout') }}"
                                                onclick="event.preventDefault();
-                                                       document.getElementById('logout-form').submit();"><i class="ti-layout-sidebar-left"></i> Logout</a></li>
+                                                           document.getElementById('logout-form').submit();"><i class="ti-layout-sidebar-left"></i> Logout</a></li>
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                             {{ csrf_field() }}
                                         </form>
@@ -456,7 +456,7 @@ function toast(message) {
                     <img class="img-40" src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image">
                     <div class="user-details">
                         <span>{{ Auth::user()->name() }}</span>
-                        <span id="more-details"> <?php // Auth::user()->role->display_name ?></span>
+                        <span id="more-details"> <?php // Auth::user()->role->display_name  ?></span>
                     </div>
                 </div>
                 <div class="main-menu-content">
@@ -569,7 +569,9 @@ function toast(message) {
                                         <a href="<?= url('sales/salesStatus') ?>" data-i18n="nav.navigate.navbar">Sales Status</a>
                                     </li>
 
-
+                                    <li>
+                                        <a href="<?= url('sales/analysis') ?>" data-i18n="nav.navigate.navbar">Sales Analysis</a>
+                                    </li>
                                 </ul>
                             </li>
                         <?php } ?>
@@ -587,13 +589,13 @@ function toast(message) {
                                                         <li><a href="offline.html" data-i18n="nav.extra-components.offline">Offline</a></li>
                                                     </ul>-->
                         </li>
-                        <?php if (Auth::user()->role_id == 14){ ?>
-                        <li class="nav-item">
-                            <a href="<?= url('sales/school') ?>">
-                                <i class="ti-list "></i>
-                                <span data-i18n="nav.extra-components.main"> List of Schools</span>
-                            </a>
-                        </li>
+                        <?php if (Auth::user()->role_id == 14) { ?>
+                            <li class="nav-item">
+                                <a href="<?= url('sales/school') ?>">
+                                    <i class="ti-list "></i>
+                                    <span data-i18n="nav.extra-components.main"> List of Schools</span>
+                                </a>
+                            </li>
                         <?php } ?>
                         <?php if (can_access('manage_marketing')) { ?>
                             <li class="nav-item">
@@ -717,8 +719,9 @@ function toast(message) {
 
                             <?php
                         }
-                        if (can_access('manage_users') || in_array(Auth::user()->role_id, array(14,8))){ ?>
-                          <li class="nav-item">
+                        if (can_access('manage_users') || in_array(Auth::user()->role_id, array(14, 8))) {
+                            ?>
+                            <li class="nav-item">
                                 <a href="#!">
                                     <i class="ti-layers "></i>
                                     <span data-i18n="nav.extra-components.main">My Schools</span>
@@ -732,9 +735,8 @@ function toast(message) {
                             <?php
                         }
                         ?>
-                        <?php 
-                            if (can_access('manage_users') || in_array(Auth::user()->role_id, array(14,8))){ ?>
-                          <li class="nav-item">
+                        <?php if (can_access('manage_users') || in_array(Auth::user()->role_id, array(14, 8))) { ?>
+                            <li class="nav-item">
                                 <a href="#!">
                                     <i class="ti-layers "></i>
                                     <span data-i18n="nav.extra-components.main">My Panel</span>
@@ -749,7 +751,7 @@ function toast(message) {
                         }
                         ?>
                         <?php
-                       // if (can_access('manage_schools')) {
+                        // if (can_access('manage_schools')) {
                         if (false) {
                             $has_class = preg_match('/exam/', url()->current()) ? 'has-class open' : '';
                             ?>
@@ -957,120 +959,120 @@ function toast(message) {
     if (request('type_id') != 'subject' && !preg_match('/emailsms/', url()->current()) && !preg_match('/sales/', url()->current()) && !preg_match('/logs/', url()->current()) && !preg_match('/activity/', url()->current()) && !preg_match('/payment_history/i', url()->current()) && !preg_match('/api/', url()->current())) {
         ?>
         <script type="text/javascript">
-                                    send_message = function (id) {
-                                        var to_user_id = $('#to_user_id' + id).val();
-                                        var body = $('#body').val();
-                                        $.ajax({
-                                            type: 'POST',
-                                            url: '<?= url('Users/storeChat/null') ?>',
-                                            data: {to_user_id: to_user_id, body: body},
-                                            dataType: "html",
-                                            success: function (data) {
-                                                $('input[type="text"],textarea').val('');
-                                                $('#usermessage').html(data);
-                                            }
-                                        });
-                                    }
+                                        send_message = function (id) {
+                                            var to_user_id = $('#to_user_id' + id).val();
+                                            var body = $('#body').val();
+                                            $.ajax({
+                                                type: 'POST',
+                                                url: '<?= url('Users/storeChat/null') ?>',
+                                                data: {to_user_id: to_user_id, body: body},
+                                                dataType: "html",
+                                                success: function (data) {
+                                                    $('input[type="text"],textarea').val('');
+                                                    $('#usermessage').html(data);
+                                                }
+                                            });
+                                        }
 
-                                    get_user = function (id) {
-                                        var to_user_id = $('#to_user_id' + id).val();
-                                        $.ajax({
-                                            type: 'get',
-                                            url: '<?= url('Users/getUser/null') ?>',
-                                            data: {to_user_id: to_user_id},
-                                            dataType: "html",
-                                            success: function (data) {
-                                                $('#usermessage').html(data);
-                                            }
-                                        });
-                                    }
+                                        get_user = function (id) {
+                                            var to_user_id = $('#to_user_id' + id).val();
+                                            $.ajax({
+                                                type: 'get',
+                                                url: '<?= url('Users/getUser/null') ?>',
+                                                data: {to_user_id: to_user_id},
+                                                dataType: "html",
+                                                success: function (data) {
+                                                    $('#usermessage').html(data);
+                                                }
+                                            });
+                                        }
 
-                                    $(document).ready(function () {
-                                        $('.dataTable').DataTable({
-                                            dom: 'Bfrtip',
-                                            responsive: false,
-                                            paging: true,
-                                            info: false,
-                                            "pageLength": 10,
-                                            buttons: [
-                                                {
-                                                    text: 'PDF',
-                                                    extend: 'pdfHtml5',
-                                                    message: '',
-                                                    orientation: 'landscape',
-                                                    exportOptions: {
-                                                        columns: ':visible'
+                                        $(document).ready(function () {
+                                            $('.dataTable').DataTable({
+                                                dom: 'Bfrtip',
+                                                responsive: false,
+                                                paging: true,
+                                                info: false,
+                                                "pageLength": 10,
+                                                buttons: [
+                                                    {
+                                                        text: 'PDF',
+                                                        extend: 'pdfHtml5',
+                                                        message: '',
+                                                        orientation: 'landscape',
+                                                        exportOptions: {
+                                                            columns: ':visible'
+                                                        },
+                                                        customize: function (doc) {
+                                                            doc.pageMargins = [10, 10, 10, 10];
+                                                            doc.defaultStyle.fontSize = 7;
+                                                            doc.styles.tableHeader.fontSize = 7;
+                                                            doc.styles.title.fontSize = 9;
+                                                            // Remove spaces around page title
+                                                            doc.content[0].text = doc.content[0].text.trim();
+                                                            // Create a footer
+                                                            doc['footer'] = (function (page, pages) {
+                                                                return {
+                                                                    columns: [
+                                                                        'www.shulesoft.com',
+                                                                        {
+                                                                            // This is the right column
+                                                                            alignment: 'right',
+                                                                            text: ['page ', {text: page.toString()}, ' of ', {text: pages.toString()}]
+                                                                        }
+                                                                    ],
+                                                                    margin: [10, 0]
+                                                                }
+                                                            });
+                                                            // Styling the table: create style object
+                                                            var objLayout = {};
+                                                            // Horizontal line thickness
+                                                            objLayout['hLineWidth'] = function (i) {
+                                                                return .5;
+                                                            };
+                                                            // Vertikal line thickness
+                                                            objLayout['vLineWidth'] = function (i) {
+                                                                return .5;
+                                                            };
+                                                            // Horizontal line color
+                                                            objLayout['hLineColor'] = function (i) {
+                                                                return '#aaa';
+                                                            };
+                                                            // Vertical line color
+                                                            objLayout['vLineColor'] = function (i) {
+                                                                return '#aaa';
+                                                            };
+                                                            // Left padding of the cell
+                                                            objLayout['paddingLeft'] = function (i) {
+                                                                return 4;
+                                                            };
+                                                            // Right padding of the cell
+                                                            objLayout['paddingRight'] = function (i) {
+                                                                return 4;
+                                                            };
+                                                            // Inject the object in the document
+                                                            doc.content[1].layout = objLayout;
+                                                        }
                                                     },
-                                                    customize: function (doc) {
-                                                        doc.pageMargins = [10, 10, 10, 10];
-                                                        doc.defaultStyle.fontSize = 7;
-                                                        doc.styles.tableHeader.fontSize = 7;
-                                                        doc.styles.title.fontSize = 9;
-                                                        // Remove spaces around page title
-                                                        doc.content[0].text = doc.content[0].text.trim();
-                                                        // Create a footer
-                                                        doc['footer'] = (function (page, pages) {
-                                                            return {
-                                                                columns: [
-                                                                    'www.shulesoft.com',
-                                                                    {
-                                                                        // This is the right column
-                                                                        alignment: 'right',
-                                                                        text: ['page ', {text: page.toString()}, ' of ', {text: pages.toString()}]
-                                                                    }
-                                                                ],
-                                                                margin: [10, 0]
-                                                            }
-                                                        });
-                                                        // Styling the table: create style object
-                                                        var objLayout = {};
-                                                        // Horizontal line thickness
-                                                        objLayout['hLineWidth'] = function (i) {
-                                                            return .5;
-                                                        };
-                                                        // Vertikal line thickness
-                                                        objLayout['vLineWidth'] = function (i) {
-                                                            return .5;
-                                                        };
-                                                        // Horizontal line color
-                                                        objLayout['hLineColor'] = function (i) {
-                                                            return '#aaa';
-                                                        };
-                                                        // Vertical line color
-                                                        objLayout['vLineColor'] = function (i) {
-                                                            return '#aaa';
-                                                        };
-                                                        // Left padding of the cell
-                                                        objLayout['paddingLeft'] = function (i) {
-                                                            return 4;
-                                                        };
-                                                        // Right padding of the cell
-                                                        objLayout['paddingRight'] = function (i) {
-                                                            return 4;
-                                                        };
-                                                        // Inject the object in the document
-                                                        doc.content[1].layout = objLayout;
-                                                    }
-                                                },
 
-                                                {extend: 'excelHtml5', footer: true},
-                                                {extend: 'csvHtml5', customize: function (csv) {
-                                                        return "ShuleSoft" + csv + "ShuleSoft";
-                                                    }},
-                                                {extend: 'print', footer: true}
+                                                    {extend: 'excelHtml5', footer: true},
+                                                    {extend: 'csvHtml5', customize: function (csv) {
+                                                            return "ShuleSoft" + csv + "ShuleSoft";
+                                                        }},
+                                                    {extend: 'print', footer: true}
 
-                                            ]
+                                                ]
+                                            });
                                         });
-                                    });
 
 
 
 
-                                    $('.clockpicker').clockpicker({
-                                        donetext: 'Done'
-                                    }).find('input').change(function () {
-                                        console.log(this.value);
-                                    });
+                                        $('.clockpicker').clockpicker({
+                                            donetext: 'Done'
+                                        }).find('input').change(function () {
+                                            console.log(this.value);
+                                        });
         </script>
     <?php } ?>
 </html>
