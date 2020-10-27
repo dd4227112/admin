@@ -169,7 +169,6 @@ class Partner extends Controller {
                DB::table('admin.integration_requests_documents')->insertGetId(['integration_bank_document_id' => $bank_file_id, 'integration_request_id' => $request_id]);
             }
 
- 
             //once a school has been installed, now create an invoice for this school or create a promo code
                 // create an invoice for this school
                 $check_booking = DB::table('admin.invoices')->where('client_id', $client_id)->first();
@@ -193,7 +192,7 @@ class Partner extends Controller {
             //send onboarding message to customer directly
             
             return redirect('account/InvoiceView/'.$invoice->id);
-            //return redirect('https://' . $username . '.shulesoft.com/database/'.$username);
+            //return redirect('https://' . $username . '.shulesoft.com/istall/database/'.$username);
            // }
         }
         return view('users.partners.add_new', $this->data);
@@ -214,4 +213,26 @@ class Partner extends Controller {
         $this->data['school_types'] = DB::select("select type, count(*) from admin.schools where ownership='Non-Government' group by type,ownership");
         return view('users.partners.school_list', $this->data);
     }
+
+    /**
+     * Store a newly created resource in storage.
+    */
+    public function psms($client_id) {
+        
+        //create a trial code for this school
+        $trial_code = $client_id . time();
+
+        $client = DB::table('admin.clients')->where('id', $client_id);
+        DB::table('admin.clients')->where('id', $client_id)->update(['code' => $trial_code]);
+        $user = $client->first();
+        $message = 'Hello ' . $user->name . '. Your Invoice Trial Code is ' . $trial_code;
+        $this->send_sms($user->phone, $message, 1);
+        $this->send_email($user->email, 'Success: School Onboarded Successfully', $message);
+        
+        $sql = "insert into public.sms (body,users_id,type,phone_number) select '{$message}',id,'0',phone from admin.all_users WHERE schema_name::text IN ($list_schema) AND usertype !='Student' {$in_array} AND phone is not NULL ";
+        DB::statement($sql);
+
+        return redirect('message/create');
+    }
+
 }

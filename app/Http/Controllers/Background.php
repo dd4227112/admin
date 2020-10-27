@@ -27,8 +27,8 @@ class Background extends Controller {
     public function index($tag = 'sms') {
         //
         return $tag == 'sms' ?
-                $this->dispatch((new \App\Jobs\PushSMS())) :
-                $this->dispatch((new \App\Jobs\PushEmail()));
+        $this->dispatch((new \App\Jobs\PushSMS())) :
+        $this->dispatch((new \App\Jobs\PushEmail()));
     }
 
     public function sendSms() {
