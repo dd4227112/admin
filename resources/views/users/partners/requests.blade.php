@@ -89,16 +89,22 @@
                       <td>'.$request->schema_name.'</td>';
                       ?>
                       <td><?=$request->banks->integration_request_id >0 ? 'Integrated' : 'Not Integrated' ?></td>
-                      <td><?=$request->bank_approved==1 ? 'Approved' : 'Not Approved' ?></td>
-                      <td><?=$request->shulesoft_approved==1 ? 'Approved' : 'Not Approved' ?></td>
+                      <td><?=$request->bank_approved == 1 ? 'Approved' : 'Not Approved' ?></td>
+                      <td><a href="<?= url('Partner/view/'.$request->id)?>" class="btn btn-success btn-sm"> <?=$request->shulesoft_approved == 1 ? 'Approved' : 'Not Approved' ?></span></td>
                       <td><?=timeAgo($request->created_at)?></td>
                       <td>
                       <a class="btn btn-info btn-sm" href="<?= url('Partner/view/'.$request->id)?>">View</a>
-                      <a href="https://<?=$request->client->username?>.shulesoft.com/database/<?php echo $request->client->username; ?>" target="_blank" class="btn btn-success btn-sm"> Install System</a>
+
+                      <?php if($request->shulesoft_approved == 0){ ?>
+                            <a href="#" class="btn btn-success btn-sm">  <i class="ti ti-lock"> </i>  Install System</a>
+                      <?php }else{ ?>
+                            <a href="https://<?=$request->client->username?>.shulesoft.com/database/<?php echo $request->client->username; ?>" target="_blank" class="btn btn-success btn-sm"> Install System</a>
+                      <?php  } ?>
                       </td>
                       </tr>
                       <?php
-                    }
+                    
+                      }
 
                   }
                   ?>
@@ -148,4 +154,20 @@
           </div>
         </div>
       </div>
+
+      <script>
+          $('#action').change(function () {
+            var val = $(this).val();
+            $.ajax({
+              type: 'POST',
+              url: "<?= url('Customer/updateTask') ?>",
+              data: "id=" + <?= $request->id ?> + "&action=" + val,
+              dataType: "html",
+              success: function (data) {
+                $('#added_').html(data);
+              }
+            });
+          });
+      </script>
+
       @endsection

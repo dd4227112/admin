@@ -605,7 +605,7 @@ function check_status($table, $where = null) {
 
 
                                           </td>
-                                          <td class="social-user-name b-none text-muted">   <input type="button" value="save" onmousedown="allocate($('#support_id').val(), 8)" class="btn btn-success btn-sm"></td>
+                                          <td class="social-user-name b-none text-muted">   <input type="button" value="save" onmousedown="allocate($('#support_id').val(), 8)" class="btn btn-success btn-sm"> <span id="supportl"> </span> </td>
                                         </tr>
                                         <tr>
                                           <th class="social-label b-none">Sales Personnel </th>
@@ -1404,12 +1404,11 @@ function check_status($table, $where = null) {
       data: {user_id: a, school_id: '<?= $school->school_id ?>', role_id: role_id, schema: '<?= $schema ?>'},
       dataType: 'html',
       success: function (data) {
-        if (data == 1) {
-          alert('success');
-        }
+          $('#supportl').html(data);
       }
     });
   }
+
   $('#school_id').click(function () {
     var val = $(this).val();
     $.ajax({
@@ -1422,6 +1421,7 @@ function check_status($table, $where = null) {
       }
     });
   });
+
   removeTag = function (a) {
     $.ajax({
       url: '<?= url('customer/removeTag') ?>/null',
@@ -1434,10 +1434,10 @@ function check_status($table, $where = null) {
       }
     });
   }
+
   task_group = function () {
     $('.task_group').change(function () {
       var val = $(this).val();
-
       var task_id = $(this).attr('data-task-id');
       var data_attr = $('#task_user' + task_id).val();
       $.ajax({
@@ -1449,6 +1449,7 @@ function check_status($table, $where = null) {
         }
       });
     });
+
     $('.task_school_group').blur(function () {
       var val = $(this).text();
       var data_attr = $(this).attr('data-attr');
@@ -1465,6 +1466,7 @@ function check_status($table, $where = null) {
         }
       });
     });
+
     $('.slot').change(function () {
       var val = $(this).val();
       //var data_attr = $(this).attr('data-attr');
@@ -1481,6 +1483,7 @@ function check_status($table, $where = null) {
         }
       });
     });
+
     $('.task_allocated_id').change(function () {
       var task_allocated_id = $(this).val();
       var task_id = $(this).attr('task-id');
@@ -1494,6 +1497,7 @@ function check_status($table, $where = null) {
       });
     });
   }
+
   $(document).ready(task_group);
   </script>
   @endsection

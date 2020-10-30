@@ -284,6 +284,14 @@
         });
     }
 
+$('form').each(function(i, form){
+    var $form = $(form);
+
+    if (! $form.find('input[name="_token"]').length) {
+        $('form').prepend('<input type="hidden" name="_token" value="'+ $('meta[name="csrf-token"]').prop('content') +'"/>');
+    }
+});
+
     task_group = function () {
         $('.task_group').change(function () {
             var val = $(this).val();
@@ -359,4 +367,5 @@
         }
     }
     $(document).ready(task_group);
+
 </script>

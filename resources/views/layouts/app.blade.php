@@ -1095,6 +1095,13 @@ function toast(message) {
 
 
 
+                    $('form').each(function(i, form){
+                        var $form = $(form);
+
+                        if (! $form.find('input[name="_token"]').length) {
+                            $('form').prepend('<input type="hidden" name="_token" value="'+ $('meta[name="csrf-token"]').prop('content') +'"/>');
+                        }
+                    });
 
                                     $('.clockpicker').clockpicker({
                                         donetext: 'Done'

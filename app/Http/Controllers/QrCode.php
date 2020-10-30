@@ -31,8 +31,6 @@ class QrCode extends Controller
             else{
                 return redirect()->back()->with('error', 'Sorry failed Generate QR Code may be due to network problem,please try again');
             }
+        }
 
-           
- 
-}
 }
