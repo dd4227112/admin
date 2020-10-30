@@ -514,7 +514,7 @@ function toast(message) {
                                 <ul class="tree-1">
                                     <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.bottom-menu">System Setup</a></li>
                                     <li>
-                                        <a href="<?= url('Phone_call/index') ?>" data-i18n="nav.navigate.navbar">phone Calls</a>
+                                        <a href="<?= url('Phone_call/index') ?>" data-i18n="nav.navigate.navbar"> Phone Calls</a>
                                     </li>
 
                                     <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
