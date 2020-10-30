@@ -34,25 +34,11 @@ class Analyse extends Controller {
 
         if (Auth::user()->role_id == 7) {
             $id = Auth::user()->id;
-            $partner_user = \App\Models\PartnerUser::whereIn('user_id', [Auth::user()->id])->first();
-
-            if (empty($partner_user)) {
-                //LATER ON ADD A TABLE TO MAP USER AND PARTNER
-                //create a branch\
-                $partner=DB::table('admin.partners')->where('email',Auth::user()->email)->first();
-                $partner_branch = \App\Models\PartnerBranch::create(['name' => 'HQ',  'phone_number' => Auth::user()->phone,
-                            'partner_id'=>$partner->id, 'district_id' => 3]);
-                //add a partner
-                $id = Auth::user()->id;
-                $partner_user = \App\Models\PartnerUser::create(['user_id'=> Auth::user()->id, 'branch_id'=>$partner_branch->id]);
-            }
-            if (preg_match('/nmb/i', $partner_user->branch->partner->name)) {
-                $refer_bank_id = 22;
-            } else {
-                $refer_bank_id = 7;
-            }
+            $this->data['refer_bank_id'] =$refer_bank_id = (new \App\Http\Controllers\Users())->getBankId();
+            //$partner_user = \App\Models\PartnerUser::whereIn('user_id', [Auth::user()->id])->first();
             $this->data['use_shulesoft'] = DB::table('admin.all_setting')->count() - 5;
-            $this->data['nmb_schools'] = \App\Models\PartnerSchool::whereIn('branch_id', \App\Models\PartnerBranch::where('partner_id', $partner_user->branch->partner->id)->get(['partner_id']))->count();
+            //$this->data['nmb_schools'] = \App\Models\PartnerSchool::whereIn('branch_id', \App\Models\PartnerBranch::where('partner_id', $partner_user->branch->partner->id)->get(['branch_id']))->count();
+            $this->data['nmb_schools'] = $refer_bank_id == 22 ? DB::table('nmb_schools')->get() : [];
             $this->data['schools'] = DB::table('admin.schools')->where('ownership', '<>', 'Government')->get();
             $this->data['nmb_shulesoft_schools'] = \collect(DB::select("select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=" . $refer_bank_id))->first()->count;
             return view('analyse.bank', $this->data);

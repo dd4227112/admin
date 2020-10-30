@@ -40,7 +40,7 @@
                                             <div class="progress ">
                                                 <div class="progress-bar progress-bar-striped progress-xs progress-bar-<?= $i == 1 ? 'pink' : 'success' ?>" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
-                                            <small><a href="#schools" class="btn btn-default btn-sm"> View</a></small>
+                                            <small><a href="<?=url('sales/school')?>" class="btn btn-default btn-sm"> View</a></small>
                                         </div>
                                         <i class="icofont icofont-gift"></i>
                                     </div>
@@ -85,7 +85,7 @@
             </div>
 
         </div>
-
+<?php if($refer_bank_id==22){ ?>
 
         <!-- Monthly Growth Chart start-->
         <div class="row" id="schools">
@@ -182,6 +182,8 @@
                 <?php } ?>
             </div>
         </div>
+        
+        <?php }?>
     </div>
 </div>
 <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>

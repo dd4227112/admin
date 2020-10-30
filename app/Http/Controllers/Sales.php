@@ -156,13 +156,14 @@ group by ownership');
             }
         }
         if ($id == 'bank') {
+             $refer_bank_id=(new \App\Http\Controllers\Users())->getBankId();
             $user = Auth::user()->id;
             $this->data['branch'] = $branch = \App\Models\PartnerUser::where('user_id', $user)->first();
             $this->data['title'] = "Schools With Bank Payment Integrarion";
             if (!empty($branch)) {
-                $this->data['all_schools'] = DB::select('select * from admin.schools WHERE schema_name IN (select distinct schema_name from admin.all_bank_accounts where refer_bank_id=22) and ward_id in (select id from admin.wards where district_id = ' . $branch->branch->district_id . ')');
+                $this->data['all_schools'] = DB::select('select * from admin.schools WHERE schema_name IN (select distinct schema_name from admin.all_bank_accounts where refer_bank_id='.$refer_bank_id.') and ward_id in (select id from admin.wards where district_id = ' . $branch->branch->district_id . ')');
             } else {
-                $this->data['all_schools'] = DB::select('select * from admin.schools WHERE schema_name IN (select distinct schema_name from admin.all_bank_accounts where refer_bank_id=22)');
+                $this->data['all_schools'] = DB::select('select * from admin.schools WHERE schema_name IN (select distinct schema_name from admin.all_bank_accounts where refer_bank_id='.$refer_bank_id.')');
             }
         }
         return view('sales.school_status', $this->data);
