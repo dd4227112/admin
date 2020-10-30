@@ -263,7 +263,7 @@
                                                             <td class="text-center">
                                                                 Tsh <?= money($total_paid) ?>
                                                                 <br/>
-                                                                Equivalent to <?=round($total_paid*100/$total_amount)?>% collected
+                                                                Equivalent to <?=(int) $total_amount>0 ? round($total_paid*100/$total_amount):$total_amount?>% collected
                                                             </td>
                                                             <td class="text-center">Tsh <?= money($total_unpaid) ?></td>
                                                         </tr>

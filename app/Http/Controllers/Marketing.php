@@ -284,6 +284,9 @@ group by ownership');
     }
 
     public function Events() {
+        /**
+         * add option for someone to write an attendance and upload via excel in case you visit TAMONGSCO 
+         */
         $id = request()->segment(3);
         if ((int) $id > 0) {
 
@@ -675,5 +678,6 @@ group by ownership');
             return redirect()->back()->with('error', $this->lang->line('no_teachers_error'));
         }
     }
+
 
 }
