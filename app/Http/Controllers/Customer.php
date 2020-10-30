@@ -640,15 +640,15 @@ $obj=[
                 $check = DB::table('users_schools')->where('role_id', $role_id)->where('school_id', $school_id)->first();
                 if (!empty($check)) {
                     \App\Models\UsersSchool::where('role_id', $role_id)->where('school_id', $school_id)->update(['user_id' => $user_id, 'updated_at' => $date]);
-                    echo "Success";
+                    echo "Success Updated";
                 } else {
                     \App\Models\UsersSchool::create(['school_id' => $school_id, 'user_id' => $user_id, 'role_id' => $role_id, 'schema_name' => $schema, 'created_at' => $date, 'updated_at' => $date]);
-                    echo "Success";
+                    echo "Success Added";
                 }
                 DB::table($schema . '.setting')->update(['school_id' => $school_id]);
                 $school_info->update(['schema_name' => $schema]);
             }else{
-                echo "Failed";
+                echo "Failed to Add";
             }
         }else{
             echo "Failed";
