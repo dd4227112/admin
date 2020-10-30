@@ -60,54 +60,10 @@
                                 <a class="nav-link" data-toggle="tab" href="#profile1" role="tab"> <i class="ti-menu"> </i> Reports</a>
                               </li> -->
 
-<<<<<<< HEAD
-            <div class="table-responsive dt-responsive">
-              <table id="dt-ajax-array" class="table table-striped table-bordered nowrap">
-                <thead>
-                  <tr>
-                    <th>No.</th>
-                    <th>School Name</th>
-                    <th>System Status</th>
-                    <th>Bank Integration</th>
-                    <th>Bank Status</th>
-                    <th>Shulesoft Status</th>
-                    <th>Added Date</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php
-                  if(!empty($requests)){
-                    $i=1;
-                    foreach($requests as $request){
-                      echo '<tr>
-                      <td>'.$i++.'</td>
-                      <td>'.substr($request->client->name, 0, 30).'</td>
-                      <td>'.$request->schema_name.'</td>';
-                      ?>
-                      <td><?=$request->banks->integration_request_id >0 ? 'Integrated' : 'Not Integrated' ?></td>
-                      <td><?=$request->bank_approved == 1 ? 'Approved' : 'Not Approved' ?></td>
-                      <td><a href="<?= url('Partner/view/'.$request->id)?>" class="btn btn-success btn-sm"> <?=$request->shulesoft_approved == 1 ? 'Approved' : 'Not Approved' ?></span></td>
-                      <td><?=timeAgo($request->created_at)?></td>
-                      <td>
-                      <a class="btn btn-info btn-sm" href="<?= url('Partner/view/'.$request->id)?>">View</a>
-
-                      <?php if($request->shulesoft_approved == 0){ ?>
-                            <a href="#" class="btn btn-success btn-sm">  <i class="ti ti-lock"> </i>  Install System</a>
-                      <?php }else{ ?>
-                            <a href="https://<?=$request->client->username?>.shulesoft.com/database/<?php echo $request->client->username; ?>" target="_blank" class="btn btn-success btn-sm"> Install System</a>
-                      <?php  } ?>
-                      </td>
-                      </tr>
-                      <?php
-                    
-                      }
-=======
                             </ul>
                             <!-- Tab panes -->
                             <div class="tab-content tabs">
                                 <div class="tab-pane active" id="home1" role="tabpanel">
->>>>>>> 7541af209a3c08124a18bb4f11c5055cc5512702
 
                                     <div class="table-responsive dt-responsive">
                                         <table id="dt-ajax-array" class="table table-striped table-bordered nowrap">
