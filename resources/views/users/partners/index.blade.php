@@ -80,7 +80,7 @@
                             <?php } ?>
                           <td>
                           <?php 
-                                if($set > 0 ){ $path = 'Staffs'; }else{  $path = 'partners'; }
+                                if($set > 0 ){ $path = 'View Staffs'; }else{  $path = 'View Branches'; }
                                 $school == 1 ? $school1 = $partner->id.'/branch' :  $school1 = $partner->id;
                             ?>
                           <a class="btn btn-info btn-sm" href="{{ url('users/'. $path . '/'.$partner->id) }}"><?=$path?></a>

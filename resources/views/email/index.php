@@ -482,7 +482,7 @@
 
                             <div style="mso-line-height-rule: exactly;line-height: 20px;font-size: 20px;">&nbsp;</div>
 
-                          
+
                             <br/>
                             <div class="layout fixed-width stack" style="Margin: 0 auto;max-width: 600px;min-width: 320px; width: 320px;width: calc(28000% - 167400px);overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;">
                                 <div class="layout__inner" style="border-collapse: collapse;display: table;width: 100%;background-color: #ffffff;">
@@ -492,10 +492,9 @@
                                         <div style="Margin-left: 20px;Margin-right: 20px;Margin-top: 12px;">
                                             <div style="mso-line-height-rule: exactly;mso-text-raise: 11px;vertical-align: middle;">
                                                 <p style="Margin-top: 0;Margin-bottom: 20px;">
-                                                 <?php
-                                    $content = DB::table('constant.guides')->first();
-                                    echo $content->content;
-                                    ?> </p>
+                                                    <?php
+                                                   echo isset($content) ? $content:'';
+                                                    ?> </p>
                                             </div>
                                         </div>
 
@@ -520,7 +519,7 @@
                                     <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
                                 </div>
                             </div>
-                         
+
 
                             <div style="mso-line-height-rule: exactly;line-height: 20px;font-size: 20px;">&nbsp;</div>
 
@@ -534,23 +533,23 @@
                                                 <table class="email-footer__links" style="border-collapse: collapse;table-layout: fixed;" role="presentation" emb-web-links>
                                                     <tbody><tr role="navigation">
                                                             <td style="padding: 0;width: 26px;" emb-web-links>
-                                                                <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #151513;" href="http://facebook.com/shulesoft" target="_blank">
+                                                                <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #151513;" href="https://facebook.com/shulesoft" target="_blank">
                                                                     <img style="border: 0;" src="https://i2.createsend1.com/static/eb/master/13-the-blueprint-3/images/facebook.png" width="26" height="26" alt="Facebook" /></a>
                                                             </td>
                                                             <td style="padding: 0 0 0 3px;width: 26px;" emb-web-links>
-                                                                <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #151513;" href="http://twitter.com/shulesoft">
+                                                                <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #151513;" href="https://twitter.com/shulesoft">
                                                                     <img style="border: 0;" src="https://i3.createsend1.com/static/eb/master/13-the-blueprint-3/images/twitter.png" width="26" height="26" alt="Twitter" /></a>
                                                             </td>
                                                             <td style="padding: 0 0 0 3px;width: 26px;" emb-web-links>
-                                                                <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #151513;" href="http://shulesoft.com/shulesoft">
+                                                                <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #151513;" href="https://youtube.com/shulesoft">
                                                                     <img style="border: 0;" src="https://i4.createsend1.com/static/eb/master/13-the-blueprint-3/images/youtube.png" width="26" height="26" alt="YouTube" /></a>
                                                             </td>
                                                             <td style="padding: 0 0 0 3px;width: 26px;" emb-web-links>
-                                                                <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #151513;" href="http://https:shulesoft.com">
+                                                                <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #151513;" href="https://instagram.com/shulesoft_">
                                                                     <img style="border: 0;" src="https://i5.createsend1.com/static/eb/master/13-the-blueprint-3/images/instagram.png" width="26" height="26" alt="Instagram" /></a>
                                                             </td>
                                                             <td style="padding: 0 0 0 3px;width: 26px;" emb-web-links>
-                                                                <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #151513;" href="http://shulesoft.com">
+                                                                <a style="text-decoration: underline;transition: opacity 0.1s ease-in;color: #151513;" href="https://www.linkedin.com/company/shulesoft-tz/?viewAsMember=true">
                                                                     <img style="border: 0;" src="https://i6.createsend1.com/static/eb/master/13-the-blueprint-3/images/linkedin.png" width="26" height="26" alt="LinkedIn" /></a>
                                                             </td>
                                                         </tr></tbody></table>
