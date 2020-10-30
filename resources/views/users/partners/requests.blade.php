@@ -83,20 +83,28 @@
                                                 <?php
                                                 if (!empty($requests)) {
                                                     $i = 1;
+                                                    $bank = null;
                                                     foreach ($requests as $request) {
+                                                      $checksystem = DB::table('admin.all_setting')->where('schema_name', $request->client->username)->first();
+                                                      if(!empty($checksystem)){
                                                         $integrated = \DB::table($request->client->username . '.bank_accounts_integrations')->where('id', $request->bank_accounts_integration_id)->first();
-                                                        $bank = DB::table($request->client->username . '.bank_accounts')->where('id', $integrated->bank_account_id)->first();
+                                                        if(!empty($integrated)){
+                                                          $bank = DB::table($request->client->username . '.bank_accounts')->where('id', $integrated->bank_account_id)->first();
+                                                        }
+                                                      }else{
+                                                        $bank = \App\Models\IntegrationBankAccount::where('integration_request_id', $request->id)->first();
+                                                      }
                                                         echo '<tr>
-                      <td>' . $i++ . '</td>
-                      <td>' . substr($request->client->name, 0, 30) . '</td>
-                      <td>' . $request->schema_name . '</td>';
-                                                        ?>
-                                                    <td><?= !empty($bank) ? $bank->number : '<b class="label label-danger">Approved</b>Invalid</b>' ?></td>
+                                                        <td>' . $i++ . '</td>
+                                                        <td>' . substr($request->client->name, 0, 30) . '</td>
+                                                        <td>' . $request->schema_name . '</td>';
+                                                    ?>
+                                                    <td><?= !empty($bank) ? $bank->number : '<b class="label label-danger">Invalid</b>' ?></td>
                                                     <td><?=
                                                         $request->bank_approved == 1 ? '<b class="label label-success">Approved</b>' :
                                                                 '<b class="label label-default">Not Approved</b>'
                                                         ?></td>
-                                                    <td><?= $request->shulesoft_approved == 1 ? 'Approved' : 'Not Approved' ?></td>
+                                                    <td><?= $request->shulesoft_approved == 1 ? '<b class="label label-success"> Approved </b>' : '<b class="label label-warning"> Not Approved </b>' ?></td>
                                                     <td><?= timeAgo($request->created_at) ?></td>
                                                     <td>
                                                         <a class="btn btn-info btn-sm" href="<?= url('Partner/view/' . $request->id) ?>">View</a>
