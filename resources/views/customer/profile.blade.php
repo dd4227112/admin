@@ -127,9 +127,9 @@ function check_status($table, $where = null) {
                                 } elseif ($st->school_status == 3) {
                                   echo '<div class="btn btn-warning">Resale</div>';
                                 } elseif ($st->school_status == 4) {
-                                  echo '<a class="btn btn-warning waves-effect waves-light f-right" data-toggle="modal" data-target="#status-Modal">Inactive</div>';
+                                  echo '<div><a class="btn btn-warning waves-effect waves-light f-right" data-toggle="modal" data-target="#status-Modal">Inactive</div>';
                                 } else {
-                                  echo '<div>not defined</div>';
+                                  echo '<div>Not defined</div>';
                                 }
                                 ?>
                               </div>
