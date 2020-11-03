@@ -120,6 +120,7 @@ function check_status($table, $where = null) {
                                 <div class="txt-primary">School Status</div>
                                 <?php
                                 $st = DB::table($schema . '.setting')->first();
+                                echo '<a data-toggle="modal" data-target="#status-Modal">';
                                 if ($st->school_status == 1) {
                                   echo '<div class="btn btn-primary">Active Paid</div>';
                                 } elseif ($st->school_status == 2) {
@@ -127,10 +128,11 @@ function check_status($table, $where = null) {
                                 } elseif ($st->school_status == 3) {
                                   echo '<div class="btn btn-warning">Resale</div>';
                                 } elseif ($st->school_status == 4) {
-                                  echo '<div><a class="btn btn-warning waves-effect waves-light f-right" data-toggle="modal" data-target="#status-Modal">Inactive</a></div>';
+                                  echo '<div class="btn btn-warning"> Inactive </div>';
                                 } else {
                                   echo '<div>Not defined</div>';
                                 }
+                                echo '</a>';
                                 ?>
                               </div>
                             </div>
@@ -449,8 +451,9 @@ function check_status($table, $where = null) {
                           <div class="card">
                             <div class="card-header">
                               <h5 class="card-header-text">Basic Information</h5>
-                              <button id="edit-btn" type="button" class="btn btn-primary waves-effect waves-light f-right" data-toggle="modal" data-target="#status-Modal">
-                                <i class="icofont icofont-edit"></i> Change school Status
+                              
+                              <button id="edit-btn" type="button" class="btn btn-primary waves-effect waves-light f-right" data-toggle="modal" data-target="#school_details">
+                                <i class="icofont icofont-edit"></i> Change school Details
                               </button>
                             </div>
                             <div class="card-block">
@@ -1350,9 +1353,62 @@ function check_status($table, $where = null) {
         </div>
       </div>
     </div>
+    </div>
+    </div>
+  </div>
+  </div>
+  </div>
+  </div>
   </div>
   <?php $root = url('/') . '/public/' ?>
+  <?php
+   if(!empty($profile)){ 
+    ?>
+              <div class="modal fade" id="school_details" tabindex="-1" role="dialog" style="z-index: 1050; display: none;" aria-hidden="true">
+              <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+                <div class="card-block">
+                  
+                  <div id="view-info" class="row">
+                    <div class="col-lg-12 col-md-12">
+                    <form action="<?= url('customer/contract/' . $client_id) ?>" method="POST" enctype="multipart/form-data">
+                        <table class="table m-b-0">
+                          <tbody><tr>
+                            <th class="social-label b-none p-t-0">School Name
+                            </th>
+                            <td class="social-user-name b-none p-t-0 text-muted"><?= $profile->school->name ?></td>
+                          </tr>
+                          <tr>
+                            <th class="social-label b-none">Region</th>
+                            <td class="social-user-name b-none text-muted"><?= $profile->school->region ?></td>
+                          </tr>
+                          <tr>
+                            <th class="social-label b-none">District</th>
+                            <td class="social-user-name b-none text-muted"><?= $profile->school->district ?></td>
+                          </tr>
+                          <tr>
+                            <th class="social-label b-none">Ward</th>
+                            <td class="social-user-name b-none text-muted"><?= $profile->school->ward ?></td>
+                          </tr>
+                         
+                        </tbody>
+                        </table>
+                        </div>
+                      </div>
+                    </form>
 
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Submit</button>
+                    </div>
+                  </div>
+                  <br/>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+  <?php } ?>
   <!-- notify js Fremwork -->
   <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.css">
   <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.brighttheme.css">
@@ -1408,6 +1464,12 @@ function check_status($table, $where = null) {
       }
     });
   }
+
+  show_tabs = function (a) {
+            $('.live_tabs').hide(function () {
+              $('#' + a).show();
+            });
+          }
 
   $('#school_id').click(function () {
     var val = $(this).val();

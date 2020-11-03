@@ -32,6 +32,7 @@ class Partner extends Controller {
         $this->data['school'] = !empty($school) ? \App\Models\SchoolContact::where('school_id', $school->id)->first() : [];
         $this->data['client'] = \App\Models\ClientSchool::where('client_id', $request->client_id)->first();
         return view('users.partners.view_request', $this->data);
+        
     }
 
     public function add() {
