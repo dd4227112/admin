@@ -83,7 +83,7 @@ return [
             'port' =>5432,
             'database' => 'Shulesoft',
             'username' => 'postgres',
-            'password' =>'kiyogoma',
+            'password' =>'99abo123',
             'charset' => 'utf8',
             'prefix' => '',
             'schema' =>'admin',

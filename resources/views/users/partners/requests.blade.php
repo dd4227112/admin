@@ -81,7 +81,7 @@
                                             </thead>
                                             <tbody>
                                                 <?php
-                                                if (!empty($requests)) {
+                                                 if (!empty($requests)) {
                                                     $i = 1;
                                                     $bank = null;
                                                     foreach ($requests as $request) {

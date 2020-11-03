@@ -96,7 +96,7 @@
                 </li>
                 <li>
                   <div class="mail-section" onclick="show_tabs('contacts')">
-                    <a href="#" >
+                    <a href="#">
                       <i class="icofont icofont-star"></i> Contacts
                     </a>
                   </div>

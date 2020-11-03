@@ -8,7 +8,11 @@
     <div class="page-wrapper">
         <div class="row">
             <div class="col-sm-6">
-                <p><a  onclick="javascript:printDiv('print_all')" class="btn btn-default btn-sm">Print</a></p>
+                <p>
+                    <a  onclick="javascript:printDiv('print_all')" class="btn btn-default btn-sm">Print</a>
+                    <a class="btn btn-success btn-sm" href="#"  data-toggle="modal" data-target="#customer_contracts_model">  <i class="ti-plus"> </i><span id="approve">Approve Appliaction</span></a>
+            </p>
+                
             </div>
 
         </div>
@@ -140,6 +144,7 @@
                             <h5>Bank Account Details</h5>
                         </div>
                         <?php
+                    $checksystem = DB::table('admin.all_setting')->where('schema_name', $request->client->username)->first();
                         $bank = \App\Models\IntegrationBankAccount::where('integration_request_id', $request->id)->first();
                         if (empty($bank)) {
                             $bank = DB::table($request->client->username . '.bank_accounts')->where('refer_bank_id', 8)->first();
@@ -184,15 +189,19 @@
                                                     <th>Branch Name</th>
                                                     <th> <?= $bank->branch ?></th>
                                                 </tr>
-                                                <?php if ((int) $request->bank_approved == 1) {
+                                                <?php
+                                                if ((int) $request->bank_approved == 1) {
+                                                    if(!empty($checksystem)){
+                                                        ?>
+                                                <?php 
+
                                                      $integrated = \DB::table($request->client->username . '.bank_accounts_integrations')->where('id', $request->bank_accounts_integration_id)->first();
-                                                       
                                                     ?>
                                                     <tr>
                                                         <th>Invoice Prefix</th>
                                                         <th> <?= $integrated->invoice_prefix ?></th>
                                                     </tr>
-                                                <?php } ?>
+                                                <?php } } ?>
                                             </tbody>
                                         </table>
                                     </div>
@@ -327,6 +336,72 @@
 </div>
 <!-- personal card end-->
 
+<div class="modal fade" id="customer_contracts_model" role="dialog" style="z-index: 99999;" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+      <span id="modeltitle"></span>
+        <h4 class="modal-title">Update Task Details</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <form action="<?=url('Sales/updateVisit')?>" method="post">
+        <div class="modal-body">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+          <div class="form-group">
+            <div class="row">
+
+              <div class="col-md-6">
+                <strong> Start Time</strong>
+                <input type="datetime-local" class="form-control" required name="start_time">
+              </div>
+
+              <div class="col-md-6">
+                <strong> End Time</strong>
+                <input type="datetime-local" class="form-control" required name="end_time">
+              </div>
+            </div>
+          </div>
+        </div>
+          
+<div class="col-xs-12 col-sm-12 col-md-12">
+<div class="form-group">
+  <div class="row">
+  <div class="col-md-12">
+      <strong> Select Task Status</strong>
+      <input type="hidden" name="task_id" value=""  class="form-control">
+
+      <select type="text" name="status"  required class="form-control select2">
+          <option value='complete'>Complete</option>
+          <option value='Pending'>Pending</option>
+          <option value='on progress'>Progress</option>
+          <option value='Resolved'>Resolved</option>
+      </select>
+    </div>
+  
+    </div>
+    </div>
+<div class="form-group">
+  <div class="row">
+
+    <div class="col-md-12">
+      <strong> Task Type</strong>
+      <textarea name="task_id" value="" rows="5" class="form-control">
+    </div>
+  
+    </div>
+    </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-info waves-effect waves-light "> Submit </button>
+        </div>
+        {{ csrf_field() }}
+      </form>
+    </div>
+  </div>
+</div>
+
 <script>
     function printDiv(divID) {
 
@@ -346,7 +421,12 @@
     }
 </script>
 <script>
-    $('#action').change(function () {
+    
+    $('#customer_contracts_model').click(function () {
+        var vals = $('#approve').val();
+        $('#modeltitle').html(vals);
+    });
+        $('#action').change(function () {
         var val = $(this).val();
         $.ajax({
             type: 'POST',
