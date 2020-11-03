@@ -273,4 +273,17 @@ class Partner extends Controller {
         return redirect('message/create');
     }
 
+    public function RequestComment() {
+        if($_POST){
+        $request = \App\Models\IntegrationRequest::find(request('integration_request_id'));
+        $user = $user_account->first();
+        \App\Models\IntegrationRequestComment::create(request()->all());
+        $message = 'Hello ' . $request->user->name . ' '.request('comment'). '<br> By.  ' . Auth::user()->name;
+        $this->send_sms($request->user->phone, $message, 1);
+        return redirect('Partner/show/' . request('integration_request_id'));
+        }else{
+
+        }
+    }
+
 }
