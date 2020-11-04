@@ -340,7 +340,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">Update Task Details</h4>
+        <h4 class="modal-title">Add Comment For this Application Request</h4>
         <span id="modeltitle"></span>
 
       </div>
@@ -350,7 +350,7 @@
     <div class="form-group">
         <div class="row">
         <div class="col-md-12">
-            <strong> Select Task Status</strong>
+            <strong> Select Comment Status</strong>
             <input type="hidden" name="integration_request_id" value="<?=$request->id?>"  class="form-control">
             <input type="hidden" name="user_id" value="<?=Auth::user()->id?>"  class="form-control">
             <select type="text" name="status" required class="form-control select2">
@@ -365,7 +365,7 @@
     <div class="form-group">
     <div class="row">
         <div class="col-md-12">
-            <strong> Task Type</strong>
+            <strong> Write your Comment</strong>
             <textarea name="comment" value="" rows="5" class="form-control"></textarea>
         </div>
     </div>

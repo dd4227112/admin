@@ -4,20 +4,13 @@
 
 <script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
   
-        <!-- Style.css -->
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css">
-
-        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2.css">
-
-        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2-bootstrap.css">
-        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css">    
 <div class="main-body">
   <div class="page-wrapper">
     <!-- Page-header start -->
     <div class="page-header">
       <div class="page-header-title">
-        <h4 class="box-title">Add Partner Branch </h4>
-        <span>Register all users who are supposed to be in the system</span>
+        <h4 class="box-title">Company Partners </h4>
+        <span>Register all partners who are supposed to be in the system</span>
       </div>
       <div class="page-header-breadcrumb">
         <ul class="breadcrumb-title">
@@ -56,7 +49,7 @@
               <div class="card-block">
                 <div class="col-xs-12 col-sm-12 col-md-12">
                   <div class="form-group">
-                    <strong>Branch Name:</strong>
+                    <strong>Company Name:</strong>
                     <input type="text" class="form-control" placeholder="Enter Partner name here..." autofocus="1" name="name" required>
 
                   </div>
@@ -66,12 +59,13 @@
                     <div class="row">
 
                       <div class="col-md-6">
-                    <strong>Branch Email:</strong>
+                    <strong>Company Email:</strong>
                     <input type="email" class="form-control" placeholder="Type Email Here..." name="email" required>
                   </div>
                 <div class="col-md-6">
                 <strong>Phone Number:</strong>
                 <input type="text" class="form-control" placeholder="Enter Phone number..." name="phone_number" required>
+
                     </div>
                     </div>
                   </div>
@@ -80,25 +74,22 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                   <div class="form-group">
                     <div class="row">
-                    
+
                       <div class="col-md-6">
-                        <strong>Select Region</strong>
-                        <select name='country_id'  id="region" class="form-control select2" required>
+                        <strong>Select Country</strong>
+                        <select name='country_id' class="form-control select2" required>
                      
                      <option value="">Select Country </option>
-                     @foreach($regions as $value)
+                     @foreach($countries as $value)
 
-                     <option value="{{$value->id}}">{{ucfirst($value->name)}} </option>
+                     <option value="{{$value->id}}">{{$value->country}} </option>
 
                      @endforeach
                    </select>                      </div>
                       <div class="col-md-6">
-                        <strong>Select District</strong>
-                        <select type="text" name="district" id="district" style="text-transform:uppercase" required class="form-control select2">
-                          <option value="">Select Here...</option>
-
-                          </select>
-                        </div>
+                        <strong>Website or Link</strong>
+                        <input type="text" class="form-control" placeholder=" Paste Here..." name="webstite">
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -142,19 +133,6 @@ $(".select2").select2({
 </script>
 <script src="<?= url('public/assets/tinymce/tinymce.min.js') ?>"></script>
    <script type="text/javascript">   
-   
-$('#region').change(function () {
-            var val = $(this).val();
-            $.ajax({
-                method: 'get',
-                url: '<?= url('Marketing/getDistrict/null') ?>',
-                data: {region: val},
-                dataType: 'html',
-                success: function (data) {
-                    $('#district').html(data);
-                }
-            });
-        });
                 wywig = function () {
                     tinymce.init({
                         selector: 'textarea#content_part',

@@ -59,11 +59,11 @@
                     <div class="form-group row">
                       <div class="col-sm-6">
                         School Name
-                        <input type="text" class="form-control" placeholder="School Name here.." name="school_name" required="">
+                        <input type="text" class="form-control" placeholder="School Name here.." name="school_name" value="<?=$school->name ?? '' ?>" required>
                         </div>
                         <div class="col-sm-6">
                         Registration No:
-                        <input type="text" class="form-control"  name="registration_number" required="">
+                        <input type="text" class="form-control"  name="registration_number" value="<?=$school->registration_number ?? '' ?>" required="">
                       </div>
                       
                     </div>
@@ -72,7 +72,7 @@
                       
                       <div class="col-sm-6">
                           Number of Students
-                          <input type="text" class="form-control" placeholder="Enter here..." name="students" required="">
+                          <input type="text" class="form-control" placeholder="Enter here..." name="students" value="<?=$school->students ?? '' ?>" required="">
                       </div>
                       <div class="col-sm-6">
                         Implementation Start Date
@@ -142,12 +142,13 @@
                     <div class="form-group row">
                       <div class="col-sm-6">
                         Fullname
-                        <input type="text" name="fullname" class="form-control" required/>
+                        <input type="text" name="fullname" class="form-control" value="<?=$contact->name ?? '' ?>" required/>
                       </div>
                       <div class="col-sm-6">
                       Title
                         <select name="title" class="form-control select2" required>
-                          <option value="director">Director/Owner</option>
+                        <option value="<?=$contact->title ?? '' ?>">$contact->title ?? '' ?></option>
+                        <option value="director">Director/Owner</option>
                           <option value="manager">School Manager</option>
                           <option value="head teacher">Head Teacher</option>
                           <option value="Second Master/Mistress">Second Master/Mistress</option>
@@ -163,11 +164,11 @@
                     <div class="form-group row">
                       <div class="col-sm-6">
                         Email Address
-                        <input type="text" name="email" class="form-control" required/>
+                        <input type="text" name="email" value="<?=$contact->email ?? '' ?>" class="form-control" required/>
                       </div>
                       <div class="col-sm-6">
                       Phone Number
-                        <input type="text" name="phone" class="form-control" required/>
+                        <input type="text" name="phone" value="<?=$contact->phone ?? '' ?>" class="form-control" required/>
                       </div>
                     </div>
 

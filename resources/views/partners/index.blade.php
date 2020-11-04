@@ -33,11 +33,11 @@
         <div class="col-sm-12">
           <!-- Ajax data source (Arrays) table start -->
           <div class="card tab-card">
-          <?php if($set > 0 ){ $title = 'Branch/'.$set; }else{  $title = 'Partner'; }?>
+          <?php if($set > 0 ){ $title = 'Partner/'.$set; }else{  $title = 'Partner'; }?>
 
             <div class="card-block">
             <span>
-        <a class="btn btn-success btn-sm" href="<?= url('users/add'.$title) ?>"> Add New <?=$title?></a>
+        <a class="btn btn-success btn-sm" href="<?= url('Partner/add'.$title) ?>"> Add New <?=$title?></a>
         </span>
               <div class="steamline">
                 <div class="card-block">
@@ -80,12 +80,13 @@
                             <?php } ?>
                           <td>
                           <?php 
-                                if($set > 0 ){ $path = 'View Staffs'; }else{  $path = 'View Branches'; }
-                                $school == 1 ? $school1 = $partner->id.'/branch' :  $school1 = $partner->id;
+                              if($set > 0 ){ $path = 'partner Staff'; }else{  $path = 'partners'; }
+                              if($set > 0 ){ $path1 = 'Staffs'; }else{  $path1 = 'Branches'; }
+                              $school == 1 ? $school1 = $partner->id.'/branch' :  $school1 = $partner->id;
                             ?>
-                          <a class="btn btn-info btn-sm" href="{{ url('users/'. $path . '/'.$partner->id) }}"><?=$path?></a>
-                          <a class="btn btn-info btn-sm" href="{{ url('users/partnerSchool/'.$school1) }}">View Schools</a>
-                          <a class="btn btn-warning btn-sm" href="{{ url('users/deletepartner/'.$partner->id) }}">Delete</a>
+                          <a class="btn btn-info btn-sm" href="{{ url('Partner/'. str_replace(' ', '', $path) . '/'.$partner->id) }}"><?=$path1?></a>
+                          <a class="btn btn-info btn-sm" href="{{ url('Partner/partnerSchool/'.$school1) }}">View Schools</a>
+                          <a class="btn btn-warning btn-sm" href="{{ url('Partner/deletepPartner/'.$partner->id) }}">Delete</a>
                           </td>
                         </tr>
                         <?php } } ?>

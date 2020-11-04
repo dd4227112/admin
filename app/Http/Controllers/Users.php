@@ -394,90 +394,18 @@ class Users extends Controller {
         echo $message1;
     }
 
-    public function partners() {
-        $id = request()->segment(3);
-        if ((int) $id > 0) {
-            $this->data['partners'] = \App\Models\PartnerBranch::where('partner_id', $id)->get();
-            $this->data['school'] = 1;
-        } else {
-            $this->data['partners'] = \App\Models\Partner::all();
-            $this->data['school'] = 2;
-        }
-        $this->data['set'] = $id;
-        return view('users.partners.index', $this->data);
-    }
-
-    public function partnerStaff() {
-        $id = request()->segment(3);
-        if ((int) $id > 0) {
-            $this->data['staffs'] = \App\Models\PartnerUser::whereIn('branch_id', \App\Models\PartnerBranch::where('partner_id', $id)->get(['partner_id']))->get();
-        } else {
-            $this->data['staffs'] = \App\Models\PartnerUser::whereIn('branch_id', \App\Models\PartnerBranch::where('partner_id', $id)->get(['partner_id']))->get();
-        }
-        $this->data['set'] = $id;
-        return view('users.partners.staffs', $this->data);
-    }
-
-    public function partnerSchool() {
-        $id = request()->segment(3);
-        $branch = request()->segment(4);
-        if ((int) $id > 0 && $branch == '') {
-            $this->data['schools'] = \App\Models\PartnerSchool::whereIn('branch_id', \App\Models\PartnerBranch::where('partner_id', $id)->get(['id']))->get();
-        }
-        if ((int) $id > 0 && $branch != '') {
-            $this->data['schools'] = \App\Models\PartnerSchool::where('branch_id', $id)->get();
-            $this->data['branch'] = \App\Models\PartnerBranch::where('id', $id)->first();
-        }
-        $this->data['set'] = $id;
-        return view('users.partners.schools', $this->data);
-    }
-
-    public function addPartner() {
-        $this->data['countries'] = \App\Models\Country::all();
-        $id = request()->segment(3);
-        if ((int) $id > 0) {
-            $this->data['partner'] = $partner = \App\Models\Partner::find($id);
-            $this->data['regions'] = \App\Models\Region::where('country_id', $partner->country_id)->get();
-            if ($_POST) {
-                $partner = \App\Models\Partner::create(request()->all());
-                $user = new User(array_merge(request()->all(), ['password' => bcrypt(request('email')), 'firstname' => request('name'), 'phone' => request('phone_number'), 'role_id' => 7, 'department' => 10, 'created_by' => Auth::user()->id]));
-                $user->save();
-                $this->sendEmailAndSms($partner);
-                return redirect('users/partners')->with('success', 'Partner ' . $partner->name . ' created successfully');
-            }
-            return view('users.partners.add_branch', $this->data);
-        } else {
-            if ($_POST) {
-                $partner = \App\Models\Partner::create(request()->all());
-                $user = new User(array_merge(request()->all(), ['password' => bcrypt(request('email')), 'firstname' => request('name'), 'phone' => request('phone_number'), 'role_id' => 7, 'department' => 10, 'created_by' => Auth::user()->id]));
-                $user->save();
-                $this->sendEmailAndSms($partner);
-                return redirect('users/partners')->with('success', 'Partner ' . $partner->name . ' created successfully');
-            }
-            return view('users.partners.add', $this->data);
-        }
-    }
-
-    public function addSchool() {
-        $id = request()->segment(3);
-        $partner = \App\Models\Partner::find($id);
-        $this->data['branches'] = \App\Models\PartnerBranch::where('partner_id', $id)->get();
-        $this->data['regions'] = \App\Models\Region::where('country_id', $partner->country_id)->get();
-        if ($_POST) {
-            
-        }
-        return view('users.partners.add_school', $this->data);
-    }
-
+    
     public function getBranch() {
         $id = request('region');
 
-        $branches = \App\Models\PartnerBranch::whereIn('district_id', \App\Models\District::where('region_id', $id)->get(['id']))->get();
+        $branches = \App\Models\PartnerBranch::whereIn('district_id', \App\Models\District::where('region_id', $id)->get(['id']))->where('partner_id', request('partner_id'))->get();
         if (count($branches) > 0) {
             $select = '';
             foreach ($branches as $branch) {
                 $select .= '<option value="' . $branch->id . '"> ' . $branch->name . '</option>';
             }
+            echo $select;
+        }else{
             echo $select;
         }
     }
