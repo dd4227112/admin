@@ -3,6 +3,15 @@
 <?php $root = url('/') . '/public/' ?>
 <link href="<?= $root ?>plugins/bower_components/sweetalert/sweetalert.css" rel="stylesheet" type="text/css">
 
+<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
+  
+        <!-- Style.css -->
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css">
+
+        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2.css">
+
+        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2-bootstrap.css">
+        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css">   
 <div class="main-body">
     <div class="page-wrapper">
         <!-- Page-header start -->
@@ -37,7 +46,9 @@
                         <div class="card-block">
                             <div class="col-lg-12">
                                 <div class="white-box">
-                                    <select class="form-control" id="check_key">
+                                <form>
+                                <div class="form-group">
+                                    <select class="form-control select2" id="check_key">
                                         <option></option>
                                         <?php
                                         if (isset($settings) && sizeof($settings) > 0) {
@@ -50,6 +61,9 @@
                                         }
                                         ?>
                                     </select>
+                                </div>
+                                </form>
+
                                     <h3 class="box-title">Schools Contacts</h3>
                                     <!--<div id="basicgrid"></div>-->
                                     <div class="table-responsive"> 
@@ -62,8 +76,8 @@
                                                     <th>Invoice Prefix</th>
                                                     <th>Live username</th>
                                                     <th>Live password </th>
-                                                    <th>Testing username</th>
-                                                    <th>Testing Password</th>
+                                                    <!-- <th>Testing username</th>
+                                                    <th>Testing Password</th> -->
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -83,8 +97,8 @@
                                                             </td>
                                                             <td><input class="text-muted" type="text" schema='<?= $bank->api_username ?>' id="api_username" value="<?= $bank->api_username ?>" onblur="edit_bank_accounts('api_username', this.value, '<?= $schema ?>',<?= $bank->id ?>)"/></td>
                                                             <td><input class="text-muted" type="text" schema='<?= $bank->api_password ?>' id="api_password" value="<?= $bank->api_password ?>" onblur="edit_bank_accounts('api_password', this.value, '<?= $schema ?>',<?= $bank->id ?>)"/></td>
-                                                            <td><input class="text-muted" type="text" schema='<?= $bank->sandbox_api_username ?>' id="sandbox_api_username" value="<?= $bank->sandbox_api_username ?>" onblur="edit_bank_accounts('sandbox_api_username', this.value, '<?= $schema ?>',<?= $bank->id ?>)"/><a href="<?= $bank->sandbox_api_username ?>" target="_blank"></a></td>
-                                                            <td><input class="text-muted" type="text" schema='<?= $bank->sandbox_api_password ?>' id="sandbox_api_password" value="<?= $bank->sandbox_api_password ?>" onblur="edit_bank_accounts('sandbox_api_password', this.value, '<?= $schema ?>',<?= $bank->id ?>)"/>
+                                                            <!-- <td><input class="text-muted" type="text" schema='<?= $bank->sandbox_api_username ?>' id="sandbox_api_username" value="<?= $bank->sandbox_api_username ?>" onblur="edit_bank_accounts('sandbox_api_username', this.value, '<?= $schema ?>',<?= $bank->id ?>)"/><a href="<?= $bank->sandbox_api_username ?>" target="_blank"></a></td>
+                                                            <td><input class="text-muted" type="text" schema='<?= $bank->sandbox_api_password ?>' id="sandbox_api_password" value="<?= $bank->sandbox_api_password ?>" onblur="edit_bank_accounts('sandbox_api_password', this.value, '<?= $schema ?>',<?= $bank->id ?>)"/> -->
                                                              
                                                             </td>
                                                             <td>   <input type='button' value="Save"/></td>
@@ -122,6 +136,12 @@
             });
         }
     };
+    $(".select2").select2({
+    theme: "bootstrap",
+    dropdownAutoWidth: false,
+    allowClear: false,
+    debug: true
+});
 </script>
 <!-- Sweet-Alert  -->
 <script src="<?= $root ?>plugins/bower_components/sweetalert/sweetalert.min.js"></script>

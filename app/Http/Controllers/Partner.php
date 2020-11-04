@@ -32,6 +32,7 @@ class Partner extends Controller {
         $this->data['school'] = !empty($school) ? \App\Models\SchoolContact::where('school_id', $school->id)->first() : [];
         $this->data['client'] = \App\Models\ClientSchool::where('client_id', $request->client_id)->first();
         return view('users.partners.view_request', $this->data);
+        
     }
 
     public function add() {
@@ -270,6 +271,19 @@ class Partner extends Controller {
         DB::statement($sql);
 
         return redirect('message/create');
+    }
+
+    public function RequestComment() {
+        if($_POST){
+        $request = \App\Models\IntegrationRequest::find(request('integration_request_id'));
+        \App\Models\IntegrationRequestComment::create(request()->all());
+        $message = 'Hello ' . $request->user->name . ' '.request('comment'). '<br> By.  ' . Auth::user()->name;
+        $this->send_sms($request->user->phone, $message, 1);
+        return redirect('Partner/show/' . request('integration_request_id'));
+        }else{
+            return redirect('Partner/index/');
+
+        }
     }
 
 }
