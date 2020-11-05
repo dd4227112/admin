@@ -19,7 +19,7 @@
               <i class="icofont icofont-home"></i>
             </a>
           </li>
-          <li class="breadcrumb-item"><a href="<?= url('/') ?>/Users/minutes">Company Minute</a>
+          <li class="breadcrumb-item"><a href="<?= url('/') ?>/Users/minutes">Company Partners</a>
           </li>
           <li class="breadcrumb-item"><a href="#!">Create</a>
           </li>
@@ -27,13 +27,13 @@
       </div>
     </div>
     <!-- Page-header end -->
+    
     <!-- Page-body start -->
     <div class="page-body">
       <div class="row">
-        <div id="outer" class="container">
-          <div id="wrapper" class="layout" style="background-color: #fff; margin-bottom: 40px;">
-            <div id="editorForm">
+        <div class="col-lg-12">
 
+          <div class="card">
               @if (sizeof($errors) > 0)
               <div class="alert alert-danger">
                 <strong>Whoops!</strong> There were some problems with your input.<br><br>
@@ -44,9 +44,10 @@
                 </ul>
               </div>
               @endif
+             
+              <div class="card-block">
               <form method="post" action="#" enctype='multipart/form-data'>
               {{ csrf_field() }}
-              <div class="card-block">
                 <div class="col-xs-12 col-sm-12 col-md-12">
                   <div class="form-group">
                     <strong>Select School:</strong>
@@ -64,7 +65,7 @@
                     </div>
                       <div class="col-md-6">
                     <strong>Account Number:</strong>
-                    <input type="email" class="form-control" placeholder="Type Account Number Here..." name="account_number" required>
+                    <input type="text" class="form-control" placeholder="Type Account Number Here..." name="account_number" required>
                   </div>
                   </div>
                   </div>
@@ -90,6 +91,8 @@
                      <option value="">Select Branch Here... </option>
                     
                    </select>
+                   <a href="#"> Add New Branch </a>
+
                   </div>
                     </div>
                     </div>
@@ -129,7 +132,7 @@ $(".select2").select2({
             $.ajax({
                 method: 'get',
                 url: '<?= url('Users/getBranch/null') ?>',
-                data: {region: val},
+                data: {region: val, partner_id: <?=$partner->id?>},
                 dataType: 'html',
                 success: function (data) {
                     $('#branch_id').html(data);

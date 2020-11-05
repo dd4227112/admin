@@ -37,7 +37,10 @@
            <h3> <?=isset($branch) ? 'List of Schools At '. $branch->name.' Branch' : 'Shulesoft Partners School Lists'; ?> 
 
           <span style="float:right">
-          <a class="btn btn-info btn-sm" href="<?= url('users/addSchool/'.$set) ?>"> Add New School</a>
+          <?php
+                isset($branch) ? $id = $branch->partner_id : $id = $set;
+          ?>
+          <a class="btn btn-info btn-sm" href="<?= url('Partner/addSchool/'.$id) ?>"> Add New School</a>
           </span>
           </h3>
            </div>
@@ -71,7 +74,7 @@
                           <td><a href="{{ url('sales/profile/'.$school->school_id) }}"><?=$school->school_id !='' ? substr($school->school->name, 0, 60) .' - ' .$school->school->type : 'Undefined' ?></a></td>
                           <td><?=$school->account_name?></td>
                           <td><?=$school->account_number?></td>
-                          <td><a href="{{ url('users/partnerSchool/'.$school->id.'/branch') }}"> <?=$school->branch->name?></a></td>
+                          <td><b><?=$school->branch->name?></b></td>
 
                           <td>
                           <a class="btn btn-success btn-sm" href="{{ url('sales/profile/'. $school->school_id) }}"> View School</a>
