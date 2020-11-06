@@ -182,9 +182,9 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                         <a href="<?= url('analyse/moreInsight') ?>"><div class="card-block">
 
                                 <?php
-                                $user=request()->segment(3);                             
-                                $where_value=(int) $user >0 ? ' where user_id='.$user:'';
-                                $sql = 'select sum((select count(*) from admin.all_student where "schema_name"=b.username and status=1))*10000 as total_value from admin.users_schools a left join admin.clients b on b.id=a.client_id left join admin.schools c on c.id=a.school_id  '.$where_value;
+                                $user = request()->segment(4);
+                                $where_value = (int) $user > 0 ? ' where user_id=' . $user : '';
+                                $sql = 'select sum((select count(*) from admin.all_student where "schema_name"=b.username and status=1))*10000 as total_value from admin.users_schools a left join admin.clients b on b.id=a.client_id left join admin.schools c on c.id=a.school_id  ' . $where_value;
                                 $value = \collect(DB::select($sql))->first()->total_value;
                                 ?>
                                 <h5> Lead Value</h5>
@@ -193,7 +193,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                                         <i class="icofont icofont-money"></i>
                                     </li>
                                     <li class="text-right">
-                                        <?= $value ?>
+                                        <?= number_format($value) ?>
                                     </li>
                                     <span class="small">Out of Tsh 200mil Per User</span>
                                 </ul>
@@ -224,7 +224,11 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                 <div class="col-md-6 col-xl-3">
                     <div class="card client-blocks success-border">
                         <div class="card-block">
-
+                            <?php
+//                            $user = request()->segment(4);
+//                                $where_value = (int) $user > 0 ? ' where user_id=' . $user : '';
+//                            $active_user_per_school = \collect(DB::select('select count(distinct "schema_name") from admin.all_login_locations a  WHERE "table" in (\'parent\',\'user\',\'teacher\') and ' . $where))->first()->count;
+                            ?>
                             <h5>Active Users Per schools</h5>
                             <ul>
                                 <li>
@@ -504,7 +508,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
             var taskdate = $(this).val();
             if (taskdate === '') {
             } else {
-                window.location.href = '<?= url('analyse/customers/') ?>/' + taskdate;
+                window.location.href = '<?= url('analyse/customers/user/') ?>/' + taskdate;
             }
         });
 

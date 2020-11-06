@@ -242,9 +242,9 @@ class Customer extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function createGuide() {
-$obj=[
+        $obj = [
             'permission_id' => request()->permission_id,
-            'content' => str_replace('src="../../storage/images','src="'.url('/').'/storage/images',request()->content),
+            'content' => str_replace('src="../../storage/images', 'src="' . url('/') . '/storage/images', request()->content),
             'created_by' => Auth::user()->id,
             'language' => 'eng'
         ];
@@ -293,12 +293,12 @@ $obj=[
             if ($_POST) {
                 $request = request()->all();
 
-               $obj=[
-            'permission_id' => request()->permission_id,
-            'content' => str_replace('src="../../../storage/images','src="'.url('/').'/storage/images',request()->content),
-            "is_edit" => request()->is_edit,
-            'language' => 'eng'
-        ];
+                $obj = [
+                    'permission_id' => request()->permission_id,
+                    'content' => str_replace('src="../../../storage/images', 'src="' . url('/') . '/storage/images', request()->content),
+                    "is_edit" => request()->is_edit,
+                    'language' => 'eng'
+                ];
                 \App\Model\Guide::find(request('guide_id'))->update($obj);
                 return redirect('customer/guide');
             }
@@ -428,6 +428,10 @@ $obj=[
         $this->data['profile'] = \App\Models\ClientSchool::where('client_id', $client->id)->first();
 
         $this->data['is_client'] = $is_client;
+
+        $year = \App\Models\AccountYear::where('name', date('Y'))->first();
+        $this->data['invoices'] = \App\Models\Invoice::where('client_id', $client->id)->where('account_year_id', $year->id)->get();
+
         if ($_POST) {
 
             $data = array_merge(request()->all(), ['user_id' => Auth::user()->id]);
@@ -450,7 +454,7 @@ $obj=[
             }
 
             DB::table('tasks_clients')->insert([
-                'task_id' => $task->id, 
+                'task_id' => $task->id,
                 'client_id' => (int) request('client_id')
             ]);
 
@@ -557,10 +561,10 @@ $obj=[
     }
 
     public function changeStatus() {
-        if(request('status') == 'complete'){
-        \App\Models\Task::where('id', request('id'))->update(['status' => request('status'), 'end_date' => date("Y-m-d H:i:s"),  'updated_at' =>'now()']);
-        }else{
-            \App\Models\Task::where('id', request('id'))->update(['status' => request('status'),  'updated_at' => 'now()']);
+        if (request('status') == 'complete') {
+            \App\Models\Task::where('id', request('id'))->update(['status' => request('status'), 'end_date' => date("Y-m-d H:i:s"), 'updated_at' => 'now()']);
+        } else {
+            \App\Models\Task::where('id', request('id'))->update(['status' => request('status'), 'updated_at' => 'now()']);
         }
         $users = DB::table('tasks_users')->where('task_id', request('id'))->get();
         if (!empty($users)) {
@@ -630,7 +634,7 @@ $obj=[
             if ((int) $school_id == 0) {
                 $sch = DB::table('admin.all_setting')->where('schema_name', $schema)->first();
                 $obj = DB::table('schools')->where('name', 'ilike', '%' . substr($schema, 0, 4) . '%')->first();
-                $school_id = !empty($sch) ? $sch->school_id :  '';
+                $school_id = !empty($sch) ? $sch->school_id : '';
                 //$school=count($obj) == 1 ? $obj->id :'';
             }
             if ((int) $school_id == 0) {
@@ -649,10 +653,10 @@ $obj=[
                 }
                 DB::table($schema . '.setting')->update(['school_id' => $school_id]);
                 $school_info->update(['schema_name' => $schema]);
-            }else{
+            } else {
                 echo "Failed to Add";
             }
-        }else{
+        } else {
             echo "Failed";
         }
     }
@@ -855,20 +859,22 @@ $obj=[
             }
         }
     }
+
     public function resetPassword() {
         $schema = request()->segment(3);
-            if ($schema != '') {
-                $pass = $schema . rand(5697, 33);
-                $username = $schema.date('Hi');
-                DB::table($schema . '.setting')->update(['password' => bcrypt($pass), 'username' => $username]);
-                $this->data['school'] =  DB::table($schema . '.setting')->first();
-                $this->data['schema'] =  $schema;
-                $this->data['pass'] =  $pass;
-                return view('customer.view', $this->data)->with('success', 'Password Updated Successfully');
-            }else{
-                return redirect()->back()->with('warning', 'Please Define Specific School');
-            }
+        if ($schema != '') {
+            $pass = $schema . rand(5697, 33);
+            $username = $schema . date('Hi');
+            DB::table($schema . '.setting')->update(['password' => bcrypt($pass), 'username' => $username]);
+            $this->data['school'] = DB::table($schema . '.setting')->first();
+            $this->data['schema'] = $schema;
+            $this->data['pass'] = $pass;
+            return view('customer.view', $this->data)->with('success', 'Password Updated Successfully');
+        } else {
+            return redirect()->back()->with('warning', 'Please Define Specific School');
+        }
     }
+
     public function map() {
         $schema = request()->segment(3);
         $school_id = request()->segment(4);
@@ -1004,9 +1010,9 @@ $obj=[
      * 4. we return range of available dates
      */
     public function getDate($id = null, $default_dates = null) {
-        $user_id = $id = null || (int) $id==0? request('user_id') : $id;
+        $user_id = $id = null || (int) $id == 0 ? request('user_id') : $id;
         $task_user = \App\Models\TaskUser::where('user_id', $user_id)->orderBy('id', 'desc')->first();
-        $task_date = !empty($task_user)? $task_user->task->end_date : date('Y-m-d');
+        $task_date = !empty($task_user) ? $task_user->task->end_date : date('Y-m-d');
         $end_date = date('Y-m-d');
         $option = '<option></option>';
         for ($i = 0; $i <= 10; $i++) {
@@ -1055,7 +1061,5 @@ $obj=[
         }
         return $view;
     }
-
-
 
 }
