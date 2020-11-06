@@ -245,7 +245,7 @@ class Kernel extends ConsoleKernel {
         foreach ($invoices as $invoice) {
 
             if ($invoice->sub_invoice == 1) {
-                $sub_invoices = DB::select("select b.id, b.student_id, b.reference||'EA'||a.fee_id as reference, b.prefix,b.date,b.sync,b.return_message,b.push_status,b.academic_year_id,b.created_at, b.updated_at, a.balance as amount, c.name," . $schema . " as schema_name from  " . $schema . ".invoices b join " . $schema . ".student c on c.student_id=b.student_id join " . $schema . ".invoice_balances a on a.invoice_id=b.id  where b.id=" . $invoice->id);
+                $sub_invoices = DB::select("select b.id, b.student_id, b.reference||'EA'||a.fee_id as reference, b.prefix,b.date,b.sync,b.return_message,b.push_status,b.academic_year_id,b.created_at, b.updated_at, a.balance as amount, c.name, '" . $schema . "' as schema_name from  " . $schema . ".invoices b join " . $schema . ".student c on c.student_id=b.student_id join " . $schema . ".invoice_balances a on a.invoice_id=b.id  where b.id=" . $invoice->id);
 
                 foreach ($sub_invoices as $sub_invoice) {
                     $this->pushInvoice($sub_invoice);
