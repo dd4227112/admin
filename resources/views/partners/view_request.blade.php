@@ -320,15 +320,21 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="col-sm-12 text-right">
-                            <?php if ((int) $request->bank_approved <> 1) { ?>
-                                <a href="<?= url('Partner/InvoicePrefix/' . $request->id) ?>" style="float: right;" class="btn btn-success">Validate This Application</a>
-                                <br/> <br/> <br/>
+                        <div class="row" id="validate">
+                        <div class="col-sm-6">
+                            <?php if ((int) $request->shulesoft_approved == 1) { ?>
+                                <a href="<?= url('Partner/InvoicePrefix/' . $request->id) ?>" style="float: left;" class="btn btn-success">Shulesoft Validate This Application</a>
                             <?php } ?>
-
                         </div>
-                    </div>
 
+                        <div class="col-sm-6 text-right">
+                            <?php if ((int) $request->bank_approved <> 1) { ?>
+                                <a href="<?= url('Partner/InvoicePrefix/' . $request->id) ?>" style="float: right;" class="btn btn-success">Bank Validate This Application</a>
+                            <?php } ?>
+                        </div>
+                        <hr>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>
@@ -397,6 +403,7 @@
                 '<html><head><title></title></head><body>' +
                 divElements + '</body>';
         //Print Page
+        $('#validate').hide();
         window.print();
         //Restore orignal HTML
         document.body.innerHTML = oldPage;

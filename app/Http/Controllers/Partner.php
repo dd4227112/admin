@@ -304,7 +304,7 @@ class Partner extends Controller {
             $this->data['partners'] = \App\Models\Partner::all();
             $this->data['school'] = 2;
         }
-        $this->data['set'] = $id;
+        $this->data['set'] = (int)$id;
         return view('partners.index', $this->data);
     }
 

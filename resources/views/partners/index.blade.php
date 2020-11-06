@@ -8,7 +8,9 @@
     <!-- Page-header start -->
     <div class="page-header">
       <div class="page-header-title">
-        <h4>Shulesoft Partners List</h4>
+      <?php if($set > 0 ){ $top = 'Branch'; }else{  $top = 'Partner'; }?>
+
+        <h4><?=$set > 0 ? ' Partner Branches List' : 'Shulesoft Partners List'; ?></h4>
         <span>The Part holds all list of partners and their branches.</span>
 
       </div>
@@ -33,7 +35,7 @@
         <div class="col-sm-12">
           <!-- Ajax data source (Arrays) table start -->
           <div class="card tab-card">
-          <?php if($set > 0 ){ $title = 'Partner/'.$set; }else{  $title = 'Partner'; }?>
+          <?php if($set > 0 ){ $title = 'Branch'; }else{  $title = 'Partner'; }?>
 
             <div class="card-block">
             <span>
