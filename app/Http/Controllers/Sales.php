@@ -622,7 +622,7 @@ group by ownership');
             \App\Models\TrainItemAllocation::create([
                 'task_id' => $task->id,
                 'client_id' => $client_id,
-                'user_id' => (int) request('person' . $section->id),
+                'user_id' => $user_task_id,
                 'train_item_id' => $section->id,
                 'school_person_allocated' => request("train_item{$section->id}"),
                 'max_time' => $section->time
