@@ -605,9 +605,14 @@ group by ownership');
             ];
             $time += $section->time;
             $task = \App\Models\Task::create($data);
+            if((int) request('person' . $section->id) == 0){
+                $user_task_id = Auth::user()->id;
+            }else{
+                $user_task_id = (int) request('person' . $section->id);
+            }
             DB::table('tasks_users')->insert([
                 'task_id' => $task->id,
-                'user_id' => (int) request('person' . $section->id),
+                'user_id' => $user_task_id,
             ]);
 
             DB::table('tasks_clients')->insert([
