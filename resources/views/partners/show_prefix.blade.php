@@ -42,7 +42,7 @@
                                             <div class="card-block-big bg-primary quick-note-card">
                                                 <div class="card-block-big bg-info text-center">
                                                     <h1>Success</h1>
-                                                 
+
                                                 </div>
                                                 <h6> </h6>
                                                 <h2 class="text-center">This school can now access electronic payments</h2>
@@ -71,16 +71,16 @@
                                                     <td><?= $bank->number ?></td>
 
                                                 </tr>
-                                                <?php if ($partner->refer_bank_id == 8) { // This is NMB integration  ?>
+                                                <?php if ($partner->refer_bank_id == 22) { // This is NMB integration  ?>
                                                     <tr>
                                                         <td></td>
-                                                        <td>Integration Username (From SARIS)</td>
+                                                        <td>Live Integration Username (From SARIS)</td>
                                                         <td><input type="text" class="form-control col-lg-8 col-sm-8" id="username" placeholder="" name="username" required></td>
 
                                                     </tr>
                                                     <tr>
                                                         <td></td>
-                                                        <td>Integration Password (From SARIS)</td>
+                                                        <td>Live Integration Password (From SARIS)</td>
                                                         <td><input type="text" class="form-control col-lg-8 col-sm-8" id="password" placeholder="" name="password" required></td>
 
                                                     </tr>
@@ -116,7 +116,8 @@
  customer that mapping integration is complete and ready. Is this account already mapped on banking side ?, click ok if already mapped or cancel if not yet mapped")) {
 
             var bank_id =<?= $partner->refer_bank_id ?>;
-            if (bank_id == 8) {
+            if (bank_id == '22') {
+     
                 var username = $('#username').val();
                 var password = $('#password').val();
                 if (username.length < 4 || password.length < 4) {
@@ -133,7 +134,7 @@
                                             });
                                         }
                                     } else {
-                                        $(this).attr("href", "<?= url('Partner/onboardSchool/' . $partner->id) ?>");
+                                       $(this).attr("href", "<?= url('Partner/onboardSchool/' . $partner->id) ?>");
                                     }
                                 } else {
                                     return false;
