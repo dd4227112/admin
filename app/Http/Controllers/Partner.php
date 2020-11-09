@@ -20,7 +20,8 @@ class Partner extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $this->data['requests'] = \App\Models\IntegrationRequest::get();
+        $this->data['refer_bank_id'] = preg_match('/crdb/i', Auth::user()->email) ? 8 : 22;
+        $this->data['requests'] = \App\Models\IntegrationRequest::where('refer_bank_id', $this->data['refer_bank_id'])->get();
         $this->data['invoices'] = \App\Models\Invoice::whereIn('client_id', \App\Models\IntegrationRequest::get(['client_id']))->get();
         return view('partners.requests', $this->data);
     }
@@ -32,22 +33,21 @@ class Partner extends Controller {
         $this->data['school'] = !empty($school) ? \App\Models\SchoolContact::where('school_id', $school->id)->first() : [];
         $this->data['client'] = \App\Models\ClientSchool::where('client_id', $request->client_id)->first();
         return view('partners.view_request', $this->data);
-        
     }
 
     public function add() {
         $id = request()->segment(3);
         $this->data['districts'] = \App\Models\District::get();
-        if((int)$id > 0){
+        if ((int) $id > 0) {
             $this->data['districts'] = \App\Models\District::get();
             $this->data['school'] = \App\Models\School::where('id', $id)->first();
             $this->data['contact'] = \App\Models\SchoolContact::where('school_id', $id)->first();
-        }else{
+        } else {
             $this->data['school'] = null;
             $this->data['contact'] = null;
         }
         if ($_POST) {
-            
+
             $code = rand(343, 32323) . time();
             if (!empty(request('ward'))) {
                 $ward = \App\Models\Ward::find(request('ward'));
@@ -65,16 +65,16 @@ class Partner extends Controller {
                 'ward_id' => request('ward'),
                 'ward' => $ward->name
             ];
-            if((int)$id < 1){
+            if ((int) $id < 1) {
                 $check_school = DB::table('admin.schools')->where('name', strtoupper(request('school_name')))->where('schema_name', $username)->first();
-            if (empty($check_school)) {
-                $school_id = DB::table('admin.schools')->insertGetId($array);
-                $school = \App\Models\School::where('id', $school_id)->first();
+                if (empty($check_school)) {
+                    $school_id = DB::table('admin.schools')->insertGetId($array);
+                    $school = \App\Models\School::where('id', $school_id)->first();
+                } else {
+                    $school = \App\Models\School::where('id', $check_school->id)->first();
+                    $school_id = $school->id;
+                }
             } else {
-                $school = \App\Models\School::where('id', $check_school->id)->first();
-                $school_id = $school->id;
-            }
-            }else{
                 \App\Models\School::where('id', $id)->update($array);
                 $school_id = $id;
             }
@@ -209,8 +209,8 @@ class Partner extends Controller {
     public function InvoicePrefix() {
         $id = request()->segment(3);
         // DB::statement("select constant.create_invoice_prefix_trigger()");
-        $partner=$this->data['partner'] = \App\Models\IntegrationRequest::find($id);
-        $this->data['integration']=$bankAccountIntegration = DB::table($partner->schema_name . '.bank_accounts_integrations')->where('id', $partner->bank_accounts_integration_id)->first();
+        $partner = $this->data['partner'] = \App\Models\IntegrationRequest::find($id);
+        $this->data['integration'] = $bankAccountIntegration = DB::table($partner->schema_name . '.bank_accounts_integrations')->where('id', $partner->bank_accounts_integration_id)->first();
         $this->data['bank'] = DB::table($partner->schema_name . '.bank_accounts')->where('id', $bankAccountIntegration->bank_account_id)->first();
 
         return view('partners.show_prefix', $this->data);
@@ -227,15 +227,15 @@ class Partner extends Controller {
                 DB::table($partner->schema_name . '.bank_accounts_integrations')->where('id', $partner->bank_accounts_integration_id)->update([
                     'api_username' => request('username'), 'api_password' => request('password')
                 ]);
-                $partner->update(['bank_approved'=>1,'approval_user_id'=>Auth::user()->id]);
+                $partner->update(['bank_approved' => 1, 'approval_user_id' => Auth::user()->id]);
                 //send confirmation email here to client
                 $this->confirmationEmail($partner->client_id);
             }
         } else {
-             $partner->update(['bank_approved'=>1,'approval_user_id'=>Auth::user()->id]);
+            $partner->update(['bank_approved' => 1, 'approval_user_id' => Auth::user()->id]);
             //just send a confirmation email here to client
             $this->confirmationEmail($partner->client_id);
-            return redirect()->back()->with('success','Approved successfully');
+            return redirect()->back()->with('success', 'Approved successfully');
         }
     }
 
@@ -282,18 +282,16 @@ class Partner extends Controller {
     }
 
     public function RequestComment() {
-        if($_POST){
-        $request = \App\Models\IntegrationRequest::find(request('integration_request_id'));
-        \App\Models\IntegrationRequestComment::create(request()->all());
-        $message = 'Hello ' . $request->user->name . ' '.request('comment'). '<br> By.  ' . Auth::user()->name;
-        $this->send_sms($request->user->phone, $message, 1);
-        return redirect('Partner/show/' . request('integration_request_id'));
-        }else{
+        if ($_POST) {
+            $request = \App\Models\IntegrationRequest::find(request('integration_request_id'));
+            \App\Models\IntegrationRequestComment::create(request()->all());
+            $message = 'Hello ' . $request->user->name . ' ' . request('comment') . '<br> By.  ' . Auth::user()->name;
+            $this->send_sms($request->user->phone, $message, 1);
+            return redirect('Partner/show/' . request('integration_request_id'));
+        } else {
             return redirect('Partner/index/');
-
         }
     }
-
 
     public function partners() {
         $id = request()->segment(3);
@@ -304,7 +302,7 @@ class Partner extends Controller {
             $this->data['partners'] = \App\Models\Partner::all();
             $this->data['school'] = 2;
         }
-        $this->data['set'] = (int)$id;
+        $this->data['set'] = (int) $id;
         return view('partners.index', $this->data);
     }
 
@@ -320,18 +318,18 @@ class Partner extends Controller {
         return view('partners.staffs', $this->data);
     }
 
-    public function addStaff(){
+    public function addStaff() {
         if ($_POST) {
             //dd(request('position'));
-            $name = request('firstname') . ' '. request('lastname');
+            $name = request('firstname') . ' ' . request('lastname');
             $user = \App\Models\User::create(array_merge(request()->all(), ['password' => bcrypt(request('email')), 'name' => $name, 'phone' => request('phone'), 'role_id' => 7, 'department' => 10, 'created_by' => Auth::user()->id, 'status' => 1]));
             $partner = \App\Models\PartnerUser::create(['user_id' => $user->id, 'branch_id' => request('branch_id')]);
 
-            $message = "Habari ".$name.", umeunganishwa katika ShuleSoft Admin Panel (admin.shulesoft.com) na nenotumizi: ".request('email')." na Password: ". request('email') ." . Tafadhali kumbuka kubadili Password yako pindi utakapoingia.";
+            $message = "Habari " . $name . ", umeunganishwa katika ShuleSoft Admin Panel (admin.shulesoft.com) na nenotumizi: " . request('email') . " na Password: " . request('email') . " . Tafadhali kumbuka kubadili Password yako pindi utakapoingia.";
             $phonenumber = request('phone_number');
             $sql = "insert into public.sms (body,user_id, type,phone_number) values ('$message', 1, '0', '$phonenumber')";
             DB::statement($sql);
-            return redirect('partner/partnerStaff/'. request('branch_id'))->with('success', $name . ' Added successfully');
+            return redirect('partner/partnerStaff/' . request('branch_id'))->with('success', $name . ' Added successfully');
         }
     }
 
@@ -356,11 +354,11 @@ class Partner extends Controller {
             $this->data['partner'] = $partner = \App\Models\Partner::find($id);
             $this->data['regions'] = \App\Models\Region::where('country_id', $partner->country_id)->get();
             if ($_POST) {
-            //dd(request()->all());
+                //dd(request()->all());
                 $partner = \App\Models\PartnerBranch::create(array_merge(request()->all(), ['partner_id' => $id, 'status' => 1]));
                 $user = new User(array_merge(request()->all(), ['password' => bcrypt(request('email')), 'firstname' => request('name'), 'phone' => request('phone_number'), 'role_id' => 7, 'department' => 10, 'created_by' => Auth::user()->id]));
                 $user->save();
-                $message = "Habari ".request('name').", umeunganishwa katika ShuleSoft Admin Panel (admin.shulesoft.com) na nenotumizi: ".request('email')." na Password: ". request('email') ." . Tafadhali kumbuka kubadili Password yako pindi utakapoingia.";
+                $message = "Habari " . request('name') . ", umeunganishwa katika ShuleSoft Admin Panel (admin.shulesoft.com) na nenotumizi: " . request('email') . " na Password: " . request('email') . " . Tafadhali kumbuka kubadili Password yako pindi utakapoingia.";
                 $phonenumber = request('phone_number');
                 $sql = "insert into public.sms (body,user_id, type,phone_number) values ('$message', 1, '0', '$phonenumber')";
                 DB::statement($sql);
@@ -385,7 +383,7 @@ class Partner extends Controller {
         $this->data['regions'] = \App\Models\Region::where('country_id', $partner->country_id)->get();
         if ($_POST) {
             $school = \App\Models\PartnerSchool::create(array_merge(request()->all(), ['status' => 1]));
-            return redirect('Partner/partnerSchool/'.$school->branch_id.'/branch')->with('success', 'School ' . $school->school->name . ' added successfully');
+            return redirect('Partner/partnerSchool/' . $school->branch_id . '/branch')->with('success', 'School ' . $school->school->name . ' added successfully');
         }
         return view('partners.add_school', $this->data);
     }
@@ -398,6 +396,7 @@ class Partner extends Controller {
             //\App\Models\User::where('name', $partner->name)->delete();
             \App\Models\Partner::where('id', $id)->delete();
         }
-        return redirect('Partner/partners')->with('success', $partner->name.' Deleted successfully');
+        return redirect('Partner/partners')->with('success', $partner->name . ' Deleted successfully');
     }
+
 }

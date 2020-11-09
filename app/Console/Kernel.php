@@ -245,7 +245,7 @@ class Kernel extends ConsoleKernel {
         foreach ($invoices as $invoice) {
 
             if ($invoice->sub_invoice == 1) {
-                $sub_invoices = DB::select("select b.id, b.student_id, b.reference||'EA'||a.fee_id as reference, b.prefix,b.date,b.sync,b.return_message,b.push_status,b.academic_year_id,b.created_at, b.updated_at, a.balance as amount, c.name, '" . $schema . "' as schema_name from  " . $schema . ".invoices b join " . $schema . ".student c on c.student_id=b.student_id join " . $schema . ".invoice_balances a on a.invoice_id=b.id  where b.id=" . $invoice->id);
+                $sub_invoices = DB::select("select b.id,b.status, b.student_id, b.reference||'EA'||a.fee_id as reference, b.prefix,b.date,b.sync,b.return_message,b.push_status,b.academic_year_id,b.created_at, b.updated_at, a.balance as amount, c.name as student_name, '" . $schema . "' as schema_name from  " . $schema . ".invoices b join " . $schema . ".student c on c.student_id=b.student_id join " . $schema . ".invoice_balances a on a.invoice_id=b.id  where b.id=" . $invoice->id);
 
                 foreach ($sub_invoices as $sub_invoice) {
                     $this->pushInvoice($sub_invoice);
@@ -262,7 +262,7 @@ class Kernel extends ConsoleKernel {
         if (strlen($token) > 4) {
             $fields = array(
                 "reference" => trim($invoice->reference),
-                "student_name" => $invoice->student_name,
+                "student_name" => isset($invoice->student_name) ? $invoice->student_name:'',
                 "student_id" => $invoice->student_id,
                 "amount" => $invoice->amount,
                 // "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
@@ -287,7 +287,7 @@ class Kernel extends ConsoleKernel {
             }
             $curl = $this->curlServer($fields, $url);
             $result = json_decode($curl);
-            //echo $result->description;
+           // echo $result->description;
             if (isset($result->description) && (strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
 //update invoice no
                 DB::table($invoice->schema_name . '.invoices')

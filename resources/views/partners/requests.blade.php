@@ -53,9 +53,13 @@
                               <li class="nav-item">
                               <a class="nav-link" data-toggle="tab" href="#Progress" role="tab"> <i class="ti-check"> </i> Verified</a>
                             </li> -->
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#invoices" role="tab"> <i class="ti-list"> </i> Invoices</a>
-                                </li>
+                                <?php
+                                if ($refer_bank_id == 8) {
+                                    ?>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#invoices" role="tab"> <i class="ti-list"> </i> Invoices</a>
+                                    </li>
+                                <?php } ?>
                                 <!-- <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#profile1" role="tab"> <i class="ti-menu"> </i> Reports</a>
                               </li> -->
@@ -81,24 +85,22 @@
                                             </thead>
                                             <tbody>
                                                 <?php
-                                                 if (!empty($requests)) {
+                                                if (!empty($requests)) {
                                                     $i = 1;
                                                     $bank = null;
                                                     foreach ($requests as $request) {
-                                                      $checksystem = DB::table('admin.all_setting')->where('schema_name', $request->client->username)->first();
-                                                      if(!empty($checksystem)){
-                                                        $integrated = \DB::table($request->client->username . '.bank_accounts_integrations')->where('id', $request->bank_accounts_integration_id)->first();
-                                                        if(!empty($integrated)){
-                                                          $bank = DB::table($request->client->username . '.bank_accounts')->where('id', $integrated->bank_account_id)->first();
-                                                        }
-                                                      }else{
-                                                        $bank = \App\Models\IntegrationBankAccount::where('integration_request_id', $request->id)->first();
-                                                      }
+                                                   
+                                                            $integrated = \DB::table($request->client->username . '.bank_accounts_integrations')->where('id', $request->bank_accounts_integration_id)->first();
+                                                        
+                                                            if (!empty($integrated)) {
+                                                                $bank = DB::table($request->client->username . '.bank_accounts')->where('id', $integrated->bank_account_id)->first();
+                                                            } 
+                                                        
                                                         echo '<tr>
                                                         <td>' . $i++ . '</td>
                                                         <td>' . substr($request->client->name, 0, 30) . '</td>
                                                         <td>' . $request->schema_name . '</td>';
-                                                    ?>
+                                                        ?>
                                                     <td><?= !empty($bank) ? $bank->number : '<b class="label label-danger">Invalid</b>' ?></td>
                                                     <td><?=
                                                         $request->bank_approved == 1 ? '<b class="label label-success">Approved</b>' :
