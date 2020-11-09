@@ -170,7 +170,18 @@
                                                       <a href="{{url('downloadMaterial/introduction_letter')}}"  target="_blank" class="badge badge-warning">Download (V 1.0)</a>
                                                 </div>
                                             </div>
-                                        
+                                        <div class="col-lg-4 col-xl-3 col-sm-6">
+                                                <div class="badge-box">
+                                                    <div class="sub-title">Standing Order Instruction Form
+
+                                                    </div>
+
+                                                    <p>
+                                                        Any customer must submit a standing order form together with an agreement form for system to be offered
+                                                    </p>
+                                                      <a href="{{url('downloadMaterial/introduction_letter')}}"  target="_blank" class="badge badge-warning">Download (V 1.0)</a>
+                                                </div>
+                                            </div>
                                            
                                         </div>
                                     </div>
