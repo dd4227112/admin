@@ -563,6 +563,7 @@ group by ownership');
     public function scheduleActivities($client_id) {
         $time = 0;
         $sections = \App\Models\TrainItem::orderBy('id', 'asc')->get();
+        $start_date = date('Y-m-d H:i');
         foreach ($sections as $section) {
 
             $start_date = date('Y-m-d H:i', strtotime("+{$time} minutes", strtotime(request('implementation_date'))));
@@ -588,6 +589,9 @@ group by ownership');
             $end_date = date('Y-m-d H:i', strtotime("+{$section->time} minutes", strtotime($start_date)));
 
             $slot = \App\Models\Slot::find(request('slot_id' . $section->id));
+            if(empty($slot)){
+                $slot = \App\Models\Slot::first();
+            }
             $date = date('Y-m-d', strtotime(request('slot_date' . $section->id)));
 
             $data = [
