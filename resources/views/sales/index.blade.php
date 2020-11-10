@@ -65,11 +65,11 @@
                                                     <p>
                                                         This provides a guide on how to do sales effectively and win customers
                                                     </p>
-                                                    <a href="https://drive.google.com/file/d/1u-abgJZKVailuZPDosCCyV8L-SCCwv6I/view?usp=sharing" target="_blank" class="badge badge-success">Download (V 1.0)</a>
+                                                    <a href="https://drive.google.com/file/d/1xu1mWmRIt96Na8EkFcr3rW8Xw3dOy500/view?usp=sharing" target="_blank" class="badge badge-success">Download (V 2.2)</a>
                                                 </div>
                                             </div>
 
-                                            <div class="col-lg-4 col-xl-3 col-sm-6">
+<!--                                            <div class="col-lg-4 col-xl-3 col-sm-6">
                                                 <div class="badge-box">
                                                     <div class="sub-title">Company Profile
 
@@ -80,7 +80,7 @@
                                                     </p>
                                                   <a href="https://drive.google.com/file/d/1z8NyES8tK_U35d-wUNfluiADOZlyXskM/view?usp=sharing" target="_blank" class="badge badge-warning">Download (V 1.0)</a>
                                                 </div>
-                                            </div>
+                                            </div>-->
                                             <div class="col-lg-4 col-xl-3 col-sm-6">
                                                 <div class="badge-box">
                                                     <div class="sub-title">ShuleSoft Proposal
@@ -90,7 +90,7 @@
                                                     <p>
                                                         If you have a presentation like an event, you can use this to be in a flow easily.
                                                     </p>
-                                                   <a href="https://drive.google.com/file/d/1NAzGeIi-YlXp6OHvY2dqvoQWfPdxyzIj/view?usp=sharing" target="_blank" class="badge badge-warning">Download (V 1.0)</a> 
+                                                   <a href="https://drive.google.com/file/d/19_46LuHyXOikevG5nDIDcsrbIgRRKQSx/view?usp=sharing" target="_blank" class="badge badge-warning">Download (V 1.0)</a> 
                                                 </div>
                                             </div>
                                             <div class="col-lg-4 col-xl-3 col-sm-6">
@@ -148,14 +148,14 @@
                                             </div>
                                             <div class="col-lg-4 col-xl-3 col-sm-6">
                                                 <div class="badge-box">
-                                                    <div class="sub-title">ShuleSoft Grace Period Form
+                                                    <div class="sub-title">ShuleSoft NMB Application Form
 
                                                     </div>
 
                                                     <p>
-                                                        provide this to customer interested to start using ShuleSoft but needs a grace or trial period
+                                                       For school that needs an application with NMB BANK or sales done with NMB Bank partnership
                                                     </p>
-                                                      <a href="https://drive.google.com/file/d/1eby-E3YzjffrvCqapTBL6820WhrDnq10/view?usp=sharing"  target="_blank" class="badge badge-warning">Download (V 1.0)</a>
+                                                      <a href="https://drive.google.com/file/d/1DlSsOI_UFehOFmcd1U7Bbzr4Og5-6fa1/view?usp=sharing"  target="_blank" class="badge badge-warning">Download (V 2.0)</a>
                                                 </div>
                                             </div>
                                             <div class="col-lg-4 col-xl-3 col-sm-6">
@@ -170,7 +170,18 @@
                                                       <a href="{{url('downloadMaterial/introduction_letter')}}"  target="_blank" class="badge badge-warning">Download (V 1.0)</a>
                                                 </div>
                                             </div>
-                                        
+                                        <div class="col-lg-4 col-xl-3 col-sm-6">
+                                                <div class="badge-box">
+                                                    <div class="sub-title">Standing Order Instruction Form
+
+                                                    </div>
+
+                                                    <p>
+                                                        Any customer must submit a standing order form together with an agreement form for system to be offered
+                                                    </p>
+                                                      <a href="https://drive.google.com/file/d/1FKvv0xIzaT7Os_5EwCmteXuPsNXbN6wM/view?usp=sharing"  target="_blank" class="badge badge-warning">Download (V 1.0)</a>
+                                                </div>
+                                            </div>
                                            
                                         </div>
                                     </div>

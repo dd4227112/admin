@@ -573,7 +573,7 @@ function toast(message) {
                             </li>
                         <?php } ?>
 
-                        <?php if (can_access('manage_sales')) { ?>
+                        <?php if (can_access('manage_sales') || Auth::user()->role_id == 14) { ?>
                             <li class="nav-item">
                                 <a href="#!">
                                     <i class="ti-layout-cta-right"></i>
@@ -613,12 +613,12 @@ function toast(message) {
                                     <span data-i18n="nav.extra-components.main"> Customer Modules</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <!-- <li class="nav-item">
                                 <a href="<?= url('sales/school') ?>">
                                     <i class="ti-list "></i>
                                     <span data-i18n="nav.extra-components.main"> List of Schools</span>
                                 </a>
-                            </li>
+                            </li> -->
                         <?php } ?>
 
                         <?php if (can_access('manage_marketing') && Auth::user()->role_id != 10) { ?>
@@ -734,7 +734,7 @@ function toast(message) {
                                     <li><a href="<?= url('users/index') ?>" data-i18n="nav.extra-components.session-timeout">Users</a></li>
                                     <li><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">Meeting Minutes</a></li>
                                     <li><a href="<?= url('general/show/attendance') ?>" data-i18n="nav.extra-components.session-timeout">Attendance</a></li>
-                                    <li><a href="<?= url('users/partners') ?>" data-i18n="nav.extra-components.session-idle-timeout">Partners</a></li>
+                                    <li><a href="<?= url('Partner/partners') ?>" data-i18n="nav.extra-components.session-idle-timeout">Partners</a></li>
                                     <li><a href="<?= url('users/applicant') ?>" data-i18n="nav.extra-components.session-idle-timeout">Applicants</a>
                                     </li>
                                     <li><a href="<?= url('users/template') ?>" data-i18n="nav.extra-components.offline">Forms & Templates</a></li>
