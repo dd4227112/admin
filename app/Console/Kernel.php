@@ -288,8 +288,9 @@ class Kernel extends ConsoleKernel {
             $curl = $this->curlServer($fields, $url);
             $result = json_decode($curl);
            // echo $result->description;
-            if (isset($result->description) && (strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
-//update invoice no
+           //if (isset($result->description) && (strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
+            if (isset($result) && !empty($result)) {
+                //update invoice no
                 DB::table($invoice->schema_name . '.invoices')
                         ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
 
