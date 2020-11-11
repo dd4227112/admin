@@ -707,15 +707,21 @@ function check_status($table, $where = null) {
                                                                                     $i = 1;
                                                                                     if (!empty($client_contracts)) {
                                                                                         foreach ($client_contracts as $client_contract) {
+                                                                                            //  $contract = \App\Models\Contract::where('id', $client_contracts->contract_id)->get();
+                                                                                            //  if(!empty($contract)){
+
                                                                                             ?>
                                                                                             <tr>
                                                                                                 <th scope="row"><?= $i ?></th>
                                                                                                 <td><?= $client_contract->contract->name ?></td>
-                                                                                                <td><?= $client_contract->contract->contractType->name ?></td>
+                                                                                                <td><?= isset($client_contract->contract->contract_type_id) ? $client_contract->contract->contractType->name : 'Not Defined' ?></td>
                                                                                                 <td><?= $client_contract->contract->start_date ?></td>
                                                                                                 <td><?= $client_contract->contract->end_date ?></td>
                                                                                                 <td><?= $client_contract->contract->user->name ?></td>
-                                                                                                <td><a type="button" class="btn btn-primary btn-xs waves-effect" target="_blank" href="<?= url('customer/viewContract/' . $client_contract->contract->id) ?>">View</a></td>
+                                                                                                <td>
+                                                                                                    <a type="button" class="btn btn-primary btn-sm waves-effect" target="_blank" href="<?= url('customer/viewContract/' . $client_contract->contract->id) ?>">View</a>
+                                                                                                    <a type="button" class="btn btn-warning btn-sm waves-effect" href="<?= url('customer/deleteContract/' . $client_contract->contract->id) ?>">Delete</a>
+                                                                                                </td>
                                                                                             </tr>
 
                                                                                             <?php
