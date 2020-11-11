@@ -847,13 +847,25 @@ group by ownership');
         foreach ($tasks as $value) {
             array_push($task_ids, (int) $value->id);
         }
+        if(Auth::user()->role_id==1){
+            $this->data['schools'] = \App\Models\TaskClient::whereIn('task_id', \App\Models\Task::where('action', 'visit')->get(['id']))->get();
+            //$this->data['new_schools'] = \App\Models\Task::whereIn('user_id', $id)->where('next_action', 'new')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
+    
+            $this->data['query'] = 'SELECT count(a.status), a.status from admin.tasks_clients a where task_id in(select id from admin.tasks where  action=\'visit\') group by a.status order by count(a.status) desc';
+// dd( $this->data['query']);
+
+            $this->data['types'] = 'SELECT count(a.updated_at::date), a.updated_at::date as "Date" from admin.tasks_clients a where task_id in(select id from admin.tasks where  action=\'visit\') and a.status is not null group by a.updated_at::date order by count(a.updated_at::date) desc';
+            return view('sales.sales_status.visitation_index', $this->data);
+        }else{
         $this->data['schools'] = \App\Models\TaskClient::whereIn('task_id', $task_ids)->get();
+        
         //$this->data['new_schools'] = \App\Models\Task::whereIn('user_id', $id)->where('next_action', 'new')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
 
         $this->data['query'] = 'SELECT count(a.status), a.status from admin.tasks_clients a where task_id in(select id from admin.tasks where user_id in(' . $id . ')  and action=\'visit\') group by a.status order by count(a.status) desc';
         $this->data['types'] = 'SELECT count(a.updated_at::date), a.updated_at::date as "Date" from admin.tasks_clients a where task_id in(select id from admin.tasks where user_id in(' . $id . ')   and action=\'visit\') and a.status is not null group by a.updated_at::date order by count(a.updated_at::date) desc';
         return view('sales.sales_status.visitation_index', $this->data);
     }
+}
 
     public function addVisit() {
 
