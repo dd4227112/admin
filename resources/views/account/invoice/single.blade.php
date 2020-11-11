@@ -246,7 +246,14 @@
 
               </div>
               <!-- /.row -->
+              <div class="row" style="padding-top: 0px">
+                <div class="col-lg-12 col-sm-12"><small><i>
+1. School hereby agreed to pay for the service fee as specified in ShuleSoft Price list for the service provided by ShuleSoft Electronic Payment System Integrated to  Bank.
+                        <br/>2.School agrees to sign a bank Standing Order for automatic deduction of the required amount from school bank account to the Company bank account, standing order to specify the date for payment either annually or semi-annually.
 
+</i>
+</small>
+                </div></div>
 
             </div>
           </div>
