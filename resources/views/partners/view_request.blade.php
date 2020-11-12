@@ -148,15 +148,21 @@
                         $bank = \App\Models\IntegrationBankAccount::where('integration_request_id', $request->id)->first();
                         if (!empty($checksystem)) {
                             $bank = DB::table($request->client->username . '.bank_accounts')->where('refer_bank_id', 8)->first();
-                            $refer_bank = $bank->name;
-                            $number = $bank->number;
+                            if(!empty($bank)){
+                                $refer_bank = $bank->name;
+                                $number = $bank->number;
+                            }
                             $user = DB::table($request->client->username . '.users')->where("table", $request->table)->where('id', $request->user_id)->first();
                             $user_name = $user->name;
                             $usertype = ucfirst($user->usertype);
-                        } else {
+                        } elseif(!empty($bank)) {
                             $refer_bank = $bank->referBank->name;
                             $number = $bank->number;
                             $user_name = $bank->requests->user->name;
+                            $usertype = 'Sales Manager';
+                        }else{
+                            $refer_bank = 'Not Defined';
+                            $number = '';
                             $usertype = 'Sales Manager';
                         }
                         ?>
