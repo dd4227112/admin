@@ -146,6 +146,7 @@
                         <?php
                         $refer_bank = '';
                         $number = '';
+                        $branch = '';
                     $checksystem = DB::table('admin.all_setting')->where('schema_name', $request->client->username)->first();
                         $bank = \App\Models\IntegrationBankAccount::where('integration_request_id', $request->id)->first();
                         if (!empty($checksystem)) {
@@ -153,6 +154,8 @@
                             if(!empty($bank)){
                                 $refer_bank = $bank->name;
                                 $number = $bank->number;
+                                $branch = $bank->branch;
+
                             }
                             $user = DB::table($request->client->username . '.users')->where("table", $request->table)->where('id', $request->user_id)->first();
                             if(!empty($user)){
@@ -162,6 +165,7 @@
                         } elseif(!empty($bank)) {
                             $refer_bank = $bank->referBank->name;
                             $number = $bank->number;
+                            $branch = $bank->branch;
                             $user_name = $bank->requests->user->name;
                             $usertype = 'Sales Manager';
                         }else{
@@ -201,7 +205,7 @@
 
                                                 <tr>
                                                     <th>Branch Name</th>
-                                                    <th> <?= $bank->branch ?></th>
+                                                    <th> <?= $branch ?></th>
                                                 </tr>
                                                 <?php
                                                 if ((int) $request->bank_approved == 1) {
