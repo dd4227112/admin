@@ -66,11 +66,11 @@ return [
        
           'pgsql' => [
             'driver' => 'pgsql',
-            'host' => '127.0.0.1',
+            'host' => '51.91.251.252',
             'port' =>5432,
-            'database' => 'Shulesoft',
+            'database' => 'shulesoft_2017',
             'username' => 'postgres',
-            'password' =>'99abo123',
+            'password' =>'Jesus_ShuleSoft@2020_',
             'charset' => 'utf8',
             'prefix' => '',
             'schema' =>'admin',
