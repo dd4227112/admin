@@ -211,9 +211,7 @@
                         <?php }?>
                         <!-- <br/>
                         <b>If you make a bank deposit, you will have to notify us to activate your account</b> -->
-                        <p class="text-muted well well-sm no-shadow">
-                    Thank you for your business. we're glad to serve you
-                  </p>
+                     
                       </td>
                       <td>
                         <b>Summary</b>
@@ -247,12 +245,17 @@
               </div>
               <!-- /.row -->
               <div class="row" style="padding-top: 0px">
-                <div class="col-lg-12 col-sm-12"><small><i>
-1. School hereby agreed to pay for the service fee as specified in ShuleSoft Price list for the service provided by ShuleSoft Electronic Payment System Integrated to  Bank.
-                        <br/>2.School agrees to sign a bank Standing Order for automatic deduction of the required amount from school bank account to the Company bank account, standing order to specify the date for payment either annually or semi-annually.
+                <div class="col-lg-12 col-sm-12"><blockquote class="text-muted well well-sm no-shadow"><i>
+
+                <strong>Terms of Payment</strong><br>
+Fill and sign the Standing Order for automatic deduction of the invoiced amount from your school dedicated bank account to the INETS Company bank account specified above;
+</br>.Specify the date for payment of the invoiced amount on monthly or semi-annually or annually plan
+ </br>.Sign, stamp and submit Standing Order to the bank within 5 working days and send the copy to finance@shulesoft.com
+</br>.Discount of five (5) percent of the total invoiced amount is provided if you pay by a Standing Order.
+
 
 </i>
-</small>
+                        </blockquote>
                 </div></div>
 
             </div>
