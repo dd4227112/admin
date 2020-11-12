@@ -90,19 +90,26 @@
                                                     $i = 1;
                                                     $bank = null;
                                                     foreach ($requests as $request) {
-                                                   
-                                                            $integrated = \DB::table($request->client->username . '.bank_accounts_integrations')->where('id', $request->bank_accounts_integration_id)->first();
+                                                    $check_school = DB::table('all_setting')->where('schema_name', $request->client->username)->first();
+                                                    if(!empty($check_school)){  
+                                                    $integrated = \DB::table($request->client->username . '.bank_accounts_integrations')->where('id', $request->bank_accounts_integration_id)->first();
                                                         
                                                             if (!empty($integrated)) {
                                                                 $bank = DB::table($request->client->username . '.bank_accounts')->where('id', $integrated->bank_account_id)->first();
+                                                                $bank_number = $bank->number;
                                                             } 
+                                                        }else{
+                                                            $bank = DB::table('bank_accounts_integrations')->where('integration_request_id', $request->id)->first();
+                                                            $bank_number = $bank->account_number;
+
+                                                        }
                                                         
                                                         echo '<tr>
                                                         <td>' . $i++ . '</td>
                                                         <td>' . substr($request->client->name, 0, 30) . '</td>
                                                         <td>' . $request->schema_name . '</td>';
                                                         ?>
-                                                    <td><?= !empty($bank) ? $bank->number : '<b class="label label-danger">Invalid</b>' ?></td>
+                                                    <td><?= !empty($bank) ? $bank_number : '<b class="label label-danger">Invalid</b>' ?></td>
                                                     <td><?=
                                                         $request->bank_approved == 1 ? '<b class="label label-success">Approved</b>' :
                                                                 '<b class="label label-default">Not Approved</b>'

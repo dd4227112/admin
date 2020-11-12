@@ -971,7 +971,12 @@ class Customer extends Controller {
         $this->data['path'] = $contract->companyFile->path;
         return view('layouts.file_view', $this->data);
     }
-
+    public function deleteContract() {
+        $contract_id = request()->segment(3);
+        $contract = \App\Models\Contract::where('id', $contract_id)->delete();
+        return redirect()->back()->with('success', 'Contract Deleted');
+    }
+    
     public function contract() {
         $client_id = request()->segment(3);
         $file = request()->file('file');
