@@ -37,7 +37,7 @@
                                 $total = 0;
                                 foreach ($school_types as $type) {
                                     ?>
-                                        <div class="col-lg-3 col-xl-3 col-sm-12">
+                                    <div class="col-lg-3 col-xl-3 col-sm-12">
                                         <div class="card counter-card-<?= $i ?>">
                                             <div class="card-block-big">
                                                 <div>
@@ -56,7 +56,7 @@
                                     $i++;
                                 }
                                 ?>
-                                        <div class="col-lg-3 col-xl-3 col-sm-12">
+                                <div class="col-lg-3 col-xl-3 col-sm-12">
                                     <div class="card counter-card-<?= $i ?>">
                                         <div class="card-block-big">
                                             <div>
@@ -84,14 +84,14 @@
                                         // $demo=DB::table('admin.website_demo_requests')->count();
                                         // $join=DB::table('admin.website_join_shulesoft')->count();
                                         ?>
-                                        <a href="<?= url('sales/prospect/demo') ?>"> <button class="btn btn-success btn-skew"> Demo Requests <span class="badge badge-danger"><?php //echo $demo    ?></span></button></a>
-                                        <a href="<?= url('sales/prospect/join') ?>"> <button class="btn btn-info btn-skew">Join Requests <span class="badge badge-danger"><?php // echo $join     ?></span></button></a>
+                                        <a href="<?= url('sales/prospect/demo') ?>"> <button class="btn btn-success btn-skew"> Demo Requests <span class="badge badge-danger"><?php //echo $demo     ?></span></button></a>
+                                        <a href="<?= url('sales/prospect/join') ?>"> <button class="btn btn-info btn-skew">Join Requests <span class="badge badge-danger"><?php // echo $join      ?></span></button></a>
                                     </p>
                                 <?php } ?>
                                 <select class="form-control" id="school_selector">
-                                    <option value="1" <?php // selected(1) ?>>All Schools</option>
-                                    <option value="2" <?php // selected(2) ?>>Use ShuleSoft Only</option>
-                                    <option value="3"<?php // selected(3) ?>>Sales On Progress</option>
+                                    <option value="1" <?php // selected(1)  ?>>All Schools</option>
+                                    <option value="2" <?php // selected(2)  ?>>Use ShuleSoft Only</option>
+                                    <option value="3"<?php // selected(3)  ?>>Sales On Progress</option>
                                 </select>
                             </div>
                             <div class="col-lg-3"></div>
@@ -102,7 +102,7 @@
                                     <h3 class="box-title">List of Schools</h3>
                                     <div class="row">
                                         <div class="col-lg-4">
-                                         
+
                                         </div>
                                         <div class="col-lg-4 row">
                                         </div>
@@ -167,7 +167,8 @@
                         if (row.schema_name != null) {
                             return '<a href="<?= url('customer/profile') ?>/' + row.schema_name + '" class="label label-warning">Already Customer</a>';
                         } else {
-                            return '<a href="<?= url('sales/') ?>/profile/' + row.id + '" class="label label-primary">View</a>';
+                            return '<a href="<?= url('sales/') ?>/profile/' + row.id + '" class="label label-primary">View</a>\n\
+                        <a href="<?= url('sales/') ?>/onboard/' + row.id + '" class="label label-info">Onboard This School</a>';
                         }
 
                     }
@@ -185,6 +186,7 @@
             window.location.href = '<?= url('sales/school') ?>/' + val;
         })
     }
+
     $(document).ready(school_selector);
 </script>
 
