@@ -147,6 +147,8 @@
                         $refer_bank = '';
                         $number = '';
                         $branch = '';
+                        $user_name = '';
+                        $usertype = '';
                     $checksystem = DB::table('admin.all_setting')->where('schema_name', $request->client->username)->first();
                         $bank = \App\Models\IntegrationBankAccount::where('integration_request_id', $request->id)->first();
                         if (!empty($checksystem)) {
@@ -170,10 +172,6 @@
                             $usertype = 'Sales Manager';
                         }else{
                             $refer_bank = 'Not Defined';
-                            $number = '';
-                            $usertype = 'Sales Manager';
-                            $user_name = '';
-                            $usertype = '';
                         }
                         ?>
                         <div class="card-block user-desc">
