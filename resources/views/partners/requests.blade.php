@@ -34,7 +34,8 @@
                     <div class="card">
                         <p align="left">
                             <br/>
-                            &nbsp; &nbsp; &nbsp; <a class="btn btn-success btn-sm" href="<?= url('Partner/add') ?>">  <i class="ti-plus"> </i> Onboard New School</a>
+                            &nbsp; &nbsp; &nbsp; <a class="btn btn-success btn-sm" href="<?= url('sales/school') ?>">  <i class="ti-plus"> </i> Onboard New School</a>
+                            
                         </p>
                         <div class="card-header">
                             <h5>Schools Onboarding Status </h5>

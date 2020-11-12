@@ -1,4 +1,5 @@
-
+@extends('layouts.app')
+@section('content')
 <div class="card">
     <div class="card-header">
         <h5>Customer Onboarding</h5>
@@ -364,3 +365,4 @@
     $(document).ready(task_group);
 
 </script>
+@endsection
