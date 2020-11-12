@@ -153,8 +153,10 @@
                                 $number = $bank->number;
                             }
                             $user = DB::table($request->client->username . '.users')->where("table", $request->table)->where('id', $request->user_id)->first();
-                            $user_name = $user->name;
-                            $usertype = ucfirst($user->usertype);
+                            if(!empty($user)){
+                                $user_name = $user->name;
+                                $usertype = ucfirst($user->usertype);
+                            }
                         } elseif(!empty($bank)) {
                             $refer_bank = $bank->referBank->name;
                             $number = $bank->number;
@@ -164,6 +166,8 @@
                             $refer_bank = 'Not Defined';
                             $number = '';
                             $usertype = 'Sales Manager';
+                            $user_name = '';
+                            $usertype = '';
                         }
                         ?>
                         <div class="card-block user-desc">
