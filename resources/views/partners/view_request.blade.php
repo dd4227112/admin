@@ -146,14 +146,16 @@
                         <?php
                     $checksystem = DB::table('admin.all_setting')->where('schema_name', $request->client->username)->first();
                         $bank = \App\Models\IntegrationBankAccount::where('integration_request_id', $request->id)->first();
-                        if (empty($bank)) {
+                        if (!empty($checksystem)) {
                             $bank = DB::table($request->client->username . '.bank_accounts')->where('refer_bank_id', 8)->first();
                             $refer_bank = $bank->name;
+                            $number = $bank->number;
                             $user = DB::table($request->client->username . '.users')->where("table", $request->table)->where('id', $request->user_id)->first();
                             $user_name = $user->name;
                             $usertype = ucfirst($user->usertype);
                         } else {
                             $refer_bank = $bank->referBank->name;
+                            $number = $bank->number;
                             $user_name = $bank->requests->user->name;
                             $usertype = 'Sales Manager';
                         }
@@ -176,13 +178,13 @@
                                                     <th>
                                                         <?php
                                                         if ($request->user_id != '') {
-                                                            echo $bank->name;
+                                                            echo $refer_bank;
                                                         }
                                                         ?>
                                                 </tr>
                                                 <tr>
                                                     <th> Account Number </th>
-                                                    <th><?php echo $bank->number; ?> </th>
+                                                    <th><?php echo $number; ?> </th>
                                                 </tr>
 
                                                 <tr>

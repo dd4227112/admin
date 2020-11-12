@@ -1,6 +1,25 @@
 @extends('layouts.app')
 @section('content')
-
+<?php
+    $checksystem = DB::table('admin.all_setting')->where('schema_name', $partner->client->username)->first();
+    $bank = \App\Models\IntegrationBankAccount::where('integration_request_id', $partner->id)->first();
+    if (!empty($checksystem)) {
+        $bank = DB::table($partner->client->username . '.bank_accounts')->where('refer_bank_id', 8)->first();
+        $integration = DB::table($partner->client->username . '.bank_accounts_integrations')->where('bank_account_id', $bank->id)->first();
+        $integration = $integration->invoice_prefix;
+        $refer_bank = $bank->name;
+        $number = $bank->number;
+        $user = DB::table($partner->client->username . '.users')->where("table", $partner->table)->where('id', $partner->user_id)->first();
+        $user_name = $user->name;
+        $usertype = ucfirst($user->usertype);
+    } else {
+        $refer_bank = $bank->referBank->name;
+        $number = $bank->number;
+        $user_name = $bank->requests->user->name;
+        $integration = $bank->invoice_prefix;
+        $usertype = 'Sales Manager';
+    }
+?>
 <!-- Sidebar inner chat end-->
 <!-- Main-body start -->
 <div class="main-body">
@@ -62,13 +81,13 @@
                                                 <tr>
                                                     <td></td>
                                                     <td>Bank Name</td>
-                                                    <td><?= $bank->name ?></td>
+                                                    <td><?= $refer_bank ?></td>
 
                                                 </tr>
                                                 <tr>
                                                     <td></td>
                                                     <td>Account Number</td>
-                                                    <td><?= $bank->number ?></td>
+                                                    <td><?= $number ?></td>
 
                                                 </tr>
                                                 <?php if ($partner->refer_bank_id == 22) { // This is NMB integration  ?>
@@ -88,7 +107,7 @@
                                                 <tr>
                                                     <td></td>
                                                     <td>Invoice Prefix</td>
-                                                    <td><h1 style="font-size: 25px"><b><?= $integration->invoice_prefix ?></b></h1></td>
+                                                    <td><h1 style="font-size: 25px"><b><?= isset($integration) ? $integration : '' ?></b></h1></td>
                                                 </tr>
 
                                                 <tr>
