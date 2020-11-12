@@ -99,7 +99,7 @@
                                                             } 
                                                         }else{
                                                             $bank = DB::table('bank_accounts_integrations')->where('integration_request_id', $request->id)->first();
-                                                            $bank_number = $bank->account_number;
+                                                            $bank_number = $bank->number;
 
                                                         }
                                                         
