@@ -52,6 +52,7 @@ class Analyse extends Controller {
             return view('analyse.nmb', $this->data);
         } elseif (Auth::user()->department == 9) {
             $this->data['requests'] = \App\Models\IntegrationRequest::get();
+            $this->data['refer_bank_id'] = preg_match('/crdb/', Auth::user()->email) ? 8 : 22;
             $this->data['invoices'] = \App\Models\Invoice::whereIn('client_id', \App\Models\IntegrationRequest::get(['client_id']))->get();
             return view('partners.requests', $this->data);
         } elseif (Auth::user()->role_id == 12) {
