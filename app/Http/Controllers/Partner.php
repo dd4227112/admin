@@ -210,9 +210,8 @@ class Partner extends Controller {
         $id = request()->segment(3);
         // DB::statement("select constant.create_invoice_prefix_trigger()");
         $partner = $this->data['partner'] = \App\Models\IntegrationRequest::find($id);
-        $this->data['integration'] = $bankAccountIntegration = DB::table($partner->schema_name . '.bank_accounts_integrations')->where('id', $partner->bank_accounts_integration_id)->first();
-        $this->data['bank'] = DB::table($partner->schema_name . '.bank_accounts')->where('id', $bankAccountIntegration->bank_account_id)->first();
-
+        //$this->data['integration'] = $bankAccountIntegration = DB::table($partner->schema_name . '.bank_accounts_integrations')->where('id', $partner->bank_accounts_integration_id)->first();
+        //$this->data['bank'] = DB::table($partner->schema_name . '.bank_accounts')->where('id', $bankAccountIntegration->bank_account_id)->first();
         return view('partners.show_prefix', $this->data);
     }
 
