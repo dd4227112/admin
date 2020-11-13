@@ -289,7 +289,7 @@ class Kernel extends ConsoleKernel {
             $result = json_decode($curl);
            // echo $result->description;
            //if (isset($result->description) && (strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
-            /*
+            
             if (isset($result) && !empty($result)) {
                 //update invoice no
                 DB::table($invoice->schema_name . '.invoices')
@@ -305,7 +305,7 @@ class Kernel extends ConsoleKernel {
                     }
                     DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
                 }
-            } */
+            } 
             DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
         }
     }
