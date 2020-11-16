@@ -619,6 +619,7 @@ function toast(message) {
                                     <span data-i18n="nav.extra-components.main"> List of Schools</span>
                                 </a>
                             </li> -->
+                            <li><a href="<?= url('customer/requirements') ?>" data-i18n="nav.page_layout.bottom-menu">Customer Requirements</a></li>
                         <?php } ?>
 
                         <?php if (can_access('manage_marketing') && Auth::user()->role_id != 10) { ?>

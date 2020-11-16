@@ -1,5 +1,3 @@
-
-
 @extends(!isset($balance) ? 'layouts.app' : 'layouts.nologin')
 
 @section('content')

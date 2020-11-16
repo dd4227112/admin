@@ -1,17 +1,21 @@
 @extends('layouts.app')
 @section('content')
 <?php
+$integration = '';
     $checksystem = DB::table('admin.all_setting')->where('schema_name', $partner->client->username)->first();
     $bank = \App\Models\IntegrationBankAccount::where('integration_request_id', $partner->id)->first();
     if (!empty($checksystem)) {
         $bank = DB::table($partner->client->username . '.bank_accounts')->where('refer_bank_id', 8)->first();
-        $integration = DB::table($partner->client->username . '.bank_accounts_integrations')->where('bank_account_id', $bank->id)->first();
-        $integration = $integration->invoice_prefix;
+        if(!empty($bank)){
+        $integration = DB::table($partner->client->username . '.bank_accounts_integrations')->where('bank_account_id', $bank->id)->first()->invoice_prefix;
         $refer_bank = $bank->name;
         $number = $bank->number;
         $user = DB::table($partner->client->username . '.users')->where("table", $partner->table)->where('id', $partner->user_id)->first();
-        $user_name = $user->name;
-        $usertype = ucfirst($user->usertype);
+        if(!empty($user)){
+            $user_name = $user->name;
+            $usertype = ucfirst($user->usertype);
+        }
+    }
     } else {
         $refer_bank = $bank->referBank->name;
         $number = $bank->number;
@@ -61,7 +65,6 @@
                                             <div class="card-block-big bg-primary quick-note-card">
                                                 <div class="card-block-big bg-info text-center">
                                                     <h1>Success</h1>
-
                                                 </div>
                                                 <h6> </h6>
                                                 <h2 class="text-center">This school can now access electronic payments</h2>
@@ -81,13 +84,13 @@
                                                 <tr>
                                                     <td></td>
                                                     <td>Bank Name</td>
-                                                    <td><?= $refer_bank ?></td>
+                                                    <td><?= isset($refer_bank) ? $refer_bank : '' ?></td>
 
                                                 </tr>
                                                 <tr>
                                                     <td></td>
                                                     <td>Account Number</td>
-                                                    <td><?= $number ?></td>
+                                                    <td><?= isset($number) ? $number : '' ?></td>
 
                                                 </tr>
                                                 <?php if ($partner->refer_bank_id == 22) { // This is NMB integration  ?>
