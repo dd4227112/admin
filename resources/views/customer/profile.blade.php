@@ -389,6 +389,14 @@ function check_status($table, $where = null) {
                                                                                             <?= $task->user->firstname ?> - <span class="text-muted"><?= date("d M Y", strtotime($task->created_at)) ?></span>
                                                                                         </div>
                                                                                         <p class="text-muted"><?= $task->activity ?></p>
+                                                                                        <?php
+                                                                                        $modules = $task->modules()->get();
+                                                                                        if (count($modules)>0) {
+                                                                                            echo '<p>Task Module Performed</p>';
+                                                                                            foreach ($modules as $module) {
+                                                                                                ?>
+                                                                                             <?= $module->module->name ?>  &nbsp; &nbsp; |
+                                                                                            <?php } } ?>
                                                                                         <p>Start Date- <?= $task->start_date ?>  &nbsp; &nbsp; | &nbsp; &nbsp; End Date - <?= $task->end_date ?></p>
 
                                                                                     </div>
@@ -397,13 +405,13 @@ function check_status($table, $where = null) {
 
                                                                                         <?php
                                                                                         $comments = $task->taskComments()->get();
-                                                                                        if (!empty($comments)) {
+                                                                                        if (count($comments) > 0) {
                                                                                             ?>
-                                                                                            <div class="p-b-30"> <span class="f-14"><a href="#">What have been done</a></span></div>
+                                                                                            <div class="mt-1"> <span class="f-14"><a href="#">What have been done</a></span></div>
                                                                                             <?php
                                                                                             foreach ($comments as $comment) {
                                                                                                 ?>
-                                                                                                <div class="media" style="padding-bottom: 2px;">
+                                                                                                <div class="media" class="pb-1">
                                                                                                     <a class="media-left" href="#">
                                                                                                         <img class="media-object img-circle m-r-20" src="<?= $root . '/assets/images/avatar-2.png'; ?>" alt="Image">
                                                                                                     </a>
