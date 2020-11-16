@@ -6,7 +6,7 @@
 /vendor
 /app/config/
 /config/*.key
-/config/database.php
+config/database.php
 /.vagrant
 Homestead.json
 Homestead.yaml
