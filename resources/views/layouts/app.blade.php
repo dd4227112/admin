@@ -744,7 +744,7 @@ function toast(message) {
 
                             <?php
                         }
-                        if (can_access('manage_users') || in_array(Auth::user()->role_id, array(14, 8))) {
+                        if (can_access('manage_users') || in_array(Auth::user()->role_id, array(14, 8,15))) {
                             ?>
                             <li class="nav-item">
                                 <a href="#!">
