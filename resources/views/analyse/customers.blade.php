@@ -192,7 +192,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                                     <li>
                                         <i class="icofont icofont-money"></i>
                                     </li>
-                                    <li class="text-right">
+                                    <li class="text-right" style="    font-size: 29px !important;">
                                         <?= number_format($value) ?>
                                     </li>
                                     <span class="small">Out of Tsh 200mil Per User</span>
