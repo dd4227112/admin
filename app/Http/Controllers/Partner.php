@@ -20,8 +20,12 @@ class Partner extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $this->data['refer_bank_id'] = preg_match('/crdb/', Auth::user()->email) ? 8 : 22;
+        $this->data['refer_bank_id'] = $refer_bank_id =  preg_match('/crdb/', Auth::user()->email) ? 8 : 22;
+        if((int)$refer_bank_id>0){
         $this->data['requests'] = \App\Models\IntegrationRequest::where('refer_bank_id', $this->data['refer_bank_id'])->get();
+        }else{
+            $this->data['requests'] = \App\Models\IntegrationRequest::where('refer_bank_id', $this->data['refer_bank_id'])->get();
+        }
         $this->data['invoices'] = \App\Models\Invoice::whereIn('client_id', \App\Models\IntegrationRequest::get(['client_id']))->get();
         return view('partners.requests', $this->data);
     }
