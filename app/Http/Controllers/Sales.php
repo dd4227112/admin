@@ -880,7 +880,7 @@ group by ownership');
         if ($_POST) {
             // $data = request()->all();
             // dd($data);
-            $data = array_merge(request()->except('_token'), ['user_id' => Auth::user()->id, 'status' => 'new', 'action' => 'visit', 'date' => date('Y-m-d')]);
+            $data = array_merge(request()->except(['_token','start_date','end_date']), ['start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date'))), 'user_id' => Auth::user()->id, 'status' => 'new', 'action' => 'visit', 'date' => date('Y-m-d')]);
             $task = \App\Models\Task::create($data);
 
             DB::table('tasks_users')->insert([
