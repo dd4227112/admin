@@ -73,10 +73,12 @@
                                                             <th>School Levels</th>
                                                             <td>
                                                                 <?php
-//                                    $levels = DB::table('admin.school_levels')->where('client_id', $request->client_id)->get();
-//                                    foreach($levels as $level){
-//                                      echo '<b>'.$level->name.'</b>,   &nbsp; &nbsp;';
-//                                    }
+                                                                $levels = DB::table('admin.school_levels')->where('client_id', $request->client_id)->get();
+                                                                if(count($levels)){
+                                                                    foreach($levels as $level){
+                                                                    echo '<b>'.$level->name.'</b>,   &nbsp; &nbsp;';
+                                                                    }
+                                                                }
                                                                 ?>
                                                             </td>
                                                         </tr>
