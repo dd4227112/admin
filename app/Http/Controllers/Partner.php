@@ -149,7 +149,7 @@ class Partner extends Controller {
 
             //Bank Accounts Details
             DB::table('admin.bank_accounts_integrations')->insert([
-                'number' => request('account_number'), 'branch' => request('branch_name'), 'name' => request('account_name'), 'refer_currency_id' => request('refer_currency_id'), 'opening_balance' => request('opening_balance'), 'integration_request_id' => $request_id, 'refer_bank_id' => 8
+                'number' => request('account_number'), 'branch' => request('branch_name'), 'account_name' => request('account_name'), 'refer_currency_id' => request('refer_currency_id'), 'opening_balance' => request('opening_balance'), 'integration_request_id' => $request_id, 'refer_bank_id' => 8
             ]);
 
             //Install School Levels
