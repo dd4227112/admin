@@ -80,6 +80,7 @@ class Partner extends Controller {
                     $school_id = $school->id;
                 }
             } else {
+                $school = \App\Models\School::where('id', $id)->first();
                 \App\Models\School::where('id', $id)->update($array);
                 $school_id = $id;
             }
