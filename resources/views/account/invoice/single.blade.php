@@ -197,11 +197,17 @@
                       <td>
 
                         <p class="lead">Payment Methods:</p>
-
-                        <p  >
+                          <p>
                           <b>Account Details :</b><br/>
+                        <?php if(preg_match('/crdb/', Auth::user()->email)){ ?>
+                          <b>Bank Name:</b> CRDB Bank Plc  <br/>
+                          <b>Branch Name:</b>  Azikiwe Premier  <br/>
+                          <b>Account Name:</b>  INETS COMPANY LIMITED <br/>
+                          <b>Account Number:</b> 0150265526500 <br/>
+                        <?php }else{ ?>
                           <b>Account Name:</b> INETS COMPANY LIMITED <br/> <b>Bank Name:</b> NMB BANK PLC <br/>  <b>Account Number:</b> 22510028669
-                          <br/>
+                          <?php } ?>
+                          <br/> 
                           <small>Please notify us after a deposit</small>
                         </p>
                         <?php  if (strlen($invoice->token) > 4) { ?>
