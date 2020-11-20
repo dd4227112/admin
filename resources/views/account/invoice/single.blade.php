@@ -129,7 +129,7 @@
                   <table  class="table">
                     <tr>
                       <td>Control #</td>
-                      <td><?= strlen($invoice->token) <4 ?$invoice->reference:$invoice->token ?></td>
+                      <td><?= strlen($invoice->token) <4 ? $invoice->reference : $invoice->token ?></td>
                       </tr>
 
                       <tr>
