@@ -225,25 +225,22 @@
                                         <h3> Application Docs Attachments</h3>
                                         <?php
                                         $bank_docs = \App\Models\IntegrationRequestDocument::where('integration_request_id', $request->id)->get();
-                                        if (!empty($bank_docs)) {
+                                        if (count($bank_docs) > 0) {
                                             ?>
                                             <table class="table m-0">
                                                 <tbody>
                                                     <?php
                                                     foreach ($bank_docs as $bank_doc) {
+                                                        if($bank_doc->company_file_id){
                                                         ?>
                                                         <tr>
                                                             <th scope="row"><?= $bank_doc->companyfile->name ?> </th>
 
                                                             <th> <a href="<?= url('Partner/viewfile/' . $bank_doc->company_file_id) ?>" target="_blank" class="btn btn-info btn-sm" rel="noopener noreferrer"> <i class="ti-cloud"></i> View Doc</a> </th>
                                                         </tr>
-                                                    <?php } ?>
-
-       <!-- <tr>
-         <th scope="row">Implemetantion Start</th>
-         <th> <?php // $client->contract->start_date  ?></th>
-       </tr> -->
-
+                                                    <?php
+                                                 }
+                                                } ?>
                                                 </tbody>
                                             </table>
                                         <?php } ?>
