@@ -619,6 +619,7 @@ function toast(message) {
                                     <span data-i18n="nav.extra-components.main"> List of Schools</span>
                                 </a>
                             </li> -->
+                            <li><a href="<?= url('customer/requirements') ?>" data-i18n="nav.page_layout.bottom-menu">Customer Requirements</a></li>
                         <?php } ?>
 
                         <?php if (can_access('manage_marketing') && Auth::user()->role_id != 10) { ?>
@@ -733,7 +734,7 @@ function toast(message) {
                                 <ul class="tree-1">
                                     <li><a href="<?= url('users/index') ?>" data-i18n="nav.extra-components.session-timeout">Users</a></li>
                                     <li><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">Meeting Minutes</a></li>
-                                    <li><a href="<?= url('general/show/attendance') ?>" data-i18n="nav.extra-components.session-timeout">Attendance</a></li>
+                                    <li><a href="<?= url('general/show/attendances') ?>" data-i18n="nav.extra-components.session-timeout">Attendance</a></li>
                                     <li><a href="<?= url('Partner/partners') ?>" data-i18n="nav.extra-components.session-idle-timeout">Partners</a></li>
                                     <li><a href="<?= url('users/applicant') ?>" data-i18n="nav.extra-components.session-idle-timeout">Applicants</a>
                                     </li>
@@ -743,7 +744,7 @@ function toast(message) {
 
                             <?php
                         }
-                        if (can_access('manage_users') || in_array(Auth::user()->role_id, array(14, 8))) {
+                        if (can_access('manage_users') || in_array(Auth::user()->role_id, array(14, 8,15))) {
                             ?>
                             <li class="nav-item">
                                 <a href="#!">

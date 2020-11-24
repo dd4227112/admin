@@ -56,9 +56,9 @@
                         <span>This part shows list of customers and expected amount to be collected per each customer. These information are loaded from Google Sheet </span>
 
                       </div>
-                      <div class="card-block"  style="height: 35em">
+                      <!-- <div class="card-block"  style="height: 35em">
                         <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQoKa03HKhOJyUEWt3mi4PqJvqy9EFmoj8ZTZX7lfNWTI5FbHFTHl40xrBBsi7k2x2vY8htOPJ1wHN8/pubhtml?widget=true&amp;headers=false" width="100%" height="450"></iframe>
-                      </div>
+                      </div> -->
                     </div>
 
                     <div class="tab-pane" id="requirements" role="tabpanel">

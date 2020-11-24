@@ -86,6 +86,7 @@
                                             </thead>
                                             <tbody>
                                                 <?php
+                                                $bank_number = '';
                                                 if (!empty($requests)) {
                                                     $i = 1;
                                                     $bank = null;
@@ -94,16 +95,15 @@
                                                     if(!empty($check_school)){  
                                                     $integrated = \DB::table($request->client->username . '.bank_accounts_integrations')->where('id', $request->bank_accounts_integration_id)->first();
                                                         
-                                                            if (!empty($integrated)) {
-                                                                $bank = DB::table($request->client->username . '.bank_accounts')->where('id', $integrated->bank_account_id)->first();
-                                                                $bank_number = $bank->number;
-                                                            } 
-                                                        }else{
-                                                            $bank = DB::table('bank_accounts_integrations')->where('integration_request_id', $request->id)->first();
-                                                            $bank_number = $bank->account_number;
-
-                                                        }
-                                                        
+                                                        if (!empty($integrated)) {
+                                                            $bank = DB::table($request->client->username . '.bank_accounts')->where('id', $integrated->bank_account_id)->first();
+                                                        } 
+                                                    }else{
+                                                        $bank = DB::table('bank_accounts_integrations')->where('integration_request_id', $request->id)->first();
+                                                    }
+                                                    if(!empty($bank)){
+                                                        $bank_number = $bank->number;
+                                                    }
                                                         echo '<tr>
                                                         <td>' . $i++ . '</td>
                                                         <td>' . substr($request->client->name, 0, 30) . '</td>

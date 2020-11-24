@@ -144,18 +144,34 @@
                             <h5>Bank Account Details</h5>
                         </div>
                         <?php
+                        $refer_bank = '';
+                        $number = '';
+                        $branch = '';
+                        $user_name = '';
+                        $usertype = '';
                     $checksystem = DB::table('admin.all_setting')->where('schema_name', $request->client->username)->first();
                         $bank = \App\Models\IntegrationBankAccount::where('integration_request_id', $request->id)->first();
-                        if (empty($bank)) {
+                        if (!empty($checksystem)) {
                             $bank = DB::table($request->client->username . '.bank_accounts')->where('refer_bank_id', 8)->first();
-                            $refer_bank = $bank->name;
+                            if(!empty($bank)){
+                                $refer_bank = $bank->name;
+                                $number = $bank->number;
+                                $branch = $bank->branch;
+
+                            }
                             $user = DB::table($request->client->username . '.users')->where("table", $request->table)->where('id', $request->user_id)->first();
-                            $user_name = $user->name;
-                            $usertype = ucfirst($user->usertype);
-                        } else {
+                            if(!empty($user)){
+                                $user_name = $user->name;
+                                $usertype = ucfirst($user->usertype);
+                            }
+                        } elseif(!empty($bank)) {
                             $refer_bank = $bank->referBank->name;
+                            $number = $bank->number;
+                            $branch = $bank->branch;
                             $user_name = $bank->requests->user->name;
                             $usertype = 'Sales Manager';
+                        }else{
+                            $refer_bank = 'Not Defined';
                         }
                         ?>
                         <div class="card-block user-desc">
@@ -176,18 +192,18 @@
                                                     <th>
                                                         <?php
                                                         if ($request->user_id != '') {
-                                                            echo $bank->name;
+                                                            echo $refer_bank;
                                                         }
                                                         ?>
                                                 </tr>
                                                 <tr>
                                                     <th> Account Number </th>
-                                                    <th><?php echo $bank->number; ?> </th>
+                                                    <th><?php echo $number; ?> </th>
                                                 </tr>
 
                                                 <tr>
                                                     <th>Branch Name</th>
-                                                    <th> <?= $bank->branch ?></th>
+                                                    <th> <?= $branch ?></th>
                                                 </tr>
                                                 <?php
                                                 if ((int) $request->bank_approved == 1) {

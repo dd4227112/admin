@@ -434,8 +434,7 @@ class Customer extends Controller {
 
         if ($_POST) {
 
-            $data = array_merge(request()->all(), ['user_id' => Auth::user()->id]);
-
+            $data = array_merge(request()->except(['start_date', 'end_date']), ['user_id' => Auth::user()->id,'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date')))]);
             $task = \App\Models\Task::create($data);
             if ((int) request('to_user_id') > 0) {
                 DB::table('tasks_users')->insert([
@@ -465,7 +464,7 @@ class Customer extends Controller {
                     if (request('module_id')[$key] != '') {
                         $array = ['module_id' => request('module_id')[$key], 'task_id' => $task->id];
                         $check_unique = \App\Models\ModuleTask::where($array);
-                        if (!empty($check_unique->first())) {
+                        if (empty($check_unique->first())) {
                             \App\Models\ModuleTask::create($array);
                         }
                     }
@@ -488,7 +487,7 @@ class Customer extends Controller {
             $this->data['departments'] = DB::table('departments')->get();
             if ($_POST) {
 
-                $data = array_merge(request()->except('to_user_id'), ['user_id' => Auth::user()->id]);
+                $data = array_merge(request()->except(['to_user_id','start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date')))]);
 
                 $task = \App\Models\Task::create($data);
                 $users = request('to_user_id');
