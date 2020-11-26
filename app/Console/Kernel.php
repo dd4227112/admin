@@ -288,7 +288,7 @@ class Kernel extends ConsoleKernel {
             $curl = $this->curlServer($fields, $url);
             $result = json_decode($curl);
            // echo $result->description;
-           print_r($result);
+           print_r($invoice);
            //if (isset($result->description) && (strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
             
             if (isset($result) && !empty($result) && (int) $result->status <>0 ) {
