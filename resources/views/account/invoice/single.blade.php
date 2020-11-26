@@ -78,7 +78,6 @@
 
                     </p>
                 </div>
-
                 <div class="clearfix"></div>
             </div>
             <div class="row">
@@ -259,48 +258,7 @@
                     </div>
 
                 </div>
-                  <table class="table">
-                    <tr>
-                      <td>
-
-                        <p class="lead">Payment Methods:</p>
-
-                        <p  >
-                          <b>Account Details :</b><br/>
-                          <b>Account Name:</b> INETS COMPANY LIMITED <br/> <b>Bank Name:</b> NMB BANK PLC <br/>  <b>Account Number:</b> 22510028669
-                          <br/>
-                          <small>Please notify us after a deposit</small>
-                        </p>
-                        <?php  if (strlen($invoice->token) > 4) { ?>
-                          <d>Or Pay Electronically here <a href="<?= url('epayment/i/' . $invoice->id) ?>" target="_blank"><?= url('epayment/i/' . ($invoice->id)) ?></a></d>
-                        <?php }?>
-                        <!-- <br/>
-                        <b>If you make a bank deposit, you will have to notify us to activate your account</b> -->
-                     
-                      </td>
-                      <td>
-                        <b>Summary</b>
-
-                        <table class="table ">
-                          <tbody>
-                            <tr>
-                              <th>Sub - Total amount :</th>
-                              <th>Tsh <?= number_format($am) ?></th>
-                            </tr>
-                            <tr>
-                              <th>Paid Amount :</th>
-                              <th>Tsh <?= $paid > 0 ? number_format($paid) : 0 ?> </th>
-                            </tr>
-                            <tr>
-                              <th>Grand Total :</th>
-                              <th>Tsh <?= number_format($unpaid) ?></th>
-                            </tr>
-
-                          </tbody>
-                        </table>
-                      </td>
-                    </tr>
-                  </table>
+              
                   
                 </div>
 

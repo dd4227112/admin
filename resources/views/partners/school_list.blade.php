@@ -127,7 +127,7 @@
                         if (row.schema_name != null) {
                             return '<a href="<?= url('customer/profile') ?>/' + row.schema_name + '" class="label label-warning">Already Customer</a>';
                         } else {
-                            return '<a href="<?= url('sales/') ?>/profile/' + row.id + '" class="label label-primary">View</a><a href="<?= url('Partner/') ?>/add/' + row.id + '" class="label label-info">Onboard</a>';
+                            return '<a href="<?= url('sales/') ?>/profile/' + row.id + '" class="label label-primary">View</a> <a href="<?= url('Partner/') ?>/add/' + row.id + '" class="label label-info">Onboard</a>';
                         }
                     }
                 }
