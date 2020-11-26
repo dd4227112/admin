@@ -147,7 +147,7 @@
                       <div class="col-sm-6">
                       Title
                         <select name="title" class="form-control select2" required>
-                        <option value="<?=$contact->title ?? '' ?>">$contact->title ?? '' ?></option>
+                        <option value="<?=$contact->title ?? '' ?>"><?=$contact->title ?? '' ?></option>
                         <option value="director">Director/Owner</option>
                           <option value="manager">School Manager</option>
                           <option value="head teacher">Head Teacher</option>

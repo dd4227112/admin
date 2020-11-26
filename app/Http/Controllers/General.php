@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
+
 /**
  * used to perform all CRUD for general database tables
  */
-class General extends Controller
-{
-    
+class General extends Controller {
+
     public $table;
 
     /**
@@ -20,13 +20,13 @@ class General extends Controller
     public function __construct() {
         $this->middleware('auth');
     }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index() {
         //
     }
 
@@ -35,8 +35,7 @@ class General extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create() {
         //
     }
 
@@ -46,10 +45,10 @@ class General extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        
-;    }
+    public function store(Request $request) {
+
+        ;
+    }
 
     /**
      * Display the specified resource.
@@ -57,15 +56,14 @@ class General extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-      $this->table=request()->segment(3); 
-      $this->data['headers']=DB::table($this->table)->first();
-       $this->data['contents']=DB::table($this->table)->get();
-       if($_POST){
-        dd(request()->all());
-       }
-       return view('general.show',$this->data);
+    public function show($id) {
+        $this->table = request()->segment(3);
+        $this->data['headers'] = DB::table($this->table)->first();
+        $this->data['contents'] = DB::table($this->table)->get();
+        if ($_POST) {
+            DB::table($this->table)->insert(request()->except('_token'));
+        }
+        return view('general.show', $this->data);
     }
 
     /**
@@ -74,8 +72,7 @@ class General extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
+    public function edit($id) {
         //
     }
 
@@ -86,8 +83,7 @@ class General extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         //
     }
 
@@ -97,8 +93,8 @@ class General extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
+    public function destroy($id) {
         //
     }
+
 }

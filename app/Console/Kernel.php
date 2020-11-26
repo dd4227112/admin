@@ -64,7 +64,7 @@ class Kernel extends ConsoleKernel {
             $this->sendNotice();
             $this->sendBirthdayWish();
             $this->sendTaskReminder();
-            // $this->sendSequenceReminder();
+          $this->sendSequenceReminder();
         })->dailyAt('04:40'); // Eq to 07:40 AM 
 //        $schedule->call(function() {
 //            //send login reminder to parents in all schema

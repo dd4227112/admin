@@ -339,7 +339,8 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
 
     public function epayment() {
         $invoice_id = request()->segment(3);
-        $booking =$invoice= \App\Models\Invoice::find($invoice_id);
+        $booking = $invoice = \App\Models\Invoice::find($invoice_id);
+    if($booking){
         if (strlen($booking->token) < 4) {
            $account=new \App\Http\Controllers\Account();
            $account->createSelcomControlNumber($invoice_id);
@@ -352,8 +353,10 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
         $balance = $booking->payments()->sum('amount');
 
         return view('account.invoice.pay', compact('booking', 'balance', 'paid','invoice'));
+    }else{
+        return redirect()->back()->with('warning', 'This Invoice Number Not Defined Properly');
     }
-
+}
     //Notify all admin about monthly reports
     public function schoolMonthlyReport() {
         $users = DB::select("select * from admin.all_users where lower(usertype)='admin' and status=1");

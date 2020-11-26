@@ -437,7 +437,10 @@ group by ownership');
 
     public function onboard() {
         $school_id = request()->segment(3);
-
+        //Redirects Partners to Onboarding Views
+        if(Auth::user()->department == 9 || Auth::user()->department == 10){
+            return redirect('Partner/add/'.$school_id);
+        }
         $this->data['school'] = $school = DB::table('admin.schools')->where('id', $school_id)->first();
         $username = preg_replace('/[^a-z]/', null, strtolower($school->name));
         $this->data['staffs'] = DB::table('users')->where('status', 1)->where('role_id', '<>', 7)->get();
