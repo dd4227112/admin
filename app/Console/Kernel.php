@@ -274,7 +274,7 @@ class Kernel extends ConsoleKernel {
 
             $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
             //$push_status = 'invoice_submission';
-            echo $push_status;
+           
             if ($invoice->schema_name == 'beta_testing') {
                 //testing invoice
                 $setting = DB::table('beta_testing.setting')->first();
@@ -287,6 +287,7 @@ class Kernel extends ConsoleKernel {
             }
             $curl = $this->curlServer($fields, $url);
             $result = json_decode($curl);
+            print_r($result);
            // echo $result->description;
            //if (isset($result->description) && (strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
             
