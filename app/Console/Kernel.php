@@ -64,7 +64,7 @@ class Kernel extends ConsoleKernel {
             $this->sendNotice();
             $this->sendBirthdayWish();
             $this->sendTaskReminder();
-          $this->sendSequenceReminder();
+            $this->sendSequenceReminder();
         })->dailyAt('04:40'); // Eq to 07:40 AM 
 //        $schedule->call(function() {
 //            //send login reminder to parents in all schema
@@ -262,7 +262,7 @@ class Kernel extends ConsoleKernel {
         if (strlen($token) > 4) {
             $fields = array(
                 "reference" => trim($invoice->reference),
-                "student_name" => isset($invoice->student_name) ? $invoice->student_name:'',
+                "student_name" => isset($invoice->student_name) ? $invoice->student_name : '',
                 "student_id" => $invoice->student_id,
                 "amount" => $invoice->amount,
                 // "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
@@ -274,7 +274,7 @@ class Kernel extends ConsoleKernel {
 
             $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
             //$push_status = 'invoice_submission';
-           
+
             if ($invoice->schema_name == 'beta_testing') {
                 //testing invoice
                 $setting = DB::table('beta_testing.setting')->first();
@@ -287,11 +287,11 @@ class Kernel extends ConsoleKernel {
             }
             $curl = $this->curlServer($fields, $url);
             $result = json_decode($curl);
-           // echo $result->description;
-           print_r($invoice);
-           //if (isset($result->description) && (strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
-            
-            if (isset($result) && !empty($result) && (int) $result->status <>0 ) {
+            // echo $result->description;
+            print_r($invoice);
+            //if (isset($result->description) && (strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
+
+            if (isset($result) && !empty($result) && (int) $result->status <> 0) {
                 //update invoice no
 //                DB::table($invoice->schema_name . '.invoices')
 //                        ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
@@ -307,9 +307,9 @@ class Kernel extends ConsoleKernel {
                     DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
                 }
             }
-                DB::table($invoice->schema_name . '.invoices')
-                        ->where('id', $invoice->id)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
-            
+            DB::table($invoice->schema_name . '.invoices')
+                    ->where('id', $invoice->id)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
+
             DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
         }
     }
@@ -507,15 +507,15 @@ class Kernel extends ConsoleKernel {
     public function sendTodReminder() {
         $users = DB::select('select * from admin.all_teacher_on_duty');
         $all_users = [];
-        
+
         foreach ($users as $user) {
             unset($all_users[$user->name]);
-            $students = DB::SELECT('SELECT name FROM '. $user->schema_name . '.student where student_id in(select student_id from '. $user->schema_name . '.student_duties where duty_id='.$user->duty_id.')');
+            $students = DB::SELECT('SELECT name FROM ' . $user->schema_name . '.student where student_id in(select student_id from ' . $user->schema_name . '.student_duties where duty_id=' . $user->duty_id . ')');
             foreach ($students as $student) {
                 array_push($all_students, $student->name);
             }
             $message = 'Habari  ' . $user->name . ' ,'
-                    . 'Leo '.date("Y-m-d").' umewekwa kama walimu wa zamu Shuleni pamoja na ' . implode(',', $all_students) . ' (Viranja)  . Kumbuka kuandika repoti yako ya siku katika account yako ya ShuleSoft kwa ajili ya kumbukumbu. Asante';
+                    . 'Leo ' . date("Y-m-d") . ' umewekwa kama walimu wa zamu Shuleni pamoja na ' . implode(',', $all_students) . ' (Viranja)  . Kumbuka kuandika repoti yako ya siku katika account yako ya ShuleSoft kwa ajili ya kumbukumbu. Asante';
 
             if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
                 DB::statement("insert into " . $user->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Ratiba Ya Zamu','" . $message . "')");
@@ -554,7 +554,7 @@ class Kernel extends ConsoleKernel {
     public function sendSequenceReminder() {
         $sequences = \App\Models\Sequence::all();
         foreach ($sequences as $sequence) {
-            $users = DB::select("select a.table, a.name,a.username,a.email,a.phone,a.usertype,a.schema_name,a.id,concat(c.firstname,' ',c.lastname ) as csr_name, c.phone as csr_phone from admin.all_users a,admin.users_schools b, admin.users c where b.schema_name=a.schema_name and b.user_id=c.id and a.status=1 and c.status=1 and b.role_id=8 and a.table not in ('parent','student','teacher') and a.id in (select user_id from admin.users_sequences a,admin.sequences
+            $users = DB::select("select a.table, a.name,a.username,a.email,a.phone,a.usertype,a.schema_name,a.id,concat(c.firstname,' ',c.lastname ) as csr_name, c.phone as csr_phone from admin.all_users a,admin.user_clients u, admin.clients z, admin.users c where z.username=a.schema_name  and z.id=u.client_id and u.user_id=c.id and a.status=1 and c.status=1 and u.status=1 and a.table not in ('parent','student','teacher') and a.id in (select user_id from admin.users_sequences a,admin.sequences
 b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date=CURRENT_DATE and b.interval=" . $sequence->interval . " )");
             if (count($users) > 0) {
                 foreach ($users as $user) {
