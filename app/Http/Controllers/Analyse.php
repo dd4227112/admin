@@ -64,6 +64,7 @@ class Analyse extends Controller {
             $sql = "select a.id, a.end_date, substring(a.activity from 1 for 80) as activity,a.created_at::date, a.date,d.name as user ,e.name as type  from admin.tasks a join admin.tasks_clients c on a.id=c.task_id
             join admin.users d on d.id=a.user_id join admin.task_types e on a.task_type_id=e.id WHERE a.user_id = $user order by a.created_at::date desc";
             $this->data['activities'] = DB::select($sql);
+            $this->data['summary']= $this->summary();
             return view('analyse.index', $this->data);
         }
     }
@@ -107,7 +108,7 @@ class Analyse extends Controller {
         $this->data['active_teachers'] = \collect(DB::select('select count(*) as count from admin.all_teacher where status=1'))->first()->count;
         $this->data['active_users'] = \collect(DB::select('select count(*) as count from admin.all_users where status=1'))->first()->count;
 
-        return json_call($this->data);
+        return $this->data;
     }
 
     public function setting() {
