@@ -58,7 +58,7 @@ foreach ($payments as $payment) {
     $payment_count[$payment->schema_name] = $payment->count;
 }
 
-$school_allocations = DB::select('select a.schema_name,c.source, c.sname,b.firstname, b.lastname from admin.users_schools a join admin.users b on b.id=a.user_id join admin.all_setting c on c."schema_name"=a."schema_name" where a.role_id=8 and a.status=1 and c.schema_name is not null');
+$school_allocations = DB::select('select c.schema_name,c.source, c.sname,b.firstname, b.lastname from admin.user_clients a join admin.users b on b.id=a.user_id join admin.clients z on z.id=a.client_id join admin.all_setting c on c."schema_name"=z."username" where a.role_id=8 and a.status=1 and c.schema_name is not null');
 $allocation = [];
 $users_allocation = [];
 
