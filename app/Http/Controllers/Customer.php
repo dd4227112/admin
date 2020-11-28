@@ -150,7 +150,7 @@ class Customer extends Controller {
     }
 
     function setup() {
-
+        return $this->types();
         if (request('type')) {
             echo json_encode(array('data' =>
                 array(
@@ -161,6 +161,30 @@ class Customer extends Controller {
         } else {
             $this->data['schools'] = DB::select("SELECT distinct table_schema as schema_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','beta_testing','accounts','pg_catalog','constant','api','information_schema','public')");
             return view('customer.setup', $this->data);
+        }
+    }
+
+    function typeConfig() {
+        $classlevel_id = request('classlevel_id'); //1=complete, 2 =pending, 3 =not yet
+        $schema = request('schema_name');
+        $value_id = request('value_id');
+
+        \DB::table($schema . '.classlevel')->where('classlevel_id', $classlevel_id)->update([request('tag') => (int) $value_id]);
+        echo 'success';
+    }
+
+    function types() {
+
+        if (request('type')) {
+            echo json_encode(array('data' =>
+                array(
+                    array('James John', 'PZ-32', '0714852214', 'juma', '1', '3'),
+                    array('Ana Juma', 'PQ-44', '0144555', 'CHEMCHEM', 'AMBAKISYE', 'TAUNI'),
+                )
+            ));
+        } else {
+            $this->data['schools'] = DB::select("SELECT * FROM admin.all_classlevel");
+            return view('customer.types', $this->data);
         }
     }
 
