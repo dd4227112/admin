@@ -383,7 +383,7 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
             }
             if ($phone != '' && (int) $sms > 0) {
                 $message1 = $lang .', ' . $school->name . '.' . chr(10) . request('message'). chr(10). chr(10) . $footer;
-                DB::table('public.sms')->insert(['body' => $message1, 'type' => 1, 'user_id' => 1, 'phone_number' => 1]);
+                DB::table('public.sms')->insert(['body' => $message1, 'type' => 1, 'user_id' => 1, 'phone_number' => $phone]);
             }
         }
     return redirect()->back()->with('success', 'Message Sent successfully');
