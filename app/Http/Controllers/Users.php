@@ -101,6 +101,31 @@ class Users extends Controller {
         return view('users.show', $this->data);
     }
 
+    public function password() {
+        $this->data['user'] = User::find(Auth::user()->id);
+        return view('auth.change_password', $this->data);
+    }
+
+    public function storePassword(Request $request) {
+        $user = User::find(Auth::user()->id);   
+        if (Auth::attempt(['email' => $user->email, 'password' => request('password')])) {
+            $new1 = request('new');
+            $new2 = request('retype');
+            if ($new1 != $new2) {
+                return redirect()->back()->with('error', 'New password and confirmed one  do not matchs');
+            }
+            $this->validate(request(), [
+                'new2' => 'required|string|min:8|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/'
+                    ], ['Password must be 8–30 characters, and include a number, a symbol, a lower and a upper case letter']);
+            $user->update(['password' => Hash::make($new1)]);
+            return redirect()->back()->with('success', 'Password changed successfully');
+        } else {
+
+            return redirect()->back()->with('error', 'Current Password is not valid');
+        }
+        return redirect()->back()->with('success', 'Password Updated successfully');
+    }
+
     public function addPermission() {
         $permission_id = request('id');
         $role_id = request('role_id');
@@ -394,7 +419,6 @@ class Users extends Controller {
         echo $message1;
     }
 
-    
     public function getBranch() {
         $id = request('region');
 
@@ -405,7 +429,7 @@ class Users extends Controller {
                 $select .= '<option value="' . $branch->id . '"> ' . $branch->name . '</option>';
             }
             echo $select;
-        }else{
+        } else {
             echo $select;
         }
     }
