@@ -273,8 +273,7 @@
 
             </div>
         </div>
-    </div>
-</div>
+ 
 
 
 <script src="{{url('public/assets/shulesoft/jquery.PrintArea.js')}}" type="text/JavaScript"></script>
