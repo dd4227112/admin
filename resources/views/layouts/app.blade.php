@@ -578,7 +578,7 @@ function toast(message) {
                             </li>
                         <?php } ?>
 
-                        <?php if (can_access('manage_sales') || Auth::user()->role_id == 14) { ?>
+                        <?php // if (can_access('manage_sales') || Auth::user()->role_id == 14) { ?>
                             <li class="nav-item">
                                 <a href="#!">
                                     <i class="ti-layout-cta-right"></i>
@@ -591,6 +591,14 @@ function toast(message) {
                                     <li>
                                         <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">Schools</a>
                                     </li>
+                                    <?php
+                                        if (Auth::user()->department == 9 ||  Auth::user()->department == 10) {
+                                    ?>
+                                    
+                                    <li>
+                                        <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">List of Schools</a>
+                                    </li>
+                                        <?php } ?>
                                     <li>
                                         <a href="<?= url('sales/salesStatus') ?>" data-i18n="nav.navigate.navbar">Sales Status</a>
                                     </li>
@@ -600,7 +608,7 @@ function toast(message) {
                                                                         </li>-->
                                 </ul>
                             </li>
-                        <?php } ?>
+                        <?php // } ?>
 
                         <?php if (Auth::user()->role_id != 7) { ?>
 
@@ -819,22 +827,8 @@ function toast(message) {
                             </li>
                             <?php
                         }
-                        if (Auth::user()->department == 9) {
-                            ?>
-                            <li class="nav-item"><a href="<?= url('Partner/school') ?>" > <i class="ti-list "> </i> List of Schools</a></li>
+                        if (Auth::user()->department == 9 ||  Auth::user()->department == 10) {                            ?>
                             <li class="nav-item"><a href="<?= url('Partner/index') ?>" > <i class="ti-layers "> </i> Onboarded Schools</a></li>
-                            <li class="nav-item"><a href="<?= url('Partner/add') ?>" > <i class="ti-layout-grid2-alt"> </i> Onboard New School</a></li>
-                            <li class="nav-item">
-                                <a href="#!">
-                                    <i class="ti-gift "></i>
-                                    <span data-i18n="nav.extra-components.main">Other Resources</span>
-                                </a>
-                                <ul class="tree-1">
-                                    <li><a href="#" data-i18n="nav.extra-components.session-timeout"> Terms of Services</a></li>
-                                    <li><a href="#" data-i18n="nav.extra-components.offline">Digital Documents</a></li>
-                                    <li><a href="#" data-i18n="nav.extra-components.session-timeout">Upload New File</a></li>
-                                </ul>
-                            </li>
                             <?php
                         }
                         // if (can_access('manage_schools')) {
