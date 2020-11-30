@@ -367,11 +367,14 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         $english =  'For More Details Contact: ' . chr(10) . 'Name: '. Auth::User()->name . chr(10) . 'Phone: '. Auth::User()->phone. chr(10) . 'Email: '. Auth::User()->email;
         $swahili =  'Mawasiliano:' . chr(10) . 'Jina: '. Auth::User()->name . chr(10) . 'Simu: '. Auth::User()->phone. chr(10) . 'Barua Pepe: '. Auth::User()->email;
         request('lang') == 'swahili' ? $footer = $swahili : $footer = $english;
+        $phone = '';
         foreach ($schools as $school) {
+            if($school->phone  != ''){
             $numbers = str_replace(' ', '', $school->phone);
             $number = str_replace('/', ',', $numbers);
             $phones = explode(',', $number);
             $phone = str_replace('+', null, validate_phone_number($phones[0])[1]);
+            }
             if ($school->email != '' && (int) $email > 0) {
                 $message = '<h4>' .$lang . ', '. $school->name . '</h4>'
                         . '<h4>' . $body . '</h4>'
