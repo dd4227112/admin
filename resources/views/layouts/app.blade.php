@@ -742,7 +742,7 @@ function toast(message) {
                                 <ul class="tree-1">
                                     <li><a href="<?= url('users/index') ?>" data-i18n="nav.extra-components.session-timeout">Users</a></li>
                                     <li><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">Meeting Minutes</a></li>
-                                    <li><a href="<?= url('general/show/attendance') ?>" data-i18n="nav.extra-components.session-timeout">Attendance</a></li>
+                                    <li><a href="<?= url('general/show/attendances') ?>" data-i18n="nav.extra-components.session-timeout">Attendance</a></li>
                                     <li><a href="<?= url('Partner/partners') ?>" data-i18n="nav.extra-components.session-idle-timeout">Partners</a></li>
                                     <li><a href="<?= url('users/applicant') ?>" data-i18n="nav.extra-components.session-idle-timeout">Applicants</a>
                                     </li>

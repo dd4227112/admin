@@ -150,7 +150,7 @@ class Customer extends Controller {
     }
 
     function setup() {
-
+        return $this->types();
         if (request('type')) {
             echo json_encode(array('data' =>
                 array(
@@ -161,6 +161,30 @@ class Customer extends Controller {
         } else {
             $this->data['schools'] = DB::select("SELECT distinct table_schema as schema_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','beta_testing','accounts','pg_catalog','constant','api','information_schema','public')");
             return view('customer.setup', $this->data);
+        }
+    }
+
+    function typeConfig() {
+        $classlevel_id = request('classlevel_id'); //1=complete, 2 =pending, 3 =not yet
+        $schema = request('schema_name');
+        $value_id = request('value_id');
+
+        \DB::table($schema . '.classlevel')->where('classlevel_id', $classlevel_id)->update([request('tag') => (int) $value_id]);
+        echo 'success';
+    }
+
+    function types() {
+
+        if (request('type')) {
+            echo json_encode(array('data' =>
+                array(
+                    array('James John', 'PZ-32', '0714852214', 'juma', '1', '3'),
+                    array('Ana Juma', 'PQ-44', '0144555', 'CHEMCHEM', 'AMBAKISYE', 'TAUNI'),
+                )
+            ));
+        } else {
+            $this->data['schools'] = DB::select("SELECT * FROM admin.all_classlevel");
+            return view('customer.types', $this->data);
         }
     }
 
@@ -434,7 +458,7 @@ class Customer extends Controller {
 
         if ($_POST) {
 
-            $data = array_merge(request()->except(['start_date', 'end_date']), ['user_id' => Auth::user()->id,'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date')))]);
+            $data = array_merge(request()->except(['start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date')))]);
             $task = \App\Models\Task::create($data);
             if ((int) request('to_user_id') > 0) {
                 DB::table('tasks_users')->insert([
@@ -487,7 +511,7 @@ class Customer extends Controller {
             $this->data['departments'] = DB::table('departments')->get();
             if ($_POST) {
 
-                $data = array_merge(request()->except(['to_user_id','start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date')))]);
+                $data = array_merge(request()->except(['to_user_id', 'start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date')))]);
 
                 $task = \App\Models\Task::create($data);
                 $users = request('to_user_id');
@@ -640,18 +664,22 @@ class Customer extends Controller {
                 //this school does not exists, try to add it in a list of schols
                 $school_id = DB::table('schools')->insertGetId(['name' => $schema, 'ownership' => 'Non-Government', 'schema_name' => $schema]);
             }
-            $school_info = DB::table('schools')->where('id', $school_id);
-            if (!empty($school_info->first())) {
-                $check = DB::table('users_schools')->where('role_id', $role_id)->where('school_id', $school_id)->first();
+            $school_info = DB::table('clients')->where('username', $schema)->first();
+            if (!empty($school_info)) {
+                $check = DB::table('user_clients')->where('client_id', $school_info->id)->orderBy('created_at', 'desc')->first();
                 if (!empty($check)) {
-                    \App\Models\UsersSchool::where('role_id', $role_id)->where('school_id', $school_id)->update(['user_id' => $user_id, 'updated_at' => $date]);
-                    echo "Success Updated";
+                    if ($check->user_id <> $user_id) {
+                        DB::table('user_clients')->where('id', $check->id)->update(['status' => 0]);
+                        DB::table('user_clients')->insert(['client_id' => $school_info->id, 'user_id' => $user_id, 'status' => 1]);
+                    } else {
+                        DB::table('user_clients')->where('id', $check->id)->update(['user_id' => $user_id, 'updated_at' => $date, 'status' => 1]);
+                        echo "Success Updated";
+                    }
                 } else {
-                    \App\Models\UsersSchool::create(['school_id' => $school_id, 'user_id' => $user_id, 'role_id' => $role_id, 'schema_name' => $schema, 'created_at' => $date, 'updated_at' => $date]);
+                    DB::table('user_clients')->insert(['client_id' => $school_info->id, 'user_id' => $user_id, 'status' => 1]);
                     echo "Success Added";
                 }
                 DB::table($schema . '.setting')->update(['school_id' => $school_id]);
-                $school_info->update(['schema_name' => $schema]);
             } else {
                 echo "Failed to Add";
             }
@@ -701,7 +729,7 @@ class Customer extends Controller {
         //  if (Auth::user()->department == 1) {
         // $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public') and schema_name in (select schema_name from users_schools where user_id=" . Auth::user()->id . "  and status=1)");
         //   } else {
-        $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public') ");
+        $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public','academy','forum') ");
         //  }
 
         $sch = [];
@@ -970,12 +998,13 @@ class Customer extends Controller {
         $this->data['path'] = $contract->companyFile->path;
         return view('layouts.file_view', $this->data);
     }
+
     public function deleteContract() {
         $contract_id = request()->segment(3);
         $contract = \App\Models\Contract::where('id', $contract_id)->delete();
         return redirect()->back()->with('success', 'Contract Deleted');
     }
-    
+
     public function contract() {
         $client_id = request()->segment(3);
         $file = request()->file('file');
