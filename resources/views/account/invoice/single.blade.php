@@ -268,23 +268,12 @@
               </div>
               <!-- /.row -->
               <div class="row" style="padding-top: 0px">
-                <div class="col-lg-12 col-sm-12"><blockquote class="text-muted well well-sm no-shadow"><i>
-
-                <strong>Terms of Payment</strong><br>
-Fill and sign the Standing Order for automatic deduction of the invoiced amount from your school dedicated bank account to the INETS Company bank account specified above;
-</br>.Specify the date for payment of the invoiced amount on monthly or semi-annually or annually plan
- </br>.Sign, stamp and submit Standing Order to the bank within 5 working days and send the copy to finance@shulesoft.com
-</br>.Discount of five (5) percent of the total invoiced amount is provided if you pay by a Standing Order.
-
-
-</i>
-                        </blockquote>
+                <div class="col-lg-12 col-sm-12">
                 </div></div>
 
             </div>
         </div>
-    </div>
-</div>
+ 
 
 
 <script src="{{url('public/assets/shulesoft/jquery.PrintArea.js')}}" type="text/JavaScript"></script>

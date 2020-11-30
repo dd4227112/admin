@@ -357,6 +357,11 @@ function toast(message) {
                                                 <i class="ti-user"></i> Profile
                                             </a>
                                         </li>
+                                        <li>
+                                            <a href="<?= url('users/password/') ?>">
+                                                <i class="ti-settings"></i> Change Password
+                                            </a>
+                                        </li>
                                         <?php if (false) { ?>
                                             <li>
                                                 <a href="#!">
@@ -377,7 +382,7 @@ function toast(message) {
                                         <?php } ?>
                                         <li><a href="{{ route('logout') }}"
                                                onclick="event.preventDefault();
-                                                           document.getElementById('logout-form').submit();"><i class="ti-layout-sidebar-left"></i> Logout</a></li>
+                                                       document.getElementById('logout-form').submit();"><i class="ti-layout-sidebar-left"></i> Logout</a></li>
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                             {{ csrf_field() }}
                                         </form>
@@ -458,7 +463,7 @@ function toast(message) {
                     <img class="img-40" src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image">
                     <div class="user-details">
                         <span>{{ Auth::user()->name() }}</span>
-                        <span id="more-details"> <?php // Auth::user()->role->display_name     ?></span>
+                        <span id="more-details"> <?php // Auth::user()->role->display_name          ?></span>
                     </div>
                 </div>
                 <div class="main-menu-content">
@@ -598,9 +603,9 @@ function toast(message) {
                                         <a href="<?= url('sales/salesStatus') ?>" data-i18n="nav.navigate.navbar">Sales Status</a>
                                     </li>
 
-<!--                                    <li>
-                                        <a href="<?= url('sales/analysis') ?>" data-i18n="nav.navigate.navbar">Sales Analysis</a>
-                                    </li>-->
+                                    <!--                                    <li>
+                                                                            <a href="<?= url('sales/analysis') ?>" data-i18n="nav.navigate.navbar">Sales Analysis</a>
+                                                                        </li>-->
                                 </ul>
                             </li>
                         <?php // } ?>
@@ -709,6 +714,34 @@ function toast(message) {
 
                                         </ul>
                                     </li>
+                                    <li class="nav-sub-item">
+                                        <a href="#" data-i18n="nav.page_layout.horizontal.main">
+                                            Payroll
+                                            <span class="fa fa-chevron-down"></span></a>
+                                        <ul class="tree-2">
+
+                                            <a href="<?= url('payroll/taxes') ?>"><i class="fa fa-clipboard"></i><span>TAX</span></a>
+                                            <a href="<?= url('payroll/pension') ?>"><i class="fa fa-clipboard"></i><span>Pension Fund</span></a>
+                                            <a href="<?= url('payroll/allowanceIndex') ?>"><i class="fa fa-clipboard"></i><span>Allowances</span></a>
+                                            <a href="<?= url('payroll/deductionIndex') ?>"><i class="fa fa-clipboard"></i><span>Deductions</span></a>
+                                            <li class="nav-sub-item-3">
+                                                <a>
+                                                    Loans
+                                                    <span class="fa fa-chevron-down"></span></a>
+                                                <ul class="tree-3">
+
+                                                    <a href="<?= url('payroll/loanType') ?>"><i class="fa fa-clipboard"></i><span style="color: white; line-height: 25px;"> Loan Types</span></a>
+
+                                                    <a href="<?= url('payroll/loanIndex') ?>"><i class="fa fa-clipboard"></i><span style="color: white; line-height: 25px;"> Borrowers </span></a>
+
+                                                </ul>
+                                            </li>
+
+
+                                            <a href="<?= url('payroll/index') ?>"><i class="fa fa-clipboard"></i><span>Salary</span></a>
+
+                                        </ul>
+                                    </li>
                                     <li><a href="<?= url('account/report') ?>" data-i18n="nav.advance-components.light-box">Reports</a></li>
                                     <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Settings</a>
                                         <ul class="tree-2">
@@ -752,7 +785,7 @@ function toast(message) {
 
                             <?php
                         }
-                        if (can_access('manage_users') || in_array(Auth::user()->role_id, array(14, 8,15))) {
+                        if (can_access('manage_users') || in_array(Auth::user()->role_id, array(14, 8, 15))) {
                             ?>
                             <li class="nav-item">
                                 <a href="#!">
@@ -1114,13 +1147,13 @@ function toast(message) {
 
 
 
-                    $('form').each(function(i, form){
-                        var $form = $(form);
+                                    $('form').each(function (i, form) {
+                                        var $form = $(form);
 
-                        if (! $form.find('input[name="_token"]').length) {
-                            $('form').prepend('<input type="hidden" name="_token" value="'+ $('meta[name="csrf-token"]').prop('content') +'"/>');
-                        }
-                    });
+                                        if (!$form.find('input[name="_token"]').length) {
+                                            $('form').prepend('<input type="hidden" name="_token" value="' + $('meta[name="csrf-token"]').prop('content') + '"/>');
+                                        }
+                                    });
 
                                     $('.clockpicker').clockpicker({
                                         donetext: 'Done'

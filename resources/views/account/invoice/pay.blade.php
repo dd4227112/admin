@@ -87,8 +87,8 @@
                                     <div class="slide"></div>
                                 </li>
 
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#settings3" role="tab" aria-expanded="false">Settings</a>
+                                <li class="nav-item complete">
+                                    <a class="nav-link" data-toggle="tab" href="#settings3" role="tab" aria-expanded="false">Payment Terms & Options</a>
                                     <div class="slide"></div>
                                 </li>
 
@@ -335,13 +335,51 @@
                                 </div>
 
                                 <div class="tab-pane active" id="profile3" role="tabpanel" aria-expanded="true">
-                                    <div class="card-block">
-                                        
+                                    <div class="card-block" style="margin-left: -65px;">
+
                                         @include('account.invoice.single')
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="settings3" role="tabpanel" aria-expanded="false">
-                                    <p class="m-0">4.Cras consequat in enim ut efficitur. Nulla posuere elit quis auctor interdum praesent sit amet nulla vel enim amet. Donec convallis tellus neque, et imperdiet felis amet.</p>
+                                    <br/>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-xl-3 col-sm-6">
+                                            <div class="badge-box">
+                                                <div class="sub-title">NMB Standing Order Instruction Form
+
+                                                </div>
+
+                                                <p>
+                                                    Only bank signatory can sign this standing order form. For more than one signatory to approve, all signatory have to sign
+                                                </p>
+                                                <a href="https://drive.google.com/file/d/1FKvv0xIzaT7Os_5EwCmteXuPsNXbN6wM/view?usp=sharing"  target="_blank" class="badge badge-warning">Download (V 1.0)</a>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-xl-3 col-sm-6">
+                                            <div class="badge-box">
+                                                <div class="sub-title">CRDB Standing Order Instruction Form
+
+                                                </div>
+
+                                                <p>
+                                                   Only bank signatory can sign this standing order form. For more than one signatory to approve, all signatory have to sign
+                                                </p>
+                                                <a href="https://drive.google.com/file/d/1FKvv0xIzaT7Os_5EwCmteXuPsNXbN6wM/view?usp=sharing"  target="_blank" class="badge badge-warning">Download (V 1.0)</a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <br/>
+                                    <h2>Terms of Payment</h2>
+                                    <ol>
+
+                                        <li> Fill and sign the Standing Order for automatic deduction of the invoiced amount from your school dedicated bank account to the INETS Company bank account specified above;</li>
+                                        <li>Specify the date for payment of the invoiced amount on monthly or semi-annually or annually plan</li>
+                                        <li>Sign, stamp and submit Standing Order to the bank within 5 working days and send the copy to <a href="mailto:finance@shulesoft.com ">finance@shulesoft.com</a></li>
+                                       
+                                    </ol>
+
+
                                 </div>
                             </div>
                         </div>
