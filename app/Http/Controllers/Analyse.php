@@ -224,7 +224,7 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
 
         $all_schools = [];
         $all_schoolz = [];
-        $this->data['schools'] = $schools = \App\Models\ClientSchool::whereIn('school_id', \App\Models\UsersSchool::where('user_id', $id)->get(['school_id']))->get();
+        $this->data['schools'] = $schools = \App\Models\ClientSchool::whereIn('client_id', \App\Models\UserClient::where('user_id', $id)->get(['client_id']))->get();
         foreach ($schools as $school) {
             array_push($all_schools, "'" . $school->client->username . "'");
             array_push($all_schoolz, $school->client->username);
