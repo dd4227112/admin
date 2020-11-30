@@ -7,17 +7,7 @@
             <h4>Dashboard</h4>
         </div>
         <div class="page-header-breadcrumb">
-            <ul class="breadcrumb-title">
-                <li class="breadcrumb-item">
-                    <a href="index-2.html">
-                        <i class="icofont icofont-home"></i>
-                    </a>
-                </li>
-                <li class="breadcrumb-item"><a href="#!">Summary</a>
-                </li>
-                <li class="breadcrumb-item"><a href="#!">Dashboard</a>
-                </li>
-            </ul>
+        <a data-toggle="modal" data-target="#sendMessage" class="btn btn-info btn-sm  f-right"> <i class="ti-comments"></i> Send Message </a>
         </div>
     </div>
     <div class="page-body">
@@ -192,7 +182,7 @@
                     </div>
                   </div>
    
-
+                    <?php if(count($schools) > 0){ ?>
                   
                   <div class="col-lg-12">
                     <div class="card">
@@ -207,11 +197,64 @@
                             ?>
                         </div>
                     </div>
-                </div>
+              
+                    <?php } ?>
                 </div>
             </div>
         </div>
 </div>
+
+
+<div class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" id="sendMessage">
+                <div class="modal-dialog modal-lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title text-center">
+                       Send Message To  <?=number_to_words(count($schools))?> Clients
+                      </h4>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                      </button>
+                    </div>
+                    <form action="<?=url('analyse/sendMessage')?>" method="POST">
+                    <div class="modal-body">
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                  <div class="form-group">
+                    <strong>Select Language:</strong>
+                    <select name="lang"  class="form-control">
+                    <option value="swahili">Kiswahili</option>
+                    <option value="english">English</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                  <div class="form-group">
+                    <strong>Add Details About This Message:</strong>
+                    <textarea name="message" rows="6" placeholder="Write Your Message.." class="form-control"></textarea>
+                  </div>
+                </div>
+                
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="form-group">
+                        <strong>  Select Mode of this Message Below.</strong> 
+                          <hr>
+                          &nbsp;  &nbsp; &nbsp;<input type="checkbox" name="sms" value='1'>  Send SMS  &nbsp; &nbsp;  &nbsp; &nbsp;  &nbsp; &nbsp;
+                      <input type="checkbox" name="email" value="1" >  Send Email 
+
+                    </div>
+                </div>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary waves-effect waves-light ">  Send <i class="ti-telegram"> </i></button>
+                    </div>
+                    <?= csrf_field() ?>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
     <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript">
             $('#taskdate').change(function(event) {
