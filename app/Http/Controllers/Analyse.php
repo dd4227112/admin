@@ -233,8 +233,10 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         $this->data['users'] = $users = DB::table('admin.all_users')->select(DB::raw('count(*) as user_count, "table"'))->whereIn('schema_name', $all_schoolz)->where('status', 1)->where('table', '<>', 'setting')->groupBy('table')->get();
         $this->data['active'] = DB::table('admin.all_log')->select(DB::raw('count(*) as school_count, "schema_name"'))->whereIn('schema_name', $all_schoolz)->where('table', '<>', 'setting')->whereDate('created_at', '>', $days)->groupBy('schema_name')->get();
         $arrayTxt = implode(',', $all_schools);
+        if(count($all_schools) > 0){
         $sql = 'select count(*) as count, "schema_name" from "admin"."all_log" where created_at::date>' . $days . ' AND "schema_name" in (' . $arrayTxt . ') group by "schema_name"';
         $this->data['logs'] = $sql;
+        }
         $this->data['staffs'] = \App\Models\User::where('status', 1)->where('department', '<>', 10)->get();
         $this->data['staff'] = \App\Models\User::where('id', $id)->first();
         //DB::table('admin.all_log')->select(DB::raw('count(*) as school_count, "schema_name"'))->whereIn('schema_name', $all_schools)->where('table', '<>', 'setting')->groupBy('schema_name')->get();
@@ -351,5 +353,37 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
             return True;
         }
     }
+
+ public function sendMessage()
+{
+    if ($_POST) {
+        //dd(request()->all());
+
+        $body = request('message');
+        $sms = request('sms');
+        $email = request('email');
+        request('lang') == 'swahili' ? $lang = 'Habari' : $lang = 'Hello';
+        $schools = DB::table('all_setting')->whereIn('schema_name', \App\Models\Client::whereIn('id', \App\Models\ClientSchool::whereIn('school_id', \App\Models\UsersSchool::where('user_id', Auth::User()->id)->get(['school_id']))->get(['client_id']))->get(['username']))->get();
+        $english =  'For More Details Contact: ' . chr(10) . 'Name: '. Auth::User()->name . chr(10) . 'Phone: '. Auth::User()->phone. chr(10) . 'Email: '. Auth::User()->email;
+        $swahili =  'Mawasiliano:' . chr(10) . 'Jina: '. Auth::User()->name . chr(10) . 'Simu: '. Auth::User()->phone. chr(10) . 'Barua Pepe: '. Auth::User()->email;
+        request('lang') == 'swahili' ? $footer = $swahili : $footer = $english;
+        foreach ($schools as $school) {
+            $numbers = str_replace(' ', '', $school->phone);
+            $number = str_replace('/', ',', $numbers);
+            $phones = explode(',', $number);
+            $phone = str_replace('+', null, validate_phone_number($phones[0])[1]);
+            if ($school->email != '' && (int) $email > 0) {
+                $message = '<h4>' .$lang . ', '. $school->name . '</h4>'
+                        . '<h4>' . $body . '</h4>'
+                        . '<br><br>'. $footer;
+                DB::table('public.email')->insert(['body' => $message, 'subject' => 'ShuleSoft New Client Support Message', 'user_id' => 1, 'email' => $school->email]);
+            }
+            if ($phone != '' && (int) $sms > 0) {
+                $message1 = $lang .', ' . $school->name . '.' . chr(10) . request('message'). chr(10). chr(10) . $footer;
+            }
+        }
+    return redirect()->back()->with('success', 'Message Sent successfully');
+    }       
+}
 
 }
