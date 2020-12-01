@@ -245,7 +245,8 @@ class Users extends Controller {
     }
 
     public function applicant() {
-        $this->data['budget'] = [];
+        $this->data['applicants'] =  DB::table('admin.applicants')->get();
+         $this->data['applicant'] =  DB::table('admin.applicants')->first();
         return view('users.applicant', $this->data);
     }
 

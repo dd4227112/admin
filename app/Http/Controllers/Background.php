@@ -27,8 +27,8 @@ class Background extends Controller {
     public function index($tag = 'sms') {
         //
         return $tag == 'sms' ?
-        $this->dispatch((new \App\Jobs\PushSMS())) :
-        $this->dispatch((new \App\Jobs\PushEmail()));
+                $this->dispatch((new \App\Jobs\PushSMS())) :
+                $this->dispatch((new \App\Jobs\PushEmail()));
     }
 
     public function sendSms() {
@@ -292,7 +292,6 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
             $module_id = $id->id;
         } else {
             $module_id = '';
-           
         }
 
         #getting a user who push
@@ -340,23 +339,27 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
     public function epayment() {
         $invoice_id = request()->segment(3);
         $booking = $invoice = \App\Models\Invoice::find($invoice_id);
-    if($booking){
-        if (strlen($booking->token) < 4) {
-           $account=new \App\Http\Controllers\Account();
-           $account->createSelcomControlNumber($invoice_id);
-        }
-        $paid = 0;
-        if ($booking->payments()->sum('amount') == $booking->invoiceFees()->sum('amount')) {
-            $paid = 1;
-        }
+        if ($booking) {
+            if (strlen($booking->token) < 4) {
+                $account = new \App\Http\Controllers\Account();
+                $account->createSelcomControlNumber($invoice_id);
+            }
+            $paid = 0;
+            if ($booking->payments()->sum('amount') == $booking->invoiceFees()->sum('amount')) {
+                $paid = 1;
+            }
+            $am = $invoice->invoiceFees()->sum('amount');
+            $paid = $invoice->payments()->sum('amount');
+            $unpaid = $am - $paid;
 
-        $balance = $booking->payments()->sum('amount');
+            $balance = $booking->payments()->sum('amount');
 
-        return view('account.invoice.pay', compact('booking', 'balance', 'paid','invoice'));
-    }else{
-        return redirect()->back()->with('warning', 'This Invoice Number Not Defined Properly');
+            return view('account.invoice.pay', compact('booking', 'balance', 'paid', 'invoice','unpaid'));
+        } else {
+            return redirect()->back()->with('warning', 'This Invoice Number Not Defined Properly');
+        }
     }
-}
+
     //Notify all admin about monthly reports
     public function schoolMonthlyReport() {
         $users = DB::select("select * from admin.all_users where lower(usertype)='admin' and status=1");

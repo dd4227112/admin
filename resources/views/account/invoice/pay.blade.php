@@ -153,7 +153,7 @@
                                                             <li>Select option 4, to enter business number </li>
                                                             <li>Enter Business Number <b> 123123</b></li>
                                                             <li>Enter Reference Number : <b><?= isset($booking->token) ? $booking->token : '<span style="color:red;"><u> Not Defined</u></span>' ?></b></li>
-                                                            <li>Enter amount for your payment Tsh <b><?= isset($booking->amount) ? number_format($booking->amount - $balance) : '<span style="color:red;"><u> Not Defined</u></span>' ?></b></li>
+                                                            <li>Enter amount for your payment Tsh <b><?= isset($unpaid) ? number_format($unpaid) : '<span style="color:red;"><u> Not Defined</u></span>' ?></b></li>
                                                             <li>Enter pin to confirm </li>
                                                             <li>Once you get SMS confirmation, click "Proceed" to continue </li>
                                                         </ol>
@@ -173,7 +173,7 @@
                                                             <li>Select option 5, for Merchant payment</li>
                                                             <li>Select option 2, Pay Mastercard QR Merchant </li>
                                                             <li>Enter Reference Number : <b><?= isset($booking->token) ? $booking->token : '<span style="color:red;"><u> Not Defined</u></span>' ?></b></li>
-                                                            <li>Enter amount for your payment Tsh <b><?= isset($booking->amount) ? number_format($booking->amount - $balance) : '<span style="color:red;"><u> Not Defined</u></span>' ?></b></li>
+                                                            <li>Enter amount for your payment Tsh <b><?= isset($unpaid) ? number_format($unpaid) : '<span style="color:red;"><u> Not Defined</u></span>' ?></b></li>
                                                             <li>Enter pin to confirm </li>
                                                             <li>Once you get SMS confirmation, click "Proceed" to continue </li>
                                                         </ol>
@@ -192,7 +192,7 @@
                                                             <li>Select option 1, for Merchant payments  </li>
                                                             <li>Select option 1, Pay with Mastercard QR</li>
                                                             <li>Enter amount for your payment Tsh <b><?= isset($booking->amount) ? number_format($booking->amount - $balance) : '<span style="color:red;"><u> Not Defined</u></span>' ?></b></li>
-                                                            <li>Enter Reference Number : <b><?= isset($booking->token) ? $booking->token : '<span style="color:red;"><u> Not Defined</u></span>' ?></b></li>
+                                                            <li>Enter Reference Number : <b><?=isset($unpaid) ? number_format($unpaid) : '<span style="color:red;"><u> Not Defined</u></span>' ?></b></li>
                                                             <li>Enter pin to confirm </li>
                                                             <li>Once you get SMS confirmation, click "Proceed" to continue </li>
                                                         </ol>
@@ -213,7 +213,7 @@
                                                             <li>Select option 5, for payment</li>
                                                             <li>Select option 3, Pay with Mastercard QR</li>
                                                             <li>Enter Reference Number : <b><?= isset($booking->token) ? $booking->token : '<span style="color:red;"><u> Not Defined</u></span>' ?></b></li>
-                                                            <li>Enter amount for your payment Tsh <b><?= isset($booking->amount) ? number_format($booking->amount - $balance) : '<span style="color:red;"><u> Not Defined</u></span>' ?></b></li>
+                                                            <li>Enter amount for your payment Tsh <b><?= isset($unpaid) ? number_format($unpaid): '<span style="color:red;"><u> Not Defined</u></span>' ?></b></li>
 
                                                             <li>Enter pin to confirm </li>
                                                             <li>Once you get SMS confirmation, click "Proceed" to continue </li>
@@ -236,7 +236,7 @@
                                                             <li>Select option 1, for Lipa Hapa</li>
                                                             <li>Select option 2, Pay with Mastercard QR</li>
                                                             <li>Enter Reference Number : <b><?= isset($booking->token) ? $booking->token : '<span style="color:red;"><u> Not Defined</u></span>' ?></b></li>
-                                                            <li>Enter amount for your payment Tsh <b><?= isset($booking->amount) ? number_format($booking->amount - $balance) : '<span style="color:red;"><u> Not Defined</u></span>' ?></b></li>
+                                                            <li>Enter amount for your payment Tsh <b><?=isset($unpaid) ? number_format($unpaid): '<span style="color:red;"><u> Not Defined</u></span>' ?></b></li>
 
                                                             <li>Enter pin to confirm </li>
                                                             <li>Once you get SMS confirmation, click "Proceed" to continue </li>
@@ -260,7 +260,7 @@
 
                                                             <li>Select option 2, Pay with Mastercard QR</li>
                                                             <li>Enter Reference Number : <b><?= isset($booking->token) ? $booking->token : '<span style="color:red;"><u> Not Defined</u></span>' ?></b></li>
-                                                            <li>Enter amount for your payment Tsh <b><?= isset($booking->amount) ? number_format($booking->amount - $balance) : '<span style="color:red;"><u> Not Defined</u></span>' ?></b></li>
+                                                            <li>Enter amount for your payment Tsh <b><?= isset($unpaid) ? number_format($unpaid) : '<span style="color:red;"><u> Not Defined</u></span>' ?></b></li>
 
                                                             <li>Enter pin to confirm </li>
                                                             <li>Once you get SMS confirmation, click "Proceed" to continue </li>
@@ -283,7 +283,7 @@
 
                                                             <li>Select option 2, Pay with Mastercard QR</li>
                                                             <li>Enter Reference Number : <b><?= isset($booking->token) ? $booking->token : '<span style="color:red;"><u> Not Defined</u></span>' ?></b></li>
-                                                            <li>Enter amount for your payment Tsh <b><?= isset($booking->amount) ? number_format($booking->amount - $balance) : '<span style="color:red;"><u> Not Defined</u></span>' ?></b></li>
+                                                            <li>Enter amount for your payment Tsh <b><?= isset($unpaid) ? number_format($unpaid): '<span style="color:red;"><u> Not Defined</u></span>' ?></b></li>
 
                                                             <li>Confirm Payments by entering 1 </li>
                                                             <li>Once you get SMS confirmation, click "Proceed" to continue </li>
@@ -306,7 +306,7 @@
 
                                                             <li>Select Mastercard QR</li>
                                                             <li>Enter Reference Number : <b><?= isset($booking->token) ? $booking->token : '<span style="color:red;"><u> Not Defined</u></span>' ?></b></li>
-                                                            <li>Enter amount for your payment Tsh <b><?= isset($booking->amount) ? number_format($booking->amount - $balance) : '<span style="color:red;"><u> Not Defined</u></span>' ?></b></li>
+                                                            <li>Enter amount for your payment Tsh <b><?= isset($unpaid) ? number_format($unpaid) : '<span style="color:red;"><u> Not Defined</u></span>' ?></b></li>
                                                             <li>Confirm Payments by entering 1 </li>
                                                             <li>Once you get SMS confirmation, click "Proceed" to continue </li>
                                                         </ol>
