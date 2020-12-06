@@ -42,7 +42,7 @@ foreach ($user_permission as $permis) {
                                 <div class="card-block-big">
                                     <div class="media-left">
                                         <a href="#" class="profile-image">
-                                            <img class="user-img img-circle" src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image" height="90">
+                                            <img class="user-img img-circle" src="<?= preg_match('/http/', $user->photo) ? $user->photo:  $root.'assets/images/user.png' ?>" alt="User-Profile-Image" height="90">
                                         </a>
                                     </div>
                                     <i class="icofont icofont-comment"></i>
@@ -155,10 +155,14 @@ foreach ($user_permission as $permis) {
                             <a class="nav-link " data-toggle="tab" href="#messages5" role="tab" aria-expanded="false">Activities</a>
                             <div class="slide"></div>
                         </li>
+                         <?php
+                        if (Auth::user()->role_id != 7) {
+                            ?>
                         <li class="nav-item">
                             <a class="nav-link" data-toggle="tab" href="#settings5" role="tab">Permissions</a>
                             <div class="slide"></div>
                         </li>
+                        <?php }?>
                     </ul>
                     <!-- Tab panes -->
                     <div class="tab-content tabs-left-content card-block" style="width:100%; padding-top: 0; padding-right: 0;">

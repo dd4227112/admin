@@ -354,7 +354,7 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
 
             $balance = $booking->payments()->sum('amount');
 
-            return view('account.invoice.pay', compact('booking', 'balance', 'paid', 'invoice','unpaid'));
+            return view('account.invoice.pay', compact('booking', 'balance', 'paid', 'invoice', 'unpaid'));
         } else {
             return redirect()->back()->with('warning', 'This Invoice Number Not Defined Properly');
         }
@@ -384,6 +384,100 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
                 DB::table($user->schema_name . '.email')->insert($obj);
             }
         }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function associate() {
+        $id = (int) request()->segment(3) == 0 ? Auth::user()->id : request()->segment(3);
+        $this->data['user'] = \App\Models\User::find($id);
+        return view('users.associate', $this->data);
+    }
+
+    public function registerApplicant() {
+        $applicant_id = decrypt(request()->segment(3));
+        $applicant = DB::table('admin.applicants')->where('id', $applicant_id)->first();
+        if ($applicant) {
+            //register user in demo account
+            //build data to upload
+            if (DB::table('public.user')->where('email', $applicant->email)->first()) {
+                //user exists, set to 1 then send email
+                DB::table('public.user')->where('email', $applicant->email)->update(['status' => 1]);
+                return $this->sendApplicantEmail(DB::table('public.user')->where('email', $applicant->email)->first());
+            }
+            $pass = rand(1, 999) . substr(str_shuffle('abcdefghkmnpl'), 0, 3);
+            $password = bcrypt($pass);
+            DB::table('public.user')->insert(array('username' => str_replace(" ", NULL, $applicant->phone),
+                'salary' => (float) 0, 'sex' => $applicant->gender, 'name' => $applicant->name, 'email' => $applicant->email, 'phone' => $applicant->phone,
+                'password' => $password, 'default_password' => $pass, 'status' => 1,
+                'photo' => 'defualt.png',
+                'usertype' => 'Admin'
+            ));
+            $this->registerInAdmin($applicant, $password);
+            return $this->sendApplicantEmail(DB::table('public.user')->where('email', $applicant->email)->first());
+            //send confirmation email and send invite email for academy learning
+        } else {
+            die('Wrong url supplied, this user does not exists');
+        }
+    }
+
+    public function sendApplicantEmail($applicant) {
+         $message =view('email.associate_confirm');
+            $patterns = array(
+                '/#name/i', '/#username/i', '/#password/i',
+            );
+           $replacements = array(
+                $applicant->name, $applicant->username,$applicant->default_password
+            );
+            //send sms
+            $sms = preg_replace($patterns, $replacements, $message);
+            $new_user_message = 'Hi #name, Your accounts ( in https://demo.shulesoft.com, https://academy.shulesoft.com) '
+                    . 'has been created successfully with username: '.$applicant->username.' and password: '.$applicant->default_password.' .Check your email for detailed information. Thanks ';
+            $this->send_sms($applicant->phone, $new_user_message, 10);
+            $this->send_sms($applicant->email, 'We are hiring/finding ShuleSoft Regional and Local Associates', $sms);
+    }
+
+    public function InviteApplicants() {
+        $applicants = DB::select('select * from admin.applicants where id not in (select applicant_id from admin.users where applicant_id is not null)');
+        foreach ($applicants as $applicant) {
+
+            $message = view('email.associate');
+            $patterns = array(
+                '/#name/i', '/#link/i',
+            );
+            $url = 'https://admin.shulesoft.com/background/registerApplicant/' . encrypt($applicant->id);
+            $replacements = array(
+                $applicant->name, $url
+            );
+            //send sms
+            $sms = preg_replace($patterns, $replacements, $message);
+            $new_user_message = 'Habari #name'
+                    . 'You are kindly invited to Join ShuleSoft Associate Program. Our Associates will be directly involved to provide training, data entry and configuration '
+                    . 'to ALL schools (600+) and get paid per task done but also exposed to '
+                    . 'schools that are looking for candidates who knows ShuleSoft. Click this link to join (' . $this->shortenUrl($url) . ') or visit our website (www.shulesoft.com) to learn more. Thanks';
+            $this->send_sms($applicant->phone, $new_user_message, 10);
+            $this->send_sms($applicant->email, 'We are hiring/finding ShuleSoft Regional and Local Associates', $sms);
+        }
+    }
+
+    public function registerInAdmin($applicant, $password) {
+        DB::table('admin.users')->insert(array('firstname' => $applicant->name,
+            'sex' => $applicant->gender, 'email' => $applicant->email, 'phone' => $applicant->phone, 'name' => $applicant->name,
+            'password' => $password, 'status' => 1,
+            'applicant_id' => $applicant->id
+        ));
+    }
+
+    public function shortenUrl($url) {
+        $key = '21ac1db212ce1bd8fb357c6f4b0edb2a2b18b';
+        $json = file_get_contents('https://cutt.ly/api/api.php?key=' . $key . '&short=' . $url);
+        $data = json_decode($json, true);
+        return $short_url = $data["url"]["shortLink"];
     }
 
 }

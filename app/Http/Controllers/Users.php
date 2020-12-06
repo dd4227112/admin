@@ -107,7 +107,7 @@ class Users extends Controller {
     }
 
     public function storePassword(Request $request) {
-        $user = User::find(Auth::user()->id);   
+        $user = User::find(Auth::user()->id);
         if (Auth::attempt(['email' => $user->email, 'password' => request('password')])) {
             $new1 = request('new');
             $new2 = request('retype');
@@ -245,8 +245,8 @@ class Users extends Controller {
     }
 
     public function applicant() {
-        $this->data['applicants'] =  DB::table('admin.applicants')->get();
-         $this->data['applicant'] =  DB::table('admin.applicants')->first();
+        $this->data['applicants'] = DB::table('admin.applicants')->get();
+        $this->data['applicant'] = DB::table('admin.applicants')->first();
         return view('users.applicant', $this->data);
     }
 
@@ -455,4 +455,7 @@ class Users extends Controller {
         return $refer_bank_id;
     }
 
+ 
+
+  
 }
