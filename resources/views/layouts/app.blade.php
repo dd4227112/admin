@@ -870,7 +870,9 @@ function toast(message) {
                                 </ul>
                             </li>
                         <?php } ?>
-
+                        <?php if (Auth::user()->role_id != 7) { ?>
+                            <li><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">Meeting Minutes</a></li>
+                        <?php } ?>
                     <?php } ?>
                 </ul>
             </div>
