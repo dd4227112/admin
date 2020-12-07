@@ -443,7 +443,7 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
     }
 
     public function InviteApplicants() {
-        $applicants = DB::select('select * from admin.applicants where id not in (select applicant_id from admin.users where applicant_id is not null)');
+        $applicants = DB::select('select * from admin.applicants where id=621');
         foreach ($applicants as $applicant) {
 
             $message = view('email.associate');
