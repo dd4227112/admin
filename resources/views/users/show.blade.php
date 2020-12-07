@@ -42,7 +42,7 @@ foreach ($user_permission as $permis) {
                                 <div class="card-block-big">
                                     <div class="media-left">
                                         <a href="#" class="profile-image">
-                                            <img class="user-img img-circle" src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image">
+                                            <img class="user-img img-circle" src="<?= preg_match('/http/', $user->photo) ? $user->photo:  $root.'assets/images/user.png' ?>" alt="User-Profile-Image" height="90">
                                         </a>
                                     </div>
                                     <i class="icofont icofont-comment"></i>
@@ -51,7 +51,7 @@ foreach ($user_permission as $permis) {
                         </div>
                         <?php
                         if (Auth::user()->role_id != 7) {
-                        ?>
+                            ?>
                             <div class="col-md-6 col-xl-4">
                                 <div class="card counter-card-2">
                                     <div class="card-block-big">
@@ -139,50 +139,41 @@ foreach ($user_permission as $permis) {
                 </div>
             </div>
             <!--profile cover end-->
-            <div class="row">
-                <div class="col-lg-12">
-                    <!-- tab header start -->
-                    <div class="tab-header">
-                        <ul class="nav nav-tabs md-tabs tab-timeline" role="tablist" id="mytab">
-                            <li class="nav-item">
-                                <a class="nav-link active" data-toggle="tab" href="#personal" role="tab">Personal Info</a>
-                                <div class="slide"></div>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#binfo" role="tab">Reports</a>
-                                <div class="slide"></div>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#review" role="tab">Activities</a>
-                                <div class="slide"></div>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#Qr_code" role="tab">QR Code</a>
-                                <div class="slide"></div>
-                            </li>
-                            <?php
-                            if (Auth::user()->id == 2) {
+            <div class="row ">
+                <div class="col-lg-12 col-xl-12">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs md-tabs tabs-left b-none" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#home5" role="tab" aria-expanded="true">Personal Info</a>
+                            <div class="slide"></div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#profile5" role="tab" aria-expanded="false">Reports</a>
+                            <div class="slide"></div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " data-toggle="tab" href="#messages5" role="tab" aria-expanded="false">Activities</a>
+                            <div class="slide"></div>
+                        </li>
+                         <?php
+                        if (Auth::user()->id ==2) {
                             ?>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#permissions" role="tab">Permissions</a>
-                                    <div class="slide"></div>
-                                </li>
-                            <?php } ?>
-                        </ul>
-                    </div>
-                    <!-- tab header end -->
-                    <!-- tab content start -->
-                    <div class="tab-content">
-                        <!-- tab panel personal start -->
-                        <div class="tab-pane active" id="personal" role="tabpanel">
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#settings5" role="tab">Permissions</a>
+                            <div class="slide"></div>
+                        </li>
+                        <?php }?>
+                    </ul>
+                    <!-- Tab panes -->
+                    <div class="tab-content tabs-left-content card-block" style="width:100%; padding-top: 0; padding-right: 0;">
+                        <div class="tab-pane active" id="home5" role="tabpanel" aria-expanded="true">
                             <!-- personal card start -->
                             <div class="card">
                                 <div class="card-header">
                                     <h5 class="card-header-text">About</h5>
                                     <?php
                                     if ($user->id == 2) {
-                                    ?>
+                                        ?>
                                         <a id="edit-btn" href="<?= url('users/edit/' . $user->id) ?>" class="btn btn-sm btn-primary waves-effect waves-light f-right">
                                             <i class="icofont icofont-edit"></i>
                                         </a>
@@ -395,23 +386,23 @@ foreach ($user_permission as $permis) {
                                     <!-- end of edit-info -->
                                     <?php
                                     if (Auth::user()->id == 2) {
-                                    ?>
-                                        <form class="form-horizontal form-material" method="post" action="<?= url('user/changePhoto/' . $user->id) ?>" enctype="multipart/form-data">
+                                        ?>
+            <!--                                        <form class="form-horizontal form-material" method="post" action="<?= url('user/changePhoto/' . $user->id) ?>" enctype="multipart/form-data">
 
-                                            <div class="form-group">
-                                                <label class="col-md-12">Photo</label>
-                                                <div class="col-md-12">
-                                                    <input type="file" name="photo" accept=".png,.jpg,.jpeg,.gif" class="form-control form-control-line">
-                                                </div>
-                                            </div>
+                                                        <div class="form-group">
+                                                            <label class="col-md-12">Photo</label>
+                                                            <div class="col-md-12">
+                                                                <input type="file" name="photo" accept=".png,.jpg,.jpeg,.gif" class="form-control form-control-line">
+                                                            </div>
+                                                        </div>
 
-                                            <div class="form-group">
-                                                <div class="col-sm-12">
-                                                    <?= csrf_field() ?>
-                                                    <button class="btn btn-success">Update Profile</button>
-                                                </div>
-                                            </div>
-                                        </form>
+                                                        <div class="form-group">
+                                                            <div class="col-sm-12">
+                                        <?= csrf_field() ?>
+                                                                <button class="btn btn-success">Update Profile</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>-->
                                     <?php } ?>
                                 </div>
                                 <!-- end of card-block -->
@@ -445,13 +436,99 @@ foreach ($user_permission as $permis) {
                                     </div>
                                 </div>
                             </div>
-                            <!-- personal card end-->
-                        </div>
-                        <!-- tab pane personal end -->
-                        <!-- tab pane info start -->
-                        <div class="tab-pane" id="binfo" role="tabpanel">
-                            <!-- info card start -->
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5 class="card-header-text">Job Application Details</h5>
 
+                                        </div>
+                                        <div class="card-block user-desc">
+                                            <?php
+                                            $except = array('id', 'updated_at');
+                                            $applicant = (int) $user->applicant_id > 0 ? DB::table('applicants')->where('id', $user->applicant_id)->first() : [];
+                                            if ($applicant) {
+                                                $vars = get_object_vars($applicant);
+                                                ?>
+                                                <div class="view-desc">
+                                                    <table class="table">
+                                                        <?php
+                                                        foreach ($vars as $key => $value) {
+                                                            if (!in_array($key, $except)) {
+                                                                ?> 
+                                                                <tr>
+                                                                    <td><?= ucwords(str_replace('_', ' ', $key)) ?></td>
+                                                                    <td>
+                                                                        <?php
+                                                                        $content= $applicant->{$key};
+                                                                        if(preg_match('/https/', $content)){
+                                                                            echo '<a href="'.$content.'" target="_blank">'.$content.'</a>';                                                                            
+                                                                        }else if(preg_match('/-/', $content)){
+                                                                            $pieces= explode('-', $content);
+                                                                            foreach ($pieces as $piece) {
+                                                                                echo $piece.'<br/>';
+                                                                            }
+                                                                        }else{
+                                                                            echo $content;
+                                                                        }
+                                                                        ?></td>
+                                                                </tr>
+                                                                <?php
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </table>
+                                                </div>
+                                            <?php } ?>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="card-header-text">User QR CODE</h5>
+                                </div>
+                                <div class="card-block">
+                                    <form>
+
+                                        <div class="form-group row">
+
+                                            <div class="col-sm-2">
+                                                <a href="<?= url('QrCode/generate_qr_code/' . $user->email) ?>" class="form-control  btn btn-primary" id="search_report">Generate QR Code</a>
+
+                                            </div>
+                                            <?php if ($user->qr_code != '') { ?>
+                                                <div class="col-sm-2">
+                                                    <a href="<?= $root ?><?= $user->qr_code ?>" class="btn btn-success">Download</a>
+                                                </div>
+                                            <?php } ?>
+                                        </div>
+
+
+                                    </form>
+                                    <div>
+                                        <?php if ($user->qr_code != '') { ?>
+                                            <img src="<?= $root ?><?= $user->qr_code ?>" alt="">
+                                            <bt>
+
+
+                                            <?php } ?>
+                                    </div>
+                                </div>
+
+                                <br />
+                                <div class="card-block">
+
+                                    <div id="report_section">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- personal card end--> 
+                        </div>
+                        <div class="tab-pane" id="profile5" role="tabpanel" aria-expanded="false">
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="card">
@@ -482,78 +559,23 @@ foreach ($user_permission as $permis) {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!-- info card end -->
-                        </div>
-
-                        <div class="tab-pane" id="review" role="tabpanel">
+                            </div> </div>
+                        <div class="tab-pane" id="messages5" role="tabpanel" aria-expanded="false">
                             <div class="card">
                                 <div class="card-header">
                                     <h5 class="card-header-text">Activities</h5>
                                 </div>
                                 <div class="card-block">
-                                  
+
                                 </div>
-                            </div>
-                        </div>
-
-                        <!-- tab pane info start -->
-                        <div class="tab-pane" id="Qr_code" role="tabpanel">
-                            <!-- info card start -->
-
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h5 class="card-header-text">User QR CODE</h5>
-                                        </div>
-                                        <div class="card-block">
-                                            <form>
-
-                                                <div class="form-group row">
-
-                                                    <div class="col-sm-2">
-                                                        <a href="<?= url('QrCode/generate_qr_code/' . $user->email) ?>" class="form-control  btn btn-primary" id="search_report">Generate QR Code</a>
-
-                                                    </div>
-                                                    <?php if ($user->qr_code != '') { ?>
-                                                        <div class="col-sm-2">
-                                                            <a href="<?= $root ?><?= $user->qr_code ?>" class="btn btn-success">Download</a>
-                                                        </div>
-                                                    <?php } ?>
-                                                </div>
-
-
-                                            </form>
-                                            <div>
-                                                <?php if ($user->qr_code != '') { ?>
-                                                    <img src="<?= $root ?><?= $user->qr_code ?>" alt="">
-                                                    <bt>
-
-
-                                                    <?php } ?>
-                                            </div>
-                                        </div>
-
-                                        <br />
-                                        <div class="card-block">
-
-                                            <div id="report_section">
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- info card end -->
-                        </div>
-
-                        <div class="tab-pane" id="permissions" role="tabpanel" aria-expanded="false">
+                            </div>   </div>
+                        <div class="tab-pane" id="settings5" role="tabpanel">
                             <div class="email-card p-0">
-                                <div class="card-block">
-                                    <h6>
-                                        <b>Permissions</b>
-                                    </h6>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-header-text">Permissions</h5>
+                                    </div>
+
                                     <div class="mail-body-content">
                                         <table class="table table-responsive">
                                             <tbody>
@@ -561,7 +583,7 @@ foreach ($user_permission as $permis) {
                                                 <?php
                                                 $permissions = \App\Models\Permission::all();
                                                 foreach ($permissions as $permission) {
-                                                ?>
+                                                    ?>
                                                     <?php
                                                     $checked = in_array($permission->id, $arr) ? 'checked' : '';
                                                     ?>
@@ -579,25 +601,25 @@ foreach ($user_permission as $permis) {
                                                         <td><a href="#!" class="email-name"><?= $permission->display_name ?></a></td>
                                                         <td><?= $permission->description ?></td>
                                                     </tr>
-                                                <?php
+                                                    <?php
                                                 }
                                                 ?>
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            </div>    </div>
                     </div>
-                    <!-- tab content end -->
                 </div>
+
+
             </div>
         </div>
     </div>
 </div>
 <script type="text/javascript">
-    permission = function() {
-        $('.permission').click(function() {
+    permission = function () {
+        $('.permission').click(function () {
             var id = $(this).val();
             var role_id = '<?= $user->role_id ?>';
             if (parseInt(id)) {
@@ -615,7 +637,7 @@ foreach ($user_permission as $permis) {
                         role_id: role_id
                     },
                     dataType: "html",
-                    success: function(data) {
+                    success: function (data) {
                         toast(data);
                     }
                 });
@@ -623,8 +645,8 @@ foreach ($user_permission as $permis) {
         });
     }
     $(document).ready(permission);
-    search_report = function() {
-        $('#search_report').mousedown(function() {
+    search_report = function () {
+        $('#search_report').mousedown(function () {
             var from = $('#from').val();
             var to = $('#to').val();
             $.ajax({
@@ -636,7 +658,7 @@ foreach ($user_permission as $permis) {
                     user_id: <?= $user->id ?>
                 },
                 dataType: "html",
-                success: function(data) {
+                success: function (data) {
                     $('#report_section').html(data);
                 }
             });

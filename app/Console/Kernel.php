@@ -49,9 +49,10 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
             $this->curlServer(['action' => 'payment'], 'http://51.77.212.234:8081/api/cron');
-            (new Message())->sendEmail();
+          
         })->everyMinute();
         $schedule->call(function () {
+              (new Message())->sendEmail();
             (new Message())->karibusmsEmails();
         })->everyMinute();
         $schedule->call(function () {

@@ -385,14 +385,28 @@ class Account extends Controller {
                 );
                 die(json_encode($data));
             }
-
+            $am = $invoice->invoiceFees()->sum('amount');
+            $paid = $invoice->payments()->sum('amount');
+            $unpaid = $am - $paid;
+            $advanced_amount = 0;
+            $amount = request('amount');
             $mobile_transaction_id = request('mobile_transaction_id');
-            if (request('amount') > $invoice->invoiceFees()->sum('amount')) {
-                return redirect()->back()->with('error', 'Payment not accepted. Amount paid is greater than amount required');
+            if (request('amount') > $unpaid) {
+                $advanced_amount = request('amount') - $unpaid;
+                $amount = $unpaid;
+                //return redirect()->back()->with('error', 'Payment not accepted. Amount paid is greater than amount required');
             }
             $refer_expense_id = request('refer_expense_id');
             $payment_type = \App\Models\PaymentType::find(request('payment_type'));
-            $payment = $this->acceptPayment(request('amount'), $invoice->id, $payment_type->name, $transaction_id, $mobile_transaction_id, request('name'), request('bank_account_id'), request('transaction_time'), request('token'), $invoice->client_id, $refer_expense_id, request('date'));
+            $payment = $this->acceptPayment($amount, $invoice->id, $payment_type->name, $transaction_id, $mobile_transaction_id, request('name'), request('bank_account_id'), request('transaction_time'), request('token'), $invoice->client_id, $refer_expense_id, request('date'));
+
+            if ((int) $advanced_amount > 0) {
+                DB::table('admin.advance_payments')->insert([
+                    'client_id' => $invoice->client_id,
+                    'payment_id' => json_decode($payment)->payment_id,
+                    'amount' => $advanced_amount
+                ]);
+            }
         }
         // $this->sendNotification($invoice);
         return redirect('account/invoice/1/' . $invoice->account_year_id)->with('success', json_decode($payment)->description);
@@ -875,7 +889,7 @@ class Account extends Controller {
                 // $account_group_id = request("group") > 0 ? request("group") : DB::table('account_groups')->insertGetId($obj);
             } else {
                 $check = DB::table('account_groups')->where($obj)->first();
-                $account_group_id = !empty($check)? $check->id : DB::table('account_groups')->insertGetId($obj);
+                $account_group_id = !empty($check) ? $check->id : DB::table('account_groups')->insertGetId($obj);
             }
             $array = array(
                 "name" => trim(request("subcategory")),
@@ -1165,7 +1179,7 @@ class Account extends Controller {
                     'payment_method' => $value['payment_method'],
                     'transaction_id' => $value['transaction_id'],
                     "refer_expense_id" => $refer_expense->id,
-                    "bank_account_id" => !empty($bank)? $bank->id : NULL,
+                    "bank_account_id" => !empty($bank) ? $bank->id : NULL,
                     'date' => date("Y-m-d", strtotime($value['date'])),
                     'note' => $value['note'],
                     'ref_no' => $value['transaction_id'],
@@ -1202,7 +1216,7 @@ class Account extends Controller {
                         'created_by_id' => session('id'),
                         'amount' => $value['amount'],
                         "refer_expense_id" => $refer_expense->id,
-                        "bank_account_id" => !empty($bank)? $bank->id : NULL,
+                        "bank_account_id" => !empty($bank) ? $bank->id : NULL,
                         'payment_method' => $value['payment_method'],
                         'transaction_id' => $value['transaction_id'],
                         'ref_no' => $value['transaction_id'],
@@ -1246,12 +1260,12 @@ class Account extends Controller {
                     return redirect()->back()->with('error', $check);
                 }
                 $invoice = Invoice::where(DB::raw('lower(reference)'), strtolower($value['invoice']))->first();
-                if (empty($invoice) ) {
+                if (empty($invoice)) {
                     //create invoice
 
                     $client = \App\Models\Client::where('email', strtolower($value['email']))->first();
 
-                    $client_record = empty($client)  ?
+                    $client_record = empty($client) ?
                             \App\Models\Client::create(['name' => $value['email'], 'email' => $value['email'], 'phone' => time(), 'address' => '', 'username' => $value['email'], 'created_at' => date('Y-m-d H:i:s')]) : $client;
 
 
@@ -1264,13 +1278,13 @@ class Account extends Controller {
                     $invoice = Invoice::create(['reference' => $reference, 'client_id' => $client_record->id, 'date' => 'now()', 'year' => date('Y'), 'user_id' => Auth::user()->id, 'account_year_id' => $year->id, 'due_date' => date('Y-m-d', strtotime('+ 30 days'))]);
                     $amount = $value['amount'];
                     $project = DB::table('projects')->where(DB::raw('lower(name)'), 'ilike', '%' . strtolower($value['revenue_name']) . '%')->first();
-                    $project_id = !empty($project)? $project->id : 1; //default shulesoft
+                    $project_id = !empty($project) ? $project->id : 1; //default shulesoft
                     \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => $project_id, 'item_name' => 'ShuleSoft Service Fee For ', 'quantity' => 1, 'unit_price' => 1]);
                 }
 
                 $transaction_id = (int) $value['transaction_id'] == 0 ? time() : $value['transaction_id'];
                 $payments = \App\Models\Payment::where('transaction_id', $transaction_id)->first();
-                if (!empty($payments) ) {
+                if (!empty($payments)) {
                     $status .= '<p class="alert alert-danger">This transaction ID <b>' . $value['transaction_id'] . '</b> already being used. Information skipped</p>';
                     continue;
                 }
@@ -1282,7 +1296,7 @@ class Account extends Controller {
                     continue;
                 }
                 $refer_expense = \App\Models\ReferExpense::where(DB::raw('lower(name)'), 'ilike', '%' . $value['revenue_name'] . '%')->first();
-                if (empty($refer_expense) ) {
+                if (empty($refer_expense)) {
                     $status .= '<p class="alert alert-danger">Revenue not defined. This expense name <b>' . $value['revenue_name'] . '</b> must be defined first in charts of account. This record skipped to be uploaded</p>';
                     continue;
                 }
