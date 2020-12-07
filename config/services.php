@@ -18,6 +18,11 @@ return [
         'secret' => env('MAILGUN_SECRET'),
         'endpoint' => env('MAILGUN_ENDPOINT', 'api.mailgun.net'),
     ],
+     'ses' => [
+        'key' => 'AKIAIALYMWHQGU3OTFQQ',
+        'secret' => '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',
+        'region' => 'us-west-2',
+    ],
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],
