@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'driver' => 'smtp',
+    'driver' => 'ses',
 
     /*
     |--------------------------------------------------------------------------
@@ -84,9 +84,9 @@ return [
     |
     */
 
-    'username' => 'no-reply@shulesoft.com',
+    'username' => 'noreply@shulesoft.com',
 
-    'password' =>'t}(E4p=sjB9O',
+    'password' =>'k8y*&*YHIU(&*(((_)+_#%$$777$HGHGgu',
 
     /*
     |--------------------------------------------------------------------------
