@@ -416,7 +416,7 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
                 'salary' => (float) 0, 'sex' => $applicant->gender, 'name' => $applicant->name, 'email' => $applicant->email, 'phone' => $applicant->phone,
                 'password' => $password, 'default_password' => $pass, 'status' => 1,
                 'photo' => 'defualt.png', 'dob' => date('Y-m-d', strtotime($applicant->dob)),
-                'usertype' => 'Admin'
+                'usertype' => 'Admin','jod'=>date('Y-m-d')
             ));
             $this->registerInAdmin($applicant, $password);
             return $this->sendApplicantEmail(DB::table('public.user')->where('email', $applicant->email)->first());
