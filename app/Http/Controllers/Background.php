@@ -443,7 +443,7 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
     }
 
     public function InviteApplicants() {
-        $applicants = DB::select('select * from admin.applicants where id=621');
+        $applicants = DB::table('dmin.applicants')->where('id',621)->get();
         foreach ($applicants as $applicant) {
 
             $message = view('email.associate');
@@ -456,12 +456,13 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
             );
             //send sms
             $sms = preg_replace($patterns, $replacements, $message);
-            $new_user_message = 'Habari #name'
+            $new_user_message = 'Hello '.$applicant->name.' '
                     . 'You are kindly invited to Join ShuleSoft Associate Program. Our Associates will be directly involved to provide training, data entry and configuration '
                     . 'to ALL schools (600+) and get paid per task done but also exposed to '
                     . 'schools that are looking for candidates who knows ShuleSoft. Click this link to join (' . $this->shortenUrl($url) . ') or visit our website (www.shulesoft.com) to learn more. Thanks';
-            $this->send_sms($applicant->phone, $new_user_message, 10);
+            $this->send_sms($applicant->phone, $new_user_message);
             $this->send_sms($applicant->email, 'We are hiring/finding ShuleSoft Regional and Local Associates', $sms);
+            echo 'Email and SMS sent to '.$applicant->name.'<br/>';
         }
     }
 
