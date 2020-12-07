@@ -416,7 +416,7 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
                 'salary' => (float) 0, 'sex' => $applicant->gender, 'name' => $applicant->name, 'email' => $applicant->email, 'phone' => $applicant->phone,
                 'password' => $password, 'default_password' => $pass, 'status' => 1,
                 'photo' => 'defualt.png', 'dob' => date('Y-m-d', strtotime($applicant->dob)),
-                'usertype' => 'Admin'
+                'usertype' => 'Admin', 'jod' => date('Y-m-d')
             ));
             $this->registerInAdmin($applicant, $password);
             return $this->sendApplicantEmail(DB::table('public.user')->where('email', $applicant->email)->first());
@@ -436,14 +436,16 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
         );
         //send sms
         $sms = preg_replace($patterns, $replacements, $message);
-        $new_user_message = 'Hi #name, Your accounts ( in https://demo.shulesoft.com, https://academy.shulesoft.com) '
+        $new_user_message = 'Hi ' . $applicant->name . ', Your accounts ( in https://demo.shulesoft.com, https://academy.shulesoft.com) '
                 . 'has been created successfully with username: ' . $applicant->username . ' and password: ' . $applicant->default_password . ' .Check your email for detailed information. Thanks ';
-        $this->send_sms($applicant->phone, $new_user_message, 10);
-        $this->send_sms($applicant->email, 'We are hiring/finding ShuleSoft Regional and Local Associates', $sms);
+        $this->send_sms($applicant->phone, $new_user_message);
+        $this->send_email($applicant->email, 'Success: ShuleSoft Account Registration', $sms);
+        die('Success: Your Account has been created, kindly wait for the confirmation email with details on how to get started. Thanks');
     }
 
+    
     public function InviteApplicants() {
-        $applicants = DB::table('admin.applicants')->where('id', 621)->get();
+        $applicants = DB::select('select * from admin.applicants where id not in (select applicant_id from admin.users where applicant_id is not null)');
         foreach ($applicants as $applicant) {
 
             $message = view('email.associate');
@@ -460,23 +462,17 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
                     . 'You are kindly invited to Join ShuleSoft Associate Program. Our Associates will be directly involved to provide training, data entry and configuration '
                     . 'to ALL schools (600+) and get paid per task done but also exposed to '
                     . 'schools that are looking for candidates who knows ShuleSoft. Click this link to join (' . $this->shortenUrl($url) . ') or visit our website (www.shulesoft.com) to learn more. Thanks';
-            //$this->send_sms($applicant->phone, $new_user_message);
-            // $this->send_email($applicant->email, 'We are looking for ShuleSoft Regional and Local Associates', $sms);
-            $link =  'demo.shulesoft.com.';
-            $data = ['content' => $sms, 'link' => $link, 'photo' => 'shulesoft.png', 'sitename' =>'shulesoft', 'name' => ''];
-            $mail = \Mail::send('email.default', $data, function ($m) use ($message) {
-                        $m->from('noreply@shulesoft.com', $message->sitename);
-                        $m->to($message->email)->subject($message->subject);
-                    });
+            $this->send_sms($applicant->phone, $new_user_message);
+            $this->send_email($applicant->email, 'We are looking for ShuleSoft Regional and Local Associates', $sms);
             echo 'Email and SMS sent to ' . $applicant->name . '<br/>';
         }
     }
 
     public function registerInAdmin($applicant, $password) {
-        DB::table('admin.users')->insert(array('firstname' => $applicant->name,
-            'sex' => $applicant->gender, 'email' => $applicant->email, 'phone' => $applicant->phone, 'name' => $applicant->name,
-            'password' => $password, 'status' => 1,
-            'applicant_id' => $applicant->id
+        return DB::table('admin.users')->insert(array('firstname' => $applicant->name,
+                    'sex' => $applicant->gender, 'email' => $applicant->email, 'phone' => $applicant->phone, 'name' => $applicant->name,
+                    'password' => $password, 'status' => 1,
+                    'applicant_id' => $applicant->id
         ));
     }
 
