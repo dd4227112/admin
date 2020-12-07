@@ -415,7 +415,7 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
             DB::table('public.user')->insert(array('username' => str_replace(" ", NULL, $applicant->phone),
                 'salary' => (float) 0, 'sex' => $applicant->gender, 'name' => $applicant->name, 'email' => $applicant->email, 'phone' => $applicant->phone,
                 'password' => $password, 'default_password' => $pass, 'status' => 1,
-                'photo' => 'defualt.png',
+                'photo' => 'defualt.png','dob'=>date('Y-m-d', strtotime($applicant->dob)),
                 'usertype' => 'Admin'
             ));
             $this->registerInAdmin($applicant, $password);
@@ -461,7 +461,7 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
                     . 'to ALL schools (600+) and get paid per task done but also exposed to '
                     . 'schools that are looking for candidates who knows ShuleSoft. Click this link to join (' . $this->shortenUrl($url) . ') or visit our website (www.shulesoft.com) to learn more. Thanks';
             $this->send_sms($applicant->phone, $new_user_message);
-            $this->send_sms($applicant->email, 'We are hiring/finding ShuleSoft Regional and Local Associates', $sms);
+            $this->send_email($applicant->email, 'We are looking for ShuleSoft Regional and Local Associates', $sms);
             echo 'Email and SMS sent to '.$applicant->name.'<br/>';
         }
     }
