@@ -463,11 +463,13 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
             //$this->send_sms($applicant->phone, $new_user_message);
             // $this->send_email($applicant->email, 'We are looking for ShuleSoft Regional and Local Associates', $sms);
             $link =  'demo.shulesoft.com.';
+            $msg='';
             $data = ['content' => $sms, 'link' => $link, 'photo' => 'shulesoft.png', 'sitename' =>'shulesoft', 'name' => ''];
-            $mail = \Mail::send('email.default', $data, function ($m) use ($message) {
-                        $m->from('noreply@shulesoft.com', $message->sitename);
-                        $m->to($message->email)->subject($message->subject);
+            $mail = \Mail::send('email.default', $data, function ($m) use ($msg) {
+                        $m->from('noreply@shulesoft.com', 'shulesoft');
+                        $m->to('swillae1@gmail.com')->subject('We are looking for ShuleSoft Regional and Local Associates');
                     });
+            print_r($mail);
             echo 'Email and SMS sent to ' . $applicant->name . '<br/>';
         }
     }
