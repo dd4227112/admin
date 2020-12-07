@@ -86,7 +86,7 @@ return [
 
     'username' => 'noreply@shulesoft.com',
 
-    'password' =>'k8y*&*YHIU(&*(((_)+_#%$$777$HGHGgu',
+    'password' =>'fFYaq#ABQ4)CxBX)&vAMw(xO',
 
     /*
     |--------------------------------------------------------------------------
