@@ -21,5 +21,9 @@ return [
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],
+    'google'=>[
+       'Client ID'=> '645217235571-uoega8r3kssjrfedrsvltm061186hped.apps.googleusercontent.com',
+        'Mtk6XCDNoIEMvoXGziTAn0cG'
+    ]
     
 ];

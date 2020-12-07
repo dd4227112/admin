@@ -98,10 +98,10 @@ class Controller extends BaseController {
 
     public function send_email($email, $subject, $message) {
 
-        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+       // if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $obj = array('body' => $message, 'subject' => $subject, 'email' => $email);
             DB::table('public.email')->insert($obj);
-        }
+       // }
 
         return $this;
     }
