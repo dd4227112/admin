@@ -415,7 +415,7 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
             DB::table('public.user')->insert(array('username' => str_replace(" ", NULL, $applicant->phone),
                 'salary' => (float) 0, 'sex' => $applicant->gender, 'name' => $applicant->name, 'email' => $applicant->email, 'phone' => $applicant->phone,
                 'password' => $password, 'default_password' => $pass, 'status' => 1,
-                'photo' => 'defualt.png','dob'=>date('Y-m-d', strtotime($applicant->dob)),
+                'photo' => 'defualt.png', 'dob' => date('Y-m-d', strtotime($applicant->dob)),
                 'usertype' => 'Admin'
             ));
             $this->registerInAdmin($applicant, $password);
@@ -427,23 +427,23 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
     }
 
     public function sendApplicantEmail($applicant) {
-         $message =view('email.associate_confirm');
-            $patterns = array(
-                '/#name/i', '/#username/i', '/#password/i',
-            );
-           $replacements = array(
-                $applicant->name, $applicant->username,$applicant->default_password
-            );
-            //send sms
-            $sms = preg_replace($patterns, $replacements, $message);
-            $new_user_message = 'Hi #name, Your accounts ( in https://demo.shulesoft.com, https://academy.shulesoft.com) '
-                    . 'has been created successfully with username: '.$applicant->username.' and password: '.$applicant->default_password.' .Check your email for detailed information. Thanks ';
-            $this->send_sms($applicant->phone, $new_user_message, 10);
-            $this->send_sms($applicant->email, 'We are hiring/finding ShuleSoft Regional and Local Associates', $sms);
+        $message = view('email.associate_confirm');
+        $patterns = array(
+            '/#name/i', '/#username/i', '/#password/i',
+        );
+        $replacements = array(
+            $applicant->name, $applicant->username, $applicant->default_password
+        );
+        //send sms
+        $sms = preg_replace($patterns, $replacements, $message);
+        $new_user_message = 'Hi #name, Your accounts ( in https://demo.shulesoft.com, https://academy.shulesoft.com) '
+                . 'has been created successfully with username: ' . $applicant->username . ' and password: ' . $applicant->default_password . ' .Check your email for detailed information. Thanks ';
+        $this->send_sms($applicant->phone, $new_user_message, 10);
+        $this->send_sms($applicant->email, 'We are hiring/finding ShuleSoft Regional and Local Associates', $sms);
     }
 
     public function InviteApplicants() {
-        $applicants = DB::table('admin.applicants')->where('id',621)->get();
+        $applicants = DB::table('admin.applicants')->where('id', 621)->get();
         foreach ($applicants as $applicant) {
 
             $message = view('email.associate');
@@ -456,13 +456,19 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
             );
             //send sms
             $sms = preg_replace($patterns, $replacements, $message);
-            $new_user_message = 'Hello '.$applicant->name.' '
+            $new_user_message = 'Hello ' . $applicant->name . ' '
                     . 'You are kindly invited to Join ShuleSoft Associate Program. Our Associates will be directly involved to provide training, data entry and configuration '
                     . 'to ALL schools (600+) and get paid per task done but also exposed to '
                     . 'schools that are looking for candidates who knows ShuleSoft. Click this link to join (' . $this->shortenUrl($url) . ') or visit our website (www.shulesoft.com) to learn more. Thanks';
-            $this->send_sms($applicant->phone, $new_user_message);
-            $this->send_email($applicant->email, 'We are looking for ShuleSoft Regional and Local Associates', $sms);
-            echo 'Email and SMS sent to '.$applicant->name.'<br/>';
+            //$this->send_sms($applicant->phone, $new_user_message);
+            // $this->send_email($applicant->email, 'We are looking for ShuleSoft Regional and Local Associates', $sms);
+            $link =  'demo.shulesoft.com.';
+            $data = ['content' => $sms, 'link' => $link, 'photo' => 'shulesoft.png', 'sitename' =>'shulesoft', 'name' => ''];
+            $mail = \Mail::send('email.default', $data, function ($m) use ($message) {
+                        $m->from('noreply@shulesoft.com', $message->sitename);
+                        $m->to($message->email)->subject($message->subject);
+                    });
+            echo 'Email and SMS sent to ' . $applicant->name . '<br/>';
         }
     }
 

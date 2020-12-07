@@ -271,7 +271,6 @@ class Message extends Controller {
                                     $m->from('noreply@shulesoft.com', $message->sitename);
                                     $m->to($message->email)->subject($message->subject);
                                 });
-                        print_r($mail);
 
                         if (count(\Mail::failures()) > 0) {
                             DB::update('update ' . $message->schema_name . '.email set status=0 WHERE email_id=' . $message->email_id);
