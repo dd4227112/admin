@@ -563,7 +563,6 @@ function toast(message) {
                         <?php } ?>
 
                         <?php if (Auth::user()->role_id == 12) { ?>
-                            <li><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">Meeting Minutes</a></li>
 
                             <li class="nav-item">
                                 <a href="<?= url('customer/activity') ?>">
@@ -787,6 +786,7 @@ function toast(message) {
                         }
                         if (can_access('manage_users') || in_array(Auth::user()->role_id, array(14, 8, 15))) {
                             ?>
+
                             <li class="nav-item">
                                 <a href="#!">
                                     <i class="ti-layers "></i>
@@ -798,6 +798,7 @@ function toast(message) {
                                     <li><a href="<?= url('sales/schoolVisit/1') ?>" data-i18n="nav.extra-components.session-timeout">School Visitation</a></li>
                                 </ul>
                             </li>
+                            <li class="nav-item"><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline"> <i class="ti-book "> Meeting Minutes</a></li>
                             <?php
                         }
                         ?>
@@ -827,7 +828,7 @@ function toast(message) {
                             </li>
                             <?php
                         }
-                        if (Auth::user()->department == 9 ||  Auth::user()->department == 10) {                            ?>
+                        if (Auth::user()->department == 9 ||  Auth::user()->department == 10) { ?>
                             <li class="nav-item"><a href="<?= url('Partner/index') ?>" > <i class="ti-layers "> </i> Onboarded Schools</a></li>
                             <?php
                         }
@@ -870,9 +871,7 @@ function toast(message) {
                                 </ul>
                             </li>
                         <?php } ?>
-                        <?php   if (Auth::user()->department != 9 ||  Auth::user()->department != 10) { ?>
-                            <li class="nav-item"><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline"> <i class="ti-book "> Meeting Minutes</a></li>
-                        <?php } ?>
+                        
                     <?php } ?>
                 </ul>
             </div>
