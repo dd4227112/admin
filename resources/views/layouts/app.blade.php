@@ -870,8 +870,8 @@ function toast(message) {
                                 </ul>
                             </li>
                         <?php } ?>
-                        <?php   if (Auth::user()->department == 9 ||  Auth::user()->department == 10) { ?>
-                            <li class="nav-item"><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">Meeting Minutes</a></li>
+                        <?php   if (Auth::user()->department != 9 ||  Auth::user()->department != 10) { ?>
+                            <li class="nav-item"><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline"> <i class="ti-book "> Meeting Minutes</a></li>
                         <?php } ?>
                     <?php } ?>
                 </ul>
