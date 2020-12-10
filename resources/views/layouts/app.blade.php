@@ -634,7 +634,7 @@ function toast(message) {
                             <li><a href="<?= url('customer/requirements') ?>" data-i18n="nav.page_layout.bottom-menu">Customer Requirements</a></li>
                         <?php } ?>
 
-                        <?php if (can_access('manage_marketing') && Auth::user()->role_id != 10) { ?>
+                        <?php if (can_access('manage_marketing') && Auth::user()->id == 33) { ?>
                             <li class="nav-item">
                                 <a href="#!">
                                     <i class="ti-bell "></i>
