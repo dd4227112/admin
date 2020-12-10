@@ -784,7 +784,7 @@ function toast(message) {
 
                             <?php
                         }
-                        if (can_access('manage_users') || in_array(Auth::user()->role_id, array(14, 8, 15))) {
+                        if (can_access('manage_users') || in_array(Auth::user()->role_id, array(14, 8, 15)) && Auth::user()->role_id !=1) {
                             ?>
 
                             <li class="nav-item">
@@ -798,10 +798,12 @@ function toast(message) {
                                     <li><a href="<?= url('sales/schoolVisit/1') ?>" data-i18n="nav.extra-components.session-timeout">School Visitation</a></li>
                                 </ul>
                             </li>
-                            <li class="nav-item"><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline"> <i class="ti-book "> Meeting Minutes</a></li>
-                            <?php
-                        }
+                          <?php
+                            }
                         ?>
+                         <?php if (in_array(Auth::user()->role_id, array(14, 8, 15,9))) { ?>
+                                <li class="nav-item"><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline"> <i class="ti-book "> </i> Meeting Minutes</a></li>
+                            <?php } ?>
                         <?php if ((int) Auth::user()->role_id == 7) { ?>
                             <li class="nav-item">
                                 <a href="#!">
