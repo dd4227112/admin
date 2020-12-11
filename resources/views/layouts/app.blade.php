@@ -801,15 +801,11 @@ function toast(message) {
                             <?php
                         }
                         ?>
-<<<<<<< HEAD
-                         <?php if (in_array(Auth::user()->role_id, array(14, 8,93,2))) { ?>
+
+                         <?php if (in_array(Auth::user()->role_id, array(14, 8,9,3,2))) { ?>
                                 <li class="nav-item"><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline"> <i class="ti-book "> </i> Meeting Minutes</a></li>
                             <?php } ?>
-=======
-                        <?php if (in_array(Auth::user()->role_id, array(14, 8, 15)) &&   !preg_match('/crdb/i', Auth::user()->email)) { ?>
-                            <li class="nav-item"><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline"> <i class="ti-book "> </i> Meeting Minutes</a></li>
-                        <?php } ?>
->>>>>>> 153b4e6466664375a56d6743622fd0ac0f7ce046
+                            
                         <?php if ((int) Auth::user()->role_id == 7) { ?>
                             <li class="nav-item">
                                 <a href="#!">
