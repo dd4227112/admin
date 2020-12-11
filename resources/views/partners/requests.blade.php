@@ -157,7 +157,7 @@
                                                             <td><?= $invoice->client->name ?></td>
                                                             <td><?= $invoice->reference ?></td>
                                                             <td><?= $invoice->client->estimated_students ?></td>
-                                                            <td><?= number_format(12000 * $invoice->client->estimated_students) ?></td>
+                                                            <td><?= $invoice->invoiceFees()->sum('amount')?></td>
                                                             <td><?= $invoice->status == 0 ? 'Unpaid' : 'Paid' ?></td>
                                                             <td><?php echo date('d M Y', strtotime($invoice->client->created_at)); ?></td>
                                                             <td>
