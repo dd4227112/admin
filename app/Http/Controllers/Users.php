@@ -450,7 +450,7 @@ class Users extends Controller {
         if (preg_match('/nmb/i', $partner_user->branch->partner->name)) {
             $refer_bank_id = 22;
         } else {
-            $refer_bank_id = 7;
+            $refer_bank_id = 8;
         }
         return $refer_bank_id;
     }

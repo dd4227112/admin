@@ -154,12 +154,12 @@
                                                         ?>
                                                         <tr>
                                                             <td><?= $i++ ?></td>
-                                                            <td><?= $invoice->name ?></td>
+                                                            <td><?= $invoice->client->name ?></td>
                                                             <td><?= $invoice->reference ?></td>
-                                                            <td><?= $invoice->estimated_students ?></td>
-                                                            <td><?= number_format($invoice->amount) ?></td>
+                                                            <td><?= $invoice->client->estimated_students ?></td>
+                                                            <td><?= number_format(12000 * $invoice->client->estimated_students) ?></td>
                                                             <td><?= $invoice->status == 0 ? 'Unpaid' : 'Paid' ?></td>
-                                                            <td><?php echo date('d M Y', strtotime($invoice->date)); ?></td>
+                                                            <td><?php echo date('d M Y', strtotime($invoice->client->created_at)); ?></td>
                                                             <td>
                                                                 <a href="<?= url('Partner/invoiceView/' . $invoice->id) ?>" class="btn btn-info btn-sm"> View Invoice</a>
                                                                 <a href="#"  data-toggle="modal" data-target="#customer_payment_model_<?=$invoice->id?>_this" class="btn btn-success btn-sm"> Payments</a>
@@ -169,7 +169,7 @@
                                                     <div class="modal-dialog modal-lg" role="document">
                                                         <div class="modal-content">
                                                         <div class="modal-header text-center">
-                                                            <h4 class="modal-title"> Payment Verification for <?= $invoice->name ?><br> Procced with system Installation</h4>
+                                                            <h4 class="modal-title"> Payment Verification for <?= $invoice->client->name ?><br> Procced with system Installation</h4>
                                                             <span id="modeltitle"></span>
                                                         </div>
                                                         <form action="<?=url('Partner/VerifyPayment')?>" class="form-card" method="post"  enctype='multipart/form-data'>

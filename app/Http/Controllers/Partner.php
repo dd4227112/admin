@@ -27,9 +27,7 @@ class Partner extends Controller {
             $this->data['refer_bank_id'] = $refer_bank_id =  '';
             $this->data['requests'] = \App\Models\IntegrationRequest::get();
         }
-        $refer_bank_id > 0 ? $refer_bank = "in (".$refer_bank_id.")" : $refer_bank  = " in (22,8)";
-        
-        $this->data['invoices'] = DB::SELECT('SELECT distinct a.reference,a.id, a.status, b.username,b.estimated_students, (2000 * b.estimated_students) as amount, a.created_at::date as date,b.name from admin.invoices a, admin.clients b, admin.integration_requests c where a.created_at::date=c.created_at::date and a.client_id=c.client_id and b.id=c.client_id and refer_bank_id '.$refer_bank.' and reference is not null');
+        $this->data['invoices'] = \App\Models\Invoice::whereIn('client_id', \App\Models\IntegrationRequest::where('refer_bank_id', $this->data['refer_bank_id'])->get(['client_id']))->where('note','integration')->get();
         return view('partners.requests', $this->data);
     }
 
