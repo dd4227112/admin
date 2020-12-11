@@ -382,7 +382,7 @@ function toast(message) {
                                         <?php } ?>
                                         <li><a href="{{ route('logout') }}"
                                                onclick="event.preventDefault();
-                                                       document.getElementById('logout-form').submit();"><i class="ti-layout-sidebar-left"></i> Logout</a></li>
+                                                           document.getElementById('logout-form').submit();"><i class="ti-layout-sidebar-left"></i> Logout</a></li>
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                             {{ csrf_field() }}
                                         </form>
@@ -463,7 +463,7 @@ function toast(message) {
                     <img class="img-40" src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image">
                     <div class="user-details">
                         <span>{{ Auth::user()->name() }}</span>
-                        <span id="more-details"> <?php // Auth::user()->role->display_name          ?></span>
+                        <span id="more-details"> <?php // Auth::user()->role->display_name            ?></span>
                     </div>
                 </div>
                 <div class="main-menu-content">
@@ -578,35 +578,35 @@ function toast(message) {
                         <?php } ?>
 
                         <?php // if (can_access('manage_sales') || Auth::user()->role_id == 14) { ?>
-                            <li class="nav-item">
-                                <a href="#!">
-                                    <i class="ti-layout-cta-right"></i>
-                                    <span data-i18n="nav.navigate.main">Sales</span>
-                                </a>
-                                <ul class="tree-1">
-                                    <li>
-                                        <a href="<?= url('sales/index') ?>" data-i18n="nav.navigate.navbar">Sales Materials</a>
-                                    </li>
+                        <li class="nav-item">
+                            <a href="#!">
+                                <i class="ti-layout-cta-right"></i>
+                                <span data-i18n="nav.navigate.main">Sales</span>
+                            </a>
+                            <ul class="tree-1">
+                                <li>
+                                    <a href="<?= url('sales/index') ?>" data-i18n="nav.navigate.navbar">Sales Materials</a>
+                                </li>
+
+                                <?php
+                                if (!preg_match('/crdb/i', Auth::user()->email)) {
+                                    ?>
                                     <li>
                                         <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">Schools</a>
                                     </li>
-                                    <?php
-                                        if (Auth::user()->department == 9 ||  Auth::user()->department == 10) {
-                                    ?>
-                                    
                                     <li>
                                         <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">List of Schools</a>
                                     </li>
-                                        <?php } ?>
-                                    <li>
-                                        <a href="<?= url('sales/salesStatus') ?>" data-i18n="nav.navigate.navbar">Sales Status</a>
-                                    </li>
+                                <?php } ?>
+                                <li>
+                                    <a href="<?= url('sales/salesStatus') ?>" data-i18n="nav.navigate.navbar">Sales Status</a>
+                                </li>
 
-                                    <!--                                    <li>
-                                                                            <a href="<?= url('sales/analysis') ?>" data-i18n="nav.navigate.navbar">Sales Analysis</a>
-                                                                        </li>-->
-                                </ul>
-                            </li>
+                                <!--                                    <li>
+                                                                        <a href="<?= url('sales/analysis') ?>" data-i18n="nav.navigate.navbar">Sales Analysis</a>
+                                                                    </li>-->
+                            </ul>
+                        </li>
                         <?php // } ?>
 
                         <?php if (Auth::user()->role_id != 7) { ?>
@@ -784,7 +784,7 @@ function toast(message) {
 
                             <?php
                         }
-                        if (can_access('manage_users') || in_array(Auth::user()->role_id, array(14, 8, 15)) && Auth::user()->role_id !=1) {
+                        if (can_access('manage_users') || in_array(Auth::user()->role_id, array(14, 8, 15)) && Auth::user()->role_id != 1) {
                             ?>
 
                             <li class="nav-item">
@@ -798,12 +798,12 @@ function toast(message) {
                                     <li><a href="<?= url('sales/schoolVisit/1') ?>" data-i18n="nav.extra-components.session-timeout">School Visitation</a></li>
                                 </ul>
                             </li>
-                          <?php
-                            }
+                            <?php
+                        }
                         ?>
-                         <?php if (in_array(Auth::user()->role_id, array(14, 8, 15,9))) { ?>
-                                <li class="nav-item"><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline"> <i class="ti-book "> </i> Meeting Minutes</a></li>
-                            <?php } ?>
+                        <?php if (in_array(Auth::user()->role_id, array(14, 8, 15, 9))) { ?>
+                            <li class="nav-item"><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline"> <i class="ti-book "> </i> Meeting Minutes</a></li>
+                        <?php } ?>
                         <?php if ((int) Auth::user()->role_id == 7) { ?>
                             <li class="nav-item">
                                 <a href="#!">
@@ -830,7 +830,8 @@ function toast(message) {
                             </li>
                             <?php
                         }
-                        if (Auth::user()->department == 9 ||  Auth::user()->department == 10) { ?>
+                        if (Auth::user()->department == 9 || Auth::user()->department == 10) {
+                            ?>
                             <li class="nav-item"><a href="<?= url('Partner/index') ?>" > <i class="ti-layers "> </i> Onboarded Schools</a></li>
                             <?php
                         }
@@ -873,7 +874,7 @@ function toast(message) {
                                 </ul>
                             </li>
                         <?php } ?>
-                        
+
                     <?php } ?>
                 </ul>
             </div>
