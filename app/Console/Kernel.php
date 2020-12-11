@@ -94,7 +94,10 @@ class Kernel extends ConsoleKernel {
             //  (new HomeController())->createTodayReport();
             (new Background())->officeDailyReport();
         })->dailyAt('14:50'); // Eq to 17:50 h 
-
+        $schedule->call(function () {
+            $this->understandActivities();
+        })->dailyAt('13:00'); //eg to 16h
+        
         $schedule->call(function () {
             //  (new HomeController())->createTodayReport();
             (new Background())->schoolMonthlyReport();
@@ -539,6 +542,20 @@ class Kernel extends ConsoleKernel {
             $key = DB::table('public.sms_keys')->first();
             DB::statement("insert into public.sms (phone_number,body,type,sms_keys_id) values ('" . $user->phone . "','" . $message . "',0," . $key->id . " )");
         }
+    }
+
+    public function understandActivities() {
+        //notify CEO about todays people's todays tasks
+        $tasks = DB::select('select a.activity,u.email,u.phone, u.name, cl.name as client_name, a.created_at, a.end_date,\'support\' as task_type from admin.tasks a join admin.tasks_users b on a.id=b.task_id join admin.tasks_clients c on c.task_id=a.id join admin.users u on u.id=b.user_id join admin.clients cl on cl.id=c.client_id where a.created_at::date=CURRENT_DATE OR a.end_date=CURRENT_DATE
+union all
+select a.activity,u.email,u.phone, u.name,cl.name as client_name,a.created_at, a.end_date,\'sales\' from admin.tasks a join admin.tasks_schools b on a.id=b.task_id join admin.schools cl on cl.id=b.school_id left join admin.users u on u.id=a.user_id where b.created_at::date=CURRENT_DATE');
+        $table = '<table><thead><tr><th>Activity</th><th>Email</th><th>Phone</th><th>Name</th><th>Client Name</th><th>Task Created</th><th>End Date</th><th>Type</th></tr></thead><tbody>';
+        foreach ($tasks as $task) {
+            $table .= '<tr>th>' . $task->activity . '</th><th>' . $task->email . '</th><th>' . $task->phone . '</th>'
+                    . '<th>' . $task->name . '</th><th>' . $task->client_name . '</th><th>' . $task->created_at . '</th><th>' . $task->end_date . '</th><th>' . $task->task_type . '</th></tr>';
+        }
+        $table .= '</table><p>Total Tasks ' . count($tasks) . '</p>';
+        DB::statement("insert into public.email (email,subject,body) values ('swillae1@gmail.com', 'Todays Activities','" . $table . "')");
     }
 
     public function getCleanSms($replacements, $message) {
