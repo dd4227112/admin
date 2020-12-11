@@ -784,7 +784,7 @@ function toast(message) {
 
                             <?php
                         }
-                        if (can_access('manage_users') || in_array(Auth::user()->role_id, array(14, 8, 15)) && Auth::user()->role_id != 1) {
+                        if (can_access('manage_users') && !in_array(Auth::user()->department, [9,10]) || in_array(Auth::user()->role_id, array(14, 8, 2,3,9))) {
                             ?>
 
                             <li class="nav-item">
@@ -801,9 +801,11 @@ function toast(message) {
                             <?php
                         }
                         ?>
-                        <?php if (in_array(Auth::user()->role_id, array(14, 8, 15)) &&   !preg_match('/crdb/i', Auth::user()->email)) { ?>
-                            <li class="nav-item"><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline"> <i class="ti-book "> </i> Meeting Minutes</a></li>
-                        <?php } ?>
+
+                         <?php if (in_array(Auth::user()->role_id, array(14, 8,9,3,2))) { ?>
+                                <li class="nav-item"><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline"> <i class="ti-book "> </i> Meeting Minutes</a></li>
+                            <?php } ?>
+                            
                         <?php if ((int) Auth::user()->role_id == 7) { ?>
                             <li class="nav-item">
                                 <a href="#!">

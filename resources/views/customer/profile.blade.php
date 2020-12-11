@@ -8,6 +8,8 @@ function check_status($table, $where = null) {
     $schema = SCHEMA;
     if ($table == 'admin.vendors') {
         $report = \collect(DB::select('select created_at::date from ' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first();
+    }elseif ($table == 'invoices') {
+        $report = \collect(DB::select('select date::date as created_at from ' . $table . '  ' . $where . ' order by date::date desc limit 1'))->first();
     } else {
         $report = \collect(DB::select('select created_at::date from ' . $schema . '.' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first();
     }
