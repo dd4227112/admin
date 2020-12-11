@@ -1,14 +1,19 @@
 @extends('layouts.app')
 @section('content')
 <?php $root = url('/') . '/public/' ?>
+<div class="main-body">
 <div class="page-wrapper">
     <div class="page-header">
         <div class="page-header-title">
             <h4>Dashboard</h4>
         </div>
+        <?php
+                                if (!preg_match('/crdb/i', Auth::user()->email)) {
+                                    ?>
         <div class="page-header-breadcrumb">
         <a data-toggle="modal" data-target="#sendMessage" class="btn btn-info btn-sm  f-right"> <i class="ti-comments"></i> Send Message </a>
         </div>
+                                <?php }?>
     </div>
     <div class="page-body">
     <div class="row">
@@ -253,7 +258,7 @@
               </div>
             </div>
           </div>
-        </div>
+      
 
     <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript">

@@ -303,13 +303,13 @@ class Users extends Controller {
                 'attached' => $filename
             ];
             $minute = \App\Models\Minutes::create($array);
-            if (count($minute->id) > 0 && request('user_id')) {
+            if (!empty($minute->id) && request('user_id')) {
                 $modules = request('user_id');
                 foreach ($modules as $key => $value) {
                     if (request('user_id')[$key] != '') {
                         $array = ['user_id' => request('user_id')[$key], 'minute_id' => $minute->id];
                         $check_unique = \App\Models\MinuteUser::where($array);
-                        if (count($check_unique->first()) == 0) {
+                        if (empty($check_unique->first())) {
                             \App\Models\MinuteUser::create($array);
                         }
                     }
@@ -450,7 +450,7 @@ class Users extends Controller {
         if (preg_match('/nmb/i', $partner_user->branch->partner->name)) {
             $refer_bank_id = 22;
         } else {
-            $refer_bank_id = 7;
+            $refer_bank_id = 8;
         }
         return $refer_bank_id;
     }
