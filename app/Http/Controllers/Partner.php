@@ -27,7 +27,7 @@ class Partner extends Controller {
             $this->data['refer_bank_id'] = $refer_bank_id =  '';
             $this->data['requests'] = \App\Models\IntegrationRequest::get();
         }
-        $this->data['invoices'] = \App\Models\Invoice::whereIn('client_id', \App\Models\IntegrationRequest::get(['client_id']))->get();
+        $this->data['invoices'] = \App\Models\Invoice::whereIn('client_id', \App\Models\IntegrationRequest::where('refer_bank_id', $this->data['refer_bank_id'])->get(['client_id']))->where('note','integration')->get();
         return view('partners.requests', $this->data);
     }
 
