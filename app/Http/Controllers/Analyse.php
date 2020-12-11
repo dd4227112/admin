@@ -54,7 +54,7 @@ class Analyse extends Controller {
 
             $this->data['refer_bank_id'] = (new \App\Http\Controllers\Users())->getBankId();
             $this->data['requests'] = \App\Models\IntegrationRequest::where('refer_bank_id', $this->data['refer_bank_id'])->get();
-            $this->data['invoices'] = \App\Models\Invoice::whereIn('client_id', \App\Models\IntegrationRequest::where('refer_bank_id', $this->data['refer_bank_id'])->get(['client_id']))->get();
+            $this->data['invoices'] = \App\Models\Invoice::whereIn('client_id', \App\Models\IntegrationRequest::where('refer_bank_id', $this->data['refer_bank_id'])->get(['client_id']))->where('note','integration')->get();
             return view('partners.requests', $this->data);
         } elseif (Auth::user()->role_id == 12) {
 
