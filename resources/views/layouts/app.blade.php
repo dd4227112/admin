@@ -784,11 +784,7 @@ function toast(message) {
 
                             <?php
                         }
-<<<<<<< HEAD
                         if (can_access('manage_users') && !in_array(Auth::user()->department, [9,10]) || in_array(Auth::user()->role_id, array(14, 8, 2,3,9))) {
-=======
-                        if (can_access('manage_users') || in_array(Auth::user()->role_id, array(14, 8, 15)) && Auth::user()->role_id != 1) {
->>>>>>> 153b4e6466664375a56d6743622fd0ac0f7ce046
                             ?>
 
                             <li class="nav-item">

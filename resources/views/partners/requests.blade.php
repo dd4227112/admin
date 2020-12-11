@@ -157,12 +157,19 @@
                                                             <td><?= $invoice->client->name ?></td>
                                                             <td><?= $invoice->reference ?></td>
                                                             <td><?= $invoice->client->estimated_students ?></td>
-                                                            <td><?= number_format(12000 * $invoice->client->estimated_students) ?></td>
+                                                            <td><?= $invoice->invoiceFees()->sum('amount')?></td>
                                                             <td><?= $invoice->status == 0 ? 'Unpaid' : 'Paid' ?></td>
                                                             <td><?php echo date('d M Y', strtotime($invoice->client->created_at)); ?></td>
                                                             <td>
                                                                 <a href="<?= url('Partner/invoiceView/' . $invoice->id) ?>" class="btn btn-info btn-sm"> View Invoice</a>
+                                                                <?php 
+                                                                $check_payment = $invoice->payments->count();
+                                                                    if($check_payment>0){
+                                                                ?>
+                                                                <a href="https://<?= $request->client->username ?>.shulesoft.com/database/<?php echo $request->client->username; ?>" target="_blank" class="btn btn-success btn-sm"> Install System</a>
+                                                            <?php }else{ ?>
                                                                 <a href="#"  data-toggle="modal" data-target="#customer_payment_model_<?=$invoice->id?>_this" class="btn btn-success btn-sm"> Payments</a>
+                                                            <?php } ?>
                                                             </td>
                                                         </tr>
                                                     <div class="modal fade" id="customer_payment_model_<?=$invoice->id?>_this" role="dialog" style="z-index: 99999;" aria-hidden="true">
