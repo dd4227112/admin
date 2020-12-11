@@ -51,8 +51,9 @@ class Analyse extends Controller {
             $this->data['nmb_shulesoft_schools'] = \collect(DB::select('select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22 and schema_name in(select schema_name from admin.schools where schema_name is not null and ward_id in (select id from admin.wards where district_id = ' . $branch->branch->district_id . '))'))->first()->count;
             return view('analyse.nmb', $this->data);
         } elseif (Auth::user()->department == 9) {
-            $this->data['requests'] = \App\Models\IntegrationRequest::get();
-            $this->data['refer_bank_id'] = preg_match('/crdb/', Auth::user()->email) ? 8 : 22;
+           
+            $this->data['refer_bank_id'] = (new \App\Http\Controllers\Users())->getBankId();
+             $this->data['requests'] = \App\Models\IntegrationRequest::where('refer_bank_id',$this->data['refer_bank_id'])->get();
             $this->data['invoices'] = \App\Models\Invoice::whereIn('client_id', \App\Models\IntegrationRequest::get(['client_id']))->get();
             return view('partners.requests', $this->data);
         } elseif (Auth::user()->role_id == 12) {

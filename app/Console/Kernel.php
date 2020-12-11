@@ -13,6 +13,9 @@ class Kernel extends ConsoleKernel {
 
     /**
      * The Artisan commands provided by your application.
+     * 
+     * 
+     * Send these important notifications
      *
      * @var array
      */
@@ -49,10 +52,9 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
             $this->curlServer(['action' => 'payment'], 'http://51.77.212.234:8081/api/cron');
-          
         })->everyMinute();
         $schedule->call(function () {
-              (new Message())->sendEmail();
+            (new Message())->sendEmail();
             (new Message())->karibusmsEmails();
         })->everyMinute();
         $schedule->call(function () {
@@ -588,8 +590,12 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
     }
 
     public function sendNotice() {
+        $public_day = DB::table('admin.public_days')->whereMonth('date', date('m'))->whereDay('date', date('d'))->first();
+        !empty($public_day) ?? DB::statement("insert into public.sms(phone_number,body,type,sms_keys_id)
+select distinct phone, body,0,8 from (select 'Tunakutakia '||upper(\"schema_name\")||'  Heri ya " . $public_day->name . ". ' AS body,email,replace(replace(replace(phone,'/',','),' ',''),'|',',') as phone,\"schema_name\",name from admin.all_users where usertype in ('Admin') and length(phone)>3 and \"schema_name\" not in ('public','betatwo')) x");
+
         $notices = DB::select('select * from admin.all_notice  WHERE  date-CURRENT_DATE=3 and status=0 ');
-///these are notices
+///these are notices+
         foreach ($notices as $notice) {
 
 //$class_ids = (explode(',', preg_replace('/{/', '', preg_replace('/}/', '', $notice->class_id))));
