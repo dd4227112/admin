@@ -34,7 +34,7 @@ class Analyse extends Controller {
 
         if (Auth::user()->role_id == 7) {
             $id = Auth::user()->id;
-            $this->data['refer_bank_id'] =$refer_bank_id = (new \App\Http\Controllers\Users())->getBankId();
+            $this->data['refer_bank_id'] = $refer_bank_id = (new \App\Http\Controllers\Users())->getBankId();
             //$partner_user = \App\Models\PartnerUser::whereIn('user_id', [Auth::user()->id])->first();
             $this->data['use_shulesoft'] = DB::table('admin.all_setting')->count() - 5;
             //$this->data['nmb_schools'] = \App\Models\PartnerSchool::whereIn('branch_id', \App\Models\PartnerBranch::where('partner_id', $partner_user->branch->partner->id)->get(['branch_id']))->count();
@@ -51,10 +51,10 @@ class Analyse extends Controller {
             $this->data['nmb_shulesoft_schools'] = \collect(DB::select('select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22 and schema_name in(select schema_name from admin.schools where schema_name is not null and ward_id in (select id from admin.wards where district_id = ' . $branch->branch->district_id . '))'))->first()->count;
             return view('analyse.nmb', $this->data);
         } elseif (Auth::user()->department == 9) {
-           
+
             $this->data['refer_bank_id'] = (new \App\Http\Controllers\Users())->getBankId();
-             $this->data['requests'] = \App\Models\IntegrationRequest::where('refer_bank_id',$this->data['refer_bank_id'])->get();
-            $this->data['invoices'] = \App\Models\Invoice::whereIn('client_id', \App\Models\IntegrationRequest::get(['client_id']))->get();
+            $this->data['requests'] = \App\Models\IntegrationRequest::where('refer_bank_id', $this->data['refer_bank_id'])->get();
+            $this->data['invoices'] = \App\Models\Invoice::whereIn('client_id', \App\Models\IntegrationRequest::where('refer_bank_id', $this->data['refer_bank_id'])->get(['client_id']))->get();
             return view('partners.requests', $this->data);
         } elseif (Auth::user()->role_id == 12) {
 
@@ -65,7 +65,7 @@ class Analyse extends Controller {
             $sql = "select a.id, a.end_date, substring(a.activity from 1 for 80) as activity,a.created_at::date, a.date,d.name as user ,e.name as type  from admin.tasks a join admin.tasks_clients c on a.id=c.task_id
             join admin.users d on d.id=a.user_id join admin.task_types e on a.task_type_id=e.id WHERE a.user_id = $user order by a.created_at::date desc";
             $this->data['activities'] = DB::select($sql);
-            $this->data['summary']= $this->summary();
+            $this->data['summary'] = $this->summary();
             return view('analyse.index', $this->data);
         }
     }
@@ -234,9 +234,9 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         $this->data['users'] = $users = DB::table('admin.all_users')->select(DB::raw('count(*) as user_count, "table"'))->whereIn('schema_name', $all_schoolz)->where('status', 1)->where('table', '<>', 'setting')->groupBy('table')->get();
         $this->data['active'] = DB::table('admin.all_log')->select(DB::raw('count(*) as school_count, "schema_name"'))->whereIn('schema_name', $all_schoolz)->where('table', '<>', 'setting')->whereDate('created_at', '>', $days)->groupBy('schema_name')->get();
         $arrayTxt = implode(',', $all_schools);
-        if(count($all_schools) > 0){
-        $sql = 'select count(*) as count, "schema_name" from "admin"."all_log" where created_at::date>' . $days . ' AND "schema_name" in (' . $arrayTxt . ') group by "schema_name"';
-        $this->data['logs'] = $sql;
+        if (count($all_schools) > 0) {
+            $sql = 'select count(*) as count, "schema_name" from "admin"."all_log" where created_at::date>' . $days . ' AND "schema_name" in (' . $arrayTxt . ') group by "schema_name"';
+            $this->data['logs'] = $sql;
         }
         $this->data['staffs'] = \App\Models\User::where('status', 1)->where('department', '<>', 10)->get();
         $this->data['staff'] = \App\Models\User::where('id', $id)->first();
@@ -355,40 +355,39 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         }
     }
 
- public function sendMessage()
-{
-    if ($_POST) {
-        //dd(request()->all());
+    public function sendMessage() {
+        if ($_POST) {
+            //dd(request()->all());
 
-        $body = request('message');
-        $sms = request('sms');
-        $email = request('email');
-        request('lang') == 'swahili' ? $lang = 'Habari' : $lang = 'Hello';
-        $schools = DB::table('all_setting')->whereIn('schema_name', \App\Models\Client::whereIn('id', \App\Models\ClientSchool::whereIn('school_id', \App\Models\UsersSchool::where('user_id', Auth::User()->id)->get(['school_id']))->get(['client_id']))->get(['username']))->get();
-        $english =  'For More Details Contact: ' . chr(10) . 'Name: '. Auth::User()->name . chr(10) . 'Phone: '. Auth::User()->phone. chr(10) . 'Email: '. Auth::User()->email;
-        $swahili =  'Mawasiliano:' . chr(10) . 'Jina: '. Auth::User()->name . chr(10) . 'Simu: '. Auth::User()->phone. chr(10) . 'Barua Pepe: '. Auth::User()->email;
-        request('lang') == 'swahili' ? $footer = $swahili : $footer = $english;
-        $phone = '';
-        foreach ($schools as $school) {
-            if($school->phone  != ''){
-            $numbers = str_replace(' ', '', $school->phone);
-            $number = str_replace('/', ',', $numbers);
-            $phones = explode(',', $number);
-            $phone = str_replace('+', null, validate_phone_number($phones[0])[1]);
+            $body = request('message');
+            $sms = request('sms');
+            $email = request('email');
+            request('lang') == 'swahili' ? $lang = 'Habari' : $lang = 'Hello';
+            $schools = DB::table('all_setting')->whereIn('schema_name', \App\Models\Client::whereIn('id', \App\Models\ClientSchool::whereIn('school_id', \App\Models\UsersSchool::where('user_id', Auth::User()->id)->get(['school_id']))->get(['client_id']))->get(['username']))->get();
+            $english = 'For More Details Contact: ' . chr(10) . 'Name: ' . Auth::User()->name . chr(10) . 'Phone: ' . Auth::User()->phone . chr(10) . 'Email: ' . Auth::User()->email;
+            $swahili = 'Mawasiliano:' . chr(10) . 'Jina: ' . Auth::User()->name . chr(10) . 'Simu: ' . Auth::User()->phone . chr(10) . 'Barua Pepe: ' . Auth::User()->email;
+            request('lang') == 'swahili' ? $footer = $swahili : $footer = $english;
+            $phone = '';
+            foreach ($schools as $school) {
+                if ($school->phone != '') {
+                    $numbers = str_replace(' ', '', $school->phone);
+                    $number = str_replace('/', ',', $numbers);
+                    $phones = explode(',', $number);
+                    $phone = str_replace('+', null, validate_phone_number($phones[0])[1]);
+                }
+                if ($school->email != '' && (int) $email > 0) {
+                    $message = '<h4>' . $lang . ', ' . $school->name . '</h4>'
+                            . '<h4>' . $body . '</h4>'
+                            . '<br><br>' . $footer;
+                    DB::table('public.email')->insert(['body' => $message, 'subject' => 'ShuleSoft New Client Support Message', 'user_id' => 1, 'email' => $school->email]);
+                }
+                if ($phone != '' && (int) $sms > 0) {
+                    $message1 = $lang . ', ' . $school->name . '.' . chr(10) . request('message') . chr(10) . chr(10) . $footer;
+                    DB::table('public.sms')->insert(['body' => $message1, 'type' => 1, 'user_id' => 1, 'phone_number' => $phone]);
+                }
             }
-            if ($school->email != '' && (int) $email > 0) {
-                $message = '<h4>' .$lang . ', '. $school->name . '</h4>'
-                        . '<h4>' . $body . '</h4>'
-                        . '<br><br>'. $footer;
-                DB::table('public.email')->insert(['body' => $message, 'subject' => 'ShuleSoft New Client Support Message', 'user_id' => 1, 'email' => $school->email]);
-            }
-            if ($phone != '' && (int) $sms > 0) {
-                $message1 = $lang .', ' . $school->name . '.' . chr(10) . request('message'). chr(10). chr(10) . $footer;
-                DB::table('public.sms')->insert(['body' => $message1, 'type' => 1, 'user_id' => 1, 'phone_number' => $phone]);
-            }
+            return redirect()->back()->with('success', 'Message Sent successfully');
         }
-    return redirect()->back()->with('success', 'Message Sent successfully');
-    }       
-}
+    }
 
 }
