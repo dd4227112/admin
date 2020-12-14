@@ -94,6 +94,9 @@ class Kernel extends ConsoleKernel {
             //  (new HomeController())->createTodayReport();
             (new Background())->officeDailyReport();
         })->dailyAt('14:50'); // Eq to 17:50 h 
+        $schedule->call(function () {
+            $this->understandActivities();
+        })->dailyAt('13:00'); //eg to 16h
 
         $schedule->call(function () {
             //  (new HomeController())->createTodayReport();
@@ -128,8 +131,9 @@ class Kernel extends ConsoleKernel {
     }
 
     public function sendReminder($schedule) {
-        if (count(explode(',', $schedule->user_id)) > 0) {
-            $users = DB::table($schedule->schema_name . '.users')->whereIn('id', explode(',', $schedule->user_id))->where('role_id', $schedule->role_id)->where('status', '1')->get();
+        if (!empty(explode(',', $schedule->user_id)) > 0) {
+            $users_list = empty(explode(',', $schedule->user_id)) ? [0] : explode(',', $schedule->user_id);
+            $users = DB::table($schedule->schema_name . '.users')->whereIn('id', $users_list)->where('role_id', $schedule->role_id)->where('status', '1')->get();
             // $users = DB::table($schedule->schema_name . '.users')->whereIn('id', explode(',', $schedule->user_id))->where('role_id', $schedule->role_id)->get();
 
             $check_payment_pattern = (preg_match('/#balance/i', $schedule->message) || preg_match('/#invoice/i', $schedule->message)) ? 1 : 0;
@@ -138,7 +142,7 @@ class Kernel extends ConsoleKernel {
                 $patterns = array(
                     '/#name/i', '/#username/i', '/#balance/i', '/#student_name/i', '/#invoice/i'
                 );
-                $replacements = count($payment_pattern) > 0 ? array(
+                $replacements = sizeof($payment_pattern) > 0 ? array(
                     $user->name, $user->username, $payment_pattern[0], $payment_pattern[1], $payment_pattern[2]) : array($user->name, $user->username, 0, 0, 0
                 );
                 $body = preg_replace($patterns, $replacements, $schedule->message);
@@ -541,6 +545,20 @@ class Kernel extends ConsoleKernel {
         }
     }
 
+    public function understandActivities() {
+        //notify CEO about todays people's todays tasks
+        $tasks = DB::select('select a.activity,u.email,u.phone, u.name, cl.name as client_name, a.created_at, a.end_date,\'support\' as task_type from admin.tasks a join admin.tasks_users b on a.id=b.task_id join admin.tasks_clients c on c.task_id=a.id join admin.users u on u.id=b.user_id join admin.clients cl on cl.id=c.client_id where a.created_at::date=CURRENT_DATE OR a.end_date=CURRENT_DATE
+union all
+select a.activity,u.email,u.phone, u.name,cl.name as client_name,a.created_at, a.end_date,\'sales\' from admin.tasks a join admin.tasks_schools b on a.id=b.task_id join admin.schools cl on cl.id=b.school_id left join admin.users u on u.id=a.user_id where b.created_at::date=CURRENT_DATE');
+        $table = '<table><thead><tr><th>Activity</th><th>Email</th><th>Phone</th><th>Name</th><th>Client Name</th><th>Task Created</th><th>End Date</th><th>Type</th></tr></thead><tbody>';
+        foreach ($tasks as $task) {
+            $table .= '<tr>th>' . $task->activity . '</th><th>' . $task->email . '</th><th>' . $task->phone . '</th>'
+                    . '<th>' . $task->name . '</th><th>' . $task->client_name . '</th><th>' . $task->created_at . '</th><th>' . $task->end_date . '</th><th>' . $task->task_type . '</th></tr>';
+        }
+        $table .= '</table><p>Total Tasks ' . sizeof($tasks) . '</p>';
+        DB::table("public.email")->insert(['email' => 'swillae1@gmail.com', 'subject' => 'Todays Activities', 'body' => $table]);
+    }
+
     public function getCleanSms($replacements, $message) {
         $patterns = array(
             '/#name/i', '/#username/i', '/#email/i', '/#phone/i', '/#usertype/i'
@@ -559,7 +577,7 @@ class Kernel extends ConsoleKernel {
         foreach ($sequences as $sequence) {
             $users = DB::select("select a.table, a.name,a.username,a.email,a.phone,a.usertype,a.schema_name,a.id,concat(c.firstname,' ',c.lastname ) as csr_name, c.phone as csr_phone from admin.all_users a,admin.user_clients u, admin.clients z, admin.users c where z.username=a.schema_name  and z.id=u.client_id and u.user_id=c.id and a.status=1 and c.status=1 and u.status=1 and a.table not in ('parent','student','teacher') and a.id in (select user_id from admin.users_sequences a,admin.sequences
 b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date=CURRENT_DATE and b.interval=" . $sequence->interval . " )");
-            if (count($users) > 0) {
+            if (sizeof($users) > 0) {
                 foreach ($users as $user) {
                     $replacements = array(
                         $user->name, $user->username, $user->email, $user->phone, $user->usertype
@@ -602,7 +620,7 @@ select distinct phone, body,0,8 from (select 'Tunakutakia '||upper(\"schema_name
             $to_roll_ids = preg_replace('/{/', '', preg_replace('/}/', '', $notice->to_roll_id));
 
             $users = $to_roll_ids == 0 ? DB::select("select *,(select id as sms_keys_id from " . $notice->table_schema . ".sms_keys limit 1 ) as sms_keys_id from admin.all_users where schema_name::text='" . $notice->schema_name . "'") : DB::select('select *,(select id as sms_keys_id from ' . $notice->schema_name . '.sms_keys limit 1 ) as sms_keys_id from admin.all_users where role_id IN (' . $to_roll_ids . ' ) and schema_name::text=\'' . $notice->schema_name . '\'  ');
-            if (count($users) > 0) {
+            if (sizeof($users) > 0) {
                 foreach ($users as $user) {
 
                     $message = 'Kalenda ya Shule:'
@@ -622,7 +640,7 @@ select distinct phone, body,0,8 from (select 'Tunakutakia '||upper(\"schema_name
     public function sendBirthdayWish() {
         $schemas = (new \App\Http\Controllers\Software())->loadSchema();
         foreach ($schemas as $schema) {
-            if (!in_array($schema->table_schema, array('public', 'api', 'admin'))) {
+            if (!in_array($schema->table_schema, array('public', 'api', 'admin', 'forum', 'academy'))) {
                 //Remind parents,class and section teachers to wish their students
 
                 $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\",sms_keys_id)"
