@@ -42,7 +42,7 @@ foreach ($user_permission as $permis) {
                                 <div class="card-block-big">
                                     <div class="media-left">
                                         <a href="#" class="profile-image">
-                                            <img class="user-img img-circle" src="<?= preg_match('/http/', $user->photo) ? $user->photo:  $root.'assets/images/user.png' ?>" alt="User-Profile-Image" height="90">
+                                            <img class="user-img img-circle" src="<?= preg_match('/http/', $user->photo) ? $user->photo : $root . 'assets/images/user.png' ?>" alt="User-Profile-Image" height="90">
                                         </a>
                                     </div>
                                     <i class="icofont icofont-comment"></i>
@@ -155,14 +155,22 @@ foreach ($user_permission as $permis) {
                             <a class="nav-link " data-toggle="tab" href="#messages5" role="tab" aria-expanded="false">Activities</a>
                             <div class="slide"></div>
                         </li>
-                         <?php
-                        if (Auth::user()->id ==2) {
-                            ?>
                         <li class="nav-item">
-                            <a class="nav-link" data-toggle="tab" href="#settings5" role="tab">Permissions</a>
+                            <a class="nav-link " data-toggle="tab" href="#attendance" role="tab" aria-expanded="false">Attendance</a>
                             <div class="slide"></div>
                         </li>
-                        <?php }?>
+                        <li class="nav-item">
+                            <a class="nav-link " data-toggle="tab" href="#leave" role="tab" aria-expanded="false">Leave/Absent</a>
+                            <div class="slide"></div>
+                        </li>
+                        <?php
+                        if (Auth::user()->id == 2) {
+                            ?>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#settings5" role="tab">Permissions</a>
+                                <div class="slide"></div>
+                            </li>
+                        <?php } ?>
                     </ul>
                     <!-- Tab panes -->
                     <div class="tab-content tabs-left-content card-block" style="width:100%; padding-top: 0; padding-right: 0;">
@@ -387,22 +395,22 @@ foreach ($user_permission as $permis) {
                                     <?php
                                     if (Auth::user()->id == 2) {
                                         ?>
-            <!--                                        <form class="form-horizontal form-material" method="post" action="<?= url('user/changePhoto/' . $user->id) ?>" enctype="multipart/form-data">
+                                                                            <!--                                        <form class="form-horizontal form-material" method="post" action="<?= url('user/changePhoto/' . $user->id) ?>" enctype="multipart/form-data">
 
-                                                        <div class="form-group">
-                                                            <label class="col-md-12">Photo</label>
-                                                            <div class="col-md-12">
-                                                                <input type="file" name="photo" accept=".png,.jpg,.jpeg,.gif" class="form-control form-control-line">
-                                                            </div>
-                                                        </div>
+                                                                                                                        <div class="form-group">
+                                                                                                                            <label class="col-md-12">Photo</label>
+                                                                                                                            <div class="col-md-12">
+                                                                                                                                <input type="file" name="photo" accept=".png,.jpg,.jpeg,.gif" class="form-control form-control-line">
+                                                                                                                            </div>
+                                                                                                                        </div>
 
-                                                        <div class="form-group">
-                                                            <div class="col-sm-12">
+                                                                                                                        <div class="form-group">
+                                                                                                                            <div class="col-sm-12">
                                         <?= csrf_field() ?>
-                                                                <button class="btn btn-success">Update Profile</button>
-                                                            </div>
-                                                        </div>
-                                                    </form>-->
+                                                                                                                                <button class="btn btn-success">Update Profile</button>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </form>-->
                                     <?php } ?>
                                 </div>
                                 <!-- end of card-block -->
@@ -460,15 +468,15 @@ foreach ($user_permission as $permis) {
                                                                     <td><?= ucwords(str_replace('_', ' ', $key)) ?></td>
                                                                     <td>
                                                                         <?php
-                                                                        $content= $applicant->{$key};
-                                                                        if(preg_match('/https/', $content)){
-                                                                            echo '<a href="'.$content.'" target="_blank">'.$content.'</a>';                                                                            
-                                                                        }else if(preg_match('/-/', $content)){
-                                                                            $pieces= explode('-', $content);
+                                                                        $content = $applicant->{$key};
+                                                                        if (preg_match('/https/', $content)) {
+                                                                            echo '<a href="' . $content . '" target="_blank">' . $content . '</a>';
+                                                                        } else if (preg_match('/-/', $content)) {
+                                                                            $pieces = explode('-', $content);
                                                                             foreach ($pieces as $piece) {
-                                                                                echo $piece.'<br/>';
+                                                                                echo $piece . '<br/>';
                                                                             }
-                                                                        }else{
+                                                                        } else {
                                                                             echo $content;
                                                                         }
                                                                         ?></td>
@@ -559,7 +567,8 @@ foreach ($user_permission as $permis) {
                                         </div>
                                     </div>
                                 </div>
-                            </div> </div>
+                            </div> 
+                        </div>
                         <div class="tab-pane" id="messages5" role="tabpanel" aria-expanded="false">
                             <div class="card">
                                 <div class="card-header">
@@ -569,6 +578,111 @@ foreach ($user_permission as $permis) {
 
                                 </div>
                             </div>   </div>
+                        <div class="tab-pane" id="attendance" role="tabpanel" aria-expanded="false">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-header-text">Attendace</h5>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <br/>
+                                        <?php
+                                        if ($user->id == Auth::user()->id) {
+                                            ?>
+                                            <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#large-Modal"><i class="fa fa-plus"></i>Add Attendance</button>
+                                        <?php } ?>
+                                        <div class="card-block ">
+                                            <table class="table table-responsive dataTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Date</th>
+                                                        <th>Status</th>
+                                                        <th>Arrival Time</th>
+                                                        <th>Late Comer Reaons</th>
+                                                        <th>Departue Time</th>
+                                                        <th>Early Departue Reason</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php
+                                                    foreach ($attendances as $attendance) {
+                                                        ?>
+                                                        <tr>
+                                                            <td><?= date('d M Y', strtotime($attendance->created_at)) ?></td>
+                                                            <td><?= $attendance->status == 1 ? 'Present' : 'Absent' ?></td>
+                                                            <td><?= date('h:i', strtotime($attendance->created_at)) ?></td>
+                                                            <td><?= $attendance->late_comment ?></td>
+                                                            <td><?= date('Y', strtotime($attendance->timeout)) > 1970 ? date('h:i', strtotime($attendance->timeout)) : '' ?></td>
+                                                            <td><?= $attendance->early_leave_comment ?></td>
+                                                            <td>
+                                                                <?php
+                                                                if (date('d M Y', strtotime($attendance->created_at)) == date('d M Y')) {
+                                                                    if (date('H') > 17 && date('Y', strtotime($attendance->timeout)) == 1970) {
+                                                                        ?>
+                                                                        <a href="<?= url('users/leave') ?>">Leave the Office</a>
+
+                                                                    <?php } else if (date('H') < 17 && date('Y', strtotime($attendance->timeout)) == 1970) { ?>
+                                                                        <a  href="#" class="text-danger waves-effect" data-toggle="modal" data-target="#early-large-Modal">Early Leave</a>
+                                                                        <?php
+                                                                    }
+                                                                }
+                                                                ?>
+
+                                                            </td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div></div>   </div>
+
+                        <div class="tab-pane" id="leave" role="tabpanel" aria-expanded="false">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-header-text">Leave/Absent</h5>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <br/>
+                                        <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#leave-large-Modal"><i class="fa fa-plus"></i>Add Leave</button>
+
+                                        <div class="card-block ">
+                                            <table class="table table-responsive dataTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Date</th>
+                                                        <th>Absent Type</th>
+                                                        <th>Note</th>
+                                                        <th>Leave Attachment</th>
+                                                        <th>Approved By</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php
+                                                    foreach ($absents as $absent) {
+                                                        ?>
+                                                        <tr>
+                                                            <td><?= date('d M Y', strtotime($absent->date)) ?></td>
+                                                            <td><?= $absent->absentReason->name ?></td>
+                                                            <td><?= $absent->note ?></td>
+                                                            <td><?= $absent->companyFile->name ?></td>
+                                                            <td><?= $absent->approvedBy->name ?></td>
+                                                            <td>
+
+                                                                <a type="button" class="btn btn-primary btn-sm waves-effect" target="_blank" href="<?= url('customer/viewContract/' . $absent->companyFile->id) ?>">View</a>
+                                                                <!--<a type="button" class="btn btn-warning btn-sm waves-effect" href="<?= url('users/absent/' . $absent->id) ?>">Delete</a>-->
+
+                                                            </td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div></div>   </div>
                         <div class="tab-pane" id="settings5" role="tabpanel">
                             <div class="email-card p-0">
                                 <div class="card">
@@ -616,6 +730,138 @@ foreach ($user_permission as $permis) {
             </div>
         </div>
     </div>
+</div>
+<div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" style="z-index: 1050; display: none;" aria-hidden="true">
+    <form class="cmxform form-horizontal " id="commentForm" method="post" action="#">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add Attendance</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group ">
+                        <label for="cname" class="control-label col-lg-3">Time In</label>
+                        <div class="col-lg-12">
+                            <input class="form-control" id="cname" name="timein" disabled="" value="<?= date('H:i') ?>"  type="time">
+                        </div>
+                    </div>
+                    <?php
+                    if (date('H') > 8) {
+                        ?>
+                        <div class="form-group ">
+                            <label for="cname" class="control-label col-lg-3">Late Coming Reasons</label>
+                            <div class="col-lg-12">
+                                <textarea class=" form-control" id="abbrname" name="late_comment" type="text" required=""></textarea>
+                            </div>
+                        </div>
+                    <?php } ?> 
+                </div>
+                <div class="modal-footer">
+                    <?= csrf_field() ?>
+                    <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal fade" id="early-large-Modal" tabindex="-1" role="dialog" style="z-index: 1050; display: none;" aria-hidden="true">
+    <form class="cmxform form-horizontal " id="commentForm" method="post" action="#">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Early Leave </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group ">
+                        <label for="cname" class="control-label col-lg-3">Current Time</label>
+                        <div class="col-lg-12">
+                            <input class="form-control" id="cname" name="timein" disabled="" value="<?= date('H:i') ?>"  type="time">
+                        </div>
+                    </div>
+
+                    <div class="form-group ">
+                        <label for="cname" class="control-label col-lg-3">Early Leave Reasons</label>
+                        <div class="col-lg-12">
+                            <textarea class=" form-control" id="abbrname" name="early_leave_comment" type="text" required=""></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <?= csrf_field() ?>
+                    <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal fade" id="leave-large-Modal" tabindex="-1" role="dialog" style="z-index: 1050; display: none;" aria-hidden="true">
+    <form class="cmxform form-horizontal " id="commentForms" action="<?= url('users/absent') ?>" method="POST" enctype="multipart/form-data">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Absent Registration  </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group ">
+                        <label for="cname" class="control-label col-lg-3">Date</label>
+                        <div class="col-lg-12">
+                            <input class="form-control" id="cname" name="date" disabled=""  value="<?= date('Y-m-d') ?>"  type="date">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="control-label col-lg-3">Absent Reason</label>
+                        <div class="col-lg-12">
+                            <select name="absent_reason_id" class="form-control">
+
+                                <?php
+                                $ctypes = DB::table('admin.absent_reasons')->get();
+                                if (!empty($ctypes)) {
+                                    foreach ($ctypes as $ctype) {
+                                        ?>
+                                        <option value="<?= $ctype->id ?>"><?= $ctype->name ?></option>
+                                        <?php
+                                    }
+                                }
+                                ?>
+
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group ">
+                        <label for="cname" class="control-label col-lg-3">Leave Reasons Comment</label>
+                        <div class="col-lg-12">
+                            <textarea class=" form-control" id="abbrname" name="note" type="text" required=""></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="control-label col-lg-3">Upload Document of verification</label>
+                        <div class="col-sm-12">
+                            <input type="file" class="form-control" accept=".pdf" name="file" >
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <?= csrf_field() ?>
+                    <input type="hidden" value="<?=$user->id?>" name="user_id"/>
+                    <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
 <script type="text/javascript">
     permission = function () {

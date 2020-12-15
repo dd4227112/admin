@@ -98,7 +98,41 @@ class Users extends Controller {
 
         $this->data['user_permission'] = \App\Models\Permission::whereIn('id', \App\Models\PermissionRole::where('role_id', $this->data['user']->role_id)->get(['permission_id']))->get(['id']);
 
+        $this->data['attendances'] = DB::table('attendances')->where('user_id', $id)->get();
+        $this->data['absents'] = \App\Models\Absent::where('user_id', $id)->get();
+        if ($_POST) {
+            //check if its attendance or not
+            $ip = $_SERVER['REMOTE_ADDR'] ?: ($_SERVER['HTTP_X_FORWARDED_FOR'] ?: $_SERVER['HTTP_CLIENT_IP']);
+            if ($ip == '102.69.167.173') {
+                if (strlen(request('early_leave_comment')) > 2) {
+                    DB::table('attendances')->where('user_id', $id)->whereDate('created_at', date('Y-m-d'))->update([
+                        'timeout' => 'now()',
+                        'early_leave_comment' => request('early_leave_comment')
+                    ]);
+                } else {
+                    DB::table('attendances')->insert([
+                        'status' => 1,
+                        'user_id' => $id,
+                        'late_comment' => request('late_comment')
+                    ]);
+                }
+                return redirect()->back()->with('success', 'success');
+            } else {
+                return redirect()->back()->with('error', 'Error: This action can only be done at the office, using Flashnet Internet connection');
+            }
+        }
         return view('users.show', $this->data);
+    }
+
+    public function absent() {
+        if ($_POST) {
+            $file = request()->file('file');
+            $file_id = $file ? $this->saveFile($file, 'company/employees') : 1;
+
+            \App\Models\Absent::create(['date' => date('Y-m-d'), 'user_id' => request('user_id'), 'absent_reason_id' => request('absent_reason_id'),
+                'note' => request('note'), 'company_file_id' => $file_id]);
+        }
+        return redirect()->back()->with('success', 'success');
     }
 
     public function password() {
@@ -455,7 +489,4 @@ class Users extends Controller {
         return $refer_bank_id;
     }
 
- 
-
-  
 }
