@@ -618,7 +618,7 @@ foreach ($user_permission as $permis) {
                                                             <td><?= $attendance->early_leave_comment ?></td>
                                                             <td>
                                                                 <?php
-                                                                if (date('d M Y', strtotime(custom_date($attendance->created_at))) == date('d M Y')) {
+                                                                if (date('dMY', strtotime(($attendance->created_at))) == date('dMY')) {
                                                                     if (date('H') > 17 && date('Y', strtotime($attendance->timeout)) == 1970) {
                                                                         ?>
                                                                         <a href="<?= url('users/leave') ?>">Leave the Office</a>
