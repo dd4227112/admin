@@ -617,8 +617,9 @@ foreach ($user_permission as $permis) {
                                                             <td><?= date('Y', strtotime($attendance->timeout)) > 1970 ? date('h:i', strtotime($attendance->timeout)) : '' ?></td>
                                                             <td><?= $attendance->early_leave_comment ?></td>
                                                             <td>
+                                                                 <a href="<?= url('users/leave') ?>">Leave the Office</a>
                                                                 <?php
-                                                                if (date('dMY', strtotime(($attendance->created_at))) == date('dMY')) {
+                                                              
                                                                     if (date('H') > 17 && date('Y', strtotime($attendance->timeout)) == 1970) {
                                                                         ?>
                                                                         <a href="<?= url('users/leave') ?>">Leave the Office</a>
@@ -627,7 +628,7 @@ foreach ($user_permission as $permis) {
                                                                         <a  href="#" class="text-danger waves-effect" data-toggle="modal" data-target="#early-large-Modal">Early Leave</a>
                                                                         <?php
                                                                     }
-                                                                }
+                                                                
                                                                 ?>
 
                                                             </td>
