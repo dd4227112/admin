@@ -124,6 +124,13 @@ class Users extends Controller {
         return view('users.show', $this->data);
     }
 
+    public function leave() {
+        DB::table('attendances')->where('user_id', Auth::user()->id)->whereDate('created_at', date('Y-m-d'))->update([
+            'timeout' => 'now()'
+        ]);
+        return redirect()->back()->with('success', 'success');
+    }
+
     public function absent() {
         if ($_POST) {
             $file = request()->file('file');
