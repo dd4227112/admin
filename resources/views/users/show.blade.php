@@ -395,22 +395,22 @@ foreach ($user_permission as $permis) {
                                     <?php
                                     if (Auth::user()->id == 2) {
                                         ?>
-                                                                            <!--                                        <form class="form-horizontal form-material" method="post" action="<?= url('user/changePhoto/' . $user->id) ?>" enctype="multipart/form-data">
+                                                                                        <!--                                        <form class="form-horizontal form-material" method="post" action="<?= url('user/changePhoto/' . $user->id) ?>" enctype="multipart/form-data">
 
-                                                                                                                        <div class="form-group">
-                                                                                                                            <label class="col-md-12">Photo</label>
-                                                                                                                            <div class="col-md-12">
-                                                                                                                                <input type="file" name="photo" accept=".png,.jpg,.jpeg,.gif" class="form-control form-control-line">
-                                                                                                                            </div>
-                                                                                                                        </div>
+                                                                                                                                    <div class="form-group">
+                                                                                                                                        <label class="col-md-12">Photo</label>
+                                                                                                                                        <div class="col-md-12">
+                                                                                                                                            <input type="file" name="photo" accept=".png,.jpg,.jpeg,.gif" class="form-control form-control-line">
+                                                                                                                                        </div>
+                                                                                                                                    </div>
 
-                                                                                                                        <div class="form-group">
-                                                                                                                            <div class="col-sm-12">
+                                                                                                                                    <div class="form-group">
+                                                                                                                                        <div class="col-sm-12">
                                         <?= csrf_field() ?>
-                                                                                                                                <button class="btn btn-success">Update Profile</button>
-                                                                                                                            </div>
-                                                                                                                        </div>
-                                                                                                                    </form>-->
+                                                                                                                                            <button class="btn btn-success">Update Profile</button>
+                                                                                                                                        </div>
+                                                                                                                                    </div>
+                                                                                                                                </form>-->
                                     <?php } ?>
                                 </div>
                                 <!-- end of card-block -->
@@ -606,18 +606,19 @@ foreach ($user_permission as $permis) {
                                                 </thead>
                                                 <tbody>
                                                     <?php
+                                              
                                                     foreach ($attendances as $attendance) {
                                                         ?>
                                                         <tr>
-                                                            <td><?= date('d M Y', strtotime($attendance->created_at)) ?></td>
+                                                            <td><?= date('d M Y', strtotime(custom_date($attendance->created_at))) ?></td>
                                                             <td><?= $attendance->status == 1 ? 'Present' : 'Absent' ?></td>
-                                                            <td><?= date('h:i', strtotime($attendance->created_at)) ?></td>
+                                                            <td><?= date('h:i', strtotime(custom_date($attendance->created_at))) ?></td>
                                                             <td><?= $attendance->late_comment ?></td>
                                                             <td><?= date('Y', strtotime($attendance->timeout)) > 1970 ? date('h:i', strtotime($attendance->timeout)) : '' ?></td>
                                                             <td><?= $attendance->early_leave_comment ?></td>
                                                             <td>
                                                                 <?php
-                                                                if (date('d M Y', strtotime($attendance->created_at)) == date('d M Y')) {
+                                                                if (date('d M Y', strtotime(custom_date($attendance->created_at))) == date('d M Y')) {
                                                                     if (date('H') > 17 && date('Y', strtotime($attendance->timeout)) == 1970) {
                                                                         ?>
                                                                         <a href="<?= url('users/leave') ?>">Leave the Office</a>
@@ -855,7 +856,7 @@ foreach ($user_permission as $permis) {
                 </div>
                 <div class="modal-footer">
                     <?= csrf_field() ?>
-                    <input type="hidden" value="<?=$user->id?>" name="user_id"/>
+                    <input type="hidden" value="<?= $user->id ?>" name="user_id"/>
                     <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
                 </div>
