@@ -34,60 +34,88 @@ $root = url('/') . '/public/';
                             <div class="col-lg-12 col-xl-12">
                                 <!-- <h6 class="sub-title">Tab With Icon</h6> -->
                                 <div class="sub-title">Applicants</div>                                        
+                                <div class="col-md-12 col-xl-12">
 
-                                <div class="card-block">
- <div class="table-responsive dt-responsive">
-                                    <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
-                                        <thead>
-                                            <tr>
-                                                <th><input type="checkbox" name="all" id="toggle_all"> </th>
-                                                    <?php
-                                                    $vars = get_object_vars($applicant);
-                                                    $except = array('id');
-                                                    ?>
-
+                                    <div class="form-group row col-lg-offset-6">
+                                        <label class="col-sm-4 col-form-label">Select Location</label>
+                                        <div class="col-sm-4">
+                                            <select name="select" class="form-control" id="schema_select">
+                                                <option value="0">Select</option>
                                                 <?php
-                                                foreach ($vars as $key => $value) {
-                                                    if (!in_array($key, $except)) {
-                                                        ?>
-                                                        <th><?= $key ?></th>
-
-                                                        <?php
-                                                    }
-                                                }
+                                                $locations = \DB::select('select distinct current_location from applicants');
+                                                foreach ($locations as $location) {
+                                                    ?>
+                                                    <option value="<?= $location->current_location ?>" selected><?= $location->current_location ?></option>
+                                                <?php }
                                                 ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row col-lg-offset-6"  selected id="year_id">
+                                        <label class="col-sm-4 col-form-label">Select Status</label>
+                                        <div class="col-sm-4">
+                                            <select name="select" class="form-control" id="year_select">
+                                                 <option value=""></option>
+                                                <option value="0">All</option>
+                                                <option value="1" >Finish Trainings</option>
 
-                                                <th>Action</th>
-
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                            $i = 0;
-                                            foreach ($applicants as $content) {
-                                                $i++;
-                                                ?> 
-
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-block">
+                                    <div class="table-responsive dt-responsive">
+                                        <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
+                                            <thead>
                                                 <tr>
-                                                    <td><?= $i ?></td>
+                                                    <th><input type="checkbox" name="all" id="toggle_all"> </th>
+                                                        <?php
+                                                        $vars = get_object_vars($applicant);
+                                                        $except = array('id');
+                                                        ?>
+
                                                     <?php
                                                     foreach ($vars as $key => $value) {
                                                         if (!in_array($key, $except)) {
-                                                            ?> 
-                                                            <td><?= $content->{$key} ?></td>
-
-
+                                                            ?>
+                                                            <th><?= $key ?></th>
 
                                                             <?php
                                                         }
                                                     }
                                                     ?>
-                                                    <td></td>
+
+                                                    <th>Action</th>
+
                                                 </tr>
-                                            <?php } ?>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                $i = 0;
+                                                foreach ($applicants as $content) {
+                                                    $i++;
+                                                    ?> 
+
+                                                    <tr>
+                                                        <td><?= $i ?></td>
+                                                        <?php
+                                                        foreach ($vars as $key => $value) {
+                                                            if (!in_array($key, $except)) {
+                                                                ?> 
+                                                                <td><?= $content->{$key} ?></td>
+
+
+
+                                                                <?php
+                                                            }
+                                                        }
+                                                        ?>
+                                                        <td></td>
+                                                    </tr>
+                                                <?php } ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
 
                             </div>
@@ -100,5 +128,17 @@ $root = url('/') . '/public/';
         </div>
     </div>
 </div>
+<script type="text/javascript">
+
+    $('#year_select').change(function () {
+        var year = $(this).val();
+        var project = $('#schema_select').val();
+        if (year == 0) {
+            return false;
+        } else {
+            window.location.href = "<?= url('account/invoice') ?>/" + project + '/' + year;
+        }
+    });
+</script>
 @endsection
 

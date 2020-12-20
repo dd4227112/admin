@@ -336,6 +336,54 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
         }
     }
 
+    public function createEpayment() {
+        $order_id = request()->segment(3);
+        $total = request()->segment(4);
+        if ((int) $total > 0) {
+            $check = \App\Models\Invoice::where('order_id', $order_id)->first();
+            if ($check) {
+                 $invoice =$check;
+            } else {
+                $data = [
+                    'order_id' => $order_id,
+                    'amount' => $total,
+                    'user_id' => 2,
+                    'sid' => 4343,
+                    "client_id" => 79,
+                    'source' => 'carryshop',
+                    'status' => 0,
+                    'schema_name' => 'carryshop',
+                    'methods' => 'selcom'
+                ];
+                $invoice = \App\Models\Invoice::create($data);
+                \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $total, 'project_id' => 2, 'item_name' => 'ShuleSoft Service Fee For ', 'quantity' => 1, 'unit_price' => 1]);
+            }
+        } else {
+            echo 'Invalid Amount ' . $total;
+            exit;
+        }
+        $booking = $invoice;
+        if ($booking) {
+            if (strlen($booking->token) < 4) {
+                $account = new \App\Http\Controllers\Account();
+                $account->createSelcomControlNumber($invoice->id);
+            }
+            $paid = 0;
+            if ($booking->payments()->sum('amount') == $booking->invoiceFees()->sum('amount')) {
+                $paid = 1;
+            }
+            $am = $invoice->invoiceFees()->sum('amount');
+            $paid = $invoice->payments()->sum('amount');
+            $unpaid = $am - $paid;
+
+            $balance = $booking->payments()->sum('amount');
+            $page = 'api_pay';
+            return view('account.invoice.' . $page, compact('booking', 'balance', 'paid', 'invoice', 'unpaid'));
+        } else {
+            return redirect()->back()->with('warning', 'This Invoice Number Not Defined Properly');
+        }
+    }
+
     public function epayment() {
         $invoice_id = request()->segment(3);
         $booking = $invoice = \App\Models\Invoice::find($invoice_id);
@@ -353,8 +401,8 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
             $unpaid = $am - $paid;
 
             $balance = $booking->payments()->sum('amount');
-
-            return view('account.invoice.pay', compact('booking', 'balance', 'paid', 'invoice', 'unpaid'));
+            $page = 'pay';
+            return view('account.invoice.' . $page, compact('booking', 'balance', 'paid', 'invoice', 'unpaid'));
         } else {
             return redirect()->back()->with('warning', 'This Invoice Number Not Defined Properly');
         }
@@ -443,7 +491,6 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
         die('Success: Your Account has been created, kindly wait for the confirmation email with details on how to get started. Thanks');
     }
 
-    
     public function InviteApplicants() {
         $applicants = DB::select('select * from admin.applicants where id not in (select applicant_id from admin.users where applicant_id is not null)');
         foreach ($applicants as $applicant) {

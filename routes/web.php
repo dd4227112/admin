@@ -37,7 +37,9 @@ Auth::routes();
 //Route::group(['middleware' => ['guest']], function() {
 //    Auth::routes();
 //});
-Route::get('/epayment/i/{id}','Background@epayment');
+Route::get('/epayment/i/{id}/{amount?}','Background@epayment');
+Route::any('/create/epayment/{id}/{amount?}','Background@createEpayment');
+
 Route::get('/student/getschools/null', function() {
     if (strlen(request('term')) > 1) {
         $sql = "SELECT id::text,upper(name)|| ' '||upper(type)||' - '||upper(region) as name FROM admin.schools 
