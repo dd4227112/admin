@@ -3,6 +3,18 @@
 function mailConfig() {
     
 }
+
+function custom_date($datatime) {
+    $newTZ = new DateTimeZone('America/New_York');
+    date_default_timezone_set('America/New_York');
+    
+    $GMT = new DateTimeZone(Config::get('app.timezone'));
+    $date = new DateTime($datatime, $newTZ);
+    $date->setTimezone($GMT);
+    return $date->format('Y-m-d H:i:s');
+}
+
+
 function validateDate($date, $format = 'Y-m-d')
 {
     $d = DateTime::createFromFormat($format, $date);
