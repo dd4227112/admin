@@ -26,6 +26,9 @@ use Illuminate\Support\Facades\Route;
   |
  */
 
+Route::get('/', function () {
+    return view('comming.index');
+});
 
 $bad_url = ['acme-challenge', 'rss', 'index.php', 'errors', 'phpR', 'apple-touch', 'assetlinks', '.php', 'public', '.tff', '.jpg'];
 foreach ($bad_url as $value) {
