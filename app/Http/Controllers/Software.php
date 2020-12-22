@@ -91,8 +91,8 @@ WHERE CONSTRAINT_TYPE = '$constrains'
 AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
     }
 
-    public function getDefinedFunctions(){
-        $sql=DB::select("select distinct routine_name from (SELECT routines.routine_name, parameters.data_type, parameters.ordinal_position
+    public function getDefinedFunctions() {
+        $sql = DB::select("select distinct routine_name from (SELECT routines.routine_name, parameters.data_type, parameters.ordinal_position
         FROM information_schema.routines
             LEFT JOIN information_schema.parameters ON routines.specific_name=parameters.specific_name
         WHERE routines.specific_schema='public'
@@ -100,7 +100,7 @@ AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
     }
 
     public function loadSchema() {
-        return DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant','admin','api','app','skysat','dodoso','forum','academy')");
+        return DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema='admin'");
     }
 
     /**
@@ -203,11 +203,16 @@ AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
         return $stable;
     }
 
-    public function syncTable() {
-        $master_table_name = request('table');
-        $slave_schema = request('slave');
-        $sql = \collect(DB::select("select show_create_table('" . $master_table_name . "','" . $slave_schema . "') as result"))->first();
-        return DB::statement(str_replace('ARRAY', 'character varying[]', $sql->result));
+    public function syncTable($master_table = null, $slave = null, $connection = false) {
+        $master_table_name = $master_table == NULL ? request('table') : $master_table;
+        $slave_schema = $slave == null ? request('slave') : $slave;
+        echo $sql_q="select * from public.show_create_tables('" . $master_table_name . "') as result";
+        $sql = \collect(DB::select($sql_q))->first();  
+        dd($sql);
+        $sqls=str_replace('public',$slave_schema, $sql->result);
+        return $connection == FALSE ?
+                DB::statement(str_replace('ARRAY', 'character varying[]', $sqls)) :
+                DB::connection($connection)->statement(str_replace('ARRAY', 'character varying[]', $sqls));
     }
 
     public function syncColumn($master_table = null, $schema = null, $column_missing = null) {
@@ -330,8 +335,8 @@ ORDER  BY conrelid::regclass::text, contype DESC";
     public function logs() {
         $schema = request()->segment(3);
 
-     
-        $this->data['error_logs'] =strlen($schema) > 3 ? DB::table('error_logs')->whereNull('deleted_at')->where('schema_name',$schema)->count() : DB::table('error_logs')->whereNull('deleted_at')->count();
+
+        $this->data['error_logs'] = strlen($schema) > 3 ? DB::table('error_logs')->whereNull('deleted_at')->where('schema_name', $schema)->count() : DB::table('error_logs')->whereNull('deleted_at')->count();
         $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1 '))->first();
         return view('software.logs', $this->data);
     }
@@ -445,7 +450,7 @@ ORDER  BY conrelid::regclass::text, contype DESC";
         $this->data['returns'] = [];
         if ($_POST) {
             $schema = request('schema_name');
-            $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where "schema_name"=\''.$schema.'\'');
+            $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where "schema_name"=\'' . $schema . '\'');
             $returns = [];
             $background = new \App\Http\Controllers\Background();
             foreach ($invoices as $invoice) {
@@ -461,13 +466,13 @@ ORDER  BY conrelid::regclass::text, contype DESC";
                             'https://wip.mpayafrica.com/v2/' . $push_status : 'https://api.mpayafrica.co.tz/v2/' . $push_status;
                     $curl = $background->curlServer($fields, $url);
                     array_push($returns, json_decode($curl));
-                  //  json_decode($curl);
+                    //  json_decode($curl);
                 } else {
                     echo 'invalid token';
                     exit;
                 }
             }
-            $this->data['returns'] =$returns; 
+            $this->data['returns'] = $returns;
         }
         return view('software.api.reconciliation', $this->data);
     }
@@ -480,10 +485,9 @@ ORDER  BY conrelid::regclass::text, contype DESC";
         return $curl;
         // return redirect()->back()->with('success',$curl);
     }
-    
-    
+
     public function template() {
-          $this->data['faqs'] = [];
+        $this->data['faqs'] = [];
         return view('software.index', $this->data);
     }
 
