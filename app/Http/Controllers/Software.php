@@ -100,7 +100,7 @@ AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
     }
 
     public function loadSchema() {
-        return DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema='admin'");
+        return DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant','admin','api','app','skysat','dodoso','forum','academy')");
     }
 
     /**
@@ -203,16 +203,11 @@ AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
         return $stable;
     }
 
-    public function syncTable($master_table = null, $slave = null, $connection = false) {
-        $master_table_name = $master_table == NULL ? request('table') : $master_table;
-        $slave_schema = $slave == null ? request('slave') : $slave;
-        echo $sql_q="select * from public.show_create_tables('" . $master_table_name . "') as result";
-        $sql = \collect(DB::select($sql_q))->first();  
-        dd($sql);
-        $sqls=str_replace('public',$slave_schema, $sql->result);
-        return $connection == FALSE ?
-                DB::statement(str_replace('ARRAY', 'character varying[]', $sqls)) :
-                DB::connection($connection)->statement(str_replace('ARRAY', 'character varying[]', $sqls));
+    public function syncTable() {
+        $master_table_name = request('table');
+        $slave_schema = request('slave');
+        $sql = \collect(DB::select("select show_create_table('" . $master_table_name . "','" . $slave_schema . "') as result"))->first();
+        return DB::statement(str_replace('ARRAY', 'character varying[]', $sql->result));
     }
 
     public function syncColumn($master_table = null, $schema = null, $column_missing = null) {
