@@ -90,7 +90,7 @@
                                                          if (can_access('manage_users')) { 
                                                              $text = 'text';
                                                          }else{
-                                                            $text = 'hidden';
+                                                            $text = 'readonly';
                                                          }
                                                         ?>
                                                         <tr>
