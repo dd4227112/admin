@@ -87,18 +87,23 @@
 
                                                 if (isset($banks) && sizeof($banks) > 0) {
                                                     foreach ($banks as $bank) {
+                                                         if (can_access('manage_users')) { 
+                                                             $text = 'text';
+                                                         }else{
+                                                            $text = 'hidden';
+                                                         }
                                                         ?>
                                                         <tr>
                                                             <td><?= $i ?></td>
                                                             <td><?= $bank->name ?></td>
                                                             <td><?= $bank->number ?></td>
                                                             <td>
-                                                                <input class="text-muted" type="text" schema='<?= $bank->invoice_prefix ?>' id="invoice_prefix" value="<?= $bank->invoice_prefix ?>" onblur="edit_bank_accounts('invoice_prefix', this.value, '<?= $schema ?>',<?= $bank->id ?>)"/>
+                                                                <input class="text-muted" type="<?=$text?>" schema='<?= $bank->invoice_prefix ?>' id="invoice_prefix" value="<?= $bank->invoice_prefix ?>" onblur="edit_bank_accounts('invoice_prefix', this.value, '<?= $schema ?>',<?= $bank->id ?>)"/>
                                                             </td>
-                                                            <td><input class="text-muted" type="text" schema='<?= $bank->api_username ?>' id="api_username" value="<?= $bank->api_username ?>" onblur="edit_bank_accounts('api_username', this.value, '<?= $schema ?>',<?= $bank->id ?>)"/></td>
-                                                            <td><input class="text-muted" type="text" schema='<?= $bank->api_password ?>' id="api_password" value="<?= $bank->api_password ?>" onblur="edit_bank_accounts('api_password', this.value, '<?= $schema ?>',<?= $bank->id ?>)"/></td>
-                                                            <!-- <td><input class="text-muted" type="text" schema='<?= $bank->sandbox_api_username ?>' id="sandbox_api_username" value="<?= $bank->sandbox_api_username ?>" onblur="edit_bank_accounts('sandbox_api_username', this.value, '<?= $schema ?>',<?= $bank->id ?>)"/><a href="<?= $bank->sandbox_api_username ?>" target="_blank"></a></td>
-                                                            <td><input class="text-muted" type="text" schema='<?= $bank->sandbox_api_password ?>' id="sandbox_api_password" value="<?= $bank->sandbox_api_password ?>" onblur="edit_bank_accounts('sandbox_api_password', this.value, '<?= $schema ?>',<?= $bank->id ?>)"/> -->
+                                                            <td><input class="text-muted" type="<?=$text?>" schema='<?= $bank->api_username ?>' id="api_username" value="<?= $bank->api_username ?>" onblur="edit_bank_accounts('api_username', this.value, '<?= $schema ?>',<?= $bank->id ?>)"/></td>
+                                                            <td><input class="text-muted" type="<?=$text?>" schema='<?= $bank->api_password ?>' id="api_password" value="<?= $bank->api_password ?>" onblur="edit_bank_accounts('api_password', this.value, '<?= $schema ?>',<?= $bank->id ?>)"/></td>
+                                                            <!-- <td><input class="text-muted" type="<?=$text?>" schema='<?= $bank->sandbox_api_username ?>' id="sandbox_api_username" value="<?= $bank->sandbox_api_username ?>" onblur="edit_bank_accounts('sandbox_api_username', this.value, '<?= $schema ?>',<?= $bank->id ?>)"/><a href="<?= $bank->sandbox_api_username ?>" target="_blank"></a></td>
+                                                            <td><input class="text-muted" type="<?=$text?>" schema='<?= $bank->sandbox_api_password ?>' id="sandbox_api_password" value="<?= $bank->sandbox_api_password ?>" onblur="edit_bank_accounts('sandbox_api_password', this.value, '<?= $schema ?>',<?= $bank->id ?>)"/> -->
                                                              
                                                             </td>
                                                             <td>   <input type='button' value="Save"/></td>
