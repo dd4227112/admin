@@ -342,7 +342,7 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
         if ((int) $total > 0) {
             $check = \App\Models\Invoice::where('order_id', $order_id)->first();
             if ($check) {
-                 $invoice =$check;
+                $invoice = $check;
             } else {
                 $data = [
                     'order_id' => $order_id,
@@ -528,6 +528,75 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
         $json = file_get_contents('https://cutt.ly/api/api.php?key=' . $key . '&short=' . $url);
         $data = json_decode($json, true);
         return $short_url = $data["url"]["shortLink"];
+    }
+
+    public function sync() {
+        $software = new \App\Http\Controllers\Software();
+        $schemas = $software->loadSchema();
+        $schema_number = 1;
+        foreach ($schemas as $schema) {
+
+            //check if schema exists or create
+            $sql = "SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema= '" . $schema->table_schema . "' limit 1";
+            $check_schema = \collect(DB::connection('live')->select($sql))->first();
+            if (empty($check_schema)) {
+                DB::connection('live')->statement("create schema if not exists " . $schema->table_schema);
+                echo 'Schema ' . $schema->table_schema . ' Created Successfully <br/>';
+            }
+
+            //get tables on that schema
+            $tables = $software->loadTables($schema->table_schema);
+
+            //loop through tables and push one by one
+            //
+           foreach ($tables as $table) {
+
+                //check if table exists in live envir
+                $check_table = \collect(DB::connection('live')->select("SELECT table_name, column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE  is_updatable='YES' AND "
+                                . " table_schema='" . $schema->table_schema . "' AND table_name='" . $table . "'"))->first();
+
+                $object_array = (array) DB::table($schema->table_schema . '.' . $table)->first();
+
+                if (!empty($check_table)) {
+                    echo 'Table  ' . $table . ' exists, now importing data in ' . $schema->table_schema . '.' . $table . ' schema Successfully <br/>';
+
+                    !empty($object_array) ? $this->insertIntoLive($schema->table_schema, $table) : '';
+                } else {
+                    //this table does not exists, so sync this table
+                    echo 'Table ' . $schema->table_schema . '. ' . $table . ' does not exists, try to create new table now <br/>';
+                    $software->syncTable($table, $schema->table_schema, 'live');
+                    echo 'Table ' . $schema->table_schema . '. ' . $table . ' created successfully <br/>';
+                    !empty($object_array) ? $this->insertIntoLive($schema->table_schema, $table) : '';
+                    echo 'Table data imported after creating ' . $schema->table_schema . '. ' . $table . ' , success<br/>';
+                }
+            }
+            echo 'Finishing Schema No ' . $schema_number . '<br/>';
+            $schema_number++;
+        }
+        echo 'All schema (' . $schema_number . ') has been proceesed successfully';
+    }
+
+    public function insertIntoLive($schema_table_schema, $table) {
+//        $table_sql = "SELECT column_default,data_type FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema='" . $schema_table_schema . "' AND table_name='" . $table . "' AND column_name='created_at' limit 1";
+//        $local = \collect(DB::select($table_sql))->first();
+//        if (empty($local)) {
+//            DB::statement('alter table ' . $schema_table_schema . '.' . $table . ' add column if not exists created_at timestamp without time zone default now()');
+//            DB::connection('live')->statement('alter table ' . $schema_table_schema . '.' . $table . ' add column if not exists created_at timestamp without time zone default now()');
+//        }
+//        $check = DB::connection('live')->table($schema_table_schema . '.' . $table)->orderBy('created_at', 'desc')->first();
+//        if (!empty($check)) {
+        if (!in_array($table, ['log', 'requests'])) {
+            $object_data = DB::table($schema_table_schema . '.' . $table)->get();
+            if (count($object_data) > 0) {
+                $ob = [];
+                foreach ($object_data as $data) {
+                    //array_push($ob, (array) $data);
+                    DB::connection('live')->table($schema_table_schema . '.' . $table)->insert((array) $data);
+                    echo 'data inserted for table ' . $table . '<br/>';
+                }
+            }
+        }
+        // }
     }
 
 }

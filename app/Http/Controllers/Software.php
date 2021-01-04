@@ -91,8 +91,8 @@ WHERE CONSTRAINT_TYPE = '$constrains'
 AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
     }
 
-    public function getDefinedFunctions(){
-        $sql=DB::select("select distinct routine_name from (SELECT routines.routine_name, parameters.data_type, parameters.ordinal_position
+    public function getDefinedFunctions() {
+        $sql = DB::select("select distinct routine_name from (SELECT routines.routine_name, parameters.data_type, parameters.ordinal_position
         FROM information_schema.routines
             LEFT JOIN information_schema.parameters ON routines.specific_name=parameters.specific_name
         WHERE routines.specific_schema='public'
@@ -330,8 +330,8 @@ ORDER  BY conrelid::regclass::text, contype DESC";
     public function logs() {
         $schema = request()->segment(3);
 
-     
-        $this->data['error_logs'] =strlen($schema) > 3 ? DB::table('error_logs')->whereNull('deleted_at')->where('schema_name',$schema)->count() : DB::table('error_logs')->whereNull('deleted_at')->count();
+
+        $this->data['error_logs'] = strlen($schema) > 3 ? DB::table('error_logs')->whereNull('deleted_at')->where('schema_name', $schema)->count() : DB::table('error_logs')->whereNull('deleted_at')->count();
         $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1 '))->first();
         return view('software.logs', $this->data);
     }
@@ -445,7 +445,7 @@ ORDER  BY conrelid::regclass::text, contype DESC";
         $this->data['returns'] = [];
         if ($_POST) {
             $schema = request('schema_name');
-            $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where "schema_name"=\''.$schema.'\'');
+            $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where "schema_name"=\'' . $schema . '\'');
             $returns = [];
             $background = new \App\Http\Controllers\Background();
             foreach ($invoices as $invoice) {
@@ -461,13 +461,13 @@ ORDER  BY conrelid::regclass::text, contype DESC";
                             'https://wip.mpayafrica.com/v2/' . $push_status : 'https://api.mpayafrica.co.tz/v2/' . $push_status;
                     $curl = $background->curlServer($fields, $url);
                     array_push($returns, json_decode($curl));
-                  //  json_decode($curl);
+                    //  json_decode($curl);
                 } else {
                     echo 'invalid token';
                     exit;
                 }
             }
-            $this->data['returns'] =$returns; 
+            $this->data['returns'] = $returns;
         }
         return view('software.api.reconciliation', $this->data);
     }
@@ -480,10 +480,9 @@ ORDER  BY conrelid::regclass::text, contype DESC";
         return $curl;
         // return redirect()->back()->with('success',$curl);
     }
-    
-    
+
     public function template() {
-          $this->data['faqs'] = [];
+        $this->data['faqs'] = [];
         return view('software.index', $this->data);
     }
 
