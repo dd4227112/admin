@@ -112,7 +112,13 @@ $integration = '';
                                                     <td>Invoice Prefix</td>
                                                     <td><h1 style="font-size: 25px"><b><?= isset($integration) ? $integration : '' ?></b></h1></td>
                                                 </tr>
-
+                                                <?php   if(!preg_match('/nmb/', Auth::user()->email)){  ?>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>Payment Type</td>
+                                                    <td><h1 style="font-size: 25px"><b><?php echo '10'; ?></b></h1></td>
+                                                </tr>
+                                                <?php } ?>
                                                 <tr>
                                                     <td></td>
                                                     <td></td>
