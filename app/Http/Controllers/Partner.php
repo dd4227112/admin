@@ -245,14 +245,17 @@ class Partner extends Controller {
 
     public function InvoicePrefix() {
         $id = request()->segment(3);
+        $send = request()->segment(4);
         // DB::statement("select constant.create_invoice_prefix_trigger()");
         $partner = $this->data['partner'] = \App\Models\IntegrationRequest::find($id);
+    if($send != ''){
         $message = 'Dear '. $partner->client->username .'
         ShuleSoft is pleased to inform you that, we have successfully finalized integration with CRDB Bank for enabling your school to commence receiving fees electronically.
         To start using service please login '. $partner->client->username .'.shulesoft.com go to settings then system settings and click Payment Integration. .   
         Thanks';
         $this->send_email($partner->client->email, 'School Electronic Payment Integration Accepted', $message);
         $this->send_sms($partner->client->phone, $message, 1);
+    }
         return view('partners.show_prefix', $this->data);
     }
 
