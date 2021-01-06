@@ -8,8 +8,8 @@ $integration = '';
         $bank = DB::table($partner->client->username . '.bank_accounts')->where('refer_bank_id', $partner->refer_bank_id)->first();
         if(!empty($bank)){
         $banks = DB::table($partner->client->username . '.bank_accounts_integrations')->where('bank_account_id', $bank->id)->first();
-        $type = $bank->payment_type;
-        $integration = $bank->invoice_prefix;
+        $type = $banks->payment_type;
+        $integration = $banks->invoice_prefix;
         $refer_bank = $bank->name;
         $number = $bank->number;
         $user = DB::table($partner->client->username . '.users')->where("table", $partner->table)->where('id', $partner->user_id)->first();
