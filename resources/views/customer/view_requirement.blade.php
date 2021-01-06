@@ -158,7 +158,8 @@
                                             ?>
                                         </div>
                                     </div>
-                                  <p>  <a href="<?=url('Customer/requirements')?>" class="btn btn-success" style="float: right;"> Go Back</a> </p>
+                                    <p>  <a href="<?=url('Customer/requirements')?>" class="btn btn-success" style="float: left;"> Go Back</a> </p>
+                                    <p>  <a href="<?=url('Customer/requirements/show/'.$next)?>" class="btn btn-success" style="float: right;"> Go Next</a> </p>
                                 <br>
                             </div>
                             </div>
