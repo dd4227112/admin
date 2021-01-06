@@ -7,7 +7,9 @@ $integration = '';
     if (!empty($checksystem)) {
         $bank = DB::table($partner->client->username . '.bank_accounts')->where('refer_bank_id', $partner->refer_bank_id)->first();
         if(!empty($bank)){
-        $integration = DB::table($partner->client->username . '.bank_accounts_integrations')->where('bank_account_id', $bank->id)->first()->invoice_prefix;
+        $banks = DB::table($partner->client->username . '.bank_accounts_integrations')->where('bank_account_id', $bank->id)->first();
+        $type = $bank->payment_type;
+        $integration = $bank->invoice_prefix;
         $refer_bank = $bank->name;
         $number = $bank->number;
         $user = DB::table($partner->client->username . '.users')->where("table", $partner->table)->where('id', $partner->user_id)->first();
@@ -22,6 +24,7 @@ $integration = '';
         $user_name = $bank->requests->user->name;
         $integration = $bank->invoice_prefix;
         $usertype = 'Sales Manager';
+        $type = 10;
     }
 ?>
 <!-- Sidebar inner chat end-->
@@ -116,7 +119,7 @@ $integration = '';
                                                 <tr>
                                                     <td></td>
                                                     <td>Payment Type</td>
-                                                    <td><h1 style="font-size: 25px"><b><?php echo '10'; ?></b></h1></td>
+                                                    <td><h1 style="font-size: 25px"><b><?= isset($type) ? $type : '' ?></b></h1></td>
                                                 </tr>
                                                 <?php } ?>
                                                 <tr>
