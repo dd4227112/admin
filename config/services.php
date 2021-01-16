@@ -26,6 +26,7 @@ return [
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],
+    'mandrill'=>['secret'=>'a53zTYM-xCEq1kIE7LATYQ'],
     'google'=>[
        'Client ID'=> '645217235571-uoega8r3kssjrfedrsvltm061186hped.apps.googleusercontent.com',
         'Mtk6XCDNoIEMvoXGziTAn0cG'

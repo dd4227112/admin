@@ -486,4 +486,9 @@ ORDER  BY conrelid::regclass::text, contype DESC";
         return view('software.index', $this->data);
     }
 
+      public function whatsapp() {
+        $this->data['faqs'] = [];
+        return view('software.whatsapp', $this->data);
+    }
+    
 }

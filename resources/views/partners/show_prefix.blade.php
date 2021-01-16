@@ -112,6 +112,11 @@ $integration = '';
                                                     <td>Invoice Prefix</td>
                                                     <td><h1 style="font-size: 25px"><b><?= isset($integration) ? $integration : '' ?></b></h1></td>
                                                 </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>Payment Type</td>
+                                                    <td><h1 style="font-size: 25px"><b><?= isset($integration) ? $integration : '' ?></b></h1></td>
+                                                </tr>
 
                                                 <tr>
                                                     <td></td>
