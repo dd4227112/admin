@@ -694,6 +694,7 @@ class Customer extends Controller {
         $id = request()->segment(4);
         if ($tab == 'show' && $id > 0) {
             $this->data['requirement'] = \App\Models\Requirement::where('id', $id)->first();
+            $this->data['next'] = \App\Models\Requirement::whereNotIn('id',[$id])->where('status', 'New')->first()->id;
             return view('customer/view_requirement', $this->data);
         }
         $this->data['levels'] = [];

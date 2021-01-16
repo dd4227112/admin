@@ -7,7 +7,9 @@ $integration = '';
     if (!empty($checksystem)) {
         $bank = DB::table($partner->client->username . '.bank_accounts')->where('refer_bank_id', $partner->refer_bank_id)->first();
         if(!empty($bank)){
-        $integration = DB::table($partner->client->username . '.bank_accounts_integrations')->where('bank_account_id', $bank->id)->first()->invoice_prefix;
+        $banks = DB::table($partner->client->username . '.bank_accounts_integrations')->where('bank_account_id', $bank->id)->first();
+        $type = $banks->payment_type;
+        $integration = $banks->invoice_prefix;
         $refer_bank = $bank->name;
         $number = $bank->number;
         $user = DB::table($partner->client->username . '.users')->where("table", $partner->table)->where('id', $partner->user_id)->first();
@@ -22,6 +24,7 @@ $integration = '';
         $user_name = $bank->requests->user->name;
         $integration = $bank->invoice_prefix;
         $usertype = 'Sales Manager';
+        $type = 10;
     }
 ?>
 <!-- Sidebar inner chat end-->
@@ -112,12 +115,14 @@ $integration = '';
                                                     <td>Invoice Prefix</td>
                                                     <td><h1 style="font-size: 25px"><b><?= isset($integration) ? $integration : '' ?></b></h1></td>
                                                 </tr>
+
+                                                <?php   if(!preg_match('/nmb/', Auth::user()->email)){  ?>
                                                 <tr>
                                                     <td></td>
                                                     <td>Payment Type</td>
-                                                    <td><h1 style="font-size: 25px"><b><?= isset($integration) ? $integration : '' ?></b></h1></td>
+                                                    <td><h1 style="font-size: 25px"><b><?= isset($type) ? $type : '' ?></b></h1></td>
                                                 </tr>
-
+                                                <?php } ?>
                                                 <tr>
                                                     <td></td>
                                                     <td></td>
