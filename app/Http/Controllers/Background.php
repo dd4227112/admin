@@ -246,7 +246,7 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
     }
 
     public function officeDailyReport() {
-        $users = \App\Models\User::where('status', 1)->get();
+        $users = \DB::select("select * from admin.users where status=1 and email not like '%nmb%' ");;
         foreach ($users as $user) {
             $tasks = DB::select("select b.name, count(a.*) from admin.tasks a join admin.task_types b on b.id=a.task_type_id where a.created_at::date=CURRENT_DATE AND user_id=" . $user->id . " group by b.name");
             $tr = '';
