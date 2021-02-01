@@ -24,6 +24,7 @@ class Analyse extends Controller {
     }
 
     public function index() {
+   
         $this->data['users'] = [];
 
 //         $this->data['active_schools']=\collect(DB::select(" select count(distinct \"schema_name\") as aggregate from admin.all_log where \"table\"  in ('user', 'teacher') and (created_at >= date_trunc('week', CURRENT_TIMESTAMP - interval '1 week') and
@@ -54,7 +55,7 @@ class Analyse extends Controller {
 
             $this->data['refer_bank_id'] = (new \App\Http\Controllers\Users())->getBankId();
             $this->data['requests'] = \App\Models\IntegrationRequest::where('refer_bank_id', $this->data['refer_bank_id'])->get();
-            $this->data['invoices'] = \App\Models\Invoice::whereIn('client_id', \App\Models\IntegrationRequest::where('refer_bank_id', $this->data['refer_bank_id'])->get(['client_id']))->where('note','integration')->get();
+            $this->data['invoices'] = \App\Models\Invoice::whereIn('client_id', \App\Models\IntegrationRequest::where('refer_bank_id', $this->data['refer_bank_id'])->get(['client_id']))->where('note', 'integration')->get();
             return view('partners.requests', $this->data);
         } elseif (Auth::user()->role_id == 12) {
 

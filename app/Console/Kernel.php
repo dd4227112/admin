@@ -92,7 +92,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
             //  (new HomeController())->createTodayReport();
-            (new Background())->officeDailyReport();
+           // (new Background())->officeDailyReport();
         })->dailyAt('14:50'); // Eq to 17:50 h 
         $schedule->call(function () {
             $this->understandActivities();
@@ -657,10 +657,24 @@ select distinct phone, body,0,8 from (select 'Tunakutakia '||upper(\"schema_name
                 DB::statement($sql_for_teachers);
 
                 //send notification to administrators
-                $sql_to_admin = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")"
-                        . "select 'Hello '||s.sname||', leo ni birthday ya '||(select string_agg(a.name, ',') from " . $schema->table_schema . ".student a WHERE   DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) 
-                    AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE))||' katika shule yako. Ingia katika account yako ya ShuleSoft kujua zaidi na uwatakie heri ya kuzaliwa. Asante', s.phone,0,0,1,'setting' from " . $schema->table_schema . ".student a join " . $schema->table_schema . ".setting s on true  group by s.sname,s.phone";
+                //$sql_to_admin = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")"
+                   //     . "select 'Hello '||s.sname||', leo ni birthday ya '||(select string_agg(a.name, ',') from " . $schema->table_schema . ".student a WHERE   DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) 
+                  //  AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE))||' katika shule yako. Ingia katika account yako ya ShuleSoft kujua zaidi na uwatakie heri ya kuzaliwa. Asante', s.phone,0,0,1,'setting' from " . $schema->table_schema . ".student a join " . $schema->table_schema . ".setting s on true  group by s.sname,s.phone";
                 // DB::statement($sql_to_admin);
+                
+                
+                //staff birthday messages to school staff
+                 $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\",sms_keys_id)"
+                        . "select 'Hello '|| upper(a.name)|| ', tunapenda kukutakia  heri ya siku yako ya kuzaliwa. Mungu akupe afya tele, maisha marefu, baraka na mafanikio.  Kama hujaziliwa tarehe kama ya leo, mwambie Administrator wa system katika shule yako abadili tarehe yako iwe sahihi. Ubarikiwe',a.phone, 0,0, a.id,a.table, (select id from " . $schema->table_schema . ".sms_keys limit 1)  FROM " . $schema->table_schema . ".users a  WHERE \"table\"  in ('user','teacher') AND (
+                    DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) AND a.status = 1  
+                    AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE))";
+                DB::statement($sql);
+
+                //get staff with birthday, with their admin names
+//                $sql_for_admin = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\",sms_keys_id)"
+//                        . "SELECT 'Hello '||teacher_name||', leo ni birthday ya '||string_agg(student_name, ', ')||', katika darasa lako '||classes||'('||section||'). Usisite kumtakia heri ya kuzaliwa. Asante', phone,0,0,\"teacherID\",'teacher',(select id from " . $schema->table_schema . ".sms_keys limit 1 ) from ( select a.name as student_name, t.name as teacher_name, t.\"teacherID\", t.phone, c.section, d.classes from " . $schema->table_schema . ".student a join " . $schema->table_schema . ".section c on c.\"sectionID\"=a.\"sectionID\" JOIN " . $schema->table_schema . ".teacher t on t.\"teacherID\"=c.\"teacherID\" join " . $schema->table_schema . ".classes d on d.\"classesID\"=c.\"classesID\" WHERE  a.status=1 and  DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE)   AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE) ) x GROUP  BY teacher_name,phone,classes,section,phone,\"teacherID\"";
+//                DB::statement($sql_for_admin);
+                
             }
         }
     }

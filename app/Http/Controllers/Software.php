@@ -100,7 +100,7 @@ AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
     }
 
     public function loadSchema() {
-        return DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant','admin','api','app','skysat','dodoso','forum','academy')");
+        return DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant','admin','api','app','skysat','dodoso','forum','academy','carryshop')");
     }
 
     /**
@@ -486,4 +486,9 @@ ORDER  BY conrelid::regclass::text, contype DESC";
         return view('software.index', $this->data);
     }
 
+      public function whatsapp() {
+        $this->data['faqs'] = [];
+        return view('software.whatsapp', $this->data);
+    }
+    
 }
