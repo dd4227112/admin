@@ -489,7 +489,7 @@ class Partner extends Controller {
             $request = \App\Models\IntegrationRequest::find(request('integration_request_id'));
             $reference =  request('reference');
             //$invoice = \App\Models\Invoice::where('client_id', $request->client_id)->orderBy('id', 'desc')->first();
-            $payments = \App\Models\Payment::where('invoice_id', \App\Models\Invoice::where('reference', $reference)->first()->id)->firs();
+            $payments = \App\Models\Payment::where('invoice_id', \App\Models\Invoice::where('reference', $reference)->first()->id)->first();
             $file = request()->file('standing_order');
             $contract_id = 0;
             if($file){
