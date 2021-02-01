@@ -506,7 +506,7 @@ class Partner extends Controller {
             }          
             if($contract_id > 0 || $payments){
                 $request->update(['bank_approved' => 1, 'shulesoft_approved' => 1]);
-                return redirect('Partner/show/' . request('integration_request_id'))->with('error', 'Payment accepted.!!');
+                return redirect('Partner/show/' . request('integration_request_id'))->with('success', 'Payment accepted.!!');
             }else{
                 return redirect('Partner/show/' . request('integration_request_id'))->with('error', 'Payment not accepted. Your Reference Number Does Not Match any of Recorded Payments, Try Again!!');
             }

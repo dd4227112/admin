@@ -263,4 +263,13 @@ function validate_phone_number($number) {
         $valid = array($country_name, $valid_number);
         return $valid;
     }
+
+    
 }
+
+ function timeZones($value)
+    {
+        $date = DateTime::createFromFormat('Y-m-d H:i:s', $value);
+        $date->setTimeZone(new DateTimeZone('Europe/Berlin'));
+        return $date->format('Y-m-d H:i:s');
+    }

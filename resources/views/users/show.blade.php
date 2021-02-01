@@ -57,7 +57,7 @@ foreach ($user_permission as $permis) {
                                     <div class="card-block-big">
                                         <div>
                                             <h3>Tsh <?= number_format($user->salary) ?></h3>
-                                            <p>Basic Salary <?php echo Auth::user()->role_id; ?>
+                                            <p>Basic Salary 
                                                 <span class="f-right text-success">
                                                     <i class="icofont icofont-arrow-up"></i>
                                                     increase every 3 months
@@ -747,7 +747,7 @@ foreach ($user_permission as $permis) {
                     <div class="form-group ">
                         <label for="cname" class="control-label col-lg-3">Time In</label>
                         <div class="col-lg-12">
-                            <input class="form-control" id="cname" name="timein" disabled="" value="<?= date('H:i') ?>"  type="time">
+                            <input class="form-control" id="cname" name="timein" disabled="" value="<?=date('H:i', strtotime(timeZones(date('Y-m-d H:i:s')))) ?>"  type="time">
                         </div>
                     </div>
                     <?php
@@ -784,7 +784,7 @@ foreach ($user_permission as $permis) {
                     <div class="form-group ">
                         <label for="cname" class="control-label col-lg-3">Current Time</label>
                         <div class="col-lg-12">
-                            <input class="form-control" id="cname" name="timein" disabled="" value="<?= date('H:i') ?>"  type="time">
+                            <input class="form-control" id="cname" name="timein" disabled="" value="<?=date('H:i', strtotime(timeZones(date('Y-m-d H:i:s')))) ?>"  type="time">
                         </div>
                     </div>
 
