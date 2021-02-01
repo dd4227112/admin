@@ -264,3 +264,12 @@ function validate_phone_number($number) {
         return $valid;
     }
 }
+
+
+ function timeZones($value)
+    {
+        $date = DateTime::createFromFormat('Y-m-d H:i:s', $value);
+        $date->setTimeZone(new DateTimeZone('Europe/Berlin'));
+        return $date->format('Y-m-d H:i:s');
+    }
+
