@@ -620,11 +620,11 @@ foreach ($user_permission as $permis) {
                                                                  <a href="<?= url('users/leave') ?>">Leave the Office</a>
                                                                 <?php
                                                               
-                                                                    if (date('H') > 17 && date('Y', strtotime($attendance->timeout)) == 1970) {
+                                                                    if (date('H', strtotime(timeZones(date('Y-m-d H:i:s')))) > 17 && date('Y', strtotime($attendance->timeout)) == 1970) {
                                                                         ?>
                                                                         <a href="<?= url('users/leave') ?>">Leave the Office</a>
 
-                                                                    <?php } else if (date('H') < 17 && date('Y', strtotime($attendance->timeout)) == 1970) { ?>
+                                                                    <?php } else if (date('H', strtotime(timeZones(date('Y-m-d H:i:s')))) < 17 && date('Y', strtotime($attendance->timeout)) == 1970) { ?>
                                                                         <a  href="#" class="text-danger waves-effect" data-toggle="modal" data-target="#early-large-Modal">Early Leave</a>
                                                                         <?php
                                                                     }
@@ -751,7 +751,7 @@ foreach ($user_permission as $permis) {
                         </div>
                     </div>
                     <?php
-                    if (date('H') > 8) {
+                    if (date('H', strtotime(timeZones(date('Y-m-d H:i:s')))) > 8) {
                         ?>
                         <div class="form-group ">
                             <label for="cname" class="control-label col-lg-3">Late Coming Reasons</label>
