@@ -263,6 +263,7 @@ function validate_phone_number($number) {
         $valid = array($country_name, $valid_number);
         return $valid;
     }
+
 }
 
 
