@@ -488,8 +488,8 @@ class Partner extends Controller {
         if ($_POST) {
             $request = \App\Models\IntegrationRequest::find(request('integration_request_id'));
             $reference =  request('reference');
-            //$payment = \App\Models\Invoice::where('client_id', $request->client_id)->orderBy('id', 'desc')->first();
-            $payments = \App\Models\Payment::where('transaction_id', $reference)->first();
+            //$invoice = \App\Models\Invoice::where('client_id', $request->client_id)->orderBy('id', 'desc')->first();
+            $payments = \App\Models\Payment::where('invoice_id', \App\Models\Invoice::where('reference', $reference)->first()->id)->firs();
             $file = request()->file('standing_order');
             $contract_id = 0;
             if($file){
@@ -506,7 +506,7 @@ class Partner extends Controller {
             }          
             if($contract_id > 0 || $payments){
                 $request->update(['bank_approved' => 1, 'shulesoft_approved' => 1]);
-                return redirect('Install/database/'.$request->client->username);
+                return redirect('Partner/show/' . request('integration_request_id'))->with('error', 'Payment accepted.!!');
             }else{
                 return redirect('Partner/show/' . request('integration_request_id'))->with('error', 'Payment not accepted. Your Reference Number Does Not Match any of Recorded Payments, Try Again!!');
             }
