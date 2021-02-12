@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'driver' => 'mandrill',
+    'driver' => 'smtp',
 
     /*
     |--------------------------------------------------------------------------
@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'host' =>'smtp.mandrillapp.com',
+    'host' =>'mail.shulesoft.com',
 
     /*
     |--------------------------------------------------------------------------
@@ -84,9 +84,9 @@ return [
     |
     */
 
-    'username' => 'noreply@shulesoft.com',
+    'username' => 'no-reply@shulesoft.com',
 
-    'password' =>'k8y*&*YHIU(&*(((_)+_#%$$777$HGHGgu',
+    'password' =>'t}(E4p=sjB9O',
 
     /*
     |--------------------------------------------------------------------------
