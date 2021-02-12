@@ -133,10 +133,10 @@ class Handler extends ExceptionHandler {
         $data = ['content' => $message, 'link' => 'demo.',
             'photo' => 'shulesoft.png', 'sitename' => 'ShuleSoft', 'name' => ''];
         $mes = [];
-        \Mail::send('email.default', $data, function ($m) use ($mes) {
-            $m->from('noreply@shulesoft.com', 'ShuleSoft');
-            $m->to('ephraim@shulesoft.com')->subject('Database System is down and needs your immediate attention');
-        });
+//        \Mail::send('email.default', $data, function ($m) use ($mes) {
+//            $m->from('noreply@shulesoft.com', 'ShuleSoft');
+//            $m->to('ephraim@shulesoft.com')->subject('Database System is down and needs your immediate attention');
+//        });
         $whatsapp_numbers = ['255714825469', '255744158016', '255684033878', '255652160360'];
         foreach ($whatsapp_numbers as $number) {
             $chat_id = '@c.us' . $number;
