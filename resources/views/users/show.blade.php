@@ -57,7 +57,7 @@ foreach ($user_permission as $permis) {
                                     <div class="card-block-big">
                                         <div>
                                             <h3>Tsh <?= number_format($user->salary) ?></h3>
-                                            <p>Basic Salary <?php echo Auth::user()->role_id; ?>
+                                            <p>Basic Salary 
                                                 <span class="f-right text-success">
                                                     <i class="icofont icofont-arrow-up"></i>
                                                     increase every 3 months
@@ -620,11 +620,11 @@ foreach ($user_permission as $permis) {
                                                                  <a href="<?= url('users/leave') ?>">Leave the Office</a>
                                                                 <?php
                                                               
-                                                                    if (date('H') > 17 && date('Y', strtotime($attendance->timeout)) == 1970) {
+                                                                    if (date('H', strtotime(timeZones(date('Y-m-d H:i:s')))) > 17 && date('Y', strtotime($attendance->timeout)) == 1970) {
                                                                         ?>
                                                                         <a href="<?= url('users/leave') ?>">Leave the Office</a>
 
-                                                                    <?php } else if (date('H') < 17 && date('Y', strtotime($attendance->timeout)) == 1970) { ?>
+                                                                    <?php } else if (date('H', strtotime(timeZones(date('Y-m-d H:i:s')))) < 17 && date('Y', strtotime($attendance->timeout)) == 1970) { ?>
                                                                         <a  href="#" class="text-danger waves-effect" data-toggle="modal" data-target="#early-large-Modal">Early Leave</a>
                                                                         <?php
                                                                     }
@@ -747,11 +747,11 @@ foreach ($user_permission as $permis) {
                     <div class="form-group ">
                         <label for="cname" class="control-label col-lg-3">Time In</label>
                         <div class="col-lg-12">
-                            <input class="form-control" id="cname" name="timein" disabled="" value="<?= date('H:i') ?>"  type="time">
+                            <input class="form-control" id="cname" name="timein" disabled="" value="<?=date('H:i', strtotime(timeZones(date('Y-m-d H:i:s')))) ?>"  type="time">
                         </div>
                     </div>
                     <?php
-                    if (date('H') > 8) {
+                    if (date('H', strtotime(timeZones(date('Y-m-d H:i:s')))) > 8) {
                         ?>
                         <div class="form-group ">
                             <label for="cname" class="control-label col-lg-3">Late Coming Reasons</label>
@@ -784,7 +784,7 @@ foreach ($user_permission as $permis) {
                     <div class="form-group ">
                         <label for="cname" class="control-label col-lg-3">Current Time</label>
                         <div class="col-lg-12">
-                            <input class="form-control" id="cname" name="timein" disabled="" value="<?= date('H:i') ?>"  type="time">
+                            <input class="form-control" id="cname" name="timein" disabled="" value="<?=date('H:i', strtotime(timeZones(date('Y-m-d H:i:s')))) ?>"  type="time">
                         </div>
                     </div>
 
