@@ -128,29 +128,29 @@ class Handler extends ExceptionHandler {
         system("service postgresql-12 stop");
         system("service postgresql-12 start");
         
-        $karibusms = new \karibusms();
-        $karibusms->API_KEY = '25336025463';
-        $karibusms->API_SECRET = '1cb066306b7c36d3e665228a50ceca939609864d';
-        $karibusms->set_name(strtoupper('SHULESOFT'));
-        $karibusms->karibuSMSpro = 1;
-        $message = 'Database System is down and needs your immediate attention. Thanks';
-        (object) json_decode($karibusms->send_sms('255714825469', $message, 'SHULESOFT_recovery' . time()));
-
-        $data = ['content' => $message, 'link' => 'demo.',
-            'photo' => 'shulesoft.png', 'sitename' => 'ShuleSoft', 'name' => ''];
-        $mes = [];
-        $emails = ['email' => 'ephraim@shulesoft.com', 'email' => 'swillae1@gmail.com'];
-        foreach ($emails as $mail) {
-            \Mail::send('email.default', $data, function ($m) use ($mail) {
-                $m->from('noreply@shulesoft.com', 'ShuleSoft');
-                $m->to($mail['email'])->subject('Database System is down and needs your immediate attention');
-            });
-        }
-        $whatsapp_numbers = ['255714825469', '255744158016', '255684033878', '255652160360'];
-        foreach ($whatsapp_numbers as $number) {
-            $chat_id = $number.'@c.us';
-            $this->sendMessage($chat_id, $message);
-        }
+//        $karibusms = new \karibusms();
+//        $karibusms->API_KEY = '25336025463';
+//        $karibusms->API_SECRET = '1cb066306b7c36d3e665228a50ceca939609864d';
+//        $karibusms->set_name(strtoupper('SHULESOFT'));
+//        $karibusms->karibuSMSpro = 1;
+//        $message = 'Database System is down and needs your immediate attention. Thanks';
+//        (object) json_decode($karibusms->send_sms('255714825469', $message, 'SHULESOFT_recovery' . time()));
+//
+//        $data = ['content' => $message, 'link' => 'demo.',
+//            'photo' => 'shulesoft.png', 'sitename' => 'ShuleSoft', 'name' => ''];
+//        $mes = [];
+//        $emails = ['email' => 'ephraim@shulesoft.com', 'email' => 'swillae1@gmail.com'];
+//        foreach ($emails as $mail) {
+//            \Mail::send('email.default', $data, function ($m) use ($mail) {
+//                $m->from('noreply@shulesoft.com', 'ShuleSoft');
+//                $m->to($mail['email'])->subject('Database System is down and needs your immediate attention');
+//            });
+//        }
+//        $whatsapp_numbers = ['255714825469', '255744158016', '255684033878', '255652160360'];
+//        foreach ($whatsapp_numbers as $number) {
+//            $chat_id = $number.'@c.us';
+//            $this->sendMessage($chat_id, $message);
+//        }
         
         
     }
