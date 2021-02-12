@@ -122,6 +122,12 @@ class Handler extends ExceptionHandler {
 
     public function automateDatabaseRecovery() {
         // First Notify key people
+        
+        //try to see if we can restart our db here
+        
+        system("service postgresql-12 stop");
+        system("service postgresql-12 start");
+        
         $karibusms = new \karibusms();
         $karibusms->API_KEY = '25336025463';
         $karibusms->API_SECRET = '1cb066306b7c36d3e665228a50ceca939609864d';
@@ -145,6 +151,8 @@ class Handler extends ExceptionHandler {
             $chat_id = $number.'@c.us';
             $this->sendMessage($chat_id, $message);
         }
+        
+        
     }
 
     public function sendMessage($chatId, $text) {
