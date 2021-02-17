@@ -879,6 +879,19 @@ function toast(message) {
                         <?php } ?>
 
                     <?php } ?>
+                    <?php if (preg_match('/localhost/', url()->current()) && can_access('manage_software')) { ?>
+                            <li class="nav-item">
+                                <a href="#">
+                                    <i class="ti-menu"></i>
+                                    <span data-i18n="nav.basic-components.main"> Customer Requirement </span>
+                                </a>
+                                <ul class="tree-1 ">
+                                    <li><a href="<?=url('software/requirements')?>" data-i18n="nav.extra-components.session-timeout">Requirement</a></li>
+                                    <li><a href="<?= url('software/todo') ?>" data-i18n="nav.extra-components.session-timeout">Todo List</a></li>
+                                    <li><a href="<?= url('software/statistics') ?>" data-i18n="nav.extra-components.session-timeout">Reports</a></li>
+                                </ul>
+                                </li>
+                        <?php } ?>
                 </ul>
             </div>
         </div>

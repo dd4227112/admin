@@ -491,4 +491,59 @@ ORDER  BY conrelid::regclass::text, contype DESC";
         return view('software.whatsapp', $this->data);
     }
     
+    public function requirements() {
+
+        $tab = request()->segment(3);
+        $id = request()->segment(4);
+        if ($tab == 'show' && $id > 0) {
+            $this->data['requirement'] = \App\Models\Requirement::where('id', $id)->first();
+            $this->data['next'] = \App\Models\Requirement::whereNotIn('id',[$id])->where('status', 'New')->first()->id;
+            return view('customer/view_requirement', $this->data);
+        }
+        $this->data['levels'] = [];
+        if ($_POST) {
+
+            $data = array_merge(request()->all(), ['user_id' => Auth::user()->id]);
+
+            $req = \App\Models\Requirement::create($data);
+            if ((int) request('to_user_id') > 0) {
+
+                $user = \App\Models\User::find(request('to_user_id'));
+                $message = 'Hello ' . $user->name . '<br/><br/>'
+                        . 'There is New School Requirement from ' . $req->school->name . ' (' . $req->school->region . ')'
+                        . '<br/><br/><p><b>Requirement:</b> ' . $req->note . '</p>'
+                        . '<br/><br/><p><b>By:</b> ' . $req->user->name . '</p>';
+                $this->send_email($user->email, 'ShuleSoft New Customer Requirement', $message);
+            }
+        }
+        $this->data['requirements'] = \App\Models\Requirement::orderBy('id', 'DESC')->get();
+        return view('software/tasks', $this->data);
+    }
+
+
+    public function updateReq() {
+        $id = request('id');
+        $action = request('action');
+        \App\Models\Requirement::where('id', $id)->update(['status' => $action]);
+        return redirect()->back()->with('success', 'success');
+    }
+
+    public function addTodo() {
+        $id = Auth::user()->id;
+        $to = request('to_user_id');
+        $message = \App\Models\Chat::create(['body' => request('body'), 'status' => 1]);
+        \App\Models\ChatUser::create(['user_id' => $id, 'to_user_id' => $to, 'message_id' => $message->id]);
+       $message = '';
+
+       $message .= '<div class="media chat-inner-header">
+       <a class="back_chatBox">
+       <input id="to_user_id' . $user->id . '" value="' . $user->id . '" type="hidden">
+           <i class="icofont icofont-rounded-left"></i>' . $user->firstname . ' ' . $user->lastname . '
+       </a>
+   </div>';
+    
+   echo $message;
+    }
+
+
 }
