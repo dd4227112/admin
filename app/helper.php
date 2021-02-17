@@ -270,7 +270,7 @@ function validate_phone_number($number) {
  function timeZones($value)
     {
         $date = DateTime::createFromFormat('Y-m-d H:i:s', $value);
-        $date->setTimeZone(new DateTimeZone('Europe/Berlin'));
+        $date->setTimeZone(new DateTimeZone('Africa/Dar_es_Salaam'));
         return $date->format('Y-m-d H:i:s');
     }
 
