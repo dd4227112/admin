@@ -62,7 +62,7 @@ class UsersImport implements ToModel
                 'user_id' => 1,
                 'email' => $user->email,
                 'table' => 'setting'
-            ]);
+            ]); 
         }
         return $user;
     }

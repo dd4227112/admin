@@ -7428,7 +7428,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-10-26T17:03:56+00:00"
+            "time": "2020-10-26T17:03:56+00:01"
         },
         {
             "name": "sebastian/object-enumerator",

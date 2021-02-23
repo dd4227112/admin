@@ -74,7 +74,7 @@ class Users extends Controller {
         $content = 'Hello ' . $user->name . ' Your password has been updated by administrator. Kindly login  with username ' . $user->email . ' and password ' . $pass;
         $this->sendEmailAndSms($user, $content);
         return redirect()->back()->with('success', 'Password sent successfully');
-    }
+    } 
 
     public function sendEmailAndSms($requests, $content = null) {
         $request = (object) $requests;
