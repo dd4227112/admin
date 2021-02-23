@@ -410,6 +410,7 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
 
     //Notify all admin about monthly reports
     public function schoolMonthlyReport() {
+         DB::select('REFRESH MATERIALIZED VIEW CONCURRENTLY public.all_users');
         $users = DB::select("select * from admin.all_users where lower(usertype)='admin' and status=1");
         $key_id = DB::table('public.sms_keys')->first()->id;
         foreach ($users as $user) {
