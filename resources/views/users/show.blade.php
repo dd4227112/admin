@@ -218,10 +218,11 @@ foreach ($user_permission as $permis) {
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">Academic Certificates</th>
-                                                                        <td><a href="<?= url('/storage/uploads/images/' . $user->academic_certificates) ?>" class="btn btn-primary btn-sm"> View Certificate</a></td>
+                                                                        <td><a href="<?= url('/storage/uploads/images/' . $user->academic_certificates) ?>" class="btn btn-default btn-sm"> View Certificate</a></td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td><a href="<?= url('users/resetPassword/' . $user->id) ?>" class="btn btn-warning btn-sm">Reset Password</a></td>
+                                                                    <td><a href="<?= url('users/resetPassword/' . $user->id) ?>" class="btn btn-warning btn-sm">Reset Password</a></td>
+                                                                    <td> <button class="btn btn-primary btn-sm text-right" data-toggle="modal"  role="button" data-target="#status-Modal"> Upload Users  <i class="ti-user"></i></button> </td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
@@ -914,4 +915,35 @@ foreach ($user_permission as $permis) {
     };
     $(document).ready(search_report);
 </script>
+<div class="modal fade" id="status-Modal">
+<div class="modal-dialog modal-lg" role="document">
+<form id="add-form" action="userUpload" method="POST" enctype="multipart/form-data">
+<?= csrf_field() ?>
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Add New Members</h5>
+            <a href="<?=url('public/sample_files/users.csv')?>"> <u><b>Download Sample</b></u> </a>
+        </div>
+      <div class="modal-body">
+      <p>Import users from a CSV file. In Excel, add all required column of  New Users, and save the file in a CSV format. Click A CSV file, then drag and drop your .csv file, or click choose file to browse files on your computer. Then click <b>Submit. <br>  <br> #Remember to Remove First Row.</b></p>
+          <div class="form-group">
+            <label>Attach File Name</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <i class="fas fa-file"></i>
+                </div>
+              </div>
+              <input type="file" class="form-control" placeholder="Enter group name..." name="user_file" required>
+            </div>
+          </div>
+        <!-- </div> -->
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+          </div>
+        </form>
+      </div>
+  </div>
+</div>
 @endsection
