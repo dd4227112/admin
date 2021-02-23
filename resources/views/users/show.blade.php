@@ -618,7 +618,7 @@ foreach ($user_permission as $permis) {
                                                             <td><?= $attendance->early_leave_comment ?></td>
                                                             <td>
                                                                  <a href="<?= url('users/leave') ?>">Leave the Office</a>
-                                                                <?php
+                                                                <?php 
                                                               
                                                                     if (date('H', strtotime(timeZones(date('Y-m-d H:i:s')))) > 17 && date('Y', strtotime($attendance->timeout)) == 1970) {
                                                                         ?>

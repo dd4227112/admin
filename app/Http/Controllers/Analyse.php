@@ -98,17 +98,17 @@ class Analyse extends Controller {
 
     public function summary() {
 
-        $this->data['parents'] = \collect(DB::select('select count(*) as count from admin.all_parent'))->first()->count;
-        $this->data['students'] = \collect(DB::select('select count(*) as count from admin.all_student'))->first()->count;
-        $this->data['teachers'] = \collect(DB::select('select count(*) as count from admin.all_teacher'))->first()->count;
-        $this->data['users'] = \collect(DB::select('select count(*) as count from admin.all_users'))->first()->count;
-        $this->data['total_schools'] = \collect(DB::select(" select count(distinct \"table_schema\") as aggregate from INFORMATION_SCHEMA.TABLES where \"table_schema\" not in ('admin', 'beta_testing', 'api', 'app', 'constant', 'public','accounts','information_schema')"))->first()->aggregate;
-        $this->data['schools_with_students'] = \collect(DB::select('select count(distinct "schema_name") as count from admin.all_student'))->first()->count;
+        $this->data['parents'] = 1; // \collect(DB::select('select count(*) as count from admin.all_parent'))->first()->count;
+        $this->data['students'] =  1; // \collect(DB::select('select count(*) as count from admin.all_student'))->first()->count;
+        $this->data['teachers'] =  1; // \collect(DB::select('select count(*) as count from admin.all_teacher'))->first()->count;
+        $this->data['users'] =  1; // \collect(DB::select('select count(*) as count from admin.all_users'))->first()->count;
+        $this->data['total_schools'] =  1; // \collect(DB::select(" select count(distinct \"table_schema\") as aggregate from INFORMATION_SCHEMA.TABLES where \"table_schema\" not in ('admin', 'beta_testing', 'api', 'app', 'constant', 'public','accounts','information_schema')"))->first()->aggregate;
+        $this->data['schools_with_students'] =  1; // \collect(DB::select('select count(distinct "schema_name") as count from admin.all_student'))->first()->count;
 
-        $this->data['active_parents'] = \collect(DB::select('select count(*) as count from admin.all_parent where status=1'))->first()->count;
-        $this->data['active_students'] = \collect(DB::select('select count(*) as count from admin.all_student where status=1'))->first()->count;
+        $this->data['active_parents'] =   1; // \collect(DB::select('select count(*) as count from admin.all_parent where status=1'))->first()->count;
+        $this->data['active_students'] =   1; // \collect(DB::select('select count(*) as count from admin.all_student where status=1'))->first()->count;
         $this->data['active_teachers'] = \collect(DB::select('select count(*) as count from admin.all_teacher where status=1'))->first()->count;
-        $this->data['active_users'] = \collect(DB::select('select count(*) as count from admin.all_users where status=1'))->first()->count;
+        $this->data['active_users'] =   1; // \collect(DB::select('select count(*) as count from admin.all_users where status=1'))->first()->count;
 
         return $this->data;
     }

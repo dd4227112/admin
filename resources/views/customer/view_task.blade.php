@@ -31,17 +31,10 @@
         <div class="page-body">
             <div class="row">
                 <div class="col-lg-12">
-                    <!-- tab panel personal start -->
-                    <div class="tab-pane active" id="personal" role="tabpanel">
                         <!-- personal card start -->
                         <div class="card">
                             <div class="card-block">
-                                <div class="view-info">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="general-info">
-                                                <div class="row">
-                                                    <div class="col-lg-12 col-xl-12">
+                               
                                                         <table class="table m-0">
                                                             <tbody>
                                                                 <tr>
@@ -107,11 +100,7 @@
                                                 <!-- end of row -->
                                             </div>
                                             <!-- end of general info -->
-                                        </div>
-                                        <!-- end of col-lg-12 -->
-                                    </div>
-                                    <!-- end of row -->
-                                </div>
+                                     
 
                                 <!-- end of card-block -->
                             </div>

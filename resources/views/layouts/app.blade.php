@@ -784,7 +784,7 @@ function toast(message) {
 
                             <?php
                         }
-                        if (can_access('manage_users') && !in_array(Auth::user()->department, [9,10]) || in_array(Auth::user()->role_id, array(14, 8, 2,3,9))) {
+                        if (can_access('manage_users') && !in_array(Auth::user()->department, [9,10]) || in_array(Auth::user()->role_id, array(14, 8, 2,3,9,20))) {
                             ?>
 
                             <li class="nav-item">
@@ -796,7 +796,7 @@ function toast(message) {
                                     <li><a href="<?= url('Analyse/myschools') ?>" data-i18n="nav.extra-components.session-timeout"> List of Schools</a></li>
                                     <li><a href="<?= url('Analyse/myreport') ?>" data-i18n="nav.extra-components.offline">Task Report</a></li>
                                     <li><a href="<?= url('sales/schoolVisit/1') ?>" data-i18n="nav.extra-components.session-timeout">School Visitation</a></li>
-                                    <li><a href="<?= url('software/banksetup') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Bank Setup</a></li>
+                                    <!-- <li><a href="<?= url('software/banksetup') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Bank Setup</a></li> -->
                                 </ul>
                             </li>
                             <?php
@@ -879,6 +879,19 @@ function toast(message) {
                         <?php } ?>
 
                     <?php } ?>
+                    <?php /* if (preg_match('/localhost/', url()->current()) && can_access('manage_software')) { ?>
+                            <li class="nav-item">
+                                <a href="#">
+                                    <i class="ti-menu"></i>
+                                    <span data-i18n="nav.basic-components.main"> Customer Requirement </span>
+                                </a>
+                                <ul class="tree-1 ">
+                                    <li><a href="<?=url('software/requirements')?>" data-i18n="nav.extra-components.session-timeout">Requirement</a></li>
+                                    <li><a href="<?= url('software/todo') ?>" data-i18n="nav.extra-components.session-timeout">Todo List</a></li>
+                                    <li><a href="<?= url('software/statistics') ?>" data-i18n="nav.extra-components.session-timeout">Reports</a></li>
+                                </ul>
+                                </li>
+                        <?php } */ ?>
                 </ul>
             </div>
         </div>
