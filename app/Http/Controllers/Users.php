@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\User;
+use App\Imports\UsersImport;
 use DB;
 use Intervention\Image\ImageManagerStatic as Image;
 use Auth;
@@ -55,6 +57,13 @@ class Users extends Controller {
         $this->sendEmailAndSms($request);
 
         return redirect('users/index')->with('success', 'User ' . $request['firstname'] . ' created successfully');
+    }
+
+ 
+    public function userUpload() 
+    {
+        Excel::import(new UsersImport, request()->file('user_file'));
+        return redirect('Users/show/'.Auth::User()->id)->with('success', 'All Users Uploaded Successfully!');
     }
 
     public function resetPassword() {
