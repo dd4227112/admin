@@ -45,7 +45,7 @@ class Kernel extends ConsoleKernel {
         })->everyMinute();
 
         $schedule->call(function () {
-            (new Message())->checkPhoneStatus();
+           // (new Message())->checkPhoneStatus();
         })->hourly();
 
 
