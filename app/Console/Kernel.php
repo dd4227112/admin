@@ -45,7 +45,7 @@ class Kernel extends ConsoleKernel {
         })->everyMinute();
 
         $schedule->call(function () {
-            (new Message())->checkPhoneStatus();
+           // (new Message())->checkPhoneStatus();
         })->hourly();
 
 
@@ -159,6 +159,7 @@ class Kernel extends ConsoleKernel {
     }
 
     public function checkSchedule() {
+         DB::select('REFRESH MATERIALIZED VIEW  admin.all_message');
         $messages = DB::select("select \"messageID\",attach,attach_file_name,schema_name from admin.all_message where attach is not null and attach_file_name  not like '%amazon%' limit 100");
         foreach ($messages as $message) {
             $file = '/usr/share/nginx/html/shulesoft_live/storage/uploads/attach/' . $message->attach_file_name;
@@ -235,6 +236,8 @@ class Kernel extends ConsoleKernel {
     }
 
     public function syncInvoice() {
+         DB::select('REFRESH MATERIALIZED VIEW  admin.all_invoices');
+          DB::select('REFRESH MATERIALIZED VIEW  admin.all_bank_accounts_integrations');
         $invoices = DB::select("select distinct schema_name from admin.all_bank_accounts_integrations where invoice_prefix in (select prefix from admin.all_invoices where schema_name not in ('public','accounts','beta_testing')  and sync=0) and invoice_prefix like '%SAS%'");
 
         foreach ($invoices as $invoice) {
@@ -512,6 +515,7 @@ class Kernel extends ConsoleKernel {
     }
 
     public function sendTodReminder() {
+         DB::select('REFRESH MATERIALIZED VIEW  admin.all_teacher_on_duty');
         $users = DB::select('select * from admin.all_teacher_on_duty');
         $all_users = [];
 
@@ -573,6 +577,7 @@ select a.activity,u.email,u.phone, u.name,cl.name as client_name,a.created_at, a
     }
 
     public function sendSequenceReminder() {
+         DB::select('REFRESH MATERIALIZED VIEW  admin.all_users');
         $sequences = \App\Models\Sequence::all();
         foreach ($sequences as $sequence) {
             $users = DB::select("select a.table, a.name,a.username,a.email,a.phone,a.usertype,a.schema_name,a.id,concat(c.firstname,' ',c.lastname ) as csr_name, c.phone as csr_phone from admin.all_users a,admin.user_clients u, admin.clients z, admin.users c where z.username=a.schema_name  and z.id=u.client_id and u.user_id=c.id and a.status=1 and c.status=1 and u.status=1 and a.table not in ('parent','student','teacher') and a.id in (select user_id from admin.users_sequences a,admin.sequences
@@ -608,6 +613,7 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
     }
 
     public function sendNotice() {
+         DB::select('REFRESH MATERIALIZED VIEW  admin.all_notice');
         $public_day = DB::table('admin.public_days')->whereMonth('date', date('m'))->whereDay('date', date('d'))->first();
         !empty($public_day) ?? DB::statement("insert into public.sms(phone_number,body,type,sms_keys_id)
 select distinct phone, body,0,8 from (select 'Tunakutakia '||upper(\"schema_name\")||'  Heri ya " . $public_day->name . ". ' AS body,email,replace(replace(replace(phone,'/',','),' ',''),'|',',') as phone,\"schema_name\",name from admin.all_users where usertype in ('Admin') and length(phone)>3 and \"schema_name\" not in ('public','betatwo')) x");
