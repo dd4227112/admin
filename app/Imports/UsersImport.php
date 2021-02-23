@@ -44,8 +44,7 @@ class UsersImport implements ToModel
            'date_of_birth' => $row[10],
            'dob' => $row[10],
            'department' => 2,
-           'academic_certificates' => $row[9],
-           'position' => 'ShuleSoft Associate',
+           'academic_certificates' => $row[9]
         ]);
         if($user){
             $message = 'Hello ' . $user->name . ' You have been added in ShuleSoft Administration panel. You can login for Administration of schools with username ' . $user->email . ' and password ' . $user->email;
