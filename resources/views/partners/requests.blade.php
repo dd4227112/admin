@@ -76,7 +76,7 @@
                                                 <tr>
                                                     <th>No.</th>
                                                     <th>School Name</th>
-                                                    <th>System Status</th>
+                                                    <th>Username</th>
                                                     <th>Account Number</th>
                                                     <th>Bank Status</th>
                                                     <th>Shulesoft Status</th>
@@ -114,7 +114,7 @@
                                                         $request->bank_approved == 1 ? '<b class="label label-success">Approved</b>' :
                                                                 '<b class="label label-default">Not Approved</b>'
                                                         ?></td>
-                                                    <td><?= $request->shulesoft_approved == 1 ? '<b class="label label-success"> Approved </b>' : '<b class="label label-warning"> Not Approved </b>' ?></td>
+                                                    <td><?= $request->shulesoft_approved == 1 ? '<b class="label label-success" title="'.$request->approval->name.'"> Approved </b>' : '<b class="label label-warning"> Not Approved </b>' ?></td>
                                                     <td><?= timeAgo($request->created_at) ?></td>
                                                     <td>
                                                         <a class="btn btn-info btn-sm" href="<?= url('Partner/view/' . $request->id) ?>">View</a>
