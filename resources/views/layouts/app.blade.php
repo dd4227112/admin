@@ -463,7 +463,7 @@ function toast(message) {
                     <img class="img-40" src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image">
                     <div class="user-details">
                         <span>{{ Auth::user()->name() }}</span>
-                        <span id="more-details"> <?php // Auth::user()->role->display_name            ?></span>
+                        <span id="more-details"> <?php // Auth::user()->role->display_name              ?></span>
                     </div>
                 </div>
                 <div class="main-menu-content">
@@ -489,7 +489,7 @@ function toast(message) {
                                     <li>
                                         <a href="<?= url('analyse/index') ?>" data-i18n="nav.dash.default"> Home </a></li>
 
-                                <?php } if (can_access('manage_users') || Auth::user()->department == 2) { ?>
+                                <?php } if ((can_access('manage_users') || Auth::user()->department == 2) && Auth::user()->role_id <> 3) { ?>
 
                                     <li><a href="<?= url('analyse/marketing') ?>" data-i18n="nav.dash.ecommerce"> Marketing </a></li>
                                 <?php } if (can_access('manage_users') || Auth::user()->department == 2) { ?>
@@ -505,7 +505,7 @@ function toast(message) {
                                 <?php } ?>
                             </ul>
                         </li>
-                        <?php if (can_access('manage_customers')) { ?>
+                        <?php if (can_access('manage_customers') && Auth::user()->role_id <> 3) { ?>
                             <li class="nav-title" data-i18n="nav.category.navigation">
                                 <i class="ti-line-dashed"></i>
                                 <span>Operations</span>
@@ -591,12 +591,16 @@ function toast(message) {
                                 <?php
                                 if (!preg_match('/crdb/i', Auth::user()->email)) {
                                     ?>
-                                    <li>
+<!--                                    <li>
                                         <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">Schools</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">List of Schools</a>
-                                    </li>
+                                    </li>-->
+                                    <?php
+                                    if (Auth::user()->role_id <> 3) {
+                                        ?>
+                                        <li>
+                                            <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">List of Schools</a>
+                                        </li>
+                                    <?php } ?>
                                 <?php } ?>
                                 <li>
                                     <a href="<?= url('sales/salesStatus') ?>" data-i18n="nav.navigate.navbar">Sales Status</a>
@@ -609,7 +613,7 @@ function toast(message) {
                         </li>
                         <?php // } ?>
 
-                        <?php if (Auth::user()->role_id != 7) { ?>
+                        <?php if (Auth::user()->role_id != 7 && Auth::user()->role_id <> 3) { ?>
 
                             <li class="nav-item">
                                 <a href="<?= url('customer/activity') ?>">
@@ -784,7 +788,7 @@ function toast(message) {
 
                             <?php
                         }
-                        if (can_access('manage_users') && !in_array(Auth::user()->department, [9,10]) || in_array(Auth::user()->role_id, array(14, 8, 2,3,9,20))) {
+                        if (can_access('manage_users') && !in_array(Auth::user()->department, [9, 10]) || in_array(Auth::user()->role_id, array(14, 8, 2, 3, 9, 20))) {
                             ?>
 
                             <li class="nav-item">
@@ -803,10 +807,10 @@ function toast(message) {
                         }
                         ?>
 
-                         <?php if (in_array(Auth::user()->role_id, array(14, 8,9,3,2))) { ?>
-                                <li class="nav-item"><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline"> <i class="ti-book "> </i> Meeting Minutes</a></li>
-                            <?php } ?>
-                            
+                        <?php if (in_array(Auth::user()->role_id, array(14, 8, 9, 2))) { ?>
+                            <li class="nav-item"><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline"> <i class="ti-book "> </i> Meeting Minutes</a></li>
+                        <?php } ?>
+
                         <?php if ((int) Auth::user()->role_id == 7) { ?>
                             <li class="nav-item">
                                 <a href="#!">
@@ -880,18 +884,18 @@ function toast(message) {
 
                     <?php } ?>
                     <?php /* if (preg_match('/localhost/', url()->current()) && can_access('manage_software')) { ?>
-                            <li class="nav-item">
-                                <a href="#">
-                                    <i class="ti-menu"></i>
-                                    <span data-i18n="nav.basic-components.main"> Customer Requirement </span>
-                                </a>
-                                <ul class="tree-1 ">
-                                    <li><a href="<?=url('software/requirements')?>" data-i18n="nav.extra-components.session-timeout">Requirement</a></li>
-                                    <li><a href="<?= url('software/todo') ?>" data-i18n="nav.extra-components.session-timeout">Todo List</a></li>
-                                    <li><a href="<?= url('software/statistics') ?>" data-i18n="nav.extra-components.session-timeout">Reports</a></li>
-                                </ul>
-                                </li>
-                        <?php } */ ?>
+                      <li class="nav-item">
+                      <a href="#">
+                      <i class="ti-menu"></i>
+                      <span data-i18n="nav.basic-components.main"> Customer Requirement </span>
+                      </a>
+                      <ul class="tree-1 ">
+                      <li><a href="<?=url('software/requirements')?>" data-i18n="nav.extra-components.session-timeout">Requirement</a></li>
+                      <li><a href="<?= url('software/todo') ?>" data-i18n="nav.extra-components.session-timeout">Todo List</a></li>
+                      <li><a href="<?= url('software/statistics') ?>" data-i18n="nav.extra-components.session-timeout">Reports</a></li>
+                      </ul>
+                      </li>
+                      <?php } */ ?>
                 </ul>
             </div>
         </div>

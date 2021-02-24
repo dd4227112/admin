@@ -24,7 +24,7 @@ class Analyse extends Controller {
     }
 
     public function index() {
-   
+
         $this->data['users'] = [];
 
 //         $this->data['active_schools']=\collect(DB::select(" select count(distinct \"schema_name\") as aggregate from admin.all_log where \"table\"  in ('user', 'teacher') and (created_at >= date_trunc('week', CURRENT_TIMESTAMP - interval '1 week') and
@@ -99,16 +99,16 @@ class Analyse extends Controller {
     public function summary() {
 
         $this->data['parents'] = 1; // \collect(DB::select('select count(*) as count from admin.all_parent'))->first()->count;
-        $this->data['students'] =  1; // \collect(DB::select('select count(*) as count from admin.all_student'))->first()->count;
-        $this->data['teachers'] =  1; // \collect(DB::select('select count(*) as count from admin.all_teacher'))->first()->count;
-        $this->data['users'] =  1; // \collect(DB::select('select count(*) as count from admin.all_users'))->first()->count;
-        $this->data['total_schools'] =  1; // \collect(DB::select(" select count(distinct \"table_schema\") as aggregate from INFORMATION_SCHEMA.TABLES where \"table_schema\" not in ('admin', 'beta_testing', 'api', 'app', 'constant', 'public','accounts','information_schema')"))->first()->aggregate;
-        $this->data['schools_with_students'] =  1; // \collect(DB::select('select count(distinct "schema_name") as count from admin.all_student'))->first()->count;
+        $this->data['students'] = 1; // \collect(DB::select('select count(*) as count from admin.all_student'))->first()->count;
+        $this->data['teachers'] = 1; // \collect(DB::select('select count(*) as count from admin.all_teacher'))->first()->count;
+        $this->data['users'] = 1; // \collect(DB::select('select count(*) as count from admin.all_users'))->first()->count;
+        $this->data['total_schools'] = 1; // \collect(DB::select(" select count(distinct \"table_schema\") as aggregate from INFORMATION_SCHEMA.TABLES where \"table_schema\" not in ('admin', 'beta_testing', 'api', 'app', 'constant', 'public','accounts','information_schema')"))->first()->aggregate;
+        $this->data['schools_with_students'] = 1; // \collect(DB::select('select count(distinct "schema_name") as count from admin.all_student'))->first()->count;
 
-        $this->data['active_parents'] =   1; // \collect(DB::select('select count(*) as count from admin.all_parent where status=1'))->first()->count;
-        $this->data['active_students'] =   1; // \collect(DB::select('select count(*) as count from admin.all_student where status=1'))->first()->count;
+        $this->data['active_parents'] = 1; // \collect(DB::select('select count(*) as count from admin.all_parent where status=1'))->first()->count;
+        $this->data['active_students'] = 1; // \collect(DB::select('select count(*) as count from admin.all_student where status=1'))->first()->count;
         $this->data['active_teachers'] = \collect(DB::select('select count(*) as count from admin.all_teacher where status=1'))->first()->count;
-        $this->data['active_users'] =   1; // \collect(DB::select('select count(*) as count from admin.all_users where status=1'))->first()->count;
+        $this->data['active_users'] = 1; // \collect(DB::select('select count(*) as count from admin.all_users where status=1'))->first()->count;
 
         return $this->data;
     }
@@ -226,20 +226,26 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
 
         $all_schools = [];
         $all_schoolz = [];
-        $this->data['schools'] = $schools = \App\Models\ClientSchool::whereIn('client_id', \App\Models\UserClient::where('user_id', $id)->get(['client_id']))->get();
-        foreach ($schools as $school) {
-            array_push($all_schools, "'" . $school->client->username . "'");
-            array_push($all_schoolz, $school->client->username);
+        // $this->data['schools'] = $schools = \App\Models\ClientSchool::whereIn('client_id', \App\Models\UserClient::where('user_id', $id)->get(['client_id']))->get();
+        $ward_id=[];
+        $wards = DB::table('users_schools_wards')->where('user_id', $id)->get(['ward_id']);
+        foreach ($wards as $ward) {
+            array_push($ward_id, $ward->ward_id);
         }
+        $this->data['schools'] = $schools = \App\Models\School::whereIn('ward_id', $ward_id)->where(DB::raw('lower(ownership)'),'<>','government')->get();
+//        foreach ($schools as $school) {
+//            array_push($all_schools, "'" . $school->client->username . "'");
+//            array_push($all_schoolz, $school->client->username);
+//        }
         $days = "'" . date("Y-m-d", strtotime("-7 day")) . "'";
-        $this->data['users'] = $users = DB::table('admin.all_users')->select(DB::raw('count(*) as user_count, "table"'))->whereIn('schema_name', $all_schoolz)->where('status', 1)->where('table', '<>', 'setting')->groupBy('table')->get();
-        $this->data['active'] = DB::table('admin.all_log')->select(DB::raw('count(*) as school_count, "schema_name"'))->whereIn('schema_name', $all_schoolz)->where('table', '<>', 'setting')->whereDate('created_at', '>', $days)->groupBy('schema_name')->get();
+        //    $this->data['users'] = $users = DB::table('admin.all_users')->select(DB::raw('count(*) as user_count, "table"'))->whereIn('schema_name', $all_schoolz)->where('status', 1)->where('table', '<>', 'setting')->groupBy('table')->get();
+        //   $this->data['active'] = DB::table('admin.all_log')->select(DB::raw('count(*) as school_count, "schema_name"'))->whereIn('schema_name', $all_schoolz)->where('table', '<>', 'setting')->whereDate('created_at', '>', $days)->groupBy('schema_name')->get();
         $arrayTxt = implode(',', $all_schools);
-        if (count($all_schools) > 0) {
-            $sql = 'select count(*) as count, "schema_name" from "admin"."all_log" where created_at::date>' . $days . ' AND "schema_name" in (' . $arrayTxt . ') group by "schema_name"';
-            $this->data['logs'] = $sql;
-        }
-        $this->data['staffs'] = \App\Models\User::where('status', 1)->where('department', '<>', 10)->get();
+//        if (count($all_schools) > 0) {
+//            $sql = 'select count(*) as count, "schema_name" from "admin"."all_log" where created_at::date>' . $days . ' AND "schema_name" in (' . $arrayTxt . ') group by "schema_name"';
+//            $this->data['logs'] = $sql;
+//        }
+        //   $this->data['staffs'] = \App\Models\User::where('status', 1)->where('department', '<>', 10)->get();
         $this->data['staff'] = \App\Models\User::where('id', $id)->first();
         //DB::table('admin.all_log')->select(DB::raw('count(*) as school_count, "schema_name"'))->whereIn('schema_name', $all_schools)->where('table', '<>', 'setting')->groupBy('schema_name')->get();
         return view('analyse.myschool', $this->data);
