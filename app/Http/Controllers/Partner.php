@@ -485,11 +485,17 @@ class Partner extends Controller {
     }
 
     public function VerifyPayment() {
+        $req_id = request()->segment(3);
+        if((int)$req_id > 0){
+            $request = \App\Models\IntegrationRequest::where('id', $req_id)->update(['shulesoft_approved' => 1, 'approval_user_id' => Auth::User()->id]);
+            return redirect('Partner/show/' . $req_id)->with('success', 'Request Approved.!!');
+        }
         if ($_POST) {
             $request = \App\Models\IntegrationRequest::find(request('integration_request_id'));
             $reference =  request('reference');
-            //$invoice = \App\Models\Invoice::where('client_id', $request->client_id)->orderBy('id', 'desc')->first();
-            $payments = \App\Models\Payment::where('invoice_id', \App\Models\Invoice::where('reference', $reference)->first()->id)->first();
+            $invoice = \App\Models\Invoice::where('reference', $reference)->first();
+           if(!empty($invoice)){
+                $payments = \App\Models\Payment::where('invoice_id', $invoice->id)->first();
             $file = request()->file('standing_order');
             $contract_id = 0;
             if($file){
@@ -505,11 +511,15 @@ class Partner extends Controller {
            
             }          
             if($contract_id > 0 || $payments){
-                $request->update(['bank_approved' => 1, 'shulesoft_approved' => 1]);
+                $request->update(['bank_approved' => 1, 'shulesoft_approved' => 1, 'approval_user_id' => Auth::User()->id]);
                 return redirect('Partner/show/' . request('integration_request_id'))->with('success', 'Payment accepted.!!');
             }else{
                 return redirect('Partner/show/' . request('integration_request_id'))->with('error', 'Payment not accepted. Your Reference Number Does Not Match any of Recorded Payments, Try Again!!');
             }
+        }else{
+            $msg = 'Your Reference Number Does Not Match any of Recorded Payments, Try Again!! <br> Click Approve Without Payment, <a href="'. url('partner/VerifyPayment/'.request('integration_request_id')) . '"> click here  </a>  to approve';
+            return redirect('Partner/show/' . request('integration_request_id'))->with('error', $msg);
+        }
         } else {
             return redirect('Partner/index/');
         }
