@@ -12,9 +12,9 @@
             <?php
             if (!preg_match('/crdb/i', Auth::user()->email)) {
                 ?>
-<!--                <div class="page-header-breadcrumb">
-                    <a data-toggle="modal" data-target="#sendMessage" class="btn btn-info btn-sm  f-right"> <i class="ti-comments"></i> Send Message </a>
-                </div>-->
+                <!--                <div class="page-header-breadcrumb">
+                                    <a data-toggle="modal" data-target="#sendMessage" class="btn btn-info btn-sm  f-right"> <i class="ti-comments"></i> Send Message </a>
+                                </div>-->
             <?php } ?>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -88,7 +88,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                 
+
 
                                 </div>
                             </div>
@@ -134,6 +134,7 @@
                                             <th>Ward</th>
                                             <th>Type</th>
                                             <th>Phone</th>
+                                            <th>NMB Bank</th>
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
@@ -148,9 +149,17 @@
                                             $school_phone = '';
                                             $use_nmb = '';
                                             if (strlen($school->schema_name) > 3) {
-                                                $client_status = '<span class="label label-success">Client</span>';
-                                                $setting=\DB::table($school->schema_name.'.setting')->first();
-                                                $school_phone=$setting->phone;
+
+                                                $setting = \DB::table($school->schema_name . '.setting')->first();
+                                                $school_phone = $setting->phone;
+
+                                                if (\DB::table($school->schema_name . '.student')->count() < 5) {
+                                                    $client_status = '<span class="label label-danger">Client - Not Active</span>';
+                                                } else {
+                                                    $client_status = '<span class="label label-success">Client</span>';
+                                                }
+                                            } else {
+                                                $client_status = '<span class="label label-warning">Not Client</span>';
                                             }
                                             ?>
                                             <tr>
@@ -161,6 +170,17 @@
                                                 <td><?= $school->ward ?></td>
                                                 <td><?= $school->type ?></td>
                                                 <td><?= $school_phone ?></td>
+                                                <td>
+                                                    <?php
+                                                    if (strlen($school->account_number) > 4) {
+                                                        echo '<ul><li><span class="label label-success">Use NMB</span></li>'
+                                                        . '<li>Branch: ' . $school->branch_name . '</li>'
+                                                        . '<li>Account No: ' . $school->account_number . '</li>'
+                                                        . '</ul>';
+                                                    }
+                                                    ?>
+
+                                                </td>
                                                 <td>
                                                     <?= $client_status ?>
 
