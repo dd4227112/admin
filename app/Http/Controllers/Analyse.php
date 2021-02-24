@@ -232,7 +232,7 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         foreach ($wards as $ward) {
             array_push($ward_id, $ward->ward_id);
         }
-        $this->data['schools'] = $schools = \App\Models\School::whereIn('ward_id', $ward_id)->get();
+        $this->data['schools'] = $schools = \App\Models\School::whereIn('ward_id', $ward_id)->where(DB::raw('lower(ownership)'),'<>','government')->get();
 //        foreach ($schools as $school) {
 //            array_push($all_schools, "'" . $school->client->username . "'");
 //            array_push($all_schoolz, $school->client->username);
