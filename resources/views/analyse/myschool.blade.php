@@ -12,9 +12,9 @@
             <?php
             if (!preg_match('/crdb/i', Auth::user()->email)) {
                 ?>
-                <div class="page-header-breadcrumb">
+<!--                <div class="page-header-breadcrumb">
                     <a data-toggle="modal" data-target="#sendMessage" class="btn btn-info btn-sm  f-right"> <i class="ti-comments"></i> Send Message </a>
-                </div>
+                </div>-->
             <?php } ?>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">

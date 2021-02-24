@@ -463,7 +463,7 @@ function toast(message) {
                     <img class="img-40" src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image">
                     <div class="user-details">
                         <span>{{ Auth::user()->name() }}</span>
-                        <span id="more-details"> <?php // Auth::user()->role->display_name             ?></span>
+                        <span id="more-details"> <?php // Auth::user()->role->display_name              ?></span>
                     </div>
                 </div>
                 <div class="main-menu-content">
@@ -591,12 +591,16 @@ function toast(message) {
                                 <?php
                                 if (!preg_match('/crdb/i', Auth::user()->email)) {
                                     ?>
-                                    <li>
+<!--                                    <li>
                                         <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">Schools</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">List of Schools</a>
-                                    </li>
+                                    </li>-->
+                                    <?php
+                                    if (Auth::user()->role_id <> 3) {
+                                        ?>
+                                        <li>
+                                            <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">List of Schools</a>
+                                        </li>
+                                    <?php } ?>
                                 <?php } ?>
                                 <li>
                                     <a href="<?= url('sales/salesStatus') ?>" data-i18n="nav.navigate.navbar">Sales Status</a>
