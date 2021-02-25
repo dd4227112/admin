@@ -354,7 +354,7 @@
                     }
                 });
             }
-
+/*
             downloadMaterial = function (type) {
                 $.ajax({
                     url: '{{ url("downloadMaterial") }}/' + type,
@@ -364,7 +364,7 @@
                         console.log(data);
                     }
                 });
-            }
+            } */
         </script>
         @role('admin') 
         <script type="text/javascript">
