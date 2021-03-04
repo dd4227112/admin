@@ -26,7 +26,11 @@ class IntegrationRequest extends Model {
     public function user() {
         return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'User Not Defined']);
     }
-
+    
+    public function approval() {
+        return $this->belongsTo(\App\Models\User::class, 'approval_user_id', 'id')->withDefault(['name' => 'User Not Defined']);
+    }
+    
     public function banks() {
         return $this->belongsTo(\App\Models\IntegrationBankAccount::class, 'id', 'integration_request_id')->withDefault(['name' => 'User Not Defined']);
     }

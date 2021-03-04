@@ -9,7 +9,7 @@
         <div class="row">
         <div class="col-sm-12">
                 <a  onclick="javascript:printDiv('print_all')" class="btn btn-default btn-sm">Print</a>
-                <a class="approve btn btn-success" href="#"  data-toggle="modal" data-target="#customer_payment_model"> Verify Payment <i class="ti-check-circle"> </i> </a>      
+                <?= $request->shulesoft_approved > 0 ? '<a href="#" class="approve btn btn-primary"> Approved By ShuleSoft</a>' : '<a class="approve btn btn-success" href="#"  data-toggle="modal" data-target="#customer_payment_model"> Verify Payment <i class="ti-check-circle"> </i> </a>' ?>    
                  <a  style="float: right;" class="approve btn btn-success" href="#"  data-toggle="modal" data-target="#customer_contracts_model"> Add Comment <i class="ti-plus"> </i> </a>      
                 <hr>          
             </div>
@@ -379,8 +379,8 @@
                     <div class="media-body chat-menu-content">
                         <div class="">
                             <p class="chat-cont"><?=$act->comment ?><br>
-                            <b>User</b> - <?=$act->user->name?>   &nbsp; &nbsp; &nbsp; &nbsp;
-                            <b>Time</b> - <?=timeAgo($act->created_at)?>   &nbsp; &nbsp; &nbsp; &nbsp;
+                            <b>By</b> - <?=$act->user->name?>   &nbsp; &nbsp; &nbsp; &nbsp;
+                            <b>On</b> - <?=timeAgo($act->created_at)?>   &nbsp; &nbsp; &nbsp; &nbsp;
                             <b>Status</b> - <?=ucfirst($act->status)?>   &nbsp; &nbsp; &nbsp; &nbsp;
                             </p>
                         </div>
