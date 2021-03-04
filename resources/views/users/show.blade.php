@@ -170,6 +170,10 @@ foreach ($user_permission as $permis) {
                                 <a class="nav-link" data-toggle="tab" href="#settings5" role="tab">Permissions</a>
                                 <div class="slide"></div>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link " data-toggle="tab" href="#school_allocations" role="tab" aria-expanded="false">Schools Allocation</a>
+                                <div class="slide"></div>
+                            </li>
                         <?php } ?>
                     </ul>
                     <!-- Tab panes -->
@@ -221,8 +225,8 @@ foreach ($user_permission as $permis) {
                                                                         <td><a href="<?= url('/storage/uploads/images/' . $user->academic_certificates) ?>" class="btn btn-default btn-sm"> View Certificate</a></td>
                                                                     </tr>
                                                                     <tr>
-                                                                    <td><a href="<?= url('users/resetPassword/' . $user->id) ?>" class="btn btn-warning btn-sm">Reset Password</a></td>
-                                                                    <td> <button class="btn btn-primary btn-sm text-right" data-toggle="modal"  role="button" data-target="#status-Modal"> Upload Users  <i class="ti-user"></i></button> </td>
+                                                                        <td><a href="<?= url('users/resetPassword/' . $user->id) ?>" class="btn btn-warning btn-sm">Reset Password</a></td>
+                                                                        <td> <button class="btn btn-primary btn-sm text-right" data-toggle="modal"  role="button" data-target="#status-Modal"> Upload Users  <i class="ti-user"></i></button> </td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
@@ -396,22 +400,22 @@ foreach ($user_permission as $permis) {
                                     <?php
                                     if (Auth::user()->id == 2) {
                                         ?>
-                                                                                        <!--                                        <form class="form-horizontal form-material" method="post" action="<?= url('user/changePhoto/' . $user->id) ?>" enctype="multipart/form-data">
+                                                                                                                                                <!--                                        <form class="form-horizontal form-material" method="post" action="<?= url('user/changePhoto/' . $user->id) ?>" enctype="multipart/form-data">
 
-                                                                                                                                    <div class="form-group">
-                                                                                                                                        <label class="col-md-12">Photo</label>
-                                                                                                                                        <div class="col-md-12">
-                                                                                                                                            <input type="file" name="photo" accept=".png,.jpg,.jpeg,.gif" class="form-control form-control-line">
-                                                                                                                                        </div>
-                                                                                                                                    </div>
+                                                                                                                                                                                            <div class="form-group">
+                                                                                                                                                                                                <label class="col-md-12">Photo</label>
+                                                                                                                                                                                                <div class="col-md-12">
+                                                                                                                                                                                                    <input type="file" name="photo" accept=".png,.jpg,.jpeg,.gif" class="form-control form-control-line">
+                                                                                                                                                                                                </div>
+                                                                                                                                                                                            </div>
 
-                                                                                                                                    <div class="form-group">
-                                                                                                                                        <div class="col-sm-12">
+                                                                                                                                                                                            <div class="form-group">
+                                                                                                                                                                                                <div class="col-sm-12">
                                         <?= csrf_field() ?>
-                                                                                                                                            <button class="btn btn-success">Update Profile</button>
-                                                                                                                                        </div>
-                                                                                                                                    </div>
-                                                                                                                                </form>-->
+                                                                                                                                                                                                    <button class="btn btn-success">Update Profile</button>
+                                                                                                                                                                                                </div>
+                                                                                                                                                                                            </div>
+                                                                                                                                                                                        </form>-->
                                     <?php } ?>
                                 </div>
                                 <!-- end of card-block -->
@@ -607,7 +611,6 @@ foreach ($user_permission as $permis) {
                                                 </thead>
                                                 <tbody>
                                                     <?php
-                                              
                                                     foreach ($attendances as $attendance) {
                                                         ?>
                                                         <tr>
@@ -618,18 +621,16 @@ foreach ($user_permission as $permis) {
                                                             <td><?= date('Y', strtotime($attendance->timeout)) > 1970 ? date('h:i', strtotime($attendance->timeout)) : '' ?></td>
                                                             <td><?= $attendance->early_leave_comment ?></td>
                                                             <td>
-                                                                 <a href="<?= url('users/leave') ?>">Leave the Office</a>
-                                                                <?php 
-                                                              
-                                                                    if (date('H', strtotime(timeZones(date('Y-m-d H:i:s')))) > 17 && date('Y', strtotime($attendance->timeout)) == 1970) {
-                                                                        ?>
-                                                                        <a href="<?= url('users/leave') ?>">Leave the Office</a>
+                                                                <a href="<?= url('users/leave') ?>">Leave the Office</a>
+                                                                <?php
+                                                                if (date('H', strtotime(timeZones(date('Y-m-d H:i:s')))) > 17 && date('Y', strtotime($attendance->timeout)) == 1970) {
+                                                                    ?>
+                                                                    <a href="<?= url('users/leave') ?>">Leave the Office</a>
 
-                                                                    <?php } else if (date('H', strtotime(timeZones(date('Y-m-d H:i:s')))) < 17 && date('Y', strtotime($attendance->timeout)) == 1970) { ?>
-                                                                        <a  href="#" class="text-danger waves-effect" data-toggle="modal" data-target="#early-large-Modal">Early Leave</a>
-                                                                        <?php
-                                                                    }
-                                                                
+                                                                <?php } else if (date('H', strtotime(timeZones(date('Y-m-d H:i:s')))) < 17 && date('Y', strtotime($attendance->timeout)) == 1970) { ?>
+                                                                    <a  href="#" class="text-danger waves-effect" data-toggle="modal" data-target="#early-large-Modal">Early Leave</a>
+                                                                    <?php
+                                                                }
                                                                 ?>
 
                                                             </td>
@@ -726,6 +727,128 @@ foreach ($user_permission as $permis) {
                                     </div>
                                 </div>
                             </div>    </div>
+                        <div class="tab-pane" id="school_allocations" role="tabpanel" aria-expanded="false">
+                            <div class="col-lg-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-header-text">Schools Allocation</h5>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-12 col-xl-12">
+                                            <div class="sub-title">Default</div>                                        
+                                            <!-- Nav tabs -->
+                                            <ul class="nav nav-tabs md-tabs" role="tablist">
+                                                <li class="nav-item">
+                                                    <a class="nav-link active" data-toggle="tab" href="#home3" role="tab">Add New Allocation</a>
+                                                    <div class="slide"></div>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" data-toggle="tab" href="#profile3" role="tab">Schools Allocation</a>
+                                                    <div class="slide"></div>
+                                                </li>
+
+                                            </ul>
+                                            <!-- Tab panes -->
+                                            <div class="tab-content card-block">
+                                                <div class="tab-pane active" id="home3" role="tabpanel">
+                                                    <div class="card-block ">
+
+                                                        <form class="cmxform form-horizontal " id="commentForm" method="post" action="<?= url('background/allocateSchool/null') ?>">
+                                                            <div class="modal-dialog modal-lg" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h4 class="modal-title">New Allocation  </h4>
+
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <div class="form-group ">
+                                                                            <label for="cname" class="control-label col-lg-3">Region</label>
+                                                                            <div class="col-lg-12">
+                                                                                <select name="region_id"  class="form-control" id="search_regions">
+                                                                                    <option></option>
+                                                                                    <?php
+                                                                                    $regions = \App\Models\Region::all();
+                                                                                    foreach ($regions as $region) {
+                                                                                        ?>
+                                                                                        <option value="<?= $region->id ?>"><?= $region->name ?></option>
+                                                                                    <?php }
+                                                                                    ?>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group ">
+                                                                            <label for="cname" class="control-label col-lg-3">District</label>
+                                                                            <div class="col-lg-12">
+                                                                                <select name="district_id"  class="form-control" id="search_district">
+                                                                                    <option></option>
+
+                                                                                </select> </div>
+                                                                        </div>
+
+                                                                        <div class="form-group ">
+                                                                            <label for="cname" class="control-label col-lg-3">Wards Allocation</label>
+                                                                            <div class="col-lg-12">
+                                                                                <span id="search_ward"></span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <?= csrf_field() ?>
+                                                                        <input type="hidden" value="<?= $user->id ?>" name="user_id"/>
+                                                                        <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div></div>
+                                                <div class="tab-pane" id="profile3" role="tabpanel">
+                                                    <div class="card-block ">
+
+                                                        <div class="card-block ">
+                                                            <table class="table table-responsive dataTable">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Ward</th>
+                                                                        <th>District</th>
+                                                                        <th>Region</th>
+                                                                        <th>No of Schools</th>
+                                                                        <th>Action</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <?php
+                                                                    $ward_ids = DB::table('users_schools_wards')->where('user_id', $user->id)->get(['ward_id']);
+                                                                    $arr_wards = [];
+                                                                    foreach ($ward_ids as $ward_id) {
+                                                                        array_push($arr_wards, $ward_id->ward_id);
+                                                                    }
+                                                                    $wards = \App\Models\Ward::whereIn('id', $arr_wards)->get();
+                                                                    foreach ($wards as $ward) {
+                                                                        ?>
+                                                                        <tr>
+                                                                            <td><?= $ward->name ?></td>
+                                                                            <td><?= $ward->district->name ?></td>
+                                                                            <td><?= $ward->district->region->name ?></td>
+                                                                            <td><?= $ward->schools()->where(DB::raw('lower(ownership)'), 'non-government')->count() ?></td>
+                                                                            <td>
+
+                                                                                <a type="button" class="btn btn-warning btn-sm waves-effect" href="<?= url('background/removeUserSchool/' . $user->id.'/'.$ward->id) ?>">Delete</a>
+
+                                                                            </td>
+                                                                        </tr>
+                                                                    <?php } ?>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div></div>   </div>
                     </div>
                 </div>
 
@@ -748,7 +871,7 @@ foreach ($user_permission as $permis) {
                     <div class="form-group ">
                         <label for="cname" class="control-label col-lg-3">Time In</label>
                         <div class="col-lg-12">
-                            <input class="form-control" id="cname" name="timein" disabled="" value="<?=date('H:i', strtotime(timeZones(date('Y-m-d H:i:s')))) ?>"  type="time">
+                            <input class="form-control" id="cname" name="timein" disabled="" value="<?= date('H:i', strtotime(timeZones(date('Y-m-d H:i:s')))) ?>"  type="time">
                         </div>
                     </div>
                     <?php
@@ -785,7 +908,7 @@ foreach ($user_permission as $permis) {
                     <div class="form-group ">
                         <label for="cname" class="control-label col-lg-3">Current Time</label>
                         <div class="col-lg-12">
-                            <input class="form-control" id="cname" name="timein" disabled="" value="<?=date('H:i', strtotime(timeZones(date('Y-m-d H:i:s')))) ?>"  type="time">
+                            <input class="form-control" id="cname" name="timein" disabled="" value="<?= date('H:i', strtotime(timeZones(date('Y-m-d H:i:s')))) ?>"  type="time">
                         </div>
                     </div>
 
@@ -913,37 +1036,75 @@ foreach ($user_permission as $permis) {
             });
         })
     };
+    search_district = function () {
+        $('#search_regions').change(function () {
+            var region_id = $(this).val();
+            $.ajax({
+                type: 'POST',
+                url: "<?= url('background/searchDistrict') ?>",
+                data: {
+                    "region_id": region_id,
+                    user_id: <?= $user->id ?>
+                },
+                dataType: "html",
+                success: function (data) {
+                    $('#search_district').html(data);
+                }
+            });
+        })
+    };
+
+    search_wards = function () {
+        $('#search_district').change(function () {
+            var district_id = $(this).val();
+
+            $.ajax({
+                type: 'POST',
+                url: "<?= url('background/searchWard') ?>",
+                data: {
+                    "district_id": district_id,
+                    user_id: <?= $user->id ?>
+                },
+                dataType: "html",
+                success: function (data) {
+                    $('#search_ward').html(data);
+                }
+            });
+        })
+    };
+    $(document).ready(search_wards);
+    $(document).ready(search_district);
     $(document).ready(search_report);
 </script>
 <div class="modal fade" id="status-Modal">
-<div class="modal-dialog modal-lg" role="document">
-<form id="add-form" action="{{ url('users/userUpload') }}" method="POST" enctype="multipart/form-data">
-<?= csrf_field() ?>
-      <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title">Add New Members</h5>
-            <a href="<?=url('public/sample_files/users.csv')?>"> <u><b>Download Sample</b></u> </a>
-        </div>
-      <div class="modal-body">
-      <p>Import users from a CSV file. In Excel, add all required column of  New Users, and save the file in a CSV format. Click A CSV file, then drag and drop your .csv file, or click choose file to browse files on your computer. Then click <b>Submit. <br>  <br> #Remember to Remove First Row.</b></p>
-          <div class="form-group">
-            <label>Attach File Name</label>
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <div class="input-group-text">
-                  <i class="fas fa-file"></i>
+    <div class="modal-dialog modal-lg" role="document">
+        <form id="add-form" action="{{ url('users/userUpload') }}" method="POST" enctype="multipart/form-data">
+            <?= csrf_field() ?>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Members</h5>
+                    <a href="<?= url('public/sample_files/users.csv') ?>"> <u><b>Download Sample</b></u> </a>
                 </div>
-              </div>
-              <input type="file" class="form-control" placeholder="Enter group name..." name="user_file" required>
+                <div class="modal-body">
+                    <p>Import users from a CSV file. In Excel, add all required column of  New Users, and save the file in a CSV format. Click A CSV file, then drag and drop your .csv file, or click choose file to browse files on your computer. Then click <b>Submit. <br>  <br> #Remember to Remove First Row.</b></p>
+                    <div class="form-group">
+                        <label>Attach File Name</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    <i class="fas fa-file"></i>
+                                </div>
+                            </div>
+                            <input type="file" class="form-control" placeholder="Enter group name..." name="user_file" required>
+                        </div>
+                    </div>
+                    <!-- </div> -->
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+                    </div>
+                    </form>
+                </div>
             </div>
-          </div>
-        <!-- </div> -->
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">Submit</button>
-            <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
-          </div>
-        </form>
-      </div>
-  </div>
-</div>
-@endsection
+    </div>
+    @endsection

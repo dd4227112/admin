@@ -246,7 +246,8 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
     }
 
     public function officeDailyReport() {
-        $users = \DB::select("select * from admin.users where status=1 and email not like '%nmb%' ");;
+        $users = \DB::select("select * from admin.users where status=1 and email not like '%nmb%' ");
+        ;
         foreach ($users as $user) {
             $tasks = DB::select("select b.name, count(a.*) from admin.tasks a join admin.task_types b on b.id=a.task_type_id where a.created_at::date=CURRENT_DATE AND user_id=" . $user->id . " group by b.name");
             $tr = '';
@@ -410,7 +411,7 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
 
     //Notify all admin about monthly reports
     public function schoolMonthlyReport() {
-         DB::select('REFRESH MATERIALIZED VIEW CONCURRENTLY public.all_users');
+        DB::select('REFRESH MATERIALIZED VIEW CONCURRENTLY public.all_users');
         $users = DB::select("select * from admin.all_users where lower(usertype)='admin' and status=1");
         $key_id = DB::table('public.sms_keys')->first()->id;
         foreach ($users as $user) {
@@ -598,6 +599,48 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
             }
         }
         // }
+    }
+
+    public function searchDistrict() {
+        $region_id = request('region_id');
+        $districts = \App\Models\District::where('region_id', $region_id)->get();
+
+        $select = '<select  class="form-control" id="search_district">';
+        foreach ($districts as $district) {
+            $select .= '<option value="' . $district->id . '">' . $district->name . '</option>';
+        }
+        $select .= '</select>';
+        echo $select;
+    }
+
+    public function searchWard() {
+        $region_id = request('district_id');
+        $wards = \App\Models\Ward::where('district_id', $region_id)->get();
+
+        $select = '';
+        foreach ($wards as $ward) {
+            $select .= '<input class="border-checkbox ward_lists" type="checkbox" name="wards[]" id="checkbox' . $ward->id . '" value="' . $ward->id . '">
+                                                <label class="border-checkbox-label" for="checkbox1">' . $ward->name . ' </label>
+                                            ';
+        }
+        $select .= '';
+        echo $select;
+    }
+
+    function allocateSchool() {
+        $user_id = request('user_id');
+        $wards = request('wards');
+        foreach ($wards as $ward) {
+            DB::table('users_schools_wards')->insert(['user_id' => $user_id, 'ward_id' => $ward]);
+        }
+        return redirect()->back()->with('success', 'success');
+    }
+
+    public function removeUserSchool() {
+        $user_id = request()->segment(3);
+        $ward_id = request()->segment(4);
+        DB::table('users_schools_wards')->where('user_id', $user_id)->where('ward_id', $ward_id)->delete();
+        return redirect()->back()->with('success', 'success');
     }
 
 }
