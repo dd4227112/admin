@@ -16,4 +16,7 @@ class Ward extends Model {
         return $this->belongsTo(\App\Models\District::class, 'district_id', 'id')->withDefault(['name' => 'Not Defined']);
     }
 
+    public function schools() {
+        return $this->hasMany(\App\Models\School::class);
+    }
 }
