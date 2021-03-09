@@ -759,7 +759,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
             $sql = 'ALTER TABLE  public.' . $table->table_name . '   ADD COLUMN IF NOT EXISTS created_at timestamp without time zone DEFAULT now() ';
             DB::select($sql);
           
-            $delete_sql="DELETE FROM public.". $table->table_name . " WHERE created_at::date >='2021-03-08'";
+            $delete_sql="DELETE FROM public.". $table->table_name . " WHERE created_at::date >='2021-03-10'";
             DB::statement($delete_sql);
         }
         return TRUE;
