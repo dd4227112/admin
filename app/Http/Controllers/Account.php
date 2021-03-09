@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\ImportExpense;
 use \App\Models\Invoice;
 use \App\Models\Project;
 use \App\Models\InvoiceFee;
@@ -10,7 +12,6 @@ use Illuminate\Validation\Rule;
 use \App\Models\ReferExpense;
 use \App\Models\Expense;
 use App\Charts\SimpleChart;
-use Excel;
 use DB;
 use Auth;
 
@@ -51,14 +52,14 @@ class Account extends Controller {
     public function invoice() {
         $this->data['budget'] = [];
         $project_id = $this->data['project_id'] = request()->segment(3);
-        $account_year_id = request()->segment(4);
+        $this->data['account_year_id'] = $account_year_id = request()->segment(4);
         if ((int) $project_id == 1) {
             //create shulesoft invoices
             //check in client table if all schools with students and have generated reports are registered
             // if exists, check if invoice exists, else, create new invoice
             $this->getInvoices($project_id, $account_year_id);
         }
-        if ($project_id == 'delete') {
+    /*    if ($project_id == 'delete') {
             $invoice_id = request()->segment(4);
             $payments = \App\Models\Payment::where('invoice_id', $invoice_id)->first();
             if (!empty($payments)) {
@@ -67,7 +68,7 @@ class Account extends Controller {
             \App\Models\Invoice::find($invoice_id)->delete();
 
             return redirect()->back()->with('success', 'success');
-        }
+        } */
 
         if ($project_id == 'edit') {
             $id = request()->segment(4);
@@ -86,6 +87,24 @@ class Account extends Controller {
             }
 
             return view('account.invoice.index', $this->data);
+        }
+    }
+
+    public function invoiceReport() {
+       
+        $project_id = $this->data['project_id'] = request()->segment(3);
+        $this->data['account_year_id'] = $account_year_id = request()->segment(4);
+        if ((int) $project_id == 1) {
+           !empty(request('from')) ? $from = request('from') : $from = date('Y-01-01');
+            $this->data['from'] = $from;
+            $this->data['id'] = 4;
+            !empty(request('to')) ? $to = request('to') : $to = date('Y-m-d');
+            $to = $this->data['to'] = $to;
+            $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
+            $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
+            $this->data['invoices'] = ($from != '' && $to != '') ? Invoice::whereBetween('date', [$from_date, $to_date])->get() :
+                    Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->get();
+            return view('account.invoice.report', $this->data);
         }
     }
 
@@ -1388,6 +1407,12 @@ select * from tempb");
         $this->data['payments_received'] = 0;
         $this->data['revenue_received'] = 0;
         return view('account.report.summary', $this->data);
+    }
+
+    public function uploadExpenses() 
+    {
+        Excel::import(new ImportExpense, request()->file('expense_file'));
+        return redirect('account/transaction/4')->with('success', 'All Expense Uploaded Successfully!');
     }
 
 }

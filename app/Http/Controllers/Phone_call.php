@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\PhoneCall;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\User;
+use App\Imports\PhoneCall_Import;
+use App\Models\PhoneCall;
 use DB;
 use Intervention\Image\ImageManagerStatic as Image;
 use Auth;
@@ -59,7 +61,7 @@ class Phone_call extends Controller {
        
         //PhoneCall::create(array_merge($request->all(), ['user_id' => Auth::user()->id]));
        $report->save();
-        return redirect('phonecalls/index')->with('success', 'Call recorded successfully');
+        return redirect('Phone_calls/index')->with('success', 'Call recorded successfully');
     }
 
     public function resetPassword() {
@@ -235,6 +237,14 @@ class Phone_call extends Controller {
                 . '<p></p>'
                 . '<table class="table"><thead><tr><th>Activity Name</th><th>Number of Activities</th></tr></thead><tbody>' . $tr . '</tbody></table>';
         echo $message;
+    }
+
+
+    
+    public function CallsUpload() 
+    {
+        Excel::import(new PhoneCall_Import, request()->file('call_file'));
+        return redirect('Phone_calls/index')->with('success', 'All Call Histories Uploaded Successfully!');
     }
 
 }
