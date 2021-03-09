@@ -367,21 +367,22 @@
                                         <div class="table-responsive dt-responsive">
                                             <div class="card-header">
                                                 <div class="panel-body">
-                                                    <div class="alert alert-info">Use the exactly ShuleSoft template as provided : Excel should contains these keys at the top :'amount', 'transaction_id', 'account_number', 'payment_method', 'expense_name', 'date','user_in_shulesoft','payer_name'</div>
+                                                    <div class="alert alert-info">
+                                                        Use the exactly ShuleSoft template as provided : Excel should contains these keys at the top :'amount', 'transaction_id', 'account_number', 'categort', 'payment_method', 'expense_name', 'date','user_in_shulesoft','payer_name'
+                                                        <br>   <a href="<?= url('public/sample_files/shulesoft_account.csv') ?>" style="float: right; font-weight: bold;"><i class="fa fa-download"></i> Download Sample</a></p>
+                                                        <br>
+                                                    </div>
                                                     <!--<p>Sample Excel Format. </p>-->
-                                                    <!--<img src="<?= url('public/images/sample_excel.jpg') ?>"/>-->
                                                     <br/>
                                                     <div class=" form">
-                                                        <!--                                                    <br/>
-                                                                                                            <p><?= __("file") ?> 
-                                                                                                                <a href="<?= url('storage/uploads/sample/sample_students_upload.xlsx') ?>"><i class="fa fa-2x fa-cloud-download"></i></a></p>-->
-                                                        <form id="demo-form2" action="<?= url('account/uploadExpense') ?>" class="form-horizontal" method="POST"
+                                   
+                                                        <form id="demo-form2" action="<?= url('account/uploadExpenses') ?>" class="form-horizontal" method="POST"
                                                               enctype="multipart/form-data">
 
                                                             <div class="form-group">
 
                                                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                                                    <input id="file" name="file" type="file" required="required" accept=".xls,.xlsx,.csv,.odt">
+                                                                    <input id="file" name="expense_file" type="file" required="required" accept=".xls,.xlsx,.csv,.odt">
                                                                 </div>
                                                             </div>
                                                             <div class="ln_solid"></div>

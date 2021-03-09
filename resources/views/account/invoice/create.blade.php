@@ -38,10 +38,10 @@
                                 </a>
                                 <div class="slide"></div>
                             </li>
-                           <!--  <li class="nav-item complete">
+                            <li class="nav-item complete">
                                 <a class="nav-link" data-toggle="tab" href="#profile3" role="tab" aria-expanded="false">Create Invoice From Excel</a>
                                 <div class="slide"></div>
-                            </li> -->
+                            </li> 
                            <!--  <li class="nav-item complete">
                                 <a class="nav-link" data-toggle="tab" href="#invoice" role="tab" aria-expanded="false">Create 10% Invoice </a>
                                 <div class="slide"></div>

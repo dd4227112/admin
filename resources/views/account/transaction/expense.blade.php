@@ -6,8 +6,29 @@
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4>Company Expenses</h4>
-                <span>Show expense summary</span>
+                <h4>Company   
+                <?php
+                    $global_id = $id;
+                    $name = '';
+                    if ($id == 4) {
+                        echo 'Company Expenses';
+                        $name = 'Company Expenses';
+                    } elseif ($id == 1) {
+                        echo "Fixed Assets";
+                        $name = 'Fixed Assets';
+                    } else if ($id == 2) {
+                        echo "Liabilities";
+                        $name = 'Liabilities';
+                    } else if ($id == 3) {
+                        echo "Capital Management";
+                        $name = 'Capital Management';
+                    } else if ($id == 5) {
+                        echo 'Current Assets';
+                        $name = 'Current Assets';
+                    }
+                    ?>
+                            </h4>
+                <span>Show {{ $name }} summary</span>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -18,7 +39,7 @@
                     </li>
                     <li class="breadcrumb-item"><a href="#!">Accounts</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Expenses</a>
+                    <li class="breadcrumb-item"><a href="#!">{{ $name }}</a>
                     </li>
                 </ul>
             </div>
@@ -29,38 +50,13 @@
                 <div class="card">
 
                     <div class="col-sm-12">
-                        <br/><h5 class="box-title"><i class="fa icon-expense"></i>
-                            <?php
-                            $global_id = $id;
-                            $name = '';
-                            if ($id == 4) {
-                                echo 'Company Expenses';
-                            } elseif ($id == 1) {
-                                echo "Fixed Assets";
-                                $name = 'Fixed Assets';
-                            } else if ($id == 2) {
-                                echo "Liabilities";
-                                $name = 'Liabilities';
-                            } else if ($id == 3) {
-                                echo "Capital Management";
-                                $name = 'Capital Management';
-                            } else if ($id == 5) {
-                                echo 'Current Assets';
-                                $name = 'Current Assets';
-                            }
-                            ?>
-                        </h5>
+                        <br/>
 
-                        <h5  style="float: right;">
-
-                            <a class="btn btn-success" href="<?php echo url('account/addTransaction/' . $id) ?>">
+                            <a style="float: right;" class="btn btn-success" href="<?php echo url('account/addTransaction/' . $id) ?>">
                                 <i class="fa fa-plus"></i> 
                                 Add New Expense
                             </a>
-
-                        </h5>
-
-
+                        <hr>
 
                         <div class="col-sm-12 ">
                             <form style="" class="form-horizontal" role="form" method="post"> 
