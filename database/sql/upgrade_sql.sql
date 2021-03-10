@@ -1,10 +1,7 @@
--- Table: admin.standing_orders
-
--- DROP TABLE admin.standing_orders;
 
 CREATE TABLE admin.standing_orders
 (
-    id integer NOT NULL DEFAULT nextval('admin.standing_order_id_seq'::regclass),
+    id serial NOT NULL,
     client_id integer NOT NULL,
     branch_id integer NOT NULL,
     company_file_id integer NOT NULL,
