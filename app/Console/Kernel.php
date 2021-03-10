@@ -38,14 +38,15 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             // sync invoices 
             $this->syncInvoice();
-            //$this->updateInvoice();
+            $this->updateInvoice();
         })->everyMinute();
         $schedule->call(function () {
             (new Message())->sendSms();
         })->everyMinute();
 
         $schedule->call(function () {
-           // (new Message())->checkPhoneStatus();
+            // (new Message())->checkPhoneStatus();
+             $this->resetDemo();
         })->hourly();
 
 
@@ -54,6 +55,8 @@ class Kernel extends ConsoleKernel {
             $this->curlServer(['action' => 'payment'], 'http://51.77.212.234:8081/api/cron');
         })->everyMinute();
         $schedule->call(function () {
+        
+            
             (new Message())->sendEmail();
             (new Message())->karibusmsEmails();
         })->everyMinute();
@@ -87,12 +90,13 @@ class Kernel extends ConsoleKernel {
 
 
         $schedule->call(function () {
+           
             $this->checkSchedule();
         })->everyMinute();
 
         $schedule->call(function () {
             //  (new HomeController())->createTodayReport();
-           // (new Background())->officeDailyReport();
+            // (new Background())->officeDailyReport();
         })->dailyAt('14:50'); // Eq to 17:50 h 
         $schedule->call(function () {
             $this->understandActivities();
@@ -159,7 +163,7 @@ class Kernel extends ConsoleKernel {
     }
 
     public function checkSchedule() {
-         DB::select('REFRESH MATERIALIZED VIEW  admin.all_message');
+        DB::select('REFRESH MATERIALIZED VIEW  admin.all_message');
         $messages = DB::select("select \"messageID\",attach,attach_file_name,schema_name from admin.all_message where attach is not null and attach_file_name  not like '%amazon%' limit 100");
         foreach ($messages as $message) {
             $file = '/usr/share/nginx/html/shulesoft_live/storage/uploads/attach/' . $message->attach_file_name;
@@ -236,8 +240,8 @@ class Kernel extends ConsoleKernel {
     }
 
     public function syncInvoice() {
-         DB::select('REFRESH MATERIALIZED VIEW  admin.all_invoices');
-          DB::select('REFRESH MATERIALIZED VIEW  admin.all_bank_accounts_integrations');
+        DB::select('REFRESH MATERIALIZED VIEW  admin.all_invoices');
+        DB::select('REFRESH MATERIALIZED VIEW  admin.all_bank_accounts_integrations');
         $invoices = DB::select("select distinct schema_name from admin.all_bank_accounts_integrations where invoice_prefix in (select prefix from admin.all_invoices where schema_name not in ('public','accounts','beta_testing')  and sync=0) and invoice_prefix like '%SAS%'");
 
         foreach ($invoices as $invoice) {
@@ -515,7 +519,7 @@ class Kernel extends ConsoleKernel {
     }
 
     public function sendTodReminder() {
-         DB::select('REFRESH MATERIALIZED VIEW  admin.all_teacher_on_duty');
+        DB::select('REFRESH MATERIALIZED VIEW  admin.all_teacher_on_duty');
         $users = DB::select('select * from admin.all_teacher_on_duty');
         $all_users = [];
 
@@ -577,7 +581,7 @@ select a.activity,u.email,u.phone, u.name,cl.name as client_name,a.created_at, a
     }
 
     public function sendSequenceReminder() {
-         DB::select('REFRESH MATERIALIZED VIEW  admin.all_users');
+        DB::select('REFRESH MATERIALIZED VIEW  admin.all_users');
         $sequences = \App\Models\Sequence::all();
         foreach ($sequences as $sequence) {
             $users = DB::select("select a.table, a.name,a.username,a.email,a.phone,a.usertype,a.schema_name,a.id,concat(c.firstname,' ',c.lastname ) as csr_name, c.phone as csr_phone from admin.all_users a,admin.user_clients u, admin.clients z, admin.users c where z.username=a.schema_name  and z.id=u.client_id and u.user_id=c.id and a.status=1 and c.status=1 and u.status=1 and a.table not in ('parent','student','teacher') and a.id in (select user_id from admin.users_sequences a,admin.sequences
@@ -613,7 +617,7 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
     }
 
     public function sendNotice() {
-         DB::select('REFRESH MATERIALIZED VIEW  admin.all_notice');
+        DB::select('REFRESH MATERIALIZED VIEW  admin.all_notice');
         $public_day = DB::table('admin.public_days')->whereMonth('date', date('m'))->whereDay('date', date('d'))->first();
         !empty($public_day) ?? DB::statement("insert into public.sms(phone_number,body,type,sms_keys_id)
 select distinct phone, body,0,8 from (select 'Tunakutakia '||upper(\"schema_name\")||'  Heri ya " . $public_day->name . ". ' AS body,email,replace(replace(replace(phone,'/',','),' ',''),'|',',') as phone,\"schema_name\",name from admin.all_users where usertype in ('Admin') and length(phone)>3 and \"schema_name\" not in ('public','betatwo')) x");
@@ -664,13 +668,11 @@ select distinct phone, body,0,8 from (select 'Tunakutakia '||upper(\"schema_name
 
                 //send notification to administrators
                 //$sql_to_admin = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")"
-                   //     . "select 'Hello '||s.sname||', leo ni birthday ya '||(select string_agg(a.name, ',') from " . $schema->table_schema . ".student a WHERE   DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) 
-                  //  AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE))||' katika shule yako. Ingia katika account yako ya ShuleSoft kujua zaidi na uwatakie heri ya kuzaliwa. Asante', s.phone,0,0,1,'setting' from " . $schema->table_schema . ".student a join " . $schema->table_schema . ".setting s on true  group by s.sname,s.phone";
+                //     . "select 'Hello '||s.sname||', leo ni birthday ya '||(select string_agg(a.name, ',') from " . $schema->table_schema . ".student a WHERE   DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) 
+                //  AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE))||' katika shule yako. Ingia katika account yako ya ShuleSoft kujua zaidi na uwatakie heri ya kuzaliwa. Asante', s.phone,0,0,1,'setting' from " . $schema->table_schema . ".student a join " . $schema->table_schema . ".setting s on true  group by s.sname,s.phone";
                 // DB::statement($sql_to_admin);
-                
-                
                 //staff birthday messages to school staff
-                 $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\",sms_keys_id)"
+                $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\",sms_keys_id)"
                         . "select 'Hello '|| upper(a.name)|| ', tunapenda kukutakia  heri ya siku yako ya kuzaliwa. Mungu akupe afya tele, maisha marefu, baraka na mafanikio.  Kama hujaziliwa tarehe kama ya leo, mwambie Administrator wa system katika shule yako abadili tarehe yako iwe sahihi. Ubarikiwe',a.phone, 0,0, a.id,a.table, (select id from " . $schema->table_schema . ".sms_keys limit 1)  FROM " . $schema->table_schema . ".users a  WHERE \"table\"  in ('user','teacher') AND (
                     DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) AND a.status = 1  
                     AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE))";
@@ -680,7 +682,6 @@ select distinct phone, body,0,8 from (select 'Tunakutakia '||upper(\"schema_name
 //                $sql_for_admin = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\",sms_keys_id)"
 //                        . "SELECT 'Hello '||teacher_name||', leo ni birthday ya '||string_agg(student_name, ', ')||', katika darasa lako '||classes||'('||section||'). Usisite kumtakia heri ya kuzaliwa. Asante', phone,0,0,\"teacherID\",'teacher',(select id from " . $schema->table_schema . ".sms_keys limit 1 ) from ( select a.name as student_name, t.name as teacher_name, t.\"teacherID\", t.phone, c.section, d.classes from " . $schema->table_schema . ".student a join " . $schema->table_schema . ".section c on c.\"sectionID\"=a.\"sectionID\" JOIN " . $schema->table_schema . ".teacher t on t.\"teacherID\"=c.\"teacherID\" join " . $schema->table_schema . ".classes d on d.\"classesID\"=c.\"classesID\" WHERE  a.status=1 and  DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE)   AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE) ) x GROUP  BY teacher_name,phone,classes,section,phone,\"teacherID\"";
 //                DB::statement($sql_for_admin);
-                
             }
         }
     }
@@ -750,6 +751,21 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     public function sendSchedulatedSms() {
         
     }
+
+    function resetDemo() {
+        $tables =DB::select("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema= 'public'  AND table_type='BASE TABLE' and table_name not in('jobs')");
+      
+        foreach ($tables as $table) {
+            $sql = 'ALTER TABLE  public.' . $table->table_name . '   ADD COLUMN IF NOT EXISTS created_at timestamp without time zone DEFAULT now() ';
+            DB::select($sql);
+          
+            $delete_sql="DELETE FROM public.". $table->table_name . " WHERE created_at::date >='2021-03-10'";
+            DB::statement($delete_sql);
+        }
+        return TRUE;
+    }
+
+
 
     /**
      * Register the Closure based commands for the application.

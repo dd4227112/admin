@@ -489,9 +489,13 @@ class Users extends Controller {
         if (empty($partner_user)) {
             //LATER ON ADD A TABLE TO MAP USER AND PARTNER
             //create a branch\
-            $partner = DB::table('admin.partners')->where('email', Auth::user()->email)->first();
-            $partner_branch = \App\Models\PartnerBranch::create(['name' => 'HQ', 'phone_number' => Auth::user()->phone,
-                        'partner_id' => $partner->id, 'district_id' => 3]);
+            if (preg_match('/nmb/i', Auth::user()->email)) {
+                $id = 1;
+            } else {
+                $id = 2;
+            }
+          //  $partner = DB::table('admin.partners')->where('id', 1)->first();
+            $partner_branch = \App\Models\PartnerBranch::create(['name' => 'HQ', 'phone_number' => Auth::user()->phone, 'partner_id' => $id, 'district_id' => 3]);
             //add a partner
             $partner_user = \App\Models\PartnerUser::create(['user_id' => Auth::user()->id, 'branch_id' => $partner_branch->id]);
         }

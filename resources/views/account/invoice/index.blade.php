@@ -33,6 +33,7 @@
                     <!-- Zero config.table start -->
                     <div class="card">
                         <div class="card-header">
+<<<<<<< HEAD
                             <h5>Invoices</h5>
                             <span></span>
                             <div class="card-header-right">
@@ -43,6 +44,12 @@
                             <?php if(can_access('creating_invoice')) { ?>
                             <a href="<?= url('account/projection') ?>" class="btn btn-sm btn-primary">Create New Invoice</a>
                             <?php } ?>
+=======
+                          
+                            <a href="<?= url('account/projection') ?>" class="btn btn-sm btn-primary">Create New Invoice</a>
+                            <a href="" style="float: right;"> List Of Invoices</a>
+                           
+>>>>>>> 34efa907cba5d90e43d34cffbb30b11ae00367d4
                         </div>
                         <div class="col-md-12 col-xl-12">
                            
@@ -85,10 +92,16 @@
                                 </a>
                                 <div class="slide"></div>
                             </li>
-                           <li class="nav-item complete">
+                            <li class="nav-item complete">
                                 <a class="nav-link" data-toggle="tab" href="#profile3" role="tab" aria-expanded="false">Summary</a>
                                 <div class="slide"></div>
-                            </li> 
+                            </li>
+                            @if(isset($project_id) && isset($account_year_id)) 
+                            <li class="nav-item complete">
+                                <a class="nav-link" style="color: blue;" href="{{ url('account/invoiceReport/'.$project_id.'/'.$account_year_id) }}"> <b>View Report</b> </a>
+                                <div class="slide"></div>
+                            </li>
+                            @endif
 
                         </ul>
                         <div class="tab-content">
@@ -200,26 +213,28 @@
                                                     <td>
 
 
-<div class="dropdown-secondary dropdown f-right"><button class="btn btn-success btn-mini dropdown-toggle waves-effect waves-light" type="button" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</button><div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoiceView/' . $invoice->id) ?>"  ><span class="point-marker bg-danger"></span>View</a> <a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoice/edit/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Edit</a><a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoice/delete/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Delete</a>
-<?php if ((int) $unpaid > 0) { ?>
-    <hr/>
-    <a class="dropdown-item waves-light waves-effect" href="<?= url('account/payment/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Add Payments</a>
-    <?php }  ?>
-    <?php if((int) $unpaid >0){ ?>
-        <a class="dropdown-item waves-light waves-effect" href="#" data-toggle="modal" data-target="#large-Modal" onclick="$('#invoice_id').val('<?=$invoice->id?>')"><span class="point-marker bg-warning"></span>Send Invoice</a>
-         <?php }  ?>
-          <?php if((int) $paid >0){ ?>
-<a class="dropdown-item waves-light waves-effect" href="<?= url('account/receipts/' . $invoice->id) ?>" target="_blank"><span class="point-marker bg-warning"></span>Receipt</a>
-                                                       <?php }
-                                                        ?>
-    </div></div>
-
-                                                       
-                                                     
+                                                        <div class="dropdown-secondary dropdown f-right">
+                                                        <button class="btn btn-success btn-mini dropdown-toggle waves-effect waves-light" type="button" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</button>
+                                                        <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                                                         <a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoiceView/' . $invoice->id) ?>"  > <span class="point-marker bg-danger"></span>View</a>
+                                                         <a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoice/edit/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Edit</a>
+                                                         <!-- <a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoice/delete/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Delete</a> -->
+                                                        <?php if ((int) $unpaid > 0) { ?>
+                                                            <hr/>
+                                                            <a class="dropdown-item waves-light waves-effect" href="<?= url('account/payment/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Add Payments</a>
+                                                            <?php }  ?>
+                                                            <?php if((int) $unpaid >0){ ?>
+                                                                <a class="dropdown-item waves-light waves-effect" href="#" data-toggle="modal" data-target="#large-Modal" onclick="$('#invoice_id').val('<?=$invoice->id?>')"><span class="point-marker bg-warning"></span>Send Invoice</a>
+                                                                <?php }  ?>
+                                                                <?php if((int) $paid >0){ ?>
+                                                        <a class="dropdown-item waves-light waves-effect" href="<?= url('account/receipts/' . $invoice->id) ?>" target="_blank"><span class="point-marker bg-warning"></span>Receipt</a>
+                                                    <?php } ?>
+                                                </div>
+                                            </div>
                                                     
-                                                    </td>
-                                                </tr>
-                                            <?php $i++; } ?>
+                                            </td>
+                                        </tr>
+                                    <?php $i++; } ?>
                                         </tbody>
                                         <tfoot>
                                             <tr>
@@ -240,10 +255,9 @@
                             <div class="tab-pane" id="profile3" role="tabpanel" aria-expanded="false">
                                 <div class="card-block">
 
-                                    <div class="table-responsive dt-responsive">
                                         <div class="card-header">
-                                            <div class="panel-body">
-                                                <?php if(isset($invoices) && !empty($invoices)){?>
+                                           <div class="table-responsive dt-responsive">
+                                                <?php if(isset($invoices) && !empty($invoices)){ ?>
                                                 <table class="table table-responsive table-bordered">
                                                     <thead>
                                                         <tr>
@@ -321,10 +335,10 @@
                             <div class="row">
                            <div class="col-md-12">
                                     Message
- <textarea name="message" required="" class="form-control" >Hello #name,
-Thank you for choosing ShuleSoft in your school. We really appreciate working with your school.
-To help us continue offering this service to your school, kindly find our invoice for Tsh #amount. You can also pay electronically via masterpass with reference number #invoice
-Thank you</textarea> 
+                                    <textarea name="message" required="" class="form-control" >Hello #name,
+                                    Thank you for choosing ShuleSoft in your school. We really appreciate working with your school.
+                                    To help us continue offering this service to your school, kindly find our invoice for Tsh #amount. You can also pay electronically via masterpass with reference number #invoice
+                                    Thank you</textarea> 
                                 </div>
                             </div>
                         </div>
