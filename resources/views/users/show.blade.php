@@ -2,6 +2,7 @@
 @section('content')
 <?php $root = url('/') . '/public/' ?>
 
+
 <?php
 $arr = [];
 foreach ($user_permission as $permis) {
@@ -50,8 +51,7 @@ foreach ($user_permission as $permis) {
                             </div>
                         </div>
                         <?php
-                        if (Auth::user()->role_id != 7) {
-                            ?>
+                        if (Auth::user()->role_id != 7) { ?>
                             <div class="col-md-6 col-xl-4">
                                 <div class="card counter-card-2">
                                     <div class="card-block-big">
@@ -163,15 +163,15 @@ foreach ($user_permission as $permis) {
                             <a class="nav-link " data-toggle="tab" href="#leave" role="tab" aria-expanded="false">Leave/Absent</a>
                             <div class="slide"></div>
                         </li>
-                        <?php
-                        if (Auth::user()->id == 2) {
-                            ?>
+
+                        <?php if (Auth::user()->id == 2) { ?>
                             <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#settings5" role="tab">Permissions</a>
                                 <div class="slide"></div>
                             </li>
                         <?php } ?>
                     </ul>
+
                     <!-- Tab panes -->
                     <div class="tab-content tabs-left-content card-block" style="width:100%; padding-top: 0; padding-right: 0;">
                         <div class="tab-pane active" id="home5" role="tabpanel" aria-expanded="true">
@@ -458,6 +458,7 @@ foreach ($user_permission as $permis) {
                                             $applicant = (int) $user->applicant_id > 0 ? DB::table('applicants')->where('id', $user->applicant_id)->first() : [];
                                             if ($applicant) {
                                                 $vars = get_object_vars($applicant);
+
                                                 ?>
                                                 <div class="view-desc">
                                                     <table class="table">
@@ -501,12 +502,9 @@ foreach ($user_permission as $permis) {
                                 </div>
                                 <div class="card-block">
                                     <form>
-
                                         <div class="form-group row">
-
                                             <div class="col-sm-2">
                                                 <a href="<?= url('QrCode/generate_qr_code/' . $user->email) ?>" class="form-control  btn btn-primary" id="search_report">Generate QR Code</a>
-
                                             </div>
                                             <?php if ($user->qr_code != '') { ?>
                                                 <div class="col-sm-2">
@@ -514,8 +512,6 @@ foreach ($user_permission as $permis) {
                                                 </div>
                                             <?php } ?>
                                         </div>
-
-
                                     </form>
                                     <div>
                                         <?php if ($user->qr_code != '') { ?>
@@ -588,8 +584,7 @@ foreach ($user_permission as $permis) {
                                     <div class="col-lg-12">
                                         <br/>
                                         <?php
-                                        if ($user->id == Auth::user()->id) {
-                                            ?>
+                                        if ($user->id == Auth::user()->id) {?>
                                             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#large-Modal"><i class="fa fa-plus"></i>Add Attendance</button>
                                         <?php } ?>
                                         <div class="card-block ">

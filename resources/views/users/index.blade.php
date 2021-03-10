@@ -61,6 +61,7 @@
                                                         <th width="280px">Action</th>
                                                     </tr>
                                                 </thead>
+                                                
                                                 <tbody>
                                                     <?php $i = 1; ?>
                                                     @foreach ($users as $key => $user)
@@ -130,4 +131,5 @@
       </div>
   </div>
 </div>
-    @endsection
+@endsection
+

@@ -79,8 +79,10 @@
                         </div>
                     </div>
                 <?php } ?>
-
+ 
+              <?php if(can_access('add_call')) { ?>
                 <p> &nbsp; &nbsp; <a href="<?=url('customer/addCall')?>" class="btn btn-success btn-sm">Add Call Summary</a></p>
+             <?php } ?>
 
                 <!-- Open Project card end -->
                 <div class="col-md-12 col-xl-12">

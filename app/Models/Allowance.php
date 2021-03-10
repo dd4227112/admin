@@ -11,7 +11,6 @@ class Allowance extends Model {
     protected $table = 'allowances';
     protected $fillable = ['id', 'name', 'amount', 'percent', 'description', 'is_percentage', 'type', 'pension_included', 'category'];
 
-
     public function salaries() {
         return $this->belongsToMany(\App\Models\Salary::class, 'salary_allowances', 'allowance_id', 'salary_id');
     }

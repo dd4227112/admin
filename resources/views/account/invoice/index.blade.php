@@ -40,7 +40,9 @@
                                 <i class="icofont icofont-refresh"></i>
                             </div>
                             <br/>
+                            <?php if(can_access('creating_invoice')) { ?>
                             <a href="<?= url('account/projection') ?>" class="btn btn-sm btn-primary">Create New Invoice</a>
+                            <?php } ?>
                         </div>
                         <div class="col-md-12 col-xl-12">
                            
@@ -140,7 +142,7 @@
                                                     <td><?= $invoice->method ?></td>
                                                     <td><?= date('d M Y', strtotime($invoice->time)) ?></td>
                                                     <td>
-        <!--                                                        <a href="<?= url('account/invoiceView/' . $invoice->payment_id) ?>" class="btn btn-sm btn-success">View</a>
+        <!--                                            <a href="<?= url('account/invoiceView/' . $invoice->payment_id) ?>" class="btn btn-sm btn-success">View</a>
                                                         <a href="<?= url('account/invoice/edit/' . $invoice->payment_id) ?>" class="btn btn-sm btn-primary">Edit</a>-->
                                                         <!--<a href="<?= url('account/invoice/delete/' . $invoice->payment_id) ?>" class="btn btn-sm btn-danger">Delete</a>-->
                                                         </td>
@@ -290,6 +292,7 @@
         <!-- Page-body end -->
     </div>
 </div>
+
 <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -338,6 +341,7 @@ Thank you</textarea>
         </div>
     </div>
 </div>
+
 <script type="text/javascript">
     $('#schema_select').change(function () {
         var schema = $(this).val();

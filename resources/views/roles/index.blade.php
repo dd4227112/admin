@@ -38,7 +38,7 @@
                                 <td>{{ $role->display_name }}</td>
                                 <td>{{ $role->description }}</td>
                                 <td>
-                                    <a class="btn btn-info" href="{{ route('roles.show',$role->id) }}">Show</a>
+                                    <a class="btn btn-info" href="">Show</a>
                                    <?php if(can_access('edit_role')){?>
                                     <a class="btn btn-primary" href="{{ route('roles.edit',$role->id) }}">Edit</a>
                                    <?php } ?>
@@ -53,7 +53,8 @@
                     </table>
                     {!! $roles->render() !!}
                 </div>
-                    </div>
+              </div>
+
             </div>
         </div>
             </div>

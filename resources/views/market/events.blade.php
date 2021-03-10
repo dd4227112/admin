@@ -35,7 +35,9 @@
           <div class="card tab-card">
             <div class="card-block">
             <span>
-        <a class="btn btn-success btn-sm" href="<?= url('Marketing/addEvent') ?>"> Add New Event </a>
+          <?php if(can_access('add_event')) { ?>
+          <a class="btn btn-success btn-sm" href="<?= url('Marketing/addEvent') ?>"> Add New Event </a>
+          <?php } ?>
         </span>
               <div class="steamline">
                 <div class="card-block">

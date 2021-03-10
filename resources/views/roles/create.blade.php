@@ -144,6 +144,7 @@
                                 {!! Form::textarea('description', null, array('placeholder' => 'Description','class' => 'form-control','style'=>'height:100px')) !!}
                             </div>
                         </div>
+
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
                                 <strong>Permission:</strong>
@@ -155,6 +156,7 @@
                                 @endforeach
                             </div>
                         </div>
+                        
                         <div id="savebtnWrapper" class="form-group">
                             <button type="submit" class="btn btn-primary">
                                 &emsp;Submit&emsp;

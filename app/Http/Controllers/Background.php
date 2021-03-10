@@ -199,7 +199,6 @@ class Background extends Controller {
         $names = array();
         if (count($fees) > 0) {
             foreach ($fees as $fee) {
-
                 array_push($names, $fee->name);
             }
         }
@@ -235,8 +234,8 @@ class Background extends Controller {
     public function createAcademicYear() {
         DB::select("select * from admin.join_all('academic_year','id,name,class_level_id,created_at,updated_at,start_date,end_date')");
         $years = DB::select('select distinct a.class_level_id,a."schema_name" from admin.all_academic_year a join admin.all_classlevel b on 
-(a.class_level_id =b.classlevel_id and a."schema_name"=b."schema_name")
-where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_name" from admin.all_academic_year where name=\'' . date('Y') . '\') order by a."schema_name"');
+           (a.class_level_id =b.classlevel_id and a."schema_name"=b."schema_name")
+           where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_name" from admin.all_academic_year where name=\'' . date('Y') . '\') order by a."schema_name"');
         foreach ($years as $year) {
             $academic_year_id = DB::table($year->schema_name . '.academic_year')->insertGetId(array('name' => date('Y'), 'class_level_id' => $year->class_level_id, 'start_date' => date('Y-01-01'), 'end_date' => date('Y-12-31')));
 
@@ -598,6 +597,27 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
             }
         }
         // }
+    }
+
+  
+    public function standingOrderRemainder() {
+        $users = \App\Models\User::where('role_id',1)->get();
+        foreach ($users as $user) {
+            $standingorders = \App\Models\StandingOrder::whereDate('date', date('Y-m-d', time() - 86400));
+            $msg = '';
+            foreach ($standingorders as $st) {
+                $msg .= '<tr><td>' . $st->client->name . '</td><td>' . $st->occurance_amount . '</td></tr>';
+            }
+            $message = ''
+                    . '<h2>Today standing orders</h2>'
+                    . '<p>This is the list of todays standing orders to confirm</p>'
+                    . '<table><thead><tr><th>Client name</th><th> Amount </th></tr></thead><tbody>' . $msg . '</tbody></table>';
+            DB::table('public.email')->insert([
+                'subject' => date('Y M d') . ' Standing order remainder',
+                'body' => $message,
+                'email' => $user->email
+            ]);
+        }
     }
 
 }

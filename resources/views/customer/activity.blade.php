@@ -36,7 +36,9 @@
                     <!-- Ajax data source (Arrays) table start -->
                     <div class="card">
                         <div class="card-header">
+                          <?php if(can_access('add_task')) { ?>
                             <a class="btn btn-success btn-sm" href="<?= url('customer/activity/add') ?>"> Add New Task</a>
+                          <?php } ?>
                             <?php
                             if (Auth::user()->role_id == 1) {
                                 $users = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get();
@@ -48,7 +50,6 @@
                                             <option value="<?= $user->id ?>" <?= (int) request('user_id') > 0 && request('user_id') == $user->id ? 'selected' : '' ?>><?= $user->firstname . ' ' . $user->lastname ?></option>
                                         <?php } ?>
                                     </select>
-
                                 </span>
 
                             <?php } ?>
@@ -130,9 +131,8 @@
                                                 <tbody>
                                                     <?php
                                                     $i = 1;
-
                                                     $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'complete')->orderBy('created_at', 'desc')->limit(100)->get();
-                                                    if (!empty($tasks)) {
+                                                    if (!empty($tasks)) { 
                                                         foreach ($tasks as $act) {
                                                     ?>
                                                             <tr>
@@ -140,7 +140,9 @@
                                                                 <td><?= $act->tasktype->name ?></td>
                                                                 <td><?= substr($act->activity, 0, 60) ?></td>
                                                                 <td><?= $act->end_date ?></td>
+                                                                <?php if(can_access('view_task')) { ?>
                                                                 <td> <a href="<?= url('customer/activity/show/' . $act->id) ?>">View</a> </td>
+                                                                <?php } ?>
                                                             </tr>
                                                         <?php } ?>
                                                     <?php } ?>
@@ -185,7 +187,9 @@
                                                                 <td><?= $act->tasktype->name ?></td>
                                                                 <td><?= substr($act->activity, 0, 60) ?></td>
                                                                 <td><?= $act->end_date ?></td>
+                                                                <?php if(can_access('view_task')) { ?>
                                                                 <td> <a href="<?= url('customer/activity/show/' . $act->id) ?>">View</a> </td>
+                                                               <?php } ?>
                                                             </tr>
                                                         <?php } ?>
                                                     <?php } ?>
@@ -230,7 +234,9 @@
                                                                 <td><?= $act->tasktype->name ?></td>
                                                                 <td><?= substr($act->activity, 0, 60) ?></td>
                                                                 <td><?= $act->end_date ?></td>
+                                                                <?php if(can_access('view_task')) { ?>
                                                                 <td> <a href="<?= url('customer/activity/show/' . $act->id) ?>">View</a> </td>
+                                                                <?php } ?>
                                                             </tr>
                                                         <?php } ?>
                                                     <?php } ?>

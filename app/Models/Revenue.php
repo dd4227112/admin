@@ -9,7 +9,9 @@ class Revenue extends Model {
      */
 
     protected $table = 'revenues';
-    protected $fillable = ['id', 'payer_name', 'payer_phone', 'payer_email', 'refer_expense_id', 'amount', 'user_id', 'payment_method', 'transaction_id', 'bank_account_id', 'invoice_number', 'note', 'payment_date', 'reconciled', 'number', 'date', 'payment_type_id'];
+    protected $fillable = ['id', 'payer_name', 'payer_phone', 'payer_email', 'refer_expense_id', 'amount',
+     'user_id', 'payment_method', 'transaction_id', 'bank_account_id', 'invoice_number', 'note', 
+     'payment_date', 'reconciled', 'number', 'date', 'payment_type_id','created_by_id','schema_name'];
 
 
     public function referExpense() {
