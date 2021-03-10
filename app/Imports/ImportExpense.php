@@ -65,7 +65,7 @@ class ImportExpense implements ToModel, WithHeadingRow
             "expense" => $row['note'],
             "depreciation" => 0,
             'user_id' => Auth::user()->id,
-            "bank_account_id" => !empty($bank) ? $bank->id : '1',
+            "bank_account_id" => !empty($bank) ? $bank->id : '2',
             "amount" => $row['amount']
         );
 
