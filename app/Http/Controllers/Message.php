@@ -260,6 +260,7 @@ class Message extends Controller {
     public function sendByChannel($sms) {
         $category = explode(',', $sms->channel);
         $return = [];
+        print_r($category);
         if (empty($category)) {
             echo 'phone and quick message';
             $send = $this->sendNormalSMS($sms, 'phone-sms');
