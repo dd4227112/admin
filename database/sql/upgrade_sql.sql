@@ -1,3 +1,18 @@
+--Show all:
+
+SELECT oid::regclass::text
+FROM   pg_class
+WHERE  relkind = 'm';
+
+-- Names are automatically double-quoted and schema-qualified where needed according to your current search_path in the cast from regclass to text.
+-- In the system catalog pg_class materialized views are tagged with relkind = 'm'.
+
+-- m = materialized view
+-- To drop all, you can generate the needed SQL script with this query:
+
+SELECT 'DROP MATERIALIZED VIEW ' || string_agg(oid::regclass::text, ', ') 
+FROM   pg_class WHERE  relkind = 'm';
+
 
 CREATE TABLE admin.standing_orders
 (

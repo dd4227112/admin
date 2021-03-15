@@ -511,6 +511,19 @@ group by ownership');
                     'contract_id' => $contract_id, 'client_id' => $client_id
                 ]);
             }
+            
+            if (request(standing_order)) {
+                $file = request()->file('standing_order');
+                $file_id = $this->saveFile($file, 'company/contracts');
+                //save contract
+                $contract_id = DB::table('admin.contracts')->insertGetId([
+                    'name' => 'ShuleSoft', 'company_file_id' => $file_id, 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'contract_type_id' => 8, 'user_id' => Auth::user()->id
+                ]);
+                //client contracts
+                DB::table('admin.client_contracts')->insert([
+                    'contract_id' => $contract_id, 'client_id' => $client_id
+                ]);
+            }
 
             //once a school has been installed, now create an invoice for this school or create a promo code
             if (request('payment_status') == 1) {

@@ -1417,9 +1417,16 @@ select * from tempb");
     }
 
     public function approveStandingOrder() { 
-        $standing_id = request('id');
+        
+        $this->data['standing_id'] = $standing_id = request()->segment(3);
+        $standing = \App\Models\StandingOrder::where('id', $standing_id)->first();
+        $invoice = \App\Models\Invoice::where('client_id',$standing->client_id)->orderBy('id', 'DESC')->first();
         \App\Models\StandingOrder::where('id', $standing_id)->update(['status' => 1]);
-       //  return redirect('account/transaction/create');
+        if(!empty($invoice)){
+            return redirect('account/payment/'.$invoice->id);
+        }else{
+            return redirect()->back()->with('success', 'No Invoice A');
+        }
     }
 
 

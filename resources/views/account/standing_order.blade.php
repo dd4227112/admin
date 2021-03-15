@@ -94,7 +94,7 @@
                                                         <td>
                                                           <a  target="_break" href="<?= url('account/invoiceView/' . $standing->id) ?>" class="btn btn-sm btn-success">View</a>
                                                           @if($standing->status == 0)
-                                                          <a onclick="approveSI({{ $standing->id }})" class="btn btn-sm btn-success">Confirm</a>
+                                                          <a href="<?= url('account/approveStandingOrder/' . $standing->id) ?>" class="btn btn-sm btn-success">Confirm</a>
                                                           <a  onclick="rejectSI({{ $standing->id }})" class="btn btn-sm btn-danger">Reject</a>
                                                           @else
                                                            <a  class="btn btn-sm btn-secondary">Approved</a>
