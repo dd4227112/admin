@@ -225,10 +225,10 @@ class Message extends Controller {
                 $messages = DB::select('select * from public.all_sms where api_key=\'' . $phone->api_key . '\' order by priority desc, sms_id asc limit 100');
                 if (!empty($messages)) {
                     foreach ($messages as $sms) {
-                      
+                         print_r($sms);
                         //here put options to send sms by channels
                         $this->sendByChannel($sms);
-                        print_r($sms);
+                     
                     }
                 }
             }
