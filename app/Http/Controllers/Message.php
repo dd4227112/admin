@@ -228,6 +228,7 @@ class Message extends Controller {
                       
                         //here put options to send sms by channels
                         $this->sendByChannel($sms);
+                        print_r($sms);
                     }
                 }
             }
@@ -264,18 +265,22 @@ class Message extends Controller {
         foreach ($category as $channel) {
           
             if ($channel == 'whatsapp') {
+                echo 'whatsapp message';
                 $send = $this->whatsapp($sms);
                 array_push($return, [$channel => $send]);
             }
             if ($channel == 'telegram') {
+                  echo 'Telegram message';
                 $send = $this->telegram($sms);
                 array_push($return, [$channel => $send]);
             }
             if ($channel == 'phone-sms' || $channel == 'quick-sms') {
+                  echo 'phone and quick message';
                 $send = $this->sendNormalSMS($sms, $channel);
                 array_push($return, [$channel => $send]);
             }
             if ($channel == 'email') {
+                  echo 'email message';
                 $send = $this->sendCustomEmail($sms);
                 array_push($return, [$channel => $send]);
             }
