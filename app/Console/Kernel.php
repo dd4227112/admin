@@ -41,7 +41,9 @@ class Kernel extends ConsoleKernel {
 //            $this->updateInvoice();
         })->everyMinute();
         $schedule->call(function () {
+            echo 'sending';
             (new Message())->sendSms();
+            
         })->everyMinute();
 
         $schedule->call(function () {
