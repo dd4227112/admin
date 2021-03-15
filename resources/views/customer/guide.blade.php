@@ -32,14 +32,17 @@
                         <div class="card-header">
                             <h5>Guide</h5>
                             <span>You can view and edit user manual contents</span>
-                           
+
+                            <?php if (can_access('create_guide')) { ?>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <p align='left'>
-                                        <a class="btn btn-success" href="<?= url('customer/guide/null?pg=add') ?>">Add New Guide</a></p>
+                                      <p align='left'>
+                                        <a class="btn btn-success" href="<?= url('customer/guide/null?pg=add') ?>">Add New Guide</a>
+                                      </p>
                                     <br/>
                                 </div>
                             </div>
+                            <?php } ?>
                         </div>
 
                         <div class="card-block">
@@ -74,7 +77,9 @@
                                                     <td><?= $value->updated_at ?></td>
                                                     <td><?=$value->guidePageVisit()->count()?></td>
                                                     <td>
+                                                       <?php if(can_access('view_guide')) { ?>
                                                         <a href="#"  data-toggle="modal" data-target="#exampleModal<?= $i ?>" data-whatever="@mdo" class="btn btn-success btn-sm">View</a>
+                                                       <?php } ?>
                                                         <div class="modal fade bs-example-modal-lg" id="exampleModal<?= $i ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1" style="display: none;">
                                                             <div class="modal-dialog modal-lg" role="document">
                                                                 <div class="modal-content">
@@ -91,8 +96,13 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <?php if(can_access('edit_guide')) { ?>
                                                         <?php echo '<a  href="' . url("/customer/guide/edit/$value->id") . ' " class="btn btn-info btn-sm"><i class="fa fa-pencil"></i> ' . __('edit') . ' </a>' ?>
+                                                        <?php } ?>
+
+                                                        <?php if(can_access('delete_guide')) { ?>
                                                         <?php echo '<a  href="' . url("customer/guide/delete/$value->id") . ' " class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> ' . __('delete') . ' </a>' ?>
+                                                        <?php } ?>
                                                     </td>
                                                 </tr>
                                                 <?php

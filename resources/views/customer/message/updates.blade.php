@@ -22,19 +22,21 @@
                 </ul>
             </div>
         </div>
+
+        
         <!-- Page-header end -->
         <!-- Page-body start -->
         <div class="page-body">
             <div class="row">
                 <div class="col-sm-12">
                     <div class="card">
-
+                       <?php if(can_access('create_updates')) {?>
                         <div class="card-block">
                             <div class="card-header">
                                 <a href="<?= url('customer/createUpdate') ?>" class="btn btn-success"> <i class="fa fa-check"></i> Create Updates</a>
                             </div>
                         </div>
-
+                        <?php } ?>
                         <div class="col-md-12">
                             <div class="panel">
                                 <div class="panel-heading">ShuleSoft Updates</div>

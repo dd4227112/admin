@@ -191,7 +191,7 @@ class Partner extends Controller {
                 $file_id = $this->saveFile($file, 'company/contracts');
                 // Integration requests documents
                 DB::table('admin.integration_requests_documents')->insertGetId(['company_file_id' => $file_id, 'integration_request_id' => $request_id]);
-            }
+            } 
 
             //once a school has been installed, now create an invoice for this school or create a promo code
             // create an invoice for this school

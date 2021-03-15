@@ -22,7 +22,6 @@ class WebController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index($pg = null, $sub = null) {
-
         if (!Auth::guest()) {
             $page = $pg == null ? 'home' : $pg;
         } else {

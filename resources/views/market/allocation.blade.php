@@ -74,7 +74,13 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-3">   <a href="<?= url('sales/addSchool') ?>" data-i18n="nav.navigate.navbar" class="btn btn-success">add New School</a></div>
+
+                         <?php if(can_access('add_school')) { ?>
+                            <div class="col-lg-3">
+                               <a href="<?= url('sales/addSchool') ?>" data-i18n="nav.navigate.navbar" class="btn btn-success">add New School</a>
+                            </div>
+                           <?php } ?>
+                           
                             <div class="col-lg-6">
                                 <?php
                                 if (can_access('manage_customers')) {
