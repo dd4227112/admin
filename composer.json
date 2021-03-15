@@ -47,7 +47,7 @@
         "files":
                 [
                     "app/library/karibusms/karibusms.php",
-                    "app/Library/Telegram.php",
+                    "app/library/Telegram.php",
                     "app/helper.php"
                 ]
     },
