@@ -274,7 +274,7 @@ class Message extends Controller {
                 $send = $this->telegram($sms);
                 array_push($return, [$channel => $send]);
             }
-            if ($channel == 'phone-sms' || $channel == 'quick-sms') {
+            if ($channel == 'phone-sms' || $channel == 'quick-sms' || $channel=='') {
                   echo 'phone and quick message';
                 $send = $this->sendNormalSMS($sms, $channel);
                 array_push($return, [$channel => $send]);
