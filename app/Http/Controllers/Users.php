@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\User;
@@ -15,7 +13,6 @@ class Users extends Controller {
     public function __construct() {
         $this->middleware('auth');
     }
-
     /**
      * Display a listing of the resource.
      *
@@ -93,7 +90,6 @@ class Users extends Controller {
             'table' => 'setting'
         ]);
     }
-
     /**
      * Display the specified resource.
      *
@@ -101,12 +97,11 @@ class Users extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
+
     public function show() {
         $id = (int) request()->segment(3) == 0 ? Auth::user()->id : request()->segment(3);
         $this->data['user'] = User::find($id);
-
         $this->data['user_permission'] = \App\Models\Permission::whereIn('id', \App\Models\PermissionRole::where('role_id', $this->data['user']->role_id)->get(['permission_id']))->get(['id']);
-
         $this->data['attendances'] = DB::table('attendances')->where('user_id', $id)->get();
         $this->data['absents'] = \App\Models\Absent::where('user_id', $id)->get();
         if ($_POST) {
@@ -140,10 +135,11 @@ class Users extends Controller {
         return redirect()->back()->with('success', 'success');
     }
 
+
     public function absent() {
         if ($_POST) {
             $file = request()->file('file');
-            $file_id = $file ? $this->saveFile($file, 'company/employees') : 1;
+            $file_id = $file ? $this->saveFile($file, 'company/employees') : 1; 
 
             \App\Models\Absent::create(['date' => date('Y-m-d'), 'user_id' => request('user_id'), 'absent_reason_id' => request('absent_reason_id'),
                 'note' => request('note'), 'company_file_id' => $file_id]);
@@ -485,6 +481,8 @@ class Users extends Controller {
         }
     }
 
+    
+
     public function getBankId() {
         $partner_user = \App\Models\PartnerUser::whereIn('user_id', [Auth::user()->id])->first();
 
@@ -508,5 +506,6 @@ class Users extends Controller {
         }
         return $refer_bank_id;
     }
+
 
 }

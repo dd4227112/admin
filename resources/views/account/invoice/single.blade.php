@@ -47,14 +47,7 @@
 </style>
 <div class="main-body">
     <div class="@if(!isset($balance))  page-wrapper @endif">
-        <!-- Page-header start -->
-
-        <!-- Page-header end -->
-        <!-- Page-body start -->
-
-
         <style>
-
             #valid-msg {
                 color: #00C900;
             }
@@ -71,11 +64,10 @@
             <div class="row">
                 <div class="col-lg-6"></div>
                 <div class="col-lg-6">
-
                     <p class="text-right" align="right">
-
+                        <a class="btn btn-secondary btn-sm" href="#" data-toggle="modal" data-target="#large-Modal"> Edit </a>
+                        <a href="#" id="printInvoice" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Share </a>
                         <a href="#" id="printInvoice" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Print </a>
-
                     </p>
                 </div>
                 <div class="clearfix"></div>
@@ -147,7 +139,6 @@
                                             </tr>
                                         </table>
                                     </div>
-
 
                                     <?php
                                     $invoice_fee = $invoice->invoiceFees()->get();
@@ -235,43 +226,68 @@
                                         </td>
                                         </tr>
                                     </table>
-
                                 </div>
-
-
-
-
                             </div>
-                            <!-- /.row -->
-                            <!--              <div class="row" style="padding-top: 0px">
-                                            <div class="col-lg-12 col-sm-12">
-                                                <small><i>
-                            1. School hereby agreed to pay for the service fee as specified in ShuleSoft Price list for the service provided by ShuleSoft Electronic Payment System Integrated to  Bank.
-                                                    <br/>2.School agrees to sign a bank Standing Order for automatic deduction of the required amount from school bank account to the Company bank account, standing order to specify the date for payment either annually or semi-annually.
-                            
-                            </i>
-                            </small>
-                                            </div>
-                                          </div>-->
-
                         </div>
                     </div>
-
-                </div>
-              
-                  
-                </div>
-
-
-
+                  </div>  
+               </div>
 
               </div>
-              <!-- /.row -->
-              <div class="row" style="padding-top: 0px">
-                <div class="col-lg-12 col-sm-12">
-                </div></div>
+                
 
+
+              <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Edit This Invoice</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <?php
+                        $invoice_fee = $invoice->invoiceFees()->get();
+                        ?>
+                        <div class="modal-body">
+                            <?php  foreach ($invoice_fee as $fees) {?>
+                                <form action="<?=url('Account/editInvoice')?>" method="post">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                Quantity
+                                                <input type="text" class="form-control"  name="quantity" value="<?= $fees->quantity ?>">
+                                            </div>
+                                            <div class="col-md-6">
+                                                Price
+                                                <input type="text" class="form-control"  name="price" value="<?= $fees->unit_price ?>">
+                                            </div>
+                                        </div>
+                                    </div>
+            
+                                    <div class="form-group">
+                                        <div class="row">
+                                       <div class="col-md-12">
+                                                Descriptions
+                                            <input type="text" class="form-control"  name="description" value="<?= $fees->item_name ?>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="modal-footer">
+                                        <input type="hidden" name="invoice_id" id="invoice_id" value="<?= $fees->invoice_id ?>">
+                                        <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary waves-effect waves-light ">Edit</button>
+                                    </div>
+                                    <?= csrf_field() ?>
+                                </form>
+                                <?php } ?>
+                            </div>
+                    </div>
+                </div>
             </div>
+
+
         </div>
  
 

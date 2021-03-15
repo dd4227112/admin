@@ -55,16 +55,13 @@ Route::get('/student/getschools/null', function() {
 });
 
 //dd(createRoute());
+
 if (createRoute() != NULL) {
-
     $route = explode('@', createRoute());
-
     $file = app_path() . DIRECTORY_SEPARATOR . 'Http' . DIRECTORY_SEPARATOR . 'Controllers' . DIRECTORY_SEPARATOR . $route[0] . '.php';
-
     if (file_exists($file)) {
         Route::any('/{controller?}/{method?}/{param1?}/{param2?}/{param3?}/{param4?}/{param5?}/{param6?}/{param7?}', createRoute());
     } else if ($route[0] == 'LoginController') {
-        
     }
 }
 

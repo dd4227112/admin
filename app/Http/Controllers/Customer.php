@@ -25,7 +25,6 @@ class Customer extends Controller {
     public function __construct() {
         $this->middleware('auth');
     }
-
     /**
      * Display a listing of the resource.
      *
@@ -33,7 +32,6 @@ class Customer extends Controller {
      */
     public function index($pg = null) {
         //
-
         if (method_exists($this, $pg) && is_callable(array($this, $pg))) {
             return $this->$pg();
         } else {
@@ -401,7 +399,6 @@ class Customer extends Controller {
     }
 
     public function getCleanSms($replacements, $message) {
-
         $sms = preg_replace($this->patterns, $replacements, $message);
         if (preg_match('/#/', $sms)) {
             //try to replace that character
@@ -436,7 +433,6 @@ class Customer extends Controller {
             $this->data['client_id'] = $id;
             $this->data['school'] = \collect(DB::select(' select name as sname, name,schema_name, region , ward, district as address  from admin.schools where id=' . $id))->first();
         } else {
-
             $is_client = 1;
             $this->data['school'] = DB::table($school . '.setting')->first();
             $this->data['levels'] = DB::table($school . '.classlevel')->get();
@@ -480,8 +476,6 @@ class Customer extends Controller {
                 'task_id' => $task->id,
                 'client_id' => (int) request('client_id')
             ]);
-
-
             if (!empty($task->id) && request('module_id')) {
                 $modules = request('module_id');
                 foreach ($modules as $key => $value) {
@@ -501,6 +495,28 @@ class Customer extends Controller {
         } else {
             return view('customer/profile', $this->data);
         }
+    }
+
+    public function addStandingOrder(){
+        if($_POST){
+               $file = request('standing_order_file');
+               $company_file_id = $this->saveFile($file, 'company/contracts');
+         
+                $data = [
+                'client_id' => request('client_id'),
+                'branch_id' => request('branch_id'),
+                'company_file_id' => $company_file_id,
+                'school_contact_id' => request('school_contact_id'),
+                'user_id' => Auth::user()->id,
+                'occurrence' =>  request('number_of_occurrence'),
+                'basis' => request('which_basis'),
+                'total_amount' => request('total_amount'),
+                'occurance_amount' => request('occurance_amount'),
+                'date' => request('maturity_date')
+            ];
+            DB::table('standing_orders')->insert($data);
+            return redirect()->back()->with('success', 'Data Recorded Successfully!');
+         }
     }
 
     public function activity() {
@@ -780,6 +796,7 @@ class Customer extends Controller {
         }
     }
 
+    
     public function calls() {
         $schema = request()->segment(3);
         $where = strlen($schema) > 3 ? ' where "schema_name"=\'' . $schema . '\' ' : '';

@@ -447,11 +447,9 @@ group by ownership');
     public function Communication() {
         $this->data['never_use'] = DB::table('admin.nmb_schools')->count();
         if ($_POST) {
-
             $this->validate(request(), [
                 'message' => 'required'
             ]);
-
             $fee_id = request("fee_id");
             $message = request("message");
             $module_id = request("module_id");

@@ -32,19 +32,13 @@
                         <div class="card-header">
                             <h5>Feedbacks</h5>
                             <span>If you click "Show to School" then school will be able to view this feedback. If you click "reply", then you can write your message and user will get a notification on it </span>
-
-
                         </div>
 
                         <div class="card-block">
-
-
                             <div class="row">
 
                                 <div class="col-md-12">
                                     <div class="white-box">
-
-
                                         <?php
                                         $i = 1;
                                         foreach ($feedbacks as $feedback) {
@@ -76,10 +70,12 @@
                                                             <p class="task-due"><strong> From : <b class="label label-success"><?= $feedback->schema ?></b> </strong>
                                                                 At:  <strong class="label label-default"><?= date('d M Y h:m:i', strtotime($feedback->created_at)) ?></strong></p>
                                                         </div>
+                                                      <?php if(can_access('reply_feeback')) { ?>
                                                         <div class="task-board m-0">
                                                             <a href="#" onclick="return false" onmousedown="$('#mess<?= $feedback->id ?>').toggle()" class="btn btn-info btn-mini b-none"><i class="icofont icofont-eye-alt m-0"></i> Reply</a>
-
                                                         </div>
+                                                      <?php } ?>
+
                                                         <?php
                                                         $replies = $feedback->reply()->get();
                                                         ?>
@@ -93,7 +89,7 @@
                                                                     <span class="m-b-0"><b><?= \Carbon\Carbon::createFromTimeStamp(strtotime($reply->created_at))->diffForHumans() . ' by ' . $reply->user->firstname ?></b></span>
                                                                     <p class="text-muted"><?= $reply->message ?></p>
                                                                 </div>
-    <?php } ?>
+                                                           <?php } ?>
                                                         </div>
                                                         <div class="form-group" id="mess<?= $feedback->id ?>" style="display:none">
                                                             <textarea class="form-control" placeholder="write a message" id="message<?= $feedback->id ?>"></textarea>

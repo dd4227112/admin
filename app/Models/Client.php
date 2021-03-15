@@ -6,11 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Client extends Model {
 
-    /**
-     * Generated
-     */
     protected $table = 'clients';
-    protected $fillable = ['id', 'name', 'email', 'phone', 'address', 'lat', 'long', 'google_map', 'username','status','code','email_verified','phone_verified','created_by','estimated_students','special_trial_code','price_per_student'];
+    protected $fillable = ['id', 'name', 'email', 'phone', 'address', 'lat', 'long', 'google_map', 'username',
+    'status','code','email_verified','phone_verified','created_by','estimated_students','special_trial_code',
+    'price_per_student'];
 
     public function invoices() {
         return $this->hasMany(\App\Models\Invoice::class, 'client_id', 'id');

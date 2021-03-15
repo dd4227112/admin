@@ -35,7 +35,9 @@
           <div class="card tab-card">
             <div class="card-block">
             <span>
-        <a class="btn btn-success btn-sm" href="<?= url('Marketing/socialMedia/add') ?>"> Add New Post </a>
+            <?php if(can_access('manage_marketing')) { ?>
+            <a class="btn btn-success btn-sm" href="<?= url('Marketing/socialMedia/add') ?>"> Add New Post </a>
+            <?php } ?>
         </span>
               <div class="steamline">
                 <div class="card-block">
@@ -67,7 +69,9 @@
 
                           <td>
                           <a class="btn btn-info btn-sm" href="{{ url('Marketing/socialMedia/show/'.$post->id.'/1') }}">Show</a>
-                          <a class="btn btn-warning btn-sm" href="{{ url('Marketing/DeleteMedia/'.$post->id) }}">Delete</a>
+                          <?php if(can_access('manage_marketing')) { ?>
+                            <a class="btn btn-warning btn-sm" href="{{ url('Marketing/DeleteMedia/'.$post->id) }}">Delete</a>
+                          <?php } ?>
                           </td>
                         </tr>
                         <?php } } ?>

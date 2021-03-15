@@ -7,10 +7,9 @@ class InvoiceFee extends Model {
     /**
      * Generated
      */
-
     protected $table = 'invoice_fees';
+    
     protected $fillable = ['id', 'invoice_id', 'amount', 'status', 'note', 'item_name', 'project_id','quantity','unit_price','refer_expense_id'];
-
 
     public function project() {
         return $this->belongsTo(\App\Models\Project::class, 'project_id', 'id');

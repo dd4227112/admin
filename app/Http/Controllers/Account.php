@@ -122,6 +122,21 @@ class Account extends Controller {
         }
     }
 
+
+ // Edit invoice details such as description,quantity and price
+    public function editInvoice()
+    {
+        $quantity  = request('quantity');
+        $unit_price = request('price');
+        $description = request('description');
+        $invoice_id = request('invoice_id');
+        $updated_by = Auth::user()->id;
+        \App\Models\InvoiceFee::where('invoice_id',$invoice_id)->update(['item_name' => $description,
+        'quantity' => $quantity,'unit_price' => $unit_price]);
+        return redirect()->back()->with('success','Updated successful!');
+
+    }
+
 // This method only create selcom booking ID, we don't detect errors due to its
     //sensitivity but in the future, we can add error control in case of anything
     public function createSelcomControlNumber($invoice_id) {
@@ -270,7 +285,6 @@ class Account extends Controller {
 
     public function createInvoice() {
         $this->data['projects'] = Project::all();
-
         if (request('noexcel')) {
             $data = request('users');
             $client_id = request('client_id');
@@ -283,13 +297,8 @@ class Account extends Controller {
                 $reference = 'SASA11' . date('Y') . $client_record->id;
             }
             $this->data["payment_types"] = \App\Models\PaymentType::all();
-
-
             if (empty($user_invoice)) {
-
-
                 $invoice = Invoice::create(['reference' => $reference, 'client_id' => $client_record->id, 'date' => date('d M Y', strtotime(request('date'))), 'due_date' => date('d M Y', strtotime(' +30 day')), 'year' => date('Y', strtotime(request('date'))), 'sync', 'user_id' => Auth::user()->id]);
-
                 foreach ($data as $value) {
                     //check if this user has invoice already 
                     $project = Project::where('name', 'ílike', $value['project'])->first();
@@ -387,7 +396,6 @@ class Account extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function addPayment($id) {
-
         $invoice = Invoice::find($id);
         if (!empty($invoice)) {
 // This is when a bank return payment status to us
@@ -428,6 +436,9 @@ class Account extends Controller {
             }
         }
         // $this->sendNotification($invoice);
+        if(request('status') == 1){
+            
+        }
         return redirect('account/invoice/1/' . $invoice->account_year_id)->with('success', json_decode($payment)->description);
     }
 
@@ -554,8 +565,8 @@ class Account extends Controller {
         $this->send_email($payment->invoice->user->email, 'ERB Payment Accepted - Event Barcode ticket', $content);
     }
 
+
     public function revenue() {
-        //  if (can_access('view_revenue')) {
         $id = request()->segment(3);
         $this->data['id'] = $id;
         $page = 'index';
@@ -622,7 +633,6 @@ class Account extends Controller {
 //                'refer_expense_id' => 'required']
 //            );
 //            
-
             \App\Models\Revenue::create(array_merge(['user_id' => (int) request('user_id')], request()->except('user_id')));
 
             return redirect(url('account/revenue'))->with('success', 'success');
@@ -806,17 +816,12 @@ class Account extends Controller {
                     $total_amount = $total_cash_transaction->total_cash + $total_current_assets_cash->amount;
                 }
 
-
                 if (-$amount > $total_amount) {
                     $this->session->set_flashdata('warning', 'No enough Credit to transfer');
                     return redirect()->back();
                 }
 
-
-
                 if (request('user_in_shulesoft') == 1) {
-
-
                     $user_request = explode(',', request('user_id'));
                     $user = \App\Model\User::where('id', $user_request[0])->where('table', $user_request[1])->first();
 
@@ -857,7 +862,6 @@ class Account extends Controller {
     }
 
     public function group() {
-
         $this->data['id'] = null;
         $this->data['groups'] = \App\Models\AccountGroup::all();
         $this->data["category"] = \App\Models\FinancialCategory::all();
@@ -879,7 +883,6 @@ class Account extends Controller {
     }
 
     public function chart() {
-
         $this->data['set'] = 0;
         $this->data['id'] = 0;
         $this->data['expenses'] = ReferExpense::all();
@@ -1016,7 +1019,6 @@ class Account extends Controller {
     }
 
     public function editExpense($id) {
-
         $this->data['expense'] = \App\Models\Expense::where('id', $id)->first();
         $this->data['id'] = 4;
         $this->data['check_id'] = $id;
@@ -1033,7 +1035,6 @@ class Account extends Controller {
 
                     $amount = request("amount");
                 }
-
                 $array = array(
                     "date" => date("Y-m-d", strtotime(request("date"))),
                     "amount" => $amount,
@@ -1056,7 +1057,6 @@ class Account extends Controller {
     }
 
     public function expense() {
-
         $id = request()->segment(3);
         $this->data['check_id'] = $expense_id = request()->segment(4);
         $this->data['sub_id'] = request()->segment(4);
@@ -1398,7 +1398,6 @@ select * from tempb");
         $this->data['revenue'] = $this->getExpenseRevenueByMonth();
         $this->data['expected_amount'] = \collect(DB::select('select sum(amount) as sum from admin.invoices'))->first();
         $this->data['collected_amount'] = \collect(DB::select('select sum(amount) from admin.revenues'))->first();
-
         $this->data['expected_expense'] = \collect(DB::select('select sum(amount::numeric) from admin.expense'))->first();
         ;
         $this->data['expense'] = \collect(DB::select('select sum(amount::numeric) from admin.expense'))->first();
@@ -1409,6 +1408,52 @@ select * from tempb");
         return view('account.report.summary', $this->data);
     }
 
+
+    public function standingOrders() { 
+        $this->data['client_id'] = request()->segment(3);
+        $this->data['standingorders'] = \App\Models\StandingOrder::whereYear('date', date('Y'))->get();;
+        $this->data['schools'] = \App\Models\Client::get();
+        return view('account.standing_order', $this->data);
+    }
+
+    public function approveStandingOrder() { 
+        
+        $this->data['standing_id'] = $standing_id = request()->segment(3);
+        $standing = \App\Models\StandingOrder::where('id', $standing_id)->first();
+        $invoice = \App\Models\Invoice::where('client_id',$standing->client_id)->orderBy('id', 'DESC')->first();
+        \App\Models\StandingOrder::where('id', $standing_id)->update(['status' => 1]);
+        if(!empty($invoice)){
+            return redirect('account/payment/'.$invoice->id);
+        }else{
+            return redirect()->back()->with('success', 'No Invoice A');
+        }
+    }
+
+
+    public function rejectStandingOrder()
+    {
+        $_id = request('id');
+        $standing = \App\Models\StandingOrder::where('id',$_id)->first();
+        $email = \App\Models\Client::where('id',$standing->client_id)->first()->email;
+     //   dd($email);
+        $this->sendSMSandEmail($email);
+        return redirect()->back()->with('success', 'Msg sent');
+    }
+
+
+     function sendSMSandEmail($email) 
+     {
+            $message = ''
+                    . '<h2>Today standing orders</h2>'
+                    . '<p>This is the list of todays standing orders to confirm</p>'
+                    . '<table><thead><tr><th>Client name</th><th> Amount </th></tr></thead><tbody></tbody></table>';
+            DB::table('public.email')->insert([
+                'subject' => date('Y M d') . ' Standing order rejection',
+                'body' => $message,
+                'email' => $email
+             ]);
+      }
+  
     public function uploadExpenses() 
     {
         Excel::import(new ImportExpense, request()->file('expense_file'));
