@@ -217,7 +217,7 @@ class Message extends Controller {
 
     public function sendSms() {
         //get all connected phones first, we use parallel approach to implement this
-        //DB::select('REFRESH MATERIALIZED VIEW  public.all_sms');
+        DB::select('REFRESH MATERIALIZED VIEW  public.all_sms');
         $phones_connected = DB::select('select distinct api_key from public.all_sms');
         if (count($phones_connected) > 0) {
             foreach ($phones_connected as $phone) {
