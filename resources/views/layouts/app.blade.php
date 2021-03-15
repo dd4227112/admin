@@ -489,6 +489,62 @@
                         <li>
                             <a href="<?= url('analyse/index') ?>" data-i18n="nav.dash.default"> Home </a>
                         </li>
+                        <?php if (can_access('manage_customers') && Auth::user()->role_id <> 3) { ?>
+                            <li class="nav-title" data-i18n="nav.category.navigation">
+                                <i class="ti-line-dashed"></i>
+                                <span>Operations</span>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="#!">
+                                    <i class="ti-layout"></i>
+                                    <span data-i18n="nav.page_layout.main">Customer Service</span>
+                                </a>
+                                <ul class="tree-1">
+                                    <li><a href="<?= url('general/show/whatsapp_integrations') ?>" data-i18n="nav.page_layout.bottom-menu">WhatsApp Integration</a></li>
+                                    <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.bottom-menu">System Setup</a></li>
+                                    <li>
+                                        <a href="<?= url('Phone_call/index') ?>" data-i18n="nav.navigate.navbar"> Phone Calls</a>
+                                    </li>
+
+                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
+                                                class="icon-arrow-right"></i>Training</a>
+                                        <ul class="tree-2">
+
+                                            <li><a href="<?= url('customer/guide') ?>" data-i18n="nav.page_layout.vertical.header-fixed">User Guide</a></li>
+                                            <li><a href="<?= url('customer/faq') ?>" data-i18n="nav.page_layout.vertical.compact"> FAQ </a>
+                                            </li>
+                                            <li><a href="<?= url('customer/report') ?>" data-i18n="nav.page_layout.vertical.static-layout">Report </a></li>
+                                            <li><a href="<?= url('customer/sequence') ?>" data-i18n="nav.page_layout.vertical.static-layout">Sequence </a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
+                                                class="icon-arrow-right"></i>Usage Analysis</a>
+                                        <ul class="tree-2">
+                                            <li><a href="<?= url('customer/modules') ?>" data-i18n="nav.page_layout.vertical.static-layout"> Modules </a></li>
+                                            <li><a href="<?= url('customer/logs') ?>" data-i18n="nav.page_layout.vertical.header-fixed">
+                                                    User Logs</a></li>
+                                            <li><a href="<?= url('customer/karibu') ?>" data-i18n="nav.page_layout.vertical.compact"> karibuSMS </a>
+                                            </li>
+                                            <li><a href="<?= url('customer/epayments') ?>" data-i18n="nav.page_layout.vertical.compact"> e-payments </a>
+                                            </li>
+
+                                        </ul>
+                                    </li>
+
+                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Communications</a>
+                                        <ul class="tree-2">
+                                            <li><a href="<?= url('customer/calls') ?>"  data-i18n="nav.page_layout.horizontal.static-layout"> Call Logs</a></li>
+                                            <li><a href="<?= url('customer/emailsms') ?>" data-i18n="nav.page_layout.horizontal.static-layout"> SMS & Email Logs</a></li>
+                                            <li><a href="<?= url('customer/feedbacks/null') ?>"  data-i18n="nav.page_layout.horizontal.fixed-layout">Customer Feedbacks </a></li>
+                                            <li><a href="<?= url('customer/update') ?>" data-i18n="nav.page_layout.horizontal.static-with-icon">ShuleSoft Updates </a></li>
+
+                                        </ul>
+                                    </li>
+                                    <li><a href="<?= url('customer/requirements') ?>" data-i18n="nav.page_layout.bottom-menu">Customer Requirements</a></li>
+                                </ul>
+                            </li>
                         <?php } ?>
 
                         <?php } if ((can_access('manage_users') || Auth::user()->department == 2) && Auth::user()->role_id <> 3) { ?>

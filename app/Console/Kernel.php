@@ -37,8 +37,8 @@ class Kernel extends ConsoleKernel {
                 ->hourly();
         $schedule->call(function () {
             // sync invoices 
-            $this->syncInvoice();
-            $this->updateInvoice();
+//            $this->syncInvoice();
+//            $this->updateInvoice();
         })->everyMinute();
         $schedule->call(function () {
             (new Message())->sendSms();
@@ -57,8 +57,8 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
         
             
-            (new Message())->sendEmail();
-            (new Message())->karibusmsEmails();
+//            (new Message())->sendEmail();
+//            (new Message())->karibusmsEmails();
         })->everyMinute();
         $schedule->call(function () {
             // remind parents to login in shulesoft and check their child performance
@@ -91,7 +91,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
            
-            $this->checkSchedule();
+            //$this->checkSchedule();
         })->everyMinute();
 
         $schedule->call(function () {

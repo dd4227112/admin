@@ -56,13 +56,21 @@ class General extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id) {
+    public function show($id = null) {
         $this->table = request()->segment(3);
         $this->data['headers'] = DB::table($this->table)->first();
-        $this->data['contents'] = DB::table($this->table)->get();
         if ($_POST) {
-            DB::table($this->table)->insert(request()->except('_token'));
+ 
+            if($this->table=='whatsapp_integration'){
+                
+            }
+            if ((int) request('edit') == 1) {
+                DB::table($this->table)->where('id', request('id'))->update(request()->except('_token', 'edit', 'id'));
+            } else {
+                DB::table($this->table)->insert(request()->except('_token', 'edit'));
+            }
         }
+        $this->data['contents'] = DB::table($this->table)->get();
         return view('general.show', $this->data);
     }
 
@@ -72,8 +80,8 @@ class General extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id) {
-        //
+    public function edit() {
+        
     }
 
     /**
