@@ -221,14 +221,13 @@ class Message extends Controller {
         $phones_connected = DB::select('select distinct api_key from public.all_sms');
         if (count($phones_connected) > 0) {
             foreach ($phones_connected as $phone) {
-               
+
                 $messages = DB::select('select * from public.all_sms where api_key=\'' . $phone->api_key . '\' order by priority desc, sms_id asc limit 100');
                 if (!empty($messages)) {
                     foreach ($messages as $sms) {
-                         print_r($sms);
+                        print_r($sms);
                         //here put options to send sms by channels
                         $this->sendByChannel($sms);
-                     
                     }
                 }
             }
@@ -261,32 +260,39 @@ class Message extends Controller {
     public function sendByChannel($sms) {
         $category = explode(',', $sms->channel);
         $return = [];
+        if (empty($category)) {
+            echo 'phone and quick message';
+            $send = $this->sendNormalSMS($sms, 'phone-sms');
+            array_push($return, [$channel => $send]);
+            return DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)
+                            ->update(['status' => 1, 'return_code' => json_encode($return), 'updated_at' => 'now()']);
+        } else {
+            foreach ($category as $channel) {
 
-        foreach ($category as $channel) {
-          
-            if ($channel == 'whatsapp') {
-                echo 'whatsapp message';
-                $send = $this->whatsapp($sms);
-                array_push($return, [$channel => $send]);
+                if ($channel == 'whatsapp') {
+                    echo 'whatsapp message';
+                    $send = $this->whatsapp($sms);
+                    array_push($return, [$channel => $send]);
+                }
+                if ($channel == 'telegram') {
+                    echo 'Telegram message';
+                    $send = $this->telegram($sms);
+                    array_push($return, [$channel => $send]);
+                }
+                if ($channel == 'phone-sms' || $channel == 'quick-sms' || $channel == '') {
+                    echo 'phone and quick message';
+                    $send = $this->sendNormalSMS($sms, $channel);
+                    array_push($return, [$channel => $send]);
+                }
+                if ($channel == 'email') {
+                    echo 'email message';
+                    $send = $this->sendCustomEmail($sms);
+                    array_push($return, [$channel => $send]);
+                }
             }
-            if ($channel == 'telegram') {
-                  echo 'Telegram message';
-                $send = $this->telegram($sms);
-                array_push($return, [$channel => $send]);
-            }
-            if ($channel == 'phone-sms' || $channel == 'quick-sms' || $channel=='') {
-                  echo 'phone and quick message';
-                $send = $this->sendNormalSMS($sms, $channel);
-                array_push($return, [$channel => $send]);
-            }
-            if ($channel == 'email') {
-                  echo 'email message';
-                $send = $this->sendCustomEmail($sms);
-                array_push($return, [$channel => $send]);
-            }
+            return DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)
+                            ->update(['status' => 1, 'return_code' => json_encode($return), 'updated_at' => 'now()']);
         }
-        return DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)
-                        ->update(['status' => 1, 'return_code' => json_encode($return), 'updated_at' => 'now()']);
     }
 
     public function sendCustomEmail($sms) {
@@ -306,7 +312,7 @@ class Message extends Controller {
                 } catch (\Exception $e) {
                     $return = $e->getMessage();
                 }
-            } 
+            }
         }
         return $return;
     }
