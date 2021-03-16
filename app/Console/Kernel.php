@@ -38,7 +38,7 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             // sync invoices 
            $this->syncInvoice();
-//            $this->updateInvoice();
+            $this->updateInvoice();
         })->everyMinute();
         $schedule->call(function () {
             echo 'sending';
