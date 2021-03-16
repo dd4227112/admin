@@ -751,7 +751,7 @@ function toast(message) {
                                         <ul class="tree-2">
                                             <a href="<?= url('account/client') ?>"><i class="fa icon-account"></i>  Clients</a>
                                             <a href="<?= url('account/bank') ?>"><i class="fa icon-account"></i> Banking</a>
-                                            <a href="<?= url('account/group') ?>"><i class="fa icon-account"></i> Account Groups</a>
+                                            <a href="<?= url('account/groups') ?>"><i class="fa icon-account"></i> Account Groups</a>
                                             <a href="<?= url('account/chart') ?>"><i class="fa icon-account"></i> Charts of Accounts</a>
                                             <a href="<?= url('account/project') ?>"><i class="fa icon-account"></i> Company Projects</a>
 
