@@ -37,7 +37,7 @@ class Kernel extends ConsoleKernel {
                 ->hourly();
         $schedule->call(function () {
             // sync invoices 
-//            $this->syncInvoice();
+           $this->syncInvoice();
 //            $this->updateInvoice();
         })->everyMinute();
         $schedule->call(function () {
@@ -54,7 +54,7 @@ class Kernel extends ConsoleKernel {
 
 
         $schedule->call(function () {
-            $this->curlServer(['action' => 'payment'], 'http://51.77.212.234:8081/api/cron');
+            $this->curlServer(['action' => 'payment'], 'http://51.91.251.252:8081/api/cron');
         })->everyMinute();
         $schedule->call(function () {
         
@@ -284,7 +284,7 @@ class Kernel extends ConsoleKernel {
                 // "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
                 "type" => ucfirst($invoice->schema_name) . '  School fee',
                 "code" => "10",
-                "callback_url" => "http://51.77.212.234:8081/api/init",
+                "callback_url" => "http://51.91.251.252:8081/api/init",
                 "token" => $token
             );
 
@@ -344,7 +344,7 @@ class Kernel extends ConsoleKernel {
                         //  "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
                         "type" => ucfirst($invoice->schema_name) . ' School Fees',
                         "code" => "10",
-                        "callback_url" => "http://51.77.212.234:8081/api/init",
+                        "callback_url" => "http://51.91.251.252:8081/api/init",
                         "token" => $token
                     );
                     $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
