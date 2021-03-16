@@ -225,7 +225,7 @@ class Message extends Controller {
                 $messages = DB::select('select * from public.all_sms where api_key=\'' . $phone->api_key . '\' order by priority desc, sms_id asc limit 100');
                 if (!empty($messages)) {
                     foreach ($messages as $sms) {
-                 
+
                         //here put options to send sms by channels
                         $this->sendByChannel($sms);
                     }
@@ -329,6 +329,8 @@ class Message extends Controller {
 
     public function whatsapp($sms) {
         $id = str_replace('+', NULL, $sms->phone_number) . '@c.us';
+        $this->APIurl = $sms->api_secret;
+        $this->token = $sms->api_key;
         if (strlen($sms->files) > 4) {
 
             $files = explode(',', $sms->files);
