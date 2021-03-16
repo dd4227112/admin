@@ -264,7 +264,7 @@ class Message extends Controller {
         if (empty($category)) {
             echo 'phone and quick message';
             $send = $this->sendNormalSMS($sms, 'phone-sms');
-            array_push($return, [$channel => $send]);
+            array_push($return, ['phone-sms' => $send]);
             return DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)
                             ->update(['status' => 1, 'return_code' => json_encode($return), 'updated_at' => 'now()']);
         } else {
