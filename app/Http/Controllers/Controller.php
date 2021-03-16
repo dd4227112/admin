@@ -321,6 +321,7 @@ class Controller extends BaseController {
 
     public function sendRequest($method, $data) {
         if (strlen($this->APIurl) > 5 && strlen($this->token) > 3) {
+            
             $url = $this->APIurl . $method . '?token=' . $this->token;
             if (is_array($data)) {
                 $data = json_encode($data);
@@ -331,6 +332,7 @@ class Controller extends BaseController {
                     'content' => $data]]);
             $response = file_get_contents($url, false, $options);
             // $response = $this->curlServer($body, $url);
+            print_r($response);
             $requests = array('chat_id' => '43434', 'text' => $response, 'parse_mode' => '', 'source' => 'user');
             // file_put_contents('requests.log', $response . PHP_EOL, FILE_APPEND);
         } else {
