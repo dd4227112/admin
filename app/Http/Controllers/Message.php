@@ -328,7 +328,7 @@ class Message extends Controller {
     }
 
     public function whatsapp($sms) {
-      
+
         $id = str_replace('+', NULL, $sms->phone_number) . '@c.us';
         $this->APIurl = $sms->api_secret;
         $this->token = $sms->api_key;
