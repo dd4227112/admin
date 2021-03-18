@@ -448,12 +448,22 @@ ORDER  BY conrelid::regclass::text, contype DESC";
             $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where "schema_name"=\'' . $schema . '\'');
             $returns = [];
             $background = new \App\Http\Controllers\Background();
+            
+            //Find All Payment on This Dates
+            $dates =  new \DatePeriod(
+                new \DateTime(request('start_date')),
+                new \DateInterval('P1D'),
+                new \DateTime(request('end_date'))
+            );
+            //To iterate
+            foreach ($dates as $key => $value) {
+          
             foreach ($invoices as $invoice) {
 
                 $token = $background->getToken($invoice);
                 if (strlen($token) > 4) {
                     $fields = array(
-                        "reconcile_date" => date('d-m-Y', strtotime(request('date'))),
+                        "reconcile_date" => $value->format('Y-m-d'),
                         "token" => $token
                     );
                     $push_status = 'reconcilliation';
@@ -463,10 +473,10 @@ ORDER  BY conrelid::regclass::text, contype DESC";
                     array_push($returns, json_decode($curl));
                     //  json_decode($curl);
                 } else {
-                    echo 'invalid token';
-                    exit;
+                    return redirect()->back()->with('success', 'invalid token');
                 }
             }
+        }
             $this->data['returns'] = $returns;
         }
         return view('software.api.reconciliation', $this->data);
