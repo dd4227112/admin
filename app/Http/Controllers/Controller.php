@@ -323,6 +323,7 @@ class Controller extends BaseController {
         if (strlen($this->APIurl) > 5 && strlen($this->token) > 3) {
             
             $url = $this->APIurl . $method . '?token=' . $this->token;
+        if($url != 'h67ddfj89j8pm4o8message?token=https://eu4.chat-api.com/instance210904/'){
             if (is_array($data)) {
                 $data = json_encode($data);
             }
@@ -338,6 +339,9 @@ class Controller extends BaseController {
         } else {
             echo 'Wrong url supplied in whatapp api';    
         }
+    } else {
+        echo 'Wrong url supplied in whatapp api';    
+    }
     }
 
 }
