@@ -321,9 +321,12 @@ class Controller extends BaseController {
 
     public function sendRequest($method, $data) {
         if (strlen($this->APIurl) > 5 && strlen($this->token) > 3) {
-            
+
             $url = $this->APIurl . $method . '?token=' . $this->token;
-        if($url != 'h67ddfj89j8pm4o8message?token=https://eu4.chat-api.com/instance210904/'){
+            if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {
+              $url = $this->token . $method . '?token=' . $this->APIurl;
+            }
+
             if (is_array($data)) {
                 $data = json_encode($data);
             }
@@ -337,11 +340,8 @@ class Controller extends BaseController {
             $requests = array('chat_id' => '43434', 'text' => $response, 'parse_mode' => '', 'source' => 'user');
             // file_put_contents('requests.log', $response . PHP_EOL, FILE_APPEND);
         } else {
-            echo 'Wrong url supplied in whatapp api';    
+            echo 'Wrong url supplied in whatapp api';
         }
-    } else {
-        echo 'Wrong url supplied in whatapp api';    
-    }
     }
 
 }
