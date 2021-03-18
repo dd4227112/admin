@@ -472,9 +472,10 @@ ORDER  BY conrelid::regclass::text, contype DESC";
                     $curl = $background->curlServer($fields, $url);
                     array_push($returns, json_decode($curl));
                     //  json_decode($curl);
-                } else {
-                    return redirect()->back()->with('success', 'invalid token');
-                }
+                } 
+              //  else {
+             //       return redirect()->back()->with('success', 'invalid token');
+            //    }
             }
         }
             $this->data['returns'] = $returns;
