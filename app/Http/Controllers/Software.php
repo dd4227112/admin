@@ -484,7 +484,7 @@ ORDER  BY conrelid::regclass::text, contype DESC";
 
     public function syncMissingPayments() {
         $background = new \App\Http\Controllers\Background();
-        $url = 'http://51.77.212.234:8081/api/init';
+        $url = 'http://51.91.251.252:8081/api/init';
         $fields = json_decode(urldecode(request('data')));
         $curl = $background->curlServer($fields, $url, 'row');
         return $curl;

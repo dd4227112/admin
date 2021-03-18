@@ -861,7 +861,7 @@ class Account extends Controller {
         return view('account.bank.index', $this->data);
     }
 
-    public function group() {
+    public function groups() {
         $this->data['id'] = null;
         $this->data['groups'] = \App\Models\AccountGroup::all();
         $this->data["category"] = \App\Models\FinancialCategory::all();

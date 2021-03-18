@@ -18,7 +18,6 @@ class Controller extends BaseController {
 
     public $data;
 
-    
     /**
      *
      * @var Graph title 
@@ -36,6 +35,10 @@ class Controller extends BaseController {
      * @var y axis 
      */
     public $y_axis = '';
+    var $APIurl = '';
+    var $token = '';
+    public $bot;
+    public $main_menu = '';
 
     public function createBarGraph() {
         $sql = 'select count(created_at::date), "user"  as dataname,created_at::date as timeline from all_log where "user" is not null group by "user",created_at::date order by created_at::date desc limit 10 ';
@@ -98,10 +101,10 @@ class Controller extends BaseController {
 
     public function send_email($email, $subject, $message) {
 
-       // if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $obj = array('body' => $message, 'subject' => $subject, 'email' => $email);
-            DB::table('public.email')->insert($obj);
-       // }
+        // if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $obj = array('body' => $message, 'subject' => $subject, 'email' => $email);
+        DB::table('public.email')->insert($obj);
+        // }
 
         return $this;
     }
@@ -135,7 +138,7 @@ class Controller extends BaseController {
 
     public function curlPrivate($fields, $url = null) {
         // Open connection
-        $url = 'http://51.77.212.234:8081/api/payment';
+        $url = 'http://51.91.251.252:8081/api/payment';
         $ch = curl_init();
 // Set the url, number of POST vars, POST data
 
@@ -153,7 +156,6 @@ class Controller extends BaseController {
         curl_close($ch);
         return $result;
     }
-
 
     /**
      * 
@@ -256,4 +258,86 @@ class Controller extends BaseController {
         }
         return [$k, $l];
     }
+
+    //sends a file. it is called when the bot gets the command "file"
+    //@param $chatId [string] [required] - the ID of chat where we send a message
+    //@param $format [string] [required] - file format, from the params in the message body (text[1], etc)
+    public function file($chatId, $format, $filename, $caption = null) {
+        $availableFiles = array(
+            'doc' => 'document.doc',
+            'gif' => 'gifka.gif',
+            'jpg' => 'jpgfile.jpg',
+            'png' => 'pngfile.png',
+            'pdf' => 'presentation.pdf',
+            'mp4' => 'video.mp4',
+            'mp3' => 'mp3file.mp3'
+        );
+
+        if (isset($availableFiles[$format])) {
+            $data = array(
+                'chatId' => $chatId,
+                'body' => $filename,
+                'filename' => $availableFiles[$format],
+                'caption' => $caption
+            );
+            $this->sendRequest('sendFile', $data);
+        }
+        if (strtolower($format) == 'ogg') {
+            $data = array(
+                'audio' => $filename,
+                'chatId' => $chatId
+            );
+            $this->sendRequest('sendAudio', $data);
+        }
+    }
+
+    //sends a voice message. it is called when the bot gets the command "ptt"
+    //@param $chatId [string] [required] - the ID of chat where we send a message
+    public function ptt($chatId) {
+        $data = array(
+            'audio' => 'https://domain.com/PHP/ptt.ogg',
+            'chatId' => $chatId
+        );
+        $this->sendRequest('sendAudio', $data);
+    }
+
+    //creates a group. it is called when the bot gets the command "group"
+    //@param chatId [string] [required] - the ID of chat where we send a message
+    //@param author [string] [required] - "author" property of the message
+    public function group($author) {
+        $phone = str_replace('@c.us', '', $author);
+        $data = array(
+            'groupName' => 'Group with the bot PHP',
+            'phones' => array($phone),
+            'messageText' => 'It is your group. Enjoy'
+        );
+        $this->sendRequest('group', $data);
+    }
+
+    public function sendMessage($chatId, $text) {
+        $data = array('chatId' => $chatId, 'body' => $text);
+        $this->sendRequest('message', $data);
+    }
+
+    public function sendRequest($method, $data) {
+        if (strlen($this->APIurl) > 5 && strlen($this->token) > 3) {
+            
+            $url = $this->APIurl . $method . '?token=' . $this->token;
+            if (is_array($data)) {
+                $data = json_encode($data);
+            }
+            $options = stream_context_create(['http' => [
+                    'method' => 'POST',
+                    'header' => 'Content-type: application/json',
+                    'content' => $data]]);
+            $response = file_get_contents($url, false, $options);
+            // $response = $this->curlServer($body, $url);
+            print_r($response);
+            $requests = array('chat_id' => '43434', 'text' => $response, 'parse_mode' => '', 'source' => 'user');
+            // file_put_contents('requests.log', $response . PHP_EOL, FILE_APPEND);
+        } else {
+            echo 'Wrong url supplied in whatapp api';    
+        }
+    }
+
 }
