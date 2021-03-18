@@ -330,9 +330,8 @@ class Message extends Controller {
     public function whatsapp($sms) {
       
         $id = str_replace('+', NULL, $sms->phone_number) . '@c.us';
-        $this->APIurl = $sms->api_key;
-        $this->token = $sms->api_secret;
-         return $this->sendMessage($id, $sms->body);
+        $this->APIurl = $sms->api_secret;
+        $this->token = $sms->api_key;
         if (strlen($sms->files) > 4) {
 
             $files = explode(',', $sms->files);
