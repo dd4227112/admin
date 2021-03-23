@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+<?php $root = url('/') . '/public/'; ?>
 <div class="main-body">
     <div class="page-wrapper">
         <!-- Page-header start -->
@@ -11,7 +12,7 @@
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
+                        <a href="index-2.html">
                             <i class="icofont icofont-home"></i>
                         </a>
                     </li>
@@ -22,111 +23,160 @@
                 </ul>
             </div>
         </div>
+
         <div class="page-body">
             <div class="row">
-
-                <div class="col-sm-12">
+                <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-header">
-                            <?php
-                            //$usertype = session("usertype");
-                            //if (can_access('view_revenue')) {
-                            ?>
-                            <h5 class="page-header">
+                        <div class="card-block">
+                            <!-- form start -->
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                
+                                     <div class="row">
+                                        <div class="col-sm-4">
+                                            <h5 class="page-header">
+                                                <a class="btn btn-success" href="<?php echo url('account/revenueadd/') ?>">
+                                                    <i class="fa fa-plus"></i> 
+                                                    Add Revenue
+                                                </a>
+                                            </h5>
+                                        </div>
 
-                                <?php //if (can_access('add_revenue')) { ?>
-                                <a class="btn btn-success" href="<?php echo url('account/revenueAdd') ?>">
-                                    <i class="fa fa-plus"></i> 
-                                    Add Revenue
-                                </a>
-                                <?php //} ?>
+                                        <div class="col-sm-8">
+                                            <form style="" class="form-horizontal" role="form" method="post"> 
+                                              <div class="row">
+                                                <div class="col-md-5">
+                                                    <div class="form-group row">
+                                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Start Date</label>
+                                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                                            <input type="date"  class="form-control calendar" id="from_date" name="from_date" required> 
+                                                        </div>
+                                                    </div>
+                                                </div>
 
-                            </h5>
+                                                <div class="col-md-5">
+                                                    <div class="form-group row">
+                                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">End Date</label>
+                                                        <div class="col-md-9 col-sm-9 col-xs-12"> 
+                                                            <input type="date" class="form-control" id="to_date" name="to_date"  required>
+                                                        </div>
+                                                    </div>
+                                                </div>                     
 
-                            <div class="card-block">
-                                <div class="dt-responsive table-responsive">
-                                    <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
-                                        <thead>
-                                            <tr>
-                                                <th class="col-sm-1">#</th>
-                                                <th class="col-sm-2">Name</th>
-                                                <th class="col-sm-1">Group</th>
-                                              
-                                                <th class="col-sm-2"><?= __('Total') . '(Tsh)' ?></th>
-                                                <th class="col-sm-2"><?= __('note') ?></th>
+                                                <div class="col-md-2">
+                                                  <div class="form-group row">
+                                                    <div class="">
+                                                         <input type="submit" class="form-control btn btn-success" value="Submit"  style="float: right;">
+                                                        </div>
+                                                    </div>
+                                                </div> 
 
-                                                <?php //if (can_access('edit_revenue')) { ?>
-                                                <th class="col-sm-2"><?= __('action') ?></th>
-                                                    <?php //} ?>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                            
-                                            $total_amount = 0;
-                                            if (!empty($expenses)) {
-                                                $i = 1;
-                                                foreach ($expenses as $refer_expense) {
-                                                    ?>
-                                                    <tr>
-                                                        <td data-title="<?= __('slno') ?>">
-                                                            <?php echo $i; ?>
-                                                        </td>
-                                                        <td data-title="<?= __('expense') ?>">
-                                                            <?php echo $refer_expense->name; ?>
-                                                        </td>
-                                                        <td data-title="<?= __('expense') ?>">
-                                                            <?php echo $refer_expense->accountGroup->name; ?>
-                                                        </td>
-                                                         
-                                                        <td data-title="<?= __('expense_amount') ?>">
-                                                            <?php
-                                                            $sum_amount = $refer_expense->expenses->sum('amount')+$refer_expense->revenues->sum('amount');
-                                                            $total_amount += $sum_amount;
-                                                            echo money($sum_amount)
-                                                            ?>
-                                                        </td>  
-
-                                                        <?php if (can_access('add_expense')) { ?>
-                                                            <td data-title="<?= __('expense_note') ?>">
-                                                                <?php echo $refer_expense->note; ?>
+                                              </div>
+                                                <?= csrf_field() ?>
+                                            </form>
+                                        </div>  
+                                     </div>     
+                                     
+                                     
+                                     <div class="table-responsive dt-responsive"> 
+                                        <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
+                                            <thead>
+                                                <tr>
+                                                    <th class="col-sm-1"><?= ('slno') ?></th>
+                                                    <th class="col-sm-2"><?= ('Name') ?></th>
+                                                    <th class="col-sm-2">Payer name</th>
+                                                    <th class="col-sm-1">Payer phone</th>
+                                                    <th class="col-sm-1"><?= ('Amount') ?></th>
+                                                    <th class="col-sm-2">Payment method</th>
+                                                    <th class="col-sm-1">Transaction</th>
+                                                    <th class="col-sm-2">Date</th>
+                                                    <th class="col-sm-2">Note</th>
+                                                    <?php if (can_access('edit_revenue') || can_access('delete_revenue')) { ?>
+                                                        <th class="col-sm-2">Action</th>
+                                                    <?php } ?>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                $total_expense = 0;
+                                                if (!empty($revenues)) {
+                                                    $i = 1;
+                                                    foreach ($revenues as $revenue) {
+                                                        ?>
+                                                        <tr>
+                                                            <td data-title="<?= ('slno') ?>">
+                                                                <?php echo $i; ?>
                                                             </td>
-                                                        <?php } else { ?>
-                                                            <td data-title="<?= __('expense_note') ?>">
-                                                                <?php echo wordwrap($refer_expense->note,20); ?>
+                                                            <td data-title="<?= ('expense_name') ?>">
+                                                                <?php echo $revenue->referExpense->name; ?>
                                                             </td>
-                                                        <?php } ?>
-
-                                                        <?php //if (can_access('edit_revenue')) {  ?>
-                                                        <td data-title="<?= __('action') ?>">
-
-                                                            <a href="<?php echo url('account/revenue/' . $refer_expense->id) ?>">View </a></td>
-                                                        <?php //}  ?>
-
-                                                    </tr>
-                                                    <?php
-                                                    $i++;
+                                                            <td data-title="<?= ('expense_payer') ?>">
+                                                                <?php echo $revenue->payer_name; ?>
+                                                            </td><td data-title="<?= ('expense_payer_phone') ?>">
+                                                                <?php echo $revenue->payer_phone; ?>
+                                                            </td>
+                                                            <td data-title="<?= ('expense_amount') ?>">
+                                                                <?php
+                                                                $total_expense += $revenue->amount;
+                                                                echo money($revenue->amount);
+                                                                ?>
+                                                            </td>
+                                                            <td data-title="<?= ('expense_payment_method') ?>">
+                                                                <?php echo $revenue->payment_method; ?>
+                                                            </td>
+                                                            <td data-title="<?= ('transaction_id') ?>">
+                                                                <?php echo $revenue->transaction_id; ?>
+                                                            </td>
+                
+                                                            <td data-title="<?= ('expense_date') ?>">
+                                                                <?php echo date("d M Y", strtotime($revenue->date)); ?>
+                                                            </td>                               
+                                                            <td data-title="<?= ('expense_note') ?>">
+                                                                <?php echo $revenue->note; ?>
+                                                            </td>
+                                                            <?php if (can_access('edit_revenue') || can_access('delete_revenue')) { ?>
+                                                                <td data-title="<?= ('action') ?>">
+                                                                    <?php
+                                                                    echo '<a href="' . url('account/editrevenue/' . $revenue->id . '/') . '" class="btn btn-primary btn-sm mr-1">' . ('edit') . '</a>';
+                                                                    echo '<a href="' . url('account/deleterevenue/' . $revenue->id . '/') . '" class="btn btn-danger btn-sm mr-1">' . ('Delete') . '</a>';
+                                                                    echo '<a href="' . url('account/receipt/' . $revenue->id . '/') . '" class="btn btn-default btn-sm">' . ('Receipt') . '</a>';
+                                                                    ?>                                                               
+                                                                </td>
+                                                            <?php } ?>
+                
+                
+                                                        </tr>
+                                                        <?php
+                                                        $i++;
+                                                    }
                                                 }
-                                            }
-                                            ?>
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <td colspan="4">Total</td>
-                                                <td ><?= money($total_amount) ?></td>
-                                                <td colspan="2"></td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
+                                                ?>
+                                            </tbody>
+                                            <?php if (!empty($revenues)) { ?>
+                                                <tfoot>
+                                                    <tr>
+                                                        <td colspan="4">Total</td>
+                                                        <td><?= money($total_expense) ?></td>
+                                                        <td colspan="5"></td>
+                                                    </tr>
+                                                </tfoot>
+                                            <?php } ?>
+                                        </table>
+                                    </div>
+                
+
+                                    </div>
                                 </div>
                             </div>
-
-                            <?php //}  ?>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </div> 
 </div>
 @endsection
+
+

@@ -1,7 +1,6 @@
 <?php
-
 namespace App\Http\Controllers;
-
+use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use DB;
 
@@ -17,17 +16,18 @@ class Payroll extends Controller {
         return view($this->data['subview'], $this->data);
     }
 
+
     public function pension() {
         $this->data['pensions'] = \App\Models\Pension::all();
         $id = (request()->segment(3));
         $this->data['set'] = $id;
         if ((int) $id) {
             $this->data['type'] = 'pension';
-            $this->data['users'] = $this->getUsers();
+            $users = $this->data['users'] = $this->getUsers();
             $subscriptions = DB::table('user_pensions')->where('pension_id', $id)->get();
             $data = [];
             foreach ($subscriptions as $value) {
-                $data = array_merge($data, array($value->user_id . $value->table));
+                $data = array_merge($data, array($value->user_id));
             }
             $this->data['subscriptions'] = $data;
             $this->data["subview"] = "account/payroll/subscribe";
@@ -38,54 +38,59 @@ class Payroll extends Controller {
         }
     }
 
-    function addPension() {
-        if (!empty($_POST)) {
-            $this->validate(request(), [
-                'name' => 'required|iunique:pensions,name',
-                'employer_percentage' => 'required|min:1|numeric',
-                'employee_percentage' => 'required|min:1|numeric',
-                'refer_pension_id' => 'required',
-                'address' => 'required',
-                'status' => 'required|min:0|numeric',
-                    ], $this->custom_validation_message);
-            $pensions = request()->all();
-            $pension = \App\Model\Pension::create($pensions);
-            $group = \App\Model\AccountGroup::where('name', 'Employer Contributions')->first();
-            $account_group_id = $group ? $group->id : \App\Model\AccountGroup::create(['name' => 'Employer Contributions', "financial_category_id" => 3, 'predefined' => 1])->id;
-            // auto Add it to the chart of accounts
-            DB::table('refer_expense')->insert([
-                    ["name" => request('name') . ' Contributions', "financial_category_id" => 3, "account_group_id" => $account_group_id, 'code' => 'EC-1001' . $pension->id, 'predefined' => $pension->id]]);
 
-            $this->session->set_flashdata('success', $this->lang->line('menu_success'));
-            return redirect(base_url('payroll/pension'));
+
+    function addPension(Request $request) {
+        if (!empty($_POST)) {
+            $request->validate([
+            'name' => 'required|unique:pensions,name',
+            'employer_percentage' => 'required|min:1|numeric',
+            'employee_percentage' => 'required|min:1|numeric',
+            'refer_pension_id' => 'required',
+            'address' => 'required'
+            ]);
+
+            $pensions = request()->all();
+            $pension = \App\Models\Pension::create($pensions);
+            $group = \App\Models\AccountGroup::where('name', 'Employer Contributions')->first();
+            $account_group_id = $group ? $group->id : \App\Models\AccountGroup::create(['name' => 'Employer Contributions', "financial_category_id" => 3, 'predefined' => 1])->id;
+            // auto Add it to the chart of accounts
+    
+             DB::table('refer_expense')->insert([
+              ["name" => request('name') . ' Contributions', "financial_category_id" => 3, "account_group_id" => $account_group_id, 'code' => 'EC-1001' . $pension->id, 'predefined' => $pension->id]]);
+           // $this->session->set_flashdata('success', $this->lang->line('menu_success'));
+           // return redirect(base_url('payroll/pension'));
+           return redirect('payroll/pension')->with('success', 'Successfully!');
         } else {
-            $this->data['subview'] = 'payroll/add_pension';
-            $this->load->view('_layout_main', $this->data);
+          $this->data['subview'] = 'account.payroll.add_pension';
+          return view($this->data['subview'], $this->data);
         }
     }
 
     function deletePension() {
         $id = $this->segment(3);
-        $pension = \App\Model\Pension::find($id);
+        $pension = \App\Models\Pension::find($id);
         if (!empty($pension)) {
             //check if there are members
-            $user_pension = \App\Model\UserPension::where('pension_id', $id)->get();
+            $user_pension = \App\Models\UserPension::where('pension_id', $id)->get();
             if (empty($user_pension)) {
                 $pension->delete();
                 DB::table('refer_expense')->where("predefined", $pension->id)->where("financial_category_id", 3)->where('code', 'EC-1001' . $pension->id)->delete();
 
-                $this->session->set_flashdata('success', $this->lang->line('menu_success'));
+              //  $this->session->set_flashdata('success', $this->lang->line('menu_success'));
+              return redirect('payroll/pension')->with('success', 'Successfully!');
                 return redirect(base_url('payroll/pension'));
             } else {
-                $this->session->set_flashdata('error', 'You cannot delete this pension fund. There are members already subscribed');
-                return redirect(base_url('payroll/pension'));
+                return redirect('payroll/pension')->with('success', 'Successfully!');
+              //  $this->session->set_flashdata('error', 'You cannot delete this pension fund. There are members already subscribed');
+             //   return redirect(base_url('payroll/pension'));
             }
         }
     }
 
     function editPension() {
-        $id = $this->segment(3);
-        $this->data['pension'] = \App\Model\Pension::find($id);
+        $id = request()->segment(3);
+        $this->data['pension'] = \App\Models\Pension::find($id);
         if (!empty($_POST)) {
             $this->validate(request(), [
                 'name' => ['required', Rule::unique('pensions')->ignore($id, 'id')],
@@ -192,8 +197,8 @@ class Payroll extends Controller {
         echo (int) $user_pensions > 0 ? 'Success' : 'Error';
     }
 
+    
     public function index() {
-
         $id = (request()->segment(3));
         $this->data['set'] = $id;
         $this->data['salaries'] = DB::select('select count(*) as total_users, sum(basic_pay) as basic_pay, sum(allowance) as allowance, sum(gross_pay)'
@@ -201,6 +206,8 @@ class Payroll extends Controller {
                         . ' payment_date,reference FROM salaries group by payment_date,reference order by payment_date');
         return view('account/payroll/index', $this->data);
     }
+
+
 
     public function show() {
         if (can_access('manage_payroll') || session('table') == 'user' || session('table') == 'teacher') {
@@ -245,33 +252,34 @@ class Payroll extends Controller {
                     $this->data['refer_expense_id'] = $refer_expense_id;
                     $this->session->set_flashdata('success', $this->lang->line('menu_success'));
                     $this->data['users'] = $this->getUsers();
-                    $this->data["subview"] = "payroll/create";
-                    $this->load->view('_layout_main', $this->data);
+                
+                    $this->data['view'] = 'account/payroll/create';
+                    return view($this->data['view'], $this->data);
                 } else {
-                    //less likely to occur
-                    $this->session->set_flashdata('error', 'Please define first expense category called salary in Account setting');
-                    return redirect(base_url('payroll/create'));
+                    return redirect('account/payroll/create')->with('error', 'Please define first expense category called salary in Account setting');
                 }
             } else {
                 $this->data['users'] = $this->getUsers();
-                $this->data["subview"] = "payroll/create";
-                $this->load->view('_layout_main', $this->data);
+                $this->data['view'] = 'account/payroll/create';
+                return view($this->data['view'], $this->data);
             }
         } else {
-            $this->data["subview"] = "error";
-            $this->load->view('_layout_main', $this->data);
+            // $this->data["subview"] = "error";
+            // $this->load->view('_layout_main', $this->data);
         }
     }
+     
 
+    //Get users with status 1 and not role id 7
     public function getUsers() {
-        return \App\Model\User::whereIn('table', ['user', 'teacher'])->where('status', 1)->where('payroll_status', 1)->get();
+        return \App\Models\User::where('status', 1)->where('role_id','<>', 7)->get();
     }
 
     public function payslip() {
         $this->data['set'] = request('set');
         $this->data['salary'] = \App\Model\Salary::where('payment_date', request('set'))->where('user_id', request('id'))->where('table', request('table'))->first();
 
-        $user = \App\Model\User::where('id', request('id'))->where('table', request('table'))->first();
+        $user = \App\Models\User::where('id', request('id'))->where('table', request('table'))->first();
         if ($_POST) {
             $settings = DB::table('payslip_settings')->first();
             $vars = get_object_vars($settings);
@@ -281,7 +289,7 @@ class Payroll extends Controller {
                     $obj = array_merge($obj, array($key => request($key) == null ? 0 : request($key)));
                 }
             }
-            !empty($obj) ? \App\Model\PayslipSetting::first()->update($obj) : '';
+            !empty($obj) ? \App\Models\PayslipSetting::first()->update($obj) : '';
         }
         $this->data['user'] = !empty($user) ? $user : die('User not found');
         $this->data["subview"] = "payroll/payslip";
@@ -296,7 +304,7 @@ class Payroll extends Controller {
     }
 
     public function payslipAll() {
-        $salaries = \App\Model\Salary::where('payment_date', request('set'))->get();
+        $salaries = \App\Models\Salary::where('payment_date', request('set'))->get();
         $this->data['salaries'] = count($salaries) > 0 ? $salaries : die('User not found');
         return view('payroll.payslip_print_all', $this->data);
     }
@@ -305,12 +313,8 @@ class Payroll extends Controller {
         if (request('set') != '' && strlen(request('set') > 8)) {
             $this->data['basic_payments'] = DB::select('select count(*), sum(basic_pay)  as amount, "table" from ' . set_schema_name() . 'salaries where payment_date=\'' . request('set') . '\' group by "table" ');
             $this->data['allowances'] = DB::select('select  sum(a.amount), a.allowance_id, b.name from ' . set_schema_name() . 'salary_allowances a join ' . set_schema_name() . 'allowances b on b.id=a.allowance_id  where salary_id IN (SELECT id FROM ' . set_schema_name() . 'salaries where payment_date=\'' . request('set') . '\')group by a.allowance_id,b.name');
-
             $this->data['deductions'] = DB::select('select  sum(a.amount), sum(a.employer_amount) as employer_amount,a.deduction_id, b.name from ' . set_schema_name() . 'salary_deductions a join ' . set_schema_name() . 'deductions b on b.id=a.deduction_id  where salary_id IN (SELECT id FROM ' . set_schema_name() . 'salaries where payment_date=\'' . request('set') . '\')group by a.deduction_id,b.name');
-
-
             $this->data['pensions'] = DB::select('select a.pension_id, sum(a.amount) as employee_contribution, sum(a.employer_amount) as employer_contribution, b.name from ' . set_schema_name() . 'salary_pensions a join ' . set_schema_name() . 'pensions b on b.id=a.pension_id  where salary_id IN (SELECT id FROM ' . set_schema_name() . 'salaries where payment_date=\'' . request('set') . '\')group by a.pension_id,b.name');
-
             $this->data["subview"] = "payroll/summary";
             $this->load->view('_layout_main', $this->data);
         } else {
@@ -341,15 +345,13 @@ class Payroll extends Controller {
         $set = request('set');
         $ded_id = request('ded_id');
         if (strlen($set) > 5) {
-            $salary = \App\Model\Salary::where('payment_date', $set)->get();
+            $salary = \App\Models\Salary::where('payment_date', $set)->get();
             $salary_ids = array();
             foreach ($salary as $value) {
                 array_push($salary_ids, $value->id);
             }
-
-            $this->data['deductions'] = (int) $ded_id == 0 ? \App\Model\Deduction::all() : \App\Model\Deduction::where('id', $ded_id)->get();
+            $this->data['deductions'] = (int) $ded_id == 0 ? \App\Models\Deduction::all() : \App\Models\Deduction::where('id', $ded_id)->get();
             $this->data['users'] = count($salary) > 0 ? $salary : array();
-
             $this->data['subview'] = 'payroll/summaryform';
             $this->load->view('_layout_main', $this->data);
         }
@@ -361,7 +363,7 @@ class Payroll extends Controller {
         $this->data['month'] = request('set');
         $this->data['skip'] = (int) request('skip') == 0 ? 1 : 0;
         $this->data['deductions'] = DB::select('select  sum(a.amount), sum(a.employer_amount) as employer_amount, c.name as bank_name, a.deduction_id, b.account_number, b.name from ' . set_schema_name() . 'salary_deductions a join ' . set_schema_name() . 'deductions b on b.id=a.deduction_id  left join ' . set_schema_name() . 'bank_accounts c on c.id=b.bank_account_id  where salary_id IN (SELECT id FROM ' . set_schema_name() . 'salaries where payment_date=\'' . request('set') . '\')group by a.deduction_id,b.name,c.name, b.account_number');
-        $this->data['salaries'] = \App\Model\Salary::where('payment_date', $id)->get();
+        $this->data['salaries'] = \App\Models\Salary::where('payment_date', $id)->get();
         $this->data['subview'] = 'payroll/banksubmission';
         $this->load->view('_layout_main', $this->data);
     }
@@ -375,21 +377,10 @@ class Payroll extends Controller {
         }
         return view('account.payroll.allowance.index', $this->data);
     }
+    
 
-    public function deductionIndex() {
-
-        $this->data['type'] = $id = (request()->segment(3));
-        if ((int) $id > 0) {
-            $this->data['deductions'] = \App\Models\Deduction::where('category', $id)->get();
-        } else {
-            $this->data['deductions'] = [];
-        }
-        $this->data['subview'] = '';
-        return view('account/payroll/deduction/index', $this->data);
-    }
 
     public function loanType() {
-
         $id = request()->segment(3);
         $loan_id = request()->segment(4);
         if ($id == 'edit' && (int) $loan_id > 0) {
@@ -412,7 +403,7 @@ class Payroll extends Controller {
             $this->data['subview'] = 'loan.type.edit';
             $this->load->view('_layout_main', $this->data);
         } else if ($id == 'delete' && (int) $loan_id > 0) {
-            \App\Model\LoanType::find($loan_id)->delete();
+            \App\Models\LoanType::find($loan_id)->delete();
             $this->session->set_flashdata('success', $this->lang->line('menu_success'));
             return redirect(base_url("loan/type/"));
         } else {
@@ -423,7 +414,6 @@ class Payroll extends Controller {
     }
     
       public function loanIndex() {
-      
             $this->data['type'] = $id =request()->segment(3);
             if ((int) $id > 0) {
                 $this->data['applications'] = \App\Models\LoanApplication::where('approval_status', $id)->get();
@@ -437,9 +427,9 @@ class Payroll extends Controller {
             if (in_array(session('table'), ['user', 'teacher']) && !can_access('manage_payroll')) {
             $this->data['type'] = $id = clean_htmlentities(($this->uri->segment(3)));
             if ((int) $id > 0) {
-                $this->data['applications'] = \App\Model\LoanApplication::where('approval_status', $id)->where('user_id', session('id'))->where('table', session('table'))->get();
+                $this->data['applications'] = \App\Models\LoanApplication::where('approval_status', $id)->where('user_id', session('id'))->where('table', session('table'))->get();
             } else {
-                $this->data['applications'] = \App\Model\LoanApplication::where('user_id', session('id'))->where('table', session('table'))->get();
+                $this->data['applications'] = \App\Models\LoanApplication::where('user_id', session('id'))->where('table', session('table'))->get();
             }
             $this->data['subview'] = 'loan/index';
             $this->load->view('_layout_main', $this->data);

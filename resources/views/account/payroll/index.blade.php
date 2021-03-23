@@ -1,5 +1,7 @@
 @extends('layouts.app')
 @section('content')
+
+
 <div class="main-body">
     <div class="page-wrapper">
         <!-- Page-header start -->
@@ -50,8 +52,8 @@
                                     <a class="nav-link" data-toggle="tab" href="#profile3" role="tab">Summary</a>
                                     <div class="slide"></div>
                                 </li>
-                              
                             </ul>
+
                             <!-- Tab panes -->
                             <div class="tab-content card-block">
                                 <div class="tab-pane active" id="home3" role="tabpanel">
@@ -61,7 +63,9 @@
                                                              data-toggle="popover" data-placement="right" data-trigger="hover"
                                                              data-content="Use the buttons below to either copy or download the information on the table below. "
                                                              title="Export Buttons"></i></a>
-                                            <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
+
+                                         <div class="table-responsive table-sm table-striped table-bordered table-hover">          
+                                            <table id="example1" class="table dataTable">
                                                 <thead>
                                                     <tr>
                                                         <th class="col-sm-1"><?= __('slno') ?></th>
@@ -145,6 +149,7 @@
                                                     ?>
                                                 </tbody>
                                             </table>
+                                         </div>
                                         </div>
                                 </div>
                                 <div class="tab-pane" id="profile3" role="tabpanel">

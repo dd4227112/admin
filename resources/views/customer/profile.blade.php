@@ -480,7 +480,7 @@ return $echo;
                                                                         data-toggle="dropdown" aria-haspopup="true"
                                                                         aria-expanded="true"
                                                                         role="tooltip">Actions</span>
-                                                                    <div
+                                                                     <div
                                                                         class="dropdown-menu dropdown-menu-right b-none services-list">
                                                                         <a class="dropdown-item" href="#"
                                                                             onmousedown="removeTag(<?= $task->id ?>)">Remove
@@ -491,7 +491,7 @@ return $echo;
                                                                             Timeline</a>
                                                                         <a class="dropdown-item" href="#">Blog
                                                                             User</a>
-                                                                    </div>
+                                                                    </div> 
 
                                                                     <div class="card-block">
                                                                         <div class="timeline-details">
@@ -514,20 +514,18 @@ return $echo;
                                                                             <p>Start Date- <?= $task->start_date ?>
                                                                                 &nbsp; &nbsp; | &nbsp; &nbsp; End
                                                                                 Date - <?= $task->end_date ?></p>
-
                                                                         </div>
 
                                                                         <div class="user-box">
-
                                                                             <?php
-                                                                                    $comments = $task->taskComments()->get();
+                                                                                  $comments = $task->taskComments()->get();
                                                                                     if (count($comments) > 0) {
                                                                                         ?>
                                                                             <div class="mt-1"> <span class="f-14"><a
                                                                                         href="#">What have been
                                                                                         done</a></span></div>
                                                                             <?php
-                                                                                        foreach ($comments as $comment) {
+                                                                                    foreach ($comments as $comment) {
                                                                                             ?>
                                                                             <div class="media" class="pb-1">
                                                                                 <a class="media-left" href="#">
@@ -1678,11 +1676,10 @@ return $echo;
                                                             </div>
                                                         </div>
                                                     </div>
-                                            </div>
+                                                </div>
 
                                             <div class="row">
                                                 <div class="card table-responsive">
-
                                                     <table id="invoice_table"
                                                         class="table table-striped table-bordered nowrap dataTable">
                                                         <thead>
@@ -1763,13 +1760,9 @@ return $echo;
                                                                                 target="_blank"><span
                                                                                     class="point-marker bg-warning"></span>Receipt</a>
                                                                             <?php }
-                                                    ?>
+                                                                             ?>
                                                                         </div>
                                                                     </div>
-
-
-
-
                                                                 </td>
                                                             </tr>
                                                             <?php $i++; } ?>
@@ -1786,6 +1779,74 @@ return $echo;
                                                     </table>
                                                 </div>
                                             </div>
+
+
+
+                                            <div class="row">
+                                                <div class="card table-responsive">
+                                                    <table id="invoice_table"
+                                                        class="table table-striped table-bordered nowrap dataTable">
+                                                        <thead>
+                                                            <tr>
+                                                            <th>No.</th>
+                                                            <th>Branch</th>
+                                                            <th>School contact</th>
+                                                            <th>Occurance</th>
+                                                            <th>Basis</th>
+                                                            <th>Occurance amount</th>
+                                                            <th>Total amount</th>
+                                                            <th>Maturity date</th>
+                                                            <th colspan="2" class="text-center">Actions</th>
+                                                    </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                  <?php $i = 1; ?>
+                                                  <?php  $standingorders = \App\Models\StandingOrder::where('client_id',$client_id)->get(); ?>
+                                                    @foreach ($standingorders as $key => $standing)
+                                                    <tr>
+                                                        <td><?= $i ?></td>
+                                                        <td>{{ $standing->branch->name }}</td>
+                                                        <td>{{ $standing->schoolcontact->name }}</td>
+                                                        <td>{{ $standing->occurrence }}</td>
+                                                        <td>{{ $standing->basis }}</td>
+                                                        <td>{{ $standing->occurance_amount }}</td>
+                                                        <td>{{ $standing->total_amount }}</td>
+                                                        <td><?= date('d M Y', strtotime($standing->date)) ?></td>
+                                                       @if(can_access('manage_finance'))
+                                                   
+                                                        <td>
+                                                          <a  target="_break" href="<?= url('customer/viewContract/'.$standing->id.'/standing') ?>" class="btn btn-sm btn-success">View</a>
+
+                                        
+                                                          @if($standing->status == 0)
+                                                          <a  href="<?= url('account/approveStandingOrder/'.$standing->id) ?>" class="btn btn-sm btn-success"> Confirm </a>
+                                                          <a href="<?= url('account/rejectStandingOrder/'.$standing->id) ?>" class="btn btn-sm btn-danger">Reject</a>
+                                                          @else
+                                                           <a  class="btn btn-sm btn-secondary">Approved</a>
+                                                          @endif 
+                                                        </td>
+                                                        
+                                                     @endif
+                                                    </tr>
+                                                    <?php $i++; ?>
+                                                    @endforeach
+                                                </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <td colspan="2">Total</td>
+                                                                <td><?= money($total_amount) ?></td>
+                                                                <td><?= money($total_paid) ?></td>
+                                                                <td><?= money($total_unpaid) ?></td>
+                                                                <td colspan="2"></td>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+
+
+
                                         </div>
                                     </div>
                                     <!-- Row end -->

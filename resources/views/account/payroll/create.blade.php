@@ -17,19 +17,19 @@
             <div class="col-sm-12">
                 <form class="form-horizontal" role="form" method="post">
 
-                    <!--                    <?php
-//                    if (form_error($errors, 'subject'))
-//                        echo "<div class='form-group has-error' >";
-//                    else
-//                        echo "<div class='form-group' >";
-                    ?>
-                                        <label for="subject" class="col-sm-2 control-label">
-                                            Specify payment date
-                                        </label>
-                                        <div class="col-sm-6">
-                                            <input type="text" class="form-control" id="name" placeholder="<?php //__('date')   ?>" name="date" value="<?= date('d M Y') ?>" >
-                                        </div>
-                                </div>-->
+                    <!--  <?php
+                //    if (form_error($errors, 'subject'))
+                //        echo "<div class='form-group has-error' >";
+                //    else
+                //        echo "<div class='form-group' >";
+                      ?>
+                        <label for="subject" class="col-sm-2 control-label">
+                            Specify payment date
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="name" placeholder="<?php //__('date')   ?>" name="date" value="<?= date('d M Y') ?>" >
+                        </div>
+                     </div>-->
                     <div class="col-sm-12">
                         <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
                             <thead>
@@ -51,8 +51,7 @@
 
                                     <?php
                                     if (can_access('manage_payroll')) {
-                                        ?>
-                                                                                                                                                                                                    <!--<th class="col-sm-4"><?= __('action') ?></th>-->
+                                        ?>                                                                                                                                                   <!--<th class="col-sm-4"><?= __('action') ?></th>-->
                                     <?php } ?>
                                 </tr>
                             </thead>
@@ -81,7 +80,7 @@
                                         <td><?= $i ?></td>
                                         <td><?= $user->name ?></td>
                                         <td><?= $user->usertype ?></td>
-                                        <!--<td><?php //$user_info->id_number                                     ?></td>-->
+                                        <!--<td><?php //$user_info->id_number ?></td>-->
 
                                         <td><span  style=" text-decoration: none; border-bottom: dashed 1px #0088cc;" contenteditable="true" onblur="save('<?= $user->id . $user->table . 'bank_name' ?>', '<?= $user->id ?>', 'bank_name', '<?= $user->table ?>')" id="<?= $user->id . $user->table . 'bank_name' ?>"><?= $bank_name == '' ? 'null' : $bank_name ?></span>
                                             <span id="stat<?= $user->id . $user->table . 'bank_name' ?>"></span></td>
@@ -94,7 +93,7 @@
                                         <td>
                                             <?php
                                             //calculate user allowances
-                                            $allowances = \App\Model\UserAllowance::where('user_id', $user->id)->where('table', $user->table)->get();
+                                            $allowances = \App\Models\UserAllowance::where('user_id', $user->id)->where('table', $user->table)->get();
                                             $allowance_ids = array();
                                             $total_allowance = 0;
                                             $taxable_allowances = 0;
@@ -175,7 +174,7 @@
                                         <td>  
                                             <?php
                                             //calculate user pension amount
-                                            $pensions = \App\Model\UserPension::where('user_id', $user->id)->where('table', $user->table)->get();
+                                            $pensions = \App\Models\UserPension::where('user_id', $user->id)->where('table', $user->table)->get();
                                             $pension_employer_contribution = 0;
                                             $pension_employee_contribution = 0;
                                             foreach ($pensions as $pension) {
@@ -205,7 +204,7 @@
                                         <td>
                                             <?php
                                             //calculate user deductions
-                                            $deductions = \App\Model\UserDeduction::where('user_id', $user->id)->where('table', $user->table)->get();
+                                            $deductions = \App\Models\UserDeduction::where('user_id', $user->id)->where('table', $user->table)->get();
                                             $deduction_ids = array();
                                             $ededuction_ids = array();
                                             $total_deductions = 0;
@@ -277,7 +276,7 @@
                                         <td>
                                             <?php
                                             //calculate PAYEE
-                                            $tax = \App\Model\Paye::where('from', '<=', round($taxable_amount, 0))->where('to', '>=', round($taxable_amount, 0))->first();
+                                            $tax = \App\Models\Paye::where('from', '<=', round($taxable_amount, 0))->where('to', '>=', round($taxable_amount, 0))->first();
                                             if (!empty($tax) ) {
                                                 $paye = ($taxable_amount - $tax->from) * $tax->tax_rate / 100 + $tax->tax_plus_amount;
                                             } else {
@@ -297,15 +296,13 @@
                                             echo ($net_pay);
                                             ?>
                                         </td>
-    <!--                                        <td>
-                                            <a href="<?= url('payroll/payslip/null/?id=' . $user->id . '&table=' . $user->table . '&month=' . date('m')) ?>" class="btn btn-success btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Show Payslip"><i class="fa fa-file"></i>Preview</a>
-                                            
-                                        </td>                 -->
+                                       <!-- <td>
+                                            <a href="<?= url('payroll/payslip/null/?id=' . $user->id . '&table=' . $user->table . '&month=' . date('m')) ?>" class="btn btn-success btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Show Payslip"><i class="fa fa-file"></i>Preview</a> 
+                                        </td> -->
                                     </tr>
 
                                     <?php
                                     if ($create == 1) {
-
                                         $check_data = array('user_id' => $user->id,
                                             'table' => $user->table, 'payment_date' => date('Y-M-d', strtotime(request('payroll_date'))));
                                         $check = \DB::table('salaries')->where($check_data)->first();
@@ -465,7 +462,7 @@ $bank_account = \App\Model\BankAccount::where('id','>',0 )->first();
                                 <tr>
 
                                     <td>Total</td>
-<!--                                    <td></td>-->
+                                  <!--  <td></td>-->
                                     <td></td>
                                     <td></td>
                                     <td></td>
@@ -479,7 +476,7 @@ $bank_account = \App\Model\BankAccount::where('id','>',0 )->first();
                                     <td><?= money($total_paye) ?></td>
                                     <td><?= money($total_net_pay) ?></td>
 
-<!--                                    <td>
+                                    <!--  <td>
                                         <a href="<?= url('payroll/summary/null/?month=' . date('M') . '&month=' . date('m')) . '&' . http_build_query(array('basic_pay' => $total_basic_pay, 'allowance' => $sum_of_total_allowances, 'gross_pay' => $total_gross_pay, 'pension' => $total_pension, 'deduction' => $sum_of_total_deductions, 'tax' => $total_taxable_amount, 'paye' => $total_paye, 'net_pay' => $total_net_pay)) ?>" class="btn btn-success btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Show Payslip"><i class="fa fa-file"></i>Summary</a>
                                     </td>-->
                                 </tr>
@@ -531,7 +528,7 @@ $bank_account = \App\Model\BankAccount::where('id','>',0 )->first();
                     } else {
                         //insert in expense table so we can track in income statement
                         //insert bank_account_id and payment type in expense
-                        $bank_account = \App\Model\BankAccount::where('id','>',0 )->first();
+                        $bank_account = \App\Models\BankAccount::where('id','>',0 )->first();
                         $array = array(
                             "create_date" => date("Y-m-d"),
                             "date" => date('Y-m-d', strtotime(request('payroll_date'))),

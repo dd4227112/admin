@@ -67,7 +67,6 @@
                                         $i = 1;
                                         ?>
                                         @foreach($clients as $client)
-
                                         <tr>
                                             <td><?= $i ?></td>
                                             <td>{{$client->name}}</td>
@@ -86,8 +85,6 @@
                                     <tfoot>
                                         <tr>
                                             <td  colspan="6">Total</td>
-
-
                                             <td><?= number_format($total_amount) ?></td>
                                             <td></td>
                                         </tr>

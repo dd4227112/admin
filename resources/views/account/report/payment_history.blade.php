@@ -1,6 +1,6 @@
 @extends('layouts.app')
-
 @section('content')
+
 <div class="main-body">
     <div class="page-wrapper">
         <!-- Page-header start -->
@@ -26,13 +26,11 @@
         <div class="page-body">
               <div class="row">
                 <!-- counter-card-1 start-->
-                 <?php
-                               $total=DB::table('admin.payments')->whereYear('date',date('Y'))->sum('amount');
-                                $payments = DB::select('select sum(amount), method from admin.payments where extract(year from date)='.date('Y').' group by method');
-                                foreach ($payments as  $value) {
-                               
-                                                
-                                ?>
+                   <?php
+                $total=DB::table('admin.payments')->whereYear('date',date('Y'))->sum('amount');
+                $payments = DB::select('select sum(amount), method from admin.payments where extract(year from date)='.date('Y').' group by method');
+                foreach ($payments as  $value) {
+                 ?>
                 <div class="col-md-12 col-xl-4">
                     <div class="card counter-card-1">
                         <div class="card-block-big">
@@ -69,13 +67,10 @@
                                     <tr>
                                         <th class="col-sm-1">#</th>
                                         <th class="col-sm-1">Client Name</th>
-                                       
                                         <th class="col-sm-2">Amount</th>
                                         <th class="col-sm-1">Date</th>
                                          <th class="col-sm-1">Service</th>
                                         <th class="col-sm-2">Method</th>
-                                        
-
                                         <th class="col-sm-1">Bank</th>
                                         <th class="col-sm-1">Payment Type</th>
                                         <th class="col-sm-2"><?= __('action') ?></th>
@@ -84,10 +79,10 @@
                                 <tbody>                                        
                                 </tbody>
                             </table>
-
                         </div>
                     </div>
- <div class="card">
+
+                   <div class="card">
                     <div class="card-header">
                         <h5>Average Collection Per Month </h5>
                     </div>
@@ -151,7 +146,7 @@
                     "render": function (data, type, row, meta) {
 
                         return '';
-                        //'<a href="#" id="' + row.id + '" class="label label-danger dlt_log" onmousedown="delete_log(' + row.id + ')" onclick="return false">Delete</a>' + '<a href="#" id="' + row.id + '" class="label label-info dlt_log" onmousedown="View_log(' + row.id + ')" onclick="return false">View</a>';
+                        '<a href="#" id="' + row.id + '" class="label label-danger dlt_log" onmousedown="delete_log(' + row.id + ')" onclick="return false">Delete</a>' + '<a href="#" id="' + row.id + '" class="label label-info dlt_log" onmousedown="View_log(' + row.id + ')" onclick="return false">View</a>';
 
 
                     }

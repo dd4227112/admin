@@ -36,7 +36,6 @@
                                 </a>
                             </h5>
                         <?php } ?>
-                       
                 </div>
                 <?php if ($type == 'allowance' || $type == 'deduction') { ?>
                     <div class="col-sm-6 col-xs-12 col-sm-offset-3 list-group">
@@ -105,7 +104,7 @@
                                     </td>
                                     <td data-title="<?= __('amount') ?>">
                                         <?php
-                                        $deduction = \App\Model\UserDeduction::where('user_id', $user->id)->where('table', $user->table)->where('deduction_id', $allowance->id)->where('deadline', '>', date('Y-m-d'))->first();
+                                        $deduction = \App\Models\UserDeduction::where('user_id', $user->id)->where('table', $user->table)->where('deduction_id', $allowance->id)->where('deadline', '>', date('Y-m-d'))->first();
                                         $amount = !empty($deduction)  ? $deduction->amount : '';
                                         $deadline = !empty($deduction)  ? $deduction->deadline : '';
                                         ?>
@@ -129,14 +128,10 @@
                                 <?php
                                 $i++;
                             }
-                        }
+                         }
                         ?>
                     </tbody>
                 </table>
-
-
-
-
             </div> <!-- col-sm-12 for tab -->
         </div>
     </div>

@@ -4,11 +4,12 @@
 <?php
 $root = url('/') . '/public/';
 
-function tagEdit($schema_name, $column, $value) {
+function tagEdit($schema_name, $column, $value, $type = null) {
+      $type = null ? $type = '"text"' : $type = $type;
     if ((int) request('skip') == 1) {
         $return = $value;
     } else {
-        $return = '<input class="text-muted" type="text" schema="' . $schema_name . '" id="' . $column .$schema_name. '" value="' . $value . '" onblur="edit_records(\'' . $column . '\', this.value, \'' . $schema_name . '\')"/><br/><span id="status_' . $column . $schema_name . '"></span>';
+        $return = '<input class="text-muted" type="'. $type. '" schema="' . $schema_name . '" id="' . $column .$schema_name. '" value="' . $value . '" onblur="edit_records(\'' . $column . '\', this.value, \'' . $schema_name . '\')"/><br/><span id="status_' . $column . $schema_name . '"></span>';
     }
     return $return;
 }
@@ -86,8 +87,8 @@ function tagEdit($schema_name, $column, $value) {
                                                             <!-- <th>Paid Amount</th> -->
 
                                                             <!-- <th>Remained Amount</th> -->
-                                                            <!-- <th>Payment Status</th> -->
-                                                            <!--  <th>Payment Deadline</th> --> 
+                                                            <th>Payment Start</th> 
+                                                            <th>Payment Deadline</th>
                                                             <th>Estimated Students</th>
                                                             <th>Action</th>
                                                         </tr>
@@ -98,40 +99,55 @@ function tagEdit($schema_name, $column, $value) {
                                                         $total_price = 0;
                                                         $schemas=\DB::select("select * from admin.clients where id not in (select client_id from admin.invoices where account_year_id=(select id from admin.account_years where name='".date('Y')."'))" );
                                                         foreach ($schemas as $schema) {
-                                                      
                                                             ?>
                                                             <tr>
                                                                 <td><?= $schema->username?></td>
-                                                                    <td><?= date('d M Y',strtotime($schema->created_at)) ?></td>
-                                                                <td>   <?php
-                                                                    // $students = DB::table($schema->username. '.student')->where('status', 1)->count();
-                                                                $students=3;
+                                                                <td><?= date('d M Y',strtotime($schema->created_at)) ?></td>
+                                                                <td> <?php 
+                                                                    $setting = DB::table('admin.all_setting')->where('schema_name', $schema->username)->first();
+                                                                     if(!empty($setting)) {
+                                                                        $students = DB::table($schema->username. '.student')->where('status', 1)->count();
+                                                                     } else {
+                                                                        $students=$schema->estimated_students;
+                                                                     }
                                                                     $total_students += $students;
                                                                     echo $students;
                                                                     ?>
                                                                 </td>
-                                                                <td>
 
-                                                                    <?php
+                                                                <td>
+                                                                 <?php
+                                                                   
                                                                     // $price = count($schema) == 1 ? $schema->price_per_student : 0;
-                                                                     $price =$schema->price_per_student;
+                                                                    $price =$schema->price_per_student;
                                                                     $total_price += $price * $students;
                                                                     echo tagEdit($schema->username, 'price_per_student', $price);
                                                                     ?>
                                                                 </td>
+
+                                                                <td> 
+                                                                 
+                                                                 <?php
+                                                                     // $price = count($schema) == 1 ? $schema->price_per_student : 0;
+                                                                     $start_date =$schema->invoice_start_date;
+                                                                   //  $total_price += $price * $students;
+                                                                     echo tagEdit($schema->username, 'invoice_start_date', $start_date, 'date');
+                                                                     ?>
+                                                                </td> 
                                                            
-                                                                <!-- <td> 
+                                                                <td> 
                                                                     <?php
-$end_date='';
-                                                                    //echo tagEdit($schema->username, 'payment_deadline_date', $end_date) ?> 
-                                                                </td> -->
+                                                                    // $price = count($schema) == 1 ? $schema->price_per_student : 0;
+                                                                    $end_date =$schema->invoice_end_date;
+                                                                   // $total_price += $price * $students;
+                                                                    echo tagEdit($schema->username, 'invoice_end_date', $end_date, 'date');
+                                                                    ?>
+                                                                </td> 
 
                                                                 <td>
                                                                     <?= tagEdit($schema->username, 'estimated_students', isset($schema->estimated_students) ? $schema->estimated_students:'') ?>
                                                                 </td>
-
-
-                                                                <td >                    <a href="<?= url('account/createShuleSoftInvoice/' . $schema->id) ?>" class="btn btn-sm btn-success">Create Invoice</a></td>
+                                                                <td><a href="<?= url('account/createShuleSoftInvoice/' . $schema->id) ?>" class="btn btn-sm btn-success">Create Invoice</a></td>
                                                             </tr>
                                                         <?php } ?>
                                                     </tbody>

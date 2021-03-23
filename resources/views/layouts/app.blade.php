@@ -1,6 +1,5 @@
 <?php $root = url('/') . '/public/' ?>
 
-
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 
@@ -17,7 +16,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-
     <meta name="description" content="ShuleSoft Admin">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="keywords" content="ShuleSoft, Admin , Admin Panel">
@@ -427,19 +425,14 @@
                             <div class="dummy-column">
                                 <h2>Invoices</h2>
                                 <span id="search_people"></span>
-
-
                             </div>
                             <div class="dummy-column" style="overflow-y: scroll;">
                                 <h2>Schools</h2>
                                 <span id="search_schools"></span>
-
-
                             </div>
                             <div class="dummy-column">
                                 <h2>Activity</h2>
                                 <span id="search_activities"></span>
-
                             </div>
                         </div>
                         <!-- /morphsearch-content -->
@@ -625,9 +618,9 @@
                             <a href="<?= url('sales/salesStatus') ?>" data-i18n="nav.navigate.navbar">Sales Status</a>
                         </li>
 
-                        <!--                                    <li>
-                                                                        <a href="<?= url('sales/analysis') ?>" data-i18n="nav.navigate.navbar">Sales Analysis</a>
-                                                                    </li>-->
+                                 <!-- <li>
+                                        <a href="<?= url('sales/analysis') ?>" data-i18n="nav.navigate.navbar">Sales Analysis</a>
+                                    </li>-->
                     </ul>
                 </li>
                 <?php // } ?>
@@ -762,7 +755,10 @@
                         <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main">
                                 Transactions</a>
                             <ul class="tree-2">
-                                <a href="<?= url('account/revenue') ?>"><i class="fa icon-account"></i> Revenue</a>
+                            
+                                <?php  if(can_access('view_revenue')) { ?>
+                                <a href="<?= url('account/revenue') ?>"> <i class="fa icon-account"></i> Revenue</a>
+                                <?php }  ?>
                                 <a href="<?= url('account/transaction/4') ?>"><i class="fa icon-expense"></i>
                                     Expense</a>
                                 <a href="<?= url('account/transaction/1') ?>"><i class="fa icon-account"></i> Fixed
@@ -787,9 +783,9 @@
                                         class="fa fa-clipboard"></i><span>TAX</span></a>
                                 <a href="<?= url('payroll/pension') ?>"><i class="fa fa-clipboard"></i><span>Pension
                                         Fund</span></a>
-                                <a href="<?= url('payroll/allowanceIndex') ?>"><i
+                                <a href="<?= url('allowance/index') ?>"><i
                                         class="fa fa-clipboard"></i><span>Allowances</span></a>
-                                <a href="<?= url('payroll/deductionIndex') ?>"><i
+                                <a href="<?= url('deduction/index') ?>"><i
                                         class="fa fa-clipboard"></i><span>Deductions</span></a>
                                 <li class="nav-sub-item-3">
                                     <a>
@@ -797,10 +793,10 @@
                                         <span class="fa fa-chevron-down"></span></a>
                                     <ul class="tree-3">
 
-                                        <a href="<?= url('payroll/loanType') ?>"><i class="fa fa-clipboard"></i><span
+                                        <a href="<?= url('loan/type') ?>"><i class="fa fa-clipboard"></i><span
                                                 style="color: white; line-height: 25px;"> Loan Types</span></a>
 
-                                        <a href="<?= url('payroll/loanIndex') ?>"><i class="fa fa-clipboard"></i><span
+                                        <a href="<?= url('loan/index') ?>"><i class="fa fa-clipboard"></i><span
                                                 style="color: white; line-height: 25px;"> Borrowers </span></a>
 
                                     </ul>
@@ -829,7 +825,7 @@
                     </ul>
                 </li>
                 <?php } ?>
-                <?php if (can_access('manage_expenses')) { ?>
+                <?php  if(can_access('manage_expenses')) { ?>
                 <!--                            <li class="nav-item single-item has-class">
                                                             <a href="<?= url('account/transaction/4') ?>">
                                                                 <i class="ti-view-grid"></i>
@@ -879,8 +875,8 @@
                 </li>
                 <?php }
 
-                        if (can_access('manage_users') && !in_array(Auth::user()->department, [9, 10]) || in_array(Auth::user()->role_id, array(14, 8, 2, 3, 9, 20))) {
-                            ?>
+            if (can_access('manage_users') && !in_array(Auth::user()->department, [9, 10]) || in_array(Auth::user()->role_id, array(14, 8, 2, 3, 9, 20))) {
+              ?>
 
                 <li class="nav-item">
                     <a href="#!">
@@ -1135,8 +1131,6 @@
     <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/amchart/js/light.js"></script>
     <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/amchart/js/custom-amchart.js"></script>
 
-
-
     <!-- i18next.min.js -->
     <script type="text/javascript" src="<?= $root ?>bower_components/i18next/i18next.min.js"></script>
     <script type="text/javascript" src="<?= $root ?>bower_components/i18next-xhr-backend/i18nextXHRBackend.min.js">
@@ -1145,13 +1139,6 @@
         src="<?= $root ?>bower_components/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js">
     </script>
     <script type="text/javascript" src="<?= $root ?>bower_components/jquery-i18next/jquery-i18next.min.js"></script>
-
-
-
-
-
-
-
 
     <!-- Custom js -->
     <script src="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.js"></script>

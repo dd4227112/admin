@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+
 <div class="main-body">
     <div class="page-wrapper">
         <!-- Page-header start -->
@@ -24,69 +25,69 @@
         </div>
         <!-- Page-header end -->
         <!-- Page-body start -->
+		
+							
         <div class="page-body">
-
-             <div class="row">
-
-                <div class="col-lg-12">
-                    <div class="card">
-        <?php
-                $usertype = session("usertype");
-                if (can_access('manage_payroll')) {
-                    ?>
+          <div class="row">
+            <div class="col-sm-12">
+             <div class="card">
+                <?php
+               // $usertype = session("usertype");
+                if(can_access('manage_payroll')) { ?>
+			
                     <span class="section">
-                        <a class="btn btn-success" href="<?php echo url('allowance/add') ?>">
+                        <a class="btn btn-success" href="<?php echo url('allowance/add/'.$category) ?>">
                             <i class="fa fa-plus"></i> 
                             <?= __('add_allowance') ?>
                         </a>
                     </span>
-                <?php } ?>
+              <?php } ?>
 
-      
-
-                <div class="col-sm-6 col-sm-offset-3 list-group">
-                    <div class="list-group-item list-group-item-warning">
-                        <form style="" class="form-horizontal" role="form" method="post">  
-                            <div class="form-group">              
-                                <label for="category" class="col-sm-2 col-sm-offset-2 control-label">
-                                    <?= __("category") ?>
-                                </label>
-                                <div class="col-sm-6">
-                                    <?php
-                                    $array = array("0" => __("select"));
-                                    $deduction_types = [
-                                        '1' => 'Fixed Allowances',
-                                        '2' => 'Monthly Allowances'
-                                    ];
-                                    foreach ($deduction_types as $key => $value) {
-                                        $array[$key] = $value;
-                                    }
-                                    echo form_dropdown("category", $array, old("category", $category), "id='category' class='form-control'");
-                                    ?>
+                    <div class="col-sm-6 col-sm-offset-3 list-group">
+                        <div class="list-group-item list-group-item-warning">
+                            <form style="" class="form-horizontal" role="form" method="post">  
+                                <div class="form-group">              
+                                    <label for="category" class="col-sm-2 col-sm-offset-2 control-label">
+                                        <?= __("category") ?>
+                                    </label>
+                                    <div class="col-sm-6">
+                                        <?php
+                                        $array = array("0" => __("select"));
+                                        $deduction_types = [
+                                            '1' => 'Fixed Allowances',
+                                            '2' => 'Monthly Allowances'
+                                        ];
+                                        foreach ($deduction_types as $key => $value) {
+                                            $array[$key] = $value;
+                                        }
+                                        echo form_dropdown("category", $array, old("type", $category), "id='category' class='form-control'");
+                                        ?>
+                                    </div>
                                 </div>
-                            </div>
-                            <?= csrf_field() ?>
-                        </form>
+                                <?= csrf_field() ?>
+                            </form>
+                        </div>
                     </div>
-                </div>
+                    
 
-                <div id="hide-table">
-                    <?php if (isset($allowances) && !empty($allowances)) { ?>
-                        <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
-                            <thead>
-                                <tr>
-                                    <th class="col-lg-1"><?= __('slno') ?></th>
-                                    <th class="col-lg-2"><?= __('name') ?></th>
-                                    <th class="col-lg-1"><?= __('category') ?></th>
-                                    <th class="col-lg-1"><?= __('type') ?></th>
-                                    <th class="col-lg-1"><?= __('pension') ?></th>
-                                    <th class="col-lg-1"><?= __('amount') ?></th>
-                                    <th class="col-lg-1"><?= __('percentage') ?></th>
-                                    <th class="col-lg-1"><?= __('description') ?></th>
-                                    <th class="col-lg-2"><?= __('action') ?></th>
-                                </tr>
-                            </thead>
-                            <tbody>
+				         <div id="hide-table"  class="card-block">
+					      <div class="table-responsive table-sm table-striped table-bordered table-hover">
+                            <?php if (isset($allowances) && !empty($allowances)) { ?>
+								<table class="table dataTable">
+									<thead>
+                                        <tr>
+                                            <th class="col-lg-1"><?= __('slno') ?></th>
+                                            <th class="col-lg-2"><?= __('name') ?></th>
+                                            <th class="col-lg-1"><?= __('category') ?></th>
+                                            <th class="col-lg-1"><?= __('type') ?></th>
+                                            <th class="col-lg-1"><?= __('pension') ?></th>
+                                            <th class="col-lg-1"><?= __('amount') ?></th>
+                                            <th class="col-lg-1"><?= __('percentage') ?></th>
+                                            <th class="col-lg-1"><?= __('description') ?></th>
+                                            <th class="col-lg-2"><?= __('action') ?></th>
+                                        </tr>
+									</thead>
+                             <tbody>
                                 <?php
                                 $i = 1;
                                 //  dd($allowances);
@@ -118,12 +119,12 @@
                                             <?php echo $allowance->description; ?>
                                         </td>
                                         <td data-title="<?= __('action') ?>">
-                                            <?php echo '<a  href="' . url("allowance/edit/$allowance->id") . ' " class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> ' . __('edit') . ' </a>'; ?>
-                                            <?php echo '<a  href="' . url("allowance/delete/$allowance->id") . ' " class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> ' . __('delete') . ' </a>';
+                                            <?php echo '<a  href="' . url("allowance/edit/$allowance->id") . ' " class="btn btn-info btn-sm"><i class="fa fa-pencil"></i> ' . __('edit') . ' </a>'; ?>
+                                            <?php echo '<a  href="' . url("allowance/delete/$allowance->id") . ' " class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> ' . __('delete') . ' </a>';
                                             
                                             $sub = $category == 1 ? 'subscribe' : 'monthlysubscribe';
                                             ?>
-                                            <a href="<?= url('allowance/'.$sub.'/' . $allowance->id) ?>" class="btn btn-primary btn-xs mrg" ><i class="fa fa-users"></i> members</a>
+                                            <a href="<?= url('allowance/'.$sub.'/' . $allowance->id) ?>" class="btn btn-primary btn-sm mrg" ><i class="fa fa-users"></i> members</a>
                                         </td>
                                     </tr>
                                     <?php
@@ -132,18 +133,18 @@
                                 ?>
                             </tbody>
                         </table>
-                    <?php } ?>
-                </div>
-
-
-            </div> <!-- col-sm-12 -->
-        </div><!-- row -->
-
-
-    </div><!-- Body -->
-</div><!-- /.box -->
+						<?php }  ?>
+								 
+                     </div>
+																
+                 </div>
+            </div> 
+        </div>
     </div>
+  </div>
 </div>
+
+
 <script type="text/javascript">
     $('#category').change(function () {
         var category = $(this).val();
@@ -151,7 +152,7 @@
             $('#hide-table').hide();
             $('.nav-tabs-custom').hide();
         } else {
-            window.location.href = "<?= url('payroll/allowanceIndex') ?>/" + category;
+            window.location.href = "<?= url('allowance/index') ?>/" + category;
         }
     });
 </script>

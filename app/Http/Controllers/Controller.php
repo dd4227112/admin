@@ -256,4 +256,52 @@ class Controller extends BaseController {
         }
         return [$k, $l];
     }
+
+
+    public function uploadExcel($sheet_name = null) {
+        //        $file = request()->file('file');
+        //        $data = $this->fileload($file);
+        //        dd($data);
+        //        exit;
+        //        $this->load->library('PHPExcel');
+        try {
+            // it will be your file name that you are posting with a form or c
+            //an pass static name $_FILES["file"]["name"]
+            $folder = "storage/uploads/media/";
+            if (!is_dir($folder)) {
+                mkdir($folder, 0777, true);
+            }
+            //is_dir($folder) ? '' : mkdir($folder, 0777,True);
+            $file = request()->file('file');
+            //$name=  str_replace('.'.$file->guessClientExtension(), '', $file->getClientOriginalName());
+            $name = time() . rand(4343, 3243434) . '.' . $file->guessClientExtension();
+            $move = $file->move($folder, $name);
+            $path = $folder . $name;
+            if (!$move) {
+                die('upload Error');
+            } else {
+                $objPHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load($path);
+            }
+        } catch (Exception $e) {
+            $this->resp->success = FALSE;
+            $this->resp->msg = 'Error Uploading file';
+            echo json_encode($this->resp);
+        }
+        $sheets = $objPHPExcel->getSheetNames();
+        if ($sheet_name == null) {
+            return $this->getDataBySheet($objPHPExcel, 0);
+        } else {
+            $data = [];
+            foreach ($sheets as $key => $value) {
+                $data[$value] = [];
+            }
+            foreach ($sheets as $key => $value) {
+                $excel_data = $this->getDataBySheet($objPHPExcel, $key);
+                count($excel_data) > 0 ? array_push($data[$value], $excel_data) : '';
+            }
+            return $data;
+        }
+        unlink($path);
+    }
+
 }
