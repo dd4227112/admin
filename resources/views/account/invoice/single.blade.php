@@ -66,7 +66,7 @@
                 <div class="col-lg-6">
                     <p class="text-right" align="right">
                         <a class="btn btn-secondary btn-sm" href="#" data-toggle="modal" data-target="#large-Modal"> Edit </a>
-                        <a href="#" id="printInvoice" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Share </a>
+                        <a href="#" id="Share" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Share </a>
                         <a href="#" id="printInvoice" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Print </a>
                     </p>
                 </div>
