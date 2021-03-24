@@ -36,7 +36,8 @@
 
                         <div class="tab-content">
                             <div class="card-block">
-                                <h2><a href="#model" class="btn btn-success" data-toggle="modal" data-target=".bs-example-modal-lg" class="model_img img-responsive">Add New</a></h2>
+                                <h2>
+                                    <a href="#model"  onclick="$('#edit_hidden').val('')" class="btn btn-success" data-toggle="modal" data-target=".bs-example-modal-lg" class="model_img img-responsive">Add New</a></h2>
 
                                 <span>This part shows which modules are actively used by school and which areas we need to focus to help schools.</span>
                                 <div class="steamline">
@@ -64,7 +65,8 @@
                                                                     ?>
                                                                     <th><?= $key ?></th>
 
-                                                                <?php }
+                                                                    <?php
+                                                                }
                                                             }
                                                             ?>
 
@@ -74,13 +76,13 @@
                                                     </thead>
                                                     <tbody>
                                                         <?php
-                                                        $i=0;
+                                                        $i = 0;
                                                         foreach ($contents as $content) {
                                                             $i++;
                                                             ?> 
 
                                                             <tr>
-                                                                <td><?=$i?></td>
+                                                                <td><?= $i ?></td>
                                                                 <?php
                                                                 foreach ($vars as $key => $value) {
                                                                     if (!in_array($key, $except)) {
@@ -88,24 +90,27 @@
                                                                         //special conditions
                                                                         if ($key == 'user_id') {
                                                                             $user = DB::table('users')->where('id', $content->{$key})->first();
-                                                                            echo '<td>'.$user->firstname . ' ' . $user->lastname.'</td>';
+                                                                            echo '<td>' . $user->firstname . ' ' . $user->lastname . '</td>';
                                                                         } else {
                                                                             ?> 
                                                                             <td><?= $content->{$key} ?></td>
 
 
 
-                                                                        <?php
+                                                                            <?php
                                                                         }
                                                                     }
                                                                 }
                                                                 ?>
-                                                                <td></td>
+                                                                <td>
+                                                                    <a class="btn btn-info btn-sm" onclick="edits(<?= $content->id ?>)" href="#model" class="btn btn-success" data-toggle="modal" data-target=".bs-example-modal-lg" class="model_img img-responsive" tag="{{$content->id}}">Edit</a>
+                                                                    <a class="btn btn-warning btn-sm" href="{{ url('general/deletep/'.$content->id) }}">Delete</a>
+                                                                </td>
                                                             </tr>
-                                                <?php } ?>
+                                                        <?php } ?>
                                                     </tbody>
                                                 </table>
-<?php } ?>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
@@ -139,26 +144,34 @@
                             ?>
                             <?php
                             foreach ($vars as $key => $value) {
+
+                                if ($key == 'id') {
+                                    ?>
+                                    <input type="hidden" class="form-control" id="edit_input" name="id" value="" >
+                                    <?php
+                                }
+                                if (in_array($key, ['id', 'created_at', 'updated_at'])) {
+                                    continue;
+                                }
                                 ?>
                                 <div class="form-group" id="client_id">
                                     <strong>  <?= $key ?></strong> 
-
-                                    <input type="text" class="form-control" id="get_schools" name="<?= $key ?>" value="<?= old($key) ?>" >
+                                    <input type="text" class="form-control" id="<?= $key ?>" name="<?= $key ?>" value="<?= old($key) ?>" >
 
                                 </div>
 
-                            <?php
+                                <?php
                             }
                         }
                         ?>
 
-
-
                     </div>
+                    <input type="hidden" name="edit" value="" id="edit_hidden"/>
+
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
                     </div>
-<?= csrf_field() ?>
+                    <?= csrf_field() ?>
                 </form>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger waves-effect text-left" data-dismiss="modal">Close</button>
@@ -171,9 +184,13 @@
     @endsection
     @section('footer')
     <!-- data-table js -->
-<?php $root = url('/') . '/public/' ?>
+    <?php $root = url('/') . '/public/' ?>
 
     <script type="text/javascript">
+        function edits(a) {
+            $('#edit_hidden').val('1');
+            $('#edit_input').val(a);
+        }
         allocate = function () {
             $('.allocate').change(function () {
                 var user_id = $('option:selected', this).attr('user_id');

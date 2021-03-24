@@ -31,20 +31,21 @@
                         <br>
                             <form class="form-horizontal" role="form" method="post"> 
                                     <div class="form-group row">
-                                        <div class="col-md-4 col-sm-6">
-                                            <input type="date" class="form-control calendar" id="from_date" name="from_date" value="<?= old('from_date',$from) ?>" >
+                                        <div class="col-md-5 col-sm-6">
+                                            <input type="date" class="form-control" id="from_date" name="from_date" value="<?= old('from_date',$from) ?>" >
                                         </div>
                                   
-                                        <div class="col-md-4 col-sm-6">
-                                            <input type="date" class="form-control calendar" id="to_date" name="to_date" value="<?= old('to_date',$to) ?>" >
+                                        <div class="col-md-5 col-sm-6">
+                                            <input type="date" class="form-control" id="to_date" name="to_date" value="<?= old('to_date',$to) ?>" >
                                         </div>
                                     
-                                        <div class="col-md-3 col-sm-2 col-xs-6">
+                                        <div class="col-md-2 col-sm-2 col-xs-6">
                                             <input type="submit" class="btn btn-success" value="Submit"  style="float: right;">
                                         </div>
                                     </div>
                                 <?= csrf_field() ?>
                             </form>
+                            </div>            
                         </div>            
                         <div class="card">
                             <div class="table-responsive dt-responsive "> 
@@ -125,7 +126,7 @@
                             </thead>
                             <tbody>
                                 <?php
-                                $sql = 'select sum(amount) as total,extract(month from date) as month from admin.invoices where extract(year from date)=' . date('Y', strtotime($to)) . ' group by month order by month';
+                                $sql = 'SELECT sum(a.amount) as total,extract(month from b.date) as month from admin.invoices b, admin.invoice_fees a where a.invoice_id=b.id AND extract(year from date)=' . date('Y', strtotime($to)) . ' group by month order by month';
                                 //dd($sql);
                                 $logs = DB::select($sql);
                                 foreach ($logs as $log) {
@@ -156,7 +157,7 @@
             type: 'column'
         },
         title: {
-            text: 'Expense Per Month in <?=date('Y', strtotime($to)) ?>'
+            text: 'Invoices Total Amount Per Month in <?=date('Y', strtotime($to)) ?>'
         },
         yAxis: {
             allowDecimals: false,

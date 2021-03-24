@@ -75,10 +75,8 @@
                 <div class="col-lg-6">
                     <p class="text-right" align="right">
                         <a class="btn btn-secondary btn-sm" href="#" data-toggle="modal" data-target="#large-Modal"> Edit </a>
- 
                         <a href="#" id="printInvoice" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Print </a>
 
-                        {{-- <a href="whatsapp://send?text=<?=$message?>" data-action="share/whatsapp/share">Share via Whatsapp</a>  --}}
                         <a href="whatsapp://send?text=<?=$message?>" data-action="share/whatsapp/share" title="Share via Whatsapp">
                             <img src="https://web.whatsapp.com/favicon-64x64.ico">
                         </a>
@@ -88,8 +86,6 @@
                            title="Share by Email">
                               <img src="http://png-2.findicons.com/files/icons/573/must_have/48/mail.png">
                         </a>
-
-                         {{-- <a  target="_break" href="<?= url('customer/shareinvoicewhatsapp/'.$invoice->id.'/invoice') ?>" class="btn btn-sm btn-success">View</a>  --}}
                     </p>
                 </div>
                 <div class="clearfix"></div>

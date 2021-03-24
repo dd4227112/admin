@@ -25,6 +25,7 @@ class Customer extends Controller {
     public function __construct() {
         $this->middleware('auth');
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -498,18 +499,18 @@ class Customer extends Controller {
         }
     }
 
-    public function addStandingOrder(){
-        if($_POST){
-               $file = request('standing_order_file');
-               $company_file_id = $this->saveFile($file, 'company/contracts');
-         
-                $data = [
+    public function addStandingOrder() {
+        if ($_POST) {
+            $file = request('standing_order_file');
+            $company_file_id = $this->saveFile($file, 'company/contracts');
+
+            $data = [
                 'client_id' => request('client_id'),
                 'branch_id' => request('branch_id'),
                 'company_file_id' => $company_file_id,
                 'school_contact_id' => request('school_contact_id'),
                 'user_id' => Auth::user()->id,
-                'occurrence' =>  request('number_of_occurrence'),
+                'occurrence' => request('number_of_occurrence'),
                 'basis' => request('which_basis'),
                 'total_amount' => request('total_amount'),
                 'occurance_amount' => request('occurance_amount'),
@@ -517,7 +518,7 @@ class Customer extends Controller {
             ];
             DB::table('standing_orders')->insert($data);
             return redirect()->back()->with('success', 'Data Recorded Successfully!');
-         }
+        }
     }
 
     public function activity() {
@@ -711,7 +712,7 @@ class Customer extends Controller {
         $id = request()->segment(4);
         if ($tab == 'show' && $id > 0) {
             $this->data['requirement'] = \App\Models\Requirement::where('id', $id)->first();
-            $this->data['next'] = \App\Models\Requirement::whereNotIn('id',[$id])->where('status', 'New')->first()->id;
+            $this->data['next'] = \App\Models\Requirement::whereNotIn('id', [$id])->where('status', 'New')->first()->id;
             return view('customer/view_requirement', $this->data);
         }
         $this->data['levels'] = [];
@@ -797,7 +798,6 @@ class Customer extends Controller {
         }
     }
 
-    
     public function calls() {
         $schema = request()->segment(3);
         $where = strlen($schema) > 3 ? ' where "schema_name"=\'' . $schema . '\' ' : '';
@@ -1174,6 +1174,36 @@ class Customer extends Controller {
             return response()->download('storage/app/' . $file_name, $file_name, $headers);
         }
         return $view;
+    }
+
+    public function whatsappIntegration() {
+
+        $this->data['whatsapp_requests'] = DB::table('whatsapp_integrations')->get();
+        return view('customer.message.whatsapp_requests', $this->data);
+    }
+
+    public function approveIntegration() {
+        $id = request()->segment(3);
+        if ($id == 'delete') {
+            //COMPLETELY bad design but implemented for quick start
+            DB::table('whatsapp_integrations')->where('id', request()->segment(4))->delete();
+            return redirect('customer/whatsappIntegration')->with('success', 'Succeess');
+        }
+        if ($_POST) {
+            $id = request('id');
+            $schema_name = request('schema_name');
+            $school = DB::table($schema_name . '.sms_keys')->where('api_secret', request('token'))->where('api_key', request('url'))->first();
+            empty($school) ? DB::table($schema_name . '.sms_keys')->insert([
+                                'api_secret' => request('token'),
+                                'api_key' => request('url'),
+                                'name' => 'whatsapp',
+                                'phone_number' => request('phone')
+                            ]) : '';
+            DB::table('whatsapp_integrations')->where('id', $id)->update(['approved' => 1]);
+            return redirect('customer/whatsappIntegration')->with('success', 'Succeess');
+        }
+        $this->data['request'] = DB::table('whatsapp_integrations')->where('id', $id)->first();
+        return view('customer.message.approve_integration', $this->data);
     }
 
 }

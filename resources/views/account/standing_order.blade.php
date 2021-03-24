@@ -256,21 +256,7 @@
 
 
 
-   rejectSI = function(id) {
-    var id = id;
-    var url_obj = "<?= url('Account/rejectStandingOrder') ?>";
-    $.ajax({
-        url: url_obj,
-        method: 'POST',
-        data: {
-            "id": id
-        },
-        success: function(data) {
-          //  alert(data);
-        }
-     });
-   }
-   $(document).ready(approveSI);
+
 
 
     </script>

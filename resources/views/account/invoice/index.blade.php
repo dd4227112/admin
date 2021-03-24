@@ -32,8 +32,16 @@
                     <!-- Zero config.table start -->
                     <div class="card">
                         <div class="card-header">
+                            <h5>Invoices</h5>
+                            <span></span>
+                            <div class="card-header-right">
+                                <i class="icofont icofont-rounded-down"></i>
+                                <i class="icofont icofont-refresh"></i>
+                            </div>
+                            <br/>
+                            <?php if(can_access('creating_invoice')) { ?>
                             <a href="<?= url('account/projection') ?>" class="btn btn-sm btn-primary">Create New Invoice</a>
-                            <a href="" style="float: right;"> List Of Invoices</a>
+                            <?php } ?>
                         </div>
                         <div class="col-md-12 col-xl-12">
                            

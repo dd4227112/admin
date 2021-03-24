@@ -57,6 +57,12 @@
                                             <input type="date" name="date" class="form-control"/>
                                         </div>
                                     </div>
+                                    <!-- <div class="form-group row col-lg-offset-6">
+                                        <label class="col-sm-4 col-form-label">End Date</label>
+                                        <div class="col-sm-4">
+                                            <input type="date" name="end_date" class="form-control"/>
+                                        </div>
+                                    </div> -->
                                     <div class="form-group row col-lg-offset-6">
                                         <label class="col-sm-4 col-form-label"></label>
                                         <div class="col-sm-4">

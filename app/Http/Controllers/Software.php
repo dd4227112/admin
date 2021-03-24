@@ -448,6 +448,16 @@ ORDER  BY conrelid::regclass::text, contype DESC";
             $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where "schema_name"=\'' . $schema . '\'');
             $returns = [];
             $background = new \App\Http\Controllers\Background();
+            
+            //Find All Payment on This Dates
+            $dates =  new \DatePeriod(
+                new \DateTime(request('start_date')),
+                new \DateInterval('P1D'),
+                new \DateTime(request('end_date'))
+            );
+            //To iterate
+          //  foreach ($dates as $key => $value) {
+          
             foreach ($invoices as $invoice) {
 
                 $token = $background->getToken($invoice);
@@ -462,11 +472,11 @@ ORDER  BY conrelid::regclass::text, contype DESC";
                     $curl = $background->curlServer($fields, $url);
                     array_push($returns, json_decode($curl));
                     //  json_decode($curl);
-                } else {
-                    echo 'invalid token';
-                    exit;
-                }
+                }else {
+                   return redirect()->back()->with('success', 'invalid token');
+               }
             }
+      //  }
             $this->data['returns'] = $returns;
         }
         return view('software.api.reconciliation', $this->data);
@@ -474,7 +484,7 @@ ORDER  BY conrelid::regclass::text, contype DESC";
 
     public function syncMissingPayments() {
         $background = new \App\Http\Controllers\Background();
-        $url = 'http://51.77.212.234:8081/api/init';
+        $url = 'http://51.91.251.252:8081/api/init';
         $fields = json_decode(urldecode(request('data')));
         $curl = $background->curlServer($fields, $url, 'row');
         return $curl;

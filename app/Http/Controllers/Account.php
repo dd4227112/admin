@@ -997,6 +997,7 @@ class Account extends Controller {
         return view('account.bank.index', $this->data);
     }
 
+<<<<<<< HEAD
 
     function reconciliation() {
         $this->data['payments'] = array();
@@ -1048,6 +1049,9 @@ class Account extends Controller {
     }
 
     public function group() {
+=======
+    public function groups() {
+>>>>>>> 5237a2111b667a75168b240a2b370f1200371190
         $this->data['id'] = null;
         $this->data['groups'] = \App\Models\AccountGroup::all();
         $this->data["category"] = \App\Models\FinancialCategory::all();
@@ -1601,11 +1605,24 @@ select * from tempb");
     }
 
     public function approveStandingOrder() { 
+<<<<<<< HEAD
         $standing_id = (request()->segment(3));
        // $standing_id = request('id');
         \App\Models\StandingOrder::where('id', $standing_id)->update(['status' => 1]);
        //  return redirect('account/transaction/create');
         return redirect()->back()->with('success', 'successfull!');
+=======
+        
+        $this->data['standing_id'] = $standing_id = request()->segment(3);
+        $standing = \App\Models\StandingOrder::where('id', $standing_id)->first();
+        $invoice = \App\Models\Invoice::where('client_id',$standing->client_id)->orderBy('id', 'DESC')->first();
+        \App\Models\StandingOrder::where('id', $standing_id)->update(['status' => 1]);
+        if(!empty($invoice)){
+            return redirect('account/payment/'.$invoice->id);
+        }else{
+            return redirect()->back()->with('success', 'No Invoice A');
+        }
+>>>>>>> 5237a2111b667a75168b240a2b370f1200371190
     }
 
 

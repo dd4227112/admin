@@ -52,7 +52,7 @@ class ImportExpense implements ToModel, WithHeadingRow
         $payment_type = \App\Models\PaymentType::where(DB::raw('lower(name)'), 'ilike', trim(strtolower($row['payment_method'])))->first();
 
         $array = array(
-            "date" => $row['date'],
+            "date" => date("Y-m-d", strtotime($row['date'])),
             "note" => $row['note'],
             "ref_no" => $row['transaction_id'],
             "payment_type_id" => $payment_type->id,
@@ -65,7 +65,7 @@ class ImportExpense implements ToModel, WithHeadingRow
             "expense" => $row['note'],
             "depreciation" => 0,
             'user_id' => Auth::user()->id,
-            "bank_account_id" => !empty($bank) ? $bank->id : '1',
+            "bank_account_id" => !empty($bank) ? $bank->id : '2',
             "amount" => $row['amount']
         );
 
