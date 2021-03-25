@@ -52,7 +52,6 @@ class Users extends Controller {
         $user = new User(array_merge($request->all(), ['password' => bcrypt(request('email')), 'created_by' => Auth::user()->id]));
         $user->save();
         $this->sendEmailAndSms($request);
-
         return redirect('users/index')->with('success', 'User ' . $request['firstname'] . ' created successfully');
     }
 

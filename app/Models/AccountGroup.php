@@ -3,14 +3,11 @@
 use Illuminate\Database\Eloquent\Model;
 
 class AccountGroup extends Model {
-
     /**
      * Generated
      */
-
     protected $table = 'account_groups';
     protected $fillable = ['id', 'name', 'note', 'financial_category_id'];
-
 
     public function financialCategory() {
         return $this->belongsTo(\App\Models\FinancialCategory::class, 'financial_category_id', 'id')->withDefault(['name'=>'Not Defined']);
@@ -19,6 +16,4 @@ class AccountGroup extends Model {
     public function referExpenses() {
         return $this->hasMany(\App\Models\ReferExpense::class, 'financial_category_id', 'id');
     }
-
-
 }

@@ -123,8 +123,6 @@ $bn_number = 888999;
 
                         <?php
                     } else {
-
-
                         echo'There is an issue in this receipt';
                     }
                     ?>
