@@ -577,7 +577,7 @@ group by ownership');
      * @param type $client_id
      */
     public function scheduleActivities($client_id) {
-        if(empty($client_id)){
+        if($client_id == ''){
             $client_id = request()->segment(3);
         }
         $time = 0;
