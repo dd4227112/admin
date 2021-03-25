@@ -512,7 +512,7 @@ group by ownership');
                 ]);
             }
             
-            if (request(standing_order)) {
+            if (request('standing_order')) {
                 $file = request()->file('standing_order');
                 $file_id = $this->saveFile($file, 'company/contracts');
                 //save contract
@@ -577,6 +577,9 @@ group by ownership');
      * @param type $client_id
      */
     public function scheduleActivities($client_id) {
+        if(empty($client_id)){
+            $client_id = request()->segment(3);
+        }
         $time = 0;
         $sections = \App\Models\TrainItem::orderBy('id', 'asc')->get();
         $start_date = date('Y-m-d H:i');

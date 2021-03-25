@@ -258,12 +258,14 @@ group by ownership');
 
         if ($_POST) {
 
-            $filename = '';
+            $file_id = null;
+            $attach_id = null;
             if (!empty(request('attached'))) {
-                $file = request()->file('attached');
-                $filename = time() . rand(11, 8894) . '.' . $file->guessExtension();
-                $filePath = base_path() . '/storage/uploads/images/';
-                $file->move($filePath, $filename);
+                $file_id = $this->saveFile(request('attached'), 'company/contracts');
+            }
+
+            if (!empty(request('image'))) {
+                $attach_id = $this->saveFile(request('image'), 'company/contracts');
             }
 
             $array = [
@@ -272,9 +274,11 @@ group by ownership');
                 'event_date' => request('event_date'),
                 'start_time' => request('start_time'),
                 'end_time' => request('end_time'),
+                'category' => request('category'),
                 'department_id' => request('department_id'),
                 'user_id' => Auth::user()->id,
-                'attach' => $filename
+                'file_id' => $file_id,
+                'attach_id' => $attach_id
             ];
             $minute = \App\Models\Events::create($array);
             return redirect('marketing/events')->with('success', request('title') . ' added successfully');
