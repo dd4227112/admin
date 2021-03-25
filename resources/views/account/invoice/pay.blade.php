@@ -137,6 +137,13 @@
                                                     <li class="nav-item">
                                                         <a href="#banking" data-toggle="tab" aria-expanded="false" class="nav-link"> Mobile Banking</a>
                                                     </li>
+                                                    <li class="nav-item">
+                                                        <a href="#paypal" data-toggle="tab" aria-expanded="false" class="nav-link"> Pay Pal</a>
+                                                    </li>
+
+                                                    <li class="nav-item">
+                                                        <a href="#card" data-toggle="tab" aria-expanded="false" class="nav-link"> Card </a>
+                                                    </li>
                                                 </ul>
                                                 <script>
 
@@ -291,10 +298,9 @@
 
                                                         <p></p>
                                                         <p>
-
                                                         </p>
-
                                                     </div>
+
                                                     <div id="banking" class="tab-pane col-lg-offset-1">
                                                         <br/>
                                                         <h2>Pay with mobile banking or download Masterpass Tanzania App</h2>
@@ -310,13 +316,46 @@
                                                             <li>Confirm Payments by entering 1 </li>
                                                             <li>Once you get SMS confirmation, click "Proceed" to continue </li>
                                                         </ol>
-
                                                         <p></p>
                                                         <p>
-
                                                         </p>
-
                                                     </div>
+
+                                                    <div id="paypal" class="tab-pane col-lg-offset-1">
+                                                        <br/>
+                                                        <h2>To send a payment with PayPal:</h2>
+ 
+                                                        <p></p>
+                                                        <ol>
+                                                            <li>Click Send and Request at the top of the page. </li>
+                                                            <li>Select the type of payment. </li>
+                                                            <li>Enter your recipient’s email address and the amount.</li>
+                                                            <li>Choose the payment type and click Continue.</li>
+                                                            <li>Review the details. You can change your funding source by clicking Change under “Payment method”.</li>
+                                                            <li>Click Continue.</li>
+                                                            <li>Review your payment and click Send Money.</li>
+                                                        </ol>
+                                                        <p></p>
+                                                        <p>
+                                                        </p>
+                                                    </div>
+
+                                                    <div id="card" class="tab-pane col-lg-offset-1">
+                                                        <br/>
+                                                        <h2>Pay with Debit/Credit card</h2>
+                                                        <p></p>
+                                                        <ol>
+                                                            <li>Once you are at the payment checkout, <br> you need to choose “Pay Using Debit/ Credit Card. </li>
+                                                            <li>Then, type the 16-digit Debit Card number which is on <br>the front side of your Debit Card.</li>
+                                                            <li>Enter the CCD, CVV, or similar security code</li>
+                                                            <li>Review the payment details</li>
+                                                            <li>Confirm the payment</li>
+                                                        </ol>
+                                                        <p></p>
+                                                        <p>
+                                                        </p>
+                                                    </div>
+
                                                 </div>
                                             </div>
 
@@ -324,11 +363,8 @@
 
                                         <div class="modal-footer">
                                             <a style="float:left"> For Help Call - <b>+255754406004</b></a>
-
-
                                             <a href="<?= url('/') ?>" class="btn btn-danger">Cancel </a>
                                             <a href="<?= url('epayment/i/' . $booking->id) ?>" class="btn btn-success" >Proceed </a>
-
                                         </div>
                                     </div>
 
@@ -346,9 +382,7 @@
                                         <div class="col-lg-4 col-xl-3 col-sm-6">
                                             <div class="badge-box">
                                                 <div class="sub-title">NMB Standing Order Instruction Form
-
                                                 </div>
-
                                                 <p>
                                                     Only bank signatory can sign this standing order form. For more than one signatory to approve, all signatory have to sign
                                                 </p>
@@ -358,9 +392,7 @@
                                         <div class="col-lg-4 col-xl-3 col-sm-6">
                                             <div class="badge-box">
                                                 <div class="sub-title">CRDB Standing Order Instruction Form
-
                                                 </div>
-
                                                 <p>
                                                    Only bank signatory can sign this standing order form. For more than one signatory to approve, all signatory have to sign
                                                 </p>

@@ -7,10 +7,8 @@ class ReferExpense extends Model {
     /**
      * Generated
      */
-
     protected $table = 'refer_expense';
     protected $fillable = ['id', 'name', 'financial_category_id', 'note', 'status', 'code', 'date', 'open_balance', 'account_group_id'];
-
 
     public function accountGroup() {
         return $this->belongsTo(\App\Models\AccountGroup::class, 'account_group_id', 'id')->withDefault(['name'=>'Not Defined']);
@@ -31,6 +29,4 @@ class ReferExpense extends Model {
     public function revenues() {
         return $this->hasMany(\App\Models\Revenue::class, 'refer_expense_id', 'id');
     }
-
-
 }

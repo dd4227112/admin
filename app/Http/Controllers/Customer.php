@@ -427,7 +427,6 @@ class Customer extends Controller {
         $school = $this->data['schema'] = request()->segment(3);
         $id = request()->segment(4);
         $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get();
-
         $is_client = 0;
         if ($school == 'school') {
             $id = request()->segment(4);
@@ -450,12 +449,14 @@ class Customer extends Controller {
 
         $this->data['is_client'] = $is_client;
 
+
         $year = \App\Models\AccountYear::where('name', date('Y'))->first();
         $this->data['invoices'] = \App\Models\Invoice::where('client_id', $client->id)->where('account_year_id', $year->id)->get();
 
         if ($_POST) {
 
             $data = array_merge(request()->except(['start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date')))]);
+         
             $task = \App\Models\Task::create($data);
             if ((int) request('to_user_id') > 0) {
                 DB::table('tasks_users')->insert([
@@ -527,10 +528,10 @@ class Customer extends Controller {
             $this->data['types'] = DB::table('task_types')->where('department', Auth::user()->department)->get();
             $this->data['departments'] = DB::table('departments')->get();
             if ($_POST) {
-
+               
                 $data = array_merge(request()->except(['to_user_id', 'start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date')))]);
-
-                $task = \App\Models\Task::create($data);
+               
+               // $task = \App\Models\Task::create($data);
                 $users = request('to_user_id');
                 if (!empty($users)) {
                     foreach ($users as $user_id) {
@@ -1012,10 +1013,72 @@ class Customer extends Controller {
 
     public function viewContract() {
         $contract_id = request()->segment(3);
-        $contract = \App\Models\Contract::find($contract_id);
-        $this->data['path'] = $contract->companyFile->path;
+        $type = request()->segment(4);
+        if($type == 'standing'){
+            $contract = \App\Models\StandingOrder::find($contract_id);
+            $this->data['path'] = $contract->companyFile->path;
+        }else{
+            $contract = \App\Models\Contract::find($contract_id);
+            $this->data['path'] = $contract->companyFile->path;
+        }
         return view('layouts.file_view', $this->data);
     }
+
+
+     // method to share receipt link
+    public function ShareReceiptWhatsApp() {
+        $id = request()->segment(3);
+        if ((int) $id > 0) {
+            $this->data['invoice'] = \App\Models\Invoice::find($id);
+            $this->data["payment_types"] = \App\Models\PaymentType::all();
+            $this->data['banks'] = \App\Models\BankAccount::all();
+            $this->data['revenue'] = \App\Models\Revenue::where('id', $id)->first();
+            return view('layouts.receipt_to_share', $this->data);
+        } else {
+            return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
+        }
+    }
+
+    // Share receipt by email
+    public function ShareReceiptEmail() {
+        $id = request()->segment(3);
+        if ((int) $id > 0) {
+            $this->data['invoice'] = \App\Models\Invoice::find($id);
+            $this->data["payment_types"] = \App\Models\PaymentType::all();
+            $this->data['banks'] = \App\Models\BankAccount::all();
+            $this->data['revenue'] = \App\Models\Revenue::where('id', $id)->first();
+            return view('layouts.receipt_to_share', $this->data);
+        } else {
+            return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
+        }
+    }
+
+     // method to share invoice link
+     public function ShareInvoiceWhatsApp() {
+        $invoice_id = request()->segment(3);
+        $set = $this->data['set'] = 1;
+        if ((int) $invoice_id > 0) {
+            $this->data['invoice'] = \App\Models\Invoice::find($invoice_id);
+            return view('layouts.invoice_to_share', $this->data);
+        }
+        else {
+            return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
+        }
+    }
+
+    public function ShareInvoiceEmail() {
+        $invoice_id = request()->segment(3);
+        $set = $this->data['set'] = 1;
+        if ((int) $invoice_id > 0) {
+            $this->data['invoice'] = \App\Models\Invoice::find($invoice_id);
+            return view('layouts.invoice_to_share', $this->data);
+        }
+        else {
+            return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
+        }
+
+    }
+
 
     public function deleteContract() {
         $contract_id = request()->segment(3);

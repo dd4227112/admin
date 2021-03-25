@@ -48,7 +48,7 @@
                                  <br/>
                                  <br/>
                         <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
-                            <div class='form-group row' >
+                            <div class='form-group row'>
                                 <label for="amount" class="col-sm-2 control-label">
                                     Due Amount
                                 </label>
@@ -72,57 +72,52 @@
                                 </span>
                             </div>
 
-<!--                            This part is added to assist in reporting, it needs to be removed in the future to enable proper arrangement of data and avoid duplicates-->
-<div class='form-group row' >
-                                                    <label for="expense" class="col-sm-2 control-label">
-                                                        <?= __("Fee Type") ?><span class="red">*</span>
-                                                    </label>
-                                                    <div class="col-sm-6">
-                                                        <?php
-                                                        $array = array('0' => __("select expense"));
-                                                        if (!empty($category)) {
-                                                            foreach ($category as $categ) {
-                                                                $array[$categ->id] = $categ->name;
-                                                            }
-                                                        }
-                                                        echo form_dropdown("refer_expense_id", $array, old("refer_expense_id"), "id='refer_expense_id' class='form-control'");
-                                                        ?>
-                                                        <?php if (!empty($category)) { ?>
-
-                                                        <?php } ?>
-                                                    </div>
-                                                    <!--<span class="col-sm-2 small"><a href="<?= url("expense/financial_category") ?>">Create New</a></span>-->
-                                                    <span class="col-sm-4 control-label">
-                                                        <?php echo form_error($errors, 'refer_expense_id'); ?>
-                                                    </span>
-                                                </div>
-
+<!--     This part is added to assist in reporting, it needs to be removed in the future to enable proper arrangement of data and avoid duplicates-->
                             <div class='form-group row' >
-                                <label for="payment_method" class="col-sm-2 control-label">
-                                   Payment Method
-                                </label>
+                                    <label for="expense" class="col-sm-2 control-label">
+                                        <?= __("Fee Type") ?><span class="red">*</span>
+                                    </label>
+                                    <div class="col-sm-6">
+                                        <?php
+                                        $array = array('0' => __("select expense"));
+                                        if (!empty($category)) {
+                                            foreach ($category as $categ) {
+                                                $array[$categ->id] = $categ->name;
+                                            }
+                                        }
+                                        echo form_dropdown("refer_expense_id", $array, old("refer_expense_id"), "id='refer_expense_id' class='form-control'");
+                                        ?>
+                                        <?php if (!empty($category)) { ?>
 
+                                        <?php } ?>
+                                    </div>
+                                    <!--<span class="col-sm-2 small"><a href="<?= url("expense/financial_category") ?>">Create New</a></span>-->
+                                    <span class="col-sm-4 control-label">
+                                        <?php echo form_error($errors, 'refer_expense_id'); ?>
+                                    </span>
+                                </div>
+
+                               <div class='form-group row' >
+                                  <label for="payment_method" class="col-sm-2 control-label">
+                                   Payment Method
+                                  </label>
                                 <div class="col-sm-6">
                                     <select class="form-control" required="true" name="payment_type" id="payment_type">
                                         <option value=" ">Select Payment type</option>
                                         <?php
                                         if (!empty($payment_types)) {
-
                                             foreach ($payment_types as $payment_type) {
-                                                ?>
-
+                                              ?>
                                                 <option value="<?= $payment_type->id ?>"><?= $payment_type->name ?></option>
-
-                                                <?php
+                                             <?php
                                             }
                                         }
-                                        ?></select>
-                                </div>
-                                <span class="col-sm-4 control-label">
-                                    <?php echo form_error($errors, 'payment_method'); ?>
-                                </span>
+                                    ?></select>
                             </div>
-
+                            <span class="col-sm-4 control-label">
+                                 <?php echo form_error($errors, 'payment_method'); ?>
+                            </span>
+                         </div>
 
 
                             <div id="cheque_number_div" style="display: none;">
@@ -135,12 +130,9 @@
                                 </div>
                                 <span class="col-sm-4 control-label">
                                     <?php echo form_error($errors, 'cheque_number'); ?>
-                                </span>
-                            </div>
-
-
-
-                    </div>
+                             </span>
+                        </div>
+                     </div>
 
                     <div id="date">
                        <div class='form-group row' >
@@ -165,14 +157,10 @@
                                 <option value=" ">Select Bank</option>
                                 <?php
                                 if (!empty($banks)) {
-
                                     foreach ($banks as $bank) {
-                                        ?>
-
+                                     ?>
                                         <option value="<?= $bank->id ?>"><?= $bank->name . ' (' . $bank->number . ')' ?></option>
-
-
-                                        <?php
+                                     <?php
                                     }
                                 }
                                 ?>
@@ -182,8 +170,8 @@
                         <span class="col-sm-4 control-label">
                             <?php echo form_error($errors, 'bank_name'); ?>
                         </span>
-                    </div></div>
-
+                    </div>
+                </div>
 
                 <div id="bank_transaction_id"  style="display: none;">
                   <div class='form-group row' >
@@ -224,12 +212,12 @@
             $enabled = ' ';
             ?>
             <input  <?= $enabled ?> type="submit" class="btn btn-success" value="<?= __("add_payment") ?>" >
-        </div>
-    </div>
+                  </div>
+              </div>
+                       <?= csrf_field() ?>
+                     </form>
 
 
-    <?= csrf_field() ?>
-</form>
                              </div>
                             <div class="tab-pane" id="profile3" role="tabpanel" aria-expanded="false">
                                 <div class="card-block">
@@ -270,12 +258,10 @@
                                     </div>
                                 </div>
                             </div>
-                             </div>
-
+                       </div>
 <!-- start: PAGE HEADER -->
 </div>
 </div>
-
 
 </div>
 

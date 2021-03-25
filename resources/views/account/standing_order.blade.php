@@ -92,10 +92,11 @@
                                                        @if(can_access('manage_finance'))
                                                    
                                                         <td>
-                                                          <a  target="_break" href="<?= url('account/invoiceView/' . $standing->id) ?>" class="btn btn-sm btn-success">View</a>
+                                                          <a  target="_break" href="<?= url('customer/viewContract/'.$standing->id.'/standing') ?>" class="btn btn-sm btn-success">View</a>
+
                                                           @if($standing->status == 0)
-                                                          <a href="<?= url('account/approveStandingOrder/' . $standing->id) ?>" class="btn btn-sm btn-success">Confirm</a>
-                                                          <a  onclick="rejectSI({{ $standing->id }})" class="btn btn-sm btn-danger">Reject</a>
+                                                          <a  href="<?= url('account/approveStandingOrder/'.$standing->id) ?>" class="btn btn-sm btn-success"> Confirm </a>
+                                                          <a href="<?= url('account/rejectStandingOrder/'.$standing->id) ?>" class="btn btn-sm btn-danger">Reject</a>
                                                           @else
                                                            <a  class="btn btn-sm btn-secondary">Approved</a>
                                                           @endif 
@@ -117,8 +118,9 @@
                                         <div id='calendar'></div>
                                         </p>
                                     </div>
-
                                 </div>
+
+                                
                             </div>
 
                         </div>
@@ -251,38 +253,10 @@
       }
    });
 
-  approveSI = function(id) {
-    var id = id;
-    var url_obj = "<?= url('Account/approveStandingOrder') ?>";
-    $.ajax({
-        url: url_obj,
-        method: 'POST',
-        data: {
-            "id": id
-        },
-        success: function(data) {
-          window.location.href = '<?= url('account/payment') ?>';
-        }
-     });
-   }
-   $(document).ready(approveSI);
 
 
-   rejectSI = function(id) {
-    var id = id;
-    var url_obj = "<?= url('Account/rejectStandingOrder') ?>";
-    $.ajax({
-        url: url_obj,
-        method: 'POST',
-        data: {
-            "id": id
-        },
-        success: function(data) {
-          //  alert(data);
-        }
-     });
-   }
-   $(document).ready(approveSI);
+
+
 
 
     </script>

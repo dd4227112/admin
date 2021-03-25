@@ -9,7 +9,7 @@ class Deduction extends Model {
      */
 
     protected $table = 'deductions';
-    protected $fillable = ['id', 'name', 'percent', 'amount', 'description', 'is_percentage', 'category', 'bank_account_id', 'account_number'];
+    protected $fillable = ['id', 'name', 'percent', 'amount', 'description', 'is_percentage', 'category', 'bank_account_id', 'account_number','predefined'];
 
 
     public function bankAccount() {

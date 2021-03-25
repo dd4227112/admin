@@ -837,3 +837,110 @@ CREATE INDEX fki_website_demo_requests_school_id_foreign
 
 
 
+////////////////////////////////////////
+//New
+
+
+ALTER TABLE admin.user_deductions
+    ADD CONSTRAINT user_deductions_loan_application_id_foreign FOREIGN KEY (loan_application_id)
+    REFERENCES admin.loan_applications (id)
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+CREATE INDEX fki_user_deductions_loan_application_id_foreign
+    ON admin.user_deductions(loan_application_id);
+
+
+ALTER TABLE admin.revenues
+    ADD COLUMN loan_application_id integer;
+    
+
+ALTER TABLE admin.revenues
+    ADD CONSTRAINT revenues_loan_application_id_foreign FOREIGN KEY (loan_application_id)
+    REFERENCES admin.loan_applications (id)
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+CREATE INDEX fki_revenues_loan_application_id_foreign
+    ON admin.revenues(loan_application_id);
+
+ALTER TABLE admin.clients
+    ADD COLUMN invoice_start_date date;
+
+ALTER TABLE admin.clients
+    ADD COLUMN invoice_end_date date;
+
+ALTER TABLE admin.invoices_sent
+    ADD COLUMN message text;
+
+ALTER TABLE admin.phone_number
+    ADD COLUMN message text;
+
+-- receipt_settings
+-- product_cart
+-- setting
+
+
+ CREATE VIEW admin.current_asset_transactions AS
+ SELECT d.amount,
+    d.id AS refer_expense_id,
+    d.predefined,
+    d.note,
+    d.date,
+    d.name,
+    d.code
+   FROM ( SELECT a.amount,
+            b.id,
+            b.predefined,
+            a.note,
+            a.date,
+            b.name,
+            b.code
+           FROM admin.current_assets a
+             JOIN admin.refer_expense b ON b.id = a.to_refer_expense_id) d
+UNION ALL
+ SELECT e.amount,
+    e.id AS refer_expense_id,
+    e.predefined,
+    e.note,
+    e.date,
+    e.name,
+    e.code
+   FROM ( SELECT
+                CASE
+                    WHEN a.from_refer_expense_id = b.id THEN 0::numeric - a.amount
+                    ELSE a.amount
+                END AS amount,
+            b.id,
+            b.predefined,
+            a.note,
+            a.date,
+            b.name,
+            b.code
+           FROM admin.current_assets a
+             JOIN admin.refer_expense b ON b.id = a.from_refer_expense_id) e;
+
+ -- due_amounts
+
+ ALTER TABLE admin.payments
+    ADD COLUMN payment_type_id integer;
+
+ALTER TABLE admin.payments
+    ADD CONSTRAINT payments_payment_type_foreign FOREIGN KEY (payment_type_id)
+    REFERENCES constant.payment_types (id)
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+CREATE INDEX fki_payments_payment_type_foreign
+    ON admin.payments(payment_type_id);
+
+
+CREATE TABLE constant.months
+(
+    id integer,
+    month_name text,
+    PRIMARY KEY (id)
+);
+
+ALTER TABLE constant.months
+    OWNER to postgres;
+
+ALTER TABLE constant.months
+    RENAME CONSTRAINT months_pkey TO months_id_primary;

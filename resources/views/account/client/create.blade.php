@@ -1,6 +1,6 @@
 @extends('layouts.app')
-
 @section('content')
+
 <div class="main-body">
     <div class="page-wrapper">
         <!-- Page-header start -->

@@ -78,13 +78,13 @@ class User extends Model {
     }
 
     public function usersSchools() {
-        return $this->hasMany(\App\Model\UsersSchool::class);
+        return $this->hasMany(\App\Models\UsersSchool::class);
     }
 
      public function tasks() {
         return $this->hasMany(\App\Models\Task::class);
     }
       public function role() {
-        return $this->belongsTo('App\Model\Role')->withDefault(['display_name' => 'unknown']);
+        return $this->belongsTo('App\Models\Role')->withDefault(['display_name' => 'unknown']);
     }
 }
