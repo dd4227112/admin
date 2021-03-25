@@ -375,7 +375,7 @@ function toast(message) {
                         </li>
                     </ul>
                     <!-- search -->
-                    <?php } ?>
+                  
                     <script>
                     search_inputs = function() {
                         $('#search_inputs').keyup(function() {
