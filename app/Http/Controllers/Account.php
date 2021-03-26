@@ -997,7 +997,6 @@ class Account extends Controller {
         return view('account.bank.index', $this->data);
     }
 
-<<<<<<< HEAD
 
     function reconciliation() {
         $this->data['payments'] = array();
@@ -1048,10 +1047,7 @@ class Account extends Controller {
         echo 'success';
     }
 
-    public function group() {
-=======
     public function groups() {
->>>>>>> 5237a2111b667a75168b240a2b370f1200371190
         $this->data['id'] = null;
         $this->data['groups'] = \App\Models\AccountGroup::all();
         $this->data["category"] = \App\Models\FinancialCategory::all();
@@ -1188,11 +1184,11 @@ class Account extends Controller {
                 $this->data['current_assets'] = DB::SELECT('SELECT * from admin. current_asset_transactions WHERE refer_expense_id=' . $id . ' and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . ' ');
             }
         } else if (preg_match('/EC-1001/', $refer_expense->code) && $id = 4 && (int) $refer_expense->predefined > 0) {
-            $sql = 'select sum(b.employer_amount) as amount ,payment_date as date,\'' . $refer_expense->name . '\' as note,\' ' . $refer_expense->name . '\' as name, \'Payroll\' as payment_method,null as "expenseID",extract(month from payment_date)||\'\'||extract(year from payment_date) as ref_no, 1 AS predefined, null as id  from admin.salaries a join admin.salary_pensions b on a.id=b.salary_id where b.pension_id=' . $refer_expense->predefined . '  group by a.payment_date UNION ALL (SELECT a.amount, a.date, a.note, b.name, a.payment_method, a."expenseID", a.ref_no, null as predefined, b.id FROM admin.expense a JOIN admin.refer_expense b ON a.refer_expense_id=b.id WHERE b.id=' . $refer_expense->id . ' ORDER BY a.date DESC)';
+            $sql = 'select sum(b.employer_amount) as amount ,payment_date as date,\'' . $refer_expense->name . '\' as note,\' ' . $refer_expense->name . '\' as name, \'Payroll\' as payment_method,null as "expenseID",extract(month from payment_date)||\'\'||extract(year from payment_date) as ref_no, 1 AS predefined, null as id  from admin.salaries a join admin.salary_pensions b on a.id=b.salary_id where b.pension_id=' . $refer_expense->predefined . '  group by a.payment_date UNION ALL (SELECT a.amount, a.date, a.note, b.name, a.payment_method, a."expenseID", a.ref_no, null as predefined, b.id FROM admin.expenses a JOIN admin.refer_expense b ON a.refer_expense_id=b.id WHERE b.id=' . $refer_expense->id . ' ORDER BY a.date DESC)';
             $this->data['expenses'] = DB::SELECT($sql);
         } else if (strtoupper($refer_expense->name) == 'DEPRECIATION') {
             $this->data['expenses'] = DB::select('select coalesce(sum(b.open_balance::numeric * b.depreciation*(\'' . $to_date . '\'::date-a.date::date)/365),0) as open_balance,sum(amount-amount* a.depreciation *(\'' . $to_date . '\'::date-a.date::date)/365) as total,sum(amount* a.depreciation*(\'' . $to_date . '\'::date-a.date::date)/365) as amount, refer_expense_id,a.date,a.note,a.recipient,b.name,a."expenseID",b.predefined from admin.expenses a join admin.refer_expense b  on b.id=a.refer_expense_id where b.financial_category_id=4 AND  a.date  <= \'' . $to_date . '\' group by a.refer_expense_id,b.open_balance,a.date,a.note,b.name,a."expenseID",b.predefined  ORDER BY a.date desc');
-            $this->data['depreciation'] = 1;
+             $this->data['depreciation'] = 1;
         } else {
             //$this->data['expenses'] = DB::SELECT('SELECT b.*,a.* FROM admin.expense a JOIN admin.refer_expense b ON a.refer_expense_id=b.id WHERE b.id=' . $id . ' and a."date" >= ' . "'$from_date'" . ' AND a."date" <= ' . "'$to_date'" . ' ');
             $this->data['expenses'] = \App\Models\ReferExpense::where('refer_expense.id', $id)->join('expenses', 'expenses.refer_expense_id', 'refer_expense.id')->select('payment_types.name as payment_method', 'expenses.recipient as recipient', 'expenses.date', 'expenses.amount', 'expenses.note', 'expenses.transaction_id', 'expenses.id', 'refer_expense.predefined')->leftJoin('payment_types', 'payment_types.id', 'expenses.payment_type_id')->where('expenses.date', '>=', $from_date)->where('expenses.date', '<=', $to_date)->get();
@@ -1605,13 +1601,6 @@ select * from tempb");
     }
 
     public function approveStandingOrder() { 
-<<<<<<< HEAD
-        $standing_id = (request()->segment(3));
-       // $standing_id = request('id');
-        \App\Models\StandingOrder::where('id', $standing_id)->update(['status' => 1]);
-       //  return redirect('account/transaction/create');
-        return redirect()->back()->with('success', 'successfull!');
-=======
         
         $this->data['standing_id'] = $standing_id = request()->segment(3);
         $standing = \App\Models\StandingOrder::where('id', $standing_id)->first();
@@ -1622,7 +1611,6 @@ select * from tempb");
         }else{
             return redirect()->back()->with('success', 'No Invoice A');
         }
->>>>>>> 5237a2111b667a75168b240a2b370f1200371190
     }
 
 
