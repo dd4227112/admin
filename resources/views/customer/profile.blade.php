@@ -1781,7 +1781,7 @@ return $echo;
                                             </div>
 
 
-
+                                        <?php /*
                                             <div class="row">
                                                 <div class="card table-responsive">
                                                     <table id="invoice_table"
@@ -1845,7 +1845,7 @@ return $echo;
                                                     </table>
                                                 </div>
                                             </div>
-
+                                       */ ?>
 
 
 
