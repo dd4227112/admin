@@ -512,8 +512,8 @@ return $echo;
                                                                             &nbsp; |
                                                                             <?php } } ?>
                                                                             <p>Start Date- <?= $task->start_date ?>
-                                                                                &nbsp; &nbsp; | &nbsp; &nbsp; End
-                                                                                Date - <?= $task->end_date ?></p>
+                                                                                {{-- &nbsp; &nbsp; | &nbsp; &nbsp; End
+                                                                                Date - $task->end_date ?></p> --}}
                                                                         </div>
 
                                                                         <div class="user-box">
