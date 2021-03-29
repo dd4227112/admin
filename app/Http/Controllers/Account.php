@@ -1614,7 +1614,6 @@ select * from tempb");
         $_id = (request()->segment(3));
         $standing = \App\Models\StandingOrder::where('id',$_id)->first();
         $email = \App\Models\Client::where('id',$standing->client_id)->first()->email;
-     //   dd($email);
         $this->sendSMSandEmail($email);
         return redirect()->back()->with('success', 'Msg sent');
     }

@@ -1802,6 +1802,7 @@ return $echo;
                                                         <tbody>
                                                   <?php $i = 1; ?>
                                                   <?php  $standingorders = \App\Models\StandingOrder::where('client_id',$client_id)->get(); ?>
+                                                  @if(count($standingorders))
                                                     @foreach ($standingorders as $key => $standing)
                                                     <tr>
                                                         <td><?= $i ?></td>
@@ -1830,6 +1831,7 @@ return $echo;
                                                     </tr>
                                                     <?php $i++; ?>
                                                     @endforeach
+                                                    @endif
                                                 </tbody>
                                                         <tfoot>
                                                             <tr>
