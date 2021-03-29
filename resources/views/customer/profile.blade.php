@@ -1585,10 +1585,10 @@ return $echo;
                                                                                     <select name="school_contact_id"  required
                                                                                         class="form-control select2">
                                                                                         <?php
-                                                                                        $school_id = \App\Models\ClientSchool::where('client_id', $client_id)->first()->school_id;
-                                                                                        
-                                                                                        $contact_staffs = DB::table('school_contacts')->where('school_id', 19610)->get();
-                                                                                        if (!empty($contact_staffs)) {
+                                                                                        $this_school = \App\Models\ClientSchool::where('client_id', $client_id)->first();
+                                                                                        if (!empty($this_school)){
+                                                                                        $contact_staffs = DB::table('school_contacts')->where('school_id', $this_school->school_id)->get();
+                                                                                        if (count($contact_staffs)) {
                                                                                             foreach ($contact_staffs as $contact_staff) {?>
                                                                                         <option
                                                                                             value="<?= $contact_staff->id ?>">
@@ -1597,6 +1597,7 @@ return $echo;
                                                                                         <?php
                                                                                             }
                                                                                         }
+                                                                                    }
                                                                                         ?>
 
                                                                                     </select>
@@ -1751,8 +1752,7 @@ return $echo;
                                                                                 href="#" data-toggle="modal"
                                                                                 data-target="#large-Modal"
                                                                                 onclick="$('#invoice_id').val('<?=$invoice->id?>')"><span
-                                                                                    class="point-marker bg-warning"></span>Send
-                                                                                Invoice</a>
+                                                                                    class="point-marker bg-warning"></span>Send Invoice</a>
                                                                             <?php }  ?>
                                                                             <?php if((int) $paid >0){ ?>
                                                                             <a class="dropdown-item waves-light waves-effect"
