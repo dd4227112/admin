@@ -997,61 +997,7 @@ class Account extends Controller {
         return view('account.bank.index', $this->data);
     }
 
-<<<<<<< HEAD
-
-    function reconciliation() {
-        $this->data['payments'] = array();
-        $this->data['set'] = '';
-        $this->data['banks'] = \App\Models\BankAccount::all();
-        if ($_POST) {
-            $to = date('Y-m-d', strtotime(request("to")));
-            $from = date('Y-m-d', strtotime(request("from")));
-            $this->data['bank_id'] = $bank_account_id = request('bank_account_id');
-            if (request('method') == 'received') {
-                $table = 'total_revenues';
-            } else if (request('method') == 'expense') {
-                $table = 'total_expenses';
-            } else {
-                $table = 'all_transactions';
-            }
-            $this->data['table'] = $table;
-            $payments = DB::table($table)->whereDate('date', '>=', $from)->whereDate('date', '<=', $to);
-            $this->data['bank_info'] = (int) $bank_account_id == 0 ? 'All' : \App\Models\BankAccount::find($bank_account_id);
-            $this->data['payments'] = (int) $bank_account_id == 0 ?
-                    $payments->get() :
-                    $payments->where('bank_account_id', request('bank_account_id'))->get();
-        }
-        return view('payment.reconciliation', $this->data);
-    }
-
-
-    function reconcile() {
-        $payment_id = request('id');
-        $type = request('type');
-        $table = request('table');
-        if ($table == 'total_expenses') {
-            $payment = \App\Models\Expense::find($payment_id);
-            !empty($payment) ? $payment->update(['reconciled' => 1]) : '';
-        } else {
-            $payment = $type == 1 ? \App\Models\Payment::find($payment_id) : \App\Models\Revenue::find($payment_id);
-            !empty($payment) ? $payment->update(['reconciled' => 1]) : '';
-        }
-        echo 'success';
-    }
-
-    function unreconcile() {
-        $payment_id = request('id');
-        $type = request('type');
-        $payment = $type == 1 ? \App\Models\Payment::find($payment_id) : \App\Models\Revenue::find($payment_id);
-        $payment->reconciled = 0;
-        $payment->save();
-        echo 'success';
-    }
-
-    public function group() {
-=======
     public function groups() {
->>>>>>> 5237a2111b667a75168b240a2b370f1200371190
         $this->data['id'] = null;
         $this->data['groups'] = \App\Models\AccountGroup::all();
         $this->data["category"] = \App\Models\FinancialCategory::all();
@@ -1605,24 +1551,11 @@ select * from tempb");
     }
 
     public function approveStandingOrder() { 
-<<<<<<< HEAD
         $standing_id = (request()->segment(3));
        // $standing_id = request('id');
         \App\Models\StandingOrder::where('id', $standing_id)->update(['status' => 1]);
        //  return redirect('account/transaction/create');
         return redirect()->back()->with('success', 'successfull!');
-=======
-        
-        $this->data['standing_id'] = $standing_id = request()->segment(3);
-        $standing = \App\Models\StandingOrder::where('id', $standing_id)->first();
-        $invoice = \App\Models\Invoice::where('client_id',$standing->client_id)->orderBy('id', 'DESC')->first();
-        \App\Models\StandingOrder::where('id', $standing_id)->update(['status' => 1]);
-        if(!empty($invoice)){
-            return redirect('account/payment/'.$invoice->id);
-        }else{
-            return redirect()->back()->with('success', 'No Invoice A');
-        }
->>>>>>> 5237a2111b667a75168b240a2b370f1200371190
     }
 
 
