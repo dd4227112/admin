@@ -44,7 +44,6 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                             <div class="col-lg-12 col-xl-12">
                                 <!-- <h6 class="sub-title">Tab With Icon</h6> -->
                                 <div class="sub-title">Manage Invoices</div>                                        
-                                <!-- Nav tabs 
                                 <ul class="nav nav-tabs md-tabs " role="tablist">
 
                                     <li class="nav-item">
@@ -63,7 +62,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                 </ul>
                               
                                 <div class="tab-content card-block">
-                                    <div class="tab-pane " id="home7" role="tabpanel">
+                                    {{-- <div class="tab-pane " id="home7" role="tabpanel">
                                         <div class="card-header">
                                             <h5>Revenue Projections</h5>
                                             <span>This part shows list of customers and expected amount to be collected per each customer. These information are loaded from Google Sheet </span>
@@ -72,8 +71,8 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                         <div class="card-block"  style="height: 35em">
                                             <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTUgl5FL_1xQswE7AahA4eoZ3jlDD4_wzSZxo4xo4iDot83kAG17NsqmYF522vvQ6hPSC1hVs5Pum6Z/pubhtml?widget=true&amp;headers=false" height='100%' width="100%"></iframe>
                                         </div>
-                                    </div>
-                                    <div class="tab-pane active" id="profile7" role="tabpanel"> -->
+                                    </div> --}}
+                                    <div class="tab-pane active" id="profile7" role="tabpanel">
                                         <div class="card-block">
                                             <input type="checkbox" <?=(int) request('skip')==1 ?'checked':''?> id="skip_field" onmousedown="skip_field()"/> Hide Inputs Fields
                                             <div class="table-responsive dt-responsive">
@@ -165,7 +164,6 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                             </div>
                                         </div>
                                     </div>
- <?php /*
                                     <div class="tab-pane" id="home7" role="tabpanel">
                                     <div class="card-header">
                                             <h5>Current Sent School Invoices</h5>
@@ -221,7 +219,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                         </div>
                                     </div>                                   
                                 </div>
-                            </div> */ ?>
+                            </div> 
                         </div>
                         <!-- Row end -->
                     </div>
