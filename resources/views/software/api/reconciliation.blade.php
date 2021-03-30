@@ -94,7 +94,6 @@
                                         if (isset($returns) && !empty($returns)) {
                                             foreach ($returns as $return) {
 
-                                                if($return->descriptio != 'Invalid Date Format'){
                                                 $data = $return->transactions;
                                                 if (!empty($data)) {
                                                     $trans = (object) $data;
@@ -126,7 +125,6 @@
                                                     }
                                                 }
                                             }
-                                        }
                                         }
                                         ?>
                                     </tbody>
