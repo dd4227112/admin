@@ -456,14 +456,15 @@ ORDER  BY conrelid::regclass::text, contype DESC";
                 new \DateTime(request('end_date'))
             );
             //To iterate
-          //  foreach ($dates as $key => $value) {
-          
+           foreach ($dates as $key => $value) {
+
             foreach ($invoices as $invoice) {
 
                 $token = $background->getToken($invoice);
                 if (strlen($token) > 4) {
                     $fields = array(
-                        "reconcile_date" => date('d-m-Y', strtotime(request('date'))),
+                      //  "reconcile_date" => date('d-m-Y', strtotime(request('date'))),
+                        "reconcile_date" => $value->format('Y-m-d'),
                         "token" => $token
                     );
                     $push_status = 'reconcilliation';
@@ -472,11 +473,9 @@ ORDER  BY conrelid::regclass::text, contype DESC";
                     $curl = $background->curlServer($fields, $url);
                     array_push($returns, json_decode($curl));
                     //  json_decode($curl);
-                }else {
-                   return redirect()->back()->with('success', 'invalid token');
-               }
+                } //else { return redirect()->back()->with('success', 'invalid token'); }
             }
-      //  }
+       }
             $this->data['returns'] = $returns;
         }
         return view('software.api.reconciliation', $this->data);
