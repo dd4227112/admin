@@ -1483,6 +1483,66 @@ return $echo;
                                                                         ]
                                                                     }]
                                                                 });
+
+                                                                Highcharts.chart('container_log', {
+                                                                    chart: {
+                                                                        type: 'column'
+                                                                    },
+                                                                    title: {
+                                                                        text: "Number of System User Login by Day."
+                                                                    },
+                                                                    subtitle: {
+                                                                        text: ''
+                                                                    },
+                                                                    xAxis: {
+                                                                        type: 'category'
+                                                                    },
+                                                                    yAxis: {
+                                                                        title: {
+                                                                            text: 'Number of Logins'
+                                                                        }
+
+                                                                    },
+                                                                    legend: {
+                                                                        enabled: false
+                                                                    },
+                                                                    plotOptions: {
+                                                                        series: {
+                                                                            borderWidth: 0,
+                                                                            dataLabels: {
+                                                                                enabled: true,
+                                                                                format: '{point.y:.1f}'
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    tooltip: {
+                                                                        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                                                                        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> of total<br/>'
+                                                                    },
+                                                                    series: [{
+                                                                        name: 'Number of Logins',
+                                                                        colorByPoint: true,
+                                                                        data: [
+                                                                            <?php
+                                                                            $setting = "'setting'";
+                                                                        $logins = DB::select('select count(user_id), created_at::date as month from '.$schema.'.login_locations where user_id is not null AND  "table" != '.$setting.' and extract(year from created_at) = ' . date('Y') . '  group by created_at::date order by created_at::date desc limit 10');
+                                                                        if (!empty($logins)) {
+                                                                        foreach ($logins as $log) {
+                                                                           // $dateObj = DateTime::createFromFormat('!m', $log->month);
+                                                                           // $month = $dateObj->format('F');
+                                                                            ?> {
+                                                                                name: '<?=$log->month."<br><b>".date("l", strtotime($log->month))."</b>" ?>',
+                                                                                y: <?php echo $log->count; ?>,
+                                                                            drilldown: ''
+                                                                            },
+                                                                    <?php
+                                                                        }
+                                                                        }
+                                                                        ?>
+                                                                        ]
+                                                                    }]
+                                                                });
+
                                                             }
                                                             $(document).ready(graph_disc);
                                                             </script>
@@ -1492,6 +1552,9 @@ return $echo;
                                                                 style="min-width: 70%;  height: 480px; margin: 0 auto">
                                                             </div>
                                                         </div>
+                                                    </div>
+                                                    
+                                                    <div id="container_log" style="min-width: 80%;  height: 480px; margin: 0 auto">
                                                     </div>
                                                 </div>
                                                 <!-- Gallery end -->
