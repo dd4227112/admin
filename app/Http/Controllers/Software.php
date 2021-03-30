@@ -464,7 +464,7 @@ ORDER  BY conrelid::regclass::text, contype DESC";
                 if (strlen($token) > 4) {
                     $fields = array(
                       //  "reconcile_date" => date('d-m-Y', strtotime(request('date'))),
-                        "reconcile_date" => $value->format('Y-m-d'),
+                        "reconcile_date" => $value->format('d-m-Y'),
                         "token" => $token
                     );
                     $push_status = 'reconcilliation';
