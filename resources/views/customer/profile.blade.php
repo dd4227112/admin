@@ -1408,15 +1408,10 @@ return $echo;
                                             </div>
                                             <div class="card">
                                                 <!-- Row start -->
-                                                <div class="row">
-                                                    <!-- Gallery start -->
-                                                    <div class="card-block">
-                                                        <div class="card">
-                                                            <div class="title_left">
-                                                                <br />
-                                                                <h3>System usage by month</h3>
-                                                                <br />
-                                                            </div>
+                                                <br>
+                                                <br>                                                
+                                                    <div id="container_log" style="min-width: 80%;  height: 480px; margin: 0 auto">
+                                                    </div>
                                                             <script src="https://code.highcharts.com/highcharts.js">
                                                             </script>
                                                             <script
@@ -1547,19 +1542,13 @@ return $echo;
                                                             $(document).ready(graph_disc);
                                                             </script>
 
-
+                                                            <hr>
                                                             <div id="container"
                                                                 style="min-width: 70%;  height: 480px; margin: 0 auto">
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    
-                                                    <div id="container_log" style="min-width: 80%;  height: 480px; margin: 0 auto">
-                                                    </div>
-                                                </div>
-                                                <!-- Gallery end -->
-                                            </div>
-                                        </div>
+                                                
                                         <!-- Photos tab end -->
                                         <!-- Friends tab start -->
                                         <div class="tab-pane" id="friends" aria-expanded="false">
