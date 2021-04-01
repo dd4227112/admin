@@ -433,7 +433,7 @@ class Message extends Controller {
 
         foreach ($default_deadlines as $school) {
             $payment = DB::table('accounts.payments')->where('student_id', $school->student_id)->orderBy('id', 'desc')->first();
-            if (count($payment) == 0) {
+            if (empty($payment)) {
                 continue;
             }
             $now = date('Y-m-d'); // or your date as well
