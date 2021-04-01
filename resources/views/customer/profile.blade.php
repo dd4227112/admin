@@ -512,8 +512,8 @@ return $echo;
                                                                             &nbsp; |
                                                                             <?php } } ?>
                                                                             <p>Start Date- <?= $task->start_date ?>
-                                                                                &nbsp; &nbsp; | &nbsp; &nbsp; End
-                                                                                Date - <?= $task->end_date ?></p>
+                                                                                {{-- &nbsp; &nbsp; | &nbsp; &nbsp; End
+                                                                                Date - $task->end_date ?></p> --}}
                                                                         </div>
 
                                                                         <div class="user-box">
@@ -1408,15 +1408,10 @@ return $echo;
                                             </div>
                                             <div class="card">
                                                 <!-- Row start -->
-                                                <div class="row">
-                                                    <!-- Gallery start -->
-                                                    <div class="card-block">
-                                                        <div class="card">
-                                                            <div class="title_left">
-                                                                <br />
-                                                                <h3>System usage by month</h3>
-                                                                <br />
-                                                            </div>
+                                                <br>
+                                                <br>                                                
+                                                    <div id="container_log" style="min-width: 80%;  height: 480px; margin: 0 auto">
+                                                    </div>
                                                             <script src="https://code.highcharts.com/highcharts.js">
                                                             </script>
                                                             <script
@@ -1483,20 +1478,77 @@ return $echo;
                                                                         ]
                                                                     }]
                                                                 });
+
+                                                                Highcharts.chart('container_log', {
+                                                                    chart: {
+                                                                        type: 'column'
+                                                                    },
+                                                                    title: {
+                                                                        text: "Number of System User Login by Day."
+                                                                    },
+                                                                    subtitle: {
+                                                                        text: ''
+                                                                    },
+                                                                    xAxis: {
+                                                                        type: 'category'
+                                                                    },
+                                                                    yAxis: {
+                                                                        title: {
+                                                                            text: 'Number of Logins'
+                                                                        }
+
+                                                                    },
+                                                                    legend: {
+                                                                        enabled: false
+                                                                    },
+                                                                    plotOptions: {
+                                                                        series: {
+                                                                            borderWidth: 0,
+                                                                            dataLabels: {
+                                                                                enabled: true,
+                                                                                format: '{point.y:.1f}'
+                                                                            }
+                                                                        }
+                                                                    },
+                                                                    tooltip: {
+                                                                        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                                                                        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> of total<br/>'
+                                                                    },
+                                                                    series: [{
+                                                                        name: 'Number of Logins',
+                                                                        colorByPoint: true,
+                                                                        data: [
+                                                                            <?php
+                                                                            $setting = "'setting'";
+                                                                        $logins = DB::select('select count(user_id), created_at::date as month from '.$schema.'.login_locations where user_id is not null AND  "table" != '.$setting.' and extract(year from created_at) = ' . date('Y') . '  group by created_at::date order by created_at::date desc limit 10');
+                                                                        if (!empty($logins)) {
+                                                                        foreach ($logins as $log) {
+                                                                           // $dateObj = DateTime::createFromFormat('!m', $log->month);
+                                                                           // $month = $dateObj->format('F');
+                                                                            ?> {
+                                                                                name: '<?=$log->month."<br><b>".date("l", strtotime($log->month))."</b>" ?>',
+                                                                                y: <?php echo $log->count; ?>,
+                                                                            drilldown: ''
+                                                                            },
+                                                                    <?php
+                                                                        }
+                                                                        }
+                                                                        ?>
+                                                                        ]
+                                                                    }]
+                                                                });
+
                                                             }
                                                             $(document).ready(graph_disc);
                                                             </script>
 
-
+                                                            <hr>
                                                             <div id="container"
                                                                 style="min-width: 70%;  height: 480px; margin: 0 auto">
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <!-- Gallery end -->
-                                            </div>
-                                        </div>
+                                                
                                         <!-- Photos tab end -->
                                         <!-- Friends tab start -->
                                         <div class="tab-pane" id="friends" aria-expanded="false">
@@ -1585,10 +1637,10 @@ return $echo;
                                                                                     <select name="school_contact_id"  required
                                                                                         class="form-control select2">
                                                                                         <?php
-                                                                                        $school_id = \App\Models\ClientSchool::where('client_id', $client_id)->first()->school_id;
-                                                                                        
-                                                                                        $contact_staffs = DB::table('school_contacts')->where('school_id', 19610)->get();
-                                                                                        if (!empty($contact_staffs)) {
+                                                                                        $this_school = \App\Models\ClientSchool::where('client_id', $client_id)->first();
+                                                                                        if (!empty($this_school)){
+                                                                                        $contact_staffs = DB::table('school_contacts')->where('school_id', $this_school->school_id)->get();
+                                                                                        if (count($contact_staffs)) {
                                                                                             foreach ($contact_staffs as $contact_staff) {?>
                                                                                         <option
                                                                                             value="<?= $contact_staff->id ?>">
@@ -1597,6 +1649,7 @@ return $echo;
                                                                                         <?php
                                                                                             }
                                                                                         }
+                                                                                    }
                                                                                         ?>
 
                                                                                     </select>
@@ -1751,8 +1804,7 @@ return $echo;
                                                                                 href="#" data-toggle="modal"
                                                                                 data-target="#large-Modal"
                                                                                 onclick="$('#invoice_id').val('<?=$invoice->id?>')"><span
-                                                                                    class="point-marker bg-warning"></span>Send
-                                                                                Invoice</a>
+                                                                                    class="point-marker bg-warning"></span>Send Invoice</a>
                                                                             <?php }  ?>
                                                                             <?php if((int) $paid >0){ ?>
                                                                             <a class="dropdown-item waves-light waves-effect"
@@ -1781,7 +1833,7 @@ return $echo;
                                             </div>
 
 
-
+                                        <?php /*
                                             <div class="row">
                                                 <div class="card table-responsive">
                                                     <table id="invoice_table"
@@ -1802,6 +1854,7 @@ return $echo;
                                                         <tbody>
                                                   <?php $i = 1; ?>
                                                   <?php  $standingorders = \App\Models\StandingOrder::where('client_id',$client_id)->get(); ?>
+                                                  @if(count($standingorders))
                                                     @foreach ($standingorders as $key => $standing)
                                                     <tr>
                                                         <td><?= $i ?></td>
@@ -1830,6 +1883,7 @@ return $echo;
                                                     </tr>
                                                     <?php $i++; ?>
                                                     @endforeach
+                                                    @endif
                                                 </tbody>
                                                         <tfoot>
                                                             <tr>
@@ -1843,7 +1897,7 @@ return $echo;
                                                     </table>
                                                 </div>
                                             </div>
-
+                                       */ ?>
 
 
 
