@@ -720,197 +720,72 @@ function toast(message) {
                                 </ul>
                             </li>
                         <?php } ?>
-                        <?php if (can_access('manage_finance')) { ?>
+
+
+                        <?php if (can_access('manage_users')) { ?>
                             <li class="nav-item">
                                 <a href="#!">
-                                    <i class="ti-crown"></i>
-                                    <span data-i18n="nav.advance-components.main">Accounts & Finance</span>
+                                    <i class="ti-gift "></i>
+                                    <span data-i18n="nav.extra-components.main">User permissions</span>
                                 </a>
                                 <ul class="tree-1">
-                                    <!-- <li><a href="<?= url('account/projection') ?>" data-i18n="nav.advance-components.draggable">Projections</a></li> -->
-                                    <li><a href="<?= url('account/invoice') ?>" data-i18n="nav.advance-components.grid-stack">Invoice</a></li>
-                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Transactions</a>
-                                        <ul class="tree-2">
-                                            <a href="<?= url('account/revenue') ?>"><i class="fa icon-account"></i> Revenue</a>
-                                            <a href="<?= url('account/transaction/4') ?>"><i class="fa icon-expense"></i> Expense</a>
-                                            <a href="<?= url('account/transaction/1') ?>"><i class="fa icon-account"></i> Fixed assets</a>
-                                            <a href="<?= url('account/transaction/5') ?>"><i class="fa icon-account"></i> Current assets</a>
-                                            <a href="<?= url('account/transaction/2') ?>"><i class="fa icon-account"></i> liabilities</a>
-                                            <a href="<?= url('account/transaction/3') ?>"><i class="fa icon-account"></i> capital</a>
-                                            <a href="<?= url('account/reconciliation') ?>"><i class="fa icon-account"></i> Reconciliation</a>
-
-                        <li><a href="<?= url('Account/budget') ?>"
-                            data-i18n="nav.advance-components.grid-stack">
-                              Budget 
-                        </a>
-                       </li>
-
-                        <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main">
-                                Transactions</a>
-                            <ul class="tree-2">
-                            
-                                <?php  if(can_access('view_revenue')) { ?>
-                                <a href="<?= url('account/revenue') ?>"> <i class="fa icon-account"></i> Revenue</a>
-                                <?php }  ?>
-                                <a href="<?= url('account/transaction/4') ?>"><i class="fa icon-expense"></i>
-                                    Expense</a>
-                                <a href="<?= url('account/transaction/1') ?>"><i class="fa icon-account"></i> Fixed
-                                    assets</a>
-                                <a href="<?= url('account/transaction/5') ?>"><i class="fa icon-account"></i> Current
-                                    assets</a>
-                                <a href="<?= url('account/transaction/2') ?>"><i class="fa icon-account"></i>
-                                    liabilities</a>
-                                <a href="<?= url('account/transaction/3') ?>"><i class="fa icon-account"></i>
-                                    capital</a>
-                                <a href="<?= url('account/reconciliation') ?>"><i class="fa icon-account"></i>
-                                    Reconciliation</a>
-                            </ul>
-                        </li>
-                        <li class="nav-sub-item">
-                            <a href="#" data-i18n="nav.page_layout.horizontal.main">
-                                Payroll
-                                <span class="fa fa-chevron-down"></span></a>
-                            <ul class="tree-2">
-
-                                <a href="<?= url('payroll/taxes') ?>"><i
-                                        class="fa fa-clipboard"></i><span>TAX</span></a>
-                                <a href="<?= url('payroll/pension') ?>"><i class="fa fa-clipboard"></i><span>Pension
-                                        Fund</span></a>
-                                <a href="<?= url('allowance/index') ?>"><i
-                                        class="fa fa-clipboard"></i><span>Allowances</span></a>
-                                <a href="<?= url('deduction/index') ?>"><i
-                                        class="fa fa-clipboard"></i><span>Deductions</span></a>
-                                <li class="nav-sub-item-3">
-                                    <a>
-                                        Loans
-                                        <span class="fa fa-chevron-down"></span></a>
-                                    <ul class="tree-3">
-
-                                        <a href="<?= url('loan/type') ?>"><i class="fa fa-clipboard"></i><span
-                                                style="color: white; line-height: 25px;"> Loan Types</span></a>
-
-                                        <a href="<?= url('loan/index') ?>"><i class="fa fa-clipboard"></i><span
-                                                style="color: white; line-height: 25px;"> Borrowers </span></a>
-
-                                        </ul>
-                                    </li>
-                                    <li class="nav-sub-item">
-                                        <a href="#" data-i18n="nav.page_layout.horizontal.main">
-                                            Payroll
-                                            <span class="fa fa-chevron-down"></span></a>
-                                        <ul class="tree-2">
-
-                                            <a href="<?= url('payroll/taxes') ?>"><i class="fa fa-clipboard"></i><span>TAX</span></a>
-                                            <a href="<?= url('payroll/pension') ?>"><i class="fa fa-clipboard"></i><span>Pension Fund</span></a>
-                                            <a href="<?= url('payroll/allowanceIndex') ?>"><i class="fa fa-clipboard"></i><span>Allowances</span></a>
-                                            <a href="<?= url('payroll/deductionIndex') ?>"><i class="fa fa-clipboard"></i><span>Deductions</span></a>
-                                            <li class="nav-sub-item-3">
-                                                <a>
-                                                    Loans
-                                                    <span class="fa fa-chevron-down"></span></a>
-                                                <ul class="tree-3">
-
-                                                    <a href="<?= url('payroll/loanType') ?>"><i class="fa fa-clipboard"></i><span style="color: white; line-height: 25px;"> Loan Types</span></a>
-
-                                                    <a href="<?= url('payroll/loanIndex') ?>"><i class="fa fa-clipboard"></i><span style="color: white; line-height: 25px;"> Borrowers </span></a>
-
-                                                </ul>
-                                            </li>
-
-
-                                            <a href="<?= url('payroll/index') ?>"><i class="fa fa-clipboard"></i><span>Salary</span></a>
-
-                                        </ul>
-                                    </li>
-                                    <li><a href="<?= url('account/report') ?>" data-i18n="nav.advance-components.light-box">Reports</a></li>
-                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Settings</a>
-                                        <ul class="tree-2">
-                                            <a href="<?= url('account/client') ?>"><i class="fa icon-account"></i>  Clients</a>
-                                            <a href="<?= url('account/bank') ?>"><i class="fa icon-account"></i> Banking</a>
-                                            <a href="<?= url('account/groups') ?>"><i class="fa icon-account"></i> Account Groups</a>
-                                            <a href="<?= url('account/chart') ?>"><i class="fa icon-account"></i> Charts of Accounts</a>
-                                            <a href="<?= url('account/project') ?>"><i class="fa icon-account"></i> Company Projects</a>
-
-                                        </ul>
-                                    </li>
+                                    <li><a href="<?= url('Role/userPermission') ?>"
+                                     data-i18n="nav.extra-components.session-timeout">User permission</a></li>
                                 </ul>
                             </li>
-                        <?php } ?>
-                        <?php if (can_access('manage_expenses')) { ?>
-                            <!--                            <li class="nav-item single-item has-class">
-                                                            <a href="<?= url('account/transaction/4') ?>">
-                                                                <i class="ti-view-grid"></i>
-                                                                <span data-i18n="nav.widget.main"> Expenses</span>
-                                                                <label class="label label-danger menu-caption">+</label>
-                                                            </a>
-                                                        </li>-->
-
-                <?php } ?>
-
-                <?php if (can_access('manage_users')) { ?>
-                <li class="nav-item">
-                    <a href="#!">
-                        <i class="ti-gift "></i>
-                        <span data-i18n="nav.extra-components.main">Human Resources</span>
-                    </a>
-                    <ul class="tree-1">
-                        <li><a href="<?= url('users/index') ?>"
-                                data-i18n="nav.extra-components.session-timeout">Users</a></li>
-                        <li><a href="<?= url('users/kpi_list') ?>"
-                            data-i18n="nav.extra-components.session-timeout">KPI</a></li>
-                        <li><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">Meeting
-                                Minutes</a></li>
-                        <li><a href="<?= url('attendance/index') ?>"
-                                data-i18n="nav.extra-components.session-timeout">Attendance</a></li>
-                        <li><a href="<?= url('Partner/partners') ?>"
-                                data-i18n="nav.extra-components.session-idle-timeout">Partners</a></li>
-                        <li><a href="<?= url('users/applicant') ?>"
-                                data-i18n="nav.extra-components.session-idle-timeout">Applicants</a>
-                        </li>
-                        <li><a href="<?= url('users/template') ?>" data-i18n="nav.extra-components.offline">Forms &
-                                Templates</a></li>
-                    </ul>
-                </li>
-                <?php } ?>
+                            <?php } ?>
 
 
-                <?php if (can_access('manage_users')) { ?>
-                <li class="nav-item">
-                    <a href="#!">
-                        <i class="ti-gift "></i>
-                        <span data-i18n="nav.extra-components.main">User permissions</span>
-                    </a>
-                    <ul class="tree-1">
-                        <li><a href="<?= url('Role/userPermission') ?>"
-                                data-i18n="nav.extra-components.session-timeout">User permission</a></li>
+                            <?php if (can_access('manage_users')) { ?>
+                                <li class="nav-item">
+                                    <a href="#!">
+                                        <i class="ti-gift "></i>
+                                        <span data-i18n="nav.extra-components.main">Human Resources</span>
+                                    </a>
+                                    <ul class="tree-1">
+                                        <li><a href="<?= url('users/index') ?>"
+                                                data-i18n="nav.extra-components.session-timeout">Users</a></li>
+                                        <li><a href="<?= url('users/kpi_list') ?>"
+                                            data-i18n="nav.extra-components.session-timeout">KPI</a></li>
+                                        <li><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">Meeting
+                                                Minutes</a></li>
+                                        <li><a href="<?= url('attendance/index') ?>"
+                                                data-i18n="nav.extra-components.session-timeout">Attendance</a></li>
+                                        <li><a href="<?= url('Partner/partners') ?>"
+                                                data-i18n="nav.extra-components.session-idle-timeout">Partners</a></li>
+                                        <li><a href="<?= url('users/applicant') ?>"
+                                                data-i18n="nav.extra-components.session-idle-timeout">Applicants</a>
+                                        </li>
+                                        <li><a href="<?= url('users/template') ?>" data-i18n="nav.extra-components.offline">Forms &
+                                                Templates</a></li>
+                                    </ul>
+                                </li>
+                                <?php } ?>
 
-                    </ul>
-                </li>
-                <?php }
+                                <?php  if (can_access('manage_users') && !in_array(Auth::user()->department, [9, 10]) || in_array(Auth::user()->role_id, array(14, 8, 2, 3, 9, 20))) {
+                                    ?>
+                                   <li class="nav-item">
+                                               <a href="#!">
+                                                   <i class="ti-layers "></i>
+                                                   <span data-i18n="nav.extra-components.main">My Schools</span>
+                                               </a>
+                                               <ul class="tree-1">
+                                                   <li><a href="<?= url('Analyse/myschools') ?>" data-i18n="nav.extra-components.session-timeout"> List of Schools</a></li>
+                                                   <li><a href="<?= url('Analyse/myreport') ?>" data-i18n="nav.extra-components.offline">Task Report</a></li>
+                                                   <li><a href="<?= url('sales/schoolVisit/1') ?>" data-i18n="nav.extra-components.session-timeout">School Visitation</a></li>
+                                                   <!-- <li><a href="<?= url('software/banksetup') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Bank Setup</a></li> -->
+                                               </ul>
+                                           </li>
+                                           <?php } ?>
 
-                  if (can_access('manage_users') && !in_array(Auth::user()->department, [9, 10]) || in_array(Auth::user()->role_id, array(14, 8, 2, 3, 9, 20))) {
-                     ?>
+                                <?php if (in_array(Auth::user()->role_id, array(14, 8, 9, 2))) { ?>
+                                    <li class="nav-item"><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline"> <i class="ti-book "> </i> Meeting Minutes</a></li>
+                                <?php } ?>
 
-                            <li class="nav-item">
-                                <a href="#!">
-                                    <i class="ti-layers "></i>
-                                    <span data-i18n="nav.extra-components.main">My Schools</span>
-                                </a>
-                                <ul class="tree-1">
-                                    <li><a href="<?= url('Analyse/myschools') ?>" data-i18n="nav.extra-components.session-timeout"> List of Schools</a></li>
-                                    <li><a href="<?= url('Analyse/myreport') ?>" data-i18n="nav.extra-components.offline">Task Report</a></li>
-                                    <li><a href="<?= url('sales/schoolVisit/1') ?>" data-i18n="nav.extra-components.session-timeout">School Visitation</a></li>
-                                    <!-- <li><a href="<?= url('software/banksetup') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Bank Setup</a></li> -->
-                                </ul>
-                            </li>
-                            <?php
-                        }
-                        ?>
 
-                        <?php if (in_array(Auth::user()->role_id, array(14, 8, 9, 2))) { ?>
-                            <li class="nav-item"><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline"> <i class="ti-book "> </i> Meeting Minutes</a></li>
-                        <?php } ?>
 
+
+                                
                         <?php if ((int) Auth::user()->role_id == 7) { ?>
                             <li class="nav-item">
                                 <a href="#!">
@@ -981,6 +856,90 @@ function toast(message) {
                                 </ul>
                             </li>
                         <?php } ?>
+
+                        
+
+
+                        <?php if (can_access('manage_finance')) { ?>
+                            <li class="nav-item">
+                                <a href="#!">
+                                    <i class="ti-crown"></i>
+                                    <span data-i18n="nav.advance-components.main">Accounts & Finance</span>
+                                </a>
+                                <ul class="tree-1">
+                                    <!-- <li><a href="<?= url('account/projection') ?>" data-i18n="nav.advance-components.draggable">Projections</a></li> -->
+                                    <li><a href="<?= url('account/invoice') ?>" data-i18n="nav.advance-components.grid-stack">Invoice</a></li>
+                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Transactions</a>
+                                        <ul class="tree-2">
+                                            <a href="<?= url('account/revenue') ?>"><i class="fa icon-account"></i> Revenue</a>
+                                            <a href="<?= url('account/transaction/4') ?>"><i class="fa icon-expense"></i> Expense</a>
+                                            <a href="<?= url('account/transaction/1') ?>"><i class="fa icon-account"></i> Fixed assets</a>
+                                            <a href="<?= url('account/transaction/5') ?>"><i class="fa icon-account"></i> Current assets</a>
+                                            <a href="<?= url('account/transaction/2') ?>"><i class="fa icon-account"></i> liabilities</a>
+                                            <a href="<?= url('account/transaction/3') ?>"><i class="fa icon-account"></i> capital</a>
+                                            <a href="<?= url('account/reconciliation') ?>"><i class="fa icon-account"></i> Reconciliation</a>
+                                        </ul>
+                                    </li>
+                        <li><a href="<?= url('Account/budget') ?>"
+                            data-i18n="nav.advance-components.grid-stack">
+                              Budget 
+                        </a>
+                       </li>
+
+                
+                        <li class="nav-sub-item">
+                            <a href="#" data-i18n="nav.page_layout.horizontal.main">
+                                Payroll
+                                <span class="fa fa-chevron-down"></span></a>
+                            <ul class="tree-2">
+                                <a href="<?= url('payroll/taxes') ?>"><i
+                                        class="fa fa-clipboard"></i><span>TAX</span></a>
+                                <a href="<?= url('payroll/pension') ?>"><i class="fa fa-clipboard"></i><span>Pension
+                                        Fund</span></a>
+                                <a href="<?= url('allowance/index') ?>"><i
+                                        class="fa fa-clipboard"></i><span>Allowances</span></a>
+                                <a href="<?= url('deduction/index') ?>"><i
+                                        class="fa fa-clipboard"></i><span>Deductions</span></a>
+                                <li class="nav-sub-item-3">
+                                    <a>
+                                        Loans
+                                        <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="tree-3">
+
+                                        <a href="<?= url('loan/type') ?>"><i class="fa fa-clipboard"></i><span
+                                                style="color: white; line-height: 25px;"> Loan Types</span></a>
+
+                                        <a href="<?= url('loan/index') ?>"><i class="fa fa-clipboard"></i><span
+                                                style="color: white; line-height: 25px;"> Borrowers </span></a>
+                                        </ul>
+                                    </li>
+               
+                                    <li><a href="<?= url('account/report') ?>" data-i18n="nav.advance-components.light-box">Reports</a></li>
+                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Settings</a>
+                                        <ul class="tree-2">
+                                            <a href="<?= url('account/client') ?>"><i class="fa icon-account"></i>  Clients</a>
+                                            <a href="<?= url('account/bank') ?>"><i class="fa icon-account"></i> Banking</a>
+                                            <a href="<?= url('account/groups') ?>"><i class="fa icon-account"></i> Account Groups</a>
+                                            <a href="<?= url('account/chart') ?>"><i class="fa icon-account"></i> Charts of Accounts</a>
+                                            <a href="<?= url('account/project') ?>"><i class="fa icon-account"></i> Company Projects</a>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        <?php } ?>
+
+
+                        <?php if (can_access('manage_expenses')) { ?>
+                             {{-- <li class="nav-item single-item has-class">
+                                    <a href="<?= url('account/transaction/4') ?>">
+                                        <i class="ti-view-grid"></i>
+                                        <span data-i18n="nav.widget.main"> Expenses</span>
+                                        <label class="label label-danger menu-caption">+</label>
+                                            </a>
+                                        </li> --}}
+                            <?php } ?>
+
+
 
                     <?php } ?>
                     <?php /* if (preg_match('/localhost/', url()->current()) && can_access('manage_software')) { ?>

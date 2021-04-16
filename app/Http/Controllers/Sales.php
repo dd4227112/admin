@@ -39,12 +39,12 @@ class Sales extends Controller {
      * @return \Illuminate\Http\Response
      */
 
-    // public function index() {
-    //    $this->data['faqs'] = [];
-    //     return view('sales.index',$this->data);
-    // }
+    public function index() {
+     //  $this->data['faqs'] = [];
+        return view('sales.index');
+    }
 
-    function faq() {
+    public function faq() {
         if ((int) request('id') > 0 && request('action') == 'delete') {
             DB::table('faq')->where('id', request('id'))->delete();
         }
@@ -359,10 +359,10 @@ class Sales extends Controller {
         if ((int) $id == 0) {
             return false;
         }
-        $this->data['school'] = \App\Models\School::find($id);
+        $this->data['school'] = \App\Models\School::findOrFail($id);
         if ($_POST) {
             if ((int) request('add_sale') == 1) {
-                \App\Models\School::find(request('client_id'))->update(request()->all());
+                \App\Models\School::findOrFail(request('client_id'))->update(request()->all());
                 return redirect()->back()->with('success', 'School record updated successfully');
             } else if ((int) request('add_user') == 1) {
                 \App\Models\SchoolContact::create([
@@ -394,7 +394,7 @@ class Sales extends Controller {
 
     public function updateStudent() {
         $id = request('school_id');
-        \App\Models\School::find($id)->update(['students' => request('no')]);
+        \App\Models\School::findOrFail($id)->update(['students' => request('no')]);
         echo 'success';
     }
 
@@ -625,7 +625,7 @@ class Sales extends Controller {
 
             $end_date = date('Y-m-d H:i', strtotime("+{$section->time} minutes", strtotime($start_date)));
 
-            $slot = \App\Models\Slot::find(request('slot_id' . $section->id));
+            $slot = \App\Models\Slot::findOrFail(request('slot_id' . $section->id));
             if(empty($slot)){
                 $slot = \App\Models\Slot::first();
             }
@@ -674,7 +674,7 @@ class Sales extends Controller {
      * 3. if user does have a time, then fix that initial time there
      * 4. check the specific task has been allocated how many minutes to be accomplished
      * 5. add that minutes to the time specified and fix end datetime
-     * 6. if you find occupied time slot in between, add that time slot in between to extend time for end datetime
+     * 6. if you findOrFail occupied time slot in between, add that time slot in between to extend time for end datetime
      * 7. return both, start datetime and end datetime respectively
      */
     public function taskStartTime($start_date, $timeframe, $iterate = false) {
