@@ -1,6 +1,6 @@
 @extends('layouts.app')
-
 @section('content')
+
 <?php $root = url('/') . '/public/' ?>
 <div class="main-body">
     <div class="page-wrapper">
@@ -96,7 +96,7 @@
                         <div class="card-header d-flex justify-content-between">
                             <h5 class="card-header-text">Roles</h5>
                             <h5 class="card-header-text">
-                                <?php if(!can_access('add_role')){?>
+                                <?php if(can_access('add_role')){?>
                                 <button class="btn btn-primary btn-sm" data-toggle="modal" role="button"
                                     data-target="#status-Modal"> Add role <i class="ti-user"></i></button>
                                 <?php }?>

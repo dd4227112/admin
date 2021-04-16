@@ -88,6 +88,7 @@
                                                     <tr>
                                                         <th>No.</th>
                                                         <th>Task type</th>
+                                                        <th>Priority</th>
                                                         <th>School</th>
                                                         <th style="width: 250px;">Activity</th>
                                                         <th>Status</th>
@@ -100,6 +101,7 @@
                                                     <tr>
                                                         <th>No</th>
                                                         <th>Task type</th>
+                                                        <th>Priority</th>
                                                         <th>School</th>
                                                         <th style="width: 250px;">Activity</th>
                                                         <th>Status</th>
@@ -292,6 +294,9 @@
                             "data": ""
                         },
                         {
+                            "data": "priority"
+                        },
+                        {
                             "data": "school_name"
                         },
                         {
@@ -308,16 +313,35 @@
                             "render": function(data, type, row, meta) {
                                 return '<a href="<?= url('customer/activity/show/') ?>/' + row.id + '"> ' + row.task_name + '  </a>';
                              }
-                         },
+                           },
+                        //    {
+                        //     "targets":2,
+                        //     "data": null,
+                        //     "render": function(data, type, row, meta) {
+                        //         var status;
+                        //         var message;
+                        //         if (row.priority == '1') {
+                        //             status = 'success';
+                        //             message = 'High';
+                        //         } else if (row.priority == '2') {
+                        //             status = 'warning';
+                        //             message = 'Medium';
+                        //         } else {
+                        //             status = 'info';
+                        //             message = 'Less';
+                        //         }
+                        //         return '<div class="dropdown-secondary dropdown f-right"><button class="btn btn-' + status + ' btn-mini dropdown-toggle waves-effect waves-light"  type="button" id="dropdown6' + row.id + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + message + '</button><div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_status(\'on progress\',' + row.id + ')"><span class="point-marker bg-danger"></span>On progress</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_status(\'complete\',' + row.id + ')"><span class="point-marker bg-warning"></span>Complete</a><a class="dropdown-item waves-light waves-effect" href="#!" onmousedown="change_status(\'new\',' + row.id + ')"><span class="point-marker bg-warning"></span>New</a></div> <span class="f-left m-r-5 text-inverse" style="display:none">Priority : ' + row.priority + '</span></div>';
+                        //     }
+                        //    },
                          {
-                            "targets":3,
+                            "targets":4,
                             "data": null,
                             "render": function(data, type, row, meta) {
                                 return '<div style="white-space:normal; "> ' + row.activity + '  </div>';
                              }
                          },
                         {
-                            "targets": 4,
+                            "targets": 5,
                             "data": null,
                             "render": function(data, type, row, meta) {
                                 var status;
