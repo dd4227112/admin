@@ -217,6 +217,10 @@
                                                         <th>Invoice Prefix</th>
                                                         <th> <?= $integrated->invoice_prefix ?></th>
                                                     </tr>
+                                                     <tr>
+                                                        <th>Payment Type </th>
+                                                        <th> <?= $integrated->payment_type ?></th>
+                                                    </tr>
                                                 <?php } } ?>
                                             </tbody>
                                         </table>

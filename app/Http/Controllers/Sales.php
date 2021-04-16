@@ -594,6 +594,9 @@ class Sales extends Controller {
      * @param type $client_id
      */
     public function scheduleActivities($client_id) {
+        if((int)$client_id == 0){
+            $client_id = request()->segment(3);
+        }
         $time = 0;
         $sections = \App\Models\TrainItem::orderBy('id', 'asc')->get();
         $start_date = date('Y-m-d H:i');

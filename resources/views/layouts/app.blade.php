@@ -1,17 +1,12 @@
 <?php $root = url('/') . '/public/' ?>
 
+
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 
     <head>
         <title>ShuleSoft Admin Panel</title>
-        <!-- HTML5 Shim and Respond.js IE9 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
-          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-          <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-          <![endif]-->
-        <!-- Meta -->
+     
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
@@ -349,28 +344,84 @@ function toast(message) {
                                         <span>{{ Auth::user()->name() }}</span>
                                         <i class="ti-angle-down"></i>
                                     </a>
-                                </li>
 
-                                <li>
-                                    <a href="email-inbox.html">
-                                        <i class="ti-email"></i> My Messages
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="auth-lock-screen.html">
-                                        <i class="ti-lock"></i> Lock Screen
-                                    </a>
-                                </li>
-                                <?php } ?>
-                                <li><a href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                           document.getElementById('logout-form').submit();"><i
-                                            class="ti-layout-sidebar-left"></i> Logout</a></li>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                    style="display: none;">
-                                    {{ csrf_field() }}
-                                </form>
+                                    <ul class="show-notification profile-notification">
+                                        <li>
+                                            <a href="<?= url('users/show/' . Auth::user()->id) ?>">
+                                                <i class="ti-user"></i> Profile
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="<?= url('users/password/') ?>">
+                                                <i class="ti-settings"></i> Change Password
+                                            </a>
+                                        </li>
+                                        <?php if (false) { ?>
+                                            <li>
+                                                <a href="#!">
+                                                    <i class="ti-settings"></i> Settings
+                                                </a>
+                                            </li>
 
+                                            <li>
+                                                <a href="email-inbox.html">
+                                                    <i class="ti-email"></i> My Messages
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="auth-lock-screen.html">
+                                                    <i class="ti-lock"></i> Lock Screen
+                                                </a>
+                                            </li>
+                                        <?php } ?>
+                                        <li><a href="{{ route('logout') }}"
+                                               onclick="event.preventDefault();
+                                                           document.getElementById('logout-form').submit();"><i class="ti-layout-sidebar-left"></i> Logout</a></li>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                            {{ csrf_field() }}
+                                        </form>
+
+                                    </ul>
+
+                                </li>
                             </ul>
+                            <!-- search -->
+                        <?php } ?>
+                        <script>
+                            search_inputs = function () {
+                                $('#search_inputs').keyup(function () {
+                                    var val = $(this).val();
+//                                    if(val.lenght >1){
+                                    $.ajax({
+                                        type: "post",
+                                        url: "<?= url('analyse/search') ?>",
+                                        data: "q=" + val,
+                                        dataType: 'JSON',
+                                        success: function (data) {
+                                            console.log(data);
+                                            $('#search_people').html(data.people);
+                                            $('#search_schools').html(data.schools);
+                                            $('#search_activities').html(data.activities);
+                                        }
+                                    });
+//                                    }else{
+//                                     $('#search_people').html('');
+//                                     $('#search_schools').html('');
+//                                     $('#search_activities').html('');
+//                                    }
+                                })
+                            }
+                            $(document).ready(search_inputs);
+                        </script>
+                        <div id="morphsearch" class="morphsearch">
+                            <form class="morphsearch-form">
+                                <input class="morphsearch-input" id="search_inputs" type="search" placeholder="Search..." />
+                                <button class="morphsearch-submit" type="submit">Search</button>
+                            </form>
+                            <div class="morphsearch-content">
+                                <div class="dummy-column">
+                                    <h2>Invoices</h2>
+                                    <span id="search_people"></span>
 
                         </li>
                     </ul>
@@ -609,110 +660,84 @@ function toast(message) {
                                     <span data-i18n="nav.extra-components.main"> List of Schools</span>
                                 </a>
                             </li> -->
-                <li><a href="<?= url('customer/requirements') ?>" data-i18n="nav.page_layout.bottom-menu">Customer
-                        Requirements</a></li>
-                <?php } ?>
+                            <li><a href="<?= url('customer/requirements') ?>" data-i18n="nav.page_layout.bottom-menu">Customer Requirements</a></li>
+                        <?php } ?>
 
-                <?php if (can_access('manage_marketing') || Auth::user()->id == 33) { ?>
-                <li class="nav-item">
-                    <a href="#!">
-                        <i class="ti-bell "></i>
-                        <span data-i18n="nav.extra-components.main">Marketing</span>
-                    </a>
-                    <ul class="tree-1">
-                        <li><a href="<?= url('Marketing/socialMedia') ?>"
-                                data-i18n="nav.extra-components.session-timeout">Social Media</a></li>
-                        <li><a href="<?= url('Marketing/school') ?>" data-i18n="nav.navigate.navbar">Schools Status</a>
-                        </li>
-                        <li><a href="<?= url('Marketing/Events') ?>"
-                                data-i18n="nav.extra-components.session-idle-timeout">Events</a></li>
-                        <li><a href="<?= url('Marketing/moduleUsage') ?>"
-                                data-i18n="nav.extra-components.session-idle-timeout">Module Usage</a></li>
-                        <li><a href="<?= url('Marketing/systemUser') ?>"
-                                data-i18n="nav.extra-components.session-idle-timeout">System Users</a></li>
-                        <li><a href="<?= url('Marketing/Communication') ?>"
-                                data-i18n="nav.extra-components.session-idle-timeout">Communication</a></li>
-                    </ul>
-                </li>
-                <?php } ?>
-                <?php if (can_access('manage_software')) { ?>
-                <li class="nav-item">
-                    <a href="#!">
-                        <i class="ti-layout-grid2-alt"></i>
-                        <span data-i18n="nav.basic-components.main">Software Development</span>
-                    </a>
-                    <ul class="tree-1">
-                        <li><a href="<?= url('software/template') ?>" data-i18n="nav.basic-components.alert">Templates &
-                                Policies</a></li>
-                        <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Database</a>
-                            <ul class="tree-2" style="display: none;">
-                                <li><a href="<?= url('software/compareTable') ?>"
-                                        data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Tables</a></li>
-                                <li><a href="<?= url('software/compareColumn') ?>"
-                                        data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Columns</a></li>
-                                <li><a href="<?= url('software/constrains') ?>"
-                                        data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Constrains</a></li>
-                                <li><a href="<?= url('software/backup') ?>"
-                                        data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Backup</a></li>
-                                <li><a href="<?= url('software/analysis') ?>"
-                                        data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Reports</a></li>
-                                <li><a href="<?= url('software/upgrade') ?>"
-                                        data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Create Script</a></li>
+                        <?php if (can_access('manage_marketing') || Auth::user()->id == 33) { ?>
+                            <li class="nav-item">
+                                <a href="#!">
+                                    <i class="ti-bell "></i>
+                                    <span data-i18n="nav.extra-components.main">Marketing</span>
+                                </a>
+                                <ul class="tree-1">
+                                    <li><a href="<?= url('Marketing/socialMedia') ?>" data-i18n="nav.extra-components.session-timeout">Social Media</a></li>
+                                    <li><a href="<?= url('Marketing/school') ?>" data-i18n="nav.navigate.navbar">Schools Status</a></li>
+                                    <li><a href="<?= url('Marketing/Events') ?>" data-i18n="nav.extra-components.session-idle-timeout">Events</a></li>
+                                    <li><a href="<?= url('Marketing/moduleUsage') ?>" data-i18n="nav.extra-components.session-idle-timeout">Module Usage</a></li>
+                                    <li><a href="<?= url('Marketing/systemUser') ?>" data-i18n="nav.extra-components.session-idle-timeout">System Users</a></li>
+                                    <li><a href="<?= url('Marketing/Communication') ?>" data-i18n="nav.extra-components.session-idle-timeout">Communication</a></li>
+                                </ul>
+                            </li>
+                        <?php } ?>
+                        <?php if (can_access('manage_software')) { ?>
+                            <li class="nav-item">
+                                <a href="#!">
+                                    <i class="ti-layout-grid2-alt"></i>
+                                    <span data-i18n="nav.basic-components.main">Software Development</span>
+                                </a>
+                                <ul class="tree-1">
+                                    <li><a href="<?= url('software/template') ?>" data-i18n="nav.basic-components.alert">Templates & Policies</a></li>
+                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Database</a>
+                                        <ul class="tree-2" style="display: none;">
+                                            <li><a href="<?= url('software/compareTable') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Tables</a></li>
+                                            <li><a href="<?= url('software/compareColumn') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Columns</a></li>
+                                            <li><a href="<?= url('software/constrains') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Constrains</a></li>
+                                            <li><a href="<?= url('software/backup') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Backup</a></li>
+                                            <li><a href="<?= url('software/analysis') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Reports</a></li>
+                                            <li><a href="<?= url('software/upgrade') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Create Script</a></li>
 
-                            </ul>
-                        </li>
+                                        </ul>
+                                    </li>
 
-                        <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Payment
-                                Integration</a>
-                            <ul class="tree-2" style="display: none;">
-                                <li><a href="<?= url('software/banksetup') ?>"
-                                        data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Bank Setup</a></li>
+                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Payment Integration</a>
+                                        <ul class="tree-2" style="display: none;">
+                                            <li><a href="<?= url('software/banksetup') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Bank Setup</a></li>
 
 
-                                <li><a href="<?= url('software/invoice/live') ?>"
-                                        data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Live Invoices</a></li>
-                                <li><a href="<?= url('software/invoice/uat') ?>"
-                                        data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Testing Invoices</a>
-                                </li>
-                                <li><a href="<?= url('software/api') ?>"
-                                        data-i18n="nav.menu-levels.menu-level-22.menu-level-31">API Requests</a></li>
+                                            <li><a href="<?= url('software/invoice/live') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Live Invoices</a></li>
+                                            <li><a href="<?= url('software/invoice/uat') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Testing Invoices</a></li>
+                                            <li><a href="<?= url('software/api') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">API Requests</a></li>
 
-                                <li><a href="<?= url('software/reconciliation') ?>"
-                                        data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Reconciliation</a></li>
-                            </ul>
-                        </li>
+                                            <li><a href="<?= url('software/reconciliation') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Reconciliation</a></li>
+                                        </ul>
+                                    </li>
 
-                        <li><a href="<?= url('software/server') ?>" data-i18n="nav.basic-components.button">Server
-                                Administration</a></li>
-                        <li><a href="<?= url('software/logs') ?>" data-i18n="nav.basic-components.box-shadow">Error
-                                Logs</a></li>
-                        <li><a href="<?= url('software/CustomerRequirement') ?>"
-                                data-i18n="nav.basic-components.button">Customer Requirement</a></li>
-                        <li><a href="<?= url('software/pmp') ?>"
-                                data-i18n="nav.basic-components.collapse–accordion">Project Management</a></li>
+                                    <li><a href="<?= url('software/server') ?>" data-i18n="nav.basic-components.button">Server Administration</a></li>
+                                    <li><a href="<?= url('software/logs') ?>" data-i18n="nav.basic-components.box-shadow">Error Logs</a></li>
+                                    <li><a href="<?= url('software/CustomerRequirement') ?>" data-i18n="nav.basic-components.button">Customer Requirement</a></li>
+                                    <li><a href="<?= url('software/pmp') ?>" data-i18n="nav.basic-components.collapse–accordion">Project Management</a></li>
 
-                    </ul>
-                </li>
-                <?php } ?>
-                <?php if (can_access('manage_finance')) { ?>
-                <li class="nav-item">
-                    <a href="#!">
-                        <i class="ti-crown"></i>
-                        <span data-i18n="nav.advance-components.main">Accounts & Finance</span>
-                    </a>
-                    <ul class="tree-1">
-                        <!-- <li><a href="<?= url('account/projection') ?>" data-i18n="nav.advance-components.draggable">Projections</a></li> -->
-                        <li><a href="<?= url('account/invoice') ?>"
-                                data-i18n="nav.advance-components.grid-stack">
-                                Invoice
-                            </a>
-                        </li>
-
-                        <li><a href="<?= url('Account/standingOrders') ?>"
-                                data-i18n="nav.advance-components.grid-stack">
-                                Standing Order
-                            </a>
-                        </li>
+                                </ul>
+                            </li>
+                        <?php } ?>
+                        <?php if (can_access('manage_finance')) { ?>
+                            <li class="nav-item">
+                                <a href="#!">
+                                    <i class="ti-crown"></i>
+                                    <span data-i18n="nav.advance-components.main">Accounts & Finance</span>
+                                </a>
+                                <ul class="tree-1">
+                                    <!-- <li><a href="<?= url('account/projection') ?>" data-i18n="nav.advance-components.draggable">Projections</a></li> -->
+                                    <li><a href="<?= url('account/invoice') ?>" data-i18n="nav.advance-components.grid-stack">Invoice</a></li>
+                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Transactions</a>
+                                        <ul class="tree-2">
+                                            <a href="<?= url('account/revenue') ?>"><i class="fa icon-account"></i> Revenue</a>
+                                            <a href="<?= url('account/transaction/4') ?>"><i class="fa icon-expense"></i> Expense</a>
+                                            <a href="<?= url('account/transaction/1') ?>"><i class="fa icon-account"></i> Fixed assets</a>
+                                            <a href="<?= url('account/transaction/5') ?>"><i class="fa icon-account"></i> Current assets</a>
+                                            <a href="<?= url('account/transaction/2') ?>"><i class="fa icon-account"></i> liabilities</a>
+                                            <a href="<?= url('account/transaction/3') ?>"><i class="fa icon-account"></i> capital</a>
+                                            <a href="<?= url('account/reconciliation') ?>"><i class="fa icon-account"></i> Reconciliation</a>
 
                         <li><a href="<?= url('Account/budget') ?>"
                             data-i18n="nav.advance-components.grid-stack">
@@ -767,34 +792,52 @@ function toast(message) {
                                         <a href="<?= url('loan/index') ?>"><i class="fa fa-clipboard"></i><span
                                                 style="color: white; line-height: 25px;"> Borrowers </span></a>
 
-                                    </ul>
-                                </li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-sub-item">
+                                        <a href="#" data-i18n="nav.page_layout.horizontal.main">
+                                            Payroll
+                                            <span class="fa fa-chevron-down"></span></a>
+                                        <ul class="tree-2">
+
+                                            <a href="<?= url('payroll/taxes') ?>"><i class="fa fa-clipboard"></i><span>TAX</span></a>
+                                            <a href="<?= url('payroll/pension') ?>"><i class="fa fa-clipboard"></i><span>Pension Fund</span></a>
+                                            <a href="<?= url('payroll/allowanceIndex') ?>"><i class="fa fa-clipboard"></i><span>Allowances</span></a>
+                                            <a href="<?= url('payroll/deductionIndex') ?>"><i class="fa fa-clipboard"></i><span>Deductions</span></a>
+                                            <li class="nav-sub-item-3">
+                                                <a>
+                                                    Loans
+                                                    <span class="fa fa-chevron-down"></span></a>
+                                                <ul class="tree-3">
+
+                                                    <a href="<?= url('payroll/loanType') ?>"><i class="fa fa-clipboard"></i><span style="color: white; line-height: 25px;"> Loan Types</span></a>
+
+                                                    <a href="<?= url('payroll/loanIndex') ?>"><i class="fa fa-clipboard"></i><span style="color: white; line-height: 25px;"> Borrowers </span></a>
+
+                                                </ul>
+                                            </li>
 
 
-                                <a href="<?= url('payroll/index') ?>"><i
-                                        class="fa fa-clipboard"></i><span>Salary</span></a>
+                                            <a href="<?= url('payroll/index') ?>"><i class="fa fa-clipboard"></i><span>Salary</span></a>
 
-                            </ul>
-                        </li>
-                        <li><a href="<?= url('account/report') ?>"
-                                data-i18n="nav.advance-components.light-box">Reports</a></li>
-                        <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Settings</a>
-                            <ul class="tree-2">
-                                <a href="<?= url('account/client') ?>"><i class="fa icon-account"></i> Clients</a>
-                                <a href="<?= url('account/bank') ?>"><i class="fa icon-account"></i> Banking</a>
-                                <a href="<?= url('account/group') ?>"><i class="fa icon-account"></i> Account Groups</a>
-                                <a href="<?= url('account/chart') ?>"><i class="fa icon-account"></i> Charts of
-                                    Accounts</a>
-                                <a href="<?= url('account/project') ?>"><i class="fa icon-account"></i> Company
-                                    Projects</a>
+                                        </ul>
+                                    </li>
+                                    <li><a href="<?= url('account/report') ?>" data-i18n="nav.advance-components.light-box">Reports</a></li>
+                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Settings</a>
+                                        <ul class="tree-2">
+                                            <a href="<?= url('account/client') ?>"><i class="fa icon-account"></i>  Clients</a>
+                                            <a href="<?= url('account/bank') ?>"><i class="fa icon-account"></i> Banking</a>
+                                            <a href="<?= url('account/groups') ?>"><i class="fa icon-account"></i> Account Groups</a>
+                                            <a href="<?= url('account/chart') ?>"><i class="fa icon-account"></i> Charts of Accounts</a>
+                                            <a href="<?= url('account/project') ?>"><i class="fa icon-account"></i> Company Projects</a>
 
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-                <?php } ?>
-                <?php  if(can_access('manage_expenses')) { ?>
-                <!--                            <li class="nav-item single-item has-class">
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        <?php } ?>
+                        <?php if (can_access('manage_expenses')) { ?>
+                            <!--                            <li class="nav-item single-item has-class">
                                                             <a href="<?= url('account/transaction/4') ?>">
                                                                 <i class="ti-view-grid"></i>
                                                                 <span data-i18n="nav.widget.main"> Expenses</span>
@@ -1081,17 +1124,23 @@ function toast(message) {
         <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/amchart/js/light.js"></script>
         <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/amchart/js/custom-amchart.js"></script>
 
-    <!-- i18next.min.js -->
-    <script type="text/javascript" src="<?= $root ?>bower_components/i18next/i18next.min.js"></script>
-    <script type="text/javascript" src="<?= $root ?>bower_components/i18next-xhr-backend/i18nextXHRBackend.min.js">
-    </script>
-    <script type="text/javascript"
-        src="<?= $root ?>bower_components/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js">
-    </script>
-    <script type="text/javascript" src="<?= $root ?>bower_components/jquery-i18next/jquery-i18next.min.js"></script>
 
-    <!-- Custom js -->
-    <script src="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.js"></script>
+
+        <!-- i18next.min.js -->
+        <script type="text/javascript" src="<?= $root ?>bower_components/i18next/i18next.min.js"></script>
+        <script type="text/javascript" src="<?= $root ?>bower_components/i18next-xhr-backend/i18nextXHRBackend.min.js"></script>
+        <script type="text/javascript" src="<?= $root ?>bower_components/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js"></script>
+        <script type="text/javascript" src="<?= $root ?>bower_components/jquery-i18next/jquery-i18next.min.js"></script>
+
+
+
+
+
+
+
+
+        <!-- Custom js -->
+        <script src="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.js"></script>  
 
 
         <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/custom-dashboard.js?v=3"></script>

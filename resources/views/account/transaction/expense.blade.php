@@ -170,7 +170,7 @@
                                                         echo money($total_amount);
                                                     } elseif (strtoupper($expense->name) == 'DEPRECIATION') {
 
-                                                        $total_depreciation = \collect(DB::select('select sum(amount* a.depreciation*(\'' . $to_date . '\'::date-a.date::date)/365) as deprec,COALESCE(sum(b.open_balance::numeric * b.depreciation*(\'' . $to_date . '\'::date-a.date::date)/365),0) as open_balance from expense a join refer_expense b  on b.id=a.refer_expense_id where b.financial_category_id=4 AND a.date  <= \'' . $to_date . '\''))->first();
+                                                        $total_depreciation = \collect(DB::select('select sum(amount* a.depreciation*(\'' . $to_date . '\'::date-a.date::date)/365) as deprec,COALESCE(sum(b.open_balance::numeric * b.depreciation*(\'' . $to_date . '\'::date-a.date::date)/365),0) as open_balance from expenses a join refer_expense b  on b.id=a.refer_expense_id where b.financial_category_id=4 AND a.date  <= \'' . $to_date . '\''))->first();
 
                                                         $total_amount = $total_depreciation->deprec;
                                                         //$open_balance=$total_depreciation->open_balance;
