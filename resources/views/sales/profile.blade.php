@@ -421,6 +421,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="live_tabs" id='school_details' style="display:none">
                                     <div class="card-block">
                                         <?php if(can_access('edit_school')) { ?>
@@ -466,10 +467,18 @@
                                                     </table>
                                                 </form>
                                                 <br />
+
+                                                 <div id="myForm">
+                                                    <input id="myInput" data-geocomplete="street address" />
+                                                    <select data-geocomplete="country"></select>
+                                                    <input data-geocomplete="formatted phone number" />
+                                                    ...
+                                                  </div>
+
                                                 <?php
-                      if (isset($client_id) && (int) $client_id > 0) {
-                        $client = DB::table('admin.clients')->where('id', $client_id)->first();
-                        ?>
+                                                if (isset($client_id) && (int) $client_id > 0) {
+                                                    $client = DB::table('admin.clients')->where('id', $client_id)->first();
+                                                    ?>
                                                 <h3>Onboarding Details</h3>
                                                 <table class="table">
                                                     <thead>
