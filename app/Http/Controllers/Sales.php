@@ -38,10 +38,11 @@ class Sales extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
-      //  $this->data['faqs'] = [];
-        return view('sales.index');
-    }
+
+    // public function index() {
+    //    $this->data['faqs'] = [];
+    //     return view('sales.index',$this->data);
+    // }
 
     function faq() {
         if ((int) request('id') > 0 && request('action') == 'delete') {
