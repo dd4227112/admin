@@ -32,17 +32,18 @@
             <div class="col-sm-12">
              <div class="card">
                 <?php
-               // $usertype = session("usertype");
                 if(can_access('manage_payroll')) { ?>
-			
-                    <span class="section">
-                        <a class="btn btn-success" href="<?php echo url('allowance/add/'.$category) ?>">
-                            <i class="fa fa-plus"></i> 
-                            <?= __('add_allowance') ?>
-                        </a>
-                    </span>
-              <?php } ?>
-
+                    <div class="card-header">
+                       <h5 class="page-header">
+                         <a class="btn btn-success btn-sm" href="<?php echo url('allowance/add/'.$category) ?>">
+                              <i class="fa fa-plus"></i> 
+                            <?= __('Add new allowance') ?>
+                         </a>
+                     </h5>
+                    </div>
+                   <?php } ?>
+                   
+            
                     <div class="col-sm-6 col-sm-offset-3 list-group">
                         <div class="list-group-item list-group-item-warning">
                             <form style="" class="form-horizontal" role="form" method="post">  
@@ -52,7 +53,7 @@
                                     </label>
                                     <div class="col-sm-6">
                                         <?php
-                                        $array = array("0" => __("select"));
+                                        $array = array("0" => __("Select"));
                                         $deduction_types = [
                                             '1' => 'Fixed Allowances',
                                             '2' => 'Monthly Allowances'
@@ -76,7 +77,7 @@
 								<table class="table dataTable">
 									<thead>
                                         <tr>
-                                            <th class="col-lg-1"><?= __('slno') ?></th>
+                                            <th class="col-lg-1"><?= __('#') ?></th>
                                             <th class="col-lg-2"><?= __('name') ?></th>
                                             <th class="col-lg-1"><?= __('category') ?></th>
                                             <th class="col-lg-1"><?= __('type') ?></th>

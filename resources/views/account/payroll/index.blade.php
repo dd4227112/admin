@@ -1,7 +1,5 @@
 @extends('layouts.app')
 @section('content')
-
-
 <div class="main-body">
     <div class="page-wrapper">
         <!-- Page-header start -->
@@ -33,13 +31,14 @@
                     <div class="card">
 
                         <?php
-                        $usertype = session("usertype");
+                        // $usertype = session("usertype");
                         ?>
-                        <h5 class="page-header"><a class="btn btn-success" href="<?php echo url('payroll/create') ?>"><i class="fa fa-plus"></i>
+                        <div class="m-10">
+                           <h5 class="page-header">
+                            <a class="btn btn-success" href="<?php echo url('payroll/create') ?>"><i class="fa fa-plus"></i>
                                 Create Payroll</a>&nbsp; 
-
-
-                        </h5>
+                          </h5>
+                        </div>
 
                         <div class="col-lg-12 col-xl-12">                                      
                             <!-- Nav tabs -->
@@ -184,30 +183,30 @@
                                                                 type: 'column',
                                                                 name: 'Basic Payments',
                                                                 data: [
-<?php
-foreach ($salaries as $salary) {
-    echo $salary->basic_pay . ',';
-}
-?>
+                                                                        <?php
+                                                                        foreach ($salaries as $salary) {
+                                                                            echo $salary->basic_pay . ',';
+                                                                        }
+                                                                        ?>
                                                                 ]
                                                             }, {
                                                                 type: 'column',
                                                                 name: 'Net Payments',
                                                                 data: [
-<?php
-foreach ($salaries as $salary) {
-    echo $salary->net_pay . ',';
-}
-?>
+                                                                    <?php
+                                                                    foreach ($salaries as $salary) {
+                                                                        echo $salary->net_pay . ',';
+                                                                    }
+                                                                    ?>
                                                                 ]
                                                             }, {
                                                                 type: 'spline',
                                                                 name: 'Total Users',
                                                                 data: [<?php
-foreach ($salaries as $salary) {
-    echo $salary->total_users . ',';
-}
-?>],
+                                                                        foreach ($salaries as $salary) {
+                                                                            echo $salary->total_users . ',';
+                                                                        }
+                                                                        ?>],
                                                                 marker: {
                                                                     lineWidth: 2,
                                                                     lineColor: Highcharts.getOptions().colors[3],
@@ -245,25 +244,14 @@ foreach ($salaries as $salary) {
                                             </script>
                                             <script src="https://code.highcharts.com/highcharts.js"></script>
                                             <script src="https://code.highcharts.com/modules/exporting.js"></script>
-
                                             <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-
-
-
-
-
-                                        </div>
+                                  </div>
                                 </div>
-                               
                             </div>
-                        </div>
-
-              
-                    </div>
-
-                </div> <!-- col-sm-12 -->
-            </div><!-- row -->
-        </div><!-- Body -->
-    </div><!-- /.box -->
+                         </div>
+                     </div>
+                </div> 
+            </div>
+        </div>
 </div>
 @endsection

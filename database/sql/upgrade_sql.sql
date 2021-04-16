@@ -142,6 +142,7 @@ ALTER TABLE admin.bank_accounts_integrations
     ON UPDATE CASCADE
     ON DELETE CASCADE
     NOT VALID;
+    
 CREATE INDEX fki_bank_accounts_integrations_client_id_foreign
     ON admin.bank_accounts_integrations(client_id);
 
@@ -197,7 +198,6 @@ ALTER TABLE admin.client_schools
     ON DELETE NO ACTION;
 CREATE INDEX fki_client_schools_school_id_foreign
     ON admin.client_schools(school_id);
-
 
 
 ALTER TABLE admin.client_schools
@@ -288,7 +288,6 @@ ALTER TABLE admin.expenses
 ALTER TABLE admin.failed_jobs
     RENAME CONSTRAINT failed_jobs_pkey TO failed_jobs_id_primary;
 
-
 ALTER TABLE admin.faq
     ADD CONSTRAINT faq_created_by_foreign FOREIGN KEY (created_by)
     REFERENCES admin.users (id)
@@ -296,8 +295,6 @@ ALTER TABLE admin.faq
     ON DELETE NO ACTION;
 CREATE INDEX fki_faq_created_by_foreign
     ON admin.faq(created_by);
-
-
 
 ALTER TABLE admin.integration_request_comments
     RENAME CONSTRAINT integration_request_comment_pkey TO integration_request_comment_id_primary;
@@ -944,3 +941,345 @@ ALTER TABLE constant.months
 
 ALTER TABLE constant.months
     RENAME CONSTRAINT months_pkey TO months_id_primary;
+
+
+-- NEW  24/03/2021
+
+--key_perfomance_indicators(Table)
+
+ALTER TABLE admin.key_perfomance_indicators
+    RENAME CONSTRAINT key_perfomance_indicators_pkey TO key_perfomance_indicators_id_primary;
+
+ALTER TABLE admin.key_perfomance_indicators
+    ADD COLUMN created_at timestamp without time zone;
+
+ALTER TABLE admin.key_perfomance_indicators
+    ADD COLUMN updated_at timestamp without time zone;
+
+CREATE TABLE admin.kpi_users
+(
+    id serial,
+    kpi_id integer,
+    user_id integer,
+    PRIMARY KEY (id)
+);
+
+ALTER TABLE admin.kpi_users
+    OWNER to postgres;
+
+ALTER TABLE admin.kpi_users
+    ADD CONSTRAINT kpi_users_user_id_foreign FOREIGN KEY (user_id)
+    REFERENCES admin.users (id)
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+CREATE INDEX fki_kpi_users_user_id_foreign
+    ON admin.kpi_users(user_id);
+
+ALTER TABLE admin.kpi_users
+    RENAME CONSTRAINT kpi_users_pkey TO kpi_users_id_primary;
+
+ALTER TABLE admin.kpi_users
+    ADD CONSTRAINT kpi_users_key_perfomance_indicator_id_foreign FOREIGN KEY (kpi_id)
+    REFERENCES admin.key_perfomance_indicators (id)
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+CREATE INDEX fki_kpi_users_key_perfomance_indicator_id_foreign
+    ON admin.kpi_users(kpi_id);
+
+ALTER TABLE admin.kpi_users
+    ADD COLUMN created_at timestamp without time zone;
+
+ALTER TABLE admin.kpi_users
+    ADD COLUMN updated_at timestamp without time zone;
+
+CREATE TABLE admin.query_parameters
+(
+    id serial NOT NULL,
+    parameter character varying,
+    kpi_id integer,
+    PRIMARY KEY (id)
+);
+
+ALTER TABLE admin.query_parameters
+    OWNER to postgres;
+
+ALTER TABLE admin.query_parameters
+    RENAME CONSTRAINT query_parameters_pkey TO query_parameters_id_primary;
+
+ALTER TABLE admin.query_parameters
+    ADD CONSTRAINT query_parameters_key_perfomance_indicator_id_foreign FOREIGN KEY (kpi_id)
+    REFERENCES admin.key_perfomance_indicators (id)
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+CREATE INDEX fki_query_parameters_key_perfomance_indicator_id_foreign
+    ON admin.query_parameters(kpi_id);
+
+ALTER TABLE admin.query_parameters
+    ADD COLUMN created_at timestamp without time zone;
+
+ALTER TABLE admin.query_parameters
+    ADD COLUMN updated_at timestamp without time zone;
+
+ALTER TABLE admin.users
+    ADD COLUMN company_file_id integer;
+
+ALTER TABLE admin.users
+    ADD CONSTRAINT users_company_file_id_foreign FOREIGN KEY (company_file_id)
+    REFERENCES admin.company_files (id)
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+
+
+
+-- 29/03/2021  changes
+ALTER TABLE admin.user_pensions
+    ADD COLUMN created_by integer;
+
+ALTER TABLE admin.user_allowances
+    ADD COLUMN created_by integer;
+
+ALTER TABLE admin.user_deductions
+    ADD COLUMN employer_percent integer;
+
+ALTER TABLE admin.user_deductions
+    ADD COLUMN employer_amount integer;
+
+CREATE TABLE admin.user_banks
+(
+    id serial,
+    user_id integer,
+    bank_name text,
+    bank_account_number text,
+    PRIMARY KEY (id)
+);
+
+ALTER TABLE admin.user_banks
+    OWNER to postgres;
+
+
+ALTER TABLE admin.user_banks
+    RENAME CONSTRAINT user_banks_pkey TO user_banks_id_primary;
+
+ALTER TABLE admin.user_banks
+    ADD CONSTRAINT user_banks_user_id_foreign FOREIGN KEY (user_id)
+    REFERENCES admin.users (id)
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    NOT VALID;
+CREATE INDEX fki_user_banks_user_id_foreign
+    ON admin.user_banks(user_id);
+
+ALTER TABLE admin.user_banks
+    ADD COLUMN created_at timestamp without time zone;
+
+ALTER TABLE admin.user_banks
+    ADD COLUMN updated_at timestamp without time zone;
+
+
+-- 30/03/2021
+
+ALTER TABLE admin.salary_allowances
+    ADD COLUMN created_by integer;
+
+ALTER TABLE admin.salary_deductions
+    ADD COLUMN created_by integer;
+
+ALTER TABLE admin.salary_deductions
+    ADD COLUMN employer_amount character varying;
+
+ALTER TABLE admin.salary_pensions
+    ADD COLUMN created_by integer;
+
+ALTER TABLE admin.payslip_settings
+    ADD COLUMN show_address integer;
+
+ALTER TABLE admin.payslip_settings
+    ADD COLUMN show_tax_summary integer;
+
+ALTER TABLE admin.payslip_settings
+    ADD COLUMN show_employer_contribution integer;
+
+
+-- 31/03/2021 changes
+ALTER TABLE admin.invoices_tracker
+    ADD COLUMN date timestamp without time zone;
+
+ALTER TABLE admin.invoices_tracker
+    ADD COLUMN updated_at timestamp without time zone;
+
+CREATE TABLE admin.uattendances (
+    id serial NOT NULL,
+    user_id integer,
+    created_by integer,
+    date date,
+    timein timestamp without time zone,
+    timeout timestamp without time zone,
+    present smallint DEFAULT 0,
+    absent_reason character varying,
+    absent_reason_id integer,
+    created_at timestamp without time zone DEFAULT now(),
+    updated_at timestamp without time zone
+);
+
+-- 06/04/2021
+ALTER TABLE admin.uattendances
+    ADD COLUMN absent_reason_id integer;
+
+
+ALTER TABLE admin.uattendances
+    ADD CONSTRAINT uattendances_absent_reason_id_foreign FOREIGN KEY (absent_reason_id)
+    REFERENCES constant.absent_reasons (id)
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION;
+CREATE INDEX fki_uattendances_absent_reason_id_foreign
+    ON admin.uattendances(absent_reason_id);
+
+ALTER TABLE admin.uattendances
+    ADD CONSTRAINT uattendances_id_primary PRIMARY KEY (id);
+
+
+CREATE TABLE admin.legal_contracts
+(
+    id serial,
+    name character varying,
+    start_date timestamp without time zone NOT NULL,
+    end_date timestamp without time zone,
+    user_id integer,
+    company_file_id integer,
+    description text,
+    PRIMARY KEY (id)
+);
+
+ALTER TABLE admin.legal_contracts
+    OWNER to postgres;
+
+ALTER TABLE admin.legal_contracts
+    RENAME CONSTRAINT legal_contracts_pkey TO legal_contracts_id_primary;
+
+ALTER TABLE admin.legal_contracts
+    ADD CONSTRAINT legal_contracts_user_id_foreign FOREIGN KEY (user_id)
+    REFERENCES admin.users (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE;
+CREATE INDEX fki_legal_contracts_user_id_foreign
+    ON admin.legal_contracts(user_id);
+
+ALTER TABLE admin.legal_contracts
+    ADD CONSTRAINT legal_contracts_company_file_id_foreign FOREIGN KEY (company_file_id)
+    REFERENCES admin.company_files (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE;
+CREATE INDEX fki_legal_contracts_company_file_id_foreign
+    ON admin.legal_contracts(company_file_id);
+
+
+ALTER TABLE admin.legal_contracts
+    ADD COLUMN updated_at timestamp without time zone;
+
+ALTER TABLE admin.legal_contracts
+    ADD COLUMN created_at timestamp with time zone;
+
+
+--08/04/2021
+ALTER TABLE admin.schools
+    ADD COLUMN branch_name character varying;
+
+ALTER TABLE admin.schools
+    ADD COLUMN branch_code character varying;
+
+ALTER TABLE admin.schools
+    ADD COLUMN nmb_zone character varying;
+
+ALTER TABLE admin.schools
+    ADD COLUMN registered character varying;
+
+ALTER TABLE admin.schools
+    RENAME name TO school_name;
+
+ALTER TABLE admin.schools
+    ADD COLUMN zone character varying;
+
+ALTER TABLE admin.schools
+    ADD COLUMN nmb_school_name character varying;
+
+INSERT INTO admin.schools ( region, district, ward,school_name,ownership,type,registration_number,status,students,created_at,updated_at,nmb_branch,account_number,ward_id,branch_name,branch_code,nmb_zone,registered,zone,nmb_school_name)
+SELECT  region, district, ward,school_name,null,type,null,null,null,null,null,null,account_number,null,branch_name,branch_code,nmb_zone,registered,zone,nmb_school_name
+FROM admin.allschools
+
+
+ALTER TABLE admin.schools
+    ADD COLUMN region_id integer;
+
+ALTER TABLE admin.schools
+    ADD COLUMN district_id integer;
+
+
+
+
+-- select duplicate Data 
+select school_name, count(*)
+from admin.schools 
+group by school_name
+HAVING count(*) > 1
+
+-- ALTER TABLE admin.partner_schools
+--     ADD CONSTRAINT partner_schools_school_id_foreign FOREIGN KEY (school_id)
+--     REFERENCES admin.schools (id)
+--     ON UPDATE CASCADE
+--     ON DELETE CASCADE;
+-- CREATE INDEX fki_partner_schools_school_id_foreign
+--     ON admin.partner_schools(school_id);
+
+DELETE FROM
+    admin.schools  a
+        USING admin.schools  b
+WHERE
+    a.id > b.id
+    AND a.school_name = b.school_name;
+
+
+
+--09/04/2021
+-- (select * from admin.allschools where id not in (
+--  select a.id from admin.allschools a join admin.schools b on b.name=a.school_name AND b.ward=a.ward
+-- ))
+
+
+-- ALTER TABLE admin.schools
+--     ADD COLUMN region character varying COLLATE pg_catalog."default";
+
+-- ALTER TABLE admin.schools
+--     ADD COLUMN district character varying COLLATE pg_catalog."default";
+
+-- ALTER TABLE admin.schools
+--     ADD COLUMN ward character varying COLLATE pg_catalog."default";
+
+
+-- 11/04/2021
+
+ALTER TABLE admin.absents
+    ADD COLUMN end_date timestamp without time zone;
+
+
+ -- 12/04/2021
+ ALTER TABLE admin.users
+    ADD COLUMN bank_name character varying;
+
+-- select count(X.*) from (select b.*,w.name as ward, d.name as district,r.name as region from (select a.*, (select count(*) from admin.tasks where school_id=a.id) 
+-- 		as activities from admin.schools a  where lower(a.ownership) <>'government') as b join 
+-- 		admin.wards as w on b.ward_id = w.id join admin.districts as d on d.id=w.district_id
+-- 		join admin.regions as r on r.id=d.region_id) X
+
+
+ALTER TABLE admin.absents
+    ADD COLUMN status character varying;
+
+
+--  select C.*,D.username from 
+--  (select A.*,B.* from (
+--  select b.*,w.name as ward, d.name as district,r.name as region from (select a.*, (select count(*) from admin.tasks where school_id=a.id) 
+--  as activities from admin.schools a  where lower(a.ownership) <>'government') as b join 
+--  admin.wards as w on b.ward_id = w.id join admin.districts as d on d.id=w.district_id
+--  join admin.regions as r on r.id=d.region_id) A
+--  LEFT JOIN (select school_id,client_id from admin.client_schools) B
+-- on A.id = B.school_id) C  left  join (select id,username from admin.clients) D on C.client_id = D.id 

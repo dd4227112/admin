@@ -1,44 +1,25 @@
-<?php
-/**
- * Description of subject_subscriber
- *
- *  -----------------------------------------------------
- *  Copyright: INETS COMPANY LIMITED
- *  Website: www.inetstz.com
- *  Email: info@inetstz.com
- *  -----------------------------------------------------
- * @author Ephraim Swilla
- */
-?>
-<div class="box">
-    <div class="box-header">
-        <h3 class="box-title"><i class="fa icon-subject"></i> <?= __('panel_title') ?>
-            Subscription -<?= $type ?></h3>
+@extends('layouts.app')
+@section('content')
 
-        <ol class="breadcrumb">
-            <li><a href="<?= url("dashboard/index") ?>"><i class="fa fa-laptop"></i> <?= __('menu_dashboard') ?></a></li>
-            <li class="active"><?= __('menu_subject') ?></li>
-        </ol>
-    </div><!-- /.box-header -->
-    <div class="box-body">
-        <div class="row">    
-            <div class="col-sm-12 col-md-12">
-                <div class="row">
-                    <div class="col-sm-12">
+<div class="main-body">
+    <div class="page-wrapper">
+        <!-- Page-header start -->
+        <div class="page-header">
+            <div class="page-header-title">
+                <h4> Subscription -<?= $type ?></h4>
+                <span></span>
+            </div>
+        </div>
+    
 
-                        <?php
-                        if (true) {
-                            ?>
-                            <h5 class="page-header">
-                                <a class="btn btn-success" href="<?php echo url('deduction/excel') ?>">
-                                    <i class="fa fa-plus"></i> 
-                                    Add Members by Excel
-                                </a>
-                            </h5>
-                        <?php } ?>
-                </div>
+        <div class="page-body">
+          <div class="row">
+            <div class="col-sm-12">
+             <div class="card">
+
+                
                 <?php if ($type == 'allowance' || $type == 'deduction') { ?>
-                    <div class="col-sm-6 col-xs-12 col-sm-offset-3 list-group">
+                    <div class="col-sm-12 col-xs-12 col-sm-offset-3 list-group">
                         <div class="list-group-item">
                             <table class="table">
                                 <thead>
@@ -62,81 +43,89 @@
                     </div>
                 <?php } ?>
 
-                <!--Table one will be here with list of all student subscribe to that subject-->
-                <table id="example1" class="table table-striped table-bordered table-hover no-footer dataTable tablesubscriber">
-                    <thead>
-                        <tr>
-                            <th class="col-sm-1"><?= __('slno') ?></th>
-                            <th class="col-sm-2">Name</th>
-                            <th class="col-sm-2">User type</th>
-                            <th class="col-sm-2">Email</th>
-                            <th class="col-sm-2">Phone Number</th>
-                            <th class="col-sm-2">Amount</th>
-                            <th class="col-sm-2">Deadline</th>
-                            <th class="col-sm-2"><?= __('action') ?></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if (!empty($users)) {
-                            $i = 1;
-                            foreach ($users as $user) {
-                                $arr = array(
-                                    'user_id' => $user->id,
-                                    'table' => $user->table
-                                );
-                                ?>
-                                <tr id="std<?= $user->id; ?>">
-                                    <td data-title="<?= __('slno') ?>">
-                                        <?php echo $i; ?>
-                                    </td>
-                                    <td data-title="<?= __('student_name') ?>">
-                                        <?php echo $user->name; ?>
-                                    </td>
-                                    <td data-title="<?= __('usertype') ?>">
-                                        <?php echo $user->usertype; ?>
-                                    </td>
-                                    <td data-title="<?= __('email') ?>">
-                                        <?php echo $user->email; ?>
-                                    </td>
-                                    <td data-title="<?= __('phone') ?>">
-                                        <?php echo $user->phone; ?>
-                                    </td>
-                                    <td data-title="<?= __('amount') ?>">
+				         <div  class="card-block">
+					      <div class="table-responsive table-sm table-striped table-bordered table-hover">
+                            <?php if (isset($users) && !empty($users)) { ?>
+                                <table id="example1" class="table table-striped table-bordered table-hover no-footer dataTable tablesubscriber">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-sm-1"><?= __('slno') ?></th>
+                                            <th class="col-sm-2">Name</th>
+                                            <th class="col-sm-2">User type</th>
+                                            <th class="col-sm-2">Email</th>
+                                            <th class="col-sm-2">Phone Number</th>
+                                            <th class="col-sm-2">Amount</th>
+                                            <th class="col-sm-2">Deadline</th>
+                                            <th class="col-sm-2"><?= __('action') ?></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
                                         <?php
-                                        $deduction = \App\Models\UserDeduction::where('user_id', $user->id)->where('table', $user->table)->where('deduction_id', $allowance->id)->where('deadline', '>', date('Y-m-d'))->first();
-                                        $amount = !empty($deduction)  ? $deduction->amount : '';
-                                        $deadline = !empty($deduction)  ? $deduction->deadline : '';
+                                        if (!empty($users)) {
+                                            $i = 1;
+                                            foreach ($users as $user) {
+                                                $arr = array(
+                                                    'user_id' => $user->id,
+                                                    'table' => $user->table
+                                                );
+                                                ?>
+                                                <tr id="std<?= $user->id; ?>">
+                                                    <td data-title="<?= __('slno') ?>">
+                                                        <?php echo $i; ?>
+                                                    </td>
+                                                    <td data-title="<?= __('student_name') ?>">
+                                                        <?php echo $user->name; ?>
+                                                    </td>
+                                                    <td data-title="<?= __('usertype') ?>">
+                                                        <?php echo $user->usertype; ?>
+                                                    </td>
+                                                    <td data-title="<?= __('email') ?>">
+                                                        <?php echo $user->email; ?>
+                                                    </td>
+                                                    <td data-title="<?= __('phone') ?>">
+                                                        <?php echo $user->phone; ?>
+                                                    </td>
+                                                    <td data-title="<?= __('amount') ?>">
+                                                        <?php
+                                                        $deduction = \App\Models\UserDeduction::where('user_id', $user->id)->where('deduction_id', $allowance->id)->where('deadline', '>', date('Y-m-d'))->first();
+                                                        $amount = !empty($deduction)  ? $deduction->amount : '';
+                                                        $deadline = !empty($deduction)  ? $deduction->deadline : '';
+                                                        ?>
+                                                        <input placeholder="<?= __("amount") ?>" type="number" class="form-control" id="amount<?= $user->id ?>" name="amount" value="<?= $amount ?>" >
+                                                    </td>
+                                                    <td data-title="<?= __('student_section') ?>">
+                                                        <input  type="date" class="form-control calendar" id="deadline<?= $user->id ?>" name="deadline" value="<?= date($deadline)?>" >
+                                                    </td>
+                                                    <td data-title="<?= __('action') ?>">
+                                                        <?php
+                                                        if (in_array($user->id . $user->table, $subscriptions)) {
+                                                            ?>
+                                                            <a href="#" onclick="return false" onmousedown="remove_user('<?= $user->id ?>')" class="btn btn-danger btn-xs mrg"><i class="fa fa-trash-o"></i> Remove</a>
+                                                        <?php } else { ?>
+                                                            <a href="#" onclick="return false" onmousedown="submit_deduction('<?= $user->id ?>')" class="btn btn-sx btn-success">Save</a>
+                                                           
+                                                        <?php } ?>
+                                                             <span id="stat<?= $user->id ?>"></span>
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                                $i++;
+                                            }
+                                         }
                                         ?>
-                                        <input placeholder="<?= __("amount") ?>" type="number" class="form-control" id="amount<?= $user->id ?>" name="amount" value="<?= $amount ?>" >
-                                    </td>
-                                    <td data-title="<?= __('student_section') ?>">
-                                        <input  type="text" class="form-control calendar" id="deadline<?= $user->id ?>" name="deadline" value="<?= date("m/d/Y", strtotime($deadline))?>" >
-                                    </td>
-                                    <td data-title="<?= __('action') ?>">
-                                        <?php
-                                        if (in_array($user->id . $user->table, $subscriptions)) {
-                                            ?>
-                                            <a href="#" onclick="return false" onmousedown="remove_user('<?= $user->id ?>', '<?= $user->table ?>')" class="btn btn-danger btn-xs mrg"><i class="fa fa-trash-o"></i> Remove</a>
-                                        <?php } else { ?>
-                                            <a href="#" onclick="return false" onmousedown="submit_deduction('<?= $user->id ?>', '<?= $user->table ?>')" class="btn btn-sx btn-success">Save</a>
-                                           
-                                        <?php } ?>
-                                             <span id="stat<?= $user->id ?><?= $user->table ?>"></span>
-                                    </td>
-                                </tr>
-                                <?php
-                                $i++;
-                            }
-                         }
-                        ?>
-                    </tbody>
-                </table>
-            </div> <!-- col-sm-12 for tab -->
+                                    </tbody>
+                                </table>
+                               <?php }  ?>
+								 
+                     </div>									
+                 </div>
+            </div> 
         </div>
-    </div>
+     </div>
+  </div>
 </div>
 
+   
 <script type="text/javascript">
     function submit_deduction(a, b) {
         var amount = $('#amount' + a).val();
@@ -144,35 +133,36 @@
         $.ajax({
             type: 'POST',
             url: "<?= url('deduction/monthlyAddSubscriber/null') ?>",
-            data: {user_id: a, table: b, amount: amount, deadline: deadline, deduction_id: '<?= $set ?>', type: 0},
+            data: {user_id: a, amount: amount, deadline: deadline, deduction_id: '<?= $set ?>', type: 0},
             dataType: "html ",
             beforeSend: function (xhr) {
-                $('#stat' + a + b).html('<a href="#/refresh"><i class="fa fa-spinner"></i> </a>');
+                $('#stat' + a ).html('<a href="#/refresh"><i class="fa fa-spinner"></i> </a>');
             },
             complete: function (xhr, status) {
-                $('#stat' + a + b).html('<span class="label label-success">' + status + '</span>');
+                $('#stat' + a ).html('<span class="label label-success">' + status + '</span>');
             },
             success: function (data) {
-                $('#stat' + a + b).html(data);
+                $('#stat' + a ).html(data);
+                window.location.reload();
             }
         }
         );
     }
 
-    function remove_user(a, b) {
+    function remove_user(a) {
         $.ajax({
             type: 'GET',
             url: "<?= url('payroll/deleteSubscriber/null/') ?>",
-            data: {user_id: a, table: b, set: '<?= $set ?>', type: 'deduction'},
+            data: {user_id: a, set: '<?= $set ?>', type: 'deduction'},
             dataType: "html ",
             beforeSend: function (xhr) {
-                $('#stat' + a + b).html('<a href="#/refresh"><i class="fa fa-spinner"></i> </a>');
+                $('#stat' + a ).html('<a href="#/refresh"><i class="fa fa-spinner"></i> </a>');
             },
             complete: function (xhr, status) {
-                $('#stat' + a + b).html('<span class="label label-success">' + status + '</span>');
+                $('#stat' + a ).html('<span class="label label-success">' + status + '</span>');
             },
             success: function (data) {
-                $('#stat' + a + b).html(data);
+                $('#stat' + a ).html(data);
                 window.location.reload();
             }
         }
@@ -262,3 +252,7 @@
     }
 
 </script>
+
+@endsection
+
+

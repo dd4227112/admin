@@ -1,5 +1,4 @@
 @extends(!isset($balance) ? 'layouts.app' : 'layouts.nologin')
-
 @section('content')
 
 <title>Invoice</title>
@@ -296,41 +295,32 @@
                             </button>
                         </div>
                         <?php
-                        $invoice_fee = $invoice->invoiceFees()->get();
+                        $invoice_fee = $invoice->invoiceFees()->first();
                         ?>
                         <div class="modal-body">
-                            <?php  foreach ($invoice_fee as $fees) {?>
-                                <form action="<?=url('Account/editInvoice')?>" method="post">
+                      
+                                <form action="<?=url('Account/editInvoice/'.$invoice_fee->invoice_id)?>" method="post">
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 Quantity
-                                                <input type="text" class="form-control"  name="quantity" value="<?= $fees->quantity ?>">
+                                                <input type="text" class="form-control"  name="quantity" value="<?= $invoice_fee->quantity ?>">
                                             </div>
                                             <div class="col-md-6">
                                                 Price
-                                                <input type="text" class="form-control"  name="price" value="<?= $fees->unit_price ?>">
+                                                <input type="text" class="form-control"  name="price" value="<?= $invoice_fee->unit_price ?>">
                                             </div>
                                         </div>
                                     </div>
-            
-                                    <div class="form-group">
-                                        <div class="row">
-                                       <div class="col-md-12">
-                                                Descriptions
-                                            <input type="text" class="form-control"  name="description" value="<?= $fees->item_name ?>">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
+
                                     <div class="modal-footer">
-                                        <input type="hidden" name="invoice_id" id="invoice_id" value="<?= $fees->invoice_id ?>">
+                                        <input type="hidden" name="invoice_id" id="invoice_id" value="<?= $invoice_fee->invoice_id ?>">
                                         <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
                                         <button type="submit" class="btn btn-primary waves-effect waves-light ">Edit</button>
                                     </div>
                                     <?= csrf_field() ?>
                                 </form>
-                                <?php } ?>
+           
                             </div>
                     </div>
                 </div>
@@ -342,29 +332,24 @@
 
 
 <script src="{{url('public/assets/shulesoft/jquery.PrintArea.js')}}" type="text/JavaScript"></script>
-
 <script type="text/javascript">
 function printDiv(divID) {
     //Get the HTML of div
     var divElements = document.getElementById(divID).innerHTML;
     //Get the HTML of whole page
     var oldPage = document.body.innerHTML;
-
     //Reset the page's HTML with div's HTML only
     document.body.innerHTML =
             "<html><head><title></title></head><body><div style='margin-left: 4em; margin-right:4em; margin-top:10em'>" +
             divElements + "</div></body>";
-
     //Print Page
     window.print();
-
     //Restore orignal HTML
     document.body.innerHTML = oldPage;
 }
 
 $(document).ready(function () {
     $("#printInvoice").click(function () {
-
         printDiv("print_div");
     });
 });

@@ -43,8 +43,8 @@
                             <a href="<?= url('account/projection') ?>" class="btn btn-sm btn-primary">Create New Invoice</a>
                             <?php } ?>
                         </div>
+                        
                         <div class="col-md-12 col-xl-12">
-                           
                             <div class="form-group row col-lg-offset-6">
                                 <label class="col-sm-4 col-form-label">Select Project</label>
                                 <div class="col-sm-4">
@@ -116,6 +116,7 @@
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
+                             
                                         <tbody>
                                             <?php
                                             $total_amount = 0;
@@ -173,13 +174,13 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                        
                                             <?php
                                             $total_amount = 0;
                                             $total_paid = 0;
                                             $total_unpaid = 0;
                                             $i = 1;
                                             foreach ($invoices as $invoice) {
-
                                                 $amount = $invoice->invoiceFees()->sum('amount');
                                                 $paid = $invoice->payments()->sum('amount');
                                                 $unpaid = $amount - $paid;
@@ -187,7 +188,6 @@
                                                 $total_amount += $amount;
                                                 $total_unpaid += $unpaid;
                                                 ?>
-
 
                                                 <tr>
                                                     <td><?= $invoice->client->username ?></td>
@@ -197,7 +197,6 @@
                                                     <td><?= money($unpaid) ?></td>
                                                     <td><?= date('d M Y', strtotime($invoice->due_date)) ?></td>
                                                     <td>
-
 
                                                         <div class="dropdown-secondary dropdown f-right">
                                                         <button class="btn btn-success btn-mini dropdown-toggle waves-effect waves-light" type="button" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</button>

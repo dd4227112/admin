@@ -15,11 +15,7 @@ use Auth;
 
 class Account extends Controller {
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
+  
     public function __construct() {
         $this->middleware('auth');
         $this->data['insight'] = $this;
@@ -42,22 +38,76 @@ class Account extends Controller {
         $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
         $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
         $this->data['invoices'] = ($from != '' && $to != '') ?
-                Invoice::whereBetween('date', [$from_date, $to_date])->where('project_id', $project_id)->get() :
+                Invoice::whereBetween('date', [$from_date, $to_date])->get() :
                 Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->get();
         return $this;
+    }
+
+
+    public function createInvoices($client_id) {
+        $client = \App\Models\Client::find($client_id);
+        $year = \App\Models\AccountYear::where('name', date('Y'))->first();
+        $reference = time().rand(777, 123); // to be changed for selcom ID
+       // dd($reference);
+        $start_date = $client->invoice_start_date;
+        $end_date = $client->invoice_end_date;
+
+        if($client->invoice_start_date == '' &&  $client->invoice_end_date == ''){
+            $start_date = date('Y-01-01');
+            $end_date = date('Y-m-d',strtotime('+30 days',strtotime($start_date)));
+        }
+
+        $data = ['reference' => $reference, 
+                 'client_id' => $client_id, 
+                 'date' => $start_date, 
+                 'due_date' => $end_date, 
+                 'year' => date('Y'), 
+                 'user_id' => Auth::user()->id, 
+                 'account_year_id' => $year->id
+                ];
+      
+        $invoice = Invoice::create($data);
+
+        //once we introduce packages (module pricing), we will just loop here for modules selected by specific user
+        //validate for simple missing inputs
+        if ((int) $client->price_per_student == 0 || (int) $client->estimated_students == 0) {
+            //both price per students and Estimated students cannot be 0
+            return redirect()->back()->with('error', 'Both price per students and Estimated students cannot be 0, please set them first');
+        }
+        if ((int) $client->price_per_student == 10000) {
+            $months_remains = 12 - (int) date('m', strtotime($client->created_at)) + 1;
+            $unit_price = $months_remains * $client->price_per_student / 12;
+            $amount = $unit_price * $client->estimated_students;
+        } else {
+            $unit_price = $client->price_per_student;
+            $amount = $unit_price * $client->estimated_students;
+        }
+        \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' => $client->estimated_students, 'unit_price' => $unit_price]);
+      //  return redirect()->back()->with('success', 'Invoice Created Successfully');
     }
 
     public function invoice() {
         $this->data['budget'] = [];
         $project_id = $this->data['project_id'] = request()->segment(3);
         $this->data['account_year_id'] = $account_year_id = request()->segment(4);
+     
         if ((int) $project_id == 1) {
             //create shulesoft invoices
             //check in client table if all schools with students and have generated reports are registered
-            // if exists, check if invoice exists, else, create new invoice
+            $clients=\DB::select("select * from admin.clients where id not in (select client_id from admin.invoices where account_year_id=(select id from admin.account_years where name='".date('Y')."'))");
+           // if exists, check if invoice exists, else, create new invoice
+           if(!empty($clients)){
+            foreach($clients as $client)
+              {
+                 $invoice = \App\Models\Invoice::where('client_id',$client->id)->where('account_year_id',$account_year_id)->first();
+                 if(empty($invoice)){
+                  $this->createInvoices($client->id);
+               }
+              }
+           }
             $this->getInvoices($project_id, $account_year_id);
         }
-    /*    if ($project_id == 'delete') {
+      /*    if ($project_id == 'delete') {
             $invoice_id = request()->segment(4);
             $payments = \App\Models\Payment::where('invoice_id', $invoice_id)->first();
             if (!empty($payments)) {
@@ -75,10 +125,8 @@ class Account extends Controller {
         } else {
             switch ($project_id) {
                 case 4:
-
                     $this->data['invoices'] = DB::connection('karibusms')->select('select a.transaction_code,a.method, a.amount, a.currency,a.sms_provided,a.time,a.invoice, b.name,a.confirmed,a.approved,a.payment_id from payment a join client b using(client_id)');
                     break;
-
                 default:
                     $this->getInvoices($project_id, $account_year_id);
                     break;
@@ -124,15 +172,22 @@ class Account extends Controller {
 
  // Edit invoice details such as description,quantity and price
     public function editInvoice()
-    {
+    {   $invoice_id = request()->segment(3);
         $quantity  = request('quantity');
         $unit_price = request('price');
-        $description = request('description');
-        $invoice_id = request('invoice_id');
+        $invoice = Invoice::find($invoice_id);
+     
         $date = date("Y-m-d H:i:s");
         $prev_amount = \App\Models\InvoiceFee::where('invoice_id',$invoice_id)->first()->unit_price;
-
-        \App\Models\InvoiceFee::where('invoice_id',$invoice_id)->update(['item_name' => $description,
+        if ((int) $unit_price == 10000) {
+            $months_remains = 12 - (int) date('m', strtotime($invoice->date)) + 1;
+            $unit_price = $months_remains * $unit_price / 12;
+            $amount = $unit_price * $quantity;
+        } else {
+            $unit_price = $unit_price;
+            $amount = $unit_price * $quantity;
+        }
+        \App\Models\InvoiceFee::where('invoice_id',$invoice_id)->where('project_id', 1)->update(['amount' => $amount,
         'quantity' => $quantity,'unit_price' => $unit_price]);
 
         \App\Models\InvoiceTracker::create(['invoice_id' => $invoice_id,'prev_amount' => $prev_amount,
@@ -280,12 +335,12 @@ class Account extends Controller {
     public function editShuleSoftInvoice() {
         $invoice_id = request()->segment(3);
         $invoice = Invoice::find($invoice_id);
+        $date = date("Y-m-d H:i:s");
         $invoice->update(['due_date' => date('d M Y', strtotime(request('due_date')))]);
         $client = \App\Models\Client::find($invoice->client_id);
         $client->update(['price_per_student' => request('price_per_student'), 'estimated_students' => request('estimated_students')]);
 
         if ((int) request('price_per_student') == 10000) {
-
             $months_remains = 12 - (int) date('m', strtotime(request('onboard_date'))) + 1;
             $unit_price = $months_remains * request('price_per_student') / 12;
             $amount = $unit_price * request('estimated_students');
@@ -299,7 +354,7 @@ class Account extends Controller {
                 'created_at' => date('Y-m-d', strtotime(request('onboard_date')))]);
         }
         \App\Models\InvoiceFee::where('invoice_id', $invoice->id)->where('project_id', 1)->update(['amount' => $amount, 'quantity' => $client->estimated_students, 'unit_price' => $unit_price]);
-        return redirect(url('account/invoice/1/' . $invoice->account_year_id))->with('success', 'Invoice updated Successfully');
+        return redirect(url('account/invoice'))->with('success', 'success');
     }
 
     public function createShuleSoftInvoice() {
@@ -317,12 +372,9 @@ class Account extends Controller {
                  'year' => date('Y'), 
                  'user_id' => Auth::user()->id, 
                  'account_year_id' => $year->id];
-
         $invoice = Invoice::create($data);
-
         //once we introduce packages (module pricing), we will just loop here for modules selected by specific user
         //validate for simple missing inputs
-
         if ((int) $client->price_per_student == 0 || (int) $client->estimated_students == 0) {
             //both price per students and Estimated students cannot be 0
             return redirect()->back()->with('error', 'Both price per students and Estimated students cannot be 0, please set them first');
@@ -1601,11 +1653,15 @@ select * from tempb");
     }
 
     public function approveStandingOrder() { 
-        $standing_id = (request()->segment(3));
-       // $standing_id = request('id');
+        $this->data['standing_id'] = $standing_id = request()->segment(3);
+        $standing = \App\Models\StandingOrder::where('id', $standing_id)->first();
+        $invoice = \App\Models\Invoice::where('client_id',$standing->client_id)->orderBy('id', 'DESC')->first();
         \App\Models\StandingOrder::where('id', $standing_id)->update(['status' => 1]);
-       //  return redirect('account/transaction/create');
-        return redirect()->back()->with('success', 'successfull!');
+        if(!empty($invoice)){
+            return redirect('account/payment/'.$invoice->id);
+        }else{
+            return redirect()->back()->with('success', 'No Invoice A');
+        }
     }
 
 
@@ -1637,4 +1693,24 @@ select * from tempb");
         return redirect('account/transaction/4')->with('success', 'All Expense Uploaded Successfully!');
     }
 
+
+
+    public function budget(){
+        $id = request()->segment(3);
+        if ($_POST) {
+        
+            $array = [
+                'created_by' => Auth::user()->id,
+                'type' => request('type'),
+                'amount' => request('amount'),
+                'description' => request('description'),
+            ];
+            //\App\Models\Budget::find($id)->update($array);
+            return redirect('users/kpi_list')->with('success', 'KPI Updated successfully');
+         }
+
+         return view('account.budget.index', $this->data);
+    }
+
 }
+

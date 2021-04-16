@@ -72,18 +72,17 @@
        
                                                     @foreach($months as $month)
                                                     <th class="col-sm-2"><?= $month->month_name ?></th>
-                                                    @endforeach
-                                              
+                                                    @endforeach 
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <?php
                                                 $total = 0;
                                                 $avg_total = 0;
-                                                $montharray = [];
-                                                $a = 0;
-                                                if (!empty($payments)) {
-                                                    $i = 1;foreach ($payments as $revenue) { ?>
+                                                $sumDate1 = array();
+                                                $total_month = 0;
+                                                if (!empty($payments)) {$i = 1;
+                                              foreach ($payments as $revenue) {  ?>
                                                    <tr>
                                                     <td> <?= $i; ?></td>
                                                     <td class="text-left">
@@ -98,6 +97,7 @@
                                                         <?php $average = $revenue->amount/12;
                                                         if($month->id >= date("n", strtotime($revenue->date))) {
                                                             $avg = $average;
+                                                           // $sumDate1[$i] += $avg;
                                                             echo money($avg); 
                                                           
                                                          } else {
@@ -125,6 +125,7 @@
                                                         <td><?= money($total) ?></td>
                                                         
                                                         @foreach($months as $month)
+                                                       
                                                            <td></td>
                                                         @endforeach
                                                     </tr>

@@ -328,15 +328,15 @@ function toast(message) {
                                             </li>
                                         </ul>
                                     </li>
-                                    <!--                                    <li class="header-notification">
-                                                                            <a href="#!" class="displayChatbox">
-                                                                                <i class="ti-comments"></i>
-                                                                                <span class="badge"><?php
+                               <!--    <li class="header-notification">
+                                        <a href="#!" class="displayChatbox">
+                                            <i class="ti-comments"></i>
+                                            <span class="badge"><?php
                                     $users = \App\Models\User::where('status', 1)->where('department', '<>', 10)->get();
                                     echo sizeof($users);
                                     ?></span>
-                                                                            </a>
-                                                                        </li>-->
+                                         </a>
+                                    </li>-->
                                 <?php } ?>
                                 <li class="user-profile header-notification">
                                     <a href="#!">
@@ -423,19 +423,49 @@ function toast(message) {
                                     <h2>Invoices</h2>
                                     <span id="search_people"></span>
 
+                        </li>
+                    </ul>
+                    <!-- search -->
+                
+                    <script>
+                    search_inputs = function() {
+                        $('#search_inputs').keyup(function() {
+                            var val = $(this).val();
+                            // if(val.lenght >1){
+                            $.ajax({
+                                type: "post",
+                                url: "<?= url('analyse/search') ?>",
+                                data: "q=" + val,
+                                dataType: 'JSON',
+                                success: function(data) {
+                                    console.log(data);
+                                    $('#search_people').html(data.people);
+                                    $('#search_schools').html(data.schools);
+                                    $('#search_activities').html(data.activities);
+                                }
+                            });
 
-                                </div>
-                                <div class="dummy-column" style="overflow-y: scroll;">
-                                    <h2>Schools</h2>
-                                    <span id="search_schools"></span>
-
-
-                                </div>
-                                <div class="dummy-column">
-                                    <h2>Activity</h2>
-                                    <span id="search_activities"></span>
-
-                                </div>
+                        })
+                    }
+                    $(document).ready(search_inputs);
+                    </script>
+                    <div id="morphsearch" class="morphsearch">
+                        <form class="morphsearch-form">
+                            <input class="morphsearch-input" id="search_inputs" type="search" placeholder="Search..." />
+                            <button class="morphsearch-submit" type="submit">Search</button>
+                        </form>
+                        <div class="morphsearch-content">
+                            <div class="dummy-column">
+                                <h2>Invoices</h2>
+                                <span id="search_people"></span>
+                            </div>
+                            <div class="dummy-column" style="overflow-y: scroll;">
+                                <h2>Schools</h2>
+                                <span id="search_schools"></span>
+                            </div>
+                            <div class="dummy-column">
+                                <h2>Activity</h2>
+                                <span id="search_activities"></span>
                             </div>
                             <!-- /morphsearch-content -->
                             <span class="morphsearch-close"><i class="icofont icofont-search-alt-1"></i></span>
@@ -709,6 +739,58 @@ function toast(message) {
                                             <a href="<?= url('account/transaction/3') ?>"><i class="fa icon-account"></i> capital</a>
                                             <a href="<?= url('account/reconciliation') ?>"><i class="fa icon-account"></i> Reconciliation</a>
 
+                        <li><a href="<?= url('Account/budget') ?>"
+                            data-i18n="nav.advance-components.grid-stack">
+                              Budget 
+                        </a>
+                       </li>
+
+                        <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main">
+                                Transactions</a>
+                            <ul class="tree-2">
+                            
+                                <?php  if(can_access('view_revenue')) { ?>
+                                <a href="<?= url('account/revenue') ?>"> <i class="fa icon-account"></i> Revenue</a>
+                                <?php }  ?>
+                                <a href="<?= url('account/transaction/4') ?>"><i class="fa icon-expense"></i>
+                                    Expense</a>
+                                <a href="<?= url('account/transaction/1') ?>"><i class="fa icon-account"></i> Fixed
+                                    assets</a>
+                                <a href="<?= url('account/transaction/5') ?>"><i class="fa icon-account"></i> Current
+                                    assets</a>
+                                <a href="<?= url('account/transaction/2') ?>"><i class="fa icon-account"></i>
+                                    liabilities</a>
+                                <a href="<?= url('account/transaction/3') ?>"><i class="fa icon-account"></i>
+                                    capital</a>
+                                <a href="<?= url('account/reconciliation') ?>"><i class="fa icon-account"></i>
+                                    Reconciliation</a>
+                            </ul>
+                        </li>
+                        <li class="nav-sub-item">
+                            <a href="#" data-i18n="nav.page_layout.horizontal.main">
+                                Payroll
+                                <span class="fa fa-chevron-down"></span></a>
+                            <ul class="tree-2">
+
+                                <a href="<?= url('payroll/taxes') ?>"><i
+                                        class="fa fa-clipboard"></i><span>TAX</span></a>
+                                <a href="<?= url('payroll/pension') ?>"><i class="fa fa-clipboard"></i><span>Pension
+                                        Fund</span></a>
+                                <a href="<?= url('allowance/index') ?>"><i
+                                        class="fa fa-clipboard"></i><span>Allowances</span></a>
+                                <a href="<?= url('deduction/index') ?>"><i
+                                        class="fa fa-clipboard"></i><span>Deductions</span></a>
+                                <li class="nav-sub-item-3">
+                                    <a>
+                                        Loans
+                                        <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="tree-3">
+
+                                        <a href="<?= url('loan/type') ?>"><i class="fa fa-clipboard"></i><span
+                                                style="color: white; line-height: 25px;"> Loan Types</span></a>
+
+                                        <a href="<?= url('loan/index') ?>"><i class="fa fa-clipboard"></i><span
+                                                style="color: white; line-height: 25px;"> Borrowers </span></a>
 
                                         </ul>
                                     </li>
@@ -763,28 +845,51 @@ function toast(message) {
                                                             </a>
                                                         </li>-->
 
-                        <?php } ?>
-                        <?php if (can_access('manage_users')) { ?>
-                            <li class="nav-item">
-                                <a href="#!">
-                                    <i class="ti-gift "></i>
-                                    <span data-i18n="nav.extra-components.main">Human Resources</span>
-                                </a>
-                                <ul class="tree-1">
-                                    <li><a href="<?= url('users/index') ?>" data-i18n="nav.extra-components.session-timeout">Users</a></li>
-                                    <li><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">Meeting Minutes</a></li>
-                                    <li><a href="<?= url('general/show/attendances') ?>" data-i18n="nav.extra-components.session-timeout">Attendance</a></li>
-                                    <li><a href="<?= url('Partner/partners') ?>" data-i18n="nav.extra-components.session-idle-timeout">Partners</a></li>
-                                    <li><a href="<?= url('users/applicant') ?>" data-i18n="nav.extra-components.session-idle-timeout">Applicants</a>
-                                    </li>
-                                    <li><a href="<?= url('users/template') ?>" data-i18n="nav.extra-components.offline">Forms & Templates</a></li>
-                                </ul>
-                            </li>
+                <?php } ?>
 
-                            <?php
-                        }
-                        if (can_access('manage_users') && !in_array(Auth::user()->department, [9, 10]) || in_array(Auth::user()->role_id, array(14, 8, 2, 3, 9, 20))) {
-                            ?>
+                <?php if (can_access('manage_users')) { ?>
+                <li class="nav-item">
+                    <a href="#!">
+                        <i class="ti-gift "></i>
+                        <span data-i18n="nav.extra-components.main">Human Resources</span>
+                    </a>
+                    <ul class="tree-1">
+                        <li><a href="<?= url('users/index') ?>"
+                                data-i18n="nav.extra-components.session-timeout">Users</a></li>
+                        <li><a href="<?= url('users/kpi_list') ?>"
+                            data-i18n="nav.extra-components.session-timeout">KPI</a></li>
+                        <li><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">Meeting
+                                Minutes</a></li>
+                        <li><a href="<?= url('attendance/index') ?>"
+                                data-i18n="nav.extra-components.session-timeout">Attendance</a></li>
+                        <li><a href="<?= url('Partner/partners') ?>"
+                                data-i18n="nav.extra-components.session-idle-timeout">Partners</a></li>
+                        <li><a href="<?= url('users/applicant') ?>"
+                                data-i18n="nav.extra-components.session-idle-timeout">Applicants</a>
+                        </li>
+                        <li><a href="<?= url('users/template') ?>" data-i18n="nav.extra-components.offline">Forms &
+                                Templates</a></li>
+                    </ul>
+                </li>
+                <?php } ?>
+
+
+                <?php if (can_access('manage_users')) { ?>
+                <li class="nav-item">
+                    <a href="#!">
+                        <i class="ti-gift "></i>
+                        <span data-i18n="nav.extra-components.main">User permissions</span>
+                    </a>
+                    <ul class="tree-1">
+                        <li><a href="<?= url('Role/userPermission') ?>"
+                                data-i18n="nav.extra-components.session-timeout">User permission</a></li>
+
+                    </ul>
+                </li>
+                <?php }
+
+                  if (can_access('manage_users') && !in_array(Auth::user()->department, [9, 10]) || in_array(Auth::user()->role_id, array(14, 8, 2, 3, 9, 20))) {
+                     ?>
 
                             <li class="nav-item">
                                 <a href="#!">

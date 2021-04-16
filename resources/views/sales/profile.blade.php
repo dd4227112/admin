@@ -41,7 +41,7 @@
                             <div class="user-name">
                                 <span><?= $school->name ?></span>
                                 <span>Type: <?= $school->type ?></span>
-                                <span> <?= $school->ward . ' - ' . $school->district . ' - ' . $school->region ?></span>
+                                <span> <?= $school->wards->name . ' - ' . $school->wards->district->name . ' - ' . $school->wards->district->region->name ?></span>
                             </div>
                             <div class="btn-group">
                                 <small style="margin-left:1em">Person Allocated</small>
@@ -392,10 +392,10 @@
                                     <div class="table-responsive">
                                         <div class="card-block user-box">
                                             <?php
-                    $contacts = $school->contacts()->get();
-                    if(sizeof($contacts)){
-                      foreach ($contacts as $contact) {
-                        ?>
+                                            $contacts = $school->contacts()->get();
+                                            if(sizeof($contacts)){
+                                            foreach ($contacts as $contact) {
+                                                ?>
                                             <div class="media m-b-10">
                                                 <a class="media-left" href="#!">
                                                     <img class="media-object img-circle"
@@ -413,7 +413,7 @@
                                                 </div>
                                             </div>
                                             <?php }
-                    } ?>
+                                             } ?>
 
 
                                             <a href="#" class="waves-effect" data-toggle="modal"
@@ -444,17 +444,17 @@
                                                             <tr>
                                                                 <th class="social-label b-none">Region</th>
                                                                 <td class="social-user-name b-none text-muted">
-                                                                    <?= $school->region ?></td>
+                                                                    <?= $school->wards->district->region->name ?></td>
                                                             </tr>
                                                             <tr>
                                                                 <th class="social-label b-none">District</th>
                                                                 <td class="social-user-name b-none text-muted">
-                                                                    <?= $school->district ?></td>
+                                                                    <?= $school->wards->district->name ?></td>
                                                             </tr>
                                                             <tr>
                                                                 <th class="social-label b-none">Ward</th>
                                                                 <td class="social-user-name b-none text-muted">
-                                                                    <?= $school->ward ?></td>
+                                                                    <?= $school->wards->name ?></td>
                                                             </tr>
                                                             <tr>
                                                                 <th class="social-label b-none p-b-0">Use NMB</th>
