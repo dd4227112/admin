@@ -39,7 +39,7 @@
                                                             <tbody>
                                                                 <tr>
                                                                     <th scope="row">Task Period</th>
-                                                                    <th>Start {{ $activity->start_date }} to  <?= $activity->end_date ?></th>
+                                                                    <th>Start {{ date('d-m-Y H:i:s', strtotime($activity->start_date)) }} &nbsp;&nbsp; &nbsp;  to  &nbsp;&nbsp; &nbsp;   <?=  date('d-m-Y H:i:s', strtotime($activity->end_date)) ?></th>
                                                                 </tr>
                                                                 <tr>
                                                                     <th scope="row">Staff Members</th>
@@ -76,6 +76,8 @@
                                                                     <th scope="row">Task Type</th>
                                                                     <th> <?= $activity->taskType->name ?></th> 
                                                                 </tr>
+
+                                    
                                                                 <tr>
                                                                     <th>Modules</th>
                                                                     <td>

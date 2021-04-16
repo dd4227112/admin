@@ -2,7 +2,6 @@
 @section('content')
 <?php $root = url('/') . '/public/' ?>
 
-
 <?php
 $arr = [];
 foreach ($user_permission as $permis) {
@@ -43,24 +42,28 @@ foreach ($user_permission as $permis) {
                                 <div class="card-block-big">
                                     <div class="media-left">
                                         <a href="#" class="profile-image">
-                                            <img class="user-img img-circle" src="<?= preg_match('/http/', $user->photo) ? $user->photo : $root . 'assets/images/user.png' ?>" alt="User-Profile-Image" height="90">
+                                            <img class="user-img img-circle" src="<?= $user->company_file_id !='' ? $user->companyFile->path : $root . 'assets/images/user.png' ?>" alt="User-Profile-Image" height="100">
                                         </a>
                                     </div>
-                                    <i class="icofont icofont-comment"></i>
+                                    
                                 </div>
                             </div>
                         </div>
                         <?php
-                        if (Auth::user()->role_id != 7) { ?>
+                        if (Auth::user()->role_id != 7) { 
+                            $sql = "SELECT basic_pay FROM admin.salaries WHERE user_id = '$user->id' ORDER BY id DESC LIMIT 1";
+                            $salary = \collect(DB::select($sql))->first();
+                            $salary_per_minute = $salary->basic_pay / $minutes;
+                           // dump($salary_per_minute);
+                            ?>
                             <div class="col-md-6 col-xl-4">
                                 <div class="card counter-card-2">
                                     <div class="card-block-big">
-                                        <div>
-                                            <h3>Tsh <?= number_format($user->salary) ?></h3>
+                                        <div> 
+                                            <h3>Tsh <?= money($salary->basic_pay) ?></h3>
                                             <p>Basic Salary 
                                                 <span class="f-right text-success">
                                                     <i class="icofont icofont-arrow-up"></i>
-                                                    increase every 3 months
                                                 </span>
                                             </p>
                                             <div class="progress ">
@@ -71,6 +74,7 @@ foreach ($user_permission as $permis) {
                                     </div>
                                 </div>
                             </div>
+                            
                             <div class="col-md-6 col-xl-4">
                                 <div class="card counter-card-3">
                                     <div class="card-block-big">
@@ -121,8 +125,8 @@ foreach ($user_permission as $permis) {
                                                 $b = \collect(\DB::select('select count(distinct branch) as count from admin.nmb_schools'))->first();
                                                 echo $b->count;
                                                 ?></h3>
-                                            <p>Branches with Schools
-                                                <span class="f-right text-default">
+                                                   <p>Branches with Schools
+                                                   <span class="f-right text-default">
                                                     <i class="icofont icofont-arrow-up"></i>
 
                                                 </span></p>
@@ -164,6 +168,13 @@ foreach ($user_permission as $permis) {
                             <div class="slide"></div>
                         </li>
 
+                    <?php if(can_access('add_contract')) { ?>
+                        <li class="nav-item">
+                            <a class="nav-link " data-toggle="tab" href="#legal" role="tab" aria-expanded="false">legal/contract</a>
+                            <div class="slide"></div>
+                        </li>
+                    <?php } ?>
+
                         <?php if (Auth::user()->id == 2) { ?>
                             <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#settings5" role="tab">Permissions</a>
@@ -184,8 +195,7 @@ foreach ($user_permission as $permis) {
                                 <div class="card-header">
                                     <h5 class="card-header-text">About</h5>
                                     <?php
-                                    if ($user->id == 2) {
-                                        ?>
+                                    if ($user->id == 2) { ?>
                                         <a id="edit-btn" href="<?= url('users/edit/' . $user->id) ?>" class="btn btn-sm btn-primary waves-effect waves-light f-right">
                                             <i class="icofont icofont-edit"></i>
                                         </a>
@@ -227,6 +237,8 @@ foreach ($user_permission as $permis) {
                                                                     <tr>
                                                                         <td><a href="<?= url('users/resetPassword/' . $user->id) ?>" class="btn btn-warning btn-sm">Reset Password</a></td>
                                                                         <td> <button class="btn btn-primary btn-sm text-right" data-toggle="modal"  role="button" data-target="#status-Modal"> Upload Users  <i class="ti-user"></i></button> </td>
+                                                                        {{-- <td><a href="<?= url('users/uploadprofile/' . $user->id) ?>" class="btn btn-info btn-sm">Upload profile picture</a></td> --}}
+
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
@@ -249,7 +261,7 @@ foreach ($user_permission as $permis) {
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">Role</th>
-                                                                        <td>{{ $user->role_id }}</td>
+                                                                        <td>{{ $user->role->name }}</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">Employment Category</th>
@@ -398,24 +410,23 @@ foreach ($user_permission as $permis) {
                                     </div>
                                     <!-- end of edit-info -->
                                     <?php
-                                    if (Auth::user()->id == 2) {
+                                    if (Auth::user()->id != 2) {
                                         ?>
-                                                                                                                                                <!--                                        <form class="form-horizontal form-material" method="post" action="<?= url('user/changePhoto/' . $user->id) ?>" enctype="multipart/form-data">
+                                        <form class="form-horizontal form-material" method="post" action="<?= url('users/changePhoto/' . $user->id) ?>" enctype="multipart/form-data">
+                                            <div class="form-group">
+                                                <label class="col-md-12">Photo</label>
+                                                <div class="col-md-12">
+                                                    <input type="file" name="photo" accept=".png,.jpg,.jpeg,.gif" class="form-control form-control-line">
+                                                </div>
+                                            </div>
 
-                                                                                                                                                                                            <div class="form-group">
-                                                                                                                                                                                                <label class="col-md-12">Photo</label>
-                                                                                                                                                                                                <div class="col-md-12">
-                                                                                                                                                                                                    <input type="file" name="photo" accept=".png,.jpg,.jpeg,.gif" class="form-control form-control-line">
-                                                                                                                                                                                                </div>
-                                                                                                                                                                                            </div>
-
-                                                                                                                                                                                            <div class="form-group">
-                                                                                                                                                                                                <div class="col-sm-12">
-                                        <?= csrf_field() ?>
-                                                                                                                                                                                                    <button class="btn btn-success">Update Profile</button>
-                                                                                                                                                                                                </div>
-                                                                                                                                                                                            </div>
-                                                                                                                                                                                        </form>-->
+                                            <div class="form-group">
+                                                <div class="col-sm-12">
+                                                    <?= csrf_field() ?>
+                                                    <button class="btn btn-success">Update Profile</button>
+                                                </div>
+                                            </div>
+                                        </form>
                                     <?php } ?>
                                 </div>
                                 <!-- end of card-block -->
@@ -522,7 +533,6 @@ foreach ($user_permission as $permis) {
                                             <img src="<?= $root ?><?= $user->qr_code ?>" alt="">
                                             <bt>
 
-
                                             <?php } ?>
                                     </div>
                                 </div>
@@ -545,22 +555,40 @@ foreach ($user_permission as $permis) {
                                             <h5 class="card-header-text">Custom Reports</h5>
                                         </div>
                                         <div class="card-block">
-                                            <form>
+                                      
+                                        <div class="table-responsive dt-responsive">
+                                        <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
+                                            <thead>
+                                            <tr>
+                                                <th>Id </th>
+                                                <th>Title</th>
+                                                <th>Date</th>
+                                                <th>Value</th>
+                                                <th class="text-center">Action</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php  $kpi_ids = \App\Models\KPIUser::where('user_id',$user->id)->get(['kpi_id']);
+                                                 $kpis = \App\Models\KeyPerfomanceIndicator::whereIn('id',$kpi_ids)->get();
+                                               
+                                            if(sizeof($kpis) > 0){ $i = 1;
+                                                foreach($kpis as $kpi){
+                                                ?>
+                                            <tr>
+                                                <td><?=$i++?> </td>
+                                                <td><?=$kpi->name?></td>
+                                                <td><?=$kpi->created_at ?></td>
+                                                <td><?=$kpi->value?></td>
+                                                <td>
+                                                <a class="btn btn-warning btn-sm" href="{{ url('users/evaluatekpi/'.$kpi->id .'/'.$user->id) }}">Evaluate</a>
+                                                </td>
+                                            </tr>
+                                            <?php } } ?>
+                                            </tbody>
 
-                                                <div class="form-group row">
-                                                    <div class="col-sm-5">
-                                                        <input type="date" id="from" class="form-control form-txt-warning" placeholder="From">
-                                                    </div>
-                                                    <div class="col-sm-5">
-                                                        <input type="date" id="to" class="form-control form-txt-default" placeholder="To">
-                                                    </div>
-                                                    <div class="col-sm-2">
-                                                        <input type="button" class="form-control  btn btn-success" value="submit" id="search_report">
-                                                    </div>
-                                                </div>
+                                        </table>
+                                        </div>
 
-
-                                            </form>
                                         </div>
                                         <br />
                                         <div class="card-block">
@@ -648,40 +676,107 @@ foreach ($user_permission as $permis) {
                                         <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#leave-large-Modal"><i class="fa fa-plus"></i>Add Leave</button>
 
                                         <div class="card-block ">
-                                            <table class="table table-responsive dataTable">
+                                            <div class="table-responsive table-sm table-striped table-bordered table-hover">
+                                              <table class="table dataTable">
                                                 <thead>
                                                     <tr>
                                                         <th>Date</th>
                                                         <th>Absent Type</th>
-                                                        <th>Note</th>
+                                                        <th>Note</th> 
                                                         <th>Leave Attachment</th>
                                                         <th>Approved By</th>
-                                                        <th>Action</th>
+                                                        <th>End date</th>
+                                                        <th class="text-center">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <?php
-                                                    foreach ($absents as $absent) {
-                                                        ?>
+                                                 
+                                                    <?php if(!empty($absents)) {  ?>
+                                                      <?php foreach($absents as $absent) { ?>
                                                         <tr>
                                                             <td><?= date('d M Y', strtotime($absent->date)) ?></td>
                                                             <td><?= $absent->absentReason->name ?></td>
                                                             <td><?= $absent->note ?></td>
                                                             <td><?= $absent->companyFile->name ?></td>
                                                             <td><?= $absent->approvedBy->name ?></td>
-                                                            <td>
-
-                                                                <a type="button" class="btn btn-primary btn-sm waves-effect" target="_blank" href="<?= url('customer/viewContract/' . $absent->companyFile->id) ?>">View</a>
-                                                                <!--<a type="button" class="btn btn-warning btn-sm waves-effect" href="<?= url('users/absent/' . $absent->id) ?>">Delete</a>-->
+                                                            <td><?= date('d M Y', strtotime($absent->end_date)) ?></td>
+                                                            <td class="text-center">
+                                                            
+                                                                <div class="dropdown-secondary dropdown f-right">
+                                                                    <button class="btn btn-success btn-mini dropdown-toggle waves-effect waves-light" type="button" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</button>
+                                                                    <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                                                                      <a type="button" class="btn btn-primary btn-sm waves-effect" target="_blank" href="<?= url('customer/viewContract/' . $absent->id .'/absent') ?>">View</a>
+                                                                      <?php if ($absent->status == null) { ?>
+                                                                         <?php if(can_access('approve_leave')) { ?>
+                                                                         <a type="button" class="btn btn-info btn-sm"  href="<?= url('users/askleave/' . $absent->id .'/approve') ?>">Approve</a>
+                                                                         <a type="button" class="btn btn-danger btn-sm"  href="<?= url('users/askleave/' . $absent->id .'/reject') ?>">Reject</a>
+                                                                         <?php } ?>
+                                                                     <?php } else if($absent->status == 'Approved') { ?>
+                                                                        <a  class="badge badge-info badge-sm"> <?=$absent->status?> </a>
+                                                                     <?php } else { ?>
+                                                                        <a  class="badge badge-danger badge-sm"> <?=$absent->status?> </a>
+                                                                     <?php } ?>
+                                                                   </div>
+                                                                </div>
 
                                                             </td>
                                                         </tr>
+                                                      <?php } ?>
                                                     <?php } ?>
                                                 </tbody>
                                             </table>
                                         </div>
+                                      </div>
                                     </div>
-                                </div></div>   </div>
+                                </div>
+                               </div>  
+                             </div>
+
+                             <div class="tab-pane" id="legal" role="tabpanel" aria-expanded="false">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h5 class="card-header-text">Legal/contract</h5>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <br/>
+                                            <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#legal-large-Modal"><i class="fa fa-plus"></i>Add Legal/Contract</button>
+    
+                                            <div class="card-block">
+                                              <div class="table-responsive table-sm table-striped table-bordered table-hover">
+                                                <table class="table dataTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Name</th>
+                                                            <th>Start date</th>
+                                                            <th>End date</th>
+                                                            <th>Description</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php
+                                                        foreach ($documents as $document) {
+                                                            ?>
+                                                            <tr>
+                                                                <td><?= $document->name ?></td>
+                                                                <td><?= date('d-m-Y', strtotime($document->start_date)) ?></td>
+                                                                <td> {{ $document->end_date ?? '' }}</td>
+                                                                <td><?= $document->description?></td>
+                                                                <td>
+                                                                    <a type="button" class="btn btn-primary btn-sm waves-effect" target="_blank" href="<?= url('customer/viewcontract/' . $document->id . '/legal') ?>">View</a>
+                                                                </td>
+                                                            </tr>
+                                                        <?php } ?>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                           </div>
+                                        </div>
+                                    </div>
+                                   </div>  
+                                 </div>
+
                         <div class="tab-pane" id="settings5" role="tabpanel">
                             <div class="email-card p-0">
                                 <div class="card">
@@ -800,52 +895,17 @@ foreach ($user_permission as $permis) {
                                                     <div class="card-block ">
 
                                                         <div class="card-block ">
-                                                            <table class="table table-responsive dataTable">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>Ward</th>
-                                                                        <th>District</th>
-                                                                        <th>Region</th>
-                                                                        <th>No of Schools</th>
-                                                                        <th>Action</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <?php
-                                                                    $ward_ids = DB::table('users_schools_wards')->where('user_id', $user->id)->get(['ward_id']);
-                                                                    $arr_wards = [];
-                                                                    foreach ($ward_ids as $ward_id) {
-                                                                        array_push($arr_wards, $ward_id->ward_id);
-                                                                    }
-                                                                    $wards = \App\Models\Ward::whereIn('id', $arr_wards)->get();
-                                                                    foreach ($wards as $ward) {
-                                                                        ?>
-                                                                        <tr>
-                                                                            <td><?= $ward->name ?></td>
-                                                                            <td><?= $ward->district->name ?></td>
-                                                                            <td><?= $ward->district->region->name ?></td>
-                                                                            <td><?= $ward->schools()->where(DB::raw('lower(ownership)'), 'non-government')->count() ?></td>
-                                                                            <td>
-
-                                                                                <a type="button" class="btn btn-warning btn-sm waves-effect" href="<?= url('background/removeUserSchool/' . $user->id.'/'.$ward->id) ?>">Delete</a>
-
-                                                                            </td>
-                                                                        </tr>
-                                                                    <?php } ?>
-                                                                </tbody>
-                                                            </table>
                                                         </div>
                                                     </div>
                                                 </div>
-
                                             </div>
                                         </div>
-
-
                                     </div>
-                                </div></div>   </div>
-                    </div>
-                </div>
+                                </div>
+                              </div>  
+                            </div>
+                        </div>
+                      </div>
 
 
             </div>
@@ -923,6 +983,8 @@ foreach ($user_permission as $permis) {
         </div>
     </form>
 </div>
+
+
 <div class="modal fade" id="leave-large-Modal" tabindex="-1" role="dialog" style="z-index: 1050; display: none;" aria-hidden="true">
     <form class="cmxform form-horizontal " id="commentForms" action="<?= url('users/absent') ?>" method="POST" enctype="multipart/form-data">
         <div class="modal-dialog modal-lg" role="document">
@@ -933,19 +995,12 @@ foreach ($user_permission as $permis) {
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <div class="form-group ">
-                        <label for="cname" class="control-label col-lg-3">Date</label>
-                        <div class="col-lg-12">
-                            <input class="form-control" id="cname" name="date" disabled=""  value="<?= date('Y-m-d') ?>"  type="date">
-                        </div>
-                    </div>
 
-                    <div class="form-group row">
-                        <label class="control-label col-lg-3">Absent Reason</label>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="cname" class="control-label col-lg-3">Absent Reason</label>
                         <div class="col-lg-12">
                             <select name="absent_reason_id" class="form-control">
-
                                 <?php
                                 $ctypes = DB::table('admin.absent_reasons')->get();
                                 if (!empty($ctypes)) {
@@ -953,26 +1008,53 @@ foreach ($user_permission as $permis) {
                                         ?>
                                         <option value="<?= $ctype->id ?>"><?= $ctype->name ?></option>
                                         <?php
-                                    }
-                                }
+                                      }
+                                   }
                                 ?>
-
                             </select>
                         </div>
                     </div>
 
-                    <div class="form-group ">
-                        <label for="cname" class="control-label col-lg-3">Leave Reasons Comment</label>
-                        <div class="col-lg-12">
-                            <textarea class=" form-control" id="abbrname" name="note" type="text" required=""></textarea>
-                        </div>
-                    </div>
                     <div class="form-group row">
-                        <label class="control-label col-lg-3">Upload Document of verification</label>
-                        <div class="col-sm-12">
-                            <input type="file" class="form-control" accept=".pdf" name="file" >
+                       <div class="col-sm-6">
+                         <label class="control-label">Start date</label>
+                          <div class="col-lg-12">
+                            <input class="form-control"  name="date"   value="<?= date('Y-m-d') ?>"  type="date" required>
+                          </div>
+                       </div>
+                      
+                       <div class="col-sm-6">
+                        <label class="control-label">End date</label>
+                        <div class="col-lg-12">
+                            <input class="form-control" name="end_date"  type="date">
+                        </div>
+                       </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cname" class="control-label col-lg-3">Description</label>
+                        <div class="col-lg-12">
+                            <textarea class=" form-control"  name="note" type="text"></textarea>
                         </div>
                     </div>
+
+              
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label class="control-label">Download Leave document</label>
+                             <div class="col-lg-12">
+                                <a href="https://drive.google.com/file/d/1NAzGeIi-YlXp6OHvY2dqvoQWfPdxyzIj/view?usp=sharing" target="_blank" class="badge badge-warning badge-sm"> Download </a> 
+                             </div>
+                          </div>
+
+                          <div class="col-sm-6">
+                            <label class="control-label">Upload Document</label>
+                             <div class="col-lg-12">
+                                <input type="file" class="form-control" accept=".pdf" name="file" required>
+                             </div>
+                          </div>
+                     </div>
+
                 </div>
                 <div class="modal-footer">
                     <?= csrf_field() ?>
@@ -984,6 +1066,74 @@ foreach ($user_permission as $permis) {
         </div>
     </form>
 </div>
+
+
+
+
+
+<div class="modal fade" id="legal-large-Modal" tabindex="-1" role="dialog" style="z-index: 1050; display: none;" aria-hidden="true">
+    <form class="cmxform form-horizontal " id="commentForms" action="<?= url('users/legalcontract') ?>" method="POST" enctype="multipart/form-data">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Legal/Contract  </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="cname" class="control-label col-lg-3">Contract/Legal name</label>
+                        <div class="col-lg-12">
+                            <input class="form-control"  name="contract_legal"   type="text">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                       <div class="col-sm-6">
+                         <label class="control-label">Start date</label>
+                          <div class="col-lg-12">
+                            <input class="form-control"  name="start_date"   type="date">
+                          </div>
+                       </div>
+                      
+                       <div class="col-sm-6">
+                        <label class="control-label">End date</label>
+                        <div class="col-lg-12">
+                            <input class="form-control" name="end_date"   type="date">
+                        </div>
+                       </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cname" class="control-label col-lg-3">Description</label>
+                        <div class="col-lg-12">
+                            <textarea class=" form-control"  name="description" type="text" required=""></textarea>
+                        </div>
+                    </div>
+
+              
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label class="control-label">Upload Document</label>
+                             <div class="col-lg-12">
+                                <input type="file" class="form-control" accept=".pdf" name="file">
+                             </div>
+                          </div>
+                     </div>
+                </div>
+
+                <div class="modal-footer">
+                    <?= csrf_field() ?>
+                    <input type="hidden" value="<?= $user->id ?>" name="user_id"/>
+                    <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary waves-effect waves-light ">Save </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
 <script type="text/javascript">
     permission = function () {
         $('.permission').click(function () {

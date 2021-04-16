@@ -99,24 +99,24 @@ $payslip_settings = \DB::table('payslip_settings')->first();
                                                 <th  class="col-lg-4" style="max-width:30%">
                                                     <?php
                                                     $array = array(
-                                                        "src" => url('storage/uploads/images/' . $siteinfos->photo),
+                                                        "src" => url('storage/uploads/images/'),
                                                         'width' => '82em',
                                                         'height' => '82em',
                                                         'class' => 'img-rounded',
                                                         'style' => 'margin-left:2em'
                                                     );
-                                                    $user_info = $salary->user->userInfo(\DB::table($salary->user->table));
+                                                    $user_info = $salary->user->userInfo(\DB::table($salary->user));
                                                     ?>
-                                                        <?= img($array) ?>
+                                                        {{-- <?= img($array) ?> --}}
                                                     </th>
                                                     <th style="padding-left:3em;">
                                                     <?php if ((int) $payslip_settings->show_address == 1) { ?>
                                                     <address style="margin-left:1em">
 
                                                         <br/>
-                                                            <br>Address: <?= $user_info->address; ?>
-                                                            <br>Phone: <?= $user_info->phone; ?>
-                                                            <br>Email: <?= $user_info->email; ?>
+                                                            <br>Address: <?= $user->address; ?>
+                                                            <br>Phone: <?= $user->phone; ?>
+                                                            <br>Email: <?= $user->email; ?>
                                                     </address>
                                                     <?php } ?>
                                                     </th>
@@ -178,7 +178,7 @@ $payslip_settings = \DB::table('payslip_settings')->first();
 
                                                                     <?php
                                                                     //calculate user allowances
-                                                                    $allowances = \App\Model\SalaryAllowance::where('salary_id', $salary->id)->get();
+                                                                    $allowances = \App\Models\SalaryAllowance::where('salary_id', $salary->id)->get();
                                                                     $total_allowance = 0;
                                                                     if (!empty($allowances)) {
                                                                         foreach ($allowances as $value) {
@@ -208,7 +208,7 @@ $payslip_settings = \DB::table('payslip_settings')->first();
                                                 <tr>
                                                     <td>3</td>
                                                     <?php
-                                                    $pension = \App\Model\SalaryPension::where('salary_id', $salary->id)->first();
+                                                    $pension = \App\Models\SalaryPension::where('salary_id', $salary->id)->first();
                                                     ?>
                                                     <td>Pension Fund (<?= !empty($pension)? $pension->pension->name : '' ?>)</td>
                                                     <td align='center'> <?php
@@ -238,7 +238,7 @@ $payslip_settings = \DB::table('payslip_settings')->first();
 
                                                                     <?php
                                                                     //calculate user deductions
-                                                                    $deductions = \App\Model\SalaryDeduction::where('salary_id', $salary->id)->get();
+                                                                    $deductions = \App\Models\SalaryDeduction::where('salary_id', $salary->id)->get();
                                                                     $total_deductions = 0;
                                                                     if (!empty($deductions)) {
                                                                         foreach ($deductions as $value) {
@@ -293,7 +293,7 @@ $payslip_settings = \DB::table('payslip_settings')->first();
                                                 </td>
                                                 <td>                                    <?php
                                                     if ($payslip_settings->show_employer_signature == 1) {
-                                                        $setting = \App\Model\Setting::first();
+                                                        $setting = \App\Models\Setting::first();
                                                         ?>
 
                                                         <p><?php if ($payslip_settings->show_employer_digital_signature == 1) { ?>.... <img src="<?= $setting->signature ?>" width="75" height="54"> <?php
@@ -330,7 +330,7 @@ $payslip_settings = \DB::table('payslip_settings')->first();
                                                         <tr>
                                                             <th>PAYE  <?php
                                                                 //calculate PAYEE
-                                                                $tax = \App\Model\Paye::where('from', '<=', $taxable_amount)->where('to', '>=', $taxable_amount)->first();
+                                                                $tax = \App\Models\Paye::where('from', '<=', $taxable_amount)->where('to', '>=', $taxable_amount)->first();
                                                                 if (!empty($tax)) {
                                                                     echo '(' . $tax->tax_rate . '%)';
                                                                     if (!empty($tax)) {

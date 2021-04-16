@@ -12,7 +12,6 @@
                 <label class="col-sm-2 col-form-label">School Name</label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" placeholder="Add School Namee eg, canossa" name="name" value="<?= strtoupper($school->name) ?> <?= strtoupper($school->type) ?> SCHOOL" required="" autofocus>
-
                 </div>
             </div>
             <div class="form-group row">
@@ -86,7 +85,6 @@
                     <div id="col-lg-6">
                         <input style="max-width: 17em;
                                resize: none" class="form-control " id="school_username" name="username" type="text" placeholder="school name" value="<?= strtolower($school->name) ?>" required="" onkeyup="validateForm()"> 
-
                     </div>
                     <div id="col-lg-4">
                         <b style="font-size: 1.4em;">.shulesoft.com</b>
@@ -115,7 +113,6 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Implementation Start Date</label>
                 <div class="col-sm-10">
-
                     <input type="datetime-local" class="form-control" value="" name="implementation_date" required="">
                 </div>
             </div>
@@ -211,17 +208,16 @@
                 <label class="col-sm-2 col-form-label">Agreement Type</label>
                 <div class="col-sm-10">
                     <select name="contract_type_id" class="form-control">
-
                         <?php
                         $ctypes = DB::table('admin.contracts_types')->get();
                         foreach ($ctypes as $ctype) {
                             ?>
                             <option value="<?= $ctype->id ?>"><?= $ctype->name ?></option>
                         <?php } ?>
-
                     </select>
                 </div>
             </div>
+            
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Contract Start Date</label>
                 <div class="col-sm-10">
@@ -244,7 +240,6 @@
                 <label class="col-sm-2 col-form-label">Standing Order Form</label>
                 <div class="col-sm-10">
                     <input type="file" class="form-control" accept=".pdf" name="standing_order" required="">
-
                     <span class="messages">Client MUST sign a standing order to specify which date he/she will start to pay. <a href="#">Click Here to download </a> Standing Order Template</span>
                 </div>
             </div>

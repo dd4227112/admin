@@ -50,9 +50,6 @@ class Kernel extends ConsoleKernel {
             // (new Message())->checkPhoneStatus();
              $this->resetDemo();
         })->hourly();
-
-
-
         $schedule->call(function () {
             $this->curlServer(['action' => 'payment'], 'http://51.91.251.252:8081/api/cron');
         })->everyMinute();
@@ -68,11 +65,12 @@ class Kernel extends ConsoleKernel {
         })->dailyAt('03:30'); // Eq to 06:30 AM 
 
         $schedule->call(function () {
-
             $this->sendNotice();
             $this->sendBirthdayWish();
             $this->sendTaskReminder();
             $this->sendSequenceReminder();
+             //contracts remainder
+            $this->contractRemainder();
         })->dailyAt('04:40'); // Eq to 07:40 AM 
 //        $schedule->call(function() {
 //            //send login reminder to parents in all schema
@@ -89,13 +87,9 @@ class Kernel extends ConsoleKernel {
             // $this->sendReportReminder();
             (new Message())->paymentReminder();
         })->dailyAt('05:10');
-
-
         $schedule->call(function () {
-           
             //$this->checkSchedule();
         })->everyMinute();
-
         $schedule->call(function () {
             //  (new HomeController())->createTodayReport();
             // (new Background())->officeDailyReport();
@@ -103,7 +97,6 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             $this->understandActivities();
         })->dailyAt('13:00'); //eg to 16h
-
         $schedule->call(function () {
             //  (new HomeController())->createTodayReport();
             (new Background())->schoolMonthlyReport();
@@ -622,19 +615,15 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
         DB::select('REFRESH MATERIALIZED VIEW  admin.all_notice');
         $public_day = DB::table('admin.public_days')->whereMonth('date', date('m'))->whereDay('date', date('d'))->first();
         !empty($public_day) ?? DB::statement("insert into public.sms(phone_number,body,type,sms_keys_id)
-select distinct phone, body,0,8 from (select 'Tunakutakia '||upper(\"schema_name\")||'  Heri ya " . $public_day->name . ". ' AS body,email,replace(replace(replace(phone,'/',','),' ',''),'|',',') as phone,\"schema_name\",name from admin.all_users where usertype in ('Admin') and length(phone)>3 and \"schema_name\" not in ('public','betatwo')) x");
-
-        $notices = DB::select('select * from admin.all_notice  WHERE  date-CURRENT_DATE=3 and status=0 ');
-///these are notices+
+       select distinct phone, body,0,8 from (select 'Tunakutakia '||upper(\"schema_name\")||'  Heri ya " . $public_day->name . ". ' AS body,email,replace(replace(replace(phone,'/',','),' ',''),'|',',') as phone,\"schema_name\",name from admin.all_users where usertype in ('Admin') and length(phone)>3 and \"schema_name\" not in ('public','betatwo')) x");
+        $notices = DB::select('select * from admin.all_notice  WHERE  date-CURRENT_DATE=3 and status=0');
+        ///these are notices+
         foreach ($notices as $notice) {
-
-//$class_ids = (explode(',', preg_replace('/{/', '', preg_replace('/}/', '', $notice->class_id))));
+        //$class_ids = (explode(',', preg_replace('/{/', '', preg_replace('/}/', '', $notice->class_id))));
             $to_roll_ids = preg_replace('/{/', '', preg_replace('/}/', '', $notice->to_roll_id));
-
             $users = $to_roll_ids == 0 ? DB::select("select *,(select id as sms_keys_id from " . $notice->table_schema . ".sms_keys limit 1 ) as sms_keys_id from admin.all_users where schema_name::text='" . $notice->schema_name . "'") : DB::select('select *,(select id as sms_keys_id from ' . $notice->schema_name . '.sms_keys limit 1 ) as sms_keys_id from admin.all_users where role_id IN (' . $to_roll_ids . ' ) and schema_name::text=\'' . $notice->schema_name . '\'  ');
             if (sizeof($users) > 0) {
                 foreach ($users as $user) {
-
                     $message = 'Kalenda ya Shule:'
                             . 'Siku ya tukio : ' . $notice->date . ' ,'
                             . 'Jina la Tukio:  ' . $notice->notice . ','
@@ -766,6 +755,24 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         }
         return TRUE;
     }
+
+   // Notify by email 30 days before the end of contracts
+   public function contractRemainder() {
+    $contracts = DB::select('select * from admin.legal_contracts WHERE end_date::date-CURRENT_DATE=30');
+    ///Available legal/conttracts
+    foreach ($contracts as $contract) {
+        $user = \App\Models\User::findOrFail($contract->user_id);
+        if (!empty($user)) {
+                $message = 'Hello '
+                . 'This is the remainder of end of contract '
+                . 'regarding ' . $user->firstname .' ' . $user->lastname . ''
+                . ' which ends at ' . date('d/m/Y', strtotime($contract->end_date)) . '';
+                if (filter_var($user->email, FILTER_VALIDATE_EMAIL)) {
+                    DB::statement("insert into public.email (email,subject,body) values ('" . $user->email . "', 'Employee Contract Remainder','" . $message . "')");
+                }
+          }
+       }
+    }  
 
 
 

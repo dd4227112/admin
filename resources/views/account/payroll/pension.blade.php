@@ -44,17 +44,18 @@
                         </div>
                         <?php //} ?>
                         <div id="hide-table"  class="card-block">
+                          <div class="table-responsive table-sm table-striped table-bordered table-hover">
                             <?php if (isset($pensions) && !empty($pensions)) { ?>
-                                <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
+                                <table id="example1" class="table dataTable">
                                     <thead>
                                         <tr>
-                                            <th class="col-lg-1">#</th>
+                                            <th>#</th>
                                             <th class="col-lg-2">Name</th>
                                             <th class="col-lg-1">Employer Percentage</th>
                                             <th class="col-lg-1">Employee Percentage</th>
                                             <th class="col-lg-1">Address</th>
                                             <th class="col-lg-1">Members</th>
-                                            <th class="col-lg-1">Actions</th>
+                                            <th class="col-lg-1 text-center">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -83,8 +84,8 @@
                                                 </td>
                                                 <td data-title="<?= __('employee_percentage') ?>">
                                                     <a href="<?= url('payroll/pension/' . $pension->id) ?>" class="btn btn-info btn-sm mrg" ><i class="fa fa-users"></i> members</a>
-<!--                                                    <a href="<?= url('payroll/editPension/' . $pension->id) ?>" class="btn btn-primary btn-sm mrg" ><i class="fa fa-edit"></i> <?= __('edit') ?></a>
-                                                    <a href="<?= url('payroll/deletePension/' . $pension->id) ?>" class="btn btn-danger btn-sm mrg" ><i class="fa fa-trash-o"></i> <?= __('delete') ?></a>-->
+                                                    <a href="<?= url('payroll/editPension/' . $pension->id) ?>" class="btn btn-primary btn-sm mrg" ><i class="fa fa-edit"></i> <?= __('Edit') ?></a>
+                                                    <a href="<?= url('payroll/deletePension/' . $pension->id) ?>" class="btn btn-danger btn-sm mrg" ><i class="fa fa-trash-o"></i> <?= __('Delete') ?></a>
                                                 </td>
                                             </tr>
                                             <?php
@@ -93,6 +94,7 @@
                                         ?>
                                     </tbody>
                                 </table>
+                               </div>
                             <?php } ?>
                         </div>
                     </div>

@@ -39,15 +39,17 @@
              <div class="card">
                 <?php
                // $usertype = session("usertype");
-               if (can_access('manage_payroll')) {
-                    ?>
-                    <h5 class="page-header">  
+                if (can_access('manage_payroll')) { ?>
+                     <div class="card-header">
+                        <h5 class="page-header"> 
                         <a class="btn btn-success" href="<?php echo url('deduction/add/'.$type) ?>">
                             <i class="fa fa-plus"></i> 
                                Add New Deduction
                         </a>
-                    </h5>
-              <?php } ?>
+                      </h5>
+                      </div>
+                 <?php } ?>
+
 
                     <div class="col-sm-6 col-sm-offset-3 list-group">
                         <div class="list-group-item list-group-item-warning">

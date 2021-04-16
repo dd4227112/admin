@@ -93,7 +93,6 @@
                                                    
                                                         <td>
                                                           <a  target="_break" href="<?= url('customer/viewContract/'.$standing->id.'/standing') ?>" class="btn btn-sm btn-success">View</a>
-
                                                           @if($standing->status == 0)
                                                           <a  href="<?= url('account/approveStandingOrder/'.$standing->id) ?>" class="btn btn-sm btn-success"> Confirm </a>
                                                           <a href="<?= url('account/rejectStandingOrder/'.$standing->id) ?>" class="btn btn-sm btn-danger">Reject</a>

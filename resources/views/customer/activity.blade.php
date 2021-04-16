@@ -87,13 +87,10 @@
                                                 <thead>
                                                     <tr>
                                                         <th>No.</th>
-                                                        <th>School</th>
                                                         <th>Task type</th>
-                                                        <th>Activity</th>
-                                                        <th>Start Date</th>
-                                                        <th>End Date</th>
+                                                        <th>School</th>
+                                                        <th style="width: 250px;">Activity</th>
                                                         <th>Status</th>
-                                                        <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -102,13 +99,10 @@
                                                 <tfoot>
                                                     <tr>
                                                         <th>No</th>
-                                                        <th>School</th>
                                                         <th>Task type</th>
-                                                        <th>Activity</th>
-                                                        <th>Start Date</th>
-                                                        <th>End Date</th>
+                                                        <th>School</th>
+                                                        <th style="width: 250px;">Activity</th>
                                                         <th>Status</th>
-                                                        <th>Action</th>
                                                     </tr>
                                                 </tfoot>
                                             </table>
@@ -224,7 +218,6 @@
                                                 <tbody>
                                                     <?php
                                                     $i = 1;
-
                                                     $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'new')->orderBy('created_at', 'desc')->limit(100)->get();
                                                     if (!empty($tasks)) {
                                                         foreach ($tasks as $act) {
@@ -296,19 +289,10 @@
                             "data": "id"
                         },
                         {
+                            "data": ""
+                        },
+                        {
                             "data": "school_name"
-                        },
-                        {
-                            "data": "task_name"
-                        },
-                        {
-                            "data": "activity"
-                        },
-                        {
-                            "data": "start_date"
-                        },
-                        {
-                            "data": "end_date"
                         },
                         {
                             "data": ""
@@ -316,18 +300,24 @@
                         {
                             "data": ""
                         }
+                      
                     ],
                     "columnDefs": [{
-                            "targets": 7,
+                            "targets":1,
                             "data": null,
                             "render": function(data, type, row, meta) {
-
-                                return '<a href="<?= url('customer/activity/show/') ?>/' + row.id + '" class="btn btn-mini waves-effect waves-light btn-primary"> <i class="icofont icofont-eye-alt"></i> View</a>';
-                            }
-
-                        },
+                                return '<a href="<?= url('customer/activity/show/') ?>/' + row.id + '"> ' + row.task_name + '  </a>';
+                             }
+                         },
+                         {
+                            "targets":3,
+                            "data": null,
+                            "render": function(data, type, row, meta) {
+                                return '<div style="white-space:normal; "> ' + row.activity + '  </div>';
+                             }
+                         },
                         {
-                            "targets": 6,
+                            "targets": 4,
                             "data": null,
                             "render": function(data, type, row, meta) {
                                 var status;
@@ -342,7 +332,7 @@
                                     status = 'danger';
                                     message = 'New';
                                 }
-                                return '<div class="dropdown-secondary dropdown f-right"><button class="btn btn-' + status + ' btn-mini dropdown-toggle waves-effect waves-light" type="button" id="dropdown6' + row.id + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + message + '</button><div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_status(\'on progress\',' + row.id + ')"><span class="point-marker bg-danger"></span>On progress</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_status(\'complete\',' + row.id + ')"><span class="point-marker bg-warning"></span>Complete</a><a class="dropdown-item waves-light waves-effect" href="#!" onmousedown="change_status(\'new\',' + row.id + ')"><span class="point-marker bg-warning"></span>New</a></div> <span class="f-left m-r-5 text-inverse" style="display:none">Priority : ' + row.priority + '</span></div>';
+                                return '<div class="dropdown-secondary dropdown f-right"><button class="btn btn-' + status + ' btn-mini dropdown-toggle waves-effect waves-light"  type="button" id="dropdown6' + row.id + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + message + '</button><div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_status(\'on progress\',' + row.id + ')"><span class="point-marker bg-danger"></span>On progress</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_status(\'complete\',' + row.id + ')"><span class="point-marker bg-warning"></span>Complete</a><a class="dropdown-item waves-light waves-effect" href="#!" onmousedown="change_status(\'new\',' + row.id + ')"><span class="point-marker bg-warning"></span>New</a></div> <span class="f-left m-r-5 text-inverse" style="display:none">Priority : ' + row.priority + '</span></div>';
                             }
 
                         },
@@ -394,7 +384,6 @@
             "use strict";
             $(document).ready(function() {
                 $('#external-events .fc-event').each(function() {
-
                     // store data so the calendar knows to render an event upon drop
                     $(this).data('event', {
                         title: $.trim($(this).text()), // use the element's text as the event title

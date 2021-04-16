@@ -99,10 +99,15 @@ class Users extends Controller {
 
     public function show() {
         $id = (int) request()->segment(3) == 0 ? Auth::user()->id : request()->segment(3);
-        $this->data['user'] = User::find($id);
+        $this->data['user'] = User::findOrFail($id);
         $this->data['user_permission'] = \App\Models\Permission::whereIn('id', \App\Models\PermissionRole::where('role_id', $this->data['user']->role_id)->get(['permission_id']))->get(['id']);
         $this->data['attendances'] = DB::table('attendances')->where('user_id', $id)->get();
         $this->data['absents'] = \App\Models\Absent::where('user_id', $id)->get();
+        $this->data['documents'] = \App\Models\LegalContract::where('user_id', $id)->get();
+
+        //default number of days 22 to minutes
+        $this->data['minutes'] = 22*24*60;
+
         if ($_POST) {
             //check if its attendance or not
             $ip = $_SERVER['REMOTE_ADDR'] ?: ($_SERVER['HTTP_X_FORWARDED_FOR'] ?: $_SERVER['HTTP_CLIENT_IP']);
@@ -138,12 +143,50 @@ class Users extends Controller {
     public function absent() {
         if ($_POST) {
             $file = request()->file('file');
-            $file_id = $file ? $this->saveFile($file, 'company/employees') : 1; 
-
-            \App\Models\Absent::create(['date' => date('Y-m-d'), 'user_id' => request('user_id'), 'absent_reason_id' => request('absent_reason_id'),
-                'note' => request('note'), 'company_file_id' => $file_id]);
+            $absent_reason_id = request('absent_reason_id'); 
+            switch ($absent_reason_id) {
+                  //Martenity leave 90 days
+                case 3 : 
+                   $end_date = date('Y-m-d', strtotime("+90 days", strtotime(request('date'))));
+                 break;
+                  //Partenity leave 3 days
+                 case 4 :
+                   $end_date = date('Y-m-d', strtotime("+3 days", strtotime(request('date'))));
+                 break;
+                default:
+                   $end_date = date('Y-m-d', strtotime(request('end_date')));
+                 break;
+               }
+            $file_id = $file ? $this->saveFile($file, 'company/employees') : 1;
+            \App\Models\Absent::create(['date' => request('date'), 'user_id' => request('user_id'), 'absent_reason_id' => request('absent_reason_id'),
+            'note' => request('note'), 'company_file_id' => $file_id,'end_date' => $end_date]);
         }
         return redirect()->back()->with('success', 'success');
+    }
+
+    public function askleave(){
+        $id = (int) request()->segment(3);
+        $request = request()->segment(4);
+     
+        if($request == 'approve'){
+            $approved = \App\Models\Absent::where('id',$id)->update(['approved_by' =>Auth::user()->id,'status'=>'Approved']);
+            if($approved){
+                $user = \App\Models\User::where('id',\App\Models\Absent::where('id',$id)->first()->user_id)->first();
+                $end_date = \App\Models\Absent::where('id',$id)->first()->end_date;
+            }
+            $message = 'Hello '. $user->firstname . ' ' . $user->lastname 
+                    . ' Your request has been granted '
+                    . ' which has to end at '. date('d-m-Y', strtotime($end_date)). '';
+                    
+            $this->send_email($user->email, 'Success: Absent leave granted', $message);
+            return redirect()->back()->with('success','Approved successfully');
+        }
+        //If leave request rejected, Dont give paid leave
+        if($request == 'reject'){
+            \App\Models\Absent::where('id',$id)->update(['status'=>'Rejected']);
+            return redirect()->back()->with('success','Rejected successfully');
+        }
+       
     }
 
     public function password() {
@@ -276,17 +319,16 @@ class Users extends Controller {
         return view('users.school_account', $this->data);
     }
 
-    public function changePhoto() {
 
-        if (request()->file('photo')) {
-            $this->validate(\request(), ['image' => 'max:1000'], ['image' => 'The photo size must be less than 1MB']);
-            $filename = time() . rand(11, 8844) . '.' . request()->file('photo')->guessExtension();
-            $folder = 'storage/uploads/images';
-            is_file($folder) ? mkdir($folder, 0777, TRUE) : '';
-            Image::make(request()->file('photo'))->resize(132, 185)->save('storage/uploads/images/' . $filename);
-            \App\Model\User::where('id', request()->segment(3))->update(['photo' => $filename]);
-            return redirect()->back();
-        }
+    //Changing user profile image
+    public function changePhoto() {
+          $file = request('photo');
+          $user_file_id = $this->saveFile($file, 'company/contracts');
+          $data = [
+            'company_file_id' => $user_file_id
+          ];
+          \App\Models\User::where('id', request()->segment(3))->update($data);
+          return redirect()->back()->with('success','Updated successfully');
     }
 
     public function applicant() {
@@ -321,15 +363,12 @@ class Users extends Controller {
     }
 
     public function minutes() {
-
         $this->data['minutes'] = \App\Models\Minutes::orderBy('id', 'DESC')->get();
         return view('users.minutes.minutes', $this->data);
     }
 
     public function addMinute() {
-
         if ($_POST) {
-
             $filename = '';
             if (!empty(request('attached'))) {
                 $file = request()->file('attached');
@@ -484,7 +523,6 @@ class Users extends Controller {
 
     public function getBankId() {
         $partner_user = \App\Models\PartnerUser::whereIn('user_id', [Auth::user()->id])->first();
-
         if (empty($partner_user)) {
             //LATER ON ADD A TABLE TO MAP USER AND PARTNER
             //create a branch\
@@ -505,6 +543,127 @@ class Users extends Controller {
         }
         return $refer_bank_id;
     }
+
+
+    //Creating KPI
+    public function kpi() {
+        $id = request()->segment(3);
+        $option = request()->segment(4);
+    
+        if ($_POST) {
+            $array = [
+                'name' => request('kpi_title'),
+                'value' => request('kpi_value'),
+                'query' => request('kpi_query')
+            ];
+          preg_match_all('/(?<!\w)#\w+/',request('kpi_query'), $matches);
+          $kpi = \App\Models\KeyPerfomanceIndicator::create($array);
+          if (!empty($kpi->id) && ($matches)) {
+              foreach ($matches[0] as $key => $value) {
+                  if ($matches[0][$key] != '') {
+                      $array = ['parameter' => $matches[0][$key], 'kpi_id' => $kpi->id];
+                         \App\Models\QueryParameter::create($array);
+                   }
+               } 
+           }
+            return redirect('users/kpi_list')->with('success', 'KPI created successfully');
+        }
+
+        if($option == 'edit'){
+            $this->data['data'] = \App\Models\KeyPerfomanceIndicator::findOrFail($id);
+            return view('users.kpi.edit', $this->data);
+        }
+        if($option == 'assign'){
+            $this->data['data'] = \App\Models\KeyPerfomanceIndicator::findOrFail($id);
+            return view('users.kpi.assign', $this->data);
+        }
+
+        if($option == 'show'){
+            $this->data['data'] = \App\Models\KeyPerfomanceIndicator::findOrFail($id);
+            return view('users.kpi.show', $this->data);
+        }
+        $this->data['users'] = \App\Models\User::all();
+        return view('users.kpi.add', $this->data);
+    }
+
+    public function kpi_list(){
+        $this->data['kpis'] = \App\Models\KeyPerfomanceIndicator::all();
+        return view('users.kpi.kpi_list', $this->data);
+    }
+
+    public function  editkpi(){
+        $id = request()->segment(3);
+        if ($_POST) {
+            $this->validate(request(), [
+                'kpi_title' => 'required|max:255',
+                'kpi_value' => 'required|max:255',
+                'kpi_query' => 'required|max:255',
+            ]);
+            $array = [
+                'name' => request('kpi_title'),
+                'value' => request('kpi_value'),
+                'query' => request('kpi_query')
+            ];
+            $kpi = \App\Models\KeyPerfomanceIndicator::find($id)->update($array);
+            return redirect('users/kpi_list')->with('success', 'KPI Updated successfully');
+         }
+      }
+
+      public function assignKpi(){
+        $id = request()->segment(3);
+        if (request('user_id')) {
+            $modules = request('user_id');
+            foreach ($modules as $key => $value) {
+                if (request('user_id')[$key] != '') {
+                    $array = ['user_id' => request('user_id')[$key], 'kpi_id' => $id];
+                    $check_unique = \App\Models\KPIUser::where($array);
+                   if (empty($check_unique->first())) {
+                        \App\Models\KPIUser::create($array);
+                   }
+                }
+            }
+         }
+        return redirect('users/kpi_list')->with('success', 'Assigned successfully');
+      }
+     
+
+
+      public function evaluateKpi(){
+        $this->data['id'] = $id = request()->segment(3);
+        $this->data['userid'] = $userid = request()->segment(4);
+        $query = \App\Models\KeyPerfomanceIndicator::where('id', $id)->first()->query;
+     
+        $qy = preg_replace('/(?<!\w)#\w+/', $userid, $query);
+
+        if($_POST){
+            $start_date = request('start_date');
+            $end_date = request('end_date');
+            if($start_date != '' && $end_date != ''){
+                $end = "and created_at::date >= '$start_date' AND created_at::date < '$end_date'";
+            }
+            $qy = $qy .' '. $end;
+        }
+        $this->data['userdata'] = DB::SELECT($qy);
+        $this->data['data'] = \App\Models\KeyPerfomanceIndicator::findOrFail($id);
+        $this->data['info'] = \App\Models\User::findOrFail($userid);
+
+        $this->data['value'] = $this->data['userdata'][0]->value;
+      
+        return view('users.kpi.evaluation', $this->data);
+      }
+
+
+
+      public function legalcontract(){
+        if ($_POST) {
+            $file = request()->file('file');
+           $file_id = $file ? $this->saveFile($file, 'company/employees') : 1; 
+           $arr = ['name' => request('contract_legal'),'start_date'=>request('start_date'),'end_date'=>request('end_date'),
+           'user_id' => request('user_id'),'company_file_id' => $file_id ,'description' => request('description')];
+             \App\Models\LegalContract::create($arr);
+        return redirect()->back()->with('success', 'updated successful!');
+      }
+  }
 
 
 }

@@ -44,7 +44,6 @@ class Allowance extends Controller {
                 $this->data['allowances'] = [];
             }
             $this->data['view'] = 'account.payroll.allowance.index';
-         //   $this->load->view('_layout_main', $this->data);
             return view($this->data['view'], $this->data);
     }
 
@@ -112,7 +111,6 @@ class Allowance extends Controller {
     }
 
     public function subscribe() {
-        //$id = clean_htmlentities(($this->uri->segment(3)));
         $id = request()->segment(3);
         if ((int) $id) {
             $this->data['set'] = $id;
@@ -125,45 +123,45 @@ class Allowance extends Controller {
             }
             $this->data['users'] = (new \App\Http\Controllers\Payroll())->getUsers();
             $this->data['subscriptions'] = $data;
-            // $this->data["subview"] = "payroll/subscribe";
-            // $this->load->view('_layout_main', $this->data);
+          
             $this->data['view'] = 'account/payroll/subscribe';
             return view($this->data['view'], $this->data);
         } else {
-            $this->data["subview"] = "error";
-            //$this->load->view('_layout_main', $this->data);
+            $this->data["subview"] = "account.payroll.allowance.index";
+            return view($this->data['subview'], $this->data);
         }
     }
 
      public function monthlysubscribe() {
-        $id = clean_htmlentities(($this->uri->segment(3)));
+        $id = request()->segment(3);
         if ((int) $id) {
             $this->data['set'] = $id;
             $this->data['type'] = 'allowance';
-            $this->data['allowance'] = \App\Model\Allowance::find($id);
-            $subscriptions = \App\Model\UserAllowance::where('allowance_id', $id)->get();
+            $this->data['allowance'] = \App\Models\Allowance::find($id);
+            $subscriptions = \App\Models\UserAllowance::where('allowance_id', $id)->get();
             $data = [];
             foreach ($subscriptions as $value) {
-                $data = array_merge($data, array($value->user_id . $value->table));
+                $data = array_merge($data, array($value->user_id));
             }
             $this->data['users'] = (new \App\Http\Controllers\Payroll())->getUsers();
             $this->data['subscriptions'] = $data;
-            $this->data["subview"] = "allowance/monthlysubscribe";
-            $this->load->view('_layout_main', $this->data);
+            $this->data["subview"] = "account.payroll.allowance.monthlysubscribe";
+            return view($this->data['subview'], $this->data);
         } else {
-            $this->data["subview"] = "error";
-            $this->load->view('_layout_main', $this->data);
+            $this->data["subview"] = "account.payroll.allowance.index";
+            return view($this->data['subview'], $this->data);
         }
     }
     
-        function monthlyAddSubscriber() {
-        $allowance = UserAllowance::where('user_id', request('user_id'))->where('table', request('table'))->where('allowance_id', request('allowance_id'))->where('deadline', '>', request('deadline'));
+    public function monthlyAddSubscriber() {
+        $allowance = UserAllowance::where('user_id', request('user_id'))->where('allowance_id', request('allowance_id'))->where('deadline', '>', request('deadline'));
         if (!empty($allowance->first())) {
             $allowance->update(request()->all());
         } else {
             UserAllowance::create(request()->all());
         }
-        print_r(request()->all());
+      //  print_r(request()->all());
         echo 'success';
+        return request()->ajax() == TRUE ? 'success' : redirect()->back()->with('success', 'Successfully subscribed');
     }
 }

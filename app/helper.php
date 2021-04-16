@@ -263,8 +263,11 @@ function validate_phone_number($number) {
         $valid = array($country_name, $valid_number);
         return $valid;
     }
+}
 
-    
+
+function btn_attendance($id, $method, $class, $name) {
+    return "<input type='checkbox' class='" . $class . "' $method id='" . $id . "' data-placement='top' data-toggle='tooltip' data-original-title='" . $name . "' > ";
 }
 
  function timeZones($value)
@@ -273,3 +276,6 @@ function validate_phone_number($number) {
         $date->setTimeZone(new DateTimeZone('Africa/Dar_es_Salaam'));
         return $date->format('Y-m-d H:i:s');
     }
+
+
+   

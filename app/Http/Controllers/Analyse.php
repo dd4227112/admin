@@ -24,16 +24,11 @@ class Analyse extends Controller {
     }
 
     public function index() {
-
         $this->data['users'] = [];
-
 //         $this->data['active_schools']=\collect(DB::select(" select count(distinct \"schema_name\") as aggregate from admin.all_log where \"table\"  in ('user', 'teacher') and (created_at >= date_trunc('week', CURRENT_TIMESTAMP - interval '1 week') and
 //       created_at < date_trunc('week', CURRENT_TIMESTAMP)
 //      )"))->first()->aggregate;
         //$this->data['log_graph'] = $this->createBarGraph();
-
-
-
 
         if (Auth::user()->role_id == 7) {
             $id = Auth::user()->id;
@@ -104,7 +99,6 @@ class Analyse extends Controller {
         $this->data['users'] = 1; // \collect(DB::select('select count(*) as count from admin.all_users'))->first()->count;
         $this->data['total_schools'] = 1; // \collect(DB::select(" select count(distinct \"table_schema\") as aggregate from INFORMATION_SCHEMA.TABLES where \"table_schema\" not in ('admin', 'beta_testing', 'api', 'app', 'constant', 'public','accounts','information_schema')"))->first()->aggregate;
         $this->data['schools_with_students'] = 1; // \collect(DB::select('select count(distinct "schema_name") as count from admin.all_student'))->first()->count;
-
         $this->data['active_parents'] = 1; // \collect(DB::select('select count(*) as count from admin.all_parent where status=1'))->first()->count;
         $this->data['active_students'] = 1; // \collect(DB::select('select count(*) as count from admin.all_student where status=1'))->first()->count;
         $this->data['active_teachers'] = \collect(DB::select('select count(*) as count from admin.all_teacher where status=1'))->first()->count;

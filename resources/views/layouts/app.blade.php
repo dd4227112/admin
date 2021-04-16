@@ -333,15 +333,15 @@ function toast(message) {
                                             </li>
                                         </ul>
                                     </li>
-                                    <!--                                    <li class="header-notification">
-                                                                            <a href="#!" class="displayChatbox">
-                                                                                <i class="ti-comments"></i>
-                                                                                <span class="badge"><?php
+                               <!--    <li class="header-notification">
+                                        <a href="#!" class="displayChatbox">
+                                            <i class="ti-comments"></i>
+                                            <span class="badge"><?php
                                     $users = \App\Models\User::where('status', 1)->where('department', '<>', 10)->get();
                                     echo sizeof($users);
                                     ?></span>
-                                                                            </a>
-                                                                        </li>-->
+                                         </a>
+                                    </li>-->
                                 <?php } ?>
                                 <li class="user-profile header-notification">
                                     <a href="#!">
@@ -375,7 +375,7 @@ function toast(message) {
                         </li>
                     </ul>
                     <!-- search -->
-                    <?php } ?>
+                
                     <script>
                     search_inputs = function() {
                         $('#search_inputs').keyup(function() {
@@ -714,6 +714,12 @@ function toast(message) {
                             </a>
                         </li>
 
+                        <li><a href="<?= url('Account/budget') ?>"
+                            data-i18n="nav.advance-components.grid-stack">
+                              Budget 
+                        </a>
+                       </li>
+
                         <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main">
                                 Transactions</a>
                             <ul class="tree-2">
@@ -807,9 +813,11 @@ function toast(message) {
                     <ul class="tree-1">
                         <li><a href="<?= url('users/index') ?>"
                                 data-i18n="nav.extra-components.session-timeout">Users</a></li>
+                        <li><a href="<?= url('users/kpi_list') ?>"
+                            data-i18n="nav.extra-components.session-timeout">KPI</a></li>
                         <li><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">Meeting
                                 Minutes</a></li>
-                        <li><a href="<?= url('general/show/attendances') ?>"
+                        <li><a href="<?= url('attendance/index') ?>"
                                 data-i18n="nav.extra-components.session-timeout">Attendance</a></li>
                         <li><a href="<?= url('Partner/partners') ?>"
                                 data-i18n="nav.extra-components.session-idle-timeout">Partners</a></li>
@@ -837,8 +845,8 @@ function toast(message) {
                 </li>
                 <?php }
 
-            if (can_access('manage_users') && !in_array(Auth::user()->department, [9, 10]) || in_array(Auth::user()->role_id, array(14, 8, 2, 3, 9, 20))) {
-              ?>
+                  if (can_access('manage_users') && !in_array(Auth::user()->department, [9, 10]) || in_array(Auth::user()->role_id, array(14, 8, 2, 3, 9, 20))) {
+                     ?>
 
                             <li class="nav-item">
                                 <a href="#!">

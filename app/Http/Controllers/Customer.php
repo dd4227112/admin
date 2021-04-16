@@ -425,20 +425,20 @@ class Customer extends Controller {
 
     public function profile() {
         $school = $this->data['schema'] = request()->segment(3);
+
         $id = request()->segment(4);
         $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get();
         $is_client = 0;
         if ($school == 'school') {
             $id = request()->segment(4);
             $this->data['client_id'] = $id;
-            $this->data['school'] = \collect(DB::select(' select name as sname, name,schema_name, region , ward, district as address  from admin.schools where id=' . $id))->first();
+            $this->data['school'] = \collect(DB::select('select name as sname, name,schema_name, region , ward, district as address  from admin.schools where id=' . $id))->first();
         } else {
             $is_client = 1;
             $this->data['school'] = DB::table($school . '.setting')->first();
             $this->data['levels'] = DB::table($school . '.classlevel')->get();
             $client = \App\Models\Client::where('username', $school)->first();
             if (empty($client)) {
-
                 $client = \App\Models\Client::create(['name' => $this->data['school']->sname, 'email' => $this->data['school']->email, 'phone' => $this->data['school']->phone, 'address' => $this->data['school']->address, 'username' => $school, 'created_at' => date('Y-m-d H:i:s')]);
             }
             $this->data['client_id'] = $client->id;
@@ -449,14 +449,11 @@ class Customer extends Controller {
 
         $this->data['is_client'] = $is_client;
 
-
         $year = \App\Models\AccountYear::where('name', date('Y'))->first();
         $this->data['invoices'] = \App\Models\Invoice::where('client_id', $client->id)->where('account_year_id', $year->id)->get();
 
         if ($_POST) {
-
             $data = array_merge(request()->except(['start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date')))]);
-         
             $task = \App\Models\Task::create($data);
             if ((int) request('to_user_id') > 0) {
                 DB::table('tasks_users')->insert([
@@ -589,7 +586,7 @@ class Customer extends Controller {
 
             return view('customer/addtask', $this->data);
         } elseif ($tab == 'show' && $id > 0) {
-            $this->data['activity'] = \App\Models\Task::find($id);
+            $this->data['activity'] = \App\Models\Task::findOrFail($id);
             $this->data['client'] = \App\Models\TaskClient::where('task_id', $id)->first();
             $this->data['school'] = \App\Models\TaskSchool::where('task_id', $id)->first();
             return view('customer/view_task', $this->data);
@@ -1017,7 +1014,16 @@ class Customer extends Controller {
         if($type == 'standing'){
             $contract = \App\Models\StandingOrder::find($contract_id);
             $this->data['path'] = $contract->companyFile->path;
-        }else{
+        }
+        else if($type == 'legal'){
+            $contract = \App\Models\LegalContract::find($contract_id);
+            $this->data['path'] = $contract->companyFile->path;
+        }
+        else if($type == 'absent'){
+            $document = \App\Models\Absent::find($contract_id);
+            $this->data['path'] = $document->companyFile->path;
+        }
+        else{
             $contract = \App\Models\Contract::find($contract_id);
             $this->data['path'] = $contract->companyFile->path;
         }
@@ -1152,7 +1158,6 @@ class Customer extends Controller {
         $slots = \DB::select($sql);
         $option = '<option></option>';
         foreach ($slots as $slot) {
-
             $option .= '<option value="' . $slot->id . '">' . $slot->start_time . ' - ' . $slot->end_time . '</option>';
         }
         echo $option;
@@ -1177,7 +1182,6 @@ class Customer extends Controller {
     }
 
     public function whatsappIntegration() {
-
         $this->data['whatsapp_requests'] = DB::table('whatsapp_integrations')->get();
         return view('customer.message.whatsapp_requests', $this->data);
     }

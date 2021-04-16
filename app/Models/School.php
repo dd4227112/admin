@@ -7,7 +7,6 @@ class School extends Model {
     /**
      * Generated
      */
-
     protected $table = 'schools';
     protected $fillable = ['id', 'region', 'district','ward','ownership','type','students','nmb_branch','ward_id'];
 
@@ -17,7 +16,6 @@ class School extends Model {
     
     public function wards() {
         return $this->belongsTo(\App\Models\Ward::class, 'ward_id', 'id')->withDefault(['name' => 'Not Defined']);
-
     }
 
     public function contacts() {

@@ -16,27 +16,27 @@ if (!empty($basic_payments)) {
     </div>
     <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
         <span class="count_top"><i class="fa fa-clock-o"></i> Total Basic Salary</span>
-        <div class="count"><?= $siteinfos->currency_symbol . ' ' . money(request('basic_pay')) ?></div>
+        <div class="count"><?=  ' ' . money(request('basic_pay')) ?></div>
         <!--<span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>3% </i> From last Week</span>-->
     </div>
     <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
         <span class="count_top"><i class="fa fa-user"></i> Total Allowances</span>
-        <div class="count green"><?= $siteinfos->currency_symbol . ' ' . money(request('allowance')) ?></div>
+        <div class="count green"><?=  ' ' . money(request('allowance')) ?></div>
         <!--<span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>-->
     </div>
     <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
         <span class="count_top"><i class="fa fa-user"></i> Total Deductions</span>
-        <div class="count"><?= $siteinfos->currency_symbol . ' ' . money(request('deduction')) ?></div>
+        <div class="count"><?=  ' ' . money(request('deduction')) ?></div>
         <!--<span class="count_bottom"><i class="red"><i class="fa fa-sort-desc"></i>12% </i> From last Week</span>-->
     </div>
     <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
         <span class="count_top"><i class="fa fa-user"></i> Total Net Payment</span>
-        <div class="count"><?= $siteinfos->currency_symbol . ' ' . money(request('net_pay')) ?></div>
+        <div class="count"><?=  ' ' . money(request('net_pay')) ?></div>
         <!--<span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>-->
     </div>
     <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
         <span class="count_top"><i class="fa fa-user"></i> Total PAYE</span>
-        <div class="count"><?= $siteinfos->currency_symbol . ' ' . money(request('paye')) ?></div>
+        <div class="count"><?=  ' ' . money(request('paye')) ?></div>
         <!--<span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>-->
     </div>
 </div>
@@ -88,8 +88,8 @@ if (!empty($basic_payments)) {
                     <span class="count_top"><i class="fa fa-money"></i> Amount to be Transacted From Bank Account</span>
                     <?php
                     $set = request('set');
-                    $salary = \App\Model\Salary::where('payment_date', $set);
-                    $pension = \collect(DB::select('select sum(a.employer_amount) as employer_contribution from '. set_schema_name().'salary_pensions a join constant.pensions b on b.id=a.pension_id  where salary_id IN (SELECT id FROM '. set_schema_name().'salaries where payment_date=\'' . $set . '\')'))->first();
+                    $salary = \App\Models\Salary::where('payment_date', $set);
+                    $pension = \collect(DB::select('select sum(a.employer_amount) as employer_contribution from salary_pensions a join constant.pensions b on b.id=a.pension_id  where salary_id IN (SELECT id FROM salaries where payment_date=\'' . $set . '\')'))->first();
                     ?>
                     <div class="" style="font-size:32px">Tsh <?= money($salary->sum('gross_pay') + $pension->employer_contribution) ?>/=</div>
                     <!--<span class="count_bottom"><i class="green">4% </i> From last Week</span>-->
@@ -114,7 +114,7 @@ if (!empty($basic_payments)) {
                   <tr>
                       <th>#</th>
                       <th>Name</th>
-                      <th>Total Amount (<?= $siteinfos->currency_symbol ?>)</th>
+                      <th>Total Amount </th>
                   </tr>
               </thead>
               <tbody>
@@ -122,7 +122,7 @@ if (!empty($basic_payments)) {
                       <td>1</td>
                       <td>Pay-E Summary</td>
 
-                      <td><?= $siteinfos->currency_symbol . ' ' . money(request('paye')) ?></td>
+                      <td><?=  ' ' . money(request('paye')) ?></td>
                   </tr>
                   <tr>
                       <td colspan="2"></td>
@@ -136,8 +136,8 @@ if (!empty($basic_payments)) {
   </div>
 
         <div class="col-md-6 col-sm-6 col-xs-12">
-            <div class="x_panel">
-                <div class="x_title">
+            <div class="card">
+                <div class="card-body">
                     <h2>Pension Summary </h2>
 
                     <div class="clearfix"></div>
@@ -208,7 +208,7 @@ if (!empty($basic_payments)) {
                         <tr>
                             <th>#</th>
                             <th>Allowance Name</th>
-                            <th>Amount (<?= $siteinfos->currency_symbol ?>)</th>
+                            <th>Amount </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -216,7 +216,6 @@ if (!empty($basic_payments)) {
                         $total_allowances = 0;
                         if (!empty($allowances)) {
                             $x = 1;
-
                             foreach ($allowances as $allowance) {
                                 $total_allowances += $allowance->sum;
                                 ?>
@@ -247,13 +246,13 @@ if (!empty($basic_payments)) {
 
 
       <div class="col-md-6 col-sm-6 col-xs-12">
-          <div class="x_panel">
-              <div class="x_title">
+          <div class="card">
+              <div class="card-body">
                   <h2>Basic Payments</h2>
 
                   <div class="clearfix"></div>
               </div>
-              <div class="x_content">
+              <div class="card">
 
                   <table class="table">
                       <thead>
@@ -349,27 +348,27 @@ if (!empty($basic_payments)) {
                         }
                         ?>
 
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th scope="row">TOTAL</th>
-                            <td></td>
-                            <td><?= money($total_deductions) ?></td>
-                            <td><a href="<?= url('payroll/summaryForm/null/?type=deduction&set=' . request('set') . '&month=' . date('m')) ?>" class="btn btn-success btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Show contribution form"><i class="fa fa-file"></i> Deduction Form</a></td>
-                        </tr>
-                    </tfoot>
-                </table>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th scope="row">TOTAL</th>
+                                            <td></td>
+                                            <td><?= money($total_deductions) ?></td>
+                                            <td><a href="<?= url('payroll/summaryForm/null/?type=deduction&set=' . request('set') . '&month=' . date('m')) ?>" class="btn btn-success btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Show contribution form"><i class="fa fa-file"></i> Deduction Form</a></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                <div class="clearfix"></div>
+
 
             </div>
-        </div>
-    </div>
-
-
-
-    <div class="clearfix"></div>
-
-
-</div>
 
             <!--<link href="<?php echo url('public/assets/print.css'); ?>" rel="stylesheet" type="text/css">
 
@@ -527,21 +526,21 @@ if (!empty($basic_payments)) {
                        Begin page background
 
 
-<?php
-$array = array(
-    "src" => url('storage/uploads/images/' . $siteinfos->photo),
-    'width' => '126em',
-    'height' => '126em',
-    'class' => 'img-rounded',
-    'style' => 'margin-left:2em'
-);
-?>
+                                <?php
+                                $array = array(
+                                    "src" => url('storage/uploads/images/' ),
+                                    'width' => '126em',
+                                    'height' => '126em',
+                                    'class' => 'img-rounded',
+                                    'style' => 'margin-left:2em'
+                                );
+                                ?>
 
                       <table class=" table-striped center" style="margin: 1px 2px 1px 0px;">
                           <thead>
                               <tr>
                                   <th class="col-md-2" style="padding-bottom:0px">
-<?= img($array); ?>
+                              {{-- <?= img($array); ?> --}}
                                   </th>
                                   <th class="col-md-8 text-center letterhead" style="margin: 1% 0 0 16%; padding-top: 2%; color: #000000;">
 
@@ -622,24 +621,24 @@ $array = array(
                                           <tr>
                                               <td>Total Pension (Employers Contribution)</td>
                                               <td align='center'>
-<?php
-//calculate user deductions
-$user_pensions = \App\Model\UserPension::all();
-$total_pensions = 0;
-if (!empty($user_pensions)) {
-    foreach ($user_pensions as $pension) {
-        $user = \App\Model\User::where('id', $pension->user_id)->where('table', $pension->table)->first();
-        $basic_salary = !empty($user) ? $user->userInfo(DB::table($user->table))->salary : 0;
-        $total_pensions += $basic_salary * $pension->pension->employer_percentage;
-    }
-}
-echo $total_pensions;
-?></td>
+                                            <?php
+                                            //calculate user deductions
+                                            $user_pensions = \App\Models\UserPension::all();
+                                            $total_pensions = 0;
+                                            if (!empty($user_pensions)) {
+                                                foreach ($user_pensions as $pension) {
+                                                    $user = \App\Models\User::where('id', $pension->user_id)->first();
+                                                    $basic_salary = !empty($user) ? $user->salary : 0;
+                                                    $total_pensions += $basic_salary * $pension->pension->employer_percentage;
+                                                }
+                                            }
+                                            echo $total_pensions;
+                                                ?></td>
                                           </tr>
                                           <tr>
                                               <td>Deductions</td>
                                               <td align='center'>
-<?= request('deduction') ?></td>
+                                                  <?= request('deduction') ?></td>
                                           </tr>
                                           <tr>
                                               <td>Total Net Salary</td>

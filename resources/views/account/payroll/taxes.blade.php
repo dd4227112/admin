@@ -22,16 +22,15 @@
                 </ul>
             </div>
         </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
-        <div class="page-body">
-        
+    
+     <div class="page-body">
         <div class="row">
-             <div class="card">
+          <div class="card">
             <div class="col-sm-12">
-                <div id="hide-table" class="card-block">
-		     <?php if(isset($taxes) && !empty($taxes)) { ?>
-                    <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
+              <div id="hide-table" class="card-block">
+                 <div class="table-responsive table-sm table-striped table-bordered table-hover">
+		          <?php if(isset($taxes) && !empty($taxes)) { ?>
+                    <table id="example1" class="table dataTable">
                         <thead>
                             <tr>
                                 <th class="col-lg-1">#</th>
@@ -40,7 +39,7 @@
                                 <th class="col-lg-1">To Amount</th>
                                 <th class="col-lg-1">Tax Rate</th>
                                 <th class="col-lg-1">Excess Amount</th>
-				<th class="col-lg-2">Description</th>
+				                <th class="col-lg-2">Description</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -65,15 +64,16 @@
                                         <?php echo $tax->tax_plus_amount; ?>
                                     </td>
                                    
-				    <td data-title="<?=__('description')?>">
+				                     <td data-title="<?=__('description')?>">
                                         <?php echo $tax->description; ?>
                                     </td>
                                     
                                 </tr>
                             <?php $i++; } ?>
-                        </tbody>
-                    </table>
-		     <?php } ?>
+                         </tbody>
+                      </table>
+                    </div>
+		            <?php } ?>
                 </div>
 
 

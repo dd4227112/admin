@@ -85,8 +85,7 @@ class Controller extends BaseController {
                 $total_records = $count == null ? count(DB::select($custom_sql)) : $count;
             }
             $empRecords = DB::select($empQuery);
-
-
+            
 ## Response
             $response = array(
                 "draw" => intval($draw),
@@ -94,7 +93,6 @@ class Controller extends BaseController {
                 "iTotalDisplayRecords" => $total_records,
                 "aaData" => $empRecords
             );
-
             return json_encode($response);
         }
     }
@@ -259,53 +257,6 @@ class Controller extends BaseController {
         return [$k, $l];
     }
 
-<<<<<<< HEAD
-
-    public function uploadExcel($sheet_name = null) {
-        //        $file = request()->file('file');
-        //        $data = $this->fileload($file);
-        //        dd($data);
-        //        exit;
-        //        $this->load->library('PHPExcel');
-        try {
-            // it will be your file name that you are posting with a form or c
-            //an pass static name $_FILES["file"]["name"]
-            $folder = "storage/uploads/media/";
-            if (!is_dir($folder)) {
-                mkdir($folder, 0777, true);
-            }
-            //is_dir($folder) ? '' : mkdir($folder, 0777,True);
-            $file = request()->file('file');
-            //$name=  str_replace('.'.$file->guessClientExtension(), '', $file->getClientOriginalName());
-            $name = time() . rand(4343, 3243434) . '.' . $file->guessClientExtension();
-            $move = $file->move($folder, $name);
-            $path = $folder . $name;
-            if (!$move) {
-                die('upload Error');
-            } else {
-                $objPHPExcel = \PhpOffice\PhpSpreadsheet\IOFactory::load($path);
-            }
-        } catch (Exception $e) {
-            $this->resp->success = FALSE;
-            $this->resp->msg = 'Error Uploading file';
-            echo json_encode($this->resp);
-        }
-        $sheets = $objPHPExcel->getSheetNames();
-        if ($sheet_name == null) {
-            return $this->getDataBySheet($objPHPExcel, 0);
-        } else {
-            $data = [];
-            foreach ($sheets as $key => $value) {
-                $data[$value] = [];
-            }
-            foreach ($sheets as $key => $value) {
-                $excel_data = $this->getDataBySheet($objPHPExcel, $key);
-                count($excel_data) > 0 ? array_push($data[$value], $excel_data) : '';
-            }
-            return $data;
-        }
-        unlink($path);
-=======
     //sends a file. it is called when the bot gets the command "file"
     //@param $chatId [string] [required] - the ID of chat where we send a message
     //@param $format [string] [required] - file format, from the params in the message body (text[1], etc)
@@ -389,7 +340,6 @@ class Controller extends BaseController {
         } else {
             echo 'Wrong url supplied in whatapp api';
         }
->>>>>>> 5237a2111b667a75168b240a2b370f1200371190
     }
 
 }
