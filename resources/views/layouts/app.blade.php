@@ -499,7 +499,7 @@
                                 <?php } ?>
                             </ul>
                         </li>
-                        <?php if (can_access('manage_customers') && Auth::user()->role_id <> 3) { ?>
+                        <?php if (can_access('manage_customers')) { ?>
                             <li class="nav-title" data-i18n="nav.category.navigation">
                                 <i class="ti-line-dashed"></i>
                                 <span>Operations</span>
