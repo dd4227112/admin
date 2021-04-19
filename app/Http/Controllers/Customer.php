@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use \App\Models\User;
 use DB;
+
+use Carbon\Carbon;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -525,7 +527,8 @@ class Customer extends Controller {
             $this->data['types'] = DB::table('task_types')->where('department', Auth::user()->department)->get();
             $this->data['departments'] = DB::table('departments')->get();
             if ($_POST) {
-                $data = array_merge(request()->except(['to_user_id', 'start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date')))]);
+                $random = time();
+                $data = array_merge(request()->except(['start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date'))),'ticket_no' => $random]);
                
                 $task = \App\Models\Task::create($data);
                 $users = request('to_user_id');
@@ -596,6 +599,28 @@ class Customer extends Controller {
             return view('customer/activity', $this->data);
         }
     }
+
+        public function choices(){
+            $type = request('type');
+            if($type == 'year'){
+                $this->data['completetasks']  = \App\Models\Task::where('user_id',Auth::user()->id)->where('status', 'complete')->whereYear('created_at', Carbon::now()->year)->orderBy('created_at', 'desc')->get();
+            } else if($type == 'quoter'){
+                $date = \Carbon\Carbon::today()->subDays(120);
+                $this->data['completetasks']  = \App\Models\Task::where('user_id',Auth::user()->id)->where('status', 'complete')->where('created_at','>=',$date)->orderBy('created_at', 'desc')->get();
+            } else if($type == 'month'){
+                $this->data['completetasks']  = \App\Models\Task::where('user_id',Auth::user()->id)->where('status', 'complete')->whereMonth('created_at', Carbon::now()->month)
+                ->whereYear('created_at', date('Y'))->orderBy('created_at', 'desc')->get();
+            } else if($type == 'week'){
+                $this->data['completetasks']  = \App\Models\Task::where('user_id',Auth::user()->id)->where('status', 'complete')->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->orderBy('created_at', 'desc')->get();
+            } else if($type == 'yesterday'){
+                $this->data['completetasks']  = \App\Models\Task::where('user_id',Auth::user()->id)->where('status', 'complete')->whereDate('created_at', Carbon::yesterday())->orderBy('created_at', 'desc')->get();
+            } else if($type == 'today') {
+               $this->data['completetasks']  = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'complete')->whereDate('created_at', Carbon::today())->orderBy('created_at', 'desc')->get();
+            } else{
+                $this->data['completetasks']  = \App\Models\Task::where('user_id',Auth::user()->id)->where('status', 'complete')->orderBy('created_at', 'desc')->limit(100)->get();
+            }
+            return view('customer.activity', $this->data);
+        }
 
     public function changeStatus() {
         if (request('status') == 'complete') {

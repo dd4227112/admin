@@ -924,3 +924,11 @@ ALTER TABLE admin.absents
 --  join admin.regions as r on r.id=d.region_id) A
 --  LEFT JOIN (select school_id,client_id from admin.client_schools) B
 -- on A.id = B.school_id) C  left  join (select id,username from admin.clients) D on C.client_id = D.id 
+
+
+
+ALTER TABLE admin.tasks
+    ADD COLUMN ticket_no bigint;
+
+ALTER TABLE admin.tasks
+    ADD CONSTRAINT task_ticket_no_unique UNIQUE (ticket_no);

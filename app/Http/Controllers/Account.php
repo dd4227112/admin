@@ -95,16 +95,18 @@ class Account extends Controller {
             //create shulesoft invoices
             //check in client table if all schools with students and have generated reports are registered
             $clients=\DB::select("select * from admin.clients where id not in (select client_id from admin.invoices where account_year_id=(select id from admin.account_years where name='".date('Y')."'))");
-           // if exists, check if invoice exists, else, create new invoice
-           if(!empty($clients)){
-            foreach($clients as $client)
-              {
-                 $invoice = \App\Models\Invoice::where('client_id',$client->id)->where('account_year_id',$account_year_id)->first();
-                 if(empty($invoice)){
-                  $this->createInvoices($client->id);
-               }
-              }
-           }
+
+        // if exists, check if invoice exists, else, create new invoice
+        //    if(!empty($clients)){
+        //     foreach($clients as $client)
+        //       {
+        //          $invoice = \App\Models\Invoice::where('client_id',$client->id)->where('account_year_id',$account_year_id)->first();
+        //          if(empty($invoice)){
+        //           $this->createInvoices($client->id);
+        //        }
+        //       }
+        //    }
+
             $this->getInvoices($project_id, $account_year_id);
         }
       /*    if ($project_id == 'delete') {
@@ -133,6 +135,7 @@ class Account extends Controller {
             }
 
             return view('account.invoice.index', $this->data);
+            
         }
     }
 

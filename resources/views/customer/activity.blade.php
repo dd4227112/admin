@@ -6,6 +6,12 @@
 <!-- Sidebar inner chat end-->
 <!-- Main-body start -->
 
+<style>
+    a:hover {
+     text-decoration: underline;
+  }
+</style>
+
 <div class="main-body">
     <div class="page-wrapper">
         <!-- Page-header start -->
@@ -108,6 +114,7 @@
                                                   <thead>
                                                       <tr>
                                                           <th>No.</th>
+                                                          <th>Ticket</th>
                                                           <th>Task type</th>
                                                           <th>Priority</th>
                                                           <th>School</th>
@@ -128,6 +135,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th>No.</th>
+                                                        <th>Ticket</th>
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th >Activity</th>
@@ -137,7 +145,7 @@
                                                 </thead>
                                                 <tbody>
                                                     <?php
-                                                    $i = 1; $date = \Carbon\Carbon::today()->subDays(2);
+                                                    $i = 1; $date = \Carbon\Carbon::today()->subDays(7);
                                                     $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('created_at','>=',$date)->where('status', 'new')->orderBy('created_at', 'desc')->limit(100)->get();
                                                   //  dd($tasks);
                                                     if (!empty($tasks)) { 
@@ -157,7 +165,7 @@
                                                                 }
                                                             ?>
 
-                                                               <?php if($act->status == 'complete') { 
+                                                            <?php if($act->status == 'complete') { 
                                                                         $stat = 'success';
                                                                         $msg = 'Complete';
                                                                     } else if ($act->status == 'on progress') {
@@ -170,6 +178,7 @@
                                                                  ?>
                                                             <tr>
                                                                 <td><?= $i++ ?></td>
+                                                                <td><?= $act->ticket_no?></td>
                                                                 <?php if(can_access('view_task')) { ?>
                                                                 <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->tasktype->name ?> </a> </td>
                                                                 <?php } else { ?>
@@ -193,6 +202,7 @@
                                                 <tfooter>
                                                     <tr>
                                                         <th>No.</th>
+                                                        <th>Ticket</th>
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
@@ -211,6 +221,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th>No.</th>
+                                                        <th>Ticket</th>
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
@@ -239,6 +250,7 @@
                                                           ?>
                                                             <tr>
                                                                 <td><?= $i++ ?></td>
+                                                                <td><?= $act->ticket_no?></td>
                                                                 <?php if(can_access('view_task')) { ?>
                                                                 <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->tasktype->name ?> </a> </td>
                                                                 <?php } else { ?>
@@ -256,6 +268,7 @@
                                                 <tfooter>
                                                     <tr>
                                                         <th>No.</th>
+                                                        <th>Ticket</th>
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
@@ -269,11 +282,32 @@
                                   
                                     <!-- Completed Tasks -->
                                     <div class="tab-pane" id="Completed" role="tabpanel">
+
+                                        <div class="table-responsive  table-striped table-bordered table-hover">
+                                         <form class="form-horizontal">
+                                            <div class="form-group col-md-4">
+                                                <label class="col-sm-5 col-sm-offset-2 control-label">Select period</label>
+                                                <select class="form-control" id="completetask">
+                                                  <option></option>
+                                                  <option value="today">Today</option>
+                                                  <option value="yesterday">Yesterday</option>
+                                                  <option value="week">This week</option>
+                                                  <option value="month">This month</option>
+                                                  <option value="quoter">This quoter</option>
+                                                  <option value="year">This Year</option>
+                                                </select>
+                                              </div>
+                                              <?= csrf_field() ?>
+                                            </form>
+                                        </div>
+
+                                  
                                         <div class="table-responsive  table-striped table-bordered table-hover">
                                             <table class="table dataTable">
                                                 <thead>
                                                     <tr>
                                                         <th>No.</th>
+                                                        <th>Ticket</th>
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
@@ -283,9 +317,10 @@
                                                 <tbody>
                                                     <?php
                                                     $i = 1;
-                                                    $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'complete')->orderBy('created_at', 'desc')->limit(100)->get();
-                                                    if (!empty($tasks)) { 
-                                                        foreach ($tasks as $act) {
+                                                   
+                                                 //   $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'complete')->orderBy('created_at', 'desc')->limit(100)->get();
+                                                    if (!empty($completetasks)) { 
+                                                        foreach ($completetasks as $act) {
                                                             if ($act->priority == '1') {
                                                                     $status = 'success';
                                                                     $message = 'High';
@@ -302,6 +337,7 @@
                                                             ?>
                                                             <tr>
                                                                 <td><?= $i++ ?></td>
+                                                                <td><?= $act->ticket_no?></td>
                                                                 <?php if(can_access('view_task')) { ?>
                                                                 <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->tasktype->name ?> </a> </td>
                                                                 <?php } else { ?>
@@ -319,6 +355,7 @@
                                                 <tfooter>
                                                     <tr>
                                                         <th>No.</th>
+                                                        <th>Ticket</th>
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
@@ -372,6 +409,9 @@
                             "data": "id"
                         },
                         {
+                            "data": "ticket_no"
+                        },
+                        {
                             "data": ""
                         },
                         {
@@ -389,14 +429,14 @@
                       
                     ],
                     "columnDefs": [{
-                            "targets":1,
+                            "targets":2,
                             "data": null,
                             "render": function(data, type, row, meta) {
                                 return '<a href="<?= url('customer/activity/show/') ?>/' + row.id + '"> ' + row.task_name + '  </a>';
                              }
                            },
                            {
-                            "targets":2,
+                            "targets":3,
                             "data": null,
                             "render": function(data, type, row, meta) {
                                 var status;
@@ -418,14 +458,14 @@
                             }
                            },
                          {
-                            "targets":4,
+                            "targets":5,
                             "data": null,
                             "render": function(data, type, row, meta) {
                                 return '<div style="white-space:normal; "> ' + row.activity + '  </div>';
                              }
                          },
                         {
-                            "targets": 5,
+                            "targets": 6,
                             "data": null,
                             "render": function(data, type, row, meta) {
                                 var status;
@@ -463,7 +503,6 @@
                             },
                             success: function(data) {
                                 $('#dropdown6' + b).html(data).removeClass('btn btn-danger').addClass('btn btn-primary');
-                                window.location.reload();
                             }
                         });
                     },
@@ -478,7 +517,6 @@
                             },
                             success: function(data) {   console.log(x);
                                 $('#dropdown7' + y).html(data).removeClass('btn btn-danger').addClass('btn btn-primary');
-                                window.location.reload();
                             }
                         });
                     },
@@ -505,6 +543,16 @@
                     window.location.href = '<?= url('customer/activity') ?>/null?user_id=' + taskdate;
                 }
             });
+
+      
+
+            $('#completetask').change(function(event) {
+                var choice = $(this).val();
+                if (choice != '') {
+                    window.location.href = '<?= url('customer/choices') ?>/null?type=' + choice;
+                } else {}
+            });
+            
             "use strict";
             $(document).ready(function() {
                 $('#external-events .fc-event').each(function() {
