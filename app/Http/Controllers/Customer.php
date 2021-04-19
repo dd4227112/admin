@@ -526,6 +526,7 @@ class Customer extends Controller {
             $this->data['departments'] = DB::table('departments')->get();
             if ($_POST) {
                 $data = array_merge(request()->except(['to_user_id', 'start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date')))]);
+               
                 $task = \App\Models\Task::create($data);
                 $users = request('to_user_id');
                 if (!empty($users)) {

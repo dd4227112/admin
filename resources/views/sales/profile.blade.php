@@ -469,10 +469,8 @@
                                                 <br />
 
                                                  <div id="myForm">
-                                                    <input id="myInput" data-geocomplete="street address" />
-                                                    <select data-geocomplete="country"></select>
-                                                    <input data-geocomplete="formatted phone number" />
-                                                    ...
+                                                     <label for="">Name location</label>
+                                                    <input id="myInput" data-geocomplete="street address" class="form-control" />
                                                   </div>
 
                                                 <?php

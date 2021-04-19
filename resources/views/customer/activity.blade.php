@@ -5,6 +5,7 @@
 <link rel="stylesheet" type="text/css" href="<?= $root ?>/bower_components/fullcalendar/dist/fullcalendar.print.css" media='print'>
 <!-- Sidebar inner chat end-->
 <!-- Main-body start -->
+
 <div class="main-body">
     <div class="page-wrapper">
         <!-- Page-header start -->
@@ -61,11 +62,7 @@
                                 <!-- Nav tabs -->
                                 <ul class="nav nav-tabs  tabs" role="tablist">
                                     <li class="nav-item">
-                                        <a class="nav-link active" data-toggle="tab" href="#home1" role="tab">All Tasks</a>
-                                    </li>
-
-                                    <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#new" role="tab">New task</a>
+                                        <a class="nav-link active" data-toggle="tab" href="#newtask" role="tab">New task</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" data-toggle="tab" href="#Progress" role="tab">On Progress</a>
@@ -74,87 +71,124 @@
                                     <li class="nav-item">
                                         <a class="nav-link" data-toggle="tab" href="#Completed" role="tab">Completed</a>
                                     </li>
+
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#home1" role="tab">All Tasks</a>
+                                    </li>
                
                                     <li class="nav-item">
                                         <a class="nav-link" data-toggle="tab" href="#profile1" role="tab">Calender & Schedules</a>
                                     </li>
-
                                 </ul>
+
                                 <!-- Tab panes -->
                                 <div class="tab-content tabs">
-                                    <div class="tab-pane active" id="home1" role="tabpanel">
+                                        {{-- New tasks --}}
 
-                                        <div class="table-responsive dt-responsive">
-                                            <table id="dt-ajax-array" class="table table-striped table-bordered nowrap">
-                                                <thead>
+                                        <div class="tab-pane" id="home1" role="tabpanel">
+                                            <div class="table-responsive  table-striped table-bordered table-hover">
+                                                <table class="table dataTable">
                                                     <tr>
-                                                        <th>No.</th>
-                                                        <th>Task type</th>
-                                                        <th>Priority</th>
-                                                        <th>School</th>
-                                                        <th style="width: 250px;">Activity</th>
-                                                        <th>Status</th>
+                                                        <th>All tasks</th>
+                                                        <th>New tasks</th>
+                                                        <th>Progressed tasks</th>
+                                                        <th>Completed tasks</th>
                                                     </tr>
-                                                </thead>
-                                                <tbody>
-
-                                                </tbody>
-                                                <tfoot>
                                                     <tr>
-                                                        <th>No</th>
-                                                        <th>Task type</th>
-                                                        <th>Priority</th>
-                                                        <th>School</th>
-                                                        <th style="width: 250px;">Activity</th>
-                                                        <th>Status</th>
+                                                        <th class="text-center"><?= \App\Models\Task::where('user_id', $user = Auth::user()->id)->count();  ?></th>
+                                                        <th class="text-center"><?= \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'new')->count();  ?></th>
+                                                        <th class="text-center"><?= \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'on progress')->count(); ?></th>
+                                                        <th class="text-center"><?= \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'complete')->count();?></th>
                                                     </tr>
-                                                </tfoot>
-                                            </table>
-                                        </div>
-                                    </div>
+                                                </table>
+                                            </div>
 
-                                     {{-- New tasks --}}
-                                    <div class="tab-pane" id="new" role="tabpanel">
-                                        <div class="table-responsive">
+                                            <div class="table-responsive">
+                                                <table class="display nowrap table dataTable dt-ajax-array table-bordered">
+                                                  <thead>
+                                                      <tr>
+                                                          <th>No.</th>
+                                                          <th>Task type</th>
+                                                          <th>Priority</th>
+                                                          <th>School</th>
+                                                          <th>Activity</th>
+                                                          <th>Status</th>
+                                                      </tr>
+                                                  </thead>
+                                                  <tbody>
+                                                 </tbody>
+                                              </table>
+                                          </div>
+                                      </div>
+
+
+                                 <div class="tab-pane active" id="newtask" role="tabpanel">
+                                        <div class="table-responsive  table-striped table-bordered table-hover">
                                             <table class="table dataTable">
                                                 <thead>
                                                     <tr>
                                                         <th>No.</th>
                                                         <th>Task type</th>
                                                         <th>Priority</th>
-                                                        <th>Activity</th>
+                                                        <th >Activity</th>
                                                         <th>End Date</th>
+                                                        <th>Status</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <?php
-                                                    $i = 1;
-                                                    $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'new')->orderBy('created_at', 'desc')->limit(100)->get();
+                                                    $i = 1; $date = \Carbon\Carbon::today()->subDays(2);
+                                                    $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('created_at','>=',$date)->where('status', 'new')->orderBy('created_at', 'desc')->limit(100)->get();
+                                                  //  dd($tasks);
                                                     if (!empty($tasks)) { 
                                                         foreach ($tasks as $act) {
-                                                            if($act->priority == 1){
-                                                                 $prt = "High";
-                                                            } else if($act->priority == 2){
-                                                                $prt = "Medium";
-                                                            } else if($act->priority == 3){
-                                                                $prt = "Less";
-                                                            } else{
-                                                                $prt = "";
-                                                            }
-                                                          ?>
+                                                               if ($act->priority == '1') {
+                                                                    $status = 'success';
+                                                                    $message = 'High';
+                                                                } else if ($act->priority == '2') {
+                                                                    $status = 'warning';
+                                                                    $message = 'Medium';
+                                                                } else if ($act->priority == '3'){
+                                                                    $status = 'info';
+                                                                    $message = 'Less';
+                                                                } else {
+                                                                    $status = '';
+                                                                    $message = '';
+                                                                }
+                                                            ?>
+
+                                                               <?php if($act->status == 'complete') { 
+                                                                        $stat = 'success';
+                                                                        $msg = 'Complete';
+                                                                    } else if ($act->status == 'on progress') {
+                                                                        $stat = 'warning';
+                                                                        $msg = 'On progress';
+                                                                    } else {
+                                                                        $stat = 'danger';
+                                                                        $msg = 'New';
+                                                                    }
+                                                                 ?>
                                                             <tr>
                                                                 <td><?= $i++ ?></td>
                                                                 <?php if(can_access('view_task')) { ?>
                                                                 <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->tasktype->name ?> </a> </td>
                                                                 <?php } else { ?>
-                                                                 <td> <?= $act->tasktype->name ?> </td>
+                                                                    <td> <?= $act->tasktype->name ?> </td>
                                                                 <?php } ?>
-                                                                <td> <?= $prt ?> </td>
-                                                                <td><?= substr($act->activity, 0, 60) ?></td>
+                                                                <td> 
+                                                                <div  class="dropdown-secondary dropdown f-right"><button class="btn btn-<?=$status ?>  btn-mini dropdown-toggle waves-effect waves-light"  type="button" id="dropdown7<?=$act->id?>"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= $message ?></button><div class="dropdown-menu" aria-labelledby="dropdown7" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_priority(1,<?= $act->id?>)"><span class="point-marker bg-danger"></span>High</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_priority(2,<?= $act->id?>)"><span class="point-marker bg-warning"></span>Medium</a><a class="dropdown-item waves-light waves-effect" href="#!" onmousedown="change_priority(3,<?= $act->id?>)"><span class="point-marker bg-warning"></span>Less</a></div> </div>
+                                                                </td>
+                                                                <td style="width: 100px;word-break: break-all;">
+                                                                    <?= substr($act->activity, 0, 30) ?>
+                                                                </td>
                                                                 <td><?= cdate($act->end_date) ?></td>
+                                                                <td> 
+                                                                    <div class="dropdown-secondary dropdown f-right"><button class="btn btn-<?=$stat?> btn-mini dropdown-toggle waves-effect waves-light"  type="button" id="dropdown6<?=$act->id?>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?=$msg?></button><div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_status('on progress',<?=$act->id ?>)"><span class="point-marker bg-danger"></span>On progress</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_status('complete',<?=$act->id ?>)"><span class="point-marker bg-warning"></span>Complete</a><a class="dropdown-item waves-light waves-effect" href="#!" onmousedown="change_status('new',<?=$act->id ?>)"><span class="point-marker bg-warning"></span>New</a></div> </div>
+                                                                </td>
                                                             </tr>
                                                         <?php } ?>
                                                     <?php } ?>
+                                            
                                                 </tbody>
                                                 <tfooter>
                                                     <tr>
@@ -163,72 +197,16 @@
                                                         <th>Priority</th>
                                                         <th>Activity</th>
                                                         <th>End Date</th>
+                                                        <th>Status</th>
                                                     </tr>
                                                 </tfooter>
-                                            </table>
-                                        </div>
+                                        </table>
+                                      </div>
                                     </div>
 
-
-                                    <!-- Completed Tasks -->
-                                    <div class="tab-pane" id="Completed" role="tabpanel">
-                                        <div class="table-responsive">
-                                            <table class="table dataTable">
-                                                <thead>
-                                                    <tr>
-                                                        <th>No.</th>
-                                                        <th>Task type</th>
-                                                        <th>Priority</th>
-                                                        <th>Activity</th>
-                                                        <th>End Date</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php
-                                                    $i = 1;
-                                                    $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'complete')->orderBy('created_at', 'desc')->limit(100)->get();
-                                                    if (!empty($tasks)) { 
-                                                        foreach ($tasks as $act) {
-                                                            if($act->priority == 1){
-                                                                 $prt = "High";
-                                                            } else if($act->priority == 2){
-                                                                $prt = "Medium";
-                                                            } else if($act->priority == 3){
-                                                                $prt = "Less";
-                                                            } else{
-                                                                $prt = "";
-                                                            }
-                                                        ?>
-                                                            <tr>
-                                                                <td><?= $i++ ?></td>
-                                                                <?php if(can_access('view_task')) { ?>
-                                                                <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->tasktype->name ?> </a> </td>
-                                                                <?php } else { ?>
-                                                                 <td> <?= $act->tasktype->name ?> </td>
-                                                                <?php } ?>
-                                                                <td> <?= $prt  ?> </td>
-                                                                <td><?= substr($act->activity, 0, 60) ?></td>
-                                                                <td><?= cdate($act->end_date) ?></td>
-                                                            </tr>
-                                                        <?php } ?>
-                                                    <?php } ?>
-                                                </tbody>
-                                                <tfooter>
-                                                    <tr>
-                                                        <th>No.</th>
-                                                        <th>Task type</th>
-                                                        <th>Priority</th>
-                                                        <th>Activity</th>
-                                                        <th>End Date</th>
-                                                    </tr>
-                                                </tfooter>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <!-- Completed Tasks -->
-                                    <!-- Completed Tasks -->
+                                        {{-- New Progress --}}
                                     <div class="tab-pane" id="Progress" role="tabpanel">
-                                        <div class="table-responsive">
+                                        <div class="table-responsive  table-striped table-bordered table-hover">
                                             <table class="table dataTable">
                                                 <thead>
                                                     <tr>
@@ -245,15 +223,19 @@
                                                     $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'on progress')->orderBy('created_at', 'desc')->limit(100)->get();
                                                     if (!empty($tasks)) {
                                                         foreach ($tasks as $act) {
-                                                            if($act->priority == 1){
-                                                                 $prt = "High";
-                                                            } else if($act->priority == 2){
-                                                                $prt = "Medium";
-                                                            } else if($act->priority == 3){
-                                                                $prt = "Less";
-                                                            } else{
-                                                                $prt = "";
-                                                            }
+                                                            if ($act->priority == '1') {
+                                                                    $status = 'success';
+                                                                    $message = 'High';
+                                                                } else if ($act->priority == '2') {
+                                                                    $status = 'warning';
+                                                                    $message = 'Medium';
+                                                                } else if ($act->priority == '3'){
+                                                                    $status = 'info';
+                                                                    $message = 'Less';
+                                                                } else {
+                                                                    $status = '';
+                                                                    $message = '';
+                                                                }
                                                           ?>
                                                             <tr>
                                                                 <td><?= $i++ ?></td>
@@ -262,7 +244,9 @@
                                                                 <?php } else { ?>
                                                                  <td> <?= $act->tasktype->name ?> </td>
                                                                 <?php } ?>
-                                                                <td> <?= $prt ?> </td>
+                                                                <td>  
+                                                                <div class="dropdown-secondary dropdown f-right text-center"><button class="btn btn-<?=$status ?>  btn-mini dropdown-toggle waves-effect waves-light"  type="button" id="dropdown7<?=$act->id?>"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= $message ?></button><div class="dropdown-menu" aria-labelledby="dropdown7" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_priority(1,<?= $act->id?>)"><span class="point-marker bg-danger"></span>High</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_priority(2,<?= $act->id?>)"><span class="point-marker bg-warning"></span>Medium</a><a class="dropdown-item waves-light waves-effect" href="#!" onmousedown="change_priority(3,<?= $act->id?>)"><span class="point-marker bg-warning"></span>Less</a></div> </div>
+                                                                </td>
                                                                 <td><?= substr($act->activity, 0, 60) ?></td>
                                                                 <td><?= cdate($act->end_date) ?></td>
                                                             </tr>
@@ -281,11 +265,71 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <!-- Completed Tasks -->
-                                    <!-- Completed Tasks -->
-                                
 
+                                  
                                     <!-- Completed Tasks -->
+                                    <div class="tab-pane" id="Completed" role="tabpanel">
+                                        <div class="table-responsive  table-striped table-bordered table-hover">
+                                            <table class="table dataTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>No.</th>
+                                                        <th>Task type</th>
+                                                        <th>Priority</th>
+                                                        <th>Activity</th>
+                                                        <th>End Date</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php
+                                                    $i = 1;
+                                                    $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'complete')->orderBy('created_at', 'desc')->limit(100)->get();
+                                                    if (!empty($tasks)) { 
+                                                        foreach ($tasks as $act) {
+                                                            if ($act->priority == '1') {
+                                                                    $status = 'success';
+                                                                    $message = 'High';
+                                                                } else if ($act->priority == '2') {
+                                                                    $status = 'warning';
+                                                                    $message = 'Medium';
+                                                                } else if ($act->priority == '3'){
+                                                                    $status = 'info';
+                                                                    $message = 'Less';
+                                                                } else {
+                                                                    $status = '';
+                                                                    $message = '';
+                                                                }
+                                                            ?>
+                                                            <tr>
+                                                                <td><?= $i++ ?></td>
+                                                                <?php if(can_access('view_task')) { ?>
+                                                                <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->tasktype->name ?> </a> </td>
+                                                                <?php } else { ?>
+                                                                 <td> <?= $act->tasktype->name ?> </td>
+                                                                <?php } ?>
+                                                                <td>  
+                                                                <div class="dropdown-secondary dropdown f-right text-center"><button class="btn btn-<?=$status ?>  btn-mini dropdown-toggle waves-effect waves-light"  type="button" id="dropdown7<?=$act->id?>"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= $message ?></button><div class="dropdown-menu" aria-labelledby="dropdown7" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_priority(1,<?= $act->id?>)"><span class="point-marker bg-danger"></span>High</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_priority(2,<?= $act->id?>)"><span class="point-marker bg-warning"></span>Medium</a><a class="dropdown-item waves-light waves-effect" href="#!" onmousedown="change_priority(3,<?= $act->id?>)"><span class="point-marker bg-warning"></span>Less</a></div> </div>
+                                                                </td>
+                                                                <td><?= substr($act->activity, 0, 60) ?></td>
+                                                                <td><?= cdate($act->end_date) ?></td>
+                                                            </tr>
+                                                        <?php } ?>
+                                                    <?php } ?>
+                                                </tbody>
+                                                <tfooter>
+                                                    <tr>
+                                                        <th>No.</th>
+                                                        <th>Task type</th>
+                                                        <th>Priority</th>
+                                                        <th>Activity</th>
+                                                        <th>End Date</th>
+                                                    </tr>
+                                                </tfooter>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                
                                     <div class="tab-pane" id="profile1" role="tabpanel">
                                         <p class="m-0">
                                             <div id='calendar'></div>
@@ -315,7 +359,7 @@
         <script type="text/javascript">
             load_tasks = function() {
                 var event;
-                var table = $('#dt-ajax-array').DataTable({
+                var table = $('.dt-ajax-array').DataTable({
                     "processing": true,
                     "serverSide": true,
                     'serverMethod': 'post',
@@ -418,8 +462,8 @@
                                 id: b
                             },
                             success: function(data) {
-
                                 $('#dropdown6' + b).html(data).removeClass('btn btn-danger').addClass('btn btn-primary');
+                                window.location.reload();
                             }
                         });
                     },
@@ -432,8 +476,9 @@
                                 priority: x,
                                 id: y
                             },
-                            success: function(data) {  
+                            success: function(data) {   console.log(x);
                                 $('#dropdown7' + y).html(data).removeClass('btn btn-danger').addClass('btn btn-primary');
+                                window.location.reload();
                             }
                         });
                     },
@@ -517,10 +562,6 @@ SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks
                                 textColor: '#000'
                             },
                         <?php } ?>
-
-
-
-
                     ]
                 });
             });
