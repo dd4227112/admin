@@ -70,7 +70,7 @@
                                         <div class="form-group">
                                             <div class="row">
 
-                                                <div class="col-md-6">
+                                                <div class="col-md-4">
                                                     <strong> Person Allocated to do</strong> 
                                                     <select multiple="" name="to_user_id[]" class="form-control select2" required>
                                                         <?php
@@ -83,7 +83,7 @@
                                                     </select>
                                                 </div>
 
-                                                {{-- <div class="col-md-6">
+                                                <div class="col-md-4">
                                                     <strong> Task Executed Successfully</strong> 
                                                     <select name="status" class="form-control" required>
                                                         <option value='new'> Select Task Status Here...</option>
@@ -92,10 +92,10 @@
                                                         <option value='on progress'> Yes but on Progress </option>
                                                         <option value='schedule'> Not yet (Schedule) </option>
                                                     </select>
-                                                </div> --}}
+                                                </div>
 
                                                 
-                                                <div class="col-md-6">
+                                                <div class="col-md-4">
                                                     <strong> Priority</strong> 
                                                     <select name="priority" class="form-control" required>
                                                         <option value=''> Select priority here...</option>
