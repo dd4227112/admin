@@ -52,61 +52,57 @@
 
         <link href="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.css" rel="stylesheet">
 
-
-
-
-
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script>
 
 
         <script type="text/javascript">
-ajax_setup = function () {
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        async: true,
-        cache: false,
-        beforeSend: function (xhr) {
-            // jQuery('.theme-loader').show();
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            // jQuery('.theme-loader').hide();
-        },
-        complete: function (xhr, status) {
-            // jQuery('.theme-loader').hide();
-        }
-    });
-}
-$(document).ready(ajax_setup);
-function toast(message) {
-    new PNotify({
-        title: 'Feedback',
-        text: message,
-        type: 'success',
-        hide: 'false',
-        icon: 'icofont icofont-info-circle'
-    });
-}
-        </script>
-        <style>
-            #valid-msg {
-                color: #00C900;
+            ajax_setup = function () {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    async: true,
+                    cache: false,
+                    beforeSend: function (xhr) {
+                        // jQuery('.theme-loader').show();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        // jQuery('.theme-loader').hide();
+                    },
+                    complete: function (xhr, status) {
+                        // jQuery('.theme-loader').hide();
+                    }
+                });
             }
-            #error-msg {
-                color: red;
+            $(document).ready(ajax_setup);
+            function toast(message) {
+                new PNotify({
+                    title: 'Feedback',
+                    text: message,
+                    type: 'success',
+                    hide: 'false',
+                    icon: 'icofont icofont-info-circle'
+                });
             }
-        </style>
-    </head>
+                    </script>
+                    <style>
+                        #valid-msg {
+                            color: #00C900;
+                        }
+                        #error-msg {
+                            color: red;
+                        }
+                    </style>
+                </head>
 
-    <body class="<?= strlen(request('token')) > 5 ? 'menu-collapsed menu-static' : 'fix-menu' ?>">
-        <!-- Pre-loader start -->
-        <div class="theme-loader">
-            <div class="ball-scale">
-                <div></div>
+        <body class="<?= strlen(request('token')) > 5 ? 'menu-collapsed menu-static' : 'fix-menu' ?>">
+            <!-- Pre-loader start -->
+            <div class="theme-loader">
+                <div class="ball-scale">
+                    <div></div>
+                </div>
             </div>
-        </div>
         <!-- Pre-loader end -->
         <!-- Menu header start -->
         <nav class="navbar header-navbar">
@@ -128,9 +124,10 @@ function toast(message) {
                         <i class="ti-more"></i>
                     </a>
                 </div>
+
                 <div class="navbar-container container-fluid">
                     <div>
-                        <ul class="nav-left">
+                         <ul class="nav-left">
                             <li>
                                 <a id="collapse-menu" href="#">
                                     <i class="ti-menu"></i>
@@ -270,74 +267,75 @@ function toast(message) {
                                                                 </li>
                                                             </ul>
                                                         </li>-->
-                        </ul>
-                        <?php
-                        if (strlen(request('token')) < 4) {
-                            ?>
-                            <ul class="nav-right">
-                                <li class="header-notification lng-dropdown">
-                                    <a href="#" id="dropdown-active-item">
-                                        <i class="flag-icon flag-icon-gb m-r-5"></i> English
-                                    </a>
-                                    <ul class="show-notification">
-                                        <li>
-                                            <a href="#" data-lng="en">
-                                                <i class="flag-icon  flag-icon-es m-r-5"></i> English
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#" data-lng="es">
-                                                <i class="flag-icon flag-icon-tz m-r-5"></i> Swahili
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <?php
-                                if (true) {
-                                    $tasks = \App\Models\Task::where('to_user_id', Auth::user()->id)->where('date', '>=', date('Y-m-d'))->get();
-                                    ?>
-                                    <li class="header-notification">
-                                        <a href="#!">
-                                            <i class="ti-bell"></i>
-                                            <span class="badge"><?= sizeof($tasks) ?></span>
-                                        </a>
-                                        <ul class="show-notification">
-                                            <li>
-                                                <h6>Notifications</h6>
-                                                <label class="label label-danger">New</label>
-                                            </li>
-                                            <?php
-                                            foreach ($tasks as $task) {
-                                                ?>
-                                                <li onMouseOver="this.style.backgroundColor = '#cccccc'">
-                                                    <a href="<?= url('customer/activity/show/' . $task->id) ?>" >
-                                                        <div class="media">
-                                                            <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Image">
-                                                            <div class="media-body">
-                                                                <h5 class="notification-user">Client: <?= $task->client->name ?></h5>
-                                                                <p class="notification-msg"><?= $task->activity ?></p>
-                                                                <span class="notification-time"><?= date('d M Y', strtotime($task->date)) ?></span>
-                                                            </div>
-                                                        </div>
-                                                    </a>
-                                                </li>
-                                            <?php } ?>
-                                            <li>
-
-                                                <a href="<?= url('users/notification') ?>"><label class="label label-warning">View All</label></a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                               <!--    <li class="header-notification">
-                                        <a href="#!" class="displayChatbox">
-                                            <i class="ti-comments"></i>
-                                            <span class="badge"><?php
+                                                    </ul>
+                                                    <?php
+                                                    if (strlen(request('token')) < 4) {
+                                                        ?>
+                                                     <ul class="nav-right">
+                                                    <li class="header-notification lng-dropdown">
+                                                        <a href="#" id="dropdown-active-item">
+                                                            <i class="flag-icon flag-icon-gb m-r-5"></i> English
+                                                        </a>
+                                                        <ul class="show-notification">
+                                                            <li>
+                                                                <a href="#" data-lng="en">
+                                                                    <i class="flag-icon  flag-icon-es m-r-5"></i> English
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#" data-lng="es">
+                                                                    <i class="flag-icon flag-icon-tz m-r-5"></i> Swahili
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <?php
+                                                    if (true) {
+                                                        $tasks = \App\Models\Task::where('to_user_id', Auth::user()->id)->where('date', '>=', date('Y-m-d'))->get();
+                                                        ?>
+                                                        <li class="header-notification">
+                                                            <a href="#!">
+                                                                <i class="ti-bell"></i>
+                                                                <span class="badge"><?= sizeof($tasks) ?></span>
+                                                            </a>
+                                                            <ul class="show-notification">
+                                                                <li>
+                                                                    <h6>Notifications</h6>
+                                                                    <label class="label label-danger">New</label>
+                                                                </li>
+                                                                <?php
+                                                                foreach ($tasks as $task) {
+                                                                    ?>
+                                                                    <li onMouseOver="this.style.backgroundColor = '#cccccc'">
+                                                                        <a href="<?= url('customer/activity/show/' . $task->id) ?>" >
+                                                                            <div class="media">
+                                                                                <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Image">
+                                                                                <div class="media-body">
+                                                                                    <h5 class="notification-user">Client: <?= $task->client->name ?></h5>
+                                                                                    <p class="notification-msg"><?= $task->activity ?></p>
+                                                                                    <span class="notification-time"><?= date('d M Y', strtotime($task->date)) ?></span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </a>
+                                                                    </li>
+                                                                <?php } ?>
+                                                                <li>
+                    
+                                                                    <a href="<?= url('users/notification') ?>"><label class="label label-warning">View All</label></a>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                             <!--      <li class="header-notification">
+                                                        <a href="#!" class="displayChatbox">
+                                                        <i class="ti-comments"></i>
+                                                        <span class="badge"><?php
                                     $users = \App\Models\User::where('status', 1)->where('department', '<>', 10)->get();
                                     echo sizeof($users);
                                     ?></span>
-                                         </a>
+                                        </a>
                                     </li>-->
                                 <?php } ?>
+
                                 <li class="user-profile header-notification">
                                     <a href="#!">
                                         <img src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image">
@@ -387,6 +385,8 @@ function toast(message) {
                             </ul>
                             <!-- search -->
                         <?php } ?>
+
+
                         <script>
                             search_inputs = function () {
                                 $('#search_inputs').keyup(function () {
@@ -423,49 +423,19 @@ function toast(message) {
                                     <h2>Invoices</h2>
                                     <span id="search_people"></span>
 
-                        </li>
-                    </ul>
-                    <!-- search -->
-                
-                    <script>
-                    search_inputs = function() {
-                        $('#search_inputs').keyup(function() {
-                            var val = $(this).val();
-                            // if(val.lenght >1){
-                            $.ajax({
-                                type: "post",
-                                url: "<?= url('analyse/search') ?>",
-                                data: "q=" + val,
-                                dataType: 'JSON',
-                                success: function(data) {
-                                    console.log(data);
-                                    $('#search_people').html(data.people);
-                                    $('#search_schools').html(data.schools);
-                                    $('#search_activities').html(data.activities);
-                                }
-                            });
 
-                        })
-                    }
-                    $(document).ready(search_inputs);
-                    </script>
-                    <div id="morphsearch" class="morphsearch">
-                        <form class="morphsearch-form">
-                            <input class="morphsearch-input" id="search_inputs" type="search" placeholder="Search..." />
-                            <button class="morphsearch-submit" type="submit">Search</button>
-                        </form>
-                        <div class="morphsearch-content">
-                            <div class="dummy-column">
-                                <h2>Invoices</h2>
-                                <span id="search_people"></span>
-                            </div>
-                            <div class="dummy-column" style="overflow-y: scroll;">
-                                <h2>Schools</h2>
-                                <span id="search_schools"></span>
-                            </div>
-                            <div class="dummy-column">
-                                <h2>Activity</h2>
-                                <span id="search_activities"></span>
+                                </div>
+                                <div class="dummy-column" style="overflow-y: scroll;">
+                                    <h2>Schools</h2>
+                                    <span id="search_schools"></span>
+
+
+                                </div>
+                                <div class="dummy-column">
+                                    <h2>Activity</h2>
+                                    <span id="search_activities"></span>
+
+                                </div>
                             </div>
                             <!-- /morphsearch-content -->
                             <span class="morphsearch-close"><i class="icofont icofont-search-alt-1"></i></span>
@@ -478,7 +448,7 @@ function toast(message) {
         <!-- Menu header end -->
 
 
-        <?php
+       <?php
         if (strlen(request('token')) < 3) {
             ?>
             <!-- Menu aside start -->
@@ -529,7 +499,7 @@ function toast(message) {
                                 <?php } ?>
                             </ul>
                         </li>
-                        <?php if (can_access('manage_customers') && Auth::user()->role_id <> 3) { ?>
+                        <?php if (can_access('manage_customers')) { ?>
                             <li class="nav-title" data-i18n="nav.category.navigation">
                                 <i class="ti-line-dashed"></i>
                                 <span>Operations</span>
@@ -1091,17 +1061,8 @@ function toast(message) {
         <script type="text/javascript" src="<?= $root ?>bower_components/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery-i18next/jquery-i18next.min.js"></script>
 
-
-
-
-
-
-
-
         <!-- Custom js -->
         <script src="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.js"></script>  
-
-
         <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/custom-dashboard.js?v=3"></script>
         <script type="text/javascript" src="<?= $root ?>assets/js/script.js?v=3"></script>
 
@@ -1252,3 +1213,28 @@ if (preg_match('/localhost/', url()->current())) {
     ?>
     <p align="center">This page took <?php echo (microtime(true) - LARAVEL_START) ?> seconds to render</p>
 <?php } ?>
+
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+

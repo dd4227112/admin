@@ -525,10 +525,8 @@ class Customer extends Controller {
             $this->data['types'] = DB::table('task_types')->where('department', Auth::user()->department)->get();
             $this->data['departments'] = DB::table('departments')->get();
             if ($_POST) {
-               
                 $data = array_merge(request()->except(['to_user_id', 'start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date')))]);
-               
-               // $task = \App\Models\Task::create($data);
+                $task = \App\Models\Task::create($data);
                 $users = request('to_user_id');
                 if (!empty($users)) {
                     foreach ($users as $user_id) {
@@ -622,6 +620,36 @@ class Customer extends Controller {
             }
         }
         echo request('status');
+    }
+
+
+
+    public function changepriority() {
+         if(request('priority') == 1){
+            $priority = "High";
+         } else if(request('priority') == 2){
+            $priority = "Medium";
+         } else{
+            $priority = "Less";
+         }
+        \App\Models\Task::where('id', request('id'))->update(['priority' => request('priority'), 'updated_at' => 'now()']);
+        
+        $users = DB::table('tasks_users')->where('task_id', request('id'))->get();
+        if (!empty($users)) {
+            $task = \App\Models\Task::find(request('id'));
+            foreach ($users as $user_task) {
+                $user = \App\Models\User::find($user_task->user_id);
+                $message = 'Hello ' . $user->firstname . '<br/>'
+                        . 'Task Priority has been updated to :' . $priority
+                        . '<ul>'
+                        . '<li>Task: ' . $task->activity . '</li>'
+                        . '<li>Type: ' . $task->taskType->name . '</li>'
+                        . '<li>Deadline: ' . $task->date . '</li>'
+                        . '</ul>';
+                $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+            }
+        }
+        echo $priority;
     }
 
     public function getTaskByDepartment() {
