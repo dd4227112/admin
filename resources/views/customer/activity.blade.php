@@ -63,16 +63,18 @@
                                     <li class="nav-item">
                                         <a class="nav-link active" data-toggle="tab" href="#home1" role="tab">All Tasks</a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#Completed" role="tab">Completed</a>
-                                    </li>
 
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#new" role="tab">New task</a>
+                                    </li>
                                     <li class="nav-item">
                                         <a class="nav-link" data-toggle="tab" href="#Progress" role="tab">On Progress</a>
                                     </li>
+
                                     <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#Pending" role="tab">Pending</a>
+                                        <a class="nav-link" data-toggle="tab" href="#Completed" role="tab">Completed</a>
                                     </li>
+               
                                     <li class="nav-item">
                                         <a class="nav-link" data-toggle="tab" href="#profile1" role="tab">Calender & Schedules</a>
                                     </li>
@@ -110,18 +112,75 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <!-- Completed Tasks -->
-                                    <div class="tab-pane" id="Completed" role="tabpanel">
 
+                                     {{-- New tasks --}}
+                                    <div class="tab-pane" id="new" role="tabpanel">
                                         <div class="table-responsive">
                                             <table class="table dataTable">
                                                 <thead>
                                                     <tr>
                                                         <th>No.</th>
                                                         <th>Task type</th>
+                                                        <th>Priority</th>
                                                         <th>Activity</th>
                                                         <th>End Date</th>
-                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php
+                                                    $i = 1;
+                                                    $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'new')->orderBy('created_at', 'desc')->limit(100)->get();
+                                                    if (!empty($tasks)) { 
+                                                        foreach ($tasks as $act) {
+                                                            if($act->priority == 1){
+                                                                 $prt = "High";
+                                                            } else if($act->priority == 2){
+                                                                $prt = "Medium";
+                                                            } else if($act->priority == 3){
+                                                                $prt = "Less";
+                                                            } else{
+                                                                $prt = "";
+                                                            }
+                                                          ?>
+                                                            <tr>
+                                                                <td><?= $i++ ?></td>
+                                                                <?php if(can_access('view_task')) { ?>
+                                                                <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->tasktype->name ?> </a> </td>
+                                                                <?php } else { ?>
+                                                                 <td> <?= $act->tasktype->name ?> </td>
+                                                                <?php } ?>
+                                                                <td> <?= $prt ?> </td>
+                                                                <td><?= substr($act->activity, 0, 60) ?></td>
+                                                                <td><?= cdate($act->end_date) ?></td>
+                                                            </tr>
+                                                        <?php } ?>
+                                                    <?php } ?>
+                                                </tbody>
+                                                <tfooter>
+                                                    <tr>
+                                                        <th>No.</th>
+                                                        <th>Task type</th>
+                                                        <th>Priority</th>
+                                                        <th>Activity</th>
+                                                        <th>End Date</th>
+                                                    </tr>
+                                                </tfooter>
+                                            </table>
+                                        </div>
+                                    </div>
+
+
+                                    <!-- Completed Tasks -->
+                                    <div class="tab-pane" id="Completed" role="tabpanel">
+                                        <div class="table-responsive">
+                                            <table class="table dataTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>No.</th>
+                                                        <th>Task type</th>
+                                                        <th>Priority</th>
+                                                        <th>Activity</th>
+                                                        <th>End Date</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -130,15 +189,26 @@
                                                     $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'complete')->orderBy('created_at', 'desc')->limit(100)->get();
                                                     if (!empty($tasks)) { 
                                                         foreach ($tasks as $act) {
-                                                    ?>
+                                                            if($act->priority == 1){
+                                                                 $prt = "High";
+                                                            } else if($act->priority == 2){
+                                                                $prt = "Medium";
+                                                            } else if($act->priority == 3){
+                                                                $prt = "Less";
+                                                            } else{
+                                                                $prt = "";
+                                                            }
+                                                        ?>
                                                             <tr>
                                                                 <td><?= $i++ ?></td>
-                                                                <td><?= $act->tasktype->name ?></td>
-                                                                <td><?= substr($act->activity, 0, 60) ?></td>
-                                                                <td><?= $act->end_date ?></td>
                                                                 <?php if(can_access('view_task')) { ?>
-                                                                <td> <a href="<?= url('customer/activity/show/' . $act->id) ?>">View</a> </td>
+                                                                <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->tasktype->name ?> </a> </td>
+                                                                <?php } else { ?>
+                                                                 <td> <?= $act->tasktype->name ?> </td>
                                                                 <?php } ?>
+                                                                <td> <?= $prt  ?> </td>
+                                                                <td><?= substr($act->activity, 0, 60) ?></td>
+                                                                <td><?= cdate($act->end_date) ?></td>
                                                             </tr>
                                                         <?php } ?>
                                                     <?php } ?>
@@ -147,9 +217,9 @@
                                                     <tr>
                                                         <th>No.</th>
                                                         <th>Task type</th>
+                                                        <th>Priority</th>
                                                         <th>Activity</th>
                                                         <th>End Date</th>
-                                                        <th>Action</th>
                                                     </tr>
                                                 </tfooter>
                                             </table>
@@ -158,80 +228,43 @@
                                     <!-- Completed Tasks -->
                                     <!-- Completed Tasks -->
                                     <div class="tab-pane" id="Progress" role="tabpanel">
-
                                         <div class="table-responsive">
                                             <table class="table dataTable">
                                                 <thead>
                                                     <tr>
                                                         <th>No.</th>
                                                         <th>Task type</th>
+                                                        <th>Priority</th>
                                                         <th>Activity</th>
                                                         <th>End Date</th>
-                                                        <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <?php
                                                     $i = 1;
-
                                                     $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'on progress')->orderBy('created_at', 'desc')->limit(100)->get();
                                                     if (!empty($tasks)) {
                                                         foreach ($tasks as $act) {
-                                                    ?>
+                                                            if($act->priority == 1){
+                                                                 $prt = "High";
+                                                            } else if($act->priority == 2){
+                                                                $prt = "Medium";
+                                                            } else if($act->priority == 3){
+                                                                $prt = "Less";
+                                                            } else{
+                                                                $prt = "";
+                                                            }
+                                                          ?>
                                                             <tr>
                                                                 <td><?= $i++ ?></td>
-                                                                <td><?= $act->tasktype->name ?></td>
-                                                                <td><?= substr($act->activity, 0, 60) ?></td>
-                                                                <td><?= $act->end_date ?></td>
                                                                 <?php if(can_access('view_task')) { ?>
-                                                                <td> <a href="<?= url('customer/activity/show/' . $act->id) ?>">View</a> </td>
-                                                               <?php } ?>
-                                                            </tr>
-                                                        <?php } ?>
-                                                    <?php } ?>
-                                                </tbody>
-                                                <tfooter>
-                                                    <tr>
-                                                        <th>No.</th>
-                                                        <th>Task type</th>
-                                                        <th>Activity</th>
-                                                        <th>End Date</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </tfooter>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <!-- Completed Tasks -->
-                                    <!-- Completed Tasks -->
-                                    <div class="tab-pane" id="Pending" role="tabpanel">
-
-                                        <div class="table-responsive">
-                                            <table class="table dataTable">
-                                                <thead>
-                                                    <tr>
-                                                        <th>No.</th>
-                                                        <th>Task type</th>
-                                                        <th>Activity</th>
-                                                        <th>End Date</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php
-                                                    $i = 1;
-                                                    $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'new')->orderBy('created_at', 'desc')->limit(100)->get();
-                                                    if (!empty($tasks)) {
-                                                        foreach ($tasks as $act) {
-                                                    ?>
-                                                            <tr>
-                                                                <td><?= $i++ ?></td>
-                                                                <td><?= $act->tasktype->name ?></td>
-                                                                <td><?= substr($act->activity, 0, 60) ?></td>
-                                                                <td><?= $act->end_date ?></td>
-                                                                <?php if(can_access('view_task')) { ?>
-                                                                <td> <a href="<?= url('customer/activity/show/' . $act->id) ?>">View</a> </td>
+                                                                <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->tasktype->name ?> </a> </td>
+                                                                <?php } else { ?>
+                                                                 <td> <?= $act->tasktype->name ?> </td>
                                                                 <?php } ?>
+                                                                <td> <?= $prt ?> </td>
+                                                                <td><?= substr($act->activity, 0, 60) ?></td>
+                                                                <td><?= cdate($act->end_date) ?></td>
                                                             </tr>
                                                         <?php } ?>
                                                     <?php } ?>
@@ -240,14 +273,18 @@
                                                     <tr>
                                                         <th>No.</th>
                                                         <th>Task type</th>
+                                                        <th>Priority</th>
                                                         <th>Activity</th>
                                                         <th>End Date</th>
-                                                        <th>Action</th>
                                                     </tr>
                                                 </tfooter>
                                             </table>
                                         </div>
                                     </div>
+                                    <!-- Completed Tasks -->
+                                    <!-- Completed Tasks -->
+                                
+
                                     <!-- Completed Tasks -->
                                     <div class="tab-pane" id="profile1" role="tabpanel">
                                         <p class="m-0">
@@ -294,7 +331,7 @@
                             "data": ""
                         },
                         {
-                            "data": "priority"
+                            "data": ""
                         },
                         {
                             "data": "school_name"
@@ -314,25 +351,28 @@
                                 return '<a href="<?= url('customer/activity/show/') ?>/' + row.id + '"> ' + row.task_name + '  </a>';
                              }
                            },
-                        //    {
-                        //     "targets":2,
-                        //     "data": null,
-                        //     "render": function(data, type, row, meta) {
-                        //         var status;
-                        //         var message;
-                        //         if (row.priority == '1') {
-                        //             status = 'success';
-                        //             message = 'High';
-                        //         } else if (row.priority == '2') {
-                        //             status = 'warning';
-                        //             message = 'Medium';
-                        //         } else {
-                        //             status = 'info';
-                        //             message = 'Less';
-                        //         }
-                        //         return '<div class="dropdown-secondary dropdown f-right"><button class="btn btn-' + status + ' btn-mini dropdown-toggle waves-effect waves-light"  type="button" id="dropdown6' + row.id + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + message + '</button><div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_status(\'on progress\',' + row.id + ')"><span class="point-marker bg-danger"></span>On progress</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_status(\'complete\',' + row.id + ')"><span class="point-marker bg-warning"></span>Complete</a><a class="dropdown-item waves-light waves-effect" href="#!" onmousedown="change_status(\'new\',' + row.id + ')"><span class="point-marker bg-warning"></span>New</a></div> <span class="f-left m-r-5 text-inverse" style="display:none">Priority : ' + row.priority + '</span></div>';
-                        //     }
-                        //    },
+                           {
+                            "targets":2,
+                            "data": null,
+                            "render": function(data, type, row, meta) {
+                                var status;
+                                var message;
+                                if (row.priority == '1') {
+                                    status = 'success';
+                                    message = 'High';
+                                } else if (row.priority == '2') {
+                                    status = 'warning';
+                                    message = 'Medium';
+                                } else if (row.priority == '3'){
+                                    status = 'info';
+                                    message = 'Less';
+                                } else {
+                                    status = '';
+                                    message = '';
+                                }
+                                return '<div class="dropdown-secondary dropdown f-right text-center"><button class="btn btn-' + status + ' btn-mini dropdown-toggle waves-effect waves-light"  type="button" id="dropdown7' + row.id + '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' + message + '</button><div class="dropdown-menu" aria-labelledby="dropdown7" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_priority(\'1\',' + row.id + ')"><span class="point-marker bg-danger"></span>High</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_priority(\'2\',' + row.id + ')"><span class="point-marker bg-warning"></span>Medium</a><a class="dropdown-item waves-light waves-effect" href="#!" onmousedown="change_priority(\'3\',' + row.id + ')"><span class="point-marker bg-warning"></span>Less</a></div> <span class="f-left m-r-5 text-inverse" style="display:none">Priority : ' + row.priority + '</span></div>';
+                            }
+                           },
                          {
                             "targets":4,
                             "data": null,
@@ -383,6 +423,21 @@
                             }
                         });
                     },
+
+                 change_priority = function(x,y){
+                    $.ajax({
+                            url: '<?= url('customer/changepriority') ?>/null',
+                            method: 'get',
+                            data: {
+                                priority: x,
+                                id: y
+                            },
+                            success: function(data) {  
+                                $('#dropdown7' + y).html(data).removeClass('btn btn-danger').addClass('btn btn-primary');
+                            }
+                        });
+                    },
+
                     delete_log = function(a) {
                         $.ajax({
                             url: '<?= url('software/logsDelete') ?>/null',

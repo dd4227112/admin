@@ -277,5 +277,9 @@ function btn_attendance($id, $method, $class, $name) {
         return $date->format('Y-m-d H:i:s');
     }
 
+    
+   function cdate($date){
+        return date('d-m-Y H:i:s');
+    }
 
    

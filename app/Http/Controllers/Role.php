@@ -11,7 +11,6 @@ class Role extends Controller
         $this->middleware('auth');
     }
 
-    
     public function userPermission() {
         $id = request()->segment(3);
         $this->data['set']  = (int) $id;
