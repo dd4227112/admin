@@ -1,7 +1,16 @@
 @extends('layouts.app')
 @section('content')
-
 <?php $root = url('/') . '/public/' ?>
+
+<style>
+    input{
+        width: 300px;
+    }
+    #map{
+        width: 400px;
+        height: 400px;
+    }
+</style>
 
 <div class="page-wrapper">
     <!-- Page-header start -->
@@ -140,19 +149,15 @@
                                 <div class="row follower-counter">
                                     <div class="col-md-12 col-lg-12">
                                         <div class="txt-primary" contenteditable="true" onblur="$.get('<?= url('sales/updateStudent/null/') ?>', {no: $(this).text(), school_id:<?= $school->id ?>}, function (data) {
-                alert(data)
-              })"><?= (int) $school->students ?></div>
+                                            alert(data)
+                                             })"><?= (int) $school->students ?></div>
                                         <div>Estimated Students</div>
                                     </div>
-
-
                                 </div>
                             </div>
                         </div>
                         <div class="mail-body">
                             <div class="mail-body-header">
-
-
                             </div>
                             <div class="mail-body-content">
 
@@ -189,9 +194,9 @@
                                                                         <select name="task_type_id"
                                                                             class="form-control">
                                                                             <?php
-                                  $types = DB::table('task_types')->where('department', 1)->get();
-                                  foreach ($types as $type) {
-                                    ?>
+                                                                                $types = DB::table('task_types')->where('department', 1)->get();
+                                                                                foreach ($types as $type) {
+                                                                                    ?>
                                                                             <option value="<?= $type->id ?>">
                                                                                 <?= $type->name ?></option>
                                                                             <?php } ?>
@@ -468,10 +473,29 @@
                                                 </form>
                                                 <br />
 
-                                                 <div id="myForm">
+                                                
+
+                                                  <div id="myForm">
                                                      <label for="">Name location</label>
                                                     <input id="myInput" data-geocomplete="street address" class="form-control" />
                                                   </div>
+
+                                                  <div id="map">
+                                                  </div>
+
+                                                  <form action="" id="mapform">
+                                                      Latitude: <input class="form-control" type="text" data-geo="lat">
+                                                      Longitude: <input class="form-control" type="text" data-geo="lng">
+                                                      Address: <input class="form-control" type="text" data-geo="formatted_address">
+                                                  </form>
+
+                                                  <script>
+                                                      $('#myInput').geocomplete({
+                                                          map: '#map',
+                                                          details: '#mapform',
+                                                          detailsAttribute : 'data-geo'
+                                                      });
+                                                  </script>
 
                                                 <?php
                                                 if (isset($client_id) && (int) $client_id > 0) {
