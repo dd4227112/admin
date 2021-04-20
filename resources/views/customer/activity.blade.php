@@ -101,10 +101,10 @@
                                                         <th>Completed tasks</th>
                                                     </tr>
                                                     <tr>
-                                                        <th class="text-center"><?= \App\Models\Task::where('user_id', $user = Auth::user()->id)->count();  ?></th>
-                                                        <th class="text-center"><?= \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'new')->count();  ?></th>
-                                                        <th class="text-center"><?= \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'on progress')->count(); ?></th>
-                                                        <th class="text-center"><?= \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'complete')->count();?></th>
+                                                        <th class="text-center"><?= \App\Models\Task::count();  ?></th>
+                                                        <th class="text-center"><?= \App\Models\Task::where('status', 'new')->count();  ?></th>
+                                                        <th class="text-center"><?= \App\Models\Task::where('status', 'on progress')->count(); ?></th>
+                                                        <th class="text-center"><?= \App\Models\Task::where('status', 'complete')->count();?></th>
                                                     </tr>
                                                 </table>
                                             </div>
@@ -544,7 +544,6 @@
                 }
             });
 
-      
 
             $('#completetask').change(function(event) {
                 var choice = $(this).val();

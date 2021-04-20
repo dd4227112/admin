@@ -53,8 +53,10 @@ foreach ($user_permission as $permis) {
                         if (Auth::user()->role_id != 7) { 
                             $sql = "SELECT basic_pay FROM admin.salaries WHERE user_id = '$user->id' ORDER BY id DESC LIMIT 1";
                             $salary = \collect(DB::select($sql))->first();
-                            $salary_per_minute = $salary->basic_pay / $minutes;
-                           // dump($salary_per_minute);
+                    
+                        //     $salary_per_minute = $salary->basic_pay / $minutes;
+                        //    $salary_per_minute = empty($salary_per_minute) ? 0 : $salary_per_minute;
+                        //     dd($salary_per_minute);
                             ?>
                             <div class="col-md-6 col-xl-4">
                                 <div class="card counter-card-2">

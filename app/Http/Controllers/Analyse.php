@@ -92,7 +92,6 @@ class Analyse extends Controller {
     }
 
     public function summary() {
-
         $this->data['parents'] = 1; // \collect(DB::select('select count(*) as count from admin.all_parent'))->first()->count;
         $this->data['students'] = 1; // \collect(DB::select('select count(*) as count from admin.all_student'))->first()->count;
         $this->data['teachers'] = 1; // \collect(DB::select('select count(*) as count from admin.all_teacher'))->first()->count;
@@ -103,7 +102,6 @@ class Analyse extends Controller {
         $this->data['active_students'] = 1; // \collect(DB::select('select count(*) as count from admin.all_student where status=1'))->first()->count;
         $this->data['active_teachers'] = \collect(DB::select('select count(*) as count from admin.all_teacher where status=1'))->first()->count;
         $this->data['active_users'] = 1; // \collect(DB::select('select count(*) as count from admin.all_users where status=1'))->first()->count;
-
         return $this->data;
     }
 

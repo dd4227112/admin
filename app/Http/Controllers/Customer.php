@@ -236,7 +236,6 @@ class Customer extends Controller {
             $req = [];
             $users = DB::select('select count(*),"table","schema_name" from admin.all_users  where "table" !=\'setting\'  group by "table","schema_name" order by "table"');
             foreach ($users as $user) {
-
                 $obj = [$user->schema_name, $user->parent, $user->student, $user->user, $user->teacher];
                 array_push($req, $obj);
             }
@@ -611,7 +610,7 @@ class Customer extends Controller {
         public function choices(){
             $type = request('type');
             if($type == 'year'){
-                $this->data['completetasks']  = \App\Models\Task::where('user_id',Auth::user()->id)->where('status', 'complete')->whereYear('created_at', Carbon::now()->year)->orderBy('created_at', 'desc')->get();
+                $this->data['completetasks']  = \App\Models\Task::where('user_id',Auth::user()->id)->where('status', 'complete')->whereYear('created_at', date('Y'))->orderBy('created_at', 'desc')->get();
             } else if($type == 'quoter'){
                 $date = \Carbon\Carbon::today()->subDays(120);
                 $this->data['completetasks']  = \App\Models\Task::where('user_id',Auth::user()->id)->where('status', 'complete')->where('created_at','>=',$date)->orderBy('created_at', 'desc')->get();
