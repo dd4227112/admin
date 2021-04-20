@@ -528,7 +528,7 @@ class Customer extends Controller {
             $this->data['departments'] = DB::table('departments')->get();
             if ($_POST) {
                 $random = time();
-              //  dd($random);
+             
                 $data = array_merge(request()->except(['to_user_id','start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date'))),'ticket_no' => $random]);
                
                 $task = \App\Models\Task::create($data);
@@ -599,6 +599,13 @@ class Customer extends Controller {
             $this->data['activities'] = [];
             return view('customer/activity', $this->data);
         }
+    }
+
+    public function getschools() {
+        $sql = "SELECT id,upper(name)|| ' '||upper(type) as name FROM admin.schools
+			WHERE lower(name) LIKE '%" . str_replace("'", null, strtolower(request('term'))) . "%'
+			LIMIT 10";
+        die(json_encode(DB::select($sql)));
     }
 
         public function choices(){

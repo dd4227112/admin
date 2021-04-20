@@ -37,24 +37,25 @@
                                           
                                         <div class="form-group" id="client_id">
                                             <strong>  Select School</strong> 
-
                                             <input type="text" class="form-control" id="get_schools" name="school_id" value="<?= old('school_id') ?>" >
+                                        </div> 
+                                                                                            
 
-                                        </div>
-                                                                             <!--                         
-
-                                        <div class="form-group"  id="client_id">
+                                        {{-- <div class="form-group"  id="client_id">
                                             <strong>  Select School or Client</strong> 
-
                                             <select name="client_id"  class="form-control select2">
                                                 <option value=''> Select Client Here...</option>
                                                 <?php
-                                               // foreach ($clients as $client) {
+                                                $clients = \App\Models\Client::get();
+                                                foreach ($clients as $client) {
                                                  ?>
+                                                   <option value="<?= $client->id ?>"> <?= $client->name ?></option>
+                                                <?php } ?>
                                             </select>
-                                        </div> -->
-                                        <div class="form-group">
+                                        </div>  --}}
 
+
+                                        <div class="form-group">
                                             <strong> Task Type</strong> 
                                             <select name="task_type_id" id="task_type_id" required class="form-control select2">
                                                 <option value=''> Select Here...</option>
@@ -191,37 +192,37 @@ department = function () {
         })
     })
 }
-get_schools = function () {
-    $("#get_schools").select2({
-        minimumInputLength: 2,
-       // tags: [],
-        ajax: {
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-            url: '<?= url('student/getschools/null') ?>',
-            dataType: 'json',
-            type: "GET",
-            quietMillis: 50,
-            data: function (term) {
-                return {
-                    term: term,
-                    token: $('meta[name="csrf-token"]').attr('content')
-                };
-            },
-            results: function (data) {
-                return {
-                    results: $.map(data, function (item) {
+        get_schools = function () {
+            $("#get_schools").select2({
+                minimumInputLength: 2,
+            // tags: [],
+                ajax: {
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                    url: '<?= url('customer/getschools/null') ?>',
+                    dataType: 'json',
+                    type: "GET",
+                    quietMillis: 50,
+                    data: function (term) {
                         return {
-                            text: item.name,
-                            id: item.id
+                            term: term,
+                            token: $('meta[name="csrf-token"]').attr('content')
                         };
-                    })
-                };
-            }
+                    },
+                    results: function (data) {
+                        return {
+                            results: $.map(data, function (item) {
+                                return {
+                                    text: item.name,
+                                    id: item.id
+                                };
+                            })
+                        };
+                    }
+                }
+            });
         }
-    });
-}
 
 $(document).ready(department);
 $(document).ready(get_schools);
