@@ -35,7 +35,6 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             // sync invoices 
             $this->syncInvoice();
-            $this->car_track_alert_parent('public');
             //$this->updateInvoice();
         })->everyMinute();
         $schedule->call(function () {
@@ -436,6 +435,7 @@ public function save_car_track_access_token($schema=''){
     'time_stamp' => gmdate("Y-m-d H:i:s", time()),
     'user_id' => $track_key->user_id,
     'version' => '0.9',
+    'expires_in'=>60,
     'app_key' => $track_key->app_key,
     'user_pwd_md5' => $track_key->user_pwd_md5,
     'format' => 'json',
