@@ -443,7 +443,7 @@ public function save_car_track_access_token($schema=''){
 
 
     $obj_content = json_decode($request);
-    if($obj_content['code'] <> 0) {
+    if($obj_content['code'] == 0) {
         DB::table($schema . '.car_tracker_key')->where('id','>', 0)->update(['access_token' => $obj_content['result']['access_token']]);
 
     }
