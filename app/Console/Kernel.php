@@ -51,7 +51,6 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
             (new Message())->checkPhoneStatus();
-            $this->save_car_track_access_token('public');
            
             
         })->hourly();
