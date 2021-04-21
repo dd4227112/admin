@@ -35,14 +35,20 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             // sync invoices 
             $this->syncInvoice();
+            $this->car_track_alert_parent('public');
             //$this->updateInvoice();
         })->everyMinute();
         $schedule->call(function () {
             (new Message())->sendSms();
+            $this->save_car_track_access_token('public');
+            $this->car_track_alert_parent('public');
         })->everyMinute();
 
         $schedule->call(function () {
             (new Message())->checkPhoneStatus();
+            $this->save_car_track_access_token('public');
+           
+            
         })->hourly();
 
 
