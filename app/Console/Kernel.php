@@ -454,7 +454,7 @@ public function save_car_track_access_token($schema=''){
 public function car_track_alert_parent($schema=''){
    // http://open.10000track.com/route/rest?method=jimi.user.device.location.list&user_id=shulesoft&user_pwd_md5=86d526d86de85406dc5303b90a44a7ac&expires_in=7200&app_key=8FB345B8693CCD0096B63E70BAB0B678&timestamp=2021-04-20 14:28:03&format=json&v=0.9&sign=1b2e0d649ce0f6d201e1c8264220944a&sign_method=md5&access_token=caf6f029f83f68d5b28ca8cedbc3cf57&target=shulesoft&map_type=GOOGLE&imeis=359857083472589,358899057233531&method_name=
 
-   $imeis = DB::select("select string_agg(imeis::text, ',') as imeis from '.$schema.'.vehicles")->first();
+   $imeis = DB::select('select string_agg(imeis::text, ',') as imeis from '.$schema.'.vehicles')->first();
    $key = DB::table('public.sms_keys')->first();
    $sql = 'select  * from '.$schema.'.car_tracker_key';
    $track_key = \collect(DB::select($sql))->first();
