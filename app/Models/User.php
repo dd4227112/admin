@@ -10,7 +10,7 @@ class User extends Model {
      * Generated
      */
     protected $table = 'users';
-    protected $fillable = ['id', 'firstname', 'middlename', 'lastname', 'email', 'password', 'role_id', 'type', 'name', 'remember_token', 'dp', 'phone', 'town', 'created_by', 'photo','about','salary','sex','skills','marital','date_of_birth','personal_email','tshirt_size','joining_date','contract_end_date','academic_certificates','medical_report','driving_license','valid_passport','next_kin','personal_email','employment_category','national_id','position'];
+    protected $fillable = ['id', 'firstname', 'middlename', 'lastname', 'email', 'password', 'role_id', 'type', 'name', 'remember_token', 'dp', 'phone', 'town', 'created_by', 'photo','about','salary','sex','skills','marital','date_of_birth','personal_email','tshirt_size','joining_date','contract_end_date','academic_certificates','medical_report','driving_license','valid_passport','next_kin','personal_email','employment_category','national_id','position','company_file_id'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -78,13 +78,25 @@ class User extends Model {
     }
 
     public function usersSchools() {
-        return $this->hasMany(\App\Model\UsersSchool::class);
+        return $this->hasMany(\App\Models\UsersSchool::class);
     }
 
      public function tasks() {
         return $this->hasMany(\App\Models\Task::class);
     }
       public function role() {
-        return $this->belongsTo('App\Model\Role')->withDefault(['display_name' => 'unknown']);
+        return $this->belongsTo('App\Models\Role')->withDefault(['display_name' => 'unknown']);
     }
+
+    public function companyFile() {
+        return $this->belongsTo(\App\Models\CompanyFile::class, 'company_file_id', 'id');
+    }
+
+    public function uattendance() {
+        return $this->hasMany(\App\Models\Uattendance::class, 'user_id', 'id');
+    }
+
 }
+
+
+

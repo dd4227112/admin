@@ -217,49 +217,150 @@ class Message extends Controller {
 
     public function sendSms() {
         //get all connected phones first, we use parallel approach to implement this
+        DB::select('REFRESH MATERIALIZED VIEW  public.all_sms');
         $phones_connected = DB::select('select distinct api_key from public.all_sms');
         if (count($phones_connected) > 0) {
             foreach ($phones_connected as $phone) {
+
                 $messages = DB::select('select * from public.all_sms where api_key=\'' . $phone->api_key . '\' order by priority desc, sms_id asc limit 100');
                 if (!empty($messages)) {
                     foreach ($messages as $sms) {
-                        $schema = strtoupper($sms->schema_name) == 'PUBLIC' ?
-                                'SHULESOFT' : $sms->schema_name;
-                        if ((int) $sms->type == 1) {
-                            $school_link = '';
-                            $start_link = '';
-                        } else {
-                            $link = strtoupper($sms->schema_name) == 'PUBLIC' ? '' : $sms->schema_name . '.';
-                            $school_link = '. https://' . $link . 'shulesoft.com';
-                            $start_link = strtoupper($schema);
-                        }
 
-                        $karibusms = new \karibusms();
-                        $karibusms->API_KEY = $sms->api_key;
-                        $karibusms->API_SECRET = $sms->api_secret;
-                        $karibusms->set_name(strtoupper($sms->schema_name));
-                        $karibusms->karibuSMSpro = $sms->type;
-                        $result = (object) json_decode($karibusms->send_sms($sms->phone_number, $start_link . ': ' . $sms->body . $school_link, $sms->schema_name . $sms->sms_id));
-                        if (is_object($result) && isset($result->success) && $result->success == 1) {
-                            DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 1, 'return_code' => json_encode($result), 'updated_at' => 'now()']);
-                        } else {
-//stop retrying
-                            if (isset($result->message) && preg_match('/Insufficient/i', $result->message)) {
-                                //This user try to send sms with bulk SMS but he does not have enough credit
-                                //lets resend these sms with normal phone
-                                DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 0, 'type' => 0, 'return_code' => json_encode(array_merge((array) $result, ['action' => 'Message will be resent via phone SMS'])), 'updated_at' => 'now()']);
-                            } else {
-                                DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)->update(['status' => 1, 'return_code' => json_encode($result), 'updated_at' => 'now()']);
-                            }
-                        }
+                        //here put options to send sms by channels
+                        $this->sendByChannel($sms);
                     }
                 }
             }
         }
     }
 
+    /**
+     * @uses We use this method to format SMS into a format easy to be understood by end user
+     * @param type $sms
+     * @return string
+     */
+    private function formatMessage($sms) {
+        $schema = strtoupper($sms->schema_name) == 'PUBLIC' ? 'SHULESOFT' : $sms->schema_name;
+        if ((int) $sms->type == 1) {
+            $school_link = '';
+            $start_link = '';
+        } else {
+            $link = strtoupper($sms->schema_name) == 'PUBLIC' ? '' : $sms->schema_name . '.';
+            $school_link = '. https://' . $link . 'shulesoft.com';
+            $start_link = strtoupper($schema) . ': ' . '';
+        }
+        $message = $start_link . $sms->body . $school_link;
+        return $message;
+    }
+
+    /**
+     * @info: One messsage can be sent via multiple channels, but we need results of all channels
+     * @param type $sms
+     */
+    public function sendByChannel($sms) {
+        $category = explode(',', $sms->channel);
+        $return = [];
+        echo 'send sms by channel';
+        if (empty($category)) {
+            echo 'phone and quick message';
+            $send = $this->sendNormalSMS($sms, 'phone-sms');
+            array_push($return, ['phone-sms' => $send]);
+            return DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)
+                            ->update(['status' => 1, 'return_code' => json_encode($return), 'updated_at' => 'now()']);
+        } else {
+            foreach ($category as $channel) {
+
+                if ($channel == 'whatsapp') {
+                    echo 'whatsapp message';
+                    $send = $this->whatsapp($sms);
+                    array_push($return, [$channel => $send]);
+                }
+                if ($channel == 'telegram') {
+                    echo 'Telegram message';
+                    $send = $this->telegram($sms);
+                    array_push($return, [$channel => $send]);
+                }
+                if ($channel == 'phone-sms' || $channel == 'quick-sms' || $channel == '') {
+                    echo 'phone and quick message';
+                    $send = $this->sendNormalSMS($sms, $channel);
+                    array_push($return, [$channel => $send]);
+                }
+                if ($channel == 'email') {
+                    echo 'email message';
+                    $send = $this->sendCustomEmail($sms);
+                    array_push($return, [$channel => $send]);
+                }
+            }
+            return DB::table($sms->schema_name . '.sms')->where('sms_id', $sms->sms_id)
+                            ->update(['status' => 1, 'return_code' => json_encode($return), 'updated_at' => 'now()']);
+        }
+    }
+
+    public function sendCustomEmail($sms) {
+        $user = \DB::table($sms->schema_name . 'users')->where('phone', $sms->phone_number)->first();
+        $return = 0;
+        if (!empty($user)) {
+            if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
+                try {
+
+                    $link = strtoupper($sms->schema_name) == 'PUBLIC' ? 'demo.' : $sms->schema_name . '.';
+                    $data = ['content' => $sms->body, 'link' => $link, 'photo' => $user->photo, 'sitename' => $sms->schema_name, 'name' => $user->name];
+                    $message = (object) ['sitename' => $sms->schema_name, 'email' => $user->email, 'subject' => $sms->subject];
+                    $return = \Mail::send('email.default', $data, function ($m) use ($message) {
+                                $m->from('noreply@shulesoft.com', $message->sitename);
+                                $m->to($message->email)->subject($message->subject);
+                            });
+                } catch (\Exception $e) {
+                    $return = $e->getMessage();
+                }
+            }
+        }
+        return $return;
+    }
+
+    public function sendNormalSMS($sms, $channel) {
+        $karibusms = new \karibusms();
+        $karibusms->API_KEY = $sms->api_key;
+        $karibusms->API_SECRET = $sms->api_secret;
+        $karibusms->set_name(strtoupper($sms->schema_name));
+        $karibusms->karibuSMSpro = $channel == 'quick-sms' ? 1 : 0;
+        return (object) json_decode($karibusms->send_sms($sms->phone_number, $this->formatMessage($sms), $sms->schema_name . $sms->sms_id));
+    }
+
+    public function whatsapp($sms) {
+
+        $id = str_replace('+', NULL, $sms->phone_number) . '@c.us';
+        $this->APIurl = $sms->api_secret;
+        $this->token = $sms->api_key;
+        if (strlen($sms->files) > 4) {
+
+            $files = explode(',', $sms->files);
+            foreach ($files as $file) {
+                if (preg_match('/.ogg/i', $file)) {
+                    $this->file($id, 'ogg', $file, NULL);
+                } else {
+                    $this->file($id, explode('.', $file)[1], $file, NULL);
+                }
+            }
+            return $this->sendMessage($id, $sms->body);
+        } else {
+            return $this->sendMessage($id, $sms->body);
+        }
+    }
+
+    public function telegram($sms) {
+        $telegram_subscriber = DB::table('admin.telegram_users')->where('phone_number', $sms->phone_number)->first();
+        if (!empty($telegram_subscriber)) {
+            $bot_token = '1414183991:AAFORE9WoKxEtUk6se9Xjq5VIRraVO8fkp0';
+            $telegram = new Telegram($bot_token);
+            $message = array('chat_id' => $telegram_subscriber->telegram_id, 'text' => strtoupper($sms->schema_name) . chr(10) . $sms->body . chr(10) . 'https://' . $sms->schema_name . '.shulesoft.com', 'parse_mode' => 'HTML');
+            return $telegram->sendMessage($message);
+        }
+    }
+
     public function sendEmail() {
         //loop through schema names and push emails
+        DB::select('REFRESH MATERIALIZED VIEW  public.all_email');
         $this->emails = DB::select('select * from public.all_email limit 8');
         if (count($this->emails) > 0) {
             foreach ($this->emails as $message) {
@@ -332,7 +433,7 @@ class Message extends Controller {
 
         foreach ($default_deadlines as $school) {
             $payment = DB::table('accounts.payments')->where('student_id', $school->student_id)->orderBy('id', 'desc')->first();
-            if (count($payment) == 0) {
+            if (empty($payment)) {
                 continue;
             }
             $now = date('Y-m-d'); // or your date as well

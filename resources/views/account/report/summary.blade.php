@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('content')
 <div class="main-body">
     <div class="page-wrapper">
@@ -28,9 +27,9 @@
             <form style="" class="form-horizontal list-group-item list-group-item-warning" role="form" method="post"> 
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12"><?= __('start_date') ?></label>
-                        <div class=" col-xs-12">
-                            <input type="text" required="true" class="form-control calendar" id="from_date" name="from_date" value="" autocomplete="off">
+                        <label class="control-label col-md-6 col-xs-12"><?= __('Start date') ?></label>
+                        <div class="col-xs-12">
+                            <input type="date" required="true" class="form-control calendar" id="from_date" name="from_date" value="<?= date('Y-01-01')?>" autocomplete="off">
                         </div>
                     </div>
                 </div>
@@ -38,9 +37,9 @@
 
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label class="control-label col-md-3 col-sm-3 col-xs-12"><?= __('end_date') ?></label>
+                        <label class="control-label col-md-6  col-xs-12"><?= __('End date') ?></label>
                         <div class="col-xs-12">
-                            <input type="text" required="true" class="form-control calendar" id="to_date" name="to_date" value="">
+                            <input type="date" required="true" class="form-control calendar" id="to_date" name="to_date" value="<?= date('Y-m-d')?>">
                         </div>
                     </div>
                 </div>                     
@@ -48,8 +47,8 @@
 
                 <div class="col-md-3">
                     <div class='form-group' >
-                        <label for="class_level_id" class="control-label col-md-3 col-sm-3 col-xs-12">
-                            <?= __('type') ?>
+                        <label for="class_level_id" class="control-label col-md-6 col-xs-12">
+                            <?= __('Type') ?>
                         </label>
                         <div class="col-xs-12">
                             <?php
@@ -78,33 +77,32 @@
                         </div>
                     </div>
                 </div> 
-
-
             </form>
-
         </div> 
        
-        <div class="row">
+        <div class="row" style="margin: 10px;">
             <div class="col-md-12 col-xl-3">
                     <div class="card counter-card-1">
                         <div class="card-block-big">
                             <div>
                     <h3><?= $no_invoice ?></h3>
-                    <p><?= __('No Invoice') ?></p>
+                    <p><?= __('Number of Invoice') ?></p>
                 </div>
-            </div>
+              </div>
              </div>
             </div>
+
             <div class="col-md-12 col-xl-3">
                     <div class="card counter-card-1">
                         <div class="card-block-big">
                             <div>
                     <h3><?= $no_payments ?></h3>
-                    <p><?= __('No Payments') ?> <p>
+                    <p><?= __('Number of Payments') ?> <p>
                  </div>
-            </div>
+                </div>
              </div>
             </div>
+
            <div class="col-md-12 col-xl-3">
                     <div class="card counter-card-1">
                         <div class="card-block-big">
@@ -112,9 +110,10 @@
                     <h3><?= $payments_received ?></h3>
                    <p><?= __('Payments Received') ?> <p>
                 </div>
-            </div>
+               </div>
              </div>
             </div>
+
             <div class="col-md-12 col-xl-3">
                     <div class="card counter-card-1">
                         <div class="card-block-big">
@@ -122,7 +121,7 @@
                     <h3><?= $revenue_received ?></h3>
                     <p><?= __('Revenue Received') ?> <p>
                 </div>
-            </div>
+               </div>
              </div>
             </div>
         </div>
@@ -130,24 +129,44 @@
         <div class="row">
            <div class="col-sm-12 card">
              
-                        <div class="col-md-9 col-sm-9 col-xs-12">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
 
-                            <ul class="stats-overview">
-                                <li>
-                                    <span class="name"><?= __('today_collect') ?></span>
-                                    <span class="value text-success"> <?=  number_format($today_amount->sum) ?> </span>
-                                </li>
-                                <li>
-                                    <span class="name"><?= __('week_collect') ?></span>
-                                    <span class="value text-success"><?=   number_format($weekly_amount->sum) ?> </span>
-                                </li>
-                                <li class="hidden-phone">
-                                    <span class="name"> <?= __('month_collect') ?> </span>
-                                    <span class="value text-success"> <?=  number_format($monthly_amount->sum) ?></span>
-                                </li>
+                            <div class="row" style="margin: 15px;heigth:13px;">
+                                <div class="col-md-12 col-xl-4">
+                                        <div class="card counter-card-1">
+                                            <div class="card-block-big">
+                                                <div>
+                                        <h3> <?=  number_format($today_amount->sum) ?></h3>
+                                        <p><?= __('Today collection') ?></p>
+                                    </div>
+                                  </div>
+                                 </div>
+                                </div>
+                    
+                                <div class="col-md-12 col-xl-4">
+                                        <div class="card counter-card-1">
+                                            <div class="card-block-big">
+                                                <div>
+                                        <h3><?=   number_format($weekly_amount->sum) ?></h3>
+                                        <p><?= __('Week collect') ?> <p>
+                                     </div>
+                                    </div>
+                                 </div>
+                                </div>
+                    
+                               <div class="col-md-12 col-xl-4">
+                                        <div class="card counter-card-1">
+                                            <div class="card-block-big">
+                                                <div>
+                                        <h3><?=  number_format($monthly_amount->sum) ?></h3>
+                                       <p><?= __('Month collect') ?> <p>
+                                    </div>
+                                   </div>
+                                 </div>
+                                </div>
+                
+                            </div>
 
-
-                            </ul>
                             <br>
 
                             <div id="mainb">

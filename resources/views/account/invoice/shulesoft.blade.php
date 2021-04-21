@@ -22,10 +22,7 @@
         .invoice-title{
             float: right !important;
         }
-
-
     }
-
 </style>
 
 <style>
@@ -221,7 +218,6 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-
                                                         <td>ShuleSoft</td>
                                                         <td >
                                                             <div style="line-height:2;">
@@ -255,7 +251,6 @@
                                                         <td><?= money($price) ?></td>
                                                         <td><?= money($price * ($students + (int) $siteinfos->estimated_students)) ?></td>
                                                     </tr>
-
                                                 </tbody>
                                             </table>
                                         </div>
@@ -304,10 +299,8 @@
                                                         <tr>
                                                             <th>Total Paid Amount</th>
                                                             <td><?= money($siteinfos->total_paid_amount) ?></td>
-                                                        </tr>
-
-                                                        <tr>
-
+                                                         </tr>
+                                                         <tr>
                                                             <th>Unpaid Total Amount:</th>
                                                             <td>
                                                                 <?php
@@ -360,15 +353,12 @@
                                                                 <p></p>
                                                                 <br/>
                                                                 <h3>BRANCH Payment instructions</h3>
-
                                                                 <p></p>
                                                                 <ol>
                                                                     <li>Visit any nearby NMB BANK branch</li>
                                                                     <li>Make deposit by specifying invoice number : <b><?= $invoice ?></b> with payment amount of Tsh <b><?php // money($price * $students)     ?></b></li>
                                                                 </ol>
                                                                 <p></p>
-
-
 
                                                             </div>
                                                             <div id="report" class="tab-pane col-lg-offset-1">
@@ -521,29 +511,29 @@
 <script src="{{url('public/assets/shulesoft/jquery.PrintArea.js')}}" type="text/JavaScript"></script>
 
 <script type="text/javascript">
-                                            function printDiv(divID) {
-                                                //Get the HTML of div
-                                                var divElements = document.getElementById(divID).innerHTML;
-                                                //Get the HTML of whole page
-                                                var oldPage = document.body.innerHTML;
+    function printDiv(divID) {
+        //Get the HTML of div
+        var divElements = document.getElementById(divID).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
 
-                                                //Reset the page's HTML with div's HTML only
-                                                document.body.innerHTML =
-                                                        "<html><head><title></title></head><body><div style='margin-left: 4em; margin-right:4em; margin-top:10em'>" +
-                                                        divElements + "</div></body>";
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+                "<html><head><title></title></head><body><div style='margin-left: 4em; margin-right:4em; margin-top:10em'>" +
+                divElements + "</div></body>";
 
-                                                //Print Page
-                                                window.print();
+        //Print Page
+        window.print();
 
-                                                //Restore orignal HTML
-                                                document.body.innerHTML = oldPage;
-                                            }
+        //Restore orignal HTML
+        document.body.innerHTML = oldPage;
+    }
 
-                                            $(document).ready(function () {
-                                                $("#printInvoice").click(function () {
+    $(document).ready(function () {
+        $("#printInvoice").click(function () {
 
-                                                    printDiv("print_div");
-                                                });
-                                            });
+            printDiv("print_div");
+        });
+    });
 </script>
 @endsection

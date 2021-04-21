@@ -3,6 +3,18 @@
 function mailConfig() {
     
 }
+
+function custom_date($datatime) {
+    $newTZ = new DateTimeZone('America/New_York');
+    date_default_timezone_set('America/New_York');
+    
+    $GMT = new DateTimeZone(Config::get('app.timezone'));
+    $date = new DateTime($datatime, $newTZ);
+    $date->setTimezone($GMT);
+    return $date->format('Y-m-d H:i:s');
+}
+
+
 function validateDate($date, $format = 'Y-m-d')
 {
     $d = DateTime::createFromFormat($format, $date);
@@ -252,3 +264,22 @@ function validate_phone_number($number) {
         return $valid;
     }
 }
+
+
+function btn_attendance($id, $method, $class, $name) {
+    return "<input type='checkbox' class='" . $class . "' $method id='" . $id . "' data-placement='top' data-toggle='tooltip' data-original-title='" . $name . "' > ";
+}
+
+ function timeZones($value)
+    {
+        $date = DateTime::createFromFormat('Y-m-d H:i:s', $value);
+        $date->setTimeZone(new DateTimeZone('Africa/Dar_es_Salaam'));
+        return $date->format('Y-m-d H:i:s');
+    }
+
+    
+   function cdate($date){
+        return date('d-m-Y H:i:s');
+    }
+
+   

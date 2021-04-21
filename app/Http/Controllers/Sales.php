@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Jobs\PushSMS;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -39,12 +38,13 @@ class Sales extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index() {
-        $this->data['faqs'] = [];
-        return view('sales.index', $this->data);
+     //  $this->data['faqs'] = [];
+        return view('sales.index');
     }
 
-    function faq() {
+    public function faq() {
         if ((int) request('id') > 0 && request('action') == 'delete') {
             DB::table('faq')->where('id', request('id'))->delete();
         }
@@ -65,9 +65,8 @@ class Sales extends Controller {
         if ($page == 'add') {
             $id = request()->segment(4);
             if ($_POST) {
-                $task_id = DB::table('tasks')->insertGetId(
-                        [
-                            'activity' => request('message'), 'date' => date('Y-m-d', strtotime(request('action_date'))), 'user_id' => Auth::user()->id, 'action' => request('action'), 'time' => 'now()'
+                $task_id = DB::table('tasks')->insertGetId([
+                  'activity' => request('message'), 'date' => date('Y-m-d', strtotime(request('action_date'))), 'user_id' => Auth::user()->id, 'action' => request('action'), 'time' => 'now()'
                 ]);
                 DB::table('prospects')->insert([
                     'school_id' => $id,
@@ -102,7 +101,6 @@ class Sales extends Controller {
     }
 
     function downloadMaterial($type) {
-
         if ($type == 'shulesoft_brochure') {
             $headers = array(
                 'Content-Type: image/jpg',
@@ -130,12 +128,7 @@ class Sales extends Controller {
         $this->data['nmb_schools'] = DB::table('admin.nmb_schools')->count();
         $this->data['nmb_shulesoft_schools'] = \collect(DB::select("select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22"))->first()->count;
         $this->data['school_types'] = DB::select("select type, count(*) from admin.schools where ownership='Non-Government' group by type,ownership");
-        $this->data['ownerships'] = DB::select('select ownership, COUNT(*) as count, 
-SUM(COUNT(*)) over() as total_schools, 
-(COUNT(*) * 1.0) / SUM(COUNT(*)) over() as percent
-FROM admin.schools
-group by ownership');
-
+        $this->data['ownerships'] = DB::select('select ownership, COUNT(*) as count,SUM(COUNT(*)) over() as total_schools,(COUNT(*) * 1.0) / SUM(COUNT(*)) over() as percent FROM admin.schools group by ownership');
         return view('market.allocation', $this->data);
     }
 
@@ -159,7 +152,7 @@ group by ownership');
              $refer_bank_id=(new \App\Http\Controllers\Users())->getBankId();
             $user = Auth::user()->id;
             $this->data['branch'] = $branch = \App\Models\PartnerUser::where('user_id', $user)->first();
-            $this->data['title'] = "Schools With Bank Payment Integrarion";
+            $this->data['title'] = "Schools With Bank Payment Integration";
             if (!empty($branch)) {
                 $this->data['all_schools'] = DB::select('select * from admin.schools WHERE schema_name IN (select distinct schema_name from admin.all_bank_accounts where refer_bank_id='.$refer_bank_id.') and ward_id in (select id from admin.wards where district_id = ' . $branch->branch->district_id . ')');
             } else {
@@ -245,12 +238,20 @@ group by ownership');
                 break;
             case 'schools':
                 if ((int) request('type') == 3) {
-                    $sql = "select * from (select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a   where lower(a.ownership) <>'government') a where activities >0";
+               //$sql = "select * from (select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a where lower(a.ownership) <>'government') a where activities >0";
+                $sql = "select C.*,D.username from (select A.*,B.* from (select x.* from(select s.*, w.name as ward, d.name as district,r.name as region, count(t.*) as activities 
+                from admin.schools as s join admin.tasks as t on s.id=t.school_id join admin.wards as w on s.ward_id=w.id join admin.districts as d on d.id=w.district_id
+                join admin.regions as r on r.id=d.region_id group by s.id, w.id, d.id,r.id) x ) A LEFT JOIN (select school_id,client_id from admin.client_schools) B on A.id = B.school_id
+                ) C  left  join (select id,username from admin.clients) D on C.client_id = D.id";
                 } else if ((int) request('type') == 2) {
                     $sql = "select a.*, (select count(*) from admin.tasks where client_id in (select id from admin.clients where username in (select schema_name from admin.all_setting where school_id=a.id))) as activities from admin.schools a   where lower(a.ownership) <>'government' and a.id in (select school_id from admin.all_setting)";
                 } else {
-                    $sql = "select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a   where lower(a.ownership) <>'government'";
-                }
+                 //$sql = "select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a  where lower(a.ownership) <>'government'";
+                $sql = "select C.*,D.username from (select A.*,B.* from (select b.*,w.name as ward, d.name as district,r.name as region from (select a.*, (select count(*) from admin.tasks where school_id=a.id) 
+                        as activities from admin.schools a  where lower(a.ownership) <>'government') as b join admin.wards as w on b.ward_id = w.id join admin.districts as d on d.id=w.district_id
+                        join admin.regions as r on r.id=d.region_id) A LEFT JOIN (select school_id,client_id from admin.client_schools) B
+                        on A.id = B.school_id) C  left  join (select id,username from admin.clients) D on C.client_id = D.id";
+                  }
                 return $this->ajaxTable('schools', ['a.name', 'a.region', 'a.ward', 'a.district'], $sql);
                 break;
             case 'prospects':
@@ -289,13 +290,11 @@ group by ownership');
                 return $this->ajaxTable('payments', ['a.id', 'amount', 'name', 'a.date'], $sql);
                 break;
             case 'tasks':
-
                 $user_id = (int) request('user_id') > 0 ? request('user_id') : Auth::user()->id;
-                $sql = "select t.id,substring(t.activity from 1 for 50) as activity,t.date, t.start_date::date,t.end_date::date, t.created_at,p.school_name,p.client,u.firstname||' '||u.lastname as user_name, substring(tt.name from 1 for 20) as task_name, t.status,t.priority from admin.tasks t left join (
+                $sql = "select t.id,t.ticket_no,substring(t.activity from 1 for 50) as activity,t.date, t.created_at,p.school_name,p.client,u.firstname||' '||u.lastname as user_name, substring(tt.name from 1 for 20) as task_name, t.status,t.priority from admin.tasks t left join (
                     select a.task_id, substring(c.name from 1 for 20) as school_name,'Client' as client from admin.tasks_clients a join admin.clients c on c.id=a.client_id
-                    UNION ALL
-                SELECT b.task_id,  substring(s.name from 1 for 20) as school_name, 'Not Client' as client from admin.tasks_schools b join admin.schools s on s.id=b.school_id ) p on p.task_id=t.id join admin.users u on u.id=t.user_id LEFT join admin.task_types tt on tt.id=t.task_type_id where u.id=" . $user_id . " OR t.id in (select task_id from admin.tasks_users where user_id=" . $user_id . " )";
-                return $this->ajaxTable('tasks', ['activity', 'u.firstname', 'p.school_name', 't.created_at', 't.date', 'u.lastname', 't.start_date', 't.end_date'], $sql);
+                    UNION ALL SELECT b.task_id,  substring(s.name from 1 for 20) as school_name, 'Not Client' as client from admin.tasks_schools b join admin.schools s on s.id=b.school_id ) p on p.task_id=t.id join admin.users u on u.id=t.user_id LEFT join admin.task_types tt on tt.id=t.task_type_id where u.id=" . $user_id . " OR t.id in (select task_id from admin.tasks_users where user_id=" . $user_id . " )";
+                return $this->ajaxTable('tasks', ['activity', 'u.firstname', 'p.school_name', 't.created_at', 't.date', 'u.lastname'], $sql);
 
                 break;
             case 'school_status':
@@ -360,10 +359,10 @@ group by ownership');
         if ((int) $id == 0) {
             return false;
         }
-        $this->data['school'] = \App\Models\School::find($id);
+        $this->data['school'] = \App\Models\School::findOrFail($id);
         if ($_POST) {
             if ((int) request('add_sale') == 1) {
-                \App\Models\School::find(request('client_id'))->update(request()->all());
+                \App\Models\School::findOrFail(request('client_id'))->update(request()->all());
                 return redirect()->back()->with('success', 'School record updated successfully');
             } else if ((int) request('add_user') == 1) {
                 \App\Models\SchoolContact::create([
@@ -377,7 +376,6 @@ group by ownership');
                 return redirect()->back()->with('success', 'user recorded successfully');
             } else {
                 $data = array_merge(request()->all(), ['user_id' => Auth::user()->id, 'school_id' => request('client_id')]);
-
                 $task = \App\Models\Task::create($data);
                 \App\Models\UsersSchool::create([
                     'user_id' => Auth::user()->id, 'school_id' => request('client_id'), 'role_id' => Auth::user()->role_id, 'status' => 1,
@@ -388,7 +386,6 @@ group by ownership');
                     'task_id' => $task->id,
                     'school_id' => (int) $school_id
                 ]);
-
                 return redirect()->back()->with('success', 'Report added successfully');
             }
         }
@@ -397,7 +394,7 @@ group by ownership');
 
     public function updateStudent() {
         $id = request('school_id');
-        \App\Models\School::find($id)->update(['students' => request('no')]);
+        \App\Models\School::findOrFail($id)->update(['students' => request('no')]);
         echo 'success';
     }
 
@@ -423,7 +420,6 @@ group by ownership');
 
     function addSchool() {
         if ($_POST) {
-
             $array = [
                 'name' => strtoupper(request('name')),
                 'ward_id' => request('ward'),
@@ -436,12 +432,32 @@ group by ownership');
     }
 
     public function onboard() {
-        $school_id = request()->segment(3);
+        $school_id = (int) request()->segment(3);
+        //Redirects Partners to Onboarding Views
+        if(Auth::user()->department == 9 || Auth::user()->department == 10){
+            return redirect('Partner/add/'.$school_id);
+        }
 
-        $this->data['school'] = $school = DB::table('admin.schools')->where('id', $school_id)->first();
+       // $this->data['school'] = $school = DB::table('admin.schools')->where('id', $school_id)->first();
+        $this->data['school'] = $school  =  \App\Models\School::findOrFail($school_id);
+
         $username = preg_replace('/[^a-z]/', null, strtolower($school->name));
+        
         $this->data['staffs'] = DB::table('users')->where('status', 1)->where('role_id', '<>', 7)->get();
         if ($_POST) {
+             $this->validate(request(), 
+                   ['name' => 'required',
+                    'sales_user_id' => 'required',
+                    'support_user_id' => 'required',
+                    'price' => 'required|numeric',
+                    'username' => 'required',
+                    'students' => 'required|numeric',
+                    'implementation_date' => 'required',
+                    'start_date' => 'required',
+                    'end_date' => 'required',
+                    'description' => 'required'
+                ]);
+            
             $code = rand(343, 32323) . time();
 
             $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
@@ -451,16 +467,20 @@ group by ownership');
                 ]);
                 $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
             }
-            DB::table('admin.schools')->where('id', $school_id)->update(['students' => request('students')]);
+               DB::table('admin.schools')->where('id', $school_id)->update(['students' => request('students')]);
 
-            $schema_name = request('username') != '' ? strtolower(trim(request('username'))) : $username;
+             $schema_name = request('username') != '' ? strtolower(trim(request('username'))) : $username;
+          
             $check_client = DB::table('admin.clients')->where('username', $schema_name)->first();
+         
             if (!empty($check_client)) {
                 $client_id = $check_client->id;
             } else {
                 $client_id = DB::table('admin.clients')->insertGetId([
                     'name' => $school->name,
-                    'address' => $school->ward . ' ' . $school->district . ' ' . $school->region,
+                 // 'address' => $school->ward . ' ' . $school->district . ' ' . $school->region,
+                    'address' => $school->wards->name . ' ' . $school->wards->district->name . ' ' . $school->wards->district->region->name,
+                    'created_at' => date('Y-m-d H:i:s'),
                     'phone' => $school_contact->phone,
                     'email' => $school_contact->email,
                     'estimated_students' => request('students'),
@@ -471,6 +491,7 @@ group by ownership');
                     'created_by' => Auth::user()->id,
                     'username' => $schema_name
                 ]);
+
                 //client school
                 DB::table('admin.client_schools')->insert([
                     'school_id' => $school_id, 'client_id' => $client_id
@@ -508,6 +529,19 @@ group by ownership');
                     'contract_id' => $contract_id, 'client_id' => $client_id
                 ]);
             }
+            
+            if (request('standing_order')) {
+                $file = request()->file('standing_order');
+                $file_id = $this->saveFile($file, 'company/contracts');
+                //save contract
+                $contract_id = DB::table('admin.contracts')->insertGetId([
+                    'name' => 'ShuleSoft', 'company_file_id' => $file_id, 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'contract_type_id' => 8, 'user_id' => Auth::user()->id
+                ]);
+                //client contracts
+                DB::table('admin.client_contracts')->insert([
+                    'contract_id' => $contract_id, 'client_id' => $client_id
+                ]);
+            }
 
             //once a school has been installed, now create an invoice for this school or create a promo code
             if (request('payment_status') == 1) {
@@ -523,7 +557,7 @@ group by ownership');
                     //     'buyer_name' => $client->name, 'buyer_phone' => $client->phone, 'end_point' => '/checkout/create-order', 'action' => 'createOrder', 'client_id' => $client->id, 'source' => $client->id);
                     // $this->curlPrivate($order);
 
-                    $client = \App\Models\Client::find($client_id);
+                    $client = \App\Models\Client::findOrFail($client_id);
                     $year = \App\Models\AccountYear::where('name', date('Y'))->first();
                     $reference = time(); // to be changed for selcom ID
                     $invoice = \App\Models\Invoice::create(['reference' => $reference, 'client_id' => $client_id, 'date' => date('d M Y'), 'due_date' => date('d M Y', strtotime(' +30 day')), 'year' => date('Y'), 'user_id' => Auth::user()->id, 'account_year_id' => $year->id]);
@@ -561,6 +595,9 @@ group by ownership');
      * @param type $client_id
      */
     public function scheduleActivities($client_id) {
+        if((int)$client_id == 0){
+            $client_id = request()->segment(3);
+        }
         $time = 0;
         $sections = \App\Models\TrainItem::orderBy('id', 'asc')->get();
         $start_date = date('Y-m-d H:i');
@@ -588,7 +625,7 @@ group by ownership');
 
             $end_date = date('Y-m-d H:i', strtotime("+{$section->time} minutes", strtotime($start_date)));
 
-            $slot = \App\Models\Slot::find(request('slot_id' . $section->id));
+            $slot = \App\Models\Slot::findOrFail(request('slot_id' . $section->id));
             if(empty($slot)){
                 $slot = \App\Models\Slot::first();
             }
@@ -637,11 +674,10 @@ group by ownership');
      * 3. if user does have a time, then fix that initial time there
      * 4. check the specific task has been allocated how many minutes to be accomplished
      * 5. add that minutes to the time specified and fix end datetime
-     * 6. if you find occupied time slot in between, add that time slot in between to extend time for end datetime
+     * 6. if you findOrFail occupied time slot in between, add that time slot in between to extend time for end datetime
      * 7. return both, start datetime and end datetime respectively
      */
     public function taskStartTime($start_date, $timeframe, $iterate = false) {
-
         $end_time = date('d-m-Y H:i', strtotime("+{$timeframe} minutes", time()));
         $start_time = date('d-m-Y H:i', strtotime($start_date));
         $slot_available = \collect(DB::select("SELECT * FROM   admin.tasks WHERE  start_date::timestamp <='" . $start_time . "'::timestamp and end_date::timestamp >='" . $end_time . "'::timestamp"))->first();
@@ -691,7 +727,7 @@ group by ownership');
 
     public function curlPrivate($fields, $url = null) {
         // Open connection
-        $url = 'http://51.77.212.234:8081/api/payment';
+        $url = 'http://51.91.251.252:8081/api/payment';
         $ch = curl_init();
 // Set the url, number of POST vars, POST data
 
@@ -725,13 +761,12 @@ group by ownership');
             $where = "  a.created_at::date >='" . $start_date . "' AND a.created_at::date <='" . $end_date . "'";
         }
 
-
-        $this->data['schools'] = \App\Models\Task::whereIn('user_id', \App\Models\User::where('department', 2)->get(['id']))->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
-        $this->data['new_schools'] = \App\Models\Task::whereIn('user_id', \App\Models\User::where('department', 2)->get(['id']))->where('next_action', 'new')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
-        $this->data['pipelines'] = \App\Models\Task::whereIn('user_id', \App\Models\User::where('department', 2)->get(['id']))->where('next_action', 'pipeline')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
-        $this->data['closeds'] = \App\Models\Task::whereIn('user_id', \App\Models\User::where('department', 2)->get(['id']))->where('next_action', 'closed')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
-        $this->data['query'] = 'SELECT count(next_action), next_action from admin.tasks a where  a.user_id in (select id from admin.users where department=2) and ' . $where . ' group by next_action order by count(next_action) desc';
-        $this->data['types'] = 'SELECT count(b.name), b.name as type from admin.tasks a, admin.task_types b  where a.task_type_id=b.id AND a.user_id in (select id from admin.users where department=2) and ' . $where . ' group by b.name order by count(b.name) desc';
+        $this->data['schools'] = \App\Models\Task::where('user_id', Auth::user()->id)->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
+        $this->data['new_schools'] = \App\Models\Task::where('user_id', Auth::user()->id)->where('next_action', 'new')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
+        $this->data['pipelines'] = \App\Models\Task::where('user_id', Auth::user()->id)->where('next_action', 'pipeline')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
+        $this->data['closeds'] = \App\Models\Task::where('user_id', Auth::user()->id)->where('next_action', 'closed')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
+        $this->data['query'] = 'SELECT count(next_action), next_action from admin.tasks a where  a.user_id='.Auth::User()->id.' and ' . $where . ' group by next_action order by count(next_action) desc';
+        $this->data['types'] = 'SELECT count(b.name), b.name as type from admin.tasks a, admin.task_types b  where a.task_type_id=b.id AND a.user_id ='.Auth::User()->id.' and ' . $where . ' group by b.name order by count(b.name) desc';
         return view('sales.sales_status.index', $this->data);
     }
 
@@ -777,7 +812,6 @@ group by ownership');
 
             return redirect('Sales/salesStatus/1')->with('success', 'success');
         }
-
         return view('sales.sales_status.add', $this->data);
     }
 
@@ -880,7 +914,7 @@ group by ownership');
         if ($_POST) {
             // $data = request()->all();
             // dd($data);
-            $data = array_merge(request()->except('_token'), ['user_id' => Auth::user()->id, 'status' => 'new', 'action' => 'visit', 'date' => date('Y-m-d')]);
+            $data = array_merge(request()->except(['_token','start_date','end_date']), ['start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date'))), 'user_id' => Auth::user()->id, 'status' => 'new', 'action' => 'visit', 'date' => date('Y-m-d')]);
             $task = \App\Models\Task::create($data);
 
             DB::table('tasks_users')->insert([

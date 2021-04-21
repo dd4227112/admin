@@ -91,8 +91,8 @@ WHERE CONSTRAINT_TYPE = '$constrains'
 AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
     }
 
-    public function getDefinedFunctions(){
-        $sql=DB::select("select distinct routine_name from (SELECT routines.routine_name, parameters.data_type, parameters.ordinal_position
+    public function getDefinedFunctions() {
+        $sql = DB::select("select distinct routine_name from (SELECT routines.routine_name, parameters.data_type, parameters.ordinal_position
         FROM information_schema.routines
             LEFT JOIN information_schema.parameters ON routines.specific_name=parameters.specific_name
         WHERE routines.specific_schema='public'
@@ -100,7 +100,7 @@ AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
     }
 
     public function loadSchema() {
-        return DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant','admin','api','app','skysat','dodoso')");
+        return DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant','admin','api','app','skysat','dodoso','forum','academy','carryshop')");
     }
 
     /**
@@ -300,11 +300,11 @@ ORDER BY c.oid, a.attnum";
 
     public function getConstrainByName($name) {
         $sql = "SELECT conrelid::regclass AS table_from ,conname ,pg_get_constraintdef(c.oid)
-FROM   pg_constraint c
-JOIN   pg_namespace n ON n.oid = c.connamespace
-WHERE contype IN ('f', 'p ','c','u') AND conname='" . $name . "'
-AND    n.nspname = '" . self::$master_schema . "'
-ORDER  BY conrelid::regclass::text, contype DESC";
+                FROM   pg_constraint c
+                JOIN   pg_namespace n ON n.oid = c.connamespace
+                WHERE contype IN ('f', 'p ','c','u') AND conname='" . $name . "'
+                AND    n.nspname = '" . self::$master_schema . "'
+                ORDER  BY conrelid::regclass::text, contype DESC";
         return \collect(DB::select($sql))->first();
     }
 
@@ -330,8 +330,8 @@ ORDER  BY conrelid::regclass::text, contype DESC";
     public function logs() {
         $schema = request()->segment(3);
 
-     
-        $this->data['error_logs'] =strlen($schema) > 3 ? DB::table('error_logs')->whereNull('deleted_at')->where('schema_name',$schema)->count() : DB::table('error_logs')->whereNull('deleted_at')->count();
+
+        $this->data['error_logs'] = strlen($schema) > 3 ? DB::table('error_logs')->whereNull('deleted_at')->where('schema_name', $schema)->count() : DB::table('error_logs')->whereNull('deleted_at')->count();
         $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1 '))->first();
         return view('software.logs', $this->data);
     }
@@ -445,15 +445,26 @@ ORDER  BY conrelid::regclass::text, contype DESC";
         $this->data['returns'] = [];
         if ($_POST) {
             $schema = request('schema_name');
-            $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where "schema_name"=\''.$schema.'\'');
+            $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where "schema_name"=\'' . $schema . '\'');
             $returns = [];
             $background = new \App\Http\Controllers\Background();
+            
+            //Find All Payment on This Dates
+            $dates =  new \DatePeriod(
+                new \DateTime(request('start_date')),
+                new \DateInterval('P1D'),
+                new \DateTime(request('end_date'))
+            );
+            //To iterate
+           foreach ($dates as $key => $value) {
+
             foreach ($invoices as $invoice) {
 
                 $token = $background->getToken($invoice);
                 if (strlen($token) > 4) {
                     $fields = array(
-                        "reconcile_date" => date('d-m-Y', strtotime(request('date'))),
+                      //  "reconcile_date" => date('d-m-Y', strtotime(request('date'))),
+                        "reconcile_date" => $value->format('d-m-Y'),
                         "token" => $token
                     );
                     $push_status = 'reconcilliation';
@@ -461,30 +472,84 @@ ORDER  BY conrelid::regclass::text, contype DESC";
                             'https://wip.mpayafrica.com/v2/' . $push_status : 'https://api.mpayafrica.co.tz/v2/' . $push_status;
                     $curl = $background->curlServer($fields, $url);
                     array_push($returns, json_decode($curl));
-                  //  json_decode($curl);
-                } else {
-                    echo 'invalid token';
-                    exit;
-                }
+                    //  json_decode($curl);
+                } //else { return redirect()->back()->with('success', 'invalid token'); }
             }
-            $this->data['returns'] =$returns; 
+       }
+            $this->data['returns'] = $returns;
         }
         return view('software.api.reconciliation', $this->data);
     }
 
     public function syncMissingPayments() {
         $background = new \App\Http\Controllers\Background();
-        $url = 'http://51.77.212.234:8081/api/init';
+        $url = 'http://51.91.251.252:8081/api/init';
         $fields = json_decode(urldecode(request('data')));
         $curl = $background->curlServer($fields, $url, 'row');
         return $curl;
         // return redirect()->back()->with('success',$curl);
     }
-    
-    
+
     public function template() {
-          $this->data['faqs'] = [];
+        $this->data['faqs'] = [];
         return view('software.index', $this->data);
     }
+
+      public function whatsapp() {
+        $this->data['faqs'] = [];
+        return view('software.whatsapp', $this->data);
+    }
+    
+    public function requirements() {
+        $tab = request()->segment(3);
+        $id = request()->segment(4);
+        if ($tab == 'show' && $id > 0) {
+            $this->data['requirement'] = \App\Models\Requirement::where('id', $id)->first();
+            $this->data['next'] = \App\Models\Requirement::whereNotIn('id',[$id])->where('status', 'New')->first()->id;
+            return view('customer/view_requirement', $this->data);
+        }
+        $this->data['levels'] = [];
+        if ($_POST) {
+            $data = array_merge(request()->all(), ['user_id' => Auth::user()->id]);
+            $req = \App\Models\Requirement::create($data);
+            if ((int) request('to_user_id') > 0) {
+
+                $user = \App\Models\User::find(request('to_user_id'));
+                $message = 'Hello ' . $user->name . '<br/><br/>'
+                        . 'There is New School Requirement from ' . $req->school->name . ' (' . $req->school->region . ')'
+                        . '<br/><br/><p><b>Requirement:</b> ' . $req->note . '</p>'
+                        . '<br/><br/><p><b>By:</b> ' . $req->user->name . '</p>';
+                $this->send_email($user->email, 'ShuleSoft New Customer Requirement', $message);
+            }
+        }
+        $this->data['requirements'] = \App\Models\Requirement::orderBy('id', 'DESC')->get();
+        return view('software/tasks', $this->data);
+    }
+
+
+    public function updateReq() {
+        $id = request('id');
+        $action = request('action');
+        \App\Models\Requirement::where('id', $id)->update(['status' => $action]);
+        return redirect()->back()->with('success', 'success');
+    }
+
+    public function addTodo() {
+        $id = Auth::user()->id;
+        $to = request('to_user_id');
+        $message = \App\Models\Chat::create(['body' => request('body'), 'status' => 1]);
+        \App\Models\ChatUser::create(['user_id' => $id, 'to_user_id' => $to, 'message_id' => $message->id]);
+       $message = '';
+
+       $message .= '<div class="media chat-inner-header">
+       <a class="back_chatBox">
+       <input id="to_user_id' . $user->id . '" value="' . $user->id . '" type="hidden">
+           <i class="icofont icofont-rounded-left"></i>' . $user->firstname . ' ' . $user->lastname . '
+       </a>
+   </div>';
+    
+   echo $message;
+    }
+
 
 }

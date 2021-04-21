@@ -6,13 +6,7 @@
 
     <head>
         <title>ShuleSoft Admin Panel</title>
-        <!-- HTML5 Shim and Respond.js IE9 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
-          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-          <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-          <![endif]-->
-        <!-- Meta -->
+     
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
@@ -58,61 +52,57 @@
 
         <link href="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.css" rel="stylesheet">
 
-
-
-
-
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script>
 
 
         <script type="text/javascript">
-ajax_setup = function () {
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        async: true,
-        cache: false,
-        beforeSend: function (xhr) {
-            // jQuery('.theme-loader').show();
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            // jQuery('.theme-loader').hide();
-        },
-        complete: function (xhr, status) {
-            // jQuery('.theme-loader').hide();
-        }
-    });
-}
-$(document).ready(ajax_setup);
-function toast(message) {
-    new PNotify({
-        title: 'Feedback',
-        text: message,
-        type: 'success',
-        hide: 'false',
-        icon: 'icofont icofont-info-circle'
-    });
-}
-        </script>
-        <style>
-            #valid-msg {
-                color: #00C900;
+            ajax_setup = function () {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    async: true,
+                    cache: false,
+                    beforeSend: function (xhr) {
+                        // jQuery('.theme-loader').show();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        // jQuery('.theme-loader').hide();
+                    },
+                    complete: function (xhr, status) {
+                        // jQuery('.theme-loader').hide();
+                    }
+                });
             }
-            #error-msg {
-                color: red;
+            $(document).ready(ajax_setup);
+            function toast(message) {
+                new PNotify({
+                    title: 'Feedback',
+                    text: message,
+                    type: 'success',
+                    hide: 'false',
+                    icon: 'icofont icofont-info-circle'
+                });
             }
-        </style>
-    </head>
+                    </script>
+                    <style>
+                        #valid-msg {
+                            color: #00C900;
+                        }
+                        #error-msg {
+                            color: red;
+                        }
+                    </style>
+                </head>
 
-    <body class="<?= strlen(request('token')) > 5 ? 'menu-collapsed menu-static' : 'fix-menu' ?>">
-        <!-- Pre-loader start -->
-        <div class="theme-loader">
-            <div class="ball-scale">
-                <div></div>
+        <body class="<?= strlen(request('token')) > 5 ? 'menu-collapsed menu-static' : 'fix-menu' ?>">
+            <!-- Pre-loader start -->
+            <div class="theme-loader">
+                <div class="ball-scale">
+                    <div></div>
+                </div>
             </div>
-        </div>
         <!-- Pre-loader end -->
         <!-- Menu header start -->
         <nav class="navbar header-navbar">
@@ -134,9 +124,10 @@ function toast(message) {
                         <i class="ti-more"></i>
                     </a>
                 </div>
+
                 <div class="navbar-container container-fluid">
                     <div>
-                        <ul class="nav-left">
+                         <ul class="nav-left">
                             <li>
                                 <a id="collapse-menu" href="#">
                                     <i class="ti-menu"></i>
@@ -276,74 +267,75 @@ function toast(message) {
                                                                 </li>
                                                             </ul>
                                                         </li>-->
-                        </ul>
-                        <?php
-                        if (strlen(request('token')) < 4) {
-                            ?>
-                            <ul class="nav-right">
-                                <li class="header-notification lng-dropdown">
-                                    <a href="#" id="dropdown-active-item">
-                                        <i class="flag-icon flag-icon-gb m-r-5"></i> English
-                                    </a>
-                                    <ul class="show-notification">
-                                        <li>
-                                            <a href="#" data-lng="en">
-                                                <i class="flag-icon  flag-icon-es m-r-5"></i> English
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="#" data-lng="es">
-                                                <i class="flag-icon flag-icon-tz m-r-5"></i> Swahili
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <?php
-                                if (true) {
-                                    $tasks = \App\Models\Task::where('to_user_id', Auth::user()->id)->where('date', '>=', date('Y-m-d'))->get();
-                                    ?>
-                                    <li class="header-notification">
-                                        <a href="#!">
-                                            <i class="ti-bell"></i>
-                                            <span class="badge"><?= sizeof($tasks) ?></span>
-                                        </a>
-                                        <ul class="show-notification">
-                                            <li>
-                                                <h6>Notifications</h6>
-                                                <label class="label label-danger">New</label>
-                                            </li>
-                                            <?php
-                                            foreach ($tasks as $task) {
-                                                ?>
-                                                <li onMouseOver="this.style.backgroundColor = '#cccccc'">
-                                                    <a href="<?= url('customer/activity/show/' . $task->id) ?>" >
-                                                        <div class="media">
-                                                            <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Image">
-                                                            <div class="media-body">
-                                                                <h5 class="notification-user">Client: <?= $task->client->name ?></h5>
-                                                                <p class="notification-msg"><?= $task->activity ?></p>
-                                                                <span class="notification-time"><?= date('d M Y', strtotime($task->date)) ?></span>
-                                                            </div>
-                                                        </div>
-                                                    </a>
-                                                </li>
-                                            <?php } ?>
-                                            <li>
-
-                                                <a href="<?= url('users/notification') ?>"><label class="label label-warning">View All</label></a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <!--                                    <li class="header-notification">
-                                                                            <a href="#!" class="displayChatbox">
-                                                                                <i class="ti-comments"></i>
-                                                                                <span class="badge"><?php
+                                                    </ul>
+                                                    <?php
+                                                    if (strlen(request('token')) < 4) {
+                                                        ?>
+                                                     <ul class="nav-right">
+                                                    <li class="header-notification lng-dropdown">
+                                                        <a href="#" id="dropdown-active-item">
+                                                            <i class="flag-icon flag-icon-gb m-r-5"></i> English
+                                                        </a>
+                                                        <ul class="show-notification">
+                                                            <li>
+                                                                <a href="#" data-lng="en">
+                                                                    <i class="flag-icon  flag-icon-es m-r-5"></i> English
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#" data-lng="es">
+                                                                    <i class="flag-icon flag-icon-tz m-r-5"></i> Swahili
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                    <?php
+                                                    if (true) {
+                                                        $tasks = \App\Models\Task::where('to_user_id', Auth::user()->id)->where('date', '>=', date('Y-m-d'))->get();
+                                                        ?>
+                                                        <li class="header-notification">
+                                                            <a href="#!">
+                                                                <i class="ti-bell"></i>
+                                                                <span class="badge"><?= sizeof($tasks) ?></span>
+                                                            </a>
+                                                            <ul class="show-notification">
+                                                                <li>
+                                                                    <h6>Notifications</h6>
+                                                                    <label class="label label-danger">New</label>
+                                                                </li>
+                                                                <?php
+                                                                foreach ($tasks as $task) {
+                                                                    ?>
+                                                                    <li onMouseOver="this.style.backgroundColor = '#cccccc'">
+                                                                        <a href="<?= url('customer/activity/show/' . $task->id) ?>" >
+                                                                            <div class="media">
+                                                                                <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Image">
+                                                                                <div class="media-body">
+                                                                                    <h5 class="notification-user">Client: <?= $task->client->name ?></h5>
+                                                                                    <p class="notification-msg"><?= $task->activity ?></p>
+                                                                                    <span class="notification-time"><?= date('d M Y', strtotime($task->date)) ?></span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </a>
+                                                                    </li>
+                                                                <?php } ?>
+                                                                <li>
+                    
+                                                                    <a href="<?= url('users/notification') ?>"><label class="label label-warning">View All</label></a>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                             <!--      <li class="header-notification">
+                                                        <a href="#!" class="displayChatbox">
+                                                        <i class="ti-comments"></i>
+                                                        <span class="badge"><?php
                                     $users = \App\Models\User::where('status', 1)->where('department', '<>', 10)->get();
                                     echo sizeof($users);
                                     ?></span>
-                                                                            </a>
-                                                                        </li>-->
+                                        </a>
+                                    </li>-->
                                 <?php } ?>
+
                                 <li class="user-profile header-notification">
                                     <a href="#!">
                                         <img src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image">
@@ -355,6 +347,11 @@ function toast(message) {
                                         <li>
                                             <a href="<?= url('users/show/' . Auth::user()->id) ?>">
                                                 <i class="ti-user"></i> Profile
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="<?= url('users/password/') ?>">
+                                                <i class="ti-settings"></i> Change Password
                                             </a>
                                         </li>
                                         <?php if (false) { ?>
@@ -388,6 +385,8 @@ function toast(message) {
                             </ul>
                             <!-- search -->
                         <?php } ?>
+
+
                         <script>
                             search_inputs = function () {
                                 $('#search_inputs').keyup(function () {
@@ -449,7 +448,7 @@ function toast(message) {
         <!-- Menu header end -->
 
 
-        <?php
+       <?php
         if (strlen(request('token')) < 3) {
             ?>
             <!-- Menu aside start -->
@@ -458,7 +457,7 @@ function toast(message) {
                     <img class="img-40" src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image">
                     <div class="user-details">
                         <span>{{ Auth::user()->name() }}</span>
-                        <span id="more-details"> <?php // Auth::user()->role->display_name     ?></span>
+                        <span id="more-details"> <?php // Auth::user()->role->display_name              ?></span>
                     </div>
                 </div>
                 <div class="main-menu-content">
@@ -484,7 +483,7 @@ function toast(message) {
                                     <li>
                                         <a href="<?= url('analyse/index') ?>" data-i18n="nav.dash.default"> Home </a></li>
 
-                                <?php } if (can_access('manage_users') || Auth::user()->department == 2) { ?>
+                                <?php } if ((can_access('manage_users') || Auth::user()->department == 2) && Auth::user()->role_id <> 3) { ?>
 
                                     <li><a href="<?= url('analyse/marketing') ?>" data-i18n="nav.dash.ecommerce"> Marketing </a></li>
                                 <?php } if (can_access('manage_users') || Auth::user()->department == 2) { ?>
@@ -512,6 +511,7 @@ function toast(message) {
                                     <span data-i18n="nav.page_layout.main">Customer Service</span>
                                 </a>
                                 <ul class="tree-1">
+                                    <li><a href="<?= url('general/show/whatsapp_integrations') ?>" data-i18n="nav.page_layout.bottom-menu">WhatsApp Integration</a></li>
                                     <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.bottom-menu">System Setup</a></li>
                                     <li>
                                         <a href="<?= url('Phone_call/index') ?>" data-i18n="nav.navigate.navbar"> Phone Calls</a>
@@ -558,7 +558,6 @@ function toast(message) {
                         <?php } ?>
 
                         <?php if (Auth::user()->role_id == 12) { ?>
-                            <li><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">Meeting Minutes</a></li>
 
                             <li class="nav-item">
                                 <a href="<?= url('customer/activity') ?>">
@@ -573,31 +572,43 @@ function toast(message) {
                             </li>
                         <?php } ?>
 
-                        <?php if (can_access('manage_sales') || Auth::user()->role_id == 14) { ?>
-                            <li class="nav-item">
-                                <a href="#!">
-                                    <i class="ti-layout-cta-right"></i>
-                                    <span data-i18n="nav.navigate.main">Sales</span>
-                                </a>
-                                <ul class="tree-1">
-                                    <li>
-                                        <a href="<?= url('sales/index') ?>" data-i18n="nav.navigate.navbar">Sales Materials</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">Schools</a>
-                                    </li>
-                                    <li>
-                                        <a href="<?= url('sales/salesStatus') ?>" data-i18n="nav.navigate.navbar">Sales Status</a>
-                                    </li>
+                        <?php // if (can_access('manage_sales') || Auth::user()->role_id == 14) { ?>
+                        <li class="nav-item">
+                            <a href="#!">
+                                <i class="ti-layout-cta-right"></i>
+                                <span data-i18n="nav.navigate.main">Sales</span>
+                            </a>
+                            <ul class="tree-1">
+                                <li>
+                                    <a href="<?= url('sales/index') ?>" data-i18n="nav.navigate.navbar">Sales Materials</a>
+                                </li>
 
+                                <?php
+                                if (!preg_match('/crdb/i', Auth::user()->email)) {
+                                    ?>
 <!--                                    <li>
-                                        <a href="<?= url('sales/analysis') ?>" data-i18n="nav.navigate.navbar">Sales Analysis</a>
+                                        <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">Schools</a>
                                     </li>-->
-                                </ul>
-                            </li>
-                        <?php } ?>
+                                    <?php
+                                    if (Auth::user()->role_id <> 3) {
+                                        ?>
+                                        <li>
+                                            <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">List of Schools</a>
+                                        </li>
+                                    <?php } ?>
+                                <?php } ?>
+                                <li>
+                                    <a href="<?= url('sales/salesStatus') ?>" data-i18n="nav.navigate.navbar">Sales Status</a>
+                                </li>
 
-                        <?php if (Auth::user()->role_id != 7) { ?>
+                                <!--                                    <li>
+                                                                        <a href="<?= url('sales/analysis') ?>" data-i18n="nav.navigate.navbar">Sales Analysis</a>
+                                                                    </li>-->
+                            </ul>
+                        </li>
+                        <?php // } ?>
+
+                        <?php if (Auth::user()->role_id != 7 && Auth::user()->role_id <> 3) { ?>
 
                             <li class="nav-item">
                                 <a href="<?= url('customer/activity') ?>">
@@ -622,7 +633,7 @@ function toast(message) {
                             <li><a href="<?= url('customer/requirements') ?>" data-i18n="nav.page_layout.bottom-menu">Customer Requirements</a></li>
                         <?php } ?>
 
-                        <?php if (can_access('manage_marketing') && Auth::user()->role_id != 10) { ?>
+                        <?php if (can_access('manage_marketing') || Auth::user()->id == 33) { ?>
                             <li class="nav-item">
                                 <a href="#!">
                                     <i class="ti-bell "></i>
@@ -673,93 +684,81 @@ function toast(message) {
 
                                     <li><a href="<?= url('software/server') ?>" data-i18n="nav.basic-components.button">Server Administration</a></li>
                                     <li><a href="<?= url('software/logs') ?>" data-i18n="nav.basic-components.box-shadow">Error Logs</a></li>
-                                    <li><a href="<?= url('software/CustomerRequirement') ?>" data-i18n="nav.basic-components.button">Customer Requirement</a></li>
-                                    <li><a href="<?= url('software/pmp') ?>" data-i18n="nav.basic-components.collapse–accordion">Project Management</a></li>
+                                   
 
                                 </ul>
                             </li>
                         <?php } ?>
-                        <?php if (can_access('manage_finance')) { ?>
-                            <li class="nav-item">
-                                <a href="#!">
-                                    <i class="ti-crown"></i>
-                                    <span data-i18n="nav.advance-components.main">Accounts & Finance</span>
-                                </a>
-                                <ul class="tree-1">
-                                    <!-- <li><a href="<?= url('account/projection') ?>" data-i18n="nav.advance-components.draggable">Projections</a></li> -->
-                                    <li><a href="<?= url('account/invoice') ?>" data-i18n="nav.advance-components.grid-stack">Invoice</a></li>
-                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Transactions</a>
-                                        <ul class="tree-2">
-                                            <a href="<?= url('account/revenue') ?>"><i class="fa icon-account"></i> Revenue</a>
-                                            <a href="<?= url('account/transaction/4') ?>"><i class="fa icon-expense"></i> Expense</a>
-                                            <a href="<?= url('account/transaction/1') ?>"><i class="fa icon-account"></i> Fixed assets</a>
-                                            <a href="<?= url('account/transaction/5') ?>"><i class="fa icon-account"></i> Current assets</a>
-                                            <a href="<?= url('account/transaction/2') ?>"><i class="fa icon-account"></i> liabilities</a>
-                                            <a href="<?= url('account/transaction/3') ?>"><i class="fa icon-account"></i> capital</a>
-                                            <a href="<?= url('account/reconciliation') ?>"><i class="fa icon-account"></i> Reconciliation</a>
 
 
-                                        </ul>
-                                    </li>
-                                    <li><a href="<?= url('account/report') ?>" data-i18n="nav.advance-components.light-box">Reports</a></li>
-                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Settings</a>
-                                        <ul class="tree-2">
-                                            <a href="<?= url('account/client') ?>"><i class="fa icon-account"></i>  Clients</a>
-                                            <a href="<?= url('account/bank') ?>"><i class="fa icon-account"></i> Banking</a>
-                                            <a href="<?= url('account/group') ?>"><i class="fa icon-account"></i> Account Groups</a>
-                                            <a href="<?= url('account/chart') ?>"><i class="fa icon-account"></i> Charts of Accounts</a>
-                                            <a href="<?= url('account/project') ?>"><i class="fa icon-account"></i> Company Projects</a>
-
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                        <?php } ?>
-                        <?php if (can_access('manage_expenses')) { ?>
-                            <!--                            <li class="nav-item single-item has-class">
-                                                            <a href="<?= url('account/transaction/4') ?>">
-                                                                <i class="ti-view-grid"></i>
-                                                                <span data-i18n="nav.widget.main"> Expenses</span>
-                                                                <label class="label label-danger menu-caption">+</label>
-                                                            </a>
-                                                        </li>-->
-
-                        <?php } ?>
                         <?php if (can_access('manage_users')) { ?>
                             <li class="nav-item">
                                 <a href="#!">
                                     <i class="ti-gift "></i>
-                                    <span data-i18n="nav.extra-components.main">Human Resources</span>
+                                    <span data-i18n="nav.extra-components.main">User permissions</span>
                                 </a>
                                 <ul class="tree-1">
-                                    <li><a href="<?= url('users/index') ?>" data-i18n="nav.extra-components.session-timeout">Users</a></li>
-                                    <li><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">Meeting Minutes</a></li>
-                                    <li><a href="<?= url('general/show/attendance') ?>" data-i18n="nav.extra-components.session-timeout">Attendance</a></li>
-                                    <li><a href="<?= url('Partner/partners') ?>" data-i18n="nav.extra-components.session-idle-timeout">Partners</a></li>
-                                    <li><a href="<?= url('users/applicant') ?>" data-i18n="nav.extra-components.session-idle-timeout">Applicants</a>
-                                    </li>
-                                    <li><a href="<?= url('users/template') ?>" data-i18n="nav.extra-components.offline">Forms & Templates</a></li>
+                                    <li><a href="<?= url('Role/userPermission') ?>"
+                                     data-i18n="nav.extra-components.session-timeout">User permission</a></li>
                                 </ul>
                             </li>
+                            <?php } ?>
 
-                            <?php
-                        }
-                        if (can_access('manage_users') || in_array(Auth::user()->role_id, array(14, 8,15))) {
-                            ?>
-                            <li class="nav-item">
-                                <a href="#!">
-                                    <i class="ti-layers "></i>
-                                    <span data-i18n="nav.extra-components.main">My Schools</span>
-                                </a>
-                                <ul class="tree-1">
-                                    <li><a href="<?= url('Analyse/myschools') ?>" data-i18n="nav.extra-components.session-timeout"> List of Schools</a></li>
-                                    <li><a href="<?= url('Analyse/myreport') ?>" data-i18n="nav.extra-components.offline">Task Report</a></li>
-                                    <li><a href="<?= url('sales/schoolVisit/1') ?>" data-i18n="nav.extra-components.session-timeout">School Visitation</a></li>
-                                </ul>
-                            </li>
-                            <?php
-                        }
-                        ?>
+
+                            <?php if (can_access('manage_users')) { ?>
+                                <li class="nav-item">
+                                    <a href="#!">
+                                        <i class="ti-gift "></i>
+                                        <span data-i18n="nav.extra-components.main">Human Resources</span>
+                                    </a>
+                                    <ul class="tree-1">
+                                        <li><a href="<?= url('users/index') ?>"
+                                                data-i18n="nav.extra-components.session-timeout">Users</a></li>
+                                        <li><a href="<?= url('users/kpi_list') ?>"
+                                            data-i18n="nav.extra-components.session-timeout">KPI</a></li>
+                                            
+                                     <?php if (can_access('meeting_minutes')) { ?>
+                                        <li><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">
+                                            Meeting Minutes</a>
+                                        </li>
+                                     <?php } ?>
+                                        <li><a href="<?= url('attendance/index') ?>"
+                                                data-i18n="nav.extra-components.session-timeout">Attendance</a></li>
+                                        <li><a href="<?= url('Partner/partners') ?>"
+                                                data-i18n="nav.extra-components.session-idle-timeout">Partners</a></li>
+                                        <li><a href="<?= url('users/applicant') ?>"
+                                                data-i18n="nav.extra-components.session-idle-timeout">Applicants</a>
+                                        </li>
+                                        <li><a href="<?= url('users/template') ?>" data-i18n="nav.extra-components.offline">Forms &
+                                                Templates</a></li>
+                                    </ul>
+                                </li>
+                                <?php } ?>
+
+                                <?php  if (can_access('manage_users') && !in_array(Auth::user()->department, [9, 10]) || in_array(Auth::user()->role_id, array(14, 8, 2, 3, 9, 20))) {
+                                    ?>
+                                   <li class="nav-item">
+                                               <a href="#!">
+                                                   <i class="ti-layers "></i>
+                                                   <span data-i18n="nav.extra-components.main">My Schools</span>
+                                               </a>
+                                               <ul class="tree-1">
+                                                   <li><a href="<?= url('Analyse/myschools') ?>" data-i18n="nav.extra-components.session-timeout"> List of Schools</a></li>
+                                                   <li><a href="<?= url('Analyse/myreport') ?>" data-i18n="nav.extra-components.offline">Task Report</a></li>
+                                                   <li><a href="<?= url('sales/schoolVisit/1') ?>" data-i18n="nav.extra-components.session-timeout">School Visitation</a></li>
+                                                   <!-- <li><a href="<?= url('software/banksetup') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Bank Setup</a></li> -->
+                                               </ul>
+                                           </li>
+                                           <?php } ?>
+
+                                <?php if (can_access('meeting_minutes')) { ?>
+                                    <li class="nav-item"><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline"> <i class="ti-book "> </i> Meeting Minutes</a></li>
+                                <?php } ?>
+
+
+
+
+                                
                         <?php if ((int) Auth::user()->role_id == 7) { ?>
                             <li class="nav-item">
                                 <a href="#!">
@@ -786,22 +785,9 @@ function toast(message) {
                             </li>
                             <?php
                         }
-                        if (Auth::user()->department == 9) {
+                        if (Auth::user()->department == 9 || Auth::user()->department == 10) {
                             ?>
-                            <li class="nav-item"><a href="<?= url('Partner/school') ?>" > <i class="ti-list "> </i> List of Schools</a></li>
                             <li class="nav-item"><a href="<?= url('Partner/index') ?>" > <i class="ti-layers "> </i> Onboarded Schools</a></li>
-                            <li class="nav-item"><a href="<?= url('Partner/add') ?>" > <i class="ti-layout-grid2-alt"> </i> Onboard New School</a></li>
-                            <li class="nav-item">
-                                <a href="#!">
-                                    <i class="ti-gift "></i>
-                                    <span data-i18n="nav.extra-components.main">Other Resources</span>
-                                </a>
-                                <ul class="tree-1">
-                                    <li><a href="#" data-i18n="nav.extra-components.session-timeout"> Terms of Services</a></li>
-                                    <li><a href="#" data-i18n="nav.extra-components.offline">Digital Documents</a></li>
-                                    <li><a href="#" data-i18n="nav.extra-components.session-timeout">Upload New File</a></li>
-                                </ul>
-                            </li>
                             <?php
                         }
                         // if (can_access('manage_schools')) {
@@ -844,7 +830,104 @@ function toast(message) {
                             </li>
                         <?php } ?>
 
+                        
+
+
+                        <?php if (can_access('manage_finance')) { ?>
+                            <li class="nav-item">
+                                <a href="#!">
+                                    <i class="ti-crown"></i>
+                                    <span data-i18n="nav.advance-components.main">Accounts & Finance</span>
+                                </a>
+                                <ul class="tree-1">
+                                    <!-- <li><a href="<?= url('account/projection') ?>" data-i18n="nav.advance-components.draggable">Projections</a></li> -->
+                                    <li><a href="<?= url('account/invoice') ?>" data-i18n="nav.advance-components.grid-stack">Invoice</a></li>
+                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Transactions</a>
+                                        <ul class="tree-2">
+                                            <a href="<?= url('account/revenue') ?>"><i class="fa icon-account"></i> Revenue</a>
+                                            <a href="<?= url('account/transaction/4') ?>"><i class="fa icon-expense"></i> Expense</a>
+                                            <a href="<?= url('account/transaction/1') ?>"><i class="fa icon-account"></i> Fixed assets</a>
+                                            <a href="<?= url('account/transaction/5') ?>"><i class="fa icon-account"></i> Current assets</a>
+                                            <a href="<?= url('account/transaction/2') ?>"><i class="fa icon-account"></i> liabilities</a>
+                                            <a href="<?= url('account/transaction/3') ?>"><i class="fa icon-account"></i> capital</a>
+                                            <a href="<?= url('account/reconciliation') ?>"><i class="fa icon-account"></i> Reconciliation</a>
+                                        </ul>
+                                    </li>
+                        <li><a href="<?= url('Account/budget') ?>"
+                            data-i18n="nav.advance-components.grid-stack">
+                              Budget 
+                        </a>
+                       </li>
+
+                
+                        <li class="nav-sub-item">
+                            <a href="#" data-i18n="nav.page_layout.horizontal.main">
+                                Payroll
+                                <span class="fa fa-chevron-down"></span></a>
+                            <ul class="tree-2">
+                                <a href="<?= url('payroll/taxes') ?>"><i
+                                        class="fa fa-clipboard"></i><span>TAX</span></a>
+                                <a href="<?= url('payroll/pension') ?>"><i class="fa fa-clipboard"></i><span>Pension
+                                        Fund</span></a>
+                                <a href="<?= url('allowance/index') ?>"><i
+                                        class="fa fa-clipboard"></i><span>Allowances</span></a>
+                                <a href="<?= url('deduction/index') ?>"><i
+                                        class="fa fa-clipboard"></i><span>Deductions</span></a>
+                                <li class="nav-sub-item-3">
+                                    <a>
+                                        Loans
+                                        <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="tree-3">
+
+                                        <a href="<?= url('loan/type') ?>"><i class="fa fa-clipboard"></i><span
+                                                style="color: white; line-height: 25px;"> Loan Types</span></a>
+
+                                        <a href="<?= url('loan/index') ?>"><i class="fa fa-clipboard"></i><span
+                                                style="color: white; line-height: 25px;"> Borrowers </span></a>
+                                        </ul>
+                                    </li>
+               
+                                    <li><a href="<?= url('account/report') ?>" data-i18n="nav.advance-components.light-box">Reports</a></li>
+                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Settings</a>
+                                        <ul class="tree-2">
+                                            <a href="<?= url('account/client') ?>"><i class="fa icon-account"></i>  Clients</a>
+                                            <a href="<?= url('account/bank') ?>"><i class="fa icon-account"></i> Banking</a>
+                                            <a href="<?= url('account/groups') ?>"><i class="fa icon-account"></i> Account Groups</a>
+                                            <a href="<?= url('account/chart') ?>"><i class="fa icon-account"></i> Charts of Accounts</a>
+                                            <a href="<?= url('account/project') ?>"><i class="fa icon-account"></i> Company Projects</a>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        <?php } ?>
+
+
+                        <?php if (can_access('manage_expenses')) { ?>
+                             {{-- <li class="nav-item single-item has-class">
+                                    <a href="<?= url('account/transaction/4') ?>">
+                                        <i class="ti-view-grid"></i>
+                                        <span data-i18n="nav.widget.main"> Expenses</span>
+                                        <label class="label label-danger menu-caption">+</label>
+                                            </a>
+                                        </li> --}}
+                            <?php } ?>
+
+
+
                     <?php } ?>
+                    <?php /* if (preg_match('/localhost/', url()->current()) && can_access('manage_software')) { ?>
+                      <li class="nav-item">
+                      <a href="#">
+                      <i class="ti-menu"></i>
+                      <span data-i18n="nav.basic-components.main"> Customer Requirement </span>
+                      </a>
+                      <ul class="tree-1 ">
+                      <li><a href="<?=url('software/requirements')?>" data-i18n="nav.extra-components.session-timeout">Requirement</a></li>
+                      <li><a href="<?= url('software/todo') ?>" data-i18n="nav.extra-components.session-timeout">Todo List</a></li>
+                      <li><a href="<?= url('software/statistics') ?>" data-i18n="nav.extra-components.session-timeout">Reports</a></li>
+                      </ul>
+                      </li>
+                      <?php } */ ?>
                 </ul>
             </div>
         </div>
@@ -981,17 +1064,8 @@ function toast(message) {
         <script type="text/javascript" src="<?= $root ?>bower_components/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery-i18next/jquery-i18next.min.js"></script>
 
-
-
-
-
-
-
-
         <!-- Custom js -->
         <script src="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.js"></script>  
-
-
         <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/custom-dashboard.js?v=3"></script>
         <script type="text/javascript" src="<?= $root ?>assets/js/script.js?v=3"></script>
 
@@ -1120,13 +1194,13 @@ function toast(message) {
 
 
 
-                    $('form').each(function(i, form){
-                        var $form = $(form);
+                                    $('form').each(function (i, form) {
+                                        var $form = $(form);
 
-                        if (! $form.find('input[name="_token"]').length) {
-                            $('form').prepend('<input type="hidden" name="_token" value="'+ $('meta[name="csrf-token"]').prop('content') +'"/>');
-                        }
-                    });
+                                        if (!$form.find('input[name="_token"]').length) {
+                                            $('form').prepend('<input type="hidden" name="_token" value="' + $('meta[name="csrf-token"]').prop('content') + '"/>');
+                                        }
+                                    });
 
                                     $('.clockpicker').clockpicker({
                                         donetext: 'Done'
@@ -1142,3 +1216,28 @@ if (preg_match('/localhost/', url()->current())) {
     ?>
     <p align="center">This page took <?php echo (microtime(true) - LARAVEL_START) ?> seconds to render</p>
 <?php } ?>
+
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+

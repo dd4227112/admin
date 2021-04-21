@@ -32,15 +32,20 @@
                     <div class="col-lg-12">
                         <div id="wrapper" class="card">
                             <div id="editorForm">
+                            <br>
                                 <div class="row">
-                                    <div class="card-header">
+                                    <div class="col-md-6">
                                         <a class="btn btn-success" href="<?= url('users/create') ?>"> Create New User</a>
+                                    </div>
+                                    <div class="col-md-6 text-right">
+                                        <button class="btn btn-primary" data-toggle="modal"  role="button" data-target="#status-Modal"> Upload Users  <i class="ti-user"></i></button>                     
                                     </div>
                                     @if ($message = Session::get('success'))
                                     <div class="alert alert-success">
                                         <p>{{ $message }}</p>
                                     </div>
                                     @endif
+                                    <hr>
                                     <div class="card-block">
 
                                         <div class="table-responsive dt-responsive ">
@@ -56,6 +61,7 @@
                                                         <th width="280px">Action</th>
                                                     </tr>
                                                 </thead>
+                                                
                                                 <tbody>
                                                     <?php $i = 1; ?>
                                                     @foreach ($users as $key => $user)
@@ -94,5 +100,36 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="status-Modal">
+<div class="modal-dialog modal-lg" role="document">
+<form id="add-form" action="{{ url('users/userUpload') }}" method="POST" enctype="multipart/form-data">
+<?= csrf_field() ?>
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Add New Members</h5>
+            <a href="<?=url('public/sample_files/users.csv')?>"> <u><b>Download Sample</b></u> </a>
+        </div>
+      <div class="modal-body">
+      <p>Import users from a CSV file. In Excel, add an required column of  New Users, and save the file in a CSV format. Click A CSV file, then drag and drop your .csv file, or click choose file to browse files on your computer. Then click <b>Submit. <br>  <br> #Remember to Remove First Row.</b></p>
+          <div class="form-group">
+            <label>Attach File Name</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <i class="fas fa-file"></i>
+                </div>
+              </div>
+              <input type="file" class="form-control" placeholder="Enter group name..." name="user_file" required>
+            </div>
+          </div>
+        <!-- </div> -->
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+          </div>
+        </form>
+      </div>
+  </div>
+</div>
+@endsection
 
-    @endsection

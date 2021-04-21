@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use \App\Models\User;
 use DB;
+
+use Carbon\Carbon;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -33,7 +35,6 @@ class Customer extends Controller {
      */
     public function index($pg = null) {
         //
-
         if (method_exists($this, $pg) && is_callable(array($this, $pg))) {
             return $this->$pg();
         } else {
@@ -150,7 +151,7 @@ class Customer extends Controller {
     }
 
     function setup() {
-
+        return $this->types();
         if (request('type')) {
             echo json_encode(array('data' =>
                 array(
@@ -161,6 +162,30 @@ class Customer extends Controller {
         } else {
             $this->data['schools'] = DB::select("SELECT distinct table_schema as schema_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','beta_testing','accounts','pg_catalog','constant','api','information_schema','public')");
             return view('customer.setup', $this->data);
+        }
+    }
+
+    function typeConfig() {
+        $classlevel_id = request('classlevel_id'); //1=complete, 2 =pending, 3 =not yet
+        $schema = request('schema_name');
+        $value_id = request('value_id');
+
+        \DB::table($schema . '.classlevel')->where('classlevel_id', $classlevel_id)->update([request('tag') => (int) $value_id]);
+        echo 'success';
+    }
+
+    function types() {
+
+        if (request('type')) {
+            echo json_encode(array('data' =>
+                array(
+                    array('James John', 'PZ-32', '0714852214', 'juma', '1', '3'),
+                    array('Ana Juma', 'PQ-44', '0144555', 'CHEMCHEM', 'AMBAKISYE', 'TAUNI'),
+                )
+            ));
+        } else {
+            $this->data['schools'] = DB::select("SELECT * FROM admin.all_classlevel");
+            return view('customer.types', $this->data);
         }
     }
 
@@ -211,7 +236,6 @@ class Customer extends Controller {
             $req = [];
             $users = DB::select('select count(*),"table","schema_name" from admin.all_users  where "table" !=\'setting\'  group by "table","schema_name" order by "table"');
             foreach ($users as $user) {
-
                 $obj = [$user->schema_name, $user->parent, $user->student, $user->user, $user->teacher];
                 array_push($req, $obj);
             }
@@ -377,7 +401,6 @@ class Customer extends Controller {
     }
 
     public function getCleanSms($replacements, $message) {
-
         $sms = preg_replace($this->patterns, $replacements, $message);
         if (preg_match('/#/', $sms)) {
             //try to replace that character
@@ -403,22 +426,20 @@ class Customer extends Controller {
 
     public function profile() {
         $school = $this->data['schema'] = request()->segment(3);
+
         $id = request()->segment(4);
         $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get();
-
         $is_client = 0;
         if ($school == 'school') {
             $id = request()->segment(4);
             $this->data['client_id'] = $id;
-            $this->data['school'] = \collect(DB::select(' select name as sname, name,schema_name, region , ward, district as address  from admin.schools where id=' . $id))->first();
+            $this->data['school'] = \collect(DB::select('select name as sname, name,schema_name, region , ward, district as address  from admin.schools where id=' . $id))->first();
         } else {
-
             $is_client = 1;
             $this->data['school'] = DB::table($school . '.setting')->first();
             $this->data['levels'] = DB::table($school . '.classlevel')->get();
             $client = \App\Models\Client::where('username', $school)->first();
             if (empty($client)) {
-
                 $client = \App\Models\Client::create(['name' => $this->data['school']->sname, 'email' => $this->data['school']->email, 'phone' => $this->data['school']->phone, 'address' => $this->data['school']->address, 'username' => $school, 'created_at' => date('Y-m-d H:i:s')]);
             }
             $this->data['client_id'] = $client->id;
@@ -433,9 +454,7 @@ class Customer extends Controller {
         $this->data['invoices'] = \App\Models\Invoice::where('client_id', $client->id)->where('account_year_id', $year->id)->get();
 
         if ($_POST) {
-
-            $data = array_merge(request()->all(), ['user_id' => Auth::user()->id]);
-
+            $data = array_merge(request()->except(['start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date')))]);
             $task = \App\Models\Task::create($data);
             if ((int) request('to_user_id') > 0) {
                 DB::table('tasks_users')->insert([
@@ -457,15 +476,13 @@ class Customer extends Controller {
                 'task_id' => $task->id,
                 'client_id' => (int) request('client_id')
             ]);
-
-
             if (!empty($task->id) && request('module_id')) {
                 $modules = request('module_id');
                 foreach ($modules as $key => $value) {
                     if (request('module_id')[$key] != '') {
                         $array = ['module_id' => request('module_id')[$key], 'task_id' => $task->id];
                         $check_unique = \App\Models\ModuleTask::where($array);
-                        if (!empty($check_unique->first())) {
+                        if (empty($check_unique->first())) {
                             \App\Models\ModuleTask::create($array);
                         }
                     }
@@ -480,6 +497,28 @@ class Customer extends Controller {
         }
     }
 
+    public function addStandingOrder() {
+        if ($_POST) {
+            $file = request('standing_order_file');
+            $company_file_id = $this->saveFile($file, 'company/contracts');
+
+            $data = [
+                'client_id' => request('client_id'),
+                'branch_id' => request('branch_id'),
+                'company_file_id' => $company_file_id,
+                'school_contact_id' => request('school_contact_id'),
+                'user_id' => Auth::user()->id,
+                'occurrence' => request('number_of_occurrence'),
+                'basis' => request('which_basis'),
+                'total_amount' => request('total_amount'),
+                'occurance_amount' => request('occurance_amount'),
+                'date' => request('maturity_date')
+            ];
+            DB::table('standing_orders')->insert($data);
+            return redirect()->back()->with('success', 'Data Recorded Successfully!');
+        }
+    }
+
     public function activity() {
         $tab = request()->segment(3);
         $id = request()->segment(4);
@@ -487,9 +526,10 @@ class Customer extends Controller {
             $this->data['types'] = DB::table('task_types')->where('department', Auth::user()->department)->get();
             $this->data['departments'] = DB::table('departments')->get();
             if ($_POST) {
-
-                $data = array_merge(request()->except('to_user_id'), ['user_id' => Auth::user()->id]);
-
+                $random = time();
+             
+                $data = array_merge(request()->except(['to_user_id','start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date'))),'ticket_no' => $random]);
+               
                 $task = \App\Models\Task::create($data);
                 $users = request('to_user_id');
                 if (!empty($users)) {
@@ -548,7 +588,7 @@ class Customer extends Controller {
 
             return view('customer/addtask', $this->data);
         } elseif ($tab == 'show' && $id > 0) {
-            $this->data['activity'] = \App\Models\Task::find($id);
+            $this->data['activity'] = \App\Models\Task::findOrFail($id);
             $this->data['client'] = \App\Models\TaskClient::where('task_id', $id)->first();
             $this->data['school'] = \App\Models\TaskSchool::where('task_id', $id)->first();
             return view('customer/view_task', $this->data);
@@ -559,6 +599,35 @@ class Customer extends Controller {
             return view('customer/activity', $this->data);
         }
     }
+
+    public function getschools() {
+        $sql = "SELECT id,upper(name)|| ' '||upper(type) as name FROM admin.schools
+			WHERE lower(name) LIKE '%" . str_replace("'", null, strtolower(request('term'))) . "%'
+			LIMIT 10";
+        die(json_encode(DB::select($sql)));
+    }
+
+        public function choices(){
+            $type = request('type');
+            if($type == 'year'){
+                $this->data['completetasks']  = \App\Models\Task::where('user_id',Auth::user()->id)->where('status', 'complete')->whereYear('created_at', date('Y'))->orderBy('created_at', 'desc')->get();
+            } else if($type == 'quoter'){
+                $date = \Carbon\Carbon::today()->subDays(120);
+                $this->data['completetasks']  = \App\Models\Task::where('user_id',Auth::user()->id)->where('status', 'complete')->where('created_at','>=',$date)->orderBy('created_at', 'desc')->get();
+            } else if($type == 'month'){
+                $this->data['completetasks']  = \App\Models\Task::where('user_id',Auth::user()->id)->where('status', 'complete')->whereMonth('created_at', Carbon::now()->month)
+                ->whereYear('created_at', date('Y'))->orderBy('created_at', 'desc')->get();
+            } else if($type == 'week'){
+                $this->data['completetasks']  = \App\Models\Task::where('user_id',Auth::user()->id)->where('status', 'complete')->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->orderBy('created_at', 'desc')->get();
+            } else if($type == 'yesterday'){
+                $this->data['completetasks']  = \App\Models\Task::where('user_id',Auth::user()->id)->where('status', 'complete')->whereDate('created_at', Carbon::yesterday())->orderBy('created_at', 'desc')->get();
+            } else if($type == 'today') {
+               $this->data['completetasks']  = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'complete')->whereDate('created_at', Carbon::today())->orderBy('created_at', 'desc')->get();
+            } else{
+                $this->data['completetasks']  = \App\Models\Task::where('user_id',Auth::user()->id)->where('status', 'complete')->orderBy('created_at', 'desc')->limit(100)->get();
+            }
+            return view('customer.activity', $this->data);
+        }
 
     public function changeStatus() {
         if (request('status') == 'complete') {
@@ -584,6 +653,36 @@ class Customer extends Controller {
             }
         }
         echo request('status');
+    }
+
+
+
+    public function changepriority() {
+         if(request('priority') == 1){
+            $priority = "High";
+         } else if(request('priority') == 2){
+            $priority = "Medium";
+         } else{
+            $priority = "Less";
+         }
+        \App\Models\Task::where('id', request('id'))->update(['priority' => request('priority'), 'updated_at' => 'now()']);
+        
+        $users = DB::table('tasks_users')->where('task_id', request('id'))->get();
+        if (!empty($users)) {
+            $task = \App\Models\Task::find(request('id'));
+            foreach ($users as $user_task) {
+                $user = \App\Models\User::find($user_task->user_id);
+                $message = 'Hello ' . $user->firstname . '<br/>'
+                        . 'Task Priority has been updated to :' . $priority
+                        . '<ul>'
+                        . '<li>Task: ' . $task->activity . '</li>'
+                        . '<li>Type: ' . $task->taskType->name . '</li>'
+                        . '<li>Deadline: ' . $task->date . '</li>'
+                        . '</ul>';
+                $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+            }
+        }
+        echo $priority;
     }
 
     public function getTaskByDepartment() {
@@ -641,18 +740,22 @@ class Customer extends Controller {
                 //this school does not exists, try to add it in a list of schols
                 $school_id = DB::table('schools')->insertGetId(['name' => $schema, 'ownership' => 'Non-Government', 'schema_name' => $schema]);
             }
-            $school_info = DB::table('schools')->where('id', $school_id);
-            if (!empty($school_info->first())) {
-                $check = DB::table('users_schools')->where('role_id', $role_id)->where('school_id', $school_id)->first();
+            $school_info = DB::table('clients')->where('username', $schema)->first();
+            if (!empty($school_info)) {
+                $check = DB::table('user_clients')->where('client_id', $school_info->id)->orderBy('created_at', 'desc')->first();
                 if (!empty($check)) {
-                    \App\Models\UsersSchool::where('role_id', $role_id)->where('school_id', $school_id)->update(['user_id' => $user_id, 'updated_at' => $date]);
-                    echo "Success Updated";
+                    if ($check->user_id <> $user_id) {
+                        DB::table('user_clients')->where('id', $check->id)->update(['status' => 0]);
+                        DB::table('user_clients')->insert(['client_id' => $school_info->id, 'user_id' => $user_id, 'status' => 1]);
+                    } else {
+                        DB::table('user_clients')->where('id', $check->id)->update(['user_id' => $user_id, 'updated_at' => $date, 'status' => 1]);
+                        echo "Success Updated";
+                    }
                 } else {
-                    \App\Models\UsersSchool::create(['school_id' => $school_id, 'user_id' => $user_id, 'role_id' => $role_id, 'schema_name' => $schema, 'created_at' => $date, 'updated_at' => $date]);
+                    DB::table('user_clients')->insert(['client_id' => $school_info->id, 'user_id' => $user_id, 'status' => 1]);
                     echo "Success Added";
                 }
                 DB::table($schema . '.setting')->update(['school_id' => $school_id]);
-                $school_info->update(['schema_name' => $schema]);
             } else {
                 echo "Failed to Add";
             }
@@ -667,6 +770,7 @@ class Customer extends Controller {
         $id = request()->segment(4);
         if ($tab == 'show' && $id > 0) {
             $this->data['requirement'] = \App\Models\Requirement::where('id', $id)->first();
+            $this->data['next'] = \App\Models\Requirement::whereNotIn('id', [$id])->where('status', 'New')->first()->id;
             return view('customer/view_requirement', $this->data);
         }
         $this->data['levels'] = [];
@@ -702,7 +806,7 @@ class Customer extends Controller {
         //  if (Auth::user()->department == 1) {
         // $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public') and schema_name in (select schema_name from users_schools where user_id=" . Auth::user()->id . "  and status=1)");
         //   } else {
-        $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public') ");
+        $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public','academy','forum') ");
         //  }
 
         $sch = [];
@@ -967,16 +1071,88 @@ class Customer extends Controller {
 
     public function viewContract() {
         $contract_id = request()->segment(3);
-        $contract = \App\Models\Contract::find($contract_id);
-        $this->data['path'] = $contract->companyFile->path;
+        $type = request()->segment(4);
+        if($type == 'standing'){
+            $contract = \App\Models\StandingOrder::find($contract_id);
+            $this->data['path'] = $contract->companyFile->path;
+        }
+        else if($type == 'legal'){
+            $contract = \App\Models\LegalContract::find($contract_id);
+            $this->data['path'] = $contract->companyFile->path;
+        }
+        else if($type == 'absent'){
+            $document = \App\Models\Absent::find($contract_id);
+            $this->data['path'] = $document->companyFile->path;
+        }
+        else{
+            $contract = \App\Models\Contract::find($contract_id);
+            $this->data['path'] = $contract->companyFile->path;
+        }
         return view('layouts.file_view', $this->data);
     }
+
+
+     // method to share receipt link
+    public function ShareReceiptWhatsApp() {
+        $id = request()->segment(3);
+        if ((int) $id > 0) {
+            $this->data['invoice'] = \App\Models\Invoice::find($id);
+            $this->data["payment_types"] = \App\Models\PaymentType::all();
+            $this->data['banks'] = \App\Models\BankAccount::all();
+            $this->data['revenue'] = \App\Models\Revenue::where('id', $id)->first();
+            return view('layouts.receipt_to_share', $this->data);
+        } else {
+            return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
+        }
+    }
+
+    // Share receipt by email
+    public function ShareReceiptEmail() {
+        $id = request()->segment(3);
+        if ((int) $id > 0) {
+            $this->data['invoice'] = \App\Models\Invoice::find($id);
+            $this->data["payment_types"] = \App\Models\PaymentType::all();
+            $this->data['banks'] = \App\Models\BankAccount::all();
+            $this->data['revenue'] = \App\Models\Revenue::where('id', $id)->first();
+            return view('layouts.receipt_to_share', $this->data);
+        } else {
+            return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
+        }
+    }
+
+     // method to share invoice link
+     public function ShareInvoiceWhatsApp() {
+        $invoice_id = request()->segment(3);
+        $set = $this->data['set'] = 1;
+        if ((int) $invoice_id > 0) {
+            $this->data['invoice'] = \App\Models\Invoice::find($invoice_id);
+            return view('layouts.invoice_to_share', $this->data);
+        }
+        else {
+            return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
+        }
+    }
+
+    public function ShareInvoiceEmail() {
+        $invoice_id = request()->segment(3);
+        $set = $this->data['set'] = 1;
+        if ((int) $invoice_id > 0) {
+            $this->data['invoice'] = \App\Models\Invoice::find($invoice_id);
+            return view('layouts.invoice_to_share', $this->data);
+        }
+        else {
+            return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
+        }
+
+    }
+
+
     public function deleteContract() {
         $contract_id = request()->segment(3);
         $contract = \App\Models\Contract::where('id', $contract_id)->delete();
         return redirect()->back()->with('success', 'Contract Deleted');
     }
-    
+
     public function contract() {
         $client_id = request()->segment(3);
         $file = request()->file('file');
@@ -1043,7 +1219,6 @@ class Customer extends Controller {
         $slots = \DB::select($sql);
         $option = '<option></option>';
         foreach ($slots as $slot) {
-
             $option .= '<option value="' . $slot->id . '">' . $slot->start_time . ' - ' . $slot->end_time . '</option>';
         }
         echo $option;
@@ -1065,6 +1240,35 @@ class Customer extends Controller {
             return response()->download('storage/app/' . $file_name, $file_name, $headers);
         }
         return $view;
+    }
+
+    public function whatsappIntegration() {
+        $this->data['whatsapp_requests'] = DB::table('whatsapp_integrations')->get();
+        return view('customer.message.whatsapp_requests', $this->data);
+    }
+
+    public function approveIntegration() {
+        $id = request()->segment(3);
+        if ($id == 'delete') {
+            //COMPLETELY bad design but implemented for quick start
+            DB::table('whatsapp_integrations')->where('id', request()->segment(4))->delete();
+            return redirect('customer/whatsappIntegration')->with('success', 'Succeess');
+        }
+        if ($_POST) {
+            $id = request('id');
+            $schema_name = request('schema_name');
+            $school = DB::table($schema_name . '.sms_keys')->where('api_secret', request('token'))->where('api_key', request('url'))->first();
+            empty($school) ? DB::table($schema_name . '.sms_keys')->insert([
+                                'api_secret' => request('token'),
+                                'api_key' => request('url'),
+                                'name' => 'whatsapp',
+                                'phone_number' => request('phone')
+                            ]) : '';
+            DB::table('whatsapp_integrations')->where('id', $id)->update(['approved' => 1]);
+            return redirect('customer/whatsappIntegration')->with('success', 'Succeess');
+        }
+        $this->data['request'] = DB::table('whatsapp_integrations')->where('id', $id)->first();
+        return view('customer.message.approve_integration', $this->data);
     }
 
 }

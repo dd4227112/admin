@@ -61,60 +61,55 @@
 
                                         </h5>
                                         <br/>
-                                        <div>
+ 
+                                     <div class="row">
+                                        <div class="col-sm-4">
                                             <h5 class="page-header">
-
-                                                <a class="btn btn-success" href="<?php echo url('account/addTransaction/4/' . $refer_id . '') ?>">
+                                                <a class="btn btn-success" href="<?php echo url('account/addtransaction/4/' . $refer_id . '') ?>">
                                                     <i class="fa fa-plus"></i> 
-                                                    Add New Expense
+                                                    Add Transaction 
                                                 </a>
-
                                             </h5>
                                         </div>
-                                        <!--                        <div class="col-sm-12">
-                                                                    <form style="" class="form-horizontal" role="form" method="post"> 
-                                        
-                                                                        <div class="col-sm-12">
-                                                                            <p>Kindly select the time interval to view over a period of time </p> 
-                                                                        </div>
-                                                                        <div class="col-md-5">                             
-                                        
-                                                                            <div class="form-group">
-                                                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Start Date</label>
-                                                                                <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <?php echo form_error($errors, 'from_date'); ?>
-                                                                                    <input type="text" required="true" class="form-control calendar" id="from_date" name="from_date" value="<?= old('from_date') ?>" >
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                        
-                                        
-                                                                        <div class="col-md-5">
-                                                                            <div class="form-group">
-                                                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">End Date</label>
-                                                                                <div class="col-md-9 col-sm-9 col-xs-12">
-                                        <?php echo form_error($errors, 'to_date'); ?>
-                                                                                    <input type="text" required="true" class="form-control calendar" id="to_date" name="to_date" value="<?= old('to_date') ?>" >
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>                     
-                                        
-                                        
-                                                                        <div class="col-md-2">
-                                                                            <div class="form-group">
-                                        
-                                                                                <div class="col-md-9 col-sm-9 col-xs-12">
-                                                                                    <input type="submit" class="btn btn-success" value="Submit" >
-                                                                                </div>
-                                                                            </div>
-                                                                        </div> 
-                                        <?= csrf_field() ?>
-                                                                    </form>
-                                                                </div>-->
+
+                                        <div class="col-sm-8">
+                                            <form style="" class="form-horizontal" role="form" method="post"> 
+                                              <div class="row">
+                                                <div class="col-md-5">
+                                                    <div class="form-group row">
+                                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Start Date</label>
+                                                        <div class="col-md-9 col-sm-9 col-xs-12">
+                                                            <input type="date"  class="form-control" id="from_date" name="from_date" required> 
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-5">
+                                                    <div class="form-group row">
+                                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">End Date</label>
+                                                        <div class="col-md-9 col-sm-9 col-xs-12"> 
+                                                            <input type="date" class="form-control" id="to_date" name="to_date"  required>
+                                                        </div>
+                                                    </div>
+                                                </div>                     
+
+                                                <div class="col-md-2">
+                                                  <div class="form-group row">
+                                                    <div class="">
+                                                         <input type="submit" class="form-control btn btn-success" value="Submit"  style="float: right;">
+                                                        </div>
+                                                    </div>
+                                                </div> 
+
+                                              </div>
+                                                <?= csrf_field() ?>
+                                            </form>
+                                        </div>  
+                                     </div>          
+
 
                                         <?php if ($period == 1) { ?>
-                                          <div class="table-responsive dt-responsive "> 
-
+                                          <div class="table-responsive dt-responsive"> 
                                                 <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
                                                     <thead>
                                                         <tr>
@@ -122,28 +117,21 @@
 
                                                             <th class="col-sm-2">Name</th>
 
-
                                                             <th class="col-sm-2"><?= __('Expense Date') ?></th>
-
 
                                                             <th class="col-sm-1"><?= __('Expense Amount') ?></th>                               
 
                                                             <th class="col-sm-2"><?= __('Expense Note') ?></th>
 
                                                             <?php if (isset($depreciation)) { ?>
-
                                                                 <th class="col-sm-2">Asset Name</th>
-
-
                                                             <?php } else { ?>
 
-                                                                <th class="col-sm-2"><?= __('Payment Method') ?></th>       
+                                                           <th class="col-sm-2"><?= __('Payment Method') ?></th>       
                                                             <?php } ?>
 
                                                             <th class="col-sm-2"><?= __('Reference') ?></th>
                                                             <th class="col-sm-2"><?= __('Action') ?></th>
-
-
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -153,8 +141,6 @@
                                                         $i = 1;
 
                                                         if (isset($expenses) && !empty($expenses)) {
-
-
                                                             $i = 1;
                                                             foreach ($expenses as $expense) {
                                                                 ?>
@@ -202,38 +188,24 @@
                                                                     </td>
 
                                                                     <td data-title="<?= __('action') ?>">
-
-
                                                                         <?php
                                                                         if ($id != 5 && !isset($depreciation)) {
-
                                                                             if ((int) $expense->predefined == 0) {
                                                                                 ?>
                                                                                 <?php echo '<a class="btn btn-sm btn-info" href="'.url('account/expense/edit/' . $expense->id . '/' . $id).'">edit</a>'; ?>
                                                                                 <?php echo '<a class="btn btn-sm btn-danger" href="'.url('account/expense/delete/' . $expense->id . '/' . $id).'">delete</a>'; ?>
-
-
                                                                                 <?php echo '<a class="btn btn-sm btn-warning" href="'.url('account/expense/voucher/' . $expense->id . '/' . $id).'">Payment Voucher</a>'; ?>
                                                                                 <?php
                                                                             }
                                                                         }
                                                                         ?>
                                                                     </td>
-
-
-
                                                                 </tr>
-
                                                                 <?php
                                                                 $i++;
                                                                 $total_expense += $expense->amount;
                                                             }
                                                         }
-
-
-
-
-
 
                                                         if (isset($current_assets) && !empty($current_assets) && $id == 5) {
 
@@ -274,16 +246,10 @@
                                                                     </td>
                              
                                                                         <td data-title="<?= __('action') ?>">
-
                                                                             <?php echo  '<a class="btn btn-sm" href="'.url('expense/delete/' . $current_asset->id . '/' . $id).'">delete</a>' ?>
                                                                             <?php //echo '<a class="btn btn-sm" href="'.url('expense/voucher/' . $current_asset->id . '/' . $id).'">Payment Voucher</a>'; ?>
-
-
-
                                                                         </td>
-                                                                  
-
-
+                                                            
                                                                 </tr>
                                                                 <?php
                                                                 $i++;
@@ -294,8 +260,6 @@
 
                                                         <?php
                                                         if (isset($fees) && !empty($fees) && $id == 5) {
-
-
                                                             foreach ($fees as $fee) {
                                                                 ?>
                                                                 <tr>
@@ -334,9 +298,6 @@
                                                                     </td>
                                                                     <?php if (can_access("delete_expense") || can_access('edit_expense')) { ?>
                                                                         <td data-title="<?= __('action') ?>">
-
-
-
                                                                         </td>
                                                                     <?php } ?>
 
@@ -359,19 +320,10 @@
                                                             <td></td>
                                                             <td></td>
                                                             <td></td>     
-
-
-
                                                         </tr>
                                                     </tfoot>
                                                 </table>     
-
-
-
                                             </div>
-
-
-
 
                                             <div class="col-sm-4 col-sm-offset-8 total-marg">
                                                 <div class="well well-sm">

@@ -27,8 +27,8 @@ class Background extends Controller {
     public function index($tag = 'sms') {
         //
         return $tag == 'sms' ?
-        $this->dispatch((new \App\Jobs\PushSMS())) :
-        $this->dispatch((new \App\Jobs\PushEmail()));
+                $this->dispatch((new \App\Jobs\PushSMS())) :
+                $this->dispatch((new \App\Jobs\PushEmail()));
     }
 
     public function sendSms() {
@@ -124,7 +124,7 @@ class Background extends Controller {
                         "amount" => $invoice->amount,
                         "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
                         "code" => "10",
-                        "callback_url" => "http://51.77.212.234:8081/api/init",
+                        "callback_url" => "http://51.91.251.252:8081/api/init",
                         "token" => $token
                     );
                     // $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
@@ -199,7 +199,6 @@ class Background extends Controller {
         $names = array();
         if (count($fees) > 0) {
             foreach ($fees as $fee) {
-
                 array_push($names, $fee->name);
             }
         }
@@ -235,8 +234,8 @@ class Background extends Controller {
     public function createAcademicYear() {
         DB::select("select * from admin.join_all('academic_year','id,name,class_level_id,created_at,updated_at,start_date,end_date')");
         $years = DB::select('select distinct a.class_level_id,a."schema_name" from admin.all_academic_year a join admin.all_classlevel b on 
-(a.class_level_id =b.classlevel_id and a."schema_name"=b."schema_name")
-where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_name" from admin.all_academic_year where name=\'' . date('Y') . '\') order by a."schema_name"');
+           (a.class_level_id =b.classlevel_id and a."schema_name"=b."schema_name")
+           where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_name" from admin.all_academic_year where name=\'' . date('Y') . '\') order by a."schema_name"');
         foreach ($years as $year) {
             $academic_year_id = DB::table($year->schema_name . '.academic_year')->insertGetId(array('name' => date('Y'), 'class_level_id' => $year->class_level_id, 'start_date' => date('Y-01-01'), 'end_date' => date('Y-12-31')));
 
@@ -246,7 +245,8 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
     }
 
     public function officeDailyReport() {
-        $users = \App\Models\User::where('status', 1)->get();
+        $users = \DB::select("select * from admin.users where status=1 and email not like '%nmb%' ");
+        ;
         foreach ($users as $user) {
             $tasks = DB::select("select b.name, count(a.*) from admin.tasks a join admin.task_types b on b.id=a.task_type_id where a.created_at::date=CURRENT_DATE AND user_id=" . $user->id . " group by b.name");
             $tr = '';
@@ -292,7 +292,6 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
             $module_id = $id->id;
         } else {
             $module_id = '';
-           
         }
 
         #getting a user who push
@@ -337,25 +336,81 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
         }
     }
 
+    public function createEpayment() {
+        $order_id = request()->segment(3);
+        $total = request()->segment(4);
+        if ((int) $total > 0) {
+            $check = \App\Models\Invoice::where('order_id', $order_id)->first();
+            if ($check) {
+                $invoice = $check;
+            } else {
+                $data = [
+                    'order_id' => $order_id,
+                    'amount' => $total,
+                    'user_id' => 2,
+                    'sid' => 4343,
+                    "client_id" => 79,
+                    'source' => 'carryshop',
+                    'status' => 0,
+                    'schema_name' => 'carryshop',
+                    'methods' => 'selcom'
+                ];
+                $invoice = \App\Models\Invoice::create($data);
+                \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $total, 'project_id' => 2, 'item_name' => 'ShuleSoft Service Fee For ', 'quantity' => 1, 'unit_price' => 1]);
+            }
+        } else {
+            echo 'Invalid Amount ' . $total;
+            exit;
+        }
+        $booking = $invoice;
+        if ($booking) {
+            if (strlen($booking->token) < 4) {
+                $account = new \App\Http\Controllers\Account();
+                $account->createSelcomControlNumber($invoice->id);
+            }
+            $paid = 0;
+            if ($booking->payments()->sum('amount') == $booking->invoiceFees()->sum('amount')) {
+                $paid = 1;
+            }
+            $am = $invoice->invoiceFees()->sum('amount');
+            $paid = $invoice->payments()->sum('amount');
+            $unpaid = $am - $paid;
+
+            $balance = $booking->payments()->sum('amount');
+            $page = 'api_pay';
+            return view('account.invoice.' . $page, compact('booking', 'balance', 'paid', 'invoice', 'unpaid'));
+        } else {
+            return redirect()->back()->with('warning', 'This Invoice Number Not Defined Properly');
+        }
+    }
+
     public function epayment() {
         $invoice_id = request()->segment(3);
-        $booking =$invoice= \App\Models\Invoice::find($invoice_id);
-        if (strlen($booking->token) < 4) {
-           $account=new \App\Http\Controllers\Account();
-           $account->createSelcomControlNumber($invoice_id);
-        }
-        $paid = 0;
-        if ($booking->payments()->sum('amount') == $booking->invoiceFees()->sum('amount')) {
-            $paid = 1;
-        }
+        $booking = $invoice = \App\Models\Invoice::find($invoice_id);
+        if ($booking) {
+            if (strlen($booking->token) < 4) {
+                $account = new \App\Http\Controllers\Account();
+                $account->createSelcomControlNumber($invoice_id);
+            }
+            $paid = 0;
+            if ($booking->payments()->sum('amount') == $booking->invoiceFees()->sum('amount')) {
+                $paid = 1;
+            }
+            $am = $invoice->invoiceFees()->sum('amount');
+            $paid = $invoice->payments()->sum('amount');
+            $unpaid = $am - $paid;
 
-        $balance = $booking->payments()->sum('amount');
-
-        return view('account.invoice.pay', compact('booking', 'balance', 'paid','invoice'));
+            $balance = $booking->payments()->sum('amount');
+            $page = 'pay';
+            return view('account.invoice.' . $page, compact('booking', 'balance', 'paid', 'invoice', 'unpaid'));
+        } else {
+            return redirect()->back()->with('warning', 'This Invoice Number Not Defined Properly');
+        }
     }
 
     //Notify all admin about monthly reports
     public function schoolMonthlyReport() {
+        DB::select('REFRESH MATERIALIZED VIEW CONCURRENTLY public.all_users');
         $users = DB::select("select * from admin.all_users where lower(usertype)='admin' and status=1");
         $key_id = DB::table('public.sms_keys')->first()->id;
         foreach ($users as $user) {
@@ -378,6 +433,233 @@ where b.school_level_id in (1,2,3) and a."schema_name" not in (select "schema_na
                 DB::table($user->schema_name . '.email')->insert($obj);
             }
         }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function associate() {
+        $id = (int) request()->segment(3) == 0 ? Auth::user()->id : request()->segment(3);
+        $this->data['user'] = \App\Models\User::find($id);
+        return view('users.associate', $this->data);
+    }
+
+    public function registerApplicant() {
+        $applicant_id = decrypt(request()->segment(3));
+        $applicant = DB::table('admin.applicants')->where('id', $applicant_id)->first();
+        if ($applicant) {
+            //register user in demo account
+            //build data to upload
+            if (DB::table('public.user')->where('email', $applicant->email)->first()) {
+                //user exists, set to 1 then send email
+                DB::table('public.user')->where('email', $applicant->email)->update(['status' => 1]);
+                return $this->sendApplicantEmail(DB::table('public.user')->where('email', $applicant->email)->first());
+            }
+            $pass = rand(1, 999) . substr(str_shuffle('abcdefghkmnpl'), 0, 3);
+            $password = bcrypt($pass);
+            DB::table('public.user')->insert(array('username' => str_replace(" ", NULL, $applicant->phone),
+                'salary' => (float) 0, 'sex' => $applicant->gender, 'name' => $applicant->name, 'email' => $applicant->email, 'phone' => $applicant->phone,
+                'password' => $password, 'default_password' => $pass, 'status' => 1,
+                'photo' => 'defualt.png', 'dob' => date('Y-m-d', strtotime($applicant->dob)),
+                'usertype' => 'Admin', 'jod' => date('Y-m-d')
+            ));
+            $this->registerInAdmin($applicant, $password);
+            return $this->sendApplicantEmail(DB::table('public.user')->where('email', $applicant->email)->first());
+            //send confirmation email and send invite email for academy learning
+        } else {
+            die('Wrong url supplied, this user does not exists');
+        }
+    }
+
+    public function sendApplicantEmail($applicant) {
+        $message = view('email.associate_confirm');
+        $patterns = array(
+            '/#name/i', '/#username/i', '/#password/i',
+        );
+        $replacements = array(
+            $applicant->name, $applicant->username, $applicant->default_password
+        );
+        //send sms
+        $sms = preg_replace($patterns, $replacements, $message);
+        $new_user_message = 'Hi ' . $applicant->name . ', Your accounts ( in https://demo.shulesoft.com, https://academy.shulesoft.com) '
+                . 'has been created successfully with username: ' . $applicant->username . ' and password: ' . $applicant->default_password . ' .Check your email for detailed information. Thanks ';
+        $this->send_sms($applicant->phone, $new_user_message);
+        $this->send_email($applicant->email, 'Success: ShuleSoft Account Registration', $sms);
+        die('Success: Your Account has been created, kindly wait for the confirmation email with details on how to get started. Thanks');
+    }
+
+    public function InviteApplicants() {
+        $applicants = DB::select('select * from admin.applicants where id not in (select applicant_id from admin.users where applicant_id is not null)');
+        foreach ($applicants as $applicant) {
+
+            $message = view('email.associate');
+            $patterns = array(
+                '/#name/i', '/#link/i',
+            );
+            $url = 'https://admin.shulesoft.com/background/registerApplicant/' . encrypt($applicant->id);
+            $replacements = array(
+                $applicant->name, $url
+            );
+            //send sms
+            $sms = preg_replace($patterns, $replacements, $message);
+            $new_user_message = 'Hello ' . $applicant->name . ' '
+                    . 'You are kindly invited to Join ShuleSoft Associate Program. Our Associates will be directly involved to provide training, data entry and configuration '
+                    . 'to ALL schools (600+) and get paid per task done but also exposed to '
+                    . 'schools that are looking for candidates who knows ShuleSoft. Click this link to join (' . $this->shortenUrl($url) . ') or visit our website (www.shulesoft.com) to learn more. Thanks';
+            $this->send_sms($applicant->phone, $new_user_message);
+            $this->send_email($applicant->email, 'We are looking for ShuleSoft Regional and Local Associates', $sms);
+            echo 'Email and SMS sent to ' . $applicant->name . '<br/>';
+        }
+    }
+
+    public function registerInAdmin($applicant, $password) {
+        return DB::table('admin.users')->insert(array('firstname' => $applicant->name,
+                    'sex' => $applicant->gender, 'email' => $applicant->email, 'phone' => $applicant->phone, 'name' => $applicant->name,
+                    'password' => $password, 'status' => 1,
+                    'applicant_id' => $applicant->id
+        ));
+    }
+
+    public function shortenUrl($url) {
+        $key = '21ac1db212ce1bd8fb357c6f4b0edb2a2b18b';
+        $json = file_get_contents('https://cutt.ly/api/api.php?key=' . $key . '&short=' . $url);
+        $data = json_decode($json, true);
+        return $short_url = $data["url"]["shortLink"];
+    }
+
+    public function sync() {
+        $software = new \App\Http\Controllers\Software();
+        $schemas = $software->loadSchema();
+        $schema_number = 1;
+        foreach ($schemas as $schema) {
+
+            //check if schema exists or create
+            $sql = "SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema= '" . $schema->table_schema . "' limit 1";
+            $check_schema = \collect(DB::connection('live')->select($sql))->first();
+            if (empty($check_schema)) {
+                DB::connection('live')->statement("create schema if not exists " . $schema->table_schema);
+                echo 'Schema ' . $schema->table_schema . ' Created Successfully <br/>';
+            }
+
+            //get tables on that schema
+            $tables = $software->loadTables($schema->table_schema);
+
+            //loop through tables and push one by one
+            //
+           foreach ($tables as $table) {
+
+                //check if table exists in live envir
+                $check_table = \collect(DB::connection('live')->select("SELECT table_name, column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE  is_updatable='YES' AND "
+                                . " table_schema='" . $schema->table_schema . "' AND table_name='" . $table . "'"))->first();
+
+                $object_array = (array) DB::table($schema->table_schema . '.' . $table)->first();
+
+                if (!empty($check_table)) {
+                    echo 'Table  ' . $table . ' exists, now importing data in ' . $schema->table_schema . '.' . $table . ' schema Successfully <br/>';
+
+                    !empty($object_array) ? $this->insertIntoLive($schema->table_schema, $table) : '';
+                } else {
+                    //this table does not exists, so sync this table
+                    echo 'Table ' . $schema->table_schema . '. ' . $table . ' does not exists, try to create new table now <br/>';
+                    $software->syncTable($table, $schema->table_schema, 'live');
+                    echo 'Table ' . $schema->table_schema . '. ' . $table . ' created successfully <br/>';
+                    !empty($object_array) ? $this->insertIntoLive($schema->table_schema, $table) : '';
+                    echo 'Table data imported after creating ' . $schema->table_schema . '. ' . $table . ' , success<br/>';
+                }
+            }
+            echo 'Finishing Schema No ' . $schema_number . '<br/>';
+            $schema_number++;
+        }
+        echo 'All schema (' . $schema_number . ') has been proceesed successfully';
+    }
+
+    public function insertIntoLive($schema_table_schema, $table) {
+//        $table_sql = "SELECT column_default,data_type FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema='" . $schema_table_schema . "' AND table_name='" . $table . "' AND column_name='created_at' limit 1";
+//        $local = \collect(DB::select($table_sql))->first();
+//        if (empty($local)) {
+//            DB::statement('alter table ' . $schema_table_schema . '.' . $table . ' add column if not exists created_at timestamp without time zone default now()');
+//            DB::connection('live')->statement('alter table ' . $schema_table_schema . '.' . $table . ' add column if not exists created_at timestamp without time zone default now()');
+//        }
+//        $check = DB::connection('live')->table($schema_table_schema . '.' . $table)->orderBy('created_at', 'desc')->first();
+//        if (!empty($check)) {
+        if (!in_array($table, ['log', 'requests'])) {
+            $object_data = DB::table($schema_table_schema . '.' . $table)->get();
+            if (count($object_data) > 0) {
+                $ob = [];
+                foreach ($object_data as $data) {
+                    //array_push($ob, (array) $data);
+                    DB::connection('live')->table($schema_table_schema . '.' . $table)->insert((array) $data);
+                    echo 'data inserted for table ' . $table . '<br/>';
+                }
+            }
+        }
+        // }
+    }
+
+    public function standingOrderRemainder() {
+        $users = \App\Models\User::where('role_id',1)->get();
+        foreach ($users as $user) {
+            $standingorders = \App\Models\StandingOrder::whereDate('date', date('Y-m-d', time() - 86400));
+            $msg = '';
+            foreach ($standingorders as $st) {
+                $msg .= '<tr><td>' . $st->client->name . '</td><td>' . $st->occurance_amount . '</td></tr>';
+            }
+            $message = ''
+                    . '<h2>Today standing orders</h2>'
+                    . '<p>This is the list of todays standing orders to confirm</p>'
+                    . '<table><thead><tr><th>Client name</th><th> Amount </th></tr></thead><tbody>' . $msg . '</tbody></table>';
+            DB::table('public.email')->insert([
+                'subject' => date('Y M d') . ' Standing order remainder',
+                'body' => $message,
+                'email' => $user->email
+            ]);
+        }
+    }
+
+    public function searchDistrict() {
+        $region_id = request('region_id');
+        $districts = \App\Models\District::where('region_id', $region_id)->get();
+
+        $select = '<select  class="form-control" id="search_district">';
+        foreach ($districts as $district) {
+            $select .= '<option value="' . $district->id . '">' . $district->name . '</option>';
+        }
+        $select .= '</select>';
+        echo $select;
+    }
+
+    public function searchWard() {
+        $region_id = request('district_id');
+        $wards = \App\Models\Ward::where('district_id', $region_id)->get();
+
+        $select = '';
+        foreach ($wards as $ward) {
+            $select .= '<input class="border-checkbox ward_lists" type="checkbox" name="wards[]" id="checkbox' . $ward->id . '" value="' . $ward->id . '">
+                                                <label class="border-checkbox-label" for="checkbox1">' . $ward->name . ' </label>
+                                            ';
+        }
+        $select .= '';
+        echo $select;
+    }
+
+    function allocateSchool() {
+        $user_id = request('user_id');
+        $wards = request('wards');
+        foreach ($wards as $ward) {
+            DB::table('users_schools_wards')->insert(['user_id' => $user_id, 'ward_id' => $ward]);
+        }
+        return redirect()->back()->with('success', 'success');
+    }
+
+    public function removeUserSchool() {
+        $user_id = request()->segment(3);
+        $ward_id = request()->segment(4);
+        DB::table('users_schools_wards')->where('user_id', $user_id)->where('ward_id', $ward_id)->delete();
+        return redirect()->back()->with('success', 'success');
     }
 
 }

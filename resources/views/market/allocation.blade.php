@@ -74,7 +74,13 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-3">   <a href="<?= url('sales/addSchool') ?>" data-i18n="nav.navigate.navbar" class="btn btn-success">add New School</a></div>
+
+                           <?php if(can_access('add_school')) { ?>
+                             <div class="col-lg-3">
+                                 <a href="<?= url('sales/addSchool') ?>" data-i18n="nav.navigate.navbar" class="btn btn-success">add New School</a>
+                             </div>
+                           <?php } ?>
+                           
                             <div class="col-lg-6">
                                 <?php
                                 if (can_access('manage_customers')) {
@@ -154,7 +160,7 @@
                 {"data": "district"},
                 {"data": "ward"},
                 {"data": "type"},
-//                {"data": "nmb_branch"},
+//                {"data": "nmb_branch"}, 
                 {"data": "students"},
                 {"data": "activities"},
                 {"data": ""}
@@ -164,8 +170,8 @@
                     "targets": 8,
                     "data": null,
                     "render": function (data, type, row, meta) {
-                        if (row.schema_name != null) {
-                            return '<a href="<?= url('customer/profile') ?>/' + row.schema_name + '" class="label label-warning">Already Customer</a>';
+                        if (row.client_id != null) {
+                            return '<a href="<?= url('customer/profile') ?>/' + row.username + '" class="label label-warning"> Already Customer  </a>';
                         } else {
                             return '<a href="<?= url('sales/') ?>/profile/' + row.id + '" class="label label-primary">View</a>\n\
                         <a href="<?= url('sales/') ?>/onboard/' + row.id + '" class="label label-info">Onboard This School</a>';
@@ -176,17 +182,15 @@
                 }
             ]
         });
-
-
     }
     );
     school_selector = function () {
         $('#school_selector').change(function () {
             var val = $(this).val();
+            console.log(val)
             window.location.href = '<?= url('sales/school') ?>/' + val;
         })
     }
-
     $(document).ready(school_selector);
 </script>
 

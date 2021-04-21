@@ -7,10 +7,12 @@ class Payment extends Model {
     /**
      * Generated
      */
-
     protected $table = 'payments';
-    protected $fillable = ['id', 'invoice_id', 'amount', 'transaction_fee', 'method', 'transaction_id', 'mobile_transaction_id', 'transaction_time', 'account_number', 'token', 'bank_account_id', 'status', 'reconciled', 'note', 'financial_entity_id', 'checksum', 'payment_type', 'amount_type', 'currency', 'receipt_sent','client_id'];
-
+    protected $fillable = ['id', 'invoice_id', 'amount', 'transaction_fee', 'method', 'transaction_id', 
+    'mobile_transaction_id', 'transaction_time', 'account_number', 'token', 'bank_account_id', 'status', 
+    'reconciled', 'note', 'financial_entity_id', 'checksum', 'payment_type', 'amount_type', 'currency', 
+    'receipt_sent','client_id'];
+    
 
     public function invoice() {
         return $this->belongsTo(\App\Models\Invoice::class, 'invoice_id', 'id');

@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('content')
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css" rel="stylesheet" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.9/select2-bootstrap.css" rel="stylesheet" />
@@ -10,43 +9,58 @@
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4>Company Transactions</h4>
-                <span>Record transactions based on dates</span>
+                <h3 class="box-title"><i class="fa icon-expense"></i>  
+                 <?php
+                    if ($id == 4) {
+                        echo ('Expenses');
+                    } elseif ($id == 1) {
+                        echo "Fixed Assets";
+                    } else if ($id == 2) {
+                        echo "Liabilities";
+                    } else if ($id == 3) {
+                        echo "Capital Management";
+                    }else if($id==5){
+                        echo 'Current Assets';
+                    }
+                    ?></h3> 
             </div>
+    
+
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
+                        <a href="<?= url("dashboard/index") ?>">
                             <i class="icofont icofont-home"></i>
                         </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Accounts</a>
+                    <li class="breadcrumb-item">
+                        <a>
+                        <?php
+                            if ($id == 4) {
+                                echo ('Expenses');
+                            } elseif ($id == 1) {
+                                echo "Fixed Assets";
+                            } else if ($id == 2) {
+                                echo "Liabilities";
+                            } else if ($id == 3) {
+                                echo "Capital Management";
+                            }else if($id==5){
+                                echo 'Current Assets';
+                            }
+                            ?>
+                       </a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Transactions</a>
-                    </li>
+                  
                 </ul>
             </div>
+
         </div>
         <div class="page-body">
             <div class="row">
                 <div class="col-sm-12">
                     <!-- Basic Form Inputs card start -->
                     <div class="card">
-                        <div class="card-header">
-
-                            <h3 class="box-title"><i class="fa icon-expense"></i>  <?php
-                                if ($id == 4) {
-                                    echo 'Company Expenses';
-                                } elseif ($id == 1) {
-                                    echo "Fixed Assets";
-                                } else if ($id == 2) {
-                                    echo "Liabilities";
-                                } else if ($id == 3) {
-                                    echo "Capital Management";
-                                } else if ($id == 5) {
-                                    echo 'Current Assets';
-                                }
-                                ?></h3>     
+                        <div class="card-header">    
 
                             <span>Specify information correctly as specified. Area marked with * are mandatory</span>
                             <div class="card-header-right">
@@ -72,31 +86,40 @@
                                     <div class="card-block">
 
                                         <header class="panel-heading">
-                                            Add Expense
-
+                                            Add 
                                         </header>
                                         <div class="card-block">
+
                                             <form class="form-horizontal" role="form" method="post">
-
-                                                <?php if ($check_id == 4 || $check_id == 1 || $check_id == 5) { ?>
-
-                                                    <div class='form-group row' >
-                                                        <label for="payment method" class="col-sm-2 control-label">
-                                                            User From<span class="red">*</span>
-                                                        </label>
-                                                        <div class="col-sm-6">
-                                                            <select name="user_in_shulesoft" id="user_in_shulesoft" class="form-control">
-                                                                <option value="0" selected="true">Select User type</option>
-                                                                <option value="1">User in ShuleSoft</option>
-                                                                <option value="2">User Not in ShuleSoft</option>
-                                                            </select>
+                                                <?php if($check_id==4 || $check_id==1 || $check_id==5){ ?>
+                                                    
+                                                      <?php
+                                                                if (form_error($errors, 'user_in_shulesoft'))
+                                                                    echo "<div class='form-group has-error' >";
+                                                                else
+                                                                    echo "<div class='form-group' >";
+                                                                ?>
+                                                                <label for="payment method" class="col-sm-2 control-label">
+                                                                <?=('userform')?><span class="red">*</span>
+                                                                </label>
+                                                                <div class="col-sm-6">
+                                                                    <select name="user_in_shulesoft" id="user_in_shulesoft" class="form-control">
+                                                                        <option value="0" selected="true"> <?=('usertype')?></option>
+                                                                        <option value="1"> <?=('userin')?></option>
+                                                                        <option value="2"> <?=('usernot')?></option>
+                                                                    </select>
+                                                                </div>
+                                                                <span class="col-sm-4 control-label">
+                                                                    <?php echo form_error($errors, 'user_in_shulesoft'); ?>
+                                                                </span>
                                                         </div>
-                                                        <span class="col-sm-4 control-label">
-                                                            <?php echo form_error($errors, 'user_in_shulesoft'); ?>
-                                                        </span>
-                                                    </div>
-                                                    <div  style="display: none" id="user_in_shulesoft_tag" <?php request('user_in_shulesoft') == 1 ? '' : 'style="display: none;"' ?>>        
-                                                        <div class='form-group row' >
+                                                        <div  style="display: none" id="user_in_shulesoft_tag" <?php request('user_in_shulesoft') == 1 ? '' : 'style="display: none;"' ?>>        
+                                                            <?php
+                                                            if (form_error($errors, 'user_id'))
+                                                                echo "<div class='form-group has-error' >";
+                                                            else
+                                                                echo "<div class='form-group' >";
+                                                            ?>
                                                             <label for="payment method" class="col-sm-2 control-label">
                                                                 Recipient <span class="red">*</span>
                                                             </label>
@@ -105,8 +128,6 @@
                                                                 $uarray = array('0' => "select User");
                                                                 $users = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get();
                                                                 if (count($users)) {
-
-
                                                                     foreach ($users as $user) {
                                                                         $uarray[$user->id] = $user->name();
                                                                     }
@@ -114,274 +135,290 @@
                                                                 echo form_dropdown("user_id", $uarray, old("user_id"), "id='user_id' class='form-control select2'");
                                                                 ?>
                                                             </div>
-
+                                
                                                             <span class="col-sm-4 control-label">
                                                                 <?php echo form_error($errors, 'user_id'); ?>
                                                             </span>
                                                         </div>   
                                                     </div>
                                                     <div  style="display: none" id="user_not_in_shulesoft_tag"  <?php request('user_in_shulesoft') == 2 ? '' : 'style="display: none;"' ?>>
-                                                        <div class='form-group row' >
-                                                            <label for="amount" class="col-sm-2 control-label">
-                                                                Recipient<span class="red">*</span>
-                                                            </label>
-                                                            <div class="col-sm-6">
-
-                                                                <input type="text" class="form-control" id="amount" name="payer_name" value="<?= old('payer_name') ?>"  placeholder="  e.g Juma Ali" onblur="this.value = this.value.toUpperCase()">
-                                                            </div>
-                                                            <span class="col-sm-4 control-label">
-                                                                <?php echo form_error($errors, 'payer_name'); ?>
-                                                            </span>
-                                                        </div>	    
-                                                    </div>	    
-                                                <?php } ?>
-
-
-
-                                                <div class='form-group row' >
-                                                    <label for="expense" class="col-sm-2 control-label">
-                                                        <?= __("expense") ?>
-                                                    </label>
-                                                    <div class="col-sm-6">
                                                         <?php
-                                                        $array = array('0' => "select expense");
-                                                        if (!empty($category)) {
-                                                            foreach ($category as $categ) {
-                                                                $array[$categ->id] = $categ->name;
-                                                            }
-                                                        }
-                                                        echo form_dropdown("expense", $array, old("expense", $sub_id), "id='refer_expense_id' style='border: 1px solid red' class='form-control select2' name='expense'");
+                                                        if (form_error($errors, 'payer_name'))
+                                                            echo "<div class='form-group has-error' >";
+                                                        else
+                                                            echo "<div class='form-group' >";
                                                         ?>
-                                                        <?php if (empty($category)) { ?>
-                                                            <span class="red">Please click  <a href="<?= url("expense/financial_category/$check_id") ?>" class="btn btn-primary" role="button">add category</a> to add category</span>
-                                                        <?php } ?>
-                                                    </div>
-                                                    <span class="col-sm-4 control-label">
-                                                        <?php echo form_error($errors, 'expense'); ?>
-                                                    </span>
-                                                </div>
-                                                <div class='form-group row' >
-                                                    <label for="expense" class="col-sm-2 control-label">
-                                                        <?= __("Department") ?><span class="red">*</span>
-                                                    </label>
-                                                    <div class="col-sm-6">
-
-                                                        <select name='expense_subcategories_id' class="form-control">
-                                                            <?php
-                                                            $expense_subcategories = DB::table('expense_subcategories')->get();
-                                                            ?>
-                                                            @foreach($expense_subcategories as $value)
-
-                                                            <option value="{{$value->id}}">{{$value->name}} </option>
-
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                            
-                                                    <span class="col-sm-4 control-label">
-                                                        <?php echo form_error($errors, 'expense_subcategories_id'); ?>
-                                                    </span>
-                                                </div>
-
-                                                <?php if ($check_id == 2 || $check_id == 5) { ?>
-
-                                                    <div class='form-group row' >
                                                         <label for="amount" class="col-sm-2 control-label">
+                                                           Recipient<span class="red">*</span>
                                                         </label>
                                                         <div class="col-sm-6">
-
-
-                                                            <input type="radio" value="0"   class="form-group row"  name="type"/>
-                                                            <label  >
-                                                                Pay</label>
-
-                                                            <input type="radio" value="1"   class="form-group row"  name="type"/>        <label >
-                                                                Receive</label>
+                                
+                                                            <input type="text" class="form-control" id="amount" name="payer_name" value="<?= old('payer_name') ?>"  placeholder="  e.g Juma Ali" onblur="this.value = this.value.toUpperCase()">
                                                         </div>
                                                         <span class="col-sm-4 control-label">
-                                                            <?php echo form_error($errors, 'type'); ?>
+                                                            <?php echo form_error($errors, 'payer_name'); ?>
                                                         </span>
-                                                    </div>
-
-                                                <?php } ?>
-
-
-
-                                                <div class='form-group row' >
+                                                    </div>	    
+                                                      </div>	    
+                                                    <?php }?>
+                                                
+                                                     <?php
+                                                                if (form_error($errors, 'expense'))
+                                                                    echo "<div class='form-group has-error' >";
+                                                                else
+                                                                    echo "<div class='form-group' >";
+                                                                ?>
+                                                                <label for="expense" class="col-sm-2 control-label">
+                                                                    <?= ("Category") ?>
+                                                                </label>
+                                                                <div class="col-sm-6">
+                                                                    <?php
+                                                                    $array = array('0' => ("select Name"));
+                                                                    if (!empty($category)) {
+                                                                        foreach ($category as $categ) {
+                                                                            $array[$categ->id] = $categ->name;
+                                                                        }
+                                                                    }
+                                                                    echo form_dropdown("expense", $array, old("expense", $sub_id), "id='refer_expense_id' class='form-control select2' name='expense'");
+                                                                    ?>
+                                                                    <?php if (empty($category)) { ?>
+                                                                        <span class="red">Please click  <a href="<?= url("expense/financial_category/$check_id") ?>" class="btn btn-primary" role="button">add category</a> to add category</span>
+                                                                    <?php } ?>
+                                                                </div>
+                                                                <span class="col-sm-4 control-label">
+                                                                    <?php echo form_error($errors, 'expense'); ?>
+                                                                </span>
+                                                        </div>
+                                                        <?php if ($check_id == 2 || $check_id == 5) { ?>
+                                
+                                                            <?php
+                                                            if (form_error($errors, 'type'))
+                                                                echo "<div class='form-group has-error' >";
+                                                            else
+                                                                echo "<div class='form-group' >";
+                                                            ?>
+                                                            <label for="amount" class="col-sm-2 control-label">
+                                                            </label>
+                                                            <div class="col-sm-6">
+                                
+                                
+                                                                <input type="radio" value="0"   class="form-group"  name="type"/>
+                                                                <label  >
+                                                                    Pay</label>
+                                
+                                                                <input type="radio" value="1"   class="form-group"  name="type"/>        <label >
+                                                                    Receive</label>
+                                                            </div>
+                                                            <span class="col-sm-4 control-label">
+                                                                <?php echo form_error($errors, 'type'); ?>
+                                                            </span>
+                                                        </div>
+                                
+                                                    <?php } ?>
+                                
+                                
+                                
+                                                    <?php
+                                                    if (form_error($errors, 'amount'))
+                                                        echo "<div class='form-group has-error' >";
+                                                    else
+                                                        echo "<div class='form-group' >";
+                                                    ?>
                                                     <label for="amount" class="col-sm-2 control-label">
-                                                        <?= __("expense amount") ?>
+                                                        <?= ("Amount") ?>
                                                     </label>
                                                     <div class="col-sm-6">
-
-                                                        <input type="text" class="form-control" id="amount" name="amount" value="<?= old('amount') ?>" required="true">
+                                
+                                                        <input type="number" class="form-control" id="amount" name="amount" value="<?= old('amount') ?>" required="true">
                                                     </div>
                                                     <span class="col-sm-4 control-label">
                                                         <?php echo form_error($errors, 'amount'); ?>
                                                     </span>
                                                 </div>
-
-
-                                                <div class='form-group row' >
-                                                    <label for="payment method" class="col-sm-2 control-label">
-                                                        Payment method <span class="red">*</span>
-                                                    </label>
-                                                    <div class="col-sm-6">
-
-                                                        <select name="payment_type_id" id="payment_method_status" class="form-control" required="">
-                                                            <option value="">Select Payment type</option>
-                                                            <?php
-                                                            if (!empty($payment_types)) {
-
-                                                                foreach ($payment_types as $payment_type) {
-                                                                    ?>
-
-                                                                    <option value="<?= $payment_type->id ?>"><?= $payment_type->name ?></option>
-
-                                                                    <?php
-                                                                }
-                                                            }
-                                                            ?>
-                                                        </select>
-                                                    </div>
-                                                    <span class="col-sm-4 control-label">
-                                                        <?php echo form_error($errors, 'payment_method'); ?>
-                                                    </span>
-                                                </div>
-
-
-                                                <div class='form-group row' >
-                                                    <label for="amount" class="col-sm-2 control-label">
-                                                        <?= __("reference no") ?>
-                                                    </label>
-                                                    <div class="col-sm-6">
-
-                                                        <input type="text" placeholder="Enter ref number/cheque number" class="form-control" id="ref_no" name="transaction_id" value="<?= $transaction_id ?>">
-                                                    </div>
-                                                    <span class="col-sm-4 control-label">
-
-                                                        <?php echo form_error($errors, 'transaction_id'); ?>
-                                                    </span>
-                                                </div>
-
-                                                <div id="refer_no" style="display: none">
-                                                    <div class='form-group row' >
-                                                        <label for="bank" class="col-sm-2 control-label">Bank Name</label>
-                                                        <div class="col-sm-6">
-                                                            <select class="select2_multiple form-control" name="bank_account_id" id="bank_name">               <option value=""></option>
-
-                                                                <?php
-                                                                if (!empty($banks) ) {
-
-                                                                    foreach ($banks as $bank) {
-                                                                        ?>
-
-
-                                                                        <option value="<?= $bank->id ?>"><?= $bank->referBank->name . ' (' . $bank->number . ')' ?></option>
-
-                                                                        <?php
-                                                                    }
-                                                                }
-                                                                ?>
-
-                                                            </select>
-                                                        </div>
-                                                        <span class="col-sm-4 control-label">
-                                                            <?php echo form_error($errors, 'bank_name'); ?>
-                                                        </span>
-                                                    </div>
-
-                                                </div>
-                                                <div class='form-group row' >
-                                                    <label for="date" class="col-sm-2 control-label">
-                                                        <?= __("Date") ?>
-                                                    </label>
-                                                    <div class="col-sm-6">
-                                                        <input type="date" class="form-control calendar" id="date" name="date" value="<?= old('date') ?>" required="true" >
-
-                                                    </div>
-                                                    <span class="col-sm-4 control-label">
-                                                        <?php echo form_error($errors, 'date'); ?>
-                                                    </span>
-                                                </div>
-
-                                                <?php if ($check_id == 1) { ?>
-
-                                                    <div class='form-group row' >
-                                                        <label for="depreciation" class="col-sm-2 control-label">
-                                                            Depreciation*
-                                                        </label>
-                                                        <div class="col-sm-6">
-
-                                                            <select name="depreciation" id="status" class="form-control">
-                                                                <option value=" ">Select Depreciation</option>
-                                                                <option value="0.125">Class three -12.5%</option>
-                                                                <option value="0.25">Class two -25%</option>
-                                                                <option value="0.375">Class One - 37.5%</option>
-                                                                <option value="0">Custom Depreciation</option>
-                                                            </select>
-                                                            <span> <a href="#" id="custom_id">  &nbsp;&nbsp;</a> </span>
-                                                            <input type="text" placeholder="Enter depreciation eg 0.13" hidden="true" class="form-control " id="dep" name="dep" value="" style="display: none;">
-
-                                                        </div>
-                                                        <span class="col-sm-4 control-label">
-                                                            <?php echo form_error($errors, 'depreciation'); ?>
-                                                        </span>
-
-                                                    </div>
-
-
-                                                <?php }
+                                
+                                
+                                                <?php
+                                                if (form_error($errors, 'payment_method'))
+                                                    echo "<div class='form-group has-error' >";
+                                                else
+                                                    echo "<div class='form-group' >";
                                                 ?>
-
-
-
-                                                <div class='form-group row' >
-                                                    <label for="note" class="col-sm-2 control-label">
-                                                        <?= __("Note") ?>
-                                                    </label>
-                                                    <div class="col-sm-6">
-                                                        <textarea style="min-height: 100px" placeholder="Make sure you write a well understandable descriptions here,this will help make your accounts clear" class="form-control" id="note" name="note"><?= old('note') ?></textarea>
-                                                    </div>
-                                                    <span class="col-sm-4 control-label">
-                                                        <?php echo form_error($errors, 'note'); ?>
-                                                    </span>
+                                                <label for="payment method" class="col-sm-2 control-label">
+                                                <?= ("Payment method") ?> <span class="red">*</span>
+                                                </label>
+                                                <div class="col-sm-6">
+                                
+                                                    <select name="payment_type_id" id="payment_method_status" class="form-control" required="">
+                                                         <option value="">Select Payment type</option>
+                                            <?php
+                                            
+                                               if (!empty($payment_types) ) {
+                                                foreach ($payment_types as $payment_type) {?>
+                                                    <option value="<?= $payment_type->id ?>"><?= $payment_type->name ?></option>
+                                                    <?php
+                                                 }
+                                                 }?>
+                                                 </select>
                                                 </div>
-
-                                                <div class="form-group row">
-                                                    <label for="submit" class="col-sm-2 control-label">
-
-                                                    </label>
-                                                    <div class="col-sm-offset-2 col-sm-4">
-                                                        <input type="submit" class="btn btn-primary btn-block" value="Save" >
-                                                    </div>
-                                                </div>
-
-                                                <?= csrf_field() ?>
-                                            </form>
+                                                <span class="col-sm-4 control-label">
+                                                    <?php echo form_error($errors, 'payment_method'); ?>
+                                                </span>
+                                            </div>
+                                
+                                
+                                            <?php
+                                            if (form_error($errors, 'transaction_id'))
+                                                echo "<div class='form-group has-error' >";
+                                            else
+                                                echo "<div class='form-group' >";
+                                            ?>
+                                            <label for="amount" class="col-sm-2 control-label">
+                                                <?= ("ref_no") ?>
+                                            </label>
+                                            <div class="col-sm-6">
+                                
+                                                <input type="text" placeholder="Enter ref number/cheque number" class="form-control" id="ref_no" name="transaction_id" value="<?= $transaction_id ?>">
+                                            </div>
+                                            <span class="col-sm-4 control-label">
+                                
+                                                <?php echo form_error($errors, 'transaction_id'); ?>
+                                            </span>
                                         </div>
+                                
+                                        <div id="refer_no" style="display: none">
+                                            <?php
+                                            if (form_error($errors, 'bank_name'))
+                                                echo "<div class='form-group has-error' >";
+                                            else
+                                                echo "<div class='form-group' >";
+                                            ?>
+                                            <label for="bank" class="col-sm-2 control-label">Bank Name</label>
+                                            <div class="col-sm-6">
+                                                <select class="select2_multiple form-control" name="bank_account_id" id="bank_name">
+                                                     <option value=""></option>
+                                                    <?php
+                                                    if (!empty($banks) ) {
+                                                        foreach ($banks as $bank) { ?>
+                                                            <option value="<?= $bank->id ?>"><?= $bank->referBank->name . ' (' . $bank->number . ')' ?></option>
+                                
+                                                        <?php
+                                                        }
+                                                    }
+                                                    ?>
+                                
+                                                </select>
+                                            </div>
+                                            <span class="col-sm-4 control-label">
+                                                <?php echo form_error($errors, 'bank_name'); ?>
+                                            </span>
+                                        </div>
+                                
+                                    </div>
+                                    <?php
+                                    if (form_error($errors, 'date'))
+                                        echo "<div class='form-group has-error' >";
+                                    else
+                                        echo "<div class='form-group' >";
+                                    ?>
+                                    <label for="date" class="col-sm-2 control-label">
+                                        <?= ("expense_date") ?>
+                                    </label>
+                                    <div class="col-sm-6">
+                                        <div class="icon-addon addon-lg">
+                                        <input type="date" class="form-control calendar" id="date" name="date" value="<?= old('date') ?>" required="true" >
+                                       <span class="fa fa-calendar"></span>
+                                    </div>
+                                                </div>
+                                    <span class="col-sm-4 control-label">
+                                        <?php echo form_error($errors, 'date'); ?>
+                                    </span>
+                                </div>
+                                
+                                <?php if ($check_id == 1) { ?>
+                                
+                                    <?php
+                                    if (form_error($errors, 'depreciation'))
+                                        echo "<div class='form-group has-error' >";
+                                    else
+                                        echo "<div class='form-group' >";
+                                    ?>
+                                    <label for="depreciation" class="col-sm-2 control-label">
+                                        Depreciation*
+                                    </label>
+                                    <div class="col-sm-6">
+                                
+                                        <select name="depreciation" id="status" class="form-control">
+                                            <option value=" ">Select Depreciation</option>
+                                            <option value="0.125">Class three -12.5%</option>
+                                            <option value="0.25">Class two -25%</option>
+                                            <option value="0.375">Class One - 37.5%</option>
+                                            <option value="0">Custom Depreciation</option>
+                                        </select>
+                                        <span> <a href="#" id="custom_id">  &nbsp;&nbsp;</a> </span>
+                                        <input type="text" placeholder="Enter depreciation eg 0.13" hidden="true" class="form-control " id="dep" name="dep" value="" style="display: none;">
+                                
+                                    </div>
+                                    <span class="col-sm-4 control-label">
+                                        <?php echo form_error($errors, 'depreciation'); ?>
+                                    </span>
+                                    </div>
+                                
+                                <?php }
+                                ?>
+                                
+                                <?php
+                                if (form_error($errors, 'note'))
+                                    echo "<div class='form-group has-error' >";
+                                else
+                                    echo "<div class='form-group' >";
+                                ?>
+                                <label for="note" class="col-sm-2 control-label">
+                                    <?= ("expense_note") ?>
+                                </label>
+                                <div class="col-sm-6">
+                                    <textarea style="min-height: 100px" placeholder="Make sure you write a well understandable descriptions here,this will help make your accounts clear" 
+                                    class="form-control" id="note" name="note" required><?= old('note') ?></textarea>
+                                </div>
+                                <span class="col-sm-4 control-label">
+                                    <?php echo form_error($errors, 'note'); ?>
+                                </span>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-6">
+                                        <input type="submit" class="btn btn-success btn-block" value="<?= ("save") ?>" >
                                     </div>
                                 </div>
+                                
+                                <?= csrf_field() ?>
+                                </form>
+
+                                           
+                                  </div>
+                                </div>
+                            </div>
                                 <div class="tab-pane" id="profile3" role="tabpanel" aria-expanded="false">
                                     <div class="card-block">
 
                                         <div class="table-responsive dt-responsive">
                                             <div class="card-header">
                                                 <div class="panel-body">
-                                                    <div class="alert alert-info">Use the exactly ShuleSoft template as provided : Excel should contains these keys at the top :'amount', 'transaction_id', 'account_number', 'payment_method', 'expense_name', 'date','user_in_shulesoft','payer_name'</div>
+                                                    <div class="alert alert-info">
+                                                        Use the exactly ShuleSoft template as provided : Excel should contains these keys at the top :'amount', 'transaction_id', 'account_number', 'categort', 'payment_method', 'expense_name', 'date','user_in_shulesoft','payer_name'
+                                                        <br>   <a href="<?= url('public/sample_files/shulesoft_account.csv') ?>" style="float: right; font-weight: bold;"><i class="fa fa-download"></i> Download Sample</a></p>
+                                                        <br>
+                                                    </div>
                                                     <!--<p>Sample Excel Format. </p>-->
-                                                    <!--<img src="<?= url('public/images/sample_excel.jpg') ?>"/>-->
                                                     <br/>
                                                     <div class=" form">
-                                                        <!--                                                    <br/>
-                                                                                                            <p><?= __("file") ?> 
-                                                                                                                <a href="<?= url('storage/uploads/sample/sample_students_upload.xlsx') ?>"><i class="fa fa-2x fa-cloud-download"></i></a></p>-->
-                                                        <form id="demo-form2" action="<?= url('account/uploadExpense') ?>" class="form-horizontal" method="POST"
+                                   
+                                                        <form id="demo-form2" action="<?= url('account/uploadExpenses') ?>" class="form-horizontal" method="POST"
                                                               enctype="multipart/form-data">
 
                                                             <div class="form-group">
 
                                                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                                                    <input id="file" name="file" type="file" required="required" accept=".xls,.xlsx,.csv,.odt">
+                                                                    <input id="file" name="expense_file" type="file" required="required" accept=".xls,.xlsx,.csv,.odt">
                                                                 </div>
                                                             </div>
                                                             <div class="ln_solid"></div>
@@ -392,7 +429,7 @@
                                                             </div>
 
                                                             <?= csrf_field() ?>
-                                                        </form>
+                                                        </form> 
                                                     </div>
 
                                                 </div>
@@ -434,9 +471,6 @@
             } else {
                 $('#dep').hide();
             }
-
-
-
         });
         $('#user_in_shulesoft').change(function () {
             var val = $(this).val();

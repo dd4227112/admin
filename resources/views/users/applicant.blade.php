@@ -33,37 +33,91 @@ $root = url('/') . '/public/';
                         <div class="row">
                             <div class="col-lg-12 col-xl-12">
                                 <!-- <h6 class="sub-title">Tab With Icon</h6> -->
-                                <div class="sub-title">Budget & Projections</div>                                        
-                                <!-- Nav tabs -->
-                                <ul class="nav nav-tabs md-tabs " role="tablist">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" data-toggle="tab" href="#home7" role="tab"><i class="icofont icofont-home"></i>Google Sheet Applicants</a>
-                                        <div class="slide"></div>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#profile7" role="tab"><i class="icofont icofont-ui-user "></i>Actuals</a>
-                                        <div class="slide"></div>
-                                    </li>
+                                <div class="sub-title">Applicants</div>                                        
+                                <div class="col-md-12 col-xl-12">
 
-                                </ul>
-                                <!-- Tab panes -->
-                                <div class="tab-content card-block">
-                                    <div class="tab-pane active" id="home7" role="tabpanel">
-                                        <div class="card-header">
-                                            <h5>List of Applicants</h5>
-                                            <span>This part shows list of all applicants interested to work with us </span>
-
-                                        </div>
-                                        <div class="card-block"  style="height: 35em">
-                                    <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTTsUoeCF2H7hAVSceAnhtkBwD8MUukEk_uN5GsV4vimu6KUxTWMpBVlNA3Cld8uKRTN8Xu-rn_k6oj/pubhtml?widget=true&amp;headers=false" height='100%' width="100%"></iframe>
+                                    <div class="form-group row col-lg-offset-6">
+                                        <label class="col-sm-4 col-form-label">Select Location</label>
+                                        <div class="col-sm-4">
+                                            <select name="select" class="form-control" id="schema_select">
+                                                <option value="0">Select</option>
+                                                <?php
+                                                $locations = \DB::select('select distinct current_location from applicants');
+                                                foreach ($locations as $location) {
+                                                    ?>
+                                                    <option value="<?= $location->current_location ?>" selected><?= $location->current_location ?></option>
+                                                <?php }
+                                                ?>
+                                            </select>
                                         </div>
                                     </div>
-                                    <div class="tab-pane" id="profile7" role="tabpanel">
-                                        <div class="card-block">
+                                    <div class="form-group row col-lg-offset-6"  selected id="year_id">
+                                        <label class="col-sm-4 col-form-label">Select Status</label>
+                                        <div class="col-sm-4">
+                                            <select name="select" class="form-control" id="year_select">
+                                                 <option value=""></option>
+                                                <option value="0">All</option>
+                                                <option value="1" >Finish Trainings</option>
 
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="card-block">
+                                    <div class="table-responsive dt-responsive">
+                                        <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
+                                            <thead>
+                                                <tr>
+                                                    <th><input type="checkbox" name="all" id="toggle_all"> </th>
+                                                        <?php
+                                                        $vars = get_object_vars($applicant);
+                                                        $except = array('id');
+                                                        ?>
+
+                                                    <?php
+                                                    foreach ($vars as $key => $value) {
+                                                        if (!in_array($key, $except)) {
+                                                            ?>
+                                                            <th><?= $key ?></th>
+
+                                                            <?php
+                                                        }
+                                                    }
+                                                    ?>
+
+                                                    <th>Action</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                $i = 0;
+                                                foreach ($applicants as $content) {
+                                                    $i++;
+                                                    ?> 
+
+                                                    <tr>
+                                                        <td><?= $i ?></td>
+                                                        <?php
+                                                        foreach ($vars as $key => $value) {
+                                                            if (!in_array($key, $except)) {
+                                                                ?> 
+                                                                <td><?= $content->{$key} ?></td>
+
+
+
+                                                                <?php
+                                                            }
+                                                        }
+                                                        ?>
+                                                        <td></td>
+                                                    </tr>
+                                                <?php } ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                         <!-- Row end -->
@@ -74,5 +128,17 @@ $root = url('/') . '/public/';
         </div>
     </div>
 </div>
+<script type="text/javascript">
+
+    $('#year_select').change(function () {
+        var year = $(this).val();
+        var project = $('#schema_select').val();
+        if (year == 0) {
+            return false;
+        } else {
+            window.location.href = "<?= url('account/invoice') ?>/" + project + '/' + year;
+        }
+    });
+</script>
 @endsection
 

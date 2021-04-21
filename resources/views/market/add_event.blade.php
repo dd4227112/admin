@@ -27,10 +27,9 @@
     <!-- Page-body start -->
     <div class="page-body">
       <div class="row">
-        <div id="outer" class="container">
-          <div id="wrapper" class="layout" style="background-color: #fff; margin-bottom: 40px;">
-            <div id="editorForm">
-
+            <div class="col-md-12">
+            <div class="card">
+                <div class="card-block">
               @if (sizeof($errors) > 0)
               <div class="alert alert-danger">
                 <strong>Whoops!</strong> There were some problems with your input.<br><br>
@@ -41,7 +40,7 @@
                 </ul>
               </div>
               @endif
-              <form method="post" action="#" enctype='multipart/form-data'>
+              <form method="post" action="" enctype='multipart/form-data'>
               {{ csrf_field() }}
               <div class="card-block">
                 <div class="col-xs-12 col-sm-12 col-md-12">
@@ -96,35 +95,47 @@
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
                   <div class="form-group">
-                    <strong>Attach Workshop Poster:</strong>
-                    <input type="file" class="form-control"  name="attached">
+                    <div class="row">
+
+                      <div class="col-md-6">
+                      <strong>Attach Workshop Poster/Image:</strong>
+                    <input type="file" class="form-control"  name="image" required>
+                      </div>
+                      <div class="col-md-6">
+                        <strong>Attach Event/Press Document:</strong>
+                      <input type="file" class="form-control"  name="attached">
+                      </div>
+                    </div>
                   </div>
                 </div>
+
                 <div class="col-xs-12 col-sm-12 col-md-12">
                   <div class="form-group">
                     <strong>More Details About this Workshop:</strong>
-                    <textarea name="note" rows="4" id="content_part" placeholder="Write More details Here .." class="form-control"> </textarea>
+                    <textarea name="note" required rows="4" id="content_part" placeholder="Write More details Here .." class="form-control"> </textarea>
                   </div>
                 </div>
-                <!--
+           
                 <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="form-group">
-                        <strong>  Tick Attendee of the Workshop</strong> 
-                          <hr>
-                    <?php
-                    $users = DB::table('users')->where('status', 1)->get();
-                    foreach ($users as $user) {
-                      ?>
-                      <input type="checkbox" id="feature<?= $user->id ?>" value="{{$user->id}}" name="user_id[]" >  <?php echo $user->name; ?>  &nbsp; &nbsp;
+                  <div class="form-group">
+                    <div class="row">
 
-                    <?php } ?>
+                      <div class="col-md-6">
+                            <select class="form-control" name="category" required>
+                            <option value="">Select Category</option>
+                              <option value="event">Event</option>
+                              <option value="press">Press</option>
+                            </select>
+                      </div>
+                      <div class="col-md-6">
+                          <button type="submit" class="btn btn-primary">
+                                   &emsp;Submit&emsp;
+                        </button>
+                      </div>
                     </div>
-                </div> -->
-                <div id="savebtnWrapper" class="form-group">
-                  <button type="submit" class="btn btn-primary">
-                    &emsp;Submit&emsp;
-                  </button>
+                  </div>
                 </div>
+            
               </div>
 
               </form>

@@ -61,8 +61,9 @@
                         <div class="view-info">
 
                           <h4 class="card-header-text">Event Registered Attendees</h4>
+                          <?php if(can_access('send_message'))  { ?>
                           <a data-toggle="modal" data-target="#sendMessage" class="btn btn-primary btn-sm  f-right"> <i class="ti-comments"></i> Send Message </a>
-
+                          <?php } ?>
                           </div>
                           <div class="card-block user-desc">
 
@@ -190,7 +191,7 @@
                     </div>
                     <div class="modal-body">
                       <div class="col-lg-12">
-                        <img src="<?= url('/storage/uploads/images/' . $event->attach)?>" class="img-responsive" style="width: 100%; height: auto;">
+                        <img src="<?=!empty($event->attach_id) ? $event->attach->path : '' ?>" class="img-responsive" style="width: 100%; height: auto;">
                       </div>
                     </div>
                     <div class="modal-footer">

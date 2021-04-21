@@ -26,6 +26,9 @@ use Illuminate\Support\Facades\Route;
   |
  */
 
+//Route::get('/', function () {
+//    return view('comming.index');
+//});
 
 $bad_url = ['acme-challenge', 'rss', 'index.php', 'errors', 'phpR', 'apple-touch', 'assetlinks', '.php', 'public', '.tff', '.jpg'];
 foreach ($bad_url as $value) {
@@ -37,7 +40,9 @@ Auth::routes();
 //Route::group(['middleware' => ['guest']], function() {
 //    Auth::routes();
 //});
-Route::get('/epayment/i/{id}','Background@epayment');
+Route::get('/epayment/i/{id}/{amount?}','Background@epayment');
+Route::any('/create/epayment/{id}/{amount?}','Background@createEpayment');
+
 Route::get('/student/getschools/null', function() {
     if (strlen(request('term')) > 1) {
         $sql = "SELECT id::text,upper(name)|| ' '||upper(type)||' - '||upper(region) as name FROM admin.schools 
@@ -50,16 +55,13 @@ Route::get('/student/getschools/null', function() {
 });
 
 //dd(createRoute());
+
 if (createRoute() != NULL) {
-
     $route = explode('@', createRoute());
-
     $file = app_path() . DIRECTORY_SEPARATOR . 'Http' . DIRECTORY_SEPARATOR . 'Controllers' . DIRECTORY_SEPARATOR . $route[0] . '.php';
-
     if (file_exists($file)) {
         Route::any('/{controller?}/{method?}/{param1?}/{param2?}/{param3?}/{param4?}/{param5?}/{param6?}/{param7?}', createRoute());
     } else if ($route[0] == 'LoginController') {
-        
     }
 }
 

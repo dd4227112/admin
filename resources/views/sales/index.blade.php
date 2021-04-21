@@ -146,6 +146,7 @@
                                                     <a href="https://drive.google.com/file/d/16tgURq3lyVOmAc-Tp0Bc4aaWUG69v8Rw/view?usp=sharing"  target="_blank" class="badge badge-warning">Download (V 1.0)</a>
                                                 </div>
                                             </div>
+                                            <?php if(!preg_match('/crdb/', Auth::user()->email)){ ?>
                                             <div class="col-lg-4 col-xl-3 col-sm-6">
                                                 <div class="badge-box">
                                                     <div class="sub-title">ShuleSoft NMB Application Form
@@ -158,6 +159,22 @@
                                                       <a href="https://drive.google.com/file/d/1DlSsOI_UFehOFmcd1U7Bbzr4Og5-6fa1/view?usp=sharing"  target="_blank" class="badge badge-warning">Download (V 2.0)</a>
                                                 </div>
                                             </div>
+                                            <?php }
+                                                 if(!preg_match('/nmb/', Auth::user()->email)){ 
+                                                     ?>
+                                            <div class="col-lg-4 col-xl-3 col-sm-6">
+                                                <div class="badge-box">
+                                                    <div class="sub-title">ShuleSoft CRBD Application Form
+
+                                                    </div>
+
+                                                    <p>
+                                                       For school that needs an application with CRDB BANK or sales done with CRDB Bank partnership
+                                                    </p>
+                                                      <a href="https://shulesoft.s3.amazonaws.com/company/contracts/JTQL0yIbK0E6rKZcnXfmVJzTTT1YvRSb3vsqgoEF.pdf"  target="_blank" class="badge badge-warning">Download (V 2.0)</a>
+                                                </div>
+                                            </div>
+                                                 <?php } ?>
                                             <div class="col-lg-4 col-xl-3 col-sm-6">
                                                 <div class="badge-box">
                                                     <div class="sub-title">Introduction Letter
@@ -186,10 +203,10 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane" id="messages5" role="tabpanel">
-                                        <p class="m-0">3. This is Photoshop's version of Lorem IpThis is Photoshop's version of Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean mas Cum sociis natoque penatibus et magnis dis.....</p>
+                                        <!--<p class="m-0">3. This is Photoshop's version of Lorem IpThis is Photoshop's version of Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem nibh id elit. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean mas Cum sociis natoque penatibus et magnis dis.....</p>-->
                                     </div>
                                     <div class="tab-pane" id="settings5" role="tabpanel">
-                                        <p class="m-0">4.Cras consequat in enim ut efficitur. Nulla posuere elit quis auctor interdum praesent sit amet nulla vel enim amet. Donec convallis tellus neque, et imperdiet felis amet.</p>
+                                        <!--<p class="m-0">4.Cras consequat in enim ut efficitur. Nulla posuere elit quis auctor interdum praesent sit amet nulla vel enim amet. Donec convallis tellus neque, et imperdiet felis amet.</p>-->
                                     </div>
                                 </div>
                             </div>

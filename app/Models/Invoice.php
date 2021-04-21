@@ -10,12 +10,13 @@ class Invoice extends Model {
      * Generated
      */
     protected $table = 'invoices';
-    protected $fillable = ['id', 'reference', 'client_id', 'title', 'optional_name', 'date', 'status', 'year', 'active', 'sync', 'return_message', 'push_status', 'note', 'type', 'currency', 'user_id', 'due_date', 'account_year_id'];
+    protected $fillable = ['id', 'reference', 'client_id', 'title', 'optional_name', 'date', 'status', 'year', 'active', 'sync', 'return_message', 'push_status',
+        'note', 'type', 'currency', 'user_id', 'due_date', 'account_year_id','order_id', 'amount','token','qr','gateway_buyer_uuid','payment_gateway_url','methods','schema_name','sid',
+        'user_table','source'];
 
     public function client() {
         return $this->belongsTo(\App\Models\Client::class, 'client_id', 'id');
     }
-
     public function user() {
         return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
     }

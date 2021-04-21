@@ -4,12 +4,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Permission extends Model {
 
-    /**
-     * Generated
-     */
-
     protected $table = 'permissions';
-    protected $fillable = ['id', 'name', 'display_name', 'description'];
+    protected $fillable = ['id', 'name', 'display_name', 'description','permission_group_id'];
 
 
     public function roles() {
@@ -18,6 +14,10 @@ class Permission extends Model {
 
     public function permissionRoles() {
         return $this->hasMany(\App\Models\PermissionRole::class, 'permission_id', 'id');
+    }
+
+    public function permissionGroup() {
+        return $this->belongsTo(\App\Models\PermissionGroup::class, 'permission_group_id', 'id');
     }
 
 

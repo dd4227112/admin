@@ -1,9 +1,6 @@
 @extends('layouts.app')
 @section('content')
 <?php
-
-
-
 ?>
 <!-- Sidebar inner chat end-->
 <!-- Main-body start -->
@@ -12,7 +9,7 @@
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4>Table</h4>
+                <h4>Human Resource</h4>
                 <span>Management page</span>
             </div>
             <div class="page-header-breadcrumb">
@@ -24,7 +21,7 @@
                     </li>
                     <li class="breadcrumb-item"><a href="#!">General</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Management</a>
+                    <li class="breadcrumb-item"><a href="#!">Attendance</a>
                     </li>
                 </ul>
             </div>
@@ -36,66 +33,90 @@
                 <div class="col-sm-12">
                     <!-- Ajax data source (Arrays) table start -->
                     <div class="card rd">
-                 
+
                         <div class="tab-content">
-                             <div class="card-block">
-   <h2><a href="#model" class="btn btn-success" data-toggle="modal" data-target=".bs-example-modal-lg" class="model_img img-responsive">Add New</a></h2>
+                            <div class="card-block">
+                                <h2>
+                                    <a href="#model"  onclick="$('#edit_hidden').val('')" class="btn btn-success" data-toggle="modal" data-target=".bs-example-modal-lg" class="model_img img-responsive">Add New</a></h2>
 
-                                    <span>This part shows which modules are actively used by school and which areas we need to focus to help schools.</span>
-                                    <div class="steamline">
+                                <span>This part shows which modules are actively used by school and which areas we need to focus to help schools.</span>
+                                <div class="steamline">
 
-                                 
-                                        <div class="card-block">
 
-                                            <div class="table-responsive dt-responsive">
-                                          
+                                    <div class="card-block">
 
-                                           <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
+                                        <div class="table-responsive dt-responsive">
+                                            <?php
+                                            if (!empty($headers)) {
+                                                ?>
+
+                                                <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                                                     <thead>
                                                         <tr>
                                                             <th><input type="checkbox" name="all" id="toggle_all"> </th>
-                                                             <?php
-                    $vars = get_object_vars($headers);
-                    ?>
-                                                          
                                                             <?php
-                                                           foreach ($vars as $key => $value) {
-                                                           
-                                                                ?>
-                                                                <th><?=$key?></th>
+                                                            $vars = get_object_vars($headers);
+                                                            $except = array('id', 'updated_at');
+                                                            ?>
 
-                                                            <?php } ?>
-                                                           
+                                                            <?php
+                                                            foreach ($vars as $key => $value) {
+                                                                if (!in_array($key, $except)) {
+                                                                    ?>
+                                                                    <th><?= $key ?></th>
+
+                                                                    <?php
+                                                                }
+                                                            }
+                                                            ?>
+
                                                             <th>Action</th>
 
                                                         </tr>
                                                     </thead>
-                                                     <tbody>
-                                                     	<?php
-                                                           foreach ($contents as  $content) {
-                                                           
-                                                                ?> 
-                                                     	
-                                                     	<tr>
-                                                     		<td></td>
- <?php
-                                                           foreach ($vars as $key => $value) {
-                                                           
-                                                                ?> 
-                                                                <td><?=$content->{$key}?></td>
+                                                    <tbody>
+                                                        <?php
+                                                        $i = 0;
+                                                        foreach ($contents as $content) {
+                                                            $i++;
+                                                            ?> 
 
-                                                            <?php } ?>
-                                                            <td></td>
-                                                     	</tr>
-                                                     	 <?php } ?>
-                                                     </tbody>
-                                                 </table>
-                                            </div>
+                                                            <tr>
+                                                                <td><?= $i ?></td>
+                                                                <?php
+                                                                foreach ($vars as $key => $value) {
+                                                                    if (!in_array($key, $except)) {
+
+                                                                        //special conditions
+                                                                        if ($key == 'user_id') {
+                                                                            $user = DB::table('users')->where('id', $content->{$key})->first();
+                                                                            echo '<td>' . $user->firstname . ' ' . $user->lastname . '</td>';
+                                                                        } else {
+                                                                            ?> 
+                                                                            <td><?= $content->{$key} ?></td>
+
+
+
+                                                                            <?php
+                                                                        }
+                                                                    }
+                                                                }
+                                                                ?>
+                                                                <td>
+                                                                    <a class="btn btn-info btn-sm" onclick="edits(<?= $content->id ?>)" href="#model" class="btn btn-success" data-toggle="modal" data-target=".bs-example-modal-lg" class="model_img img-responsive" tag="{{$content->id}}">Edit</a>
+                                                                    <a class="btn btn-warning btn-sm" href="{{ url('general/deletep/'.$content->id) }}">Delete</a>
+                                                                </td>
+                                                            </tr>
+                                                        <?php } ?>
+                                                    </tbody>
+                                                </table>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
-                           
-                          
+                            </div>
+
+
                         </div>
                     </div>
 
@@ -108,51 +129,68 @@
     </div>
     <!-- Main-body end -->
     <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
-                                <div class="modal-dialog modal-lg">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                                            <h4 class="modal-title" id="myLargeModalLabel"></h4> </div>
-                                       <form action="#" method="post">
-                                    <div class="modal-body">
-                                        <span>
-                                            Create a task with implementation deadline</span>
-                                            <br>
-                                           <?php
-                                                           foreach ($vars as $key => $value) {
-                                                           
-                                                                ?>
-                                                               <div class="form-group" id="client_id">
-                                            <strong>  <?=$key?></strong> 
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="myLargeModalLabel"></h4> </div>
+                <form action="#" method="post">
+                    <div class="modal-body">
+                        <span>
+                            Create a task with implementation deadline</span>
+                        <br>
+                        <?php
+                        if (!empty($headers)) {
+                            ?>
+                            <?php
+                            foreach ($vars as $key => $value) {
 
-                                            <input type="text" class="form-control" id="get_schools" name="<?=$key?>" value="<?= old($key) ?>" >
+                                if ($key == 'id') {
+                                    ?>
+                                    <input type="hidden" class="form-control" id="edit_input" name="id" value="" >
+                                    <?php
+                                }
+                                if (in_array($key, ['id', 'created_at', 'updated_at'])) {
+                                    continue;
+                                }
+                                ?>
+                                <div class="form-group" id="client_id">
+                                    <strong>  <?= $key ?></strong> 
+                                    <input type="text" class="form-control" id="<?= $key ?>" name="<?= $key ?>" value="<?= old($key) ?>" >
 
-                                        </div>
-
-                                                            <?php } ?>
-                                       
-                      
-                                
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
-                                    </div>
-                                    <?= csrf_field() ?>
-                                </form>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-danger waves-effect text-left" data-dismiss="modal">Close</button>
-                                        </div>
-                                    </div>
-                                    <!-- /.modal-content -->
                                 </div>
-                                <!-- /.modal-dialog -->
-                            </div>
+
+                                <?php
+                            }
+                        }
+                        ?>
+
+                    </div>
+                    <input type="hidden" name="edit" value="" id="edit_hidden"/>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
+                    </div>
+                    <?= csrf_field() ?>
+                </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger waves-effect text-left" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
     @endsection
     @section('footer')
     <!-- data-table js -->
     <?php $root = url('/') . '/public/' ?>
 
     <script type="text/javascript">
+        function edits(a) {
+            $('#edit_hidden').val('1');
+            $('#edit_input').val(a);
+        }
         allocate = function () {
             $('.allocate').change(function () {
                 var user_id = $('option:selected', this).attr('user_id');

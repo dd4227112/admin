@@ -112,6 +112,7 @@
                               </div>
                             </div>
                             <div class=" col-lg-10 col-sm-6">
+                              
                             <div class='form-group' >
                               <strong><?= __("Fee Type") ?><span class="red">*</span></strong>
                                 <?php

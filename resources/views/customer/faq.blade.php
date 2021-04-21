@@ -31,9 +31,11 @@
                     <div class="card">
 
                         <div class="card-block">
+                          <?php if(can_access('add_faq')) { ?>
                             <div class="card-header">
                                 <p align='left'><button class="btn btn-success"  data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Add New FAQ</button></p>
                             </div>
+                          <?php } ?>
 
                         </div>
                         <div class="row card-block">
@@ -50,9 +52,11 @@
                                                     <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse<?= $faq->id ?>" aria-expanded="true" aria-controls="collapse<?= $faq->id ?>" class="font-bold"><?= $faq->question ?> </a> </h4> </div>
                                             <div id="collapse<?= $faq->id ?>" class="panel-collapse collapse in" style="padding-left:5%" role="tabpanel" aria-labelledby="heading<?= $faq->id ?>">
                                                 <div class="panel-body"> <?= $faq->answer ?></div>
+                                                <?php if(can_access('delete_faq')) { ?>
                                                 <div class="row col-lg-offset-1">
                                                     <p>&nbsp;&nbsp; <a class="btn btn-danger btn-sm" href="<?= url('customer/faq/null/?action=delete&id=' . $faq->id) ?>"><i class="fa fa-trash-o"></i> Delete </a></p>
                                                 </div>
+                                                <?php } ?>
                                                 <br/>
                                             </div>
 
