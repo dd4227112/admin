@@ -30,13 +30,6 @@ class Kernel extends ConsoleKernel {
      * @return void
      */
     protected function schedule(Schedule $schedule) {
-        $schedule->command('inspire')
-                ->hourly();
-        $schedule->call(function () {
-            // sync invoices 
-            $this->syncInvoice();
-            //$this->updateInvoice();
-        })->everyMinute();
         $schedule->call(function () {
             $this->save_car_track_access_token('public');
            
@@ -44,6 +37,14 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             $this->car_track_alert_parent('public');
         })->everyMinute();
+        $schedule->command('inspire')
+                ->hourly();
+        $schedule->call(function () {
+            // sync invoices 
+            $this->syncInvoice();
+            //$this->updateInvoice();
+        })->everyMinute();
+       
         $schedule->call(function () {
             (new Message())->sendSms();
             
