@@ -418,6 +418,121 @@ class Kernel extends ConsoleKernel {
 //Force security measures
     }
 
+public function save_car_track_access_token($schema){
+   // DB::table($invoice->schema_name . '.invoices')->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
+   //this should be run after every 2hrs
+   $sql = 'select  * from '.$schema.'.car_tracker_key';
+   $track_key = \collect(DB::select($sql))->first();
+
+   $request = $this->curlServer([
+    'method' => 'jimi.oauth.token.get',
+    'sign_method' => 'md5',
+    'time_stamp' => gmdate("Y-m-d H:i:s", time()),
+    'user_id' => $track_key->user_id,
+    'version' => '0.9',
+    'app_key' => $track_key->app_key,
+    'user_pwd_md5' => $track_key->user_pwd_md5,
+    'format' => 'json',
+        ], 'http://open.10000track.com/route/rest');
+
+
+    $obj_content = json_decode($request);
+    if($obj_content['code'] <> 0) {
+        DB::table($schema . '.car_tracker_key')->where('id','>', 0)->update(['access_token' => $obj_content['result']['access_token']]);
+
+    }
+
+
+}
+
+public function car_track_alert_parent($schema){
+   // http://open.10000track.com/route/rest?method=jimi.user.device.location.list&user_id=shulesoft&user_pwd_md5=86d526d86de85406dc5303b90a44a7ac&expires_in=7200&app_key=8FB345B8693CCD0096B63E70BAB0B678&timestamp=2021-04-20 14:28:03&format=json&v=0.9&sign=1b2e0d649ce0f6d201e1c8264220944a&sign_method=md5&access_token=caf6f029f83f68d5b28ca8cedbc3cf57&target=shulesoft&map_type=GOOGLE&imeis=359857083472589,358899057233531&method_name=
+
+   $imeis = DB::select("select string_agg(imeis::text, ',') as imeis from '".$schema."'.vehicles")->first();
+   $key = DB::table('public.sms_keys')->first();
+   $sql = 'select  * from '.$schema.'.car_tracker_key';
+   $track_key = \collect(DB::select($sql))->first();
+
+   $request = $this->curlServer([
+    'method' => 'jimi.user.device.location.list',
+    'sign_method' => 'md5',
+    'time_stamp' => gmdate("Y-m-d H:i:s", time()),
+    'user_id' => $track_key->user_id,
+    'version' => '0.9',
+    'app_key' => $track_key->app_key,
+    'user_pwd_md5' => $track_key->user_pwd_md5,
+    'format' => 'json',
+    'access_token' => $track_key->access_token,
+    'map_type' => 'GOOGLE',
+    'imeis' => $imeis->imeis,
+    'target' => 'shulesoft',
+    
+        ], 'http://open.10000track.com/route/rest');
+
+
+    $obj_content = json_decode($request);
+    if($obj_content['code'] <> 0) {
+    //$devices=$obj_content['result'];
+
+    foreach($obj_content->results as $device) {
+$lat=$device->lat;
+$lng=$device->lng;
+$imeis=$device->imei;
+
+
+$distance_sql='select * from (select parent_id, phone,name,imeis, 6371 * acos(cos(radians('.$lat.'))
+* cos(radians(student_gps.lat)) 
+* cos(radians(student_gps.lng) - radians('.$lng.')) 
++ sin(radians('.$lat.')) 
+* sin(radians(student_gps.lat))) AS distance from '.$schema.'.student_gps) as gps_query where distance > 0 and distance < 0.5 and imeis='.$imeis.'';
+
+
+$near_by_students=DB::select($distance_sql)->get();
+
+
+if(count($near_by_students)>0){
+foreach($near_by_students as $near_by_student){  
+    DB::statement("insert into public.sms (phone_number,body,type,sms_keys_id) values ('" . $near_by_student->phone . "','" . $track_key->message . "',0," . $key->id . " )");
+
+
+}
+
+}
+ }
+
+    }
+
+}
+
+
+function distance($lat1, $lon1, $lat2, $lon2, $unit) {
+    if (($lat1 == $lat2) && ($lon1 == $lon2)) {
+      return 0;
+    }
+    else {
+      $theta = $lon1 - $lon2;
+      $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+      $dist = acos($dist);
+      $dist = rad2deg($dist);
+      $miles = $dist * 60 * 1.1515;
+      $unit = strtoupper($unit);
+  
+      if ($unit == "K") {
+        return ($miles * 1.609344);
+      } else if ($unit == "N") {
+        return ($miles * 0.8684);
+      } else {
+        return $miles;
+      }
+    }
+  }
+  
+  //echo distance(32.9697, -96.80322, 29.46786, -98.53506, "M") . " Miles<br>";
+  //echo distance(32.9697, -96.80322, 29.46786, -98.53506, "K") . " Kilometers<br>";
+  //echo distance(32.9697, -96.80322, 29.46786, -98.53506, "N") . " Nautical Miles<br>";
+  
+
+
     /**
      * 
      * @param type $fields

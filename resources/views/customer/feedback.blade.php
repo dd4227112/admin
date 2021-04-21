@@ -109,6 +109,7 @@
 
     <?php
     $i++;
+    
     $feedback->update(array('opened' => 1));
 }
 ?>
