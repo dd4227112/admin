@@ -45,17 +45,22 @@ class Account extends Controller {
 
 
     public function createInvoices($client_id) {
-        $client = \App\Models\Client::find($client_id);
+        $client = \App\Models\Client::findorFail($client_id);
         $year = \App\Models\AccountYear::where('name', date('Y'))->first();
         $reference = time().rand(777, 123); // to be changed for selcom ID
-       // dd($reference);
+        
         $start_date = $client->invoice_start_date;
         $end_date = $client->invoice_end_date;
 
         if($client->invoice_start_date == '' &&  $client->invoice_end_date == ''){
-            $start_date = date('Y-01-01');
+            $start_date = date('Y-m-d');
             $end_date = date('Y-m-d',strtotime('+30 days',strtotime($start_date)));
         }
+
+        $value=\DB::select("select reference from admin.invoices where reference = '. $reference .'");
+        if(!empty($value)){
+          $reference = time().rand(456, 789);
+         } 
 
         $data = ['reference' => $reference, 
                  'client_id' => $client_id, 
@@ -65,15 +70,17 @@ class Account extends Controller {
                  'user_id' => Auth::user()->id, 
                  'account_year_id' => $year->id
                 ];
+
+        if ((int) $client->price_per_student == 0 || (int) $client->estimated_students == 0) {
+            //both price per students and Estimated students cannot be 0
+            return redirect()->back()->with('error', 'Both price per students and Estimated students cannot be 0, please set them first');
+        }
       
         $invoice = Invoice::create($data);
 
         //once we introduce packages (module pricing), we will just loop here for modules selected by specific user
         //validate for simple missing inputs
-        if ((int) $client->price_per_student == 0 || (int) $client->estimated_students == 0) {
-            //both price per students and Estimated students cannot be 0
-            return redirect()->back()->with('error', 'Both price per students and Estimated students cannot be 0, please set them first');
-        }
+     
         if ((int) $client->price_per_student == 10000) {
             $months_remains = 12 - (int) date('m', strtotime($client->created_at)) + 1;
             $unit_price = $months_remains * $client->price_per_student / 12;
@@ -97,15 +104,15 @@ class Account extends Controller {
             $clients=\DB::select("select * from admin.clients where id not in (select client_id from admin.invoices where account_year_id=(select id from admin.account_years where name='".date('Y')."'))");
 
         // if exists, check if invoice exists, else, create new invoice
-        //    if(!empty($clients)){
-        //     foreach($clients as $client)
-        //       {
-        //          $invoice = \App\Models\Invoice::where('client_id',$client->id)->where('account_year_id',$account_year_id)->first();
-        //          if(empty($invoice)){
-        //           $this->createInvoices($client->id);
-        //        }
-        //       }
-        //    }
+           if(!empty($clients)){
+            foreach($clients as $client)
+              {
+                 $invoice = \App\Models\Invoice::where('client_id',$client->id)->where('account_year_id',$account_year_id)->first();
+                 if(empty($invoice)){
+                  $this->createInvoices($client->id);
+               }
+              }
+           }
 
             $this->getInvoices($project_id, $account_year_id);
         }

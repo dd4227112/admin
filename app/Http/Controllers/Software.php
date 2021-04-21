@@ -501,7 +501,6 @@ ORDER BY c.oid, a.attnum";
     }
     
     public function requirements() {
-
         $tab = request()->segment(3);
         $id = request()->segment(4);
         if ($tab == 'show' && $id > 0) {
@@ -511,9 +510,7 @@ ORDER BY c.oid, a.attnum";
         }
         $this->data['levels'] = [];
         if ($_POST) {
-
             $data = array_merge(request()->all(), ['user_id' => Auth::user()->id]);
-
             $req = \App\Models\Requirement::create($data);
             if ((int) request('to_user_id') > 0) {
 
