@@ -747,7 +747,7 @@
                                            </li>
                                            <?php } ?>
 
-                                <?php if (in_array(Auth::user()->role_id, array(14, 8, 9, 2))) { ?>
+                                <?php if (in_array(Auth::user()->role_id, array(14, 8, 9, 2,3))) { ?>
                                     <li class="nav-item"><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline"> <i class="ti-book "> </i> Meeting Minutes</a></li>
                                 <?php } ?>
 
