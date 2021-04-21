@@ -716,8 +716,12 @@
                                                 data-i18n="nav.extra-components.session-timeout">Users</a></li>
                                         <li><a href="<?= url('users/kpi_list') ?>"
                                             data-i18n="nav.extra-components.session-timeout">KPI</a></li>
-                                        <li><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">Meeting
-                                                Minutes</a></li>
+                                            
+                                     <?php if (can_access('meeting_minutes')) { ?>
+                                        <li><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">
+                                            Meeting Minutes</a>
+                                        </li>
+                                     <?php } ?>
                                         <li><a href="<?= url('attendance/index') ?>"
                                                 data-i18n="nav.extra-components.session-timeout">Attendance</a></li>
                                         <li><a href="<?= url('Partner/partners') ?>"
@@ -747,7 +751,7 @@
                                            </li>
                                            <?php } ?>
 
-                                <?php if (in_array(Auth::user()->role_id, array(14, 8, 9, 2,3))) { ?>
+                                <?php if (can_access('meeting_minutes')) { ?>
                                     <li class="nav-item"><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline"> <i class="ti-book "> </i> Meeting Minutes</a></li>
                                 <?php } ?>
 
