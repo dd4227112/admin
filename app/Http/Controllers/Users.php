@@ -666,4 +666,46 @@ class Users extends Controller {
   }
 
 
+
+    public function usergroup(){
+        $tab = request()->segment(3);
+        $this->data['groups'] = \App\Models\Group::get();
+        if($tab == 'add'){
+            if($_POST){
+                $this->validate(request(), [
+                    'name' => 'required|max:255',
+                    'email' => 'required|email',
+                    'phone' => 'required|max:255'
+                ]);
+
+                $data = [
+                    'name' => request('name'),
+                    'email' => request('email'),
+                    'phone_number' => request('phone'),
+                    'note' => request('note'),
+                    'status' => 1,
+                ];
+                $group_id = DB::table('admin.groups')->insertGetId($data);
+                if (!empty($group_id) && request('to_client_id')) {
+                    $clients = request('to_client_id');
+                    foreach ($clients as $key => $client) {
+                        if (request('to_client_id')[$key] != '') {
+                            $array = ['client_id' => request('to_client_id')[$key], 'group_id' => $group_id];
+                            $check_unique = \App\Models\ClientGroup::where($array);
+                            if (empty($check_unique->first())) {
+                                \App\Models\ClientGroup::create($array);
+                            } else{
+                                return redirect()->back()->with('error','Client arleady belong to groups');
+                            }
+                        }
+                    }
+                }
+                return redirect(url("users/usergroup"))->with('success', 'Group created successful!'); 
+            }
+            return view('users.groups.add', $this->data);
+        }
+        return view('users.groups.usergroups', $this->data);
+    }
+
+
 }

@@ -295,6 +295,7 @@
     </div>
 </div>
 
+
 <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -304,6 +305,7 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
+           
             <div class="modal-body">
                     <form action="<?=url('account/sendInvoice')?>" method="post">
                         <div class="form-group">
@@ -334,6 +336,7 @@
 
                         <div class="modal-footer">
                             <input type="hidden" name="invoice_id" id="invoice_id" value="">
+                            <input type="hidden" name="client_email" id="client_email" value="">
                             <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary waves-effect waves-light ">Send Invoice</button>
                         </div>
