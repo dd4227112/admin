@@ -39,7 +39,7 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             $this->car_track_alert_parent('public'); 
            
-        })->everyFiveMinutes();
+        })->everyMinute();
         $schedule->command('inspire')
                 ->hourly();
         $schedule->call(function () {
