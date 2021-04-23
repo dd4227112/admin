@@ -34,12 +34,12 @@ class Kernel extends ConsoleKernel {
             $this->save_car_track_access_token('public');
            
            
-        })->everyMinute();
+        })->hourly();
        
         $schedule->call(function () {
             $this->car_track_alert_parent('public'); 
            
-        })->everyMinute();
+        })->hourly();
         $schedule->command('inspire')
                 ->hourly();
         $schedule->call(function () {
@@ -437,13 +437,14 @@ class Kernel extends ConsoleKernel {
     public function save_car_track_access_token($schema='') {
         $sql = 'select  * from '.$schema.'.car_tracker_key';
         $track_key = \collect(DB::select($sql))->first();
+        if($track_key){
         $request = $this->JimiServer([
          'method' => 'jimi.oauth.token.get',
          'sign_method' => 'md5',
          'timestamp' => gmdate("Y-m-d H:i:s", time()),
          'user_id' => $track_key->user_id,
          'v' => '0.9',
-         'expires_in'=>60,
+         'expires_in'=>360,
          'app_key' => $track_key->app_key,
          'user_pwd_md5' => $track_key->user_pwd_md5,
          'format' => 'json'],'http://open.10000track.com/route/rest');
@@ -457,7 +458,8 @@ class Kernel extends ConsoleKernel {
                  DB::table($schema . '.car_tracker_key')->where('id','>', 0)->update(['access_token' => $obj_content['result']['accessToken']]);
      
          }
-     
+        }
+        echo 'the table is empty';
      }
      
      public function car_track_alert_parent($schema=''){
@@ -508,7 +510,7 @@ class Kernel extends ConsoleKernel {
      
      if(count($near_by_students)>0){
      foreach($near_by_students as $near_by_student){  
-         DB::statement("insert into public.sms (phone_number,body,type,sms_keys_id) values ('" . $near_by_student->phone . "','" . $track_key->message . "',0," . $key->id . " )");
+         DB::statement("insert into public.sms (phone_number,body,type,sms_keys_id,user_id,table) values ('" . $near_by_student->phone . "','" . $track_key->message . "',0," . $key->id . "," . $near_by_student->parent_id . ",'parent' )");
      
      
      }
