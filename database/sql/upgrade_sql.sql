@@ -142,6 +142,7 @@ ALTER TABLE admin.bank_accounts_integrations
     ON UPDATE CASCADE
     ON DELETE CASCADE
     NOT VALID;
+    
 CREATE INDEX fki_bank_accounts_integrations_client_id_foreign
     ON admin.bank_accounts_integrations(client_id);
 
@@ -197,7 +198,6 @@ ALTER TABLE admin.client_schools
     ON DELETE NO ACTION;
 CREATE INDEX fki_client_schools_school_id_foreign
     ON admin.client_schools(school_id);
-
 
 
 ALTER TABLE admin.client_schools
@@ -288,7 +288,6 @@ ALTER TABLE admin.expenses
 ALTER TABLE admin.failed_jobs
     RENAME CONSTRAINT failed_jobs_pkey TO failed_jobs_id_primary;
 
-
 ALTER TABLE admin.faq
     ADD CONSTRAINT faq_created_by_foreign FOREIGN KEY (created_by)
     REFERENCES admin.users (id)
@@ -296,8 +295,6 @@ ALTER TABLE admin.faq
     ON DELETE NO ACTION;
 CREATE INDEX fki_faq_created_by_foreign
     ON admin.faq(created_by);
-
-
 
 ALTER TABLE admin.integration_request_comments
     RENAME CONSTRAINT integration_request_comment_pkey TO integration_request_comment_id_primary;
@@ -840,7 +837,7 @@ CREATE INDEX fki_website_demo_requests_school_id_foreign
 ////////////////////////////////////////
 //New
 
-
+*.
 ALTER TABLE admin.user_deductions
     ADD CONSTRAINT user_deductions_loan_application_id_foreign FOREIGN KEY (loan_application_id)
     REFERENCES admin.loan_applications (id)
@@ -879,68 +876,59 @@ ALTER TABLE admin.phone_number
 -- setting
 
 
- CREATE VIEW admin.current_asset_transactions AS
- SELECT d.amount,
-    d.id AS refer_expense_id,
-    d.predefined,
-    d.note,
-    d.date,
-    d.name,
-    d.code
-   FROM ( SELECT a.amount,
-            b.id,
-            b.predefined,
-            a.note,
-            a.date,
-            b.name,
-            b.code
-           FROM admin.current_assets a
-             JOIN admin.refer_expense b ON b.id = a.to_refer_expense_id) d
-UNION ALL
- SELECT e.amount,
-    e.id AS refer_expense_id,
-    e.predefined,
-    e.note,
-    e.date,
-    e.name,
-    e.code
-   FROM ( SELECT
-                CASE
-                    WHEN a.from_refer_expense_id = b.id THEN 0::numeric - a.amount
-                    ELSE a.amount
-                END AS amount,
-            b.id,
-            b.predefined,
-            a.note,
-            a.date,
-            b.name,
-            b.code
-           FROM admin.current_assets a
-             JOIN admin.refer_expense b ON b.id = a.from_refer_expense_id) e;
-
- -- due_amounts
-
- ALTER TABLE admin.payments
-    ADD COLUMN payment_type_id integer;
-
-ALTER TABLE admin.payments
-    ADD CONSTRAINT payments_payment_type_foreign FOREIGN KEY (payment_type_id)
-    REFERENCES constant.payment_types (id)
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION;
-CREATE INDEX fki_payments_payment_type_foreign
-    ON admin.payments(payment_type_id);
 
 
-CREATE TABLE constant.months
-(
-    id integer,
-    month_name text,
-    PRIMARY KEY (id)
-);
 
-ALTER TABLE constant.months
-    OWNER to postgres;
 
-ALTER TABLE constant.months
-    RENAME CONSTRAINT months_pkey TO months_id_primary;
+--09/04/2021
+-- (select * from admin.allschools where id not in (
+--  select a.id from admin.allschools a join admin.schools b on b.name=a.school_name AND b.ward=a.ward
+-- ))
+
+
+-- ALTER TABLE admin.schools
+--     ADD COLUMN region character varying COLLATE pg_catalog."default";
+
+-- ALTER TABLE admin.schools
+--     ADD COLUMN district character varying COLLATE pg_catalog."default";
+
+-- ALTER TABLE admin.schools
+--     ADD COLUMN ward character varying COLLATE pg_catalog."default";
+
+
+-- 11/04/2021
+
+ALTER TABLE admin.absents
+    ADD COLUMN end_date timestamp without time zone;
+
+
+ -- 12/04/2021
+ ALTER TABLE admin.users
+    ADD COLUMN bank_name character varying;
+
+-- select count(X.*) from (select b.*,w.name as ward, d.name as district,r.name as region from (select a.*, (select count(*) from admin.tasks where school_id=a.id) 
+-- 		as activities from admin.schools a  where lower(a.ownership) <>'government') as b join 
+-- 		admin.wards as w on b.ward_id = w.id join admin.districts as d on d.id=w.district_id
+-- 		join admin.regions as r on r.id=d.region_id) X
+
+
+ALTER TABLE admin.absents
+    ADD COLUMN status character varying;
+
+
+--  select C.*,D.username from 
+--  (select A.*,B.* from (
+--  select b.*,w.name as ward, d.name as district,r.name as region from (select a.*, (select count(*) from admin.tasks where school_id=a.id) 
+--  as activities from admin.schools a  where lower(a.ownership) <>'government') as b join 
+--  admin.wards as w on b.ward_id = w.id join admin.districts as d on d.id=w.district_id
+--  join admin.regions as r on r.id=d.region_id) A
+--  LEFT JOIN (select school_id,client_id from admin.client_schools) B
+-- on A.id = B.school_id) C  left  join (select id,username from admin.clients) D on C.client_id = D.id 
+
+
+
+ALTER TABLE admin.tasks
+    ADD COLUMN ticket_no bigint;
+
+ALTER TABLE admin.tasks
+    ADD CONSTRAINT task_ticket_no_unique UNIQUE (ticket_no);

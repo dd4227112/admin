@@ -85,8 +85,7 @@ class Controller extends BaseController {
                 $total_records = $count == null ? count(DB::select($custom_sql)) : $count;
             }
             $empRecords = DB::select($empQuery);
-
-
+            
 ## Response
             $response = array(
                 "draw" => intval($draw),
@@ -94,7 +93,6 @@ class Controller extends BaseController {
                 "iTotalDisplayRecords" => $total_records,
                 "aaData" => $empRecords
             );
-
             return json_encode($response);
         }
     }

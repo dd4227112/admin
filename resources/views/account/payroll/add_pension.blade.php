@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('content')
-
 <div class="main-body">
     <div class="page-wrapper">
         <!-- Page-header start -->
@@ -44,10 +43,10 @@
                                             echo "<div class='form-group' >";
                                     ?>
                                         <label for="name" class="col-sm-2 control-label">
-                                            <?=__("pension_name")?><span class="red"> *</span>
+                                            <?=__("Pension name")?><span class="red"> *</span>
                                         </label>
                                         <div class="col-sm-6">
-                                            <input type="text" class="form-control" id="name" name="name" placeholder="<?= __('enter_pension') ?>" value="<?=old('name')?>"  required>
+                                            <input type="text" class="form-control" id="name" name="name" placeholder="<?= __('Enter pension') ?>" value="<?=old('name')?>"  required>
                                         </div>
                                         <span class="col-sm-4 control-label">
                                             <?php echo form_error($errors,'name'); ?>
@@ -60,10 +59,10 @@
                                         else
                                             echo "<div class='form-group' >";
                                         ?>
-                                        <label for="select class level" class="col-sm-2 control-label"><?= __('select_pension') ?> <span class="red">*</span></label>
+                                        <label for="select class level" class="col-sm-2 control-label"><?= __('Select pension') ?> <span class="red">*</span></label>
                                         <div class="col-sm-6">
                                             <select class="select2 form-control" required="true"  name="refer_pension_id" id="refer_pension_id">
-                                                <option value="0"><?= __('select_pension') ?></option>
+                                                <option value="0"><?= __('Select pension') ?></option>
                 
                                                 <?php
                                                 $pensions = DB::SELECT('SELECT * FROM constant.pensions');
@@ -85,13 +84,13 @@
                                             echo "<div class='form-group' >";
                                     ?>
                                         <label for="telephone_number" class="col-sm-2 control-label">
-                                            <?=__("employer_percentage")?>
+                                            <?=__("Employer percentage Contribution")?>
                                         </label>
                                         <div class="col-sm-6">
                                             <input type="text" class="form-control" id="employer_percentage" name="employer_percentage" value="<?=old('employer_percentage')?>" >
                                         </div>
                                         <span class="col-sm-4 control-label">
-                                            <?php echo form_error($errors,'employer_percentage'); ?>
+                                            <?php echo form_error($errors,'Employer percentage'); ?>
                                         </span>
                                     </div>
                 
@@ -102,7 +101,7 @@
                                             echo "<div class='form-group' >";
                                     ?>
                                         <label for="seats" class="col-sm-2 control-label">
-                                            <?=__("employee_percentage")?>
+                                            <?=__("Employee Percentage Contribution")?>
                                         </label>
                                         <div class="col-sm-6">
                                             <input type="text" class="form-control" id="employee_percentage" name="employee_percentage" value="<?=old('employee_percentage')?>" >
@@ -120,7 +119,7 @@
                                             echo "<div class='form-group' >";
                                         ?>
                                         <label for="salary" class="col-sm-2 control-label">
-                                        Select <?= __("status") ?>
+                                        Select <?= __("Status") ?>
                                         </label>
                                         <div class="col-sm-6">
                                     <?php  echo form_dropdown("status", array(1 => 'Based On Gross Salary', 0 => 'Based On Basic Salary'), old("status"), "id='payroll_status' class='form-control'"); ?>
@@ -138,7 +137,7 @@
                                             echo "<div class='form-group' >";
                                     ?>
                                         <label for="country" class="col-sm-2 control-label">
-                                            <?=__("address")?>
+                                            <?=__("Address")?>
                                         </label>
                                         <div class="col-sm-6">
                                             <textarea class="form-control" id="country" name="address" ><?=old('address')?></textarea>
@@ -150,7 +149,7 @@
                 
                                     <div class="form-group">
                                         <div class="col-sm-offset-2 col-sm-6">
-                                            <input type="submit" class="btn btn-success btn-block" value="<?=__("save")?>" >
+                                            <input type="submit" class="btn btn-success btn-block" value="<?=__("Save")?>" >
                                         </div>
                                     </div>
                                 <?= csrf_field() ?>

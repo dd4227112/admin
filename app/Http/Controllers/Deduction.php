@@ -10,20 +10,19 @@ class Deduction extends Controller {
     function __construct() {
       //  parent::__construct();
         $this->middleware('auth');
-        // $this->lang->load('email');
-        // $this->lang->load('payroll');
+      
     }
 
     public function index() {
         if (can_access('manage_payroll')) {
-          //  $this->data['type'] = $id = ($this->uri->segment(3));
+         
             $this->data['type'] = $id = (request()->segment(3));
             if ((int) $id > 0) {
                 $this->data['deductions'] = \App\Models\Deduction::where('category', $id)->get();
             } else {
                 $this->data['deductions'] = [];
             }
-            $this->data['subview'] = 'account/payroll/deduction/index';
+            $this->data['subview'] = 'account.payroll.deduction.index';
           //  $this->load->view('_layout_main', $this->data);
             return view($this->data['subview'], $this->data);
         } else {
@@ -138,9 +137,7 @@ class Deduction extends Controller {
     }
 
     public function subscribe() {
-        // $id = clean_htmlentities(($this->uri->segment(3)));
         $id = request()->segment(3);
-
         if ((int) $id) {
             $this->data['set'] = $id;
             $this->data['type'] = 'deduction';
@@ -152,9 +149,8 @@ class Deduction extends Controller {
             }
             $this->data['users'] = (new \App\Http\Controllers\Payroll())->getUsers();
             $this->data['subscriptions'] = $data;
-            // $this->data["subview"] = "payroll/subscribe";
-            // $this->load->view('_layout_main', $this->data);
-            $this->data['view'] = 'account/payroll/subscribe';
+       
+            $this->data['view'] = 'account.payroll.subscribe';
             return view($this->data['view'], $this->data);
         } else {
             $this->data["subview"] = "error";
@@ -163,32 +159,31 @@ class Deduction extends Controller {
     }
 
     public function monthlysubscribe() {
-        $id = clean_htmlentities(($this->uri->segment(3)));
+        $id = request()->segment(3);
         if ((int) $id) {
             $this->data['set'] = $id;
             $this->data['type'] = 'deduction';
-            $this->data['allowance'] = \App\Model\Deduction::find($id);
-            $subscriptions = \App\Model\UserDeduction::where('deduction_id', $id)->get();
+            $this->data['allowance'] = \App\Models\Deduction::find($id);
+            $subscriptions = \App\Models\UserDeduction::where('deduction_id', $id)->get();
             $data = [];
             foreach ($subscriptions as $value) {
-                $data = array_merge($data, array($value->user_id . $value->table));
+                $data = array_merge($data, array($value->user_id));
             }
             $this->data['users'] = (new \App\Http\Controllers\Payroll())->getUsers();
             $this->data['subscriptions'] = $data;
-            $this->data["subview"] = "deduction/monthlysubscribe";
-            $this->load->view('_layout_main', $this->data);
+            $this->data['view'] = 'account.payroll.deduction.monthlysubscribe';
+            return view($this->data['view'], $this->data);
         } else {
             $this->data["subview"] = "error";
-            $this->load->view('_layout_main', $this->data);
+           // $this->load->view('_layout_main', $this->data);
         }
     }
 
     function monthlyAddSubscriber() {
-        $deduction = UserDeduction::where('user_id', request('user_id'))->where('table', request('table'))->where('type', 0)->where('deduction_id', request('deduction_id'));
+        $deduction = UserDeduction::where('user_id', request('user_id'))->where('type', 0)->where('deduction_id', request('deduction_id'));
         $obj=array_merge(request()->except(['_token', 'deadline']), ['deadline'=> date('Y-m-d', strtotime(request('deadline')))]);
        // dd($obj);
         if (!empty($deduction->first())) {
-           
             $deduction->update($obj);
         } else {
             UserDeduction::create($obj);

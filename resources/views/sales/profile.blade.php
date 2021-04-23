@@ -1,7 +1,16 @@
 @extends('layouts.app')
 @section('content')
-
 <?php $root = url('/') . '/public/' ?>
+
+<style>
+    input{
+        width: 300px;
+    }
+    #map{
+        width: 400px;
+        height: 400px;
+    }
+</style>
 
 <div class="page-wrapper">
     <!-- Page-header start -->
@@ -41,7 +50,7 @@
                             <div class="user-name">
                                 <span><?= $school->name ?></span>
                                 <span>Type: <?= $school->type ?></span>
-                                <span> <?= $school->ward . ' - ' . $school->district . ' - ' . $school->region ?></span>
+                                <span> <?= $school->wards->name . ' - ' . $school->wards->district->name . ' - ' . $school->wards->district->region->name ?></span>
                             </div>
                             <div class="btn-group">
                                 <small style="margin-left:1em">Person Allocated</small>
@@ -140,19 +149,15 @@
                                 <div class="row follower-counter">
                                     <div class="col-md-12 col-lg-12">
                                         <div class="txt-primary" contenteditable="true" onblur="$.get('<?= url('sales/updateStudent/null/') ?>', {no: $(this).text(), school_id:<?= $school->id ?>}, function (data) {
-                alert(data)
-              })"><?= (int) $school->students ?></div>
+                                            alert(data)
+                                             })"><?= (int) $school->students ?></div>
                                         <div>Estimated Students</div>
                                     </div>
-
-
                                 </div>
                             </div>
                         </div>
                         <div class="mail-body">
                             <div class="mail-body-header">
-
-
                             </div>
                             <div class="mail-body-content">
 
@@ -189,9 +194,9 @@
                                                                         <select name="task_type_id"
                                                                             class="form-control">
                                                                             <?php
-                                  $types = DB::table('task_types')->where('department', 1)->get();
-                                  foreach ($types as $type) {
-                                    ?>
+                                                                                $types = DB::table('task_types')->where('department', 1)->get();
+                                                                                foreach ($types as $type) {
+                                                                                    ?>
                                                                             <option value="<?= $type->id ?>">
                                                                                 <?= $type->name ?></option>
                                                                             <?php } ?>
@@ -392,10 +397,10 @@
                                     <div class="table-responsive">
                                         <div class="card-block user-box">
                                             <?php
-                    $contacts = $school->contacts()->get();
-                    if(sizeof($contacts)){
-                      foreach ($contacts as $contact) {
-                        ?>
+                                            $contacts = $school->contacts()->get();
+                                            if(sizeof($contacts)){
+                                            foreach ($contacts as $contact) {
+                                                ?>
                                             <div class="media m-b-10">
                                                 <a class="media-left" href="#!">
                                                     <img class="media-object img-circle"
@@ -413,7 +418,7 @@
                                                 </div>
                                             </div>
                                             <?php }
-                    } ?>
+                                             } ?>
 
 
                                             <a href="#" class="waves-effect" data-toggle="modal"
@@ -421,6 +426,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="live_tabs" id='school_details' style="display:none">
                                     <div class="card-block">
                                         <?php if(can_access('edit_school')) { ?>
@@ -444,17 +450,17 @@
                                                             <tr>
                                                                 <th class="social-label b-none">Region</th>
                                                                 <td class="social-user-name b-none text-muted">
-                                                                    <?= $school->region ?></td>
+                                                                    <?= $school->wards->district->region->name ?></td>
                                                             </tr>
                                                             <tr>
                                                                 <th class="social-label b-none">District</th>
                                                                 <td class="social-user-name b-none text-muted">
-                                                                    <?= $school->district ?></td>
+                                                                    <?= $school->wards->district->name ?></td>
                                                             </tr>
                                                             <tr>
                                                                 <th class="social-label b-none">Ward</th>
                                                                 <td class="social-user-name b-none text-muted">
-                                                                    <?= $school->ward ?></td>
+                                                                    <?= $school->wards->name ?></td>
                                                             </tr>
                                                             <tr>
                                                                 <th class="social-label b-none p-b-0">Use NMB</th>
@@ -466,10 +472,35 @@
                                                     </table>
                                                 </form>
                                                 <br />
+
+                                                
+
+                                                  <div id="myForm">
+                                                     <label for="">Name location</label>
+                                                    <input id="myInput" data-geocomplete="street address" class="form-control" />
+                                                  </div>
+
+                                                  <div id="map">
+                                                  </div>
+
+                                                  <form action="" id="mapform">
+                                                      Latitude: <input class="form-control" type="text" data-geo="lat">
+                                                      Longitude: <input class="form-control" type="text" data-geo="lng">
+                                                      Address: <input class="form-control" type="text" data-geo="formatted_address">
+                                                  </form>
+
+                                                  <script>
+                                                      $('#myInput').geocomplete({
+                                                          map: '#map',
+                                                          details: '#mapform',
+                                                          detailsAttribute : 'data-geo'
+                                                      });
+                                                  </script>
+
                                                 <?php
-                      if (isset($client_id) && (int) $client_id > 0) {
-                        $client = DB::table('admin.clients')->where('id', $client_id)->first();
-                        ?>
+                                                if (isset($client_id) && (int) $client_id > 0) {
+                                                    $client = DB::table('admin.clients')->where('id', $client_id)->first();
+                                                    ?>
                                                 <h3>Onboarding Details</h3>
                                                 <table class="table">
                                                     <thead>

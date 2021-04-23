@@ -9,31 +9,14 @@
                 <h4> Subscription -<?= $type ?></h4>
                 <span>Pension Fund Status</span>
             </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
-		
-							
+        </div>					
         <div class="page-body">
           <div class="row">
             <div class="col-sm-12">
              <div class="card">
-                <?php
-               // $usertype = session("usertype");
-                if(can_access('manage_payroll')) { ?>
-			
-               <div class="card-header">
-                  <h5 class="page-header">
-                    <a class="btn btn-success btn-sm" href="<?php echo url('payroll/addPension') ?>">
-                        <i class="fa fa-plus"></i> 
-                        Add Pension Fund
-                    </a>
-                </h5>
-               </div>
-              <?php } ?>
-
+        
               <?php if ($type == 'allowance' || $type == 'deduction') { ?>
-                <div class="col-sm-6 col-xs-12 col-sm-offset-3 list-group">
+                <div class="col-sm-12 col-xs-12 col-sm-offset-3 list-group">
                     <div class="list-group-item">
                         <table class="table">
                             <thead>
@@ -55,20 +38,20 @@
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
-                </div>
-            <?php } ?>
+                        </div>
+                     </div>
+                    <?php } ?>
 
-				         <div id="hide-table"  class="card-block">
+				         <div id=""  class="card-block">
 					      <div class="table-responsive table-sm table-striped table-bordered table-hover">
-                            <?php if (isset($pensions) && !empty($pensions)) { ?>
+                          
 								<table class="table dataTable">
 									<thead>
                                         <tr>
-                                            <th class="col-sm-2"><?= __('slno') ?></th>
+                                            <th class=""><?= __('slno') ?></th>
                                             <!--<th class="col-sm-2">Photo</th>-->
                                             <th class="col-sm-2">Name</th>
-                                            <th class="col-sm-2">User type</th>
+                                            <th class="col-sm-2">User role</th>
                                             <th class="col-sm-2">Email</th>
                                             <th class="col-sm-2">Phone Number</th>
                                             <?php if ($type == 'pension') { ?>
@@ -79,7 +62,7 @@
                                                 <?php
                                             }
                                             if ($type == 'deduction') {?>
-                                                <th class="col-sm-2"><?= (bool) $allowance->is_percentage == false ? __('employer_amount') : __('employer_percent') ?></th>
+                                                <th class="col-sm-2"><?= (bool) $allowance->is_percentage == false ? __('employer_amount') : __('Employer percent') ?></th>
                                             <?php } ?> 
                                             <th class="col-sm-2"><?= __('action') ?></th>
                                         </tr>
@@ -95,7 +78,7 @@
                                                 );
                                                 ?>
                                                 <tr id="std<?= $user->id; ?>">
-                                                    <td data-title="<?= __('slno') ?>">
+                                                    <td data-title="<?= __('#') ?>">
                                                         <?php echo $i; ?>
                                                     </td>
                 
@@ -114,7 +97,7 @@
                                                         <?php echo $user->name; ?>
                                                     </td>
                                                     <td data-title="<?= __('student_roll') ?>">
-                                                        <?php echo $user->usertype; ?>
+                                                        <?php echo $user->role->name; ?>
                                                     </td>
                                                     <td data-title="<?= __('student_section') ?>">
                                                         <?php echo $user->email; ?>
@@ -136,6 +119,7 @@
                                                                 $deadline = !empty($user_allowance)? $user_allowance->deadline : '';
                                                             } else if ($type == 'deduction') {
                                                                 $user_deduction = \App\Models\UserDeduction::where('user_id', $user->id)->where('deduction_id', $set)->first();
+                                                              
                                                                 $amount = (bool) $allowance->is_percentage == false ?
                                                                         (!empty($user_deduction)  && $user_deduction->amount > 0 ? $user_deduction->amount : $allowance->amount) :
                                                                         (!empty($user_deduction)  && (int) $user_deduction->percent > 0 ? $user_deduction->percent : $allowance->percent);
@@ -154,7 +138,7 @@
                                                         if ($type == 'deduction') {
                                                             ?>  
                                                             <td>
-                                                                <input placeholder="<?= (bool) $allowance->is_percentage == false ? __('employer_amount') : __('employer_percent') ?>" type="number" class="form-control all_deduc" id="employer_amount<?= $user->id  ?>" name="amount" data-is_percent="<?= (bool) $allowance->is_percentage == false ? 0 : 1 ?>" value="<?= $employer_amount ?>" ></td>
+                                                                <input placeholder="<?= (bool) $allowance->is_percentage == false ? __('employer_amount') : __('Employer percent') ?>" type="number" class="form-control all_deduc" id="employer_amount<?= $user->id  ?>" name="amount" data-is_percent="<?= (bool) $allowance->is_percentage == false ? 0 : 1 ?>" value="<?= $employer_amount ?>" ></td>
                                                           <?php }
                                                             }
                                                          ?>
@@ -176,8 +160,7 @@
                                                         <?php } ?>
                                                       <td data-title="<?= __('action') ?>">
                                                         <?php
-                                                        if (in_array($user->id, $subscriptions)) {
-                                                            ?>
+                                                        if (in_array($user->id, $subscriptions)) {?>
                                                             <a href="<?= url('payroll/deleteSubscriber/null/?user_id=' . $user->id  . '&set=' . $set . '&type=' . $type) ?>" class="btn btn-danger btn-sm mrg"><i class="fa fa-trash-o"></i> Remove</a>
                                                         <?php } else { ?>
                                                             <input type="checkbox" value="<?= $user->id; ?>" name="result<?= $user->id; ?>" class="subscribe" id="<?= $user->id ?>" datatype="<?= $type ?>"  class="check<?= $user->id ?>">
@@ -191,37 +174,31 @@
                                         ?>
                                </tbody>
                             </table>
-						<?php }  ?>
+						
 								 
-                     </div>
-																
+                     </div>									
                  </div>
             </div> 
         </div>
-    </div>
+     </div>
   </div>
 </div>
 
 
 
 <script type="text/javascript">
-
     $(".checknumber").blur(function (event) {
-
         var inputs = $(this).val();
         var user_id = $(this).attr('id');
-        //var table = $(this).attr('table');
         var pension_id = $(this).attr('pension');
         if (inputs == null) {
-
         } else {
             $.ajax({
                 type: 'POST',
                 url: "<?= url('payroll/checknumber') ?>",
                 data: {
                     "inputs": inputs,
-                    user_id: user_id,
-                   // table: table,
+                     user_id: user_id,
                     'pension_id': pension_id
                 },
                 dataType: "html ",
@@ -231,13 +208,12 @@
                 complete: function (xhr, status) {
                     $('#check' + user_id).html('<span class="label label-success">' + status + '</span>');
                 },
-
                 success: function (data) {
                     toast(data);
+                    window.location.reload();
                 }
             });
         }
-
     });
     function check_all(a) {
         if ($('.check' + a).is(":checked")) {
@@ -255,6 +231,7 @@
             success: function (data) {
                 swal('success', data, 'success');
                 $('#std' + a).hide();
+                window.location.reload();
             }
         });
     }
@@ -290,10 +267,9 @@
 //        } else {
         subscribeUser(datatype, user_id, tag_id, is_percentage, amount, employer_amount);
         //  }
-
     });
 
-    function subscribeUser(datatype, user_id, tag_id, is_percentage, inputValue = null, employer_amount = null) {
+  function subscribeUser(datatype, user_id, tag_id, is_percentage, inputValue = null, employer_amount = null) {
 
         if (parseInt(user_id) && parseInt(tag_id)) {
             $.ajax({
@@ -303,9 +279,10 @@
                 dataType: "html",
                 success: function (data) {
                     toast(data);
+                    window.location.reload();
                 }
             });
-    }
+       }
     }
  
 </script>

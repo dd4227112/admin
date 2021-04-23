@@ -300,11 +300,11 @@ ORDER BY c.oid, a.attnum";
 
     public function getConstrainByName($name) {
         $sql = "SELECT conrelid::regclass AS table_from ,conname ,pg_get_constraintdef(c.oid)
-FROM   pg_constraint c
-JOIN   pg_namespace n ON n.oid = c.connamespace
-WHERE contype IN ('f', 'p ','c','u') AND conname='" . $name . "'
-AND    n.nspname = '" . self::$master_schema . "'
-ORDER  BY conrelid::regclass::text, contype DESC";
+                FROM   pg_constraint c
+                JOIN   pg_namespace n ON n.oid = c.connamespace
+                WHERE contype IN ('f', 'p ','c','u') AND conname='" . $name . "'
+                AND    n.nspname = '" . self::$master_schema . "'
+                ORDER  BY conrelid::regclass::text, contype DESC";
         return \collect(DB::select($sql))->first();
     }
 
@@ -501,7 +501,6 @@ ORDER  BY conrelid::regclass::text, contype DESC";
     }
     
     public function requirements() {
-
         $tab = request()->segment(3);
         $id = request()->segment(4);
         if ($tab == 'show' && $id > 0) {
@@ -511,9 +510,7 @@ ORDER  BY conrelid::regclass::text, contype DESC";
         }
         $this->data['levels'] = [];
         if ($_POST) {
-
             $data = array_merge(request()->all(), ['user_id' => Auth::user()->id]);
-
             $req = \App\Models\Requirement::create($data);
             if ((int) request('to_user_id') > 0) {
 

@@ -83,9 +83,6 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                             <th>Date Registered</th>
                                                             <th>Students</th>
                                                             <th>Price</th>
-                                                            <!-- <th>Paid Amount</th> -->
-
-                                                            <!-- <th>Remained Amount</th> -->
                                                             <th>Payment Start</th> 
                                                             <th>Payment Deadline</th>
                                                             <th>Estimated Students</th>
@@ -97,11 +94,12 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                         $total_students = 0;
                                                         $total_price = 0;
                                                         $schemas=\DB::select("select * from admin.clients where id not in (select client_id from admin.invoices where account_year_id=(select id from admin.account_years where name='".date('Y')."'))" );
+                                                        //dd($schemas);
                                                         foreach ($schemas as $schema) {
                                                             ?>
                                                             <tr>
                                                                 <td><?= $schema->username?></td>
-                                                                <td><?= date('d M Y',strtotime($schema->created_at)) ?></td>
+                                                                <td><?= date('d M Y',strtotime($schema->created_at))  ?></td>
                                                                 <td> <?php 
                                                                     $setting = DB::table('admin.all_setting')->where('schema_name', $schema->username)->first();
                                                                      if(!empty($setting)) {
@@ -127,18 +125,16 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                                 <td> 
                                                                  
                                                                  <?php
-                                                                     // $price = count($schema) == 1 ? $schema->price_per_student : 0;
-                                                                     $start_date =$schema->invoice_start_date;
-                                                                   //  $total_price += $price * $students;
+                                                                     $start_date = $schema->invoice_start_date;
+                                                                   //  $start_date = !empty($start_date) ? $start_date : date('Y-m-d');
                                                                      echo tagEdit($schema->username, 'invoice_start_date', $start_date, 'date');
                                                                      ?>
                                                                 </td> 
                                                            
                                                                 <td> 
                                                                     <?php
-                                                                    // $price = count($schema) == 1 ? $schema->price_per_student : 0;
                                                                     $end_date =$schema->invoice_end_date;
-                                                                   // $total_price += $price * $students;
+                                                                  //  $end_date = !empty($end_date) ? $end_date : date('Y-m-d',strtotime('+30 days',strtotime(date('Y-m-d'))));
                                                                     echo tagEdit($schema->username, 'invoice_end_date', $end_date, 'date');
                                                                     ?>
                                                                 </td> 
@@ -153,11 +149,9 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                     <tfoot>
                                                         <tr>
                                                             <th colspan="2">Total</th>
-                                                            
                                                             <th><?= $total_students ?></th>
                                                             <th><?= $total_price ?></th>
                                                             <th colspan="1"></th>
-
                                                         </tr>
                                                     </tfoot>
                                                 </table>

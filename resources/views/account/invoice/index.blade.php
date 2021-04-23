@@ -43,8 +43,8 @@
                             <a href="<?= url('account/projection') ?>" class="btn btn-sm btn-primary">Create New Invoice</a>
                             <?php } ?>
                         </div>
+                        
                         <div class="col-md-12 col-xl-12">
-                           
                             <div class="form-group row col-lg-offset-6">
                                 <label class="col-sm-4 col-form-label">Select Project</label>
                                 <div class="col-sm-4">
@@ -116,6 +116,7 @@
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
+                             
                                         <tbody>
                                             <?php
                                             $total_amount = 0;
@@ -173,13 +174,13 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                        
                                             <?php
                                             $total_amount = 0;
                                             $total_paid = 0;
                                             $total_unpaid = 0;
                                             $i = 1;
                                             foreach ($invoices as $invoice) {
-
                                                 $amount = $invoice->invoiceFees()->sum('amount');
                                                 $paid = $invoice->payments()->sum('amount');
                                                 $unpaid = $amount - $paid;
@@ -187,7 +188,6 @@
                                                 $total_amount += $amount;
                                                 $total_unpaid += $unpaid;
                                                 ?>
-
 
                                                 <tr>
                                                     <td><?= $invoice->client->username ?></td>
@@ -197,7 +197,6 @@
                                                     <td><?= money($unpaid) ?></td>
                                                     <td><?= date('d M Y', strtotime($invoice->due_date)) ?></td>
                                                     <td>
-
 
                                                         <div class="dropdown-secondary dropdown f-right">
                                                         <button class="btn btn-success btn-mini dropdown-toggle waves-effect waves-light" type="button" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</button>
@@ -296,6 +295,7 @@
     </div>
 </div>
 
+
 <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -305,6 +305,7 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
+           
             <div class="modal-body">
                     <form action="<?=url('account/sendInvoice')?>" method="post">
                         <div class="form-group">
@@ -335,6 +336,7 @@
 
                         <div class="modal-footer">
                             <input type="hidden" name="invoice_id" id="invoice_id" value="">
+                            <input type="hidden" name="client_email" id="client_email" value="">
                             <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary waves-effect waves-light ">Send Invoice</button>
                         </div>

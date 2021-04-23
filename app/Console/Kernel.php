@@ -13,9 +13,6 @@ class Kernel extends ConsoleKernel {
 
     /**
      * The Artisan commands provided by your application.
-     * 
-     * 
-     * Send these important notifications
      *
      * @var array
      */
@@ -33,34 +30,40 @@ class Kernel extends ConsoleKernel {
      * @return void
      */
     protected function schedule(Schedule $schedule) {
+        $schedule->call(function () {
+            $this->save_car_track_access_token('public');
+           
+        })->everyMinute();
+        $schedule->call(function () {
+            $this->car_track_alert_parent('public');
+        })->everyMinute();
         $schedule->command('inspire')
                 ->hourly();
         $schedule->call(function () {
             // sync invoices 
-           $this->syncInvoice();
-            $this->updateInvoice();
+            $this->syncInvoice();
+            //$this->updateInvoice();
         })->everyMinute();
+       
         $schedule->call(function () {
-            echo 'sending';
             (new Message())->sendSms();
             
         })->everyMinute();
 
         $schedule->call(function () {
-            // (new Message())->checkPhoneStatus();
-             $this->resetDemo();
+            (new Message())->checkPhoneStatus();
+           
+            
         })->hourly();
 
 
 
         $schedule->call(function () {
-            $this->curlServer(['action' => 'payment'], 'http://51.91.251.252:8081/api/cron');
+            $this->curlServer(['action' => 'payment'], 'http://51.77.212.234:8081/api/cron');
+            (new Message())->sendEmail();
         })->everyMinute();
         $schedule->call(function () {
-        
-            
-//           (new Message())->sendEmail();
-//            (new Message())->karibusmsEmails();
+            (new Message())->karibusmsEmails();
         })->everyMinute();
         $schedule->call(function () {
             // remind parents to login in shulesoft and check their child performance
@@ -72,7 +75,7 @@ class Kernel extends ConsoleKernel {
             $this->sendNotice();
             $this->sendBirthdayWish();
             $this->sendTaskReminder();
-            $this->sendSequenceReminder();
+            // $this->sendSequenceReminder();
         })->dailyAt('04:40'); // Eq to 07:40 AM 
 //        $schedule->call(function() {
 //            //send login reminder to parents in all schema
@@ -92,17 +95,13 @@ class Kernel extends ConsoleKernel {
 
 
         $schedule->call(function () {
-           
-            //$this->checkSchedule();
+            $this->checkSchedule();
         })->everyMinute();
 
         $schedule->call(function () {
             //  (new HomeController())->createTodayReport();
-            // (new Background())->officeDailyReport();
+            (new Background())->officeDailyReport();
         })->dailyAt('14:50'); // Eq to 17:50 h 
-        $schedule->call(function () {
-            $this->understandActivities();
-        })->dailyAt('13:00'); //eg to 16h
 
         $schedule->call(function () {
             //  (new HomeController())->createTodayReport();
@@ -137,9 +136,8 @@ class Kernel extends ConsoleKernel {
     }
 
     public function sendReminder($schedule) {
-        if (!empty(explode(',', $schedule->user_id)) > 0) {
-            $users_list = empty(explode(',', $schedule->user_id)) ? [0] : explode(',', $schedule->user_id);
-            $users = DB::table($schedule->schema_name . '.users')->whereIn('id', $users_list)->where('role_id', $schedule->role_id)->where('status', '1')->get();
+        if (count(explode(',', $schedule->user_id)) > 0) {
+            $users = DB::table($schedule->schema_name . '.users')->whereIn('id', explode(',', $schedule->user_id))->where('role_id', $schedule->role_id)->where('status', '1')->get();
             // $users = DB::table($schedule->schema_name . '.users')->whereIn('id', explode(',', $schedule->user_id))->where('role_id', $schedule->role_id)->get();
 
             $check_payment_pattern = (preg_match('/#balance/i', $schedule->message) || preg_match('/#invoice/i', $schedule->message)) ? 1 : 0;
@@ -148,7 +146,7 @@ class Kernel extends ConsoleKernel {
                 $patterns = array(
                     '/#name/i', '/#username/i', '/#balance/i', '/#student_name/i', '/#invoice/i'
                 );
-                $replacements = sizeof($payment_pattern) > 0 ? array(
+                $replacements = count($payment_pattern) > 0 ? array(
                     $user->name, $user->username, $payment_pattern[0], $payment_pattern[1], $payment_pattern[2]) : array($user->name, $user->username, 0, 0, 0
                 );
                 $body = preg_replace($patterns, $replacements, $schedule->message);
@@ -165,7 +163,6 @@ class Kernel extends ConsoleKernel {
     }
 
     public function checkSchedule() {
-        DB::select('REFRESH MATERIALIZED VIEW  admin.all_message');
         $messages = DB::select("select \"messageID\",attach,attach_file_name,schema_name from admin.all_message where attach is not null and attach_file_name  not like '%amazon%' limit 100");
         foreach ($messages as $message) {
             $file = '/usr/share/nginx/html/shulesoft_live/storage/uploads/attach/' . $message->attach_file_name;
@@ -242,8 +239,6 @@ class Kernel extends ConsoleKernel {
     }
 
     public function syncInvoice() {
-        DB::select('REFRESH MATERIALIZED VIEW  admin.all_invoices');
-        DB::select('REFRESH MATERIALIZED VIEW  admin.all_bank_accounts_integrations');
         $invoices = DB::select("select distinct schema_name from admin.all_bank_accounts_integrations where invoice_prefix in (select prefix from admin.all_invoices where schema_name not in ('public','accounts','beta_testing')  and sync=0) and invoice_prefix like '%SAS%'");
 
         foreach ($invoices as $invoice) {
@@ -278,19 +273,19 @@ class Kernel extends ConsoleKernel {
         if (strlen($token) > 4) {
             $fields = array(
                 "reference" => trim($invoice->reference),
-                "student_name" => isset($invoice->student_name) ? $invoice->student_name : '',
+                "student_name" => isset($invoice->student_name) ? $invoice->student_name:'',
                 "student_id" => $invoice->student_id,
                 "amount" => $invoice->amount,
                 // "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
                 "type" => ucfirst($invoice->schema_name) . '  School fee',
                 "code" => "10",
-                "callback_url" => "http://51.91.251.252:8081/api/init",
+                "callback_url" => "http://51.77.212.234:8081/api/init",
                 "token" => $token
             );
 
             $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
             //$push_status = 'invoice_submission';
-
+            echo $push_status;
             if ($invoice->schema_name == 'beta_testing') {
                 //testing invoice
                 $setting = DB::table('beta_testing.setting')->first();
@@ -303,14 +298,13 @@ class Kernel extends ConsoleKernel {
             }
             $curl = $this->curlServer($fields, $url);
             $result = json_decode($curl);
-            // echo $result->description;
-            print_r($invoice);
-            //if (isset($result->description) && (strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
-
-            if (isset($result) && !empty($result) && (int) $result->status <> 0) {
+           // echo $result->description;
+           //if (isset($result->description) && (strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
+            
+            if (isset($result) && !empty($result)) {
                 //update invoice no
-//                DB::table($invoice->schema_name . '.invoices')
-//                        ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
+                DB::table($invoice->schema_name . '.invoices')
+                        ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
 
                 $users = DB::table($invoice->schema_name . '.parent')->whereIn('parentID', DB::table('student_parents')->where('student_id', $invoice->student_id)->get(['parent_id']))->get();
                 foreach ($users as $user) {
@@ -322,10 +316,7 @@ class Kernel extends ConsoleKernel {
                     }
                     DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
                 }
-            }
-            DB::table($invoice->schema_name . '.invoices')
-                    ->where('id', $invoice->id)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
-
+            } 
             DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
         }
     }
@@ -344,7 +335,7 @@ class Kernel extends ConsoleKernel {
                         //  "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
                         "type" => ucfirst($invoice->schema_name) . ' School Fees',
                         "code" => "10",
-                        "callback_url" => "http://51.91.251.252:8081/api/init",
+                        "callback_url" => "http://51.77.212.234:8081/api/init",
                         "token" => $token
                     );
                     $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';
@@ -438,6 +429,123 @@ class Kernel extends ConsoleKernel {
 //Force security measures
     }
 
+public function save_car_track_access_token($schema=''){
+   // DB::table($invoice->schema_name . '.invoices')->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
+   //this should be run after every 2hrs
+   $sql = 'select  * from '.$schema.'.car_tracker_key';
+   $track_key = \collect(DB::select($sql))->first();
+
+   $request = $this->curlServer([
+    'method' => 'jimi.oauth.token.get',
+    'sign_method' => 'md5',
+    'time_stamp' => gmdate("Y-m-d H:i:s", time()),
+    'user_id' => $track_key->user_id,
+    'version' => '0.9',
+    'expires_in'=>60,
+    'app_key' => $track_key->app_key,
+    'user_pwd_md5' => $track_key->user_pwd_md5,
+    'format' => 'json',
+        ], 'http://open.10000track.com/route/rest');
+
+
+    $obj_content = json_decode($request);
+    if($obj_content['code'] == 0) {
+        DB::table($schema . '.car_tracker_key')->where('id','>', 0)->update(['access_token' => $obj_content['result']['access_token']]);
+
+    }
+
+
+}
+
+public function car_track_alert_parent($schema=''){
+   // http://open.10000track.com/route/rest?method=jimi.user.device.location.list&user_id=shulesoft&user_pwd_md5=86d526d86de85406dc5303b90a44a7ac&expires_in=7200&app_key=8FB345B8693CCD0096B63E70BAB0B678&timestamp=2021-04-20 14:28:03&format=json&v=0.9&sign=1b2e0d649ce0f6d201e1c8264220944a&sign_method=md5&access_token=caf6f029f83f68d5b28ca8cedbc3cf57&target=shulesoft&map_type=GOOGLE&imeis=359857083472589,358899057233531&method_name=
+
+   $imeis = DB::select('select string_agg(imeis::text, ',') as imeis from '.$schema.'.vehicles')->first();
+   $key = DB::table('public.sms_keys')->first();
+   $sql = 'select  * from '.$schema.'.car_tracker_key';
+   $track_key = \collect(DB::select($sql))->first();
+
+
+   $request = $this->curlServer([
+    'method' => 'jimi.user.device.location.list',
+    'sign_method' => 'md5',
+    'time_stamp' => gmdate("Y-m-d H:i:s", time()),
+    'user_id' => $track_key->user_id,
+    'version' => '0.9',
+    'app_key' => $track_key->app_key,
+    'user_pwd_md5' => $track_key->user_pwd_md5,
+    'format' => 'json',
+    'access_token' => $track_key->access_token,
+    'map_type' => 'GOOGLE',
+    'imeis' => $imeis->imeis,
+    'target' => 'shulesoft',
+    
+        ], 'http://open.10000track.com/route/rest');
+
+
+    $obj_content = json_decode($request);
+    if($obj_content['code'] <> 0) {
+    //$devices=$obj_content['result'];
+
+    foreach($obj_content->results as $device) {
+$lat=$device->lat;
+$lng=$device->lng;
+$imeis=$device->imei;
+
+
+$distance_sql='select * from (select parent_id, phone,name,imeis, 6371 * acos(cos(radians('.$lat.'))
+* cos(radians(student_gps.lat)) 
+* cos(radians(student_gps.lng) - radians('.$lng.')) 
++ sin(radians('.$lat.')) 
+* sin(radians(student_gps.lat))) AS distance from '.$schema.'.student_gps) as gps_query where distance > 0 and distance < 0.5 and imeis='.$imeis.'';
+
+
+$near_by_students=DB::select($distance_sql)->get();
+
+
+if(count($near_by_students)>0){
+foreach($near_by_students as $near_by_student){  
+    DB::statement("insert into public.sms (phone_number,body,type,sms_keys_id) values ('" . $near_by_student->phone . "','" . $track_key->message . "',0," . $key->id . " )");
+
+
+}
+
+}
+ }
+
+    }
+
+}
+
+
+function distance($lat1, $lon1, $lat2, $lon2, $unit) {
+    if (($lat1 == $lat2) && ($lon1 == $lon2)) {
+      return 0;
+    }
+    else {
+      $theta = $lon1 - $lon2;
+      $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+      $dist = acos($dist);
+      $dist = rad2deg($dist);
+      $miles = $dist * 60 * 1.1515;
+      $unit = strtoupper($unit);
+  
+      if ($unit == "K") {
+        return ($miles * 1.609344);
+      } else if ($unit == "N") {
+        return ($miles * 0.8684);
+      } else {
+        return $miles;
+      }
+    }
+  }
+  
+  //echo distance(32.9697, -96.80322, 29.46786, -98.53506, "M") . " Miles<br>";
+  //echo distance(32.9697, -96.80322, 29.46786, -98.53506, "K") . " Kilometers<br>";
+  //echo distance(32.9697, -96.80322, 29.46786, -98.53506, "N") . " Nautical Miles<br>";
+  
+
+
     /**
      * 
      * @param type $fields
@@ -521,18 +629,17 @@ class Kernel extends ConsoleKernel {
     }
 
     public function sendTodReminder() {
-        DB::select('REFRESH MATERIALIZED VIEW  admin.all_teacher_on_duty');
         $users = DB::select('select * from admin.all_teacher_on_duty');
         $all_users = [];
-
+        
         foreach ($users as $user) {
             unset($all_users[$user->name]);
-            $students = DB::SELECT('SELECT name FROM ' . $user->schema_name . '.student where student_id in(select student_id from ' . $user->schema_name . '.student_duties where duty_id=' . $user->duty_id . ')');
+            $students = DB::SELECT('SELECT name FROM '. $user->schema_name . '.student where student_id in(select student_id from '. $user->schema_name . '.student_duties where duty_id='.$user->duty_id.')');
             foreach ($students as $student) {
                 array_push($all_students, $student->name);
             }
             $message = 'Habari  ' . $user->name . ' ,'
-                    . 'Leo ' . date("Y-m-d") . ' umewekwa kama walimu wa zamu Shuleni pamoja na ' . implode(',', $all_students) . ' (Viranja)  . Kumbuka kuandika repoti yako ya siku katika account yako ya ShuleSoft kwa ajili ya kumbukumbu. Asante';
+                    . 'Leo '.date("Y-m-d").' umewekwa kama walimu wa zamu Shuleni pamoja na ' . implode(',', $all_students) . ' (Viranja)  . Kumbuka kuandika repoti yako ya siku katika account yako ya ShuleSoft kwa ajili ya kumbukumbu. Asante';
 
             if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
                 DB::statement("insert into " . $user->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Ratiba Ya Zamu','" . $message . "')");
@@ -555,20 +662,6 @@ class Kernel extends ConsoleKernel {
         }
     }
 
-    public function understandActivities() {
-        //notify CEO about todays people's todays tasks
-        $tasks = DB::select('select a.activity,u.email,u.phone, u.name, cl.name as client_name, a.created_at, a.end_date,\'support\' as task_type from admin.tasks a join admin.tasks_users b on a.id=b.task_id join admin.tasks_clients c on c.task_id=a.id join admin.users u on u.id=b.user_id join admin.clients cl on cl.id=c.client_id where a.created_at::date=CURRENT_DATE OR a.end_date=CURRENT_DATE
-union all
-select a.activity,u.email,u.phone, u.name,cl.name as client_name,a.created_at, a.end_date,\'sales\' from admin.tasks a join admin.tasks_schools b on a.id=b.task_id join admin.schools cl on cl.id=b.school_id left join admin.users u on u.id=a.user_id where b.created_at::date=CURRENT_DATE');
-        $table = '<table><thead><tr><th>Activity</th><th>Email</th><th>Phone</th><th>Name</th><th>Client Name</th><th>Task Created</th><th>End Date</th><th>Type</th></tr></thead><tbody>';
-        foreach ($tasks as $task) {
-            $table .= '<tr>th>' . $task->activity . '</th><th>' . $task->email . '</th><th>' . $task->phone . '</th>'
-                    . '<th>' . $task->name . '</th><th>' . $task->client_name . '</th><th>' . $task->created_at . '</th><th>' . $task->end_date . '</th><th>' . $task->task_type . '</th></tr>';
-        }
-        $table .= '</table><p>Total Tasks ' . sizeof($tasks) . '</p>';
-        DB::table("public.email")->insert(['email' => 'swillae1@gmail.com', 'subject' => 'Todays Activities', 'body' => $table]);
-    }
-
     public function getCleanSms($replacements, $message) {
         $patterns = array(
             '/#name/i', '/#username/i', '/#email/i', '/#phone/i', '/#usertype/i'
@@ -583,12 +676,11 @@ select a.activity,u.email,u.phone, u.name,cl.name as client_name,a.created_at, a
     }
 
     public function sendSequenceReminder() {
-        DB::select('REFRESH MATERIALIZED VIEW  admin.all_users');
         $sequences = \App\Models\Sequence::all();
         foreach ($sequences as $sequence) {
-            $users = DB::select("select a.table, a.name,a.username,a.email,a.phone,a.usertype,a.schema_name,a.id,concat(c.firstname,' ',c.lastname ) as csr_name, c.phone as csr_phone from admin.all_users a,admin.user_clients u, admin.clients z, admin.users c where z.username=a.schema_name  and z.id=u.client_id and u.user_id=c.id and a.status=1 and c.status=1 and u.status=1 and a.table not in ('parent','student','teacher') and a.id in (select user_id from admin.users_sequences a,admin.sequences
+            $users = DB::select("select a.table, a.name,a.username,a.email,a.phone,a.usertype,a.schema_name,a.id,concat(c.firstname,' ',c.lastname ) as csr_name, c.phone as csr_phone from admin.all_users a,admin.users_schools b, admin.users c where b.schema_name=a.schema_name and b.user_id=c.id and a.status=1 and c.status=1 and b.role_id=8 and a.table not in ('parent','student','teacher') and a.id in (select user_id from admin.users_sequences a,admin.sequences
 b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date=CURRENT_DATE and b.interval=" . $sequence->interval . " )");
-            if (sizeof($users) > 0) {
+            if (count($users) > 0) {
                 foreach ($users as $user) {
                     $replacements = array(
                         $user->name, $user->username, $user->email, $user->phone, $user->usertype
@@ -619,20 +711,15 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
     }
 
     public function sendNotice() {
-        DB::select('REFRESH MATERIALIZED VIEW  admin.all_notice');
-        $public_day = DB::table('admin.public_days')->whereMonth('date', date('m'))->whereDay('date', date('d'))->first();
-        !empty($public_day) ?? DB::statement("insert into public.sms(phone_number,body,type,sms_keys_id)
-select distinct phone, body,0,8 from (select 'Tunakutakia '||upper(\"schema_name\")||'  Heri ya " . $public_day->name . ". ' AS body,email,replace(replace(replace(phone,'/',','),' ',''),'|',',') as phone,\"schema_name\",name from admin.all_users where usertype in ('Admin') and length(phone)>3 and \"schema_name\" not in ('public','betatwo')) x");
-
         $notices = DB::select('select * from admin.all_notice  WHERE  date-CURRENT_DATE=3 and status=0 ');
-///these are notices+
+///these are notices
         foreach ($notices as $notice) {
 
 //$class_ids = (explode(',', preg_replace('/{/', '', preg_replace('/}/', '', $notice->class_id))));
             $to_roll_ids = preg_replace('/{/', '', preg_replace('/}/', '', $notice->to_roll_id));
 
             $users = $to_roll_ids == 0 ? DB::select("select *,(select id as sms_keys_id from " . $notice->table_schema . ".sms_keys limit 1 ) as sms_keys_id from admin.all_users where schema_name::text='" . $notice->schema_name . "'") : DB::select('select *,(select id as sms_keys_id from ' . $notice->schema_name . '.sms_keys limit 1 ) as sms_keys_id from admin.all_users where role_id IN (' . $to_roll_ids . ' ) and schema_name::text=\'' . $notice->schema_name . '\'  ');
-            if (sizeof($users) > 0) {
+            if (count($users) > 0) {
                 foreach ($users as $user) {
 
                     $message = 'Kalenda ya Shule:'
@@ -652,7 +739,7 @@ select distinct phone, body,0,8 from (select 'Tunakutakia '||upper(\"schema_name
     public function sendBirthdayWish() {
         $schemas = (new \App\Http\Controllers\Software())->loadSchema();
         foreach ($schemas as $schema) {
-            if (!in_array($schema->table_schema, array('public', 'api', 'admin', 'forum', 'academy'))) {
+            if (!in_array($schema->table_schema, array('public', 'api', 'admin'))) {
                 //Remind parents,class and section teachers to wish their students
 
                 $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\",sms_keys_id)"
@@ -669,21 +756,10 @@ select distinct phone, body,0,8 from (select 'Tunakutakia '||upper(\"schema_name
                 DB::statement($sql_for_teachers);
 
                 //send notification to administrators
-                //$sql_to_admin = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")"
-                //     . "select 'Hello '||s.sname||', leo ni birthday ya '||(select string_agg(a.name, ',') from " . $schema->table_schema . ".student a WHERE   DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) 
-                //  AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE))||' katika shule yako. Ingia katika account yako ya ShuleSoft kujua zaidi na uwatakie heri ya kuzaliwa. Asante', s.phone,0,0,1,'setting' from " . $schema->table_schema . ".student a join " . $schema->table_schema . ".setting s on true  group by s.sname,s.phone";
+                $sql_to_admin = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\")"
+                        . "select 'Hello '||s.sname||', leo ni birthday ya '||(select string_agg(a.name, ',') from " . $schema->table_schema . ".student a WHERE   DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) 
+                    AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE))||' katika shule yako. Ingia katika account yako ya ShuleSoft kujua zaidi na uwatakie heri ya kuzaliwa. Asante', s.phone,0,0,1,'setting' from " . $schema->table_schema . ".student a join " . $schema->table_schema . ".setting s on true  group by s.sname,s.phone";
                 // DB::statement($sql_to_admin);
-                //staff birthday messages to school staff
-                $sql = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\",sms_keys_id)"
-                        . "select 'Hello '|| upper(a.name)|| ', tunapenda kukutakia  heri ya siku yako ya kuzaliwa. Mungu akupe afya tele, maisha marefu, baraka na mafanikio.  Kama hujaziliwa tarehe kama ya leo, mwambie Administrator wa system katika shule yako abadili tarehe yako iwe sahihi. Ubarikiwe',a.phone, 0,0, a.id,a.table, (select id from " . $schema->table_schema . ".sms_keys limit 1)  FROM " . $schema->table_schema . ".users a  WHERE \"table\"  in ('user','teacher') AND (
-                    DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE) AND a.status = 1  
-                    AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE))";
-                DB::statement($sql);
-
-                //get staff with birthday, with their admin names
-//                $sql_for_admin = "insert into " . $schema->table_schema . ".sms (body,phone_number,status,type,user_id,\"table\",sms_keys_id)"
-//                        . "SELECT 'Hello '||teacher_name||', leo ni birthday ya '||string_agg(student_name, ', ')||', katika darasa lako '||classes||'('||section||'). Usisite kumtakia heri ya kuzaliwa. Asante', phone,0,0,\"teacherID\",'teacher',(select id from " . $schema->table_schema . ".sms_keys limit 1 ) from ( select a.name as student_name, t.name as teacher_name, t.\"teacherID\", t.phone, c.section, d.classes from " . $schema->table_schema . ".student a join " . $schema->table_schema . ".section c on c.\"sectionID\"=a.\"sectionID\" JOIN " . $schema->table_schema . ".teacher t on t.\"teacherID\"=c.\"teacherID\" join " . $schema->table_schema . ".classes d on d.\"classesID\"=c.\"classesID\" WHERE  a.status=1 and  DATE_PART('day', a.dob) = date_part('day', CURRENT_DATE)   AND DATE_PART('month', a.dob) = date_part('month', CURRENT_DATE) ) x GROUP  BY teacher_name,phone,classes,section,phone,\"teacherID\"";
-//                DB::statement($sql_for_admin);
             }
         }
     }
@@ -753,21 +829,6 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     public function sendSchedulatedSms() {
         
     }
-
-    function resetDemo() {
-        $tables =DB::select("SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema= 'public'  AND table_type='BASE TABLE' and table_name not in('jobs')");
-      
-        foreach ($tables as $table) {
-            $sql = 'ALTER TABLE  public.' . $table->table_name . '   ADD COLUMN IF NOT EXISTS created_at timestamp without time zone DEFAULT now() ';
-            DB::select($sql);
-          
-            $delete_sql="DELETE FROM public.". $table->table_name . " WHERE created_at::date >='2021-03-10'";
-            DB::statement($delete_sql);
-        }
-        return TRUE;
-    }
-
-
 
     /**
      * Register the Closure based commands for the application.
