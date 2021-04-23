@@ -462,7 +462,7 @@ class Kernel extends ConsoleKernel {
      
      public function car_track_alert_parent($schema=''){
      
-        $imeis =  DB::select("select string_agg(imeis::text, ',') as imeis from '.$schema.'.vehicles");
+        $imeis =  DB::select("select string_agg(imeis::text, ',') as imeis from ".$schema.".vehicles");
         $key = DB::table('public.sms_keys')->first();
         $sql = 'select  * from '.$schema.'.car_tracker_key';
         $track_key = \collect(DB::select($sql))->first();
