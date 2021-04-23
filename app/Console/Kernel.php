@@ -33,9 +33,12 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             $this->save_car_track_access_token('public');
            
+           
         })->everyMinute();
+       
         $schedule->call(function () {
-            $this->car_track_alert_parent('public');
+            $this->car_track_alert_parent('public'); 
+           
         })->everyMinute();
         $schedule->command('inspire')
                 ->hourly();
@@ -60,10 +63,10 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
             $this->curlServer(['action' => 'payment'], 'http://51.77.212.234:8081/api/cron');
-            (new Message())->sendEmail();
+           // (new Message())->sendEmail();
         })->everyMinute();
         $schedule->call(function () {
-            (new Message())->karibusmsEmails();
+            //(new Message())->karibusmsEmails();
         })->everyMinute();
         $schedule->call(function () {
             // remind parents to login in shulesoft and check their child performance
@@ -429,93 +432,119 @@ class Kernel extends ConsoleKernel {
 //Force security measures
     }
 
-public function save_car_track_access_token($schema=''){
-   // DB::table($invoice->schema_name . '.invoices')->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
-   //this should be run after every 2hrs
-   $sql = 'select  * from '.$schema.'.car_tracker_key';
-   $track_key = \collect(DB::select($sql))->first();
-
-   $request = $this->curlServer([
-    'method' => 'jimi.oauth.token.get',
-    'sign_method' => 'md5',
-    'time_stamp' => gmdate("Y-m-d H:i:s", time()),
-    'user_id' => $track_key->user_id,
-    'version' => '0.9',
-    'expires_in'=>60,
-    'app_key' => $track_key->app_key,
-    'user_pwd_md5' => $track_key->user_pwd_md5,
-    'format' => 'json',
-        ], 'http://open.10000track.com/route/rest');
 
 
-    $obj_content = json_decode($request);
-    if($obj_content['code'] == 0) {
-        DB::table($schema . '.car_tracker_key')->where('id','>', 0)->update(['access_token' => $obj_content['result']['access_token']]);
-
-    }
-
-
-}
-
-public function car_track_alert_parent($schema=''){
-   // http://open.10000track.com/route/rest?method=jimi.user.device.location.list&user_id=shulesoft&user_pwd_md5=86d526d86de85406dc5303b90a44a7ac&expires_in=7200&app_key=8FB345B8693CCD0096B63E70BAB0B678&timestamp=2021-04-20 14:28:03&format=json&v=0.9&sign=1b2e0d649ce0f6d201e1c8264220944a&sign_method=md5&access_token=caf6f029f83f68d5b28ca8cedbc3cf57&target=shulesoft&map_type=GOOGLE&imeis=359857083472589,358899057233531&method_name=
-
-   $imeis = DB::select('select string_agg(imeis::text, ',') as imeis from '.$schema.'.vehicles')->first();
-   $key = DB::table('public.sms_keys')->first();
-   $sql = 'select  * from '.$schema.'.car_tracker_key';
-   $track_key = \collect(DB::select($sql))->first();
-
-
-   $request = $this->curlServer([
-    'method' => 'jimi.user.device.location.list',
-    'sign_method' => 'md5',
-    'time_stamp' => gmdate("Y-m-d H:i:s", time()),
-    'user_id' => $track_key->user_id,
-    'version' => '0.9',
-    'app_key' => $track_key->app_key,
-    'user_pwd_md5' => $track_key->user_pwd_md5,
-    'format' => 'json',
-    'access_token' => $track_key->access_token,
-    'map_type' => 'GOOGLE',
-    'imeis' => $imeis->imeis,
-    'target' => 'shulesoft',
+    public function save_car_track_access_token($schema='') {
+        $sql = 'select  * from '.$schema.'.car_tracker_key';
+        $track_key = \collect(DB::select($sql))->first();
+        $request = $this->JimiServer([
+         'method' => 'jimi.oauth.token.get',
+         'sign_method' => 'md5',
+         'timestamp' => gmdate("Y-m-d H:i:s", time()),
+         'user_id' => $track_key->user_id,
+         'v' => '0.9',
+         'expires_in'=>60,
+         'app_key' => $track_key->app_key,
+         'user_pwd_md5' => $track_key->user_pwd_md5,
+         'format' => 'json'],'http://open.10000track.com/route/rest');
+     
+         
+         $obj_content = json_decode($request,true);
+     
+         if($obj_content['code'] == 0) {
     
-        ], 'http://open.10000track.com/route/rest');
-
-
-    $obj_content = json_decode($request);
-    if($obj_content['code'] <> 0) {
-    //$devices=$obj_content['result'];
-
-    foreach($obj_content->results as $device) {
-$lat=$device->lat;
-$lng=$device->lng;
-$imeis=$device->imei;
-
-
-$distance_sql='select * from (select parent_id, phone,name,imeis, 6371 * acos(cos(radians('.$lat.'))
-* cos(radians(student_gps.lat)) 
-* cos(radians(student_gps.lng) - radians('.$lng.')) 
-+ sin(radians('.$lat.')) 
-* sin(radians(student_gps.lat))) AS distance from '.$schema.'.student_gps) as gps_query where distance > 0 and distance < 0.5 and imeis='.$imeis.'';
-
-
-$near_by_students=DB::select($distance_sql)->get();
-
-
-if(count($near_by_students)>0){
-foreach($near_by_students as $near_by_student){  
-    DB::statement("insert into public.sms (phone_number,body,type,sms_keys_id) values ('" . $near_by_student->phone . "','" . $track_key->message . "',0," . $key->id . " )");
-
-
-}
-
-}
- }
-
-    }
-
-}
+                //dd($obj_content['result']['accessToken']);
+                 DB::table($schema . '.car_tracker_key')->where('id','>', 0)->update(['access_token' => $obj_content['result']['accessToken']]);
+     
+         }
+     
+     }
+     
+     public function car_track_alert_parent($schema=''){
+     
+        $imeis =  DB::select("select string_agg(imeis::text, ',') as imeis from vehicles");
+        $key = DB::table('public.sms_keys')->first();
+        $sql = 'select  * from '.$schema.'.car_tracker_key';
+        $track_key = \collect(DB::select($sql))->first();
+     
+     
+        $request = $this->JimiServer([
+         'method' => 'jimi.user.device.location.list',
+         'sign_method' => 'md5',
+         'timestamp' => gmdate("Y-m-d H:i:s", time()),
+         'user_id' => $track_key->user_id,
+         'v' => '0.9',
+         'app_key' => $track_key->app_key,
+         'user_pwd_md5' => $track_key->user_pwd_md5,
+         'format' => 'json',
+         'access_token' => $track_key->access_token,
+         'map_type' => 'GOOGLE',
+         'imeis' => $imeis[0]->imeis,
+         'target' => 'shulesoft',
+         
+             ], 'http://open.10000track.com/route/rest');
+     
+           
+         $obj_content = json_decode($request,true);
+      
+         if($obj_content['code'] == 0) {
+         //$devices=$obj_content['result'];
+     
+         foreach($obj_content['result'] as $device) {
+     $lat=$device['lat'];
+     $lng=$device['lng'];
+     $imeis=$device['imei'];
+     
+     
+     $distance_sql='select * from (select parent_id, phone,name,imeis, 6371 * acos(cos(radians('.$lat.'))
+     * cos(radians(student_gps.lat)) 
+     * cos(radians(student_gps.lng) - radians('.$lng.')) 
+     + sin(radians('.$lat.')) 
+     * sin(radians(student_gps.lat))) AS distance from '.$schema.'.student_gps) as gps_query where imeis=\''.$imeis.'\' and distance >= 0 and distance < 500 ';
+     
+     
+     $near_by_students=DB::select($distance_sql);
+     
+     
+     if(count($near_by_students)>0){
+     foreach($near_by_students as $near_by_student){  
+         DB::statement("insert into public.sms (phone_number,body,type,sms_keys_id) values ('" . $near_by_student->phone . "','" . $track_key->message . "',0," . $key->id . " )");
+     
+     
+     }
+     
+     }
+    
+    
+      }
+     
+         }
+     }
+    
+     
+     public function JimiServer($fields, $url) {
+         
+        // Open connection
+                $ch = curl_init();
+        // Set the url, number of POST vars, POST data
+       
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                    'application/x-www-form-urlencoded'
+                ));
+        
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($fields));
+        
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                
+        
+                $result = curl_exec($ch);
+                curl_close($ch);
+                return $result;
+            }
+    
+    
 
 
 function distance($lat1, $lon1, $lat2, $lon2, $unit) {
