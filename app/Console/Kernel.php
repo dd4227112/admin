@@ -44,12 +44,12 @@ class Kernel extends ConsoleKernel {
                 ->hourly();
         $schedule->call(function () {
             // sync invoices 
-           // $this->syncInvoice();
+            $this->syncInvoice();
             //$this->updateInvoice();
         })->everyMinute();
        
         $schedule->call(function () {
-           // (new Message())->sendSms();
+            (new Message())->sendSms();
             
         })->everyMinute();
 
