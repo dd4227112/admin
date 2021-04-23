@@ -220,7 +220,7 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         $all_schoolz = [];
         // $this->data['schools'] = $schools = \App\Models\ClientSchool::whereIn('client_id', \App\Models\UserClient::where('user_id', $id)->get(['client_id']))->get();
         $ward_id=[];
-        $wards = DB::table('users_schools_wards')->where('user_id', $id)->get(['ward_id']);
+        $wards = DB::table('users_schools_wards')->where('user_id',$id)->get(['ward_id']);
         foreach ($wards as $ward) {
             array_push($ward_id, $ward->ward_id);
         }

@@ -773,18 +773,12 @@ return $echo;
                                                                                     School Mapping </th>
                                                                                 <td
                                                                                     class="social-user-name b-none text-muted">
-
-
-
                                                                                     <input class="form-control"
                                                                                         id="school_id"
                                                                                         name="school_id" type="text"
                                                                                         style="width:18em"
                                                                                         placeholder="Click here to Map">
                                                                                     <span id="search_result"></span>
-
-
-
                                                                                 </td>
                                                                                 <td
                                                                                     class="social-user-name b-none text-muted">
@@ -821,8 +815,6 @@ return $echo;
                                                                                           }
                                                                                         ?>
                                                                                     </select>
-
-
                                                                                 </td>
                                                                                 <td
                                                                                     class="social-user-name b-none text-muted">
