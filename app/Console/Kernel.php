@@ -509,8 +509,9 @@ class Kernel extends ConsoleKernel {
      
      
      if(count($near_by_students)>0){
+         $table="table";
      foreach($near_by_students as $near_by_student){  
-         DB::statement("insert into public.sms (phone_number,body,type,sms_keys_id,user_id,table) values ('" . $near_by_student->phone . "','" . $track_key->message . "',0," . $key->id . "," . $near_by_student->parent_id . ",'parent' )");
+         DB::statement("insert into public.sms (phone_number,body,type,sms_keys_id,user_id,\"$table\") values ('" . $near_by_student->phone . "','" . $track_key->message . "',0," . $key->id . "," . $near_by_student->parent_id . ",'parent' )");
      
      
      }
