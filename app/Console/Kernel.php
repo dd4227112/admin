@@ -34,12 +34,12 @@ class Kernel extends ConsoleKernel {
             $this->save_car_track_access_token('public');
            
            
-        })->everyMinute();
+        })->everyFiveMinutes();
        
         $schedule->call(function () {
             $this->car_track_alert_parent('public'); 
            
-        })->everyMinute();
+        })->everyFiveMinutes();
         $schedule->command('inspire')
                 ->hourly();
         $schedule->call(function () {
@@ -444,7 +444,7 @@ class Kernel extends ConsoleKernel {
          'timestamp' => gmdate("Y-m-d H:i:s", time()),
          'user_id' => $track_key->user_id,
          'v' => '0.9',
-         'expires_in'=>60,
+         'expires_in'=>300,
          'app_key' => $track_key->app_key,
          'user_pwd_md5' => $track_key->user_pwd_md5,
          'format' => 'json'],'http://open.10000track.com/route/rest');
