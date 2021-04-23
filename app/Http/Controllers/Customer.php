@@ -515,7 +515,7 @@ class Customer extends Controller {
                 'date' => request('maturity_date')
             ];
             DB::table('standing_orders')->insert($data);
-            return redirect()->back()->with('success', 'Data Recorded Successfully!');
+            return redirect()->back()->with('success', 'Standing order added successfully!');
         }
     }
 

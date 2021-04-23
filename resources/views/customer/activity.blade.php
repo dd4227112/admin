@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<?php $root = url('/') . '/public/' ?>
+<?php $root = url('/') . '/public/'  ?>
 <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/fullcalendar/dist/fullcalendar.css">
 <link rel="stylesheet" type="text/css" href="<?= $root ?>/bower_components/fullcalendar/dist/fullcalendar.print.css" media='print'>
 <!-- Sidebar inner chat end-->
@@ -119,6 +119,7 @@
                                                           <th>Priority</th>
                                                           <th>School</th>
                                                           <th>Activity</th>
+                                                       
                                                           <th>Status</th>
                                                       </tr>
                                                   </thead>
@@ -138,8 +139,8 @@
                                                         <th>Ticket</th>
                                                         <th>Task type</th>
                                                         <th>Priority</th>
-                                                        <th >Activity</th>
-                                                        <th>End Date</th>
+                                                        <th>Activity</th>
+                                                        <th>End date</th>
                                                         <th>Status</th>
                                                     </tr>
                                                 </thead>
@@ -192,7 +193,7 @@
                                                                 </td>
                                                                 <td><?= cdate($act->end_date) ?></td>
                                                                 <td> 
-                                                                    <div class="dropdown-secondary dropdown f-right"><button class="btn btn-<?=$stat?> btn-mini dropdown-toggle waves-effect waves-light"  type="button" id="dropdown6<?=$act->id?>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?=$msg?></button><div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_status('on progress',<?=$act->id ?>)"><span class="point-marker bg-danger"></span>On progress</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_status('complete',<?=$act->id ?>)"><span class="point-marker bg-warning"></span>Complete</a><a class="dropdown-item waves-light waves-effect" href="#!" onmousedown="change_status('new',<?=$act->id ?>)"><span class="point-marker bg-warning"></span>New</a></div> </div>
+                                                                    <div class="dropdown-secondary dropdown f-right"><button class="btn btn-<?=$stat?> btn-mini dropdown-toggle waves-effect waves-light"  type="button" id="dropdown6<?=$act->id?>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?=$msg?></button><div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onclick="change_status('on progress', <?=$act->id ?>)"><span class="point-marker bg-danger"></span>On progress</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onclick="change_status('complete',<?=$act->id ?>)"><span class="point-marker bg-warning"></span>Complete</a><a class="dropdown-item waves-light waves-effect" href="#!" onclick="change_status('new',<?=$act->id ?>)"><span class="point-marker bg-warning"></span>New</a></div> </div>
                                                                 </td>
                                                             </tr>
                                                         <?php } ?>
@@ -206,7 +207,7 @@
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
-                                                        <th>End Date</th>
+                                                        <th>End date </th>
                                                         <th>Status</th>
                                                     </tr>
                                                 </tfooter>
@@ -225,7 +226,7 @@
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
-                                                        <th>End Date</th>
+                                                        <th>Last update</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -260,7 +261,7 @@
                                                                 <div class="dropdown-secondary dropdown f-right text-center"><button class="btn btn-<?=$status ?>  btn-mini dropdown-toggle waves-effect waves-light"  type="button" id="dropdown7<?=$act->id?>"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= $message ?></button><div class="dropdown-menu" aria-labelledby="dropdown7" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_priority(1,<?= $act->id?>)"><span class="point-marker bg-danger"></span>High</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_priority(2,<?= $act->id?>)"><span class="point-marker bg-warning"></span>Medium</a><a class="dropdown-item waves-light waves-effect" href="#!" onmousedown="change_priority(3,<?= $act->id?>)"><span class="point-marker bg-warning"></span>Less</a></div> </div>
                                                                 </td>
                                                                 <td><?= substr($act->activity, 0, 60) ?></td>
-                                                                <td><?= cdate($act->end_date) ?></td>
+                                                                <td><?= Carbon\Carbon::parse($act->updated_at)->diffForHumans() ?></td>
                                                             </tr>
                                                         <?php } ?>
                                                     <?php } ?>
@@ -272,7 +273,7 @@
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
-                                                        <th>End Date</th>
+                                                        <th>Last update</th>
                                                     </tr>
                                                 </tfooter>
                                             </table>
@@ -311,7 +312,7 @@
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
-                                                        <th>End Date</th>
+                                                        <th>Last update </th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -347,7 +348,7 @@
                                                                 <div class="dropdown-secondary dropdown f-right text-center"><button class="btn btn-<?=$status ?>  btn-mini dropdown-toggle waves-effect waves-light"  type="button" id="dropdown7<?=$act->id?>"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= $message ?></button><div class="dropdown-menu" aria-labelledby="dropdown7" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_priority(1,<?= $act->id?>)"><span class="point-marker bg-danger"></span>High</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_priority(2,<?= $act->id?>)"><span class="point-marker bg-warning"></span>Medium</a><a class="dropdown-item waves-light waves-effect" href="#!" onmousedown="change_priority(3,<?= $act->id?>)"><span class="point-marker bg-warning"></span>Less</a></div> </div>
                                                                 </td>
                                                                 <td><?= substr($act->activity, 0, 60) ?></td>
-                                                                <td><?= cdate($act->end_date) ?></td>
+                                                                <td><?= Carbon\Carbon::parse($act->updated_at)->diffForHumans() ?></td>
                                                             </tr>
                                                         <?php } ?>
                                                     <?php } ?>
@@ -359,7 +360,7 @@
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
-                                                        <th>End Date</th>
+                                                        <th>Last Update</th>
                                                     </tr>
                                                 </tfooter>
                                             </table>
@@ -494,6 +495,7 @@
                     }
                 });
                 change_status = function(a, b) {
+                     // alert(a);
                         $.ajax({
                             url: '<?= url('customer/changeStatus') ?>/null',
                             method: 'get',

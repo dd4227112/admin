@@ -730,7 +730,13 @@
                                                 data-i18n="nav.extra-components.session-idle-timeout">Applicants</a>
                                         </li>
                                         <li><a href="<?= url('users/template') ?>" data-i18n="nav.extra-components.offline">Forms &
-                                                Templates</a></li>
+                                                Templates</a>
+                                         </li>
+                                        <?php if(can_access('create_user_group')) { ?>
+                                         <li><a href="<?= url('users/usergroup') ?>"
+                                            data-i18n="nav.extra-components.session-idle-timeout">User groups</a>
+                                        </li>
+                                        <?php } ?>
                                     </ul>
                                 </li>
                                 <?php } ?>

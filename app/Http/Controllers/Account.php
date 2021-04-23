@@ -263,11 +263,13 @@ class Account extends Controller {
         $message = request('message');
         $email = request('email');
         $client = \App\Models\Client::where('email',$email)->first();
-
+        if(empty($client)){
+         $client = \App\Models\Client::where('email',$invoice->client->email)->first();
+        }
         $search  = array("#name","#amount","#invoice");
         $replace = array($client->name, $invoice->invoiceFees()->sum('amount'), $invoice->reference);
         $newmessage = str_replace($search, $replace, $message);
-
+        
         $arr = [
             'amount' => $invoice->invoiceFees()->sum('amount'),
             'schema_name' => $invoice->client->username,
