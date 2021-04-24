@@ -502,7 +502,7 @@ class Kernel extends ConsoleKernel {
      * cos(radians(student_gps.lat)) 
      * cos(radians(student_gps.lng) - radians('.$lng.')) 
      + sin(radians('.$lat.')) 
-     * sin(radians(student_gps.lat))) AS distance from '.$schema.'.student_gps) as gps_query where imeis=\''.$imeis.'\' and distance >= 0 and distance < 500 ';
+     * sin(radians(student_gps.lat))) AS distance from '.$schema.'.student_gps) as gps_query where imeis=\''.$imeis.'\' and distance >0 and distance <=0.78 ';
      
      
      $near_by_students=DB::select($distance_sql);
@@ -548,34 +548,6 @@ class Kernel extends ConsoleKernel {
             }
     
     
-
-
-function distance($lat1, $lon1, $lat2, $lon2, $unit) {
-    if (($lat1 == $lat2) && ($lon1 == $lon2)) {
-      return 0;
-    }
-    else {
-      $theta = $lon1 - $lon2;
-      $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
-      $dist = acos($dist);
-      $dist = rad2deg($dist);
-      $miles = $dist * 60 * 1.1515;
-      $unit = strtoupper($unit);
-  
-      if ($unit == "K") {
-        return ($miles * 1.609344);
-      } else if ($unit == "N") {
-        return ($miles * 0.8684);
-      } else {
-        return $miles;
-      }
-    }
-  }
-  
-  //echo distance(32.9697, -96.80322, 29.46786, -98.53506, "M") . " Miles<br>";
-  //echo distance(32.9697, -96.80322, 29.46786, -98.53506, "K") . " Kilometers<br>";
-  //echo distance(32.9697, -96.80322, 29.46786, -98.53506, "N") . " Nautical Miles<br>";
-  
 
 
     /**
