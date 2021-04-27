@@ -1,3 +1,4 @@
+<?php /*
 <table class="table table-responsive dataTable">
                                                                 <thead>
                                                                     <tr>
@@ -32,3 +33,4 @@
                                                                     <?php } ?>
                                                                 </tbody>
                                                             </table>
+ */ ?>

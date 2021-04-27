@@ -101,9 +101,9 @@ class Handler extends ExceptionHandler {
         if ($exception instanceof \Illuminate\Session\TokenMismatchException) {
             return redirect()->back()->with('info', 'Your session expired, please login below to continue');
         }
-        if ($exception->getStatusCode() === 500){
-            return redirect()->guest(route('login'));
-        }
+        // if ($exception->getStatusCode() === 500){
+        //     return redirect()->guest(route('login'));
+        // }
         $this->createLog($exception);
         return parent::render($request, $exception);
     }

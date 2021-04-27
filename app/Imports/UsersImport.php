@@ -5,10 +5,11 @@ namespace App\Imports;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use DB;
 use Auth;
 
-class UsersImport implements ToModel
+class UsersImport implements ToModel, WithHeadingRow
 {
     /**
      * @param array $row
@@ -17,34 +18,34 @@ class UsersImport implements ToModel
      */
     public function model(array $row)
     {
-        $check = User::where('email', $row[2])->first();
+        $check = User::where('email', $row['email'])->first();
         if(empty($check)){
-            $email = $row[2];
+            $email = $row['email'];
         }else{
-            $email =  strtolower($row[0].$row[1]).'@shulesoft.com';
+            $email =  strtolower($row['firstname'].$row['lastname']).'@shulesoft.com';
         }
 
         $user = User::create([
-            'firstname' => $row[0],
-            'lastname' => $row[1],
-            'phone' => $row[3],
+            'firstname' => $row['firstname'],
+            'lastname' => $row['lastname'],
+            'phone' => $row['phone'],
            'email' => $email,
            'password' => bcrypt($email),
            'role_id' => 20,
-           'name' => $row[0] .' '. $row[1],
+           'name' => $row['firstname'] .' '. $row['lastname'],
            'dp' => 'default.png',
-           'town' => $row[6],
+           'town' => $row['address'],
            'created_by' => Auth::User()->id,
            'photo' => 'default.png',
-            'salary' => $row[8],
-           'sex' => $row[4],
-           'marital' => $row[5],
-           'employment_category' => $row[7], //'temporarily',
-           'address' => $row[6],
-           'date_of_birth' => $row[10],
-           'dob' => $row[10],
+            'salary' => $row['salary'],
+           'sex' => $row['sex'],
+           'marital' => $row['marital'],
+           'employment_category' => $row['employment_category'], //'temporarily',
+           'address' => $row['address'],
+           'date_of_birth' => date("Y-m-d", strtotime($row['dob'])),
+           'dob' => $row['dob'],
            'department' => 2,
-           'academic_certificates' => $row[9],
+           'academic_certificates' => $row['academic_certificates'],
         ]);
         if($user){
             $message = 'Hello ' . $user->name . ' You have been added in ShuleSoft Administration panel. You can login for Administration of schools with username ' . $user->email . ' and password ' . $user->email;
