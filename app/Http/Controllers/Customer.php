@@ -426,7 +426,6 @@ class Customer extends Controller {
 
     public function profile() {
         $school = $this->data['schema'] = request()->segment(3);
-
         $id = request()->segment(4);
         $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get();
         $is_client = 0;
@@ -610,21 +609,21 @@ class Customer extends Controller {
         public function choices(){
             $type = request('type');
             if($type == 'year'){
-                $this->data['completetasks']  = \App\Models\Task::where('user_id',Auth::user()->id)->where('status', 'complete')->whereYear('created_at', date('Y'))->orderBy('created_at', 'desc')->get();
+                $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->whereYear('created_at', date('Y'))->orderBy('created_at', 'desc')->get();
             } else if($type == 'quoter'){
                 $date = \Carbon\Carbon::today()->subDays(120);
-                $this->data['completetasks']  = \App\Models\Task::where('user_id',Auth::user()->id)->where('status', 'complete')->where('created_at','>=',$date)->orderBy('created_at', 'desc')->get();
+                $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->where('created_at','>=',$date)->orderBy('created_at', 'desc')->get();
             } else if($type == 'month'){
-                $this->data['completetasks']  = \App\Models\Task::where('user_id',Auth::user()->id)->where('status', 'complete')->whereMonth('created_at', Carbon::now()->month)
+                $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->whereMonth('created_at', Carbon::now()->month)
                 ->whereYear('created_at', date('Y'))->orderBy('created_at', 'desc')->get();
             } else if($type == 'week'){
-                $this->data['completetasks']  = \App\Models\Task::where('user_id',Auth::user()->id)->where('status', 'complete')->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->orderBy('created_at', 'desc')->get();
+                $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->orderBy('created_at', 'desc')->get();
             } else if($type == 'yesterday'){
-                $this->data['completetasks']  = \App\Models\Task::where('user_id',Auth::user()->id)->where('status', 'complete')->whereDate('created_at', Carbon::yesterday())->orderBy('created_at', 'desc')->get();
+                $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->whereDate('created_at', Carbon::yesterday())->orderBy('created_at', 'desc')->get();
             } else if($type == 'today') {
-               $this->data['completetasks']  = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'complete')->whereDate('created_at', Carbon::today())->orderBy('created_at', 'desc')->get();
+               $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->whereDate('created_at', Carbon::today())->orderBy('created_at', 'desc')->get();
             } else{
-                $this->data['completetasks']  = \App\Models\Task::where('user_id',Auth::user()->id)->where('status', 'complete')->orderBy('created_at', 'desc')->limit(100)->get();
+                $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->orderBy('created_at', 'desc')->limit(100)->get();
             }
             return view('customer.activity', $this->data);
         }

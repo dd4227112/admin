@@ -139,6 +139,7 @@
                                             <th>Action</th>
                                         </tr>
                                     </thead>
+
                                     <tbody>
                                         <?php
                                         $i = 1;
@@ -149,10 +150,8 @@
                                             $school_phone = '';
                                             $use_nmb = '';
                                             if (strlen($school->schema_name) > 3) {
-
                                                 $setting = \DB::table($school->schema_name . '.setting')->first();
                                                 $school_phone = $setting->phone;
-
                                                 if (\DB::table($school->schema_name . '.student')->count() < 5) {
                                                     $client_status = '<span class="label label-danger">Client - Not Active</span>';
                                                 } else {
@@ -165,9 +164,9 @@
                                             <tr>
                                                 <td><?= $i++ ?></td>
                                                 <td><?= $school->name ?></td>
-                                                <td><?= $school->region ?></td>
-                                                <td><?= $school->district ?></td>
-                                                <td><?= $school->ward ?></td>
+                                                <td><?= $school->wards->district->region->name ?></td>
+                                                <td><?= $school->wards->district->name ?></td>
+                                                <td><?= $school->wards->name ?></td>
                                                 <td><?= $school->type ?></td>
                                                 <td><?= $school_phone ?></td>
                                                 <td>
