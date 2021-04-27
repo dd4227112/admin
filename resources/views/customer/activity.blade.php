@@ -147,7 +147,7 @@
                                                 <tbody>
                                                     <?php
                                                     $i = 1; $date = \Carbon\Carbon::today()->subDays(7);
-                                                    $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('created_at','>=',$date)->where('status', 'new')->orderBy('created_at', 'desc')->limit(100)->get();
+                                                    $tasks = \App\Models\Task::where('created_at','>=',$date)->where('status', 'new')->orderBy('created_at', 'desc')->limit(100)->get();
                                                   //  dd($tasks);
                                                     if (!empty($tasks)) { 
                                                         foreach ($tasks as $act) {
@@ -232,7 +232,7 @@
                                                 <tbody>
                                                     <?php
                                                     $i = 1;
-                                                    $tasks = \App\Models\Task::where('user_id', $user = Auth::user()->id)->where('status', 'on progress')->orderBy('created_at', 'desc')->limit(100)->get();
+                                                    $tasks = \App\Models\Task::where('status', 'on progress')->orderBy('created_at', 'desc')->limit(100)->get();
                                                     if (!empty($tasks)) {
                                                         foreach ($tasks as $act) {
                                                             if ($act->priority == '1') {
