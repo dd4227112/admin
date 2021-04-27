@@ -34,12 +34,12 @@ class Kernel extends ConsoleKernel {
             $this->save_car_track_access_token('public');
            
            
-        })->everyMinute();
+        })->everyTwoHours();
        
         $schedule->call(function () {
             $this->car_track_alert_parent('public'); 
            
-        })->everyMinute();
+        })->everyTwoHours();
         $schedule->command('inspire')
                 ->hourly();
         $schedule->call(function () {
@@ -444,7 +444,7 @@ class Kernel extends ConsoleKernel {
          'timestamp' => gmdate("Y-m-d H:i:s", time()),
          'user_id' => $track_key->user_id,
          'v' => '0.9',
-         'expires_in'=>60,
+         'expires_in'=>7200,
          'app_key' => $track_key->app_key,
          'user_pwd_md5' => $track_key->user_pwd_md5,
          'format' => 'json'],'http://open.10000track.com/route/rest');
@@ -502,15 +502,16 @@ class Kernel extends ConsoleKernel {
      * cos(radians(student_gps.lat)) 
      * cos(radians(student_gps.lng) - radians('.$lng.')) 
      + sin(radians('.$lat.')) 
-     * sin(radians(student_gps.lat))) AS distance from '.$schema.'.student_gps) as gps_query where imeis=\''.$imeis.'\' and distance >= 0 and distance < 500 ';
+     * sin(radians(student_gps.lat))) AS distance from '.$schema.'.student_gps) as gps_query where imeis=\''.$imeis.'\' and distance >0 and distance <=0.78 ';
      
      
      $near_by_students=DB::select($distance_sql);
      
      
      if(count($near_by_students)>0){
+         $table="table";
      foreach($near_by_students as $near_by_student){  
-         DB::statement("insert into public.sms (phone_number,body,type,sms_keys_id,user_id,table) values ('" . $near_by_student->phone . "','" . $track_key->message . "',0," . $key->id . "," . $near_by_student->parent_id . ",'parent' )");
+         DB::statement("insert into public.sms (phone_number,body,type,sms_keys_id,user_id,\"$table\") values ('" . $near_by_student->phone . "','" . $track_key->message . "',0," . $key->id . "," . $near_by_student->parent_id . ",'parent' )");
      
      
      }
@@ -547,34 +548,6 @@ class Kernel extends ConsoleKernel {
             }
     
     
-
-
-function distance($lat1, $lon1, $lat2, $lon2, $unit) {
-    if (($lat1 == $lat2) && ($lon1 == $lon2)) {
-      return 0;
-    }
-    else {
-      $theta = $lon1 - $lon2;
-      $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
-      $dist = acos($dist);
-      $dist = rad2deg($dist);
-      $miles = $dist * 60 * 1.1515;
-      $unit = strtoupper($unit);
-  
-      if ($unit == "K") {
-        return ($miles * 1.609344);
-      } else if ($unit == "N") {
-        return ($miles * 0.8684);
-      } else {
-        return $miles;
-      }
-    }
-  }
-  
-  //echo distance(32.9697, -96.80322, 29.46786, -98.53506, "M") . " Miles<br>";
-  //echo distance(32.9697, -96.80322, 29.46786, -98.53506, "K") . " Kilometers<br>";
-  //echo distance(32.9697, -96.80322, 29.46786, -98.53506, "N") . " Nautical Miles<br>";
-  
 
 
     /**
