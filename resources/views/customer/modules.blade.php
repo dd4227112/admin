@@ -1,25 +1,25 @@
 @extends('layouts.app')
 @section('content')
 <?php
-/**
- * select distinct &quot;schema_name&quot; from admin.all_student where extract (year from
-  created_at)=&#39;2019&#39; order by &quot;schema_name&quot; -to get the schools that have recorded
-  students this year.
-  ● select distinct &quot;schema_name&quot; from admin.all_marks where extract (year from
-  created_at)=&#39;2019&#39; -to get the schools that have recorded marks in the system.
-  ● select distinct &quot;schema_name&quot; from admin.all_invoices where extract (year from
-  created_at)=&#39;2019&#39; -to get the schools that have created invoices in the system.
-  ● select distinct &quot;schema_name&quot; from admin.all_bank_accounts_integrations where
-  extract (year from created_at)=&#39;2019&#39; -to get the schools that have been integrated
-  with NMB.
-  ● select distinct &quot;schema_name&quot; from admin.all_payments where extract (year from
-  created_at)=&#39;2019&#39; -to get the schools that have recorded payments.
-  ● select distinct &quot;schema_name&quot; from admin.all_payments where extract (year from
-  created_at)=&#39;2019&#39; and &quot;token&quot; is not null -to get the schools that have recorded
-  payments electronically.
-  ● select distinct &quot;schema_name&quot; from admin.all_expense where extract (year from
-  created_at)=&#39;2019&#39; -to
- */
+// /**
+//  * select distinct &quot;schema_name&quot; from admin.all_student where extract (year from
+//   created_at)=&#39;2019&#39; order by &quot;schema_name&quot; -to get the schools that have recorded
+//   students this year.
+//   ● select distinct &quot;schema_name&quot; from admin.all_marks where extract (year from
+//   created_at)=&#39;2019&#39; -to get the schools that have recorded marks in the system.
+//   ● select distinct &quot;schema_name&quot; from admin.all_invoices where extract (year from
+//   created_at)=&#39;2019&#39; -to get the schools that have created invoices in the system.
+//   ● select distinct &quot;schema_name&quot; from admin.all_bank_accounts_integrations where
+//   extract (year from created_at)=&#39;2019&#39; -to get the schools that have been integrated
+//   with NMB.
+//   ● select distinct &quot;schema_name&quot; from admin.all_payments where extract (year from
+//   created_at)=&#39;2019&#39; -to get the schools that have recorded payments.
+//   ● select distinct &quot;schema_name&quot; from admin.all_payments where extract (year from
+//   created_at)=&#39;2019&#39; and &quot;token&quot; is not null -to get the schools that have recorded
+//   payments electronically.
+//   ● select distinct &quot;schema_name&quot; from admin.all_expense where extract (year from
+//   created_at)=&#39;2019&#39; -to
+//  */
 $marks = DB::select('select distinct "schema_name", max(created_at) as created_at from admin.all_mark group by schema_name');
 $mark_status = [];
 foreach ($marks as $mark) {
@@ -296,7 +296,6 @@ function select($value, $schema, $sources) {
                                                                                     ?>
                                                                                     <option user_id="<?= $staff->id ?>" role_id="8" schema="<?= $school->schema_name ?>" school_id="" value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
                                                                                 <?php } ?>
-
                                                                             </select>
                                                                             <span id="status_result_8_<?= $school->schema_name ?>"></span>
 

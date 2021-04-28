@@ -108,7 +108,7 @@
                             <h5>List of Schools Under <u><?= $staff->name ?></u></h5>
                             <?php
                             if (Auth::user()->role_id == 1) {
-                                $users = \App\Models\User::where('status', 1)->whereIn('role_id', [8, 14])->get();
+                             $users = \App\Models\User::where('status', 1)->where('role_id','<>','7')->get();
                                 ?>
                                 <span style="float: right">
                                     <select class="form-control" style="width:300px;" id='taskdate'>
@@ -141,7 +141,7 @@
                                     </thead>
 
                                     <tbody>
-                                        <?php
+                                        <?php 
                                         $i = 1;
                                         foreach ($schools as $school) {
                                             ?>
@@ -149,10 +149,14 @@
                                             $client_status = '';
                                             $school_phone = '';
                                             $use_nmb = '';
-                                            if (strlen($school->schema_name) > 3) {
-                                                $setting = \DB::table($school->schema_name . '.setting')->first();
+                                           $schema_name = DB::table('admin.clients')->select('clients.*')->join('admin.client_schools', 'admin.client_schools.client_id','=','admin.clients.id')->join('admin.schools', 'admin.schools.id','=','admin.client_schools.school_id')
+                                              ->where(['schools.id' => $school->id])->first()->username;
+                                            
+                                            if (strlen($schema_name) > 3) {
+                                                $setting = \DB::table($schema_name . '.setting')->first();
                                                 $school_phone = $setting->phone;
-                                                if (\DB::table($school->schema_name . '.student')->count() < 5) {
+
+                                                if (\DB::table($schema_name . '.student')->count() < 5) {
                                                     $client_status = '<span class="label label-danger">Client - Not Active</span>';
                                                 } else {
                                                     $client_status = '<span class="label label-success">Client</span>';
@@ -178,20 +182,18 @@
                                                         . '</ul>';
                                                     }
                                                     ?>
-
                                                 </td>
                                                 <td>
                                                     <?= $client_status ?>
-
                                                 </td>
                                                 <?php
                                                 echo '<td>';
 
-                                                // echo '<a href="' . url('sales/profile/' . $school->school->id) . '" class="btn btn-success btn-sm"> View</a>';
+                                                 echo '<a href="' . url('sales/profile/' . $school->id) . '" class="btn btn-success btn-sm"> View</a>';
 
                                                 echo '</td>';
                                                 echo '</tr>';
-                                            }
+                                                 }
                                             ?>
                                     </tbody>
                                 </table>
