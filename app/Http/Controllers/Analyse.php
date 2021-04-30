@@ -62,6 +62,7 @@ class Analyse extends Controller {
             join admin.users d on d.id=a.user_id join admin.task_types e on a.task_type_id=e.id WHERE a.user_id = $user order by a.created_at::date desc";
             $this->data['activities'] = DB::select($sql);
             $this->data['summary'] = $this->summary();
+        
             return view('analyse.index', $this->data);
         }
     }
