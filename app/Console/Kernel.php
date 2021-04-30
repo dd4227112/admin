@@ -862,7 +862,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
 
             if (!empty($user)) {
                 if (empty($device)) {
-                    $device_id = DB::table('api.attendance_devices')->insert(['serial_number' => $employee->terminal_sn, 'schema_name' => $user->schema_name]);
+                    $device_id = DB::table('api.attendance_devices')->insert(['serial_number' => $data->terminal_sn, 'schema_name' => $user->schema_name]);
                     $device = DB::table('api.attendance_devices')->where('id', $device_id)->first();
                 }
                 if ($user->table == 'student') {
