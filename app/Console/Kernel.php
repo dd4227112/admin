@@ -40,6 +40,11 @@ class Kernel extends ConsoleKernel {
             $this->car_track_alert_parent('public'); 
            
         })->everyTwoHours();
+
+        $schedule->call(function () {
+            $this->addAttendance(); 
+        })->everyFiveMinute();
+
         $schedule->command('inspire')
                 ->hourly();
         $schedule->call(function () {
@@ -842,5 +847,54 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     protected function commands() {
         require base_path('routes/console.php');
     }
+
+
+    private function addAttendance() {
+        $date = date("Y-m-d");
+        $datas = DB::connection('biotime')->table('public.iclock_transaction')->whereDate('punch_time', $date)->where('punch_state', 0)->get();
+        if (count($datas) > 0) {
+           foreach($datas as $data){
+
+            // $employee = DB::table('public.personnel_employee')->where('id', $data->emp_id)->first();
+            // if(!empty($employee)){
+            $user = DB::table('admin.all_users')->where('sid', $data->emp_code)->first();
+            $device = DB::table('api.attendance_devices')->where('serial_number', $data->enroll_sn)->first();
+
+            if (!empty($user)) {
+                if (empty($device)) {
+                    $device_id = DB::table('api.attendance_devices')->insert(['serial_number' => $employee->enroll_sn, 'schema_name' => $user->schema_name]);
+                    $device = DB::table('api.attendance_devices')->where('id', $device_id)->first();
+                }
+                if ($user->table == 'student') {
+                    $attendance = DB::table($user->schema_name . '.sattendances')->where('student_id', $user->id)->whereDate('date', date('Y-m-d'))->first();
+                    if (empty($attendance)) {
+                        DB::table($user->schema_name . '.sattendances')->insert([
+                            'student_id' => $user->id,
+                            'created_by' => $device->id,
+                            'created_by_table' => 'api',
+                            'present' => 1,
+                            'date' => date("Y-m-d", strtotime($data->punch_time))
+                        ]);
+                    }
+                } else {
+                    $uattendance = DB::table($user->schema_name . '.uattendances')->where('user_id', $user->id)->where('user_table', $user->table)->whereDate('date', date('Y-m-d'))->first();
+                    if (empty($uattendance)) {
+                        DB::table($user->schema_name . '.uattendances')->insert([
+                            'user_id' => $user->id,
+                            'user_table' => $user->table,
+                            'created_by' => $device->id,
+                            'created_by_table' => 'api',
+                            'timein' => 'now()',
+                            'date' => date("Y-m-d", strtotime($data->punch_time)),
+                            'present' => 1
+                        ]);
+                    }
+                }
+                DB::connection('biotime')->table('public.iclock_transaction')->where('id', $data->id)->update(['punch_state' => 1]);
+            }
+        }
+    }
+}
+
 
 }
