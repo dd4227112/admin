@@ -43,7 +43,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
             $this->addAttendance(); 
-        })->everyFiveMinute();
+        })->everyFiveMinutes();
 
         $schedule->command('inspire')
                 ->hourly();
