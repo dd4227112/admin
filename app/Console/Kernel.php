@@ -851,7 +851,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
 
     private function addAttendance() {
         $date = date("Y-m-d");
-        $datas = DB::connection('biotime')->table('public.iclock_transaction')->whereDate('punch_time', $date)->where('punch_state', 0)->get();
+        $datas = DB::connection('biotime')->table('public.iclock_transaction')->whereDate('punch_time', $date)->where('punch_state', '0')->get();
         if (count($datas) > 0) {
            foreach($datas as $data){
 
@@ -890,7 +890,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                         ]);
                     }
                 }
-                DB::connection('biotime')->table('public.iclock_transaction')->where('id', $data->id)->update(['punch_state' => 1]);
+                DB::connection('biotime')->table('public.iclock_transaction')->where('id', $data->id)->update(['punch_state' => '1']);
             }
         }
     }
