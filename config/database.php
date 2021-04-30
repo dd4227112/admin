@@ -91,6 +91,21 @@ return [
             'schema' => 'new_karibusms',
             'sslmode' => 'prefer',
         ],
+
+    'biotime' => [
+            'driver' => 'pgsql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_HOST', '51.91.251.252'),
+            'port' => env('DB_PORT', '5432'),
+            'database' => 'biotime',
+            'username' =>  'postgres',
+            'password' => env('DB_PASSWORD', 'Jesus_ShuleSoft@2020_'),
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+        ],
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_URL'),
