@@ -522,6 +522,7 @@ class Customer extends Controller {
     public function activity() {
         $tab = request()->segment(3);
         $id = request()->segment(4);
+      //  dd(request('user_id'));
         if ($tab == 'add') {
             $this->data['types'] = DB::table('task_types')->where('department', Auth::user()->department)->get();
             $this->data['departments'] = DB::table('departments')->get();

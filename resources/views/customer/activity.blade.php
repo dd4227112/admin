@@ -48,8 +48,7 @@
                           <?php } ?>
                             <?php
                             if (Auth::user()->role_id == 1) {
-                                $users = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get();
-                            ?>
+                                $users = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get(); ?>
                                 <span style="float: right">
                                     <select class="form-control" style="width:300px;" id='taskdate'>
                                         <option></option>
@@ -57,23 +56,8 @@
                                             <option value="<?= $user->id ?>" <?= (int) request('user_id') > 0 && request('user_id') == $user->id ? 'selected' : '' ?>><?= $user->firstname . ' ' . $user->lastname ?></option>
                                         <?php } ?>
                                     </select>
-                                </span>
-
-                         <?php  $types = DB::table('task_types')->get(); ?>
-
-                                 <span style="float: right">
-                                    <select name="task_type_id" id="task_type_id" required class="form-control select2">
-                                        <option value=''> Task Type</option>
-                                        <?php
-                                        foreach ($types as $type) {
-                                            ?>
-                                            <option value="<?= $type->id ?>"> <?= $type->name ?></option>
-                                        <?php } ?>
-
-                                    </select>
-                                </span>
-
-                            <?php } ?>
+                                </span>                  
+                            <?php } ?> 
 
                         </div>
                         <div class="col-lg-12 col-xl-12">
