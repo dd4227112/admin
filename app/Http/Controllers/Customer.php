@@ -498,6 +498,7 @@ class Customer extends Controller {
 
     public function addStandingOrder() {
         if ($_POST) {
+           
             $file = request('standing_order_file');
             $company_file_id = $this->saveFile($file, 'company/contracts');
 
@@ -506,13 +507,17 @@ class Customer extends Controller {
                 'branch_id' => request('branch_id'),
                 'company_file_id' => $company_file_id,
                 'school_contact_id' => request('school_contact_id'),
-                'user_id' => Auth::user()->id,
+                'created_by' => Auth::user()->id,
                 'occurrence' => request('number_of_occurrence'),
-                'basis' => request('which_basis'),
-                'total_amount' => request('total_amount'),
+                'type' => request('which_basis'),
+                'amount' => request('total_amount'),
                 'occurance_amount' => request('occurance_amount'),
-                'date' => request('maturity_date')
+                'payment_date' => request('maturity_date'),
+                'refer_bank_id' => request('refer_bank_id'),
+                'note' => request('note'),
+                'contract_type_id' => request('contract_type_id')
             ];
+          
             DB::table('standing_orders')->insert($data);
             return redirect()->back()->with('success', 'Standing order added successfully!');
         }
