@@ -78,13 +78,18 @@ class Kernel extends ConsoleKernel {
             $this->sendTodReminder();
         })->dailyAt('03:30'); // Eq to 06:30 AM 
 
-        $schedule->call(function () {
+        $schedule->call(function () { 
 
             $this->sendNotice();
             $this->sendBirthdayWish();
             $this->sendTaskReminder();
             // $this->sendSequenceReminder();
+        })->dailyAt('04:40'); // Eq to 07:40 AM   
+
+        $schedule->call(function () { 
+            $this->sendSORemainder();
         })->dailyAt('04:40'); // Eq to 07:40 AM 
+          
 //        $schedule->call(function() {
 //            //send login reminder to parents in all schema
 //            $this->sendLoginReminder();
@@ -893,6 +898,34 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                 DB::connection('biotime')->table('public.iclock_transaction')->where('id', $data->id)->update(['punch_state' => '1']);
             }
         }
+    }
+}
+
+
+public function sendSORemainder() {
+    $users = \App\Models\User::where('role_id',1)->get();
+    foreach ($users as $user) {
+        $standingorders = DB::select('select * from admin.standing_orders  WHERE  payment_date-CURRENT_DATE=0 and status=1');
+        $msg = '';
+        foreach ($standingorders as $st) {
+            $msg .= '<tr><td>' . $st->client->name . '</td><td>' . $st->occurance_amount . '</td></tr>';
+        }
+        $message = ''
+                . '<h2>Standing orders</h2>'
+                . '<p>This is the list of matured standing orders </p>'
+                . '<table><thead><tr><th>Client name</th><th> Amount </th></tr></thead><tbody>' . $msg . '</tbody></table>';
+        DB::table('public.email')->insert([
+            'subject' => date('Y M d') . ' Standing order remainder',
+            'body' => $message,
+            'email' => $user->email
+        ]);
+
+        $smsmessage = 'Hello kindly remember to check matured standing orders in the admin panel. Thank you';
+        DB::table('public.sms')->insert([
+            'body' => $smsmessage,
+            'phone_number' => $user->phone,
+            'type' => 0
+        ]);
     }
 }
 

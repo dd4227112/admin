@@ -213,8 +213,9 @@ department = function () {
                     results: function (data) {
                         return {
                             results: $.map(data, function (item) {
+                               var value = item.client == 1 ? 'Client' : 'Not Client'
                                 return {
-                                    text: item.name,
+                                    text: item.name + '  ('+ value +') ',
                                     id: item.id
                                 };
                             })

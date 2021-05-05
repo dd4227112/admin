@@ -848,6 +848,7 @@
                                 <ul class="tree-1">
                                     <!-- <li><a href="<?= url('account/projection') ?>" data-i18n="nav.advance-components.draggable">Projections</a></li> -->
                                     <li><a href="<?= url('account/invoice') ?>" data-i18n="nav.advance-components.grid-stack">Invoice</a></li>
+                                    <li><a href="<?= url('account/standingOrders') ?>" data-i18n="nav.advance-components.grid-stack">Standing orders</a></li>
                                     <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Transactions</a>
                                         <ul class="tree-2">
                                             <a href="<?= url('account/revenue') ?>"><i class="fa icon-account"></i> Revenue</a>

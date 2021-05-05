@@ -43,13 +43,12 @@
                     <!-- Ajax data source (Arrays) table start -->
                     <div class="card">
                         <div class="card-header">
-                          <?php if(can_access('add_task')) { ?>
+                          <?php if(can_access('add_task')) {?> 
                             <a class="btn btn-success btn-sm" href="<?= url('customer/activity/add') ?>"> Add New Task</a>
                           <?php } ?>
                             <?php
                             if (Auth::user()->role_id == 1) {
-                                $users = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get();
-                            ?>
+                                $users = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get(); ?>
                                 <span style="float: right">
                                     <select class="form-control" style="width:300px;" id='taskdate'>
                                         <option></option>
@@ -57,9 +56,8 @@
                                             <option value="<?= $user->id ?>" <?= (int) request('user_id') > 0 && request('user_id') == $user->id ? 'selected' : '' ?>><?= $user->firstname . ' ' . $user->lastname ?></option>
                                         <?php } ?>
                                     </select>
-                                </span>
-
-                            <?php } ?>
+                                </span>                  
+                            <?php } ?> 
 
                         </div>
                         <div class="col-lg-12 col-xl-12">
@@ -91,43 +89,55 @@
                                 <div class="tab-content tabs">
                                         {{-- New tasks --}}
 
-                                        <div class="tab-pane" id="home1" role="tabpanel">
-                                            <div class="table-responsive  table-striped table-bordered table-hover">
-                                                <table class="table dataTable">
-                                                    <tr>
-                                                        <th>All tasks</th>
-                                                        <th>New tasks</th>
-                                                        <th>Progressed tasks</th>
-                                                        <th>Completed tasks</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th class="text-center"><?= \App\Models\Task::count();  ?></th>
-                                                        <th class="text-center"><?= \App\Models\Task::where('status', 'new')->count();  ?></th>
-                                                        <th class="text-center"><?= \App\Models\Task::where('status', 'on progress')->count(); ?></th>
-                                                        <th class="text-center"><?= \App\Models\Task::where('status', 'complete')->count();?></th>
-                                                    </tr>
-                                                </table>
-                                            </div>
+                <div class="tab-pane" id="home1" role="tabpanel">
+                    <div class="table-responsive  table-striped table-bordered table-hover">
+                        <table class="table dataTable">
+                    <tr>
+                        <th>All tasks</th>
+                        <th>New tasks</th>
+                        <th>Progressed tasks</th>
+                        <th>Completed tasks</th>
+                    </tr>
+                    <tr>
+                        <th class="text-center">
+                            <?= Auth::user()->role_id == 1 ? \App\Models\Task::count() : 
+                            \App\Models\Task::where('user_id',Auth::user()->id)->count();  ?>
+                                
+                        </th>
+                        <th class="text-center">
+                            <?= Auth::user()->role_id == 1 ? \App\Models\Task::where('status', 'new')->count() :
+                             \App\Models\Task::where('status', 'new')->where('user_id',Auth::user()->id)->count();  ?>   
+                        </th>
+                        <th class="text-center">
+                            <?= Auth::user()->role_id == 1 ? \App\Models\Task::where('status', 'on progress')->count() : 
+                            \App\Models\Task::where('status', 'on progress')->where('user_id',Auth::user()->id)->count(); ?></th>
+                        <th class="text-center">
+                            <?= Auth::user()->role_id == 1 ? \App\Models\Task::where('status', 'complete')->count() : 
+                            \App\Models\Task::where('status', 'complete')->where('user_id',Auth::user()->id)->count();?>    
+                        </th>
+                    </tr>
+                    </table>
+                </div>
 
-                                            <div class="table-responsive">
-                                                <table class="display nowrap table dataTable dt-ajax-array table-bordered">
-                                                  <thead>
-                                                      <tr>
-                                                          <th>No.</th>
-                                                          <th>Ticket</th>
-                                                          <th>Task type</th>
-                                                          <th>Priority</th>
-                                                          <th>School</th>
-                                                          <th>Activity</th>
-                                                       
-                                                          <th>Status</th>
-                                                      </tr>
-                                                  </thead>
-                                                  <tbody>
-                                                 </tbody>
-                                              </table>
-                                          </div>
-                                      </div>
+                        <div class="table-responsive">
+                            <table class="display nowrap table dataTable dt-ajax-array table-bordered">
+                              <thead>
+                                  <tr>
+                                      <th>No.</th>
+                                      <th>Ticket</th>
+                                      <th>Task type</th>
+                                      <th>Priority</th>
+                                      <th>School</th>
+                                      <th>Activity</th>
+                                   
+                                      <th>Status</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                             </tbody>
+                          </table>
+                      </div>
+                  </div>
 
 
                                  <div class="tab-pane active" id="newtask" role="tabpanel">
@@ -144,11 +154,16 @@
                                                         <th>Status</th>
                                                     </tr>
                                                 </thead>
+                                      
                                                 <tbody>
                                                     <?php
                                                     $i = 1; $date = \Carbon\Carbon::today()->subDays(7);
-                                                    $tasks = \App\Models\Task::where('created_at','>=',$date)->where('status', 'new')->orderBy('created_at', 'desc')->limit(100)->get();
-                                                  //  dd($tasks);
+                                     if(Auth::user()->role_id == 1) {
+$tasks = \App\Models\Task::where('status', 'new')->where('created_at','>=',$date)->orderBy('created_at', 'desc')->limit(100)->get();  
+                                         } else{
+    $tasks = \App\Models\Task::where('status', 'new')->where('created_at','>=',$date)->where('user_id',Auth::user()->id)->orderBy('created_at', 'desc')->limit(100)->get();    
+                                         }
+                                                  
                                                     if (!empty($tasks)) { 
                                                         foreach ($tasks as $act) {
                                                                if ($act->priority == '1') {
@@ -198,8 +213,8 @@
                                                             </tr>
                                                         <?php } ?>
                                                     <?php } ?>
-                                            
-                                                </tbody>
+                                                    </tbody>
+                                               
                                                 <tfooter>
                                                     <tr>
                                                         <th>No.</th>
@@ -216,8 +231,8 @@
                                     </div>
 
                                         {{-- New Progress --}}
-                                    <div class="tab-pane" id="Progress" role="tabpanel">
-                                        <div class="table-responsive  table-striped table-bordered table-hover">
+                                <div class="tab-pane" id="Progress" role="tabpanel">
+                                    <div class="table-responsive  table-striped table-bordered table-hover">
                                             <table class="table dataTable">
                                                 <thead>
                                                     <tr>
@@ -230,10 +245,15 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <?php
-                                                    $i = 1;
-                                                    $tasks = \App\Models\Task::where('status', 'on progress')->orderBy('created_at', 'desc')->limit(100)->get();
-                                                    if (!empty($tasks)) {
+                                                 <?php $i = 1;
+                                         if(Auth::user()->role_id == 1) {
+$tasks = \App\Models\Task::where('status', 'on progress')->orderBy('created_at', 'desc')->limit(100)->get();  
+                                         } else{
+    $tasks = \App\Models\Task::where('status', 'on progress')->where('user_id',Auth::user()->id)->orderBy('created_at', 'desc')->limit(100)->get();    
+                                         }
+            
+                                                    if (!empty($tasks)) { 
+
                                                         foreach ($tasks as $act) {
                                                             if ($act->priority == '1') {
                                                                     $status = 'success';

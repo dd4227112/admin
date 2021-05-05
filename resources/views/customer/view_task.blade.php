@@ -35,12 +35,12 @@
                         <div class="card">
                             <div class="card-block">
                                
-                                                        <table class="table m-0">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <th scope="row">Task Period</th>
-                                                                    <th>Start {{ date('d-m-Y H:i:s', strtotime($activity->start_date)) }} &nbsp;&nbsp; &nbsp;  to  &nbsp;&nbsp; &nbsp;   <?=  date('d-m-Y H:i:s', strtotime($activity->end_date)) ?></th>
-                                                                </tr>
+                                  <table class="table m-0">
+                                        <tbody>
+                                                <tr>
+                                                    <th scope="row">Task Period</th>
+                                                    <th>Start {{ date('d-m-Y H:i:s', strtotime($activity->start_date)) }} &nbsp;&nbsp; &nbsp;  to  &nbsp;&nbsp; &nbsp;   <?=  date('d-m-Y H:i:s', strtotime($activity->end_date)) ?></th>
+                                                </tr>
                                                                 <tr>
                                                                     <th scope="row">Staff Members</th>
                                                                     <th>
