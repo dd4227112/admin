@@ -70,7 +70,9 @@ return $echo;
                                                     frameborder="0" scrolling="no" marginheight="0"
                                                     marginwidth="0"></iframe><a
                                                     href="https://www.embedgooglemap.net/blog/nordvpn-coupon-code/">nordvpn
-                                                    coupon</a></div>
+                                                    coupon</a>
+                                            </div>
+                                            
                                             <style>
                                             .mapouter {
                                                 position: relative;
@@ -1587,10 +1589,10 @@ return $echo;
 
                                             <div class="row">
                                                 <div class="card">
-                                                    <button type="button" class="btn btn-primary waves-effect"
-                                                        data-toggle="modal" data-target="#standing-order-Modal">
+                                                    <a type="button" class="btn btn-primary waves-effect"
+                                                        href="{{ url('Customer/uploadstandingorder') }}">
                                                         Standing Order 
-                                                    </button>
+                                                    </a>
                                                 </div>
 
                                                 <div class="modal fade" id="standing-order-Modal" tabindex="-1"
@@ -1605,7 +1607,7 @@ return $echo;
                                                                         <span aria-hidden="true">×</span>
                                                                     </button>
                                                                 </div>
-                                                                <form action="{{ url('Customer/addStandingOrder') }}" method="post"  enctype="multipart/form-data">
+                                                                <form action="{{ url('Customer/createSI') }}" method="post"  enctype="multipart/form-data">
                                                                     <div class="modal-body">
                                                                         
                                                                         <div class="form-group">
@@ -1886,67 +1888,6 @@ return $echo;
                                             </div>
 
 
-                                      
-                                            <div class="row">
-                                                <div class="card table-responsive">
-                                                    <table id="invoice_table"
-                                                        class="table table-striped table-bordered nowrap dataTable">
-                                                        <thead>
-                                                            <tr>
-                                                            <th>No.</th>
-                                                            <th>Branch</th>
-                                                            <th>School contact</th>
-                                                            <th>Occurance</th>
-                                                            <th>Basis</th>
-                                                            <th>Occurance amount</th>
-                                                            <th>Total amount</th>
-                                                            <th>Maturity date</th>
-                                                            <th colspan="2" class="text-center">Actions</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                  <?php $i = 1;  ?> 
-                                                  <?php  $standingorders = \App\Models\StandingOrder::where('client_id',$client_id)->get(); ?>
-                                                  @if(count($standingorders) > 0)
-                                                    @foreach ($standingorders as $key => $standing)
-                                                    <tr>
-                                                        <td><?= $i ?></td>
-                                                        <td><?= $standing->branch->name ?? ''?></td>
-                                                        <td><?= $standing->schoolcontact->name ?? '' ?></td>
-                                                        <td><?= $standing->occurrence ?></td>
-                                                        <td><?= $standing->type ?></td>
-                                                        <td><?= money($standing->occurance_amount) ?></td>
-                                                        <td><?= money($standing->amount) ?></td>
-                                                        <td><?= date('d M Y', strtotime($standing->payment_date)) ?></td>
-                                                       @if(can_access('manage_finance'))
-                                                        <td>
-                                                          <a  target="_break" href="<?= url('customer/viewContract/'.$standing->id.'/standing') ?>" class="btn btn-sm btn-success">View</a>
-                                                          @if($standing->is_approved == 0)
-                                                          <a  href="<?= url('account/approveStandingOrder/'.$standing->id) ?>" class="btn btn-sm btn-success"> Confirm </a>
-                                                     
-                                                          @else
-                                                           <span class="badge badge-primary">Approved</span>
-                                                          @endif 
-                                                        </td>
-                                                     @endif
-                                                    </tr>
-                                                    <?php $i++; ?>
-                                                    @endforeach
-                                                    @endif
-                                                </tbody>
-                                                        <tfoot>
-                                                            <tr>
-                                                                <td colspan="5">Total</td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                            </tr>
-                                                        </tfoot>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                     
 
 
 

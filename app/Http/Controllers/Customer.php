@@ -496,12 +496,14 @@ class Customer extends Controller {
         }
     }
 
-    public function addStandingOrder() {
+    public function uploadstandingorder(){
+        return view('account.invoice.add_si');
+    }
+
+    public function createSI() {
         if ($_POST) {
-           
             $file = request('standing_order_file');
             $company_file_id = $this->saveFile($file, 'company/contracts');
-
             $data = [
                 'client_id' => request('client_id'),
                 'branch_id' => request('branch_id'),
@@ -516,11 +518,12 @@ class Customer extends Controller {
                 'refer_bank_id' => request('refer_bank_id'),
                 'note' => request('note'),
                 'contract_type_id' => request('contract_type_id')
-            ];
-          
+            ]; 
             DB::table('standing_orders')->insert($data);
-            return redirect()->back()->with('success', 'Standing order added successfully!');
+         //   return redirect()->back()->with('success', 'Standing order added successfully!');
+            return redirect('account/standingOrders')->with('success', 'Standing order added successfully!');
         }
+        
     }
 
 

@@ -37,37 +37,25 @@
                     <!-- Ajax data source (Arrays) table start -->
                     <div class="card">
                         <div class="card-header">
-
-                              {{-- <span style="float: left">
-                                <select class="form-control" style="width:300px;" id='schoolid'>
-                                    <option></option>
-                                     <?php  
-                                     foreach ($schools as $school) { ?>
-                                            <option value="<?= $school->id ?>"  ><?= $school->username; ?></option>
-                                        <?php } ?>
-                                    </select>
-                                </span> --}}
-
-                                {{-- <span style="float: right">
-                                  <?php if(can_access('add_si')){?>
-                                  <button class="btn btn-primary btn-sm" data-toggle="modal" role="button"
-                                 data-target="#standing-Modal"> Add standing order </button>
-                                 <?php }?>
-                                </span> --}}
+                            <?php if(can_access('add_si')){?>
+                                <span style="float: right">
+                                  <a class="btn btn-primary btn-sm" 
+                                   href="{{ url('Customer/uploadstandingorder') }}"> Add Standing order </a>
+                                </span>
+                                <?php }?>
                           </div>
-                        <div class="col-lg-12 col-xl-12">
-                            <div class="card-block">
-                                <!-- Tab panes -->
-                                <div class="tab-content tabs">
-                                    <div class="tab-pane active" id="home1" role="tabpanel">
+
+                           <div class="col-lg-12 col-xl-12">
+                               <div class="">
+                                   <div class="card-headeri">
                                         <div class="table-responsive dt-responsive">
-                                            <table id="dt-ajax-array" class="table table-striped table-bordered nowrap">
+                                            <table class="table table-responsive table-bordered">
                                                 <thead>
                                                     <tr>
                                                         <th>No.</th>
                                                         <th>School</th>
                                                         <th>Branch</th>
-                                                        <th>School contact</th>
+                                                      
                                                         <th>Type</th>
                                                         <th>Occurance amount</th>
                                                         <th>Total amount</th>
@@ -82,7 +70,7 @@
                                                         <td><?= $i ?></td>
                                                         <td><?=$standing->client->name?></td>
                                                         <td><?=$standing->branch->name?></td>
-                                                        <td><?=$standing->schoolcontact->name ?? ''?></td>
+                                               
                                                         <td><?=$standing->type?></td>
                                                         <td><?=money($standing->occurance_amount)?></td>
                                                         <td><?=money($standing->amount)?></td>
@@ -91,10 +79,11 @@
                                                         <td>
                                                           <a  target="_break" href="<?= url('customer/viewContract/'.$standing->id.'/standing') ?>" class="btn btn-sm btn-success">View</a>
                                                           @if($standing->is_approved == 0)
-                                                          <a  href="<?= url('account/approveStandingOrder/'.$standing->id) ?>" class="btn btn-sm btn-success"> Confirm </a>
+                                                          <a  href="<?= url('account/approveStandingOrder/'.$standing->id) ?>" class="btn btn-sm btn-info"> Approve </a>
+                                                          <a  href="<?= url('account/rejectStandingOrder/'.$standing->id) ?>" class="btn btn-sm btn-danger"> Reject </a>
                                                        
                                                           @else
-                                                          <span class="badge badge-primary">Approved</span>
+                                                          <a  href="<?= url('account/confirmSI/'.$standing->id) ?>" class="badge badge-primary">Confirm</a>
                                                           @endif 
                                                         </td>
                                                      @endif
@@ -103,25 +92,16 @@
                                                     @endforeach
                                                     <?php } ?>
                                                 </tbody>
-
                                             </table>
                                         </div>
+                                      </div>
                                     </div>
-
-
-                                  
                                 </div>
 
-                                
-                            </div>
-
-                        </div>
-
-                    </div>
+                           </div>
+                      </div>
                 </div>
-
             </div>
-        </div>
      
 
     @endsection

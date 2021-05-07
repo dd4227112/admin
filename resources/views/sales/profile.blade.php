@@ -480,8 +480,35 @@
                                                     <input id="myInput" data-geocomplete="street address" class="form-control" />
                                                   </div>
 
-                                                  <div id="map">
-                                                  </div>
+                                                  {{-- <div id="map">
+                                                  </div> --}}
+
+                                                  <div class="mapouter">
+                                                    <div class="gmap_canvas"><iframe width="100%" height="500"
+                                                            id="gmap_canvas"
+                                                            src="https://maps.google.com/maps?q=<?= $school->sname ?>&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                                                            frameborder="0" scrolling="no" marginheight="0"
+                                                            marginwidth="0"></iframe><a
+                                                            href="https://www.embedgooglemap.net/blog/nordvpn-coupon-code/">nordvpn
+                                                            coupon</a>
+                                                    </div>
+                                                    
+                                                    <style>
+                                                    .mapouter {
+                                                        position: relative;
+                                                        text-align: right;
+                                                        height: 300px;
+                                                        width: 100%;
+                                                    }
+        
+                                                    .gmap_canvas {
+                                                        overflow: hidden;
+                                                        background: none !important;
+                                                        height: 300px;
+                                                        width: 100%;
+                                                    }
+                                                    </style>
+                                                </div>
 
                                                   <form action="" id="mapform">
                                                       Latitude: <input class="form-control" type="text" data-geo="lat">
@@ -603,7 +630,6 @@
                                 <div class="col-md-6">
                                     Title
                                     <select name="title" class="form-control">
-
                                         <option value="director">Director/Owner</option>
                                         <option value="manager">School Manager</option>
                                         <option value="head teacher">Head Teacher</option>
@@ -612,8 +638,6 @@
                                         <option value="teacher">Normal Teacher</option>
                                         <option value="Accountant">Accountant</option>
                                         <option value="Other Staff">Other Non Teaching Staff</option>
-
-
                                     </select>
                                 </div>
                             </div>
