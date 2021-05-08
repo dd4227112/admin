@@ -78,11 +78,11 @@
                                     </li>
 
                                     <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#home1" role="tab">All Tasks</a>
+                                        <a class="nav-link" data-toggle="tab" href="#home" role="tab">All Tasks</a>
                                     </li>
                
                                     <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#profile1" role="tab">Calender & Schedules</a>
+                                        <a class="nav-link" data-toggle="tab" href="#profile" role="tab">Calender & Schedules</a>
                                     </li>
                                 </ul>
 
@@ -90,7 +90,7 @@
                                 <div class="tab-content tabs">
                                         {{-- New tasks --}}
 
-                            <div class="tab-pane" id="home1" role="tabpanel">
+                            <div class="tab-pane" id="home" role="tabpanel">
                                 <div class="table-responsive  table-bordered table-hover">
                                     <table class="table dataTable">
                                 <tr>
@@ -389,7 +389,7 @@
                                     </div>
 
                 
-                                    <div class="tab-pane" id="profile1" role="tabpanel">
+                                    <div class="tab-pane" id="profile" role="tabpanel">
                                         <p class="m-0">
                                             <div id='calendar'></div>
                                         </p>
