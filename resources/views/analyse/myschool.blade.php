@@ -12,9 +12,7 @@
             <?php
             if (!preg_match('/crdb/i', Auth::user()->email)) {
                 ?>
-                <!--                <div class="page-header-breadcrumb">
-                                    <a data-toggle="modal" data-target="#sendMessage" class="btn btn-info btn-sm  f-right"> <i class="ti-comments"></i> Send Message </a>
-                                </div>-->
+              
             <?php } ?>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -189,7 +187,7 @@
                                                 <?php
                                                 echo '<td>';
 
-                                                 echo '<a href="' . url('sales/profile/' . $school->id) . '" class="btn btn-success btn-sm"> View</a>';
+                                                 echo '<a href="' . url('customer/profile/' . $schema_name) . '" class="btn btn-success btn-sm"> View</a>';
 
                                                 echo '</td>';
                                                 echo '</tr>';
