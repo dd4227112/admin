@@ -104,7 +104,7 @@
                                     <table id="invoice_table" class="table table-striped table-bordered nowrap dataTable">
                                         <thead>
                                             <tr>
-                                                 <th>#</th>
+                                                <th>#</th>
                                                 <th>Client Name</th>
                                                 <th>Reference #</th>
                                                 <th>Amount</th>
@@ -175,13 +175,14 @@
                                         </thead>
                                         <tbody>
                                         
-                                            <?php
+                                            <?php  
                                             $total_amount = 0;
                                             $total_paid = 0;
                                             $total_unpaid = 0;
                                             $i = 1;
                                             foreach ($invoices as $invoice) {
                                                 $amount = $invoice->invoiceFees()->sum('amount');
+                                                
                                                 $paid = $invoice->payments()->sum('amount');
                                                 $unpaid = $amount - $paid;
                                                 $total_paid += $paid;
@@ -239,7 +240,6 @@
 
                             <div class="tab-pane" id="profile3" role="tabpanel" aria-expanded="false">
                                 <div class="card-block">
-
                                         <div class="card-header">
                                            <div class="table-responsive dt-responsive">
                                                 <?php if(isset($invoices) && !empty($invoices)){ ?>
@@ -274,13 +274,11 @@
                                                     </tbody>
                                                 </table>
                                             <?php }?>
-
                                             </div>
-
                                         </div>
-
                                     </div>
                                 </div>
+
                             </div> 
                         </div>
                         <div class="card-block">

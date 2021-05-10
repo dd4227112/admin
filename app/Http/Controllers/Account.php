@@ -1656,7 +1656,6 @@ select * from tempb");
         return view('account.report.summary', $this->data);
     }
 
-
     public function standingOrders() { 
         $this->data['client_id'] = request()->segment(3);
         $this->data['standingorders'] = \App\Models\StandingOrder::whereYear('payment_date', date('Y'))->get();
@@ -1666,25 +1665,30 @@ select * from tempb");
 
     public function approveStandingOrder() { 
         $this->data['so_id'] = $so_id = request()->segment(3);
+        if(!empty($so_id)){
+            \App\Models\StandingOrder::where('id', $so_id)->update(['is_approved' => 1,'approved_by' => Auth::user()->id]);
+        }
+        return redirect()->back()->with('success', 'Standing order approved!');
+    } 
+
+    public function confirmSI(){
+        $this->data['so_id'] = $so_id = request()->segment(3);
         $standing = \App\Models\StandingOrder::where('id', $so_id)->first();
         $invoice = \App\Models\Invoice::where('client_id',$standing->client_id)->first();
-        \App\Models\StandingOrder::where('id', $so_id)->update(['is_approved' => 1,'approved_by' => Auth::user()->id]);
+       // dd($invoice);
         if(!empty($invoice)){
             return redirect('account/payment/'.$invoice->id);
-        }else{
-            return redirect()->back()->with('success', 'No Invoice yet!');
         }
+        //After add payment the receipt should be sent to client
     }
 
-
-    public function rejectStandingOrder()
-    {  
+    public function rejectStandingOrder(){  
         $_id = request()->segment(3);
         $standing = \App\Models\StandingOrder::where('id',$_id)->first();
-       
-        $email = \App\Models\Client::where('id',$standing->client_id)->first()->email;
-        $this->sendSMSandEmail($email);
-        return redirect()->back()->with('success', 'Msg sent');
+        $client = \App\Models\Client::where('id',$standing->client_id)->first();
+        $message = '<p>The standing order has failed to be recorded</p>';
+        $this->send_email($client->email, 'Standing Order Rejected!' . $message);
+        return redirect()->back()->with('success', 'Standing order rejected!');
     }
 
 

@@ -150,7 +150,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                         <tr>
                                                             <th colspan="2">Total</th>
                                                             <th><?= $total_students ?></th>
-                                                            <th><?= $total_price ?></th>
+                                                            <th><?= money($total_price) ?></th>
                                                             <th colspan="1"></th>
                                                         </tr>
                                                     </tfoot>

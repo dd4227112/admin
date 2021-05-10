@@ -114,14 +114,16 @@
                                 <option value="1">Search Your School Here....</option>
                                 <?php
                                 $schools = DB::table('schools')->where('ownership', 'Non-Government')->get();
-                                foreach ($schools as $school) {
+                                foreach ($schools as $school) { 
                                   ?>
-                                  <option value="<?= $school->id ?>"><?= $school->name. ' (<b> '.$school->type. ' </b>) - '.$school->region ?></option>
+                                  <option value="<?= $school->id ?>"><?= $school->name. ' (<b> '.$school->type. ' </b>) - '.$school->wards->district->region->name ?></option>
                                 <?php } ?>
 
                               </select> -->
                             </div>
                           </div>
+
+
 
                           <div class="form-group ">
                             <div class="col-sm-12 col-xs-12">
