@@ -33,9 +33,13 @@ class Recruitments extends Controller {
          $file_id = 1;
         
         $this->data['recruiment'] = $recruiment = \App\Models\Recruiment::create(array_merge(request()->except('phone'), ['phone' => $phonenumber,'company_file_id' =>$file_id ]));
-         if($recruiment){
-            $this->data['title'] = 'Shulesoft Application Questions';
-            return view('applicant_questions', $this->data);
+        // dd($recruiment);
+        if($recruiment){ 
+            
+            return redirect()->('applicant_questions',$recruiment); 
+
+            // $this->data['title'] = 'Shulesoft Application Questions';
+            // return view('applicant_questions', $this->data);
          }
        
    

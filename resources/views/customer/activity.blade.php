@@ -107,7 +107,6 @@
                                     <th class="text-center">
                                         <?= Auth::user()->role_id == 1 ? \App\Models\Task::count() : 
                                         \App\Models\Task::where('user_id',Auth::user()->id)->count();  ?>
-                                            
                                     </th>
                                     <th class="text-center">
                                         <?= Auth::user()->role_id == 1 ? \App\Models\Task::where('status', 'new')->count() :
@@ -161,7 +160,7 @@
                                       
                                                 <tbody>
                                                     
-                                                    <?php
+                                            <?php
                                           $date = \Carbon\Carbon::today()->subDays(28);
                                           if(Auth::user()->role_id == 1) {
                                             $tasks = \App\Models\Task::where('status', 'new')->where('created_at','>=',$date)->orderBy('created_at', 'desc')->limit(100)->get();  
@@ -250,8 +249,9 @@
                                                 <tbody>
                                                  <?php $i = 1;
                                                 if(Auth::user()->role_id == 1) {
-                                            $tasks = \App\Models\Task::where('status', 'on progress')->orderBy('updated_at', 'desc')->limit(100)->get(); } else{
-                                            $tasks = \App\Models\Task::where('status', 'on progress')->where('user_id',Auth::user()->id)->orderBy('updated_at', 'desc')->limit(100)->get();    
+                                                   $tasks = \App\Models\Task::where('status', 'on progress')->orderBy('updated_at', 'desc')->limit(100)->get(); 
+                                                  } else{
+                                                    $tasks = \App\Models\Task::where('status', 'on progress')->where('user_id',Auth::user()->id)->orderBy('updated_at', 'desc')->limit(100)->get();    
                                                     }
             
                                                     if (!empty($tasks)) { 
@@ -280,7 +280,7 @@
                                                                 <td>  
                                                                 <div class="dropdown-secondary dropdown f-right text-center"><button class="btn btn-<?=$status ?>  btn-mini dropdown-toggle waves-effect waves-light"  type="button" id="dropdown7<?=$act->id?>"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= $message ?></button><div class="dropdown-menu" aria-labelledby="dropdown7" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_priority(1,<?= $act->id?>)"><span class="point-marker bg-danger"></span>High</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_priority(2,<?= $act->id?>)"><span class="point-marker bg-warning"></span>Medium</a><a class="dropdown-item waves-light waves-effect" href="#!" onmousedown="change_priority(3,<?= $act->id?>)"><span class="point-marker bg-warning"></span>Less</a></div> </div>
                                                                 </td>
-                                                                <td><?= substr($act->activity, 0, 60) ?></td>
+                                                                <td><?= substr($act->activity, 0, 30) ?></td>
                                                                 <td><?= date('d-m-Y', strtotime($act->created_at))?></td>
                                                             </tr>
                                                         <?php } ?>

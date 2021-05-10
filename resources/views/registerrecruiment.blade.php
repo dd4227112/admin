@@ -1,40 +1,73 @@
 <?php $root = url('/') . '/public/' ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <title>ShuleSoft Admin Panel</title>
-
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="description" content="Phoenixcoded">
   <meta name="keywords" content=", Flat ui, Admin , Responsive, Landing, Bootstrap, App, Template, Mobile, iOS, Android, apple, creative app">
   <meta name="author" content="Phoenixcoded">
-  <!-- Favicon icon -->
-
-<link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
-
-<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
+  <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
 
   <!-- Google font-->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
-  <!-- Required Fremwork -->
-  <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/bootstrap/dist/css/bootstrap.min.css">
-  <!-- themify-icons line icon -->
-  <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/icon/themify-icons/themify-icons.css">
-  <!-- ico font -->
-  <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/icon/icofont/css/icofont.css">
-  <!-- Style.css -->
-  <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css?v=2">
+ 
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" 
+  integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" 
+  crossorigin="anonymous"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/css/select2.min.css" />
+  <script>
+      $(document).ready(function () {
+          //Select2
+          $(".country").select2({
+              maximumSelectionLength: 2,
+          });
+      });
+
+
+      $(function() {
+    $('#datepicker').datepicker({
+        changeYear: true,
+        showButtonPanel: true,
+        dateFormat: 'yy',
+        onClose: function(dateText, inst) { 
+            var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+            $(this).datepicker('setDate', new Date(year, 1));
+        }
+    });
+ $(".date-picker-year").focus(function () {
+        $(".ui-datepicker-month").hide();
+    });
+});
+  </script>
 
 <style>
+  .ui-datepicker-calendar {
+   display: none;
+}
+.ui-datepicker-month {
+   display: none;
+}
+.ui-datepicker-next,.ui-datepicker-prev {
+  display:none;
+}
+
 .select2-container--default .select2-selection--single {
-    height: 46px !important;
+    height: 42px !important;
     padding: 10px 16px;
     font-size: 18px;
     line-height: 1.33;
-    border-radius: 6px;
+    border-radius: 3px;
 }
 .select2-container--default .select2-selection--single .select2-selection__arrow b {
     top: 85% !important;
@@ -91,7 +124,7 @@
                               <div class="row">
                                 <div class="col-md-4">
                                   Your country
-                                 <select name="country"  class="form-control select2"  required>
+                                 <select name="country"  class="form-control country"  required>
                                    <?php
                                    $countries = DB::table('constant.refer_countries')->get();
                                    if (!empty($countries)) { 
@@ -114,7 +147,7 @@
                                 </div>
                                 <div class="col-md-4">
                                    Gender
-                                   <select name="sex" class="form-control" required>
+                                   <select name="sex" class="form-control country" required>
                                       <option value=""></option>
                                       <option value="Male">Male</option>
                                       <option value="Female">Female</option>
@@ -135,7 +168,7 @@
 
                                 <div class="col-md-4">
                                    Marital status
-                                   <select name="marital_status"  class="form-control" required>
+                                   <select name="marital_status"  class="form-control country" required>
                                    <?php
                                    $status = DB::table('constant.marital_status')->get();
                                    if (!empty($status)) { foreach ($status as $type)
@@ -155,7 +188,7 @@
 
                                 <div class="col-md-4">
                                     Education Level
-                                   <select name="education_level" class="form-control" required>
+                                   <select name="education_level" class="form-control country" required>
                                       <option value=""></option>
                                       <option value="Ordinary Level certificate">Ordinary Level certificate</option>
                                       <option value="Advanced Level certificate">Advanced Level certificate</option>
@@ -175,7 +208,7 @@
                               <div class="row">
                                 <div class="col-md-4">
                                     Field of study
-                                   <select name="field" class="form-control" required>
+                                   <select name="field" class="form-control country" required>
                                       <option value=""></option>
                                       <option value="Sales">Sales</option>
                                       <option value="Marketing">Marketing</option>
@@ -198,7 +231,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     Year of graduation
-                                   <input type="date" id="date" name="year_of_graduation" class="form-control"  required>
+                                    <input class="form-control"  name="year_of_graduation"  type="text" id="datepicker"  required>
                                 </div>
                                 <div class="col-md-4">
                                    Which skills you have
@@ -213,7 +246,7 @@
                               <div class="row">
                                 <div class="col-md-4">
                                     Work Experience
-                                   <select name="experience" class="form-control" required>
+                                   <select name="experience" class="form-control country" required>
                                       <option value=""></option>
                                       <option value="Less than a year">Less than a year</option>
                                       <option value="1">1</option>
@@ -227,7 +260,7 @@
                                 <div class="col-md-4">
                                     Job Type
                                   <select name="jobtypes"  required
-                                    class="form-control">
+                                    class="form-control country">
                                     <?php
                                     $jobtypes = DB::table('constant.employment_type')->get();
                                     if (!empty($jobtypes)) {
@@ -247,7 +280,7 @@
 
                                   <div class="col-md-4">
                                     How did you hear about this ad?
-                                    <select name="source" id="source" class="form-control" required>
+                                    <select name="source" id="source" class="form-control country" required>
                                         <option value=""></option>
                                       <option>Website </option>
                                       <option>Friend</option>
@@ -271,7 +304,7 @@
                               <div class="row">
                                 <div class="col-md-4">
                                     What do you prefer and expect to do in the future?
-                                   <select name="career" class="form-control" required>
+                                   <select name="career" class="form-control country" required>
                                       <option value=""></option>
                                       <option value="Entrepreneur">Entrepreneur</option>
                                       <option value="Programmer">Programmer</option>
@@ -286,7 +319,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     Scope of Operations 
-                                    <select name="scope_of_operation" class="form-control" required>
+                                    <select name="scope_of_operation" class="form-control country" required>
                                         <option value=""></option>
                                         <option value="Within my district">Within my district</option>
                                         <option value="Within my region">Within my region</option>
@@ -299,7 +332,7 @@
 
                                   <div class="col-md-4">
                                     Do you own computer
-                                    <select name="own_computer"  class="form-control" required>
+                                    <select name="own_computer"  class="form-control country" required>
                                       <option value=""></option>
                                       <option>YES </option>
                                       <option>NO</option>
@@ -346,17 +379,8 @@
 </html>
 
 
-<script type="text/javascript">
-   $(".select2").select2({
-    theme: "bootstrap",
-    dropdownAutoWidth: false,
-    allowClear: false,
-    debug: true
-});
 
-    $(function() {
-       $( "#date" ).datepicker({dateFormat: 'yy'});
-    });
-  </script>
+
+
 
 
