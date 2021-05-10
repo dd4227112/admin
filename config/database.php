@@ -98,7 +98,7 @@ return [
             'host' => '51.91.251.252',
             'port' => '5432',
             'database' => 'biotime',
-            'username' =>  'biotime',
+            'username' => 'biotime',
             'password' => 'biotime_2021_',
             'charset' => 'utf8',
             'prefix' => '',

@@ -932,3 +932,29 @@ ALTER TABLE admin.tasks
 
 ALTER TABLE admin.tasks
     ADD CONSTRAINT task_ticket_no_unique UNIQUE (ticket_no);
+
+-- 09/05/2021
+ALTER TABLE admin.recruiments
+    ADD COLUMN company_file_id integer;
+
+
+ALTER TABLE admin.recruiments
+    ADD CONSTRAINT recruiments_company_file_id_foreign FOREIGN KEY (company_file_id)
+    REFERENCES admin.company_files (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
+    NOT VALID;
+CREATE INDEX fki_recruiments_company_file_id_foreign
+    ON admin.recruiments(company_file_id);
+
+
+ALTER TABLE admin.recruiments
+    ADD CONSTRAINT recruiments_country_id_foreign FOREIGN KEY (country)
+    REFERENCES constant.refer_countries (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE;
+CREATE INDEX fki_recruiments_country_id_foreign
+    ON admin.recruiments(country);
+
+ALTER TABLE admin.recruiments
+    ADD COLUMN country integer;
