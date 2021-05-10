@@ -316,7 +316,6 @@
                                     Documents (CV,ID and certificates)
                                     <input type="file" name="documents" class="form-control"  required>
                                 </div>
-                             
                             </div>
                           </div>
                         </div>
