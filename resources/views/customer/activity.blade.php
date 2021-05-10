@@ -45,7 +45,7 @@
                     <div class="card">
                         <div class="card-header">
                           
-                            <a class="btn btn-success btn-sm" href="<?= url('customer/activity/add') ?>"> Add New Task</a>
+                           
                        
                             <?php
                             if (Auth::user()->role_id == 1) { ?>
@@ -83,6 +83,9 @@
                
                                     <li class="nav-item">
                                         <a class="nav-link" data-toggle="tab" href="#profile" role="tab">Calender & Schedules</a>
+                                    </li>
+                                    <li class="nav-item">
+                                      <a class="nav-link"   href="<?= url('customer/activity/add') ?>"> Add Task</a>
                                     </li>
                                 </ul>
 
@@ -150,7 +153,7 @@
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
-                                                        <th>Last update</th>
+                                                        <th>Date</th>
                                                         <th>Status</th>
                                                     </tr>
                                                 </thead>
@@ -194,7 +197,7 @@
                                                                  ?>
                                                             <tr>
                                                                 <td><?= $i++ ?></td>
-                                                                <td><?= $act->ticket_no?></td>
+                                                                <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->ticket_no?></td>
                                                                 <?php if(can_access('view_task')) { ?>
                                                                 <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->tasktype->name ?> </a> </td>
                                                                 <?php } else { ?>
@@ -206,7 +209,7 @@
                                                                 <td style="width: 100px;word-break: break-all;">
                                                                     <?= substr($act->activity, 0, 30) ?>
                                                                 </td>
-                                                                <td><?= Carbon\Carbon::parse($act->updated_at)->diffForHumans() ?></td>
+                                                                <td><?= date('d-m-Y', strtotime($act->created_at))?></td>
                                                                 <td> 
                                                                     <div class="dropdown-secondary dropdown f-right"><button class="btn btn-<?=$stat?> btn-mini dropdown-toggle waves-effect waves-light"  type="button" id="dropdown6<?=$act->id?>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?=$msg?></button><div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onclick="change_status('on progress', <?=$act->id ?>)"><span class="point-marker bg-danger"></span>On progress</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onclick="change_status('complete',<?=$act->id ?>)"><span class="point-marker bg-warning"></span>Complete</a><a class="dropdown-item waves-light waves-effect" href="#!" onclick="change_status('new',<?=$act->id ?>)"><span class="point-marker bg-warning"></span>New</a></div> </div>
                                                                 </td>
@@ -269,7 +272,7 @@
                                                           ?>
                                                             <tr>
                                                                 <td><?= $i++ ?></td>
-                                                                <td><?= $act->ticket_no?></td>
+                                                                <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"><?= $act->ticket_no?></td>
                                                                 <?php if(can_access('view_task')) { ?>
                                                                 <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->tasktype->name ?> </a> </td>
                                                                 <?php } else { ?>
@@ -357,7 +360,7 @@
                                                             ?>
                                                             <tr>
                                                                 <td><?= $i++ ?></td>
-                                                                <td><?= $act->ticket_no?></td>
+                                                                <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"><?= $act->ticket_no?></td>
                                                                 <?php if(can_access('view_task')) { ?>
                                                                 <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->tasktype->name ?> </a> 
                                                                 </td>
@@ -418,8 +421,6 @@
         <script type="text/javascript" src="<?= $root ?>assets/pages/full-calender/calendar.js?v=2"></script>
         <div id="ajax_data_results" style="display: none"></div>
         <script type="text/javascript">
-         
-
 
             load_tasks = function() {
                 var event;
@@ -436,7 +437,7 @@
                             "data": "id"
                         },
                         {
-                            "data": "ticket_no"
+                            "data": ""
                         },
                         {
                             "data": ""
@@ -460,6 +461,13 @@
                             "data": null,
                             "render": function(data, type, row, meta) {
                                 return '<a href="<?= url('customer/activity/show/') ?>/' + row.id + '"> ' + row.task_name + '  </a>';
+                             }
+                           },
+                           {
+                            "targets":1,
+                            "data": null,
+                            "render": function(data, type, row, meta) {
+                                return '<a href="<?= url('customer/activity/show/') ?>/' + row.id + '"> ' + row.ticket_no + '  </a>';
                              }
                            },
                            {
