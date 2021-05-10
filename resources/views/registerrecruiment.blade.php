@@ -332,7 +332,11 @@
                           </div>
                         </div>
 
-                         
+                        <div class="form-group">
+                            <div class="col-sm-12 col-xs-12">
+                                  About you
+                             <textarea type="text" name="about" class="form-control"  required> </textarea>
+                          </div>
                         </div>
 
                       <div class="modal-footer">
