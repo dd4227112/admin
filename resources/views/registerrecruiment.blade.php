@@ -4,13 +4,7 @@
 <html lang="en">
 <head>
   <title>ShuleSoft Admin Panel</title>
-  <!-- HTML5 Shim and Respond.js IE9 support of HTML5 elements and media queries -->
-  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-  <!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-  <![endif]-->
-  <!-- Meta -->
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -21,9 +15,7 @@
 
 <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
 
-<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.2.1.min.js">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.css" />
+<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
 
   <!-- Google font-->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
@@ -73,10 +65,8 @@
 
                     </div>
 
-                        <form class="form-group" id="loginform" method="POST" action="<?=url('/addrecruiment')?>" >
-                          <div class="modal-body">
-                          {{ csrf_field() }}
-
+                     <form class="form-group" enctype="multipart/form-data" method="POST" action="<?=url('/addrecruiment')?>" >
+                      
                           <div class="form-group">
                             <div class="col-sm-12 col-xs-12">
                               <div class="row">
@@ -101,7 +91,22 @@
                               <div class="row">
                                 <div class="col-md-4">
                                   Your country
-                                 <input type="text" name="country" class="form-control" placeholder="Enter your country"  required>
+                                 <select name="country"  class="form-control select2"  required>
+                                   <?php
+                                   $countries = DB::table('constant.refer_countries')->get();
+                                   if (!empty($countries)) { 
+                                       foreach ($countries as $country)
+                                    { ?>
+                                   <
+                                   <option
+                                       value="<?= $country->id ?>">
+                                       <?= $country->country ?>
+                                   </option>
+                                   <?php
+                                       }
+                                   }
+                                   ?>
+                               </select>
                                 </div>
                                 <div class="col-md-4">
                                    Date of birth
@@ -147,6 +152,7 @@
                                    ?>
                                </select>
                                 </div>
+
                                 <div class="col-md-4">
                                     Education Level
                                    <select name="education_level" class="form-control" required>
@@ -163,8 +169,6 @@
                             </div>
                           </div>
                         </div>
-
-
 
                         <div class="form-group">
                             <div class="col-sm-12 col-xs-12">
@@ -307,32 +311,21 @@
 
                         <div class="form-group">
                             <div class="col-sm-12 col-xs-12">
-                                  About you
-                             <textarea type="text" name="about" class="form-control"  required> </textarea>
-                          </div>
-                        </div>
-
-
-                        <div class="form-group">
-                            <div class="col-sm-12 col-xs-12">
                               <div class="row">
                                 <div class="col-md-4">
-                                    Curriculum Vitae (CV) 
-                                    <input type="file" name="cv" class="form-control"  required>
+                                    Documents (CV,ID and certificates)
+                                    <input type="file" name="documents" class="form-control"  required>
                                 </div>
-                                <div class="col-md-4">
-                                    Identity Card
-                                   <input type="file" name="identity_card" class="form-control"  required>
-                                </div>
-                                <div class="col-md-4">
-                                    Academic Certificates
-                                    <input type="file" name="academic_certificates" class="form-control"  required>
-                                </div>
+                             
                             </div>
                           </div>
                         </div>
 
-                         
+                        <div class="form-group">
+                            <div class="col-sm-12 col-xs-12">
+                                  About you
+                             <textarea type="text" name="about" class="form-control"  required> </textarea>
+                          </div>
                         </div>
 
                       <div class="modal-footer">
@@ -353,13 +346,13 @@
 </html>
 
 
-  <script>
-    $(".select2").select2({
-        theme: "bootstrap",
-        dropdownAutoWidth: false,
-        allowClear: false,
-        debug: true
-    });
+<script type="text/javascript">
+   $(".select2").select2({
+    theme: "bootstrap",
+    dropdownAutoWidth: false,
+    allowClear: false,
+    debug: true
+});
 
     $(function() {
        $( "#date" ).datepicker({dateFormat: 'yy'});
