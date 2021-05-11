@@ -13,8 +13,6 @@ class Recruitments extends Controller {
         return view('registerrecruiment',$this->data);
     }
 
-  
-
     public function register() {
         $this->validate(request(), [
             'phone' => 'required|unique:recruiments,phone',

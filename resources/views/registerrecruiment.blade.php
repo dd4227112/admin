@@ -298,7 +298,6 @@
                           </div>
                         </div>
 
-
                         <div class="form-group">
                             <div class="col-sm-12 col-xs-12">
                               <div class="row">
@@ -374,7 +373,6 @@
           <!-- Authentication card end -->
         </div>
         <!-- end of col-sm-12 -->
-
 </body>
 </html>
 
