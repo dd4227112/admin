@@ -157,17 +157,15 @@
                                                         <th>Status</th>
                                                     </tr>
                                                 </thead>
-                                      
                                                 <tbody>
                                                     
                                             <?php
                                           $date = \Carbon\Carbon::today()->subDays(28);
                                           if(Auth::user()->role_id == 1) {
-                                            $tasks = \App\Models\Task::where('status', 'new')->where('created_at','>=',$date)->orderBy('created_at', 'desc')->limit(100)->get();  
+                                            $tasks = \App\Models\Task::where('status', 'new')->where('updated_at','>=',$date)->orderBy('updated_at', 'desc')->limit(100)->get();  
                                            } else{
-                                            $tasks = \App\Models\Task::where('status', 'new')->where('created_at','>=',$date)->where('user_id',Auth::user()->id)->orderBy('created_at', 'desc')->limit(100)->get();    
+                                            $tasks = \App\Models\Task::where('status', 'new')->where('updated_at','>=',$date)->where('user_id',Auth::user()->id)->orderBy('updated_at', 'desc')->limit(100)->get();    
                                            }
-                                                  
                                                     if (!empty($tasks)) { 
                                                         foreach ($tasks as $act) {
                                                                if ($act->priority == '1') {
