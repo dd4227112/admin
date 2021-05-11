@@ -50,7 +50,7 @@
 </style>
 </head>
 <body class="fix-menu"   style=" overflow-y:auto; height: auto;">
-    <div class="container-fluid">
+    <div class="container">
       <div class="page-wrapper">
         <div class="page-body">
           <div class="row">
@@ -63,7 +63,49 @@
                     <h4 class="text-center"><b>{{ $title }}</b></h4>
 
                     </div>
-                        <?php dd($questions); ?>
+                        {{-- <?= $id ?> --}}
+
+
+                      
+                          <div class="col-sm-12">
+                                  <div class="row card-block">
+                                      <div class="col-md-12">
+                                        <form action="<?= url('Recruitments/quiz')?>" method="post">
+                                          <ul class="list-view">
+                                              <?php $questions = \App\Models\RecruimentQuestions::get(); ?>
+
+                                               <?php $i=1; foreach($questions as $question) { ?>
+                                              <li>
+                                                  <div class="list-view-media">
+                                                    <h3><?=$i?> .&nbsp; <?=$question->question?></h3>
+
+                                                        <div class="m-t-15">
+                                                          <label class="radio-inline">
+                                                            <input type="radio" name="optradio" >Option 1
+                                                          </label>
+                                                          <label class="radio-inline">
+                                                            <input type="radio" name="optradio">Option 2
+                                                          </label>
+                                                          <label class="radio-inline">
+                                                            <input type="radio" name="optradio">Option 3
+                                                          </label>
+                                                        </div>  
+                                                  </div>
+                                              </li>
+                                              <?php $i++; } ?>
+                                          </ul>
+                                          <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary waves-effect waves-light ">Submit Here</button>
+                                          </div>
+                                          <?= csrf_field() ?>
+                                         </form >
+                                      </div>
+                                  </div>
+                             
+                          </div>
+                      
+
+
   
                   </div>
                 </div>

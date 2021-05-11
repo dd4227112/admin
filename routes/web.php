@@ -78,4 +78,4 @@ Route::get('/user-details/{param1?}', 'Workshop@profile')->name('profile');
 Route::get('/application', 'Recruitments@index');
 Route::post('/addrecruiment', 'Recruitments@register'); 
 
-Route::get('/applicant_questions', 'Recruitments@index');
+//Route::get('questions/{$id}', 'Recruitments@quiz')->name('questions');
