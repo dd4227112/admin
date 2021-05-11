@@ -84,8 +84,9 @@
                                     <li class="nav-item">
                                         <a class="nav-link" data-toggle="tab" href="#profile" role="tab">Calender & Schedules</a>
                                     </li>
-                                    <li class="nav-item">
-                                      <a class="nav-link"   href="<?= url('customer/activity/add') ?>"> Add Task</a>
+                                  
+                                    <li class="nav-item" style="float:right;">
+                                        <a class="nav-link" href="<?= url('customer/activity/add') ?>" role="tab"><b>  <i class="ti-pencil"> </i> Add New </b></a>
                                     </li>
                                 </ul>
 
@@ -106,7 +107,6 @@
                                     <th class="text-center">
                                         <?= Auth::user()->role_id == 1 ? \App\Models\Task::count() : 
                                         \App\Models\Task::where('user_id',Auth::user()->id)->count();  ?>
-                                            
                                     </th>
                                     <th class="text-center">
                                         <?= Auth::user()->role_id == 1 ? \App\Models\Task::where('status', 'new')->count() :
@@ -127,12 +127,13 @@
                                  <table class="display nowrap table dataTable dt-ajax-array table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>No.</th>
+                                            <th>#</th>
                                             <th>Ticket</th>
                                             <th>Task type</th>
                                             <th>Priority</th>
                                             <th>School</th>
                                             <th>Activity</th>
+                                            <th>Date</th>
                                             <th>Status</th>
                                           </tr>
                                         </thead>
@@ -148,23 +149,23 @@
                                             <table   class="display table dataTable table-bordered">
                                                 <thead>
                                                     <tr>
-                                                        <th>No.</th>
                                                         <th>Ticket</th>
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
-                                                        <th>Date</th>
+                                                        <th>Created Date</th>
                                                         <th>Status</th>
                                                     </tr>
                                                 </thead>
                                       
                                                 <tbody>
-                                                    <?php
-                                          $i = 1; $date = \Carbon\Carbon::today()->subDays(337);
+                                                    
+                                            <?php
+                                          $date = \Carbon\Carbon::today()->subDays(28);
                                           if(Auth::user()->role_id == 1) {
-                                            $tasks = \App\Models\Task::where('status', 'new')->orderBy('updated_at', 'desc')->limit(100)->get();  
+                                            $tasks = \App\Models\Task::where('status', 'new')->where('created_at','>=',$date)->orderBy('created_at', 'desc')->limit(100)->get();  
                                            } else{
-                                            $tasks = \App\Models\Task::where('status', 'new')->where('updated_at','>=',$date)->where('user_id',Auth::user()->id)->orderBy('updated_at', 'desc')->limit(100)->get();    
+                                            $tasks = \App\Models\Task::where('status', 'new')->where('created_at','>=',$date)->where('user_id',Auth::user()->id)->orderBy('created_at', 'desc')->limit(100)->get();    
                                            }
                                                   
                                                     if (!empty($tasks)) { 
@@ -196,7 +197,7 @@
                                                                     }
                                                                  ?>
                                                             <tr>
-                                                                <td><?= $i++ ?></td>
+                                                             
                                                                 <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->ticket_no?></td>
                                                                 <?php if(can_access('view_task')) { ?>
                                                                 <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->tasktype->name ?> </a> </td>
@@ -220,12 +221,11 @@
                                                
                                                 <tfooter>
                                                     <tr>
-                                                        <th>No.</th>
                                                         <th>Ticket</th>
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
-                                                        <th>End date </th>
+                                                        <th>Created Date </th>
                                                         <th>Status</th>
                                                     </tr>
                                                 </tfooter>
@@ -239,19 +239,19 @@
                                             <table  class="display table dataTable  table-bordered">
                                                 <thead>
                                                     <tr>
-                                                        <th>No.</th>
                                                         <th>Ticket</th>
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
-                                                        <th>Last update</th>
+                                                        <th>Created Date</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                  <?php $i = 1;
                                                 if(Auth::user()->role_id == 1) {
-                                            $tasks = \App\Models\Task::where('status', 'on progress')->orderBy('updated_at', 'desc')->limit(100)->get(); } else{
-                                            $tasks = \App\Models\Task::where('status', 'on progress')->where('user_id',Auth::user()->id)->orderBy('updated_at', 'desc')->limit(100)->get();    
+                                                   $tasks = \App\Models\Task::where('status', 'on progress')->orderBy('updated_at', 'desc')->limit(100)->get(); 
+                                                  } else{
+                                                    $tasks = \App\Models\Task::where('status', 'on progress')->where('user_id',Auth::user()->id)->orderBy('updated_at', 'desc')->limit(100)->get();    
                                                     }
             
                                                     if (!empty($tasks)) { 
@@ -271,7 +271,6 @@
                                                                 }
                                                           ?>
                                                             <tr>
-                                                                <td><?= $i++ ?></td>
                                                                 <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"><?= $act->ticket_no?></td>
                                                                 <?php if(can_access('view_task')) { ?>
                                                                 <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->tasktype->name ?> </a> </td>
@@ -281,20 +280,19 @@
                                                                 <td>  
                                                                 <div class="dropdown-secondary dropdown f-right text-center"><button class="btn btn-<?=$status ?>  btn-mini dropdown-toggle waves-effect waves-light"  type="button" id="dropdown7<?=$act->id?>"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= $message ?></button><div class="dropdown-menu" aria-labelledby="dropdown7" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_priority(1,<?= $act->id?>)"><span class="point-marker bg-danger"></span>High</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_priority(2,<?= $act->id?>)"><span class="point-marker bg-warning"></span>Medium</a><a class="dropdown-item waves-light waves-effect" href="#!" onmousedown="change_priority(3,<?= $act->id?>)"><span class="point-marker bg-warning"></span>Less</a></div> </div>
                                                                 </td>
-                                                                <td><?= substr($act->activity, 0, 60) ?></td>
-                                                                <td><?= Carbon\Carbon::parse($act->updated_at)->diffForHumans() ?></td>
+                                                                <td><?= substr($act->activity, 0, 30) ?></td>
+                                                                <td><?= date('d-m-Y', strtotime($act->created_at))?></td>
                                                             </tr>
                                                         <?php } ?>
                                                     <?php } ?>
                                                 </tbody>
                                                 <tfooter>
                                                     <tr>
-                                                        <th>No.</th>
                                                         <th>Ticket</th>
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
-                                                        <th>Last update</th>
+                                                        <th>Created Date</th>
                                                     </tr>
                                                 </tfooter>
                                             </table>
@@ -328,13 +326,11 @@
                                             <table class="display table dataTable table-bordered">
                                                 <thead>
                                                     <tr>
-                                                        <th>No.</th>
                                                         <th>Ticket</th>
                                                         <th>Task type</th>
                                                         <th>Priority</th>
-                                                        
                                                         <th>Activity</th>
-                                                        <th>Last update </th>
+                                                        <th>Created Date </th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -359,7 +355,6 @@
                                                                 }
                                                             ?>
                                                             <tr>
-                                                                <td><?= $i++ ?></td>
                                                                 <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"><?= $act->ticket_no?></td>
                                                                 <?php if(can_access('view_task')) { ?>
                                                                 <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->tasktype->name ?> </a> 
@@ -372,19 +367,18 @@
                                                                 <div class="dropdown-secondary dropdown f-right text-center"><button class="btn btn-<?=$status ?>  btn-mini dropdown-toggle waves-effect waves-light"  type="button" id="dropdown7<?=$act->id?>"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= $message ?></button><div class="dropdown-menu" aria-labelledby="dropdown7" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_priority(1,<?= $act->id?>)"><span class="point-marker bg-danger"></span>High</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_priority(2,<?= $act->id?>)"><span class="point-marker bg-warning"></span>Medium</a><a class="dropdown-item waves-light waves-effect" href="#!" onmousedown="change_priority(3,<?= $act->id?>)"><span class="point-marker bg-warning"></span>Less</a></div> </div>
                                                                 </td>
                                                                 <td><?= substr($act->activity, 0, 60) ?></td>
-                                                                <td><?= Carbon\Carbon::parse($act->updated_at)->diffForHumans() ?></td>
+                                                                <td><?= date('d-m-Y', strtotime($act->created_at))?></td>
                                                             </tr>
                                                         <?php } ?>
                                                     <?php } ?>
                                                 </tbody>
                                                 <tfooter>
                                                     <tr>
-                                                        <th>No.</th>
                                                         <th>Ticket</th>
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
-                                                        <th>Last Update</th>
+                                                        <th>Created Date</th>
                                                     </tr>
                                                 </tfooter>
                                             </table>
@@ -414,8 +408,7 @@
         <!-- data-table js -->
 
         <!-- calender js -->
-      
-       
+    
         <script type="text/javascript" src="<?= $root ?>/bower_components/moment/min/moment.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>/bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>assets/pages/full-calender/calendar.js?v=2"></script>
@@ -432,42 +425,29 @@
                         'url': "<?= url('sales/show/null?page=tasks&user_id=' . request('user_id')) ?>"
                     },
                     "columns": [
-
-                        {
-                            "data": "id"
-                        },
-                        {
-                            "data": ""
-                        },
-                        {
-                            "data": ""
-                        },
-                        {
-                            "data": ""
-                        },
-                        {
-                            "data": "school_name"
-                        },
-                        {
-                            "data": ""
-                        },
-                        {
-                            "data": ""
-                        }
-                      
+                        {"data": "id"},
+                        {"data": ""},
+                        {"data": ""},
+                        {"data": ""},
+                        { "data": "school_name"},
+                        {"data": ""},
+                        {"data": "created_at"},
+                        {"data": ""}
                     ],
-                    "columnDefs": [{
-                            "targets":2,
-                            "data": null,
-                            "render": function(data, type, row, meta) {
-                                return '<a href="<?= url('customer/activity/show/') ?>/' + row.id + '"> ' + row.task_name + '  </a>';
-                             }
-                           },
-                           {
+                    "columnDefs": [
+                             {
                             "targets":1,
                             "data": null,
                             "render": function(data, type, row, meta) {
                                 return '<a href="<?= url('customer/activity/show/') ?>/' + row.id + '"> ' + row.ticket_no + '  </a>';
+                             }
+                           },
+                         
+                           {
+                            "targets":2,
+                            "data": null,
+                            "render": function(data, type, row, meta) {
+                                return '<a href="<?= url('customer/activity/show/') ?>/' + row.id + '"> ' + row.task_name + '  </a>';
                              }
                            },
                            {
@@ -500,7 +480,7 @@
                              }
                          },
                         {
-                            "targets": 6,
+                            "targets": 7,
                             "data": null,
                             "render": function(data, type, row, meta) {
                                 var status;

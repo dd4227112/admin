@@ -292,7 +292,7 @@ class Sales extends Controller {
             case 'tasks': 
                 $user_id = (int) request('user_id') > 0 ? request('user_id') : Auth::user()->id;
                 if(Auth::user()->role_id == '1'){
-                    $sql = "select t.id,t.ticket_no,substring(t.activity from 1 for 50) as activity,t.date, t.created_at,t.updated_at,p.school_name,p.client,u.firstname||' '||u.lastname as user_name, substring(tt.name from 1 for 20) as task_name, t.status,t.priority from admin.tasks t left join (
+                    $sql = "select t.id,t.ticket_no,substring(t.activity from 1 for 50) as activity,t.date,t.created_at ,t.updated_at,p.school_name,p.client,u.firstname||' '||u.lastname as user_name, substring(tt.name from 1 for 20) as task_name, t.status,t.priority from admin.tasks t left join (
                     select a.task_id, substring(c.name from 1 for 20) as school_name,'Client' as client from admin.tasks_clients a join admin.clients c on c.id=a.client_id
                     UNION ALL SELECT b.task_id,  substring(s.name from 1 for 20) as school_name, 'Not Client' as client from admin.tasks_schools b join admin.schools s on s.id=b.school_id ) p on p.task_id=t.id join admin.users u on u.id=t.user_id LEFT join admin.task_types tt on tt.id=t.task_type_id where  
                     t.id in (select task_id from admin.tasks_users)";
