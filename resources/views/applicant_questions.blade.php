@@ -13,41 +13,23 @@
   <meta name="author" content="Phoenixcoded">
   <!-- Favicon icon -->
 
-<link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
 
-<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
-
-  <!-- Google font-->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
-  <!-- Required Fremwork -->
-  <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/bootstrap/dist/css/bootstrap.min.css">
-  <!-- themify-icons line icon -->
   <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/icon/themify-icons/themify-icons.css">
-  <!-- ico font -->
   <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/icon/icofont/css/icofont.css">
-  <!-- Style.css -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css?v=2">
 
-<style>
-.select2-container--default .select2-selection--single {
-    height: 46px !important;
-    padding: 10px 16px;
-    font-size: 18px;
-    line-height: 1.33;
-    border-radius: 6px;
-}
-.select2-container--default .select2-selection--single .select2-selection__arrow b {
-    top: 85% !important;
-}
-.select2-container--default .select2-selection--single .select2-selection__rendered {
-    line-height: 26px !important;
-}
-.select2-container--default .select2-selection--single {
-    border: 1px solid #CCC !important;
-    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset;
-    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-}
-</style>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
+ 
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" 
+  integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" 
+  crossorigin="anonymous"></script>
+
+
+
 </head>
 <body class="fix-menu"   style=" overflow-y:auto; height: auto;">
     <div class="container">
@@ -63,63 +45,62 @@
                     <h4 class="text-center"><b>{{ $title }}</b></h4>
 
                     </div>
-                        {{-- <?= $id ?> --}}
-
-
+                          <div class="row">
+                            <div class="col-sm-12">
+                              <div class="col-sm-12">
+                               
+                                <?php $i=1;  $questions = \App\Models\RecruimentQuestions::get(); ?>
+                                    <?php foreach($questions as $key => $question){ ?>
+                                      <h3 class="mt-0"><b> <?=$i++?>. <?php echo $question->question; ?> </b></h3>
+                                      <?php $answers = \App\Models\QuizAnswers::get(); ?>
+                                        <ol >
+                                        @foreach($answers as $answer)
+                                        
+                                        <label class="container">
+                                          <input type="radio" id="answer<?= $answer->id ?>" value="{{$answer->id}}" name="question{{$question->id}}"
+                                            onclick="send_answer(<?= $answer->answer ?>,<?=$question->id?>)" required>
+                                          <span class="checkmark"></span>
+                                          {{ $answer->answer }}
+                                        </label>
+                                        
+                                        @endforeach
+                                      </ol>
+                                     <br>
+                                  <hr>
                       
-                          <div class="col-sm-12">
-                                  <div class="row card-block">
-                                      <div class="col-md-12">
-                                        <form action="<?= url('Recruitments/quiz')?>" method="post">
-                                          <ul class="list-view">
-                                              <?php $questions = \App\Models\RecruimentQuestions::get(); ?>
-
-                                               <?php $i=1; foreach($questions as $question) { ?>
-                                              <li>
-                                                  <div class="list-view-media">
-                                                    <h3><?=$i?> .&nbsp; <?=$question->question?></h3>
-
-                                                        <div class="m-t-15">
-                                                          <label class="radio-inline">
-                                                            <input type="radio" name="optradio" >Option 1
-                                                          </label>
-                                                          <label class="radio-inline">
-                                                            <input type="radio" name="optradio">Option 2
-                                                          </label>
-                                                          <label class="radio-inline">
-                                                            <input type="radio" name="optradio">Option 3
-                                                          </label>
-                                                        </div>  
-                                                  </div>
-                                              </li>
-                                              <?php $i++; } ?>
-                                          </ul>
-                                          <div class="modal-footer">
-                                            <button type="submit" class="btn btn-primary waves-effect waves-light ">Submit Here</button>
-                                          </div>
-                                          <?= csrf_field() ?>
-                                         </form >
-                                      </div>
-                                  </div>
-                             
+                                <?php } ?>
+                                   <a href="<?=url('Recruitments/quiz/'.$id.'/submit')?>" class="btn btn-warning pull-right"> Click to Submit </a>
+                              </div>
+                            </div>
                           </div>
-                      
-
-
-  
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <!-- Authentication card end -->
-        </div>
-        <!-- end of col-sm-12 -->
 
-</body>
-</html>
+
+      </body>
+      </html>
 
 
 
-
+<script type="text/javascript">
+send_answer = function (answer,quest_id) {
+  var applicant_id = '<?=$id?>';
+  $.ajax({
+    type: 'POST',
+    url: "<?=url('Recruitments/quizAnswers')?>",
+    data: {"_token": "{{ csrf_token() }}",answer: answer,question_id: quest_id, recruiment_id: applicant_id},
+    dataType: "html",
+    success: function (data) {
+      // $('#latest_comment' + id).after(data);
+      // $('#comment_area' + id).hide();
+      // $('#answeragain' + id).show();
+      //   window.location.href = '';
+    }
+  });
+}
+</script>
 

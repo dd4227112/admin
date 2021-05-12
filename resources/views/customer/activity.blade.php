@@ -45,8 +45,6 @@
                     <div class="card">
                         <div class="card-header">
                           
-                           
-                       
                             <?php
                             if (Auth::user()->role_id == 1) { ?>
                             <?php    $users = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get(); ?>
@@ -149,24 +147,25 @@
                                             <table   class="display table dataTable table-bordered">
                                                 <thead>
                                                     <tr>
+                                                        <th style="display:none;">#</th>
                                                         <th>Ticket</th>
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
-                                                        <th>Created Date</th>
+                                                        <th>Date</th>
                                                         <th>Status</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     
-                                            <?php
-                                          $date = \Carbon\Carbon::today()->subDays(28);
-                                          if(Auth::user()->role_id == 1) {
-                                            $tasks = \App\Models\Task::where('status', 'new')->where('updated_at','>=',$date)->orderBy('updated_at', 'desc')->limit(100)->get();  
-                                           } else{
-                                            $tasks = \App\Models\Task::where('status', 'new')->where('updated_at','>=',$date)->where('user_id',Auth::user()->id)->orderBy('updated_at', 'desc')->limit(100)->get();    
-                                           }
-                                                    if (!empty($tasks)) { 
+            <?php
+          $date = \Carbon\Carbon::today()->subDays(28);
+          if(Auth::user()->role_id == 1) {
+            $tasks = \App\Models\Task::where('status', 'new')->orderBy('updated_at', 'desc')->limit(100)->get();  
+           } else{
+            $tasks = \App\Models\Task::where('status', 'new')->where('updated_at','>=',$date)->where('user_id',Auth::user()->id)->orderBy('updated_at', 'desc')->limit(100)->get();    
+           }
+                                                if (!empty($tasks)) { $i=1;
                                                         foreach ($tasks as $act) {
                                                                if ($act->priority == '1') {
                                                                     $status = 'success';
@@ -195,8 +194,12 @@
                                                                     }
                                                                  ?>
                                                             <tr>
-                                                             
-                                                                <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->ticket_no?></td>
+                                                                 <td style="display:none;">
+                                                                    <?= $i ?>
+                                                                 </td>
+                                                                <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> 
+                                                                   <?= $act->ticket_no ?> 
+                                                                 </td>
                                                                 <?php if(can_access('view_task')) { ?>
                                                                 <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->tasktype->name ?> </a> </td>
                                                                 <?php } else { ?>
@@ -208,12 +211,12 @@
                                                                 <td style="width: 100px;word-break: break-all;">
                                                                     <?= substr($act->activity, 0, 30) ?>
                                                                 </td>
-                                                                <td><?= date('d-m-Y', strtotime($act->created_at))?></td>
+                                                                <td> <?= date('d-m-Y', strtotime($act->updated_at))?></td>
                                                                 <td> 
                                                                     <div class="dropdown-secondary dropdown f-right"><button class="btn btn-<?=$stat?> btn-mini dropdown-toggle waves-effect waves-light"  type="button" id="dropdown6<?=$act->id?>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?=$msg?></button><div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onclick="change_status('on progress', <?=$act->id ?>)"><span class="point-marker bg-danger"></span>On progress</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onclick="change_status('complete',<?=$act->id ?>)"><span class="point-marker bg-warning"></span>Complete</a><a class="dropdown-item waves-light waves-effect" href="#!" onclick="change_status('new',<?=$act->id ?>)"><span class="point-marker bg-warning"></span>New</a></div> </div>
                                                                 </td>
                                                             </tr>
-                                                        <?php } ?>
+                                                        <?php $i++;} ?>
                                                     <?php } ?>
                                                     </tbody>
                                                
@@ -237,11 +240,12 @@
                                             <table  class="display table dataTable  table-bordered">
                                                 <thead>
                                                     <tr>
+                                                        <th style="display:none;">#</th>
                                                         <th>Ticket</th>
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
-                                                        <th>Created Date</th>
+                                                        <th> Date</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -269,6 +273,7 @@
                                                                 }
                                                           ?>
                                                             <tr>
+                                                                <td style="display:none;">#</td>
                                                                 <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"><?= $act->ticket_no?></td>
                                                                 <?php if(can_access('view_task')) { ?>
                                                                 <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->tasktype->name ?> </a> </td>
@@ -279,18 +284,19 @@
                                                                 <div class="dropdown-secondary dropdown f-right text-center"><button class="btn btn-<?=$status ?>  btn-mini dropdown-toggle waves-effect waves-light"  type="button" id="dropdown7<?=$act->id?>"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= $message ?></button><div class="dropdown-menu" aria-labelledby="dropdown7" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_priority(1,<?= $act->id?>)"><span class="point-marker bg-danger"></span>High</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_priority(2,<?= $act->id?>)"><span class="point-marker bg-warning"></span>Medium</a><a class="dropdown-item waves-light waves-effect" href="#!" onmousedown="change_priority(3,<?= $act->id?>)"><span class="point-marker bg-warning"></span>Less</a></div> </div>
                                                                 </td>
                                                                 <td><?= substr($act->activity, 0, 30) ?></td>
-                                                                <td><?= date('d-m-Y', strtotime($act->created_at))?></td>
+                                                                <td><?= date('d-m-Y', strtotime($act->updated_at))?></td>
                                                             </tr>
                                                         <?php } ?>
-                                                    <?php } ?>
+                                                    <?php $i++;} ?>
                                                 </tbody>
                                                 <tfooter>
                                                     <tr>
+                                                        <th style="display:none;">#</th>
                                                         <th>Ticket</th>
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
-                                                        <th>Created Date</th>
+                                                        <th>Date</th>
                                                     </tr>
                                                 </tfooter>
                                             </table>
@@ -324,11 +330,12 @@
                                             <table class="display table dataTable table-bordered">
                                                 <thead>
                                                     <tr>
+                                                        <th style="display:none;">#</th>
                                                         <th>Ticket</th>
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
-                                                        <th>Created Date </th>
+                                                        <th>Date </th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -353,6 +360,7 @@
                                                                 }
                                                             ?>
                                                             <tr>
+                                                                <td style="display:none;">#</td>
                                                                 <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"><?= $act->ticket_no?></td>
                                                                 <?php if(can_access('view_task')) { ?>
                                                                 <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->tasktype->name ?> </a> 
@@ -365,18 +373,19 @@
                                                                 <div class="dropdown-secondary dropdown f-right text-center"><button class="btn btn-<?=$status ?>  btn-mini dropdown-toggle waves-effect waves-light"  type="button" id="dropdown7<?=$act->id?>"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= $message ?></button><div class="dropdown-menu" aria-labelledby="dropdown7" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_priority(1,<?= $act->id?>)"><span class="point-marker bg-danger"></span>High</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_priority(2,<?= $act->id?>)"><span class="point-marker bg-warning"></span>Medium</a><a class="dropdown-item waves-light waves-effect" href="#!" onmousedown="change_priority(3,<?= $act->id?>)"><span class="point-marker bg-warning"></span>Less</a></div> </div>
                                                                 </td>
                                                                 <td><?= substr($act->activity, 0, 60) ?></td>
-                                                                <td><?= date('d-m-Y', strtotime($act->created_at))?></td>
+                                                                <td><?= date('d-m-Y', strtotime($act->updated_at))?></td>
                                                             </tr>
-                                                        <?php } ?>
+                                                        <?php $i++;} ?>
                                                     <?php } ?>
                                                 </tbody>
                                                 <tfooter>
                                                     <tr>
+                                                        <th style="display:none;">#</th>
                                                         <th>Ticket</th>
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
-                                                        <th>Created Date</th>
+                                                        <th>Date</th>
                                                     </tr>
                                                 </tfooter>
                                             </table>
@@ -429,7 +438,7 @@
                         {"data": ""},
                         { "data": "school_name"},
                         {"data": ""},
-                        {"data": "created_at"},
+                        {"data": "updated_at"},
                         {"data": ""}
                     ],
                     "columnDefs": [
