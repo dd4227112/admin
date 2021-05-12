@@ -958,3 +958,13 @@ CREATE INDEX fki_recruiments_country_id_foreign
 
 ALTER TABLE admin.recruiments
     ADD COLUMN country integer;
+
+11/05/2021
+ALTER TABLE admin.recruiment_answers
+    ADD COLUMN answer integer;
+
+ALTER TABLE admin.recruiments
+    ADD COLUMN score bigint;
+
+ALTER TABLE admin.recruiments
+    ADD COLUMN status smallint;

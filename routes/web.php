@@ -78,4 +78,5 @@ Route::get('/user-details/{param1?}', 'Workshop@profile')->name('profile');
 Route::get('/application', 'Recruitments@index');
 Route::post('/addrecruiment', 'Recruitments@register'); 
 
-//Route::get('questions/{$id}', 'Recruitments@quiz')->name('questions');
+Route::get('/nda_form', 'Recruitments@nda');
+Route::post('/sendndaform','Recruitments@uploadnda');

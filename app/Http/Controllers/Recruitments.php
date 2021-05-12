@@ -14,69 +14,70 @@ class Recruitments extends Controller {
     }
 
     public function register() {
-      
          $phone = request('phone'); 
         if (strpos($phone, '0') === 0) {
-         $phonenumber = preg_replace('/0/', '+255', $phone, 1);
-        }else{
-         $phonenumber = request('phone'); 
-        }
+            $phonenumber = preg_replace('/0/', '+255', $phone, 1);
+          }else{
+            $phonenumber = request('phone'); 
+          }
         $file = request()->file('documents');
-      //   $file_id = $this->saveFile($file, 'company/contracts');
-         $file_id = 1;
+        $file_id = $this->saveFile($file, 'company/contracts');
+        // $file_id = 1;
         
        $recruiment = \App\Models\Recruiment::create(array_merge(request()->except('phone'), ['phone' => $phonenumber,'company_file_id' =>$file_id ]));
-        // dd($recruiment);
-         if(isset($recruiment)){
-            return redirect('Recruitments/quiz/'. $recruiment->id);
-          //  return redirect(url('recruiments/quiz/' . $recruiment->id));
+            if(request('email')){
+            $message = '<h4>Dear ' . request('fullname') .  '</h4>'
+            .'<h4>I trust this email finds you well.</h4>'
+            .'<br/>'
+            .'<p><br>Your application has been submitted successful.</p>'
+            .'<br>'
+            .'<p>Thanks and regards,</p>'
+            .'<p><b>Shulesoft Team</b></p>'
+            .'<p> Call: +255 655 406 004 </p>';
+            $this->send_email(request('email'), 'ShuleSoft Recruiment Application', $message);
          }
-    }
+         return redirect('Recruitments/quiz/'. $recruiment->id);
+   }
+
 
 
     public function quiz(){
         $this->data['id'] = $id = request()->segment(3);
-        $this->data['title'] = 'Shulesoft Application Questions';
-        return view('applicant_questions',$this->data);
-
-           $applicant = \App\Models\Recruiment::findOrFail($id);
-           dd($applicant);
-
-             // if( request('email')){
-        //     $message = '<h4>Dear ' . request('name') .  '</h4>'
-        //     .'<h4>I trust this email finds you well.</h4>'
-        //     .'<p>Please find below the details for the Shulesoft Webinar session to be held on '.$workshop->event_date.'.</p>'
-        //     .'<p>Link: https://meet.google.com/ney-osuq-bsq </p>'
-        //     .'<br/>'
-        //     .'<p>Join through Google Meeting, You have an option to use Smartphone or Computer, if you’re going to use a smartphone, you have to download an application click that link to do so. Remember to join the session 5 minutes before the specified time in order to test your device</p>'
-        //     .'<p><br>Looking forward to hearing your contribution in the discussion.</p>'
-        //     .'<br>'
-        //     .'<p>Thanks and regards,</p>'
-        //     .'<p><b>Shulesoft Team</b></p>'
-        //     .'<p> Call: +255 655 406 004 </p>';
-        //     $this->send_email(request('email'), 'ShuleSoft Recruiment Application', $message);
-
-        //     $message1 = 'Dear ' . request('name') .  '.'
-        //     .chr(10).'Thanks for registering for the Shulesoft Webinar session to be held on '.$workshop->event_date.'.'
-        //     .chr(10).'Topic: '. $workshop->title . '.'
-        //     .chr(10).'Time: '. $workshop->start_time .' - ' .$workshop->end_time. ''
-        //     .chr(10).'Link: https://meet.google.com/ney-osuq-bsq .'
-        //     .chr(10)
-        //     .'Remember to join the session 5 minutes before the specified time in order to test your device.'
-        //     .chr(10).' Looking forward to hearing your contribution in the discussion.'
-        //     .chr(10).'Thanks and regards,'
-        //     .chr(10).'Shulesoft Team' 
-        //     .chr(10).' Call: +255 655 406 004 ';
-        //     $sql = "insert into public.sms (body,user_id, type,phone_number) values ('$message1', 1, '0', '$phonenumber')";
-        //     DB::statement($sql);
-
-        //     echo "<script>
-        //         alert('Conglatulations for registering!!! We glad to have you.');
-        //         window.location.href='https://www.shulesoft.com/';
-        //     </script>";
-        //     }
+        $option = request()->segment(4);
+       
+         if($option == 'submit'){
+            $applicant = \App\Models\Recruiment::findOrFail($id);
+            $where = ["recruiment_id" => $applicant->id];
+            $score =  \App\Models\RecruimentAnswers::selectRaw('SUM(answer) as total,recruiment_id')->where($where)->groupBy('recruiment_id')->first()->total;
+            $total_value = 1000;
+            $percent = $score / $total_value * 100;
+            \App\Models\Recruiment::where('id',$applicant->id)->update(["score" => $score]);
+         }
+         $this->data['title'] = 'Shulesoft Application Questions';
+         return view('applicant_questions',$this->data);
     }
 
    
+    public function quizAnswers(){
+        if($_POST){
+            $data = ["answer" => request('answer'),"question_id" => request('question_id'),"recruiment_id" => request('recruiment_id')];
+            $arr = ["question_id" => request('question_id'),"recruiment_id" => request('recruiment_id')];
+            $check =  \App\Models\RecruimentAnswers::where($arr)->first();
+           !empty($check) ? \App\Models\RecruimentAnswers::where($arr)->update(["answer" => request('answer')]) : \App\Models\RecruimentAnswers::create($data);    
+        }
+        echo 'Answered';
+    }
+
+
+    public function nda(){
+        $this->data['title'] = 'Shulesoft NDA Form';
+        return view('nda_form',$this->data);
+    }
+
+    public function uploadnda(){
+        $file = request()->file('nda_form');
+        dd($file);
+        $nda_file_id = $this->saveFile($file, 'company/contracts');
+    }
 
 }
