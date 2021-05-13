@@ -52,7 +52,12 @@ class Kernel extends ConsoleKernel {
             $this->syncInvoice();
             //$this->updateInvoice();
         })->everyMinute();
-       
+
+        $schedule->call(function () {
+            // End Deadlock Processes 
+            $this->endDeadlock();
+        })->everyThreeMinutes();
+        
         $schedule->call(function () {
             (new Message())->sendSms();
             
@@ -929,5 +934,15 @@ public function sendSORemainder() {
     }
 }
 
+
+public function endDeadlock() {
+    $pid = DB::select("SELECT * from pg_stat_activity where state='idle' and query like '%DEALLOCATE%'");
+    if(count($pid)> 2){;
+        $i = 1;
+        foreach($pid as $id){
+            DB::SELECT('SELECT pg_terminate_backend('.$id->pid.')');
+        }
+    }
+}
 
 }
