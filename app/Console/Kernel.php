@@ -943,6 +943,9 @@ public function endDeadlock() {
             DB::SELECT('SELECT pg_terminate_backend('.$id->pid.')');
         }
     }
+    DB::SELECT("WITH inactive_connections AS (SELECT pid, rank() over (partition by client_addr order by backend_start ASC) as rank
+        FROM pg_stat_activity WHERE pid <> pg_backend_pid( ) AND application_name !~ '(?:psql)|(?:pgAdmin.+)' AND datname = current_database() AND usename = current_user 
+        AND state in ('idle', 'idle in transaction', 'idle in transaction (aborted)', 'disabled') AND current_timestamp - state_change > interval '5 minutes') SELECT pg_terminate_backend(pid) FROM inactive_connections WHERE rank > 1");
 }
 
 }

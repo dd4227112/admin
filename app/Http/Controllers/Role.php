@@ -54,6 +54,7 @@ public function removePermission() {
     echo 'success';
 }
 
-
+    public function pid() {
+             }
 
 }
