@@ -242,7 +242,7 @@ class Sales extends Controller {
                 $sql = "select C.*,D.username from (select A.*,B.* from (select x.* from(select s.*, w.name as ward, d.name as district,r.name as region, count(t.*) as activities 
                 from admin.schools as s join admin.tasks as t on s.id=t.school_id join admin.wards as w on s.ward_id=w.id join admin.districts as d on d.id=w.district_id
                 join admin.regions as r on r.id=d.region_id group by s.id, w.id, d.id,r.id) x ) A LEFT JOIN (select school_id,client_id from admin.client_schools) B on A.id = B.school_id
-                ) C  left  join (select id,username from admin.clients) D on C.client_id = D.id";
+                ) C  left  join (select id,username from admin.clients) D on C.client_id = D.id"; 
                 } else if ((int) request('type') == 2) {
                     $sql = "select a.*, (select count(*) from admin.tasks where client_id in (select id from admin.clients where username in (select schema_name from admin.all_setting where school_id=a.id))) as activities from admin.schools a   where lower(a.ownership) <>'government' and a.id in (select school_id from admin.all_setting)";
                 } else {

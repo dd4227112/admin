@@ -25,22 +25,19 @@ class Analyse extends Controller {
 
     public function index() {
         $this->data['users'] = [];
-//         $this->data['active_schools']=\collect(DB::select(" select count(distinct \"schema_name\") as aggregate from admin.all_log where \"table\"  in ('user', 'teacher') and (created_at >= date_trunc('week', CURRENT_TIMESTAMP - interval '1 week') and
-//       created_at < date_trunc('week', CURRENT_TIMESTAMP)
-//      )"))->first()->aggregate;
-        //$this->data['log_graph'] = $this->createBarGraph();
 
         if (Auth::user()->role_id == 7) {
+            return redirect('sales/school');
+            exit;
             $id = Auth::user()->id;
             $this->data['refer_bank_id'] = $refer_bank_id = (new \App\Http\Controllers\Users())->getBankId();
-            //$partner_user = \App\Models\PartnerUser::whereIn('user_id', [Auth::user()->id])->first();
             $this->data['use_shulesoft'] = DB::table('admin.all_setting')->count() - 5;
-            //$this->data['nmb_schools'] = \App\Models\PartnerSchool::whereIn('branch_id', \App\Models\PartnerBranch::where('partner_id', $partner_user->branch->partner->id)->get(['branch_id']))->count();
             $this->data['nmb_schools'] = $refer_bank_id == 22 ? DB::table('nmb_schools')->get() : [];
             $this->data['schools'] = DB::table('admin.schools')->where('ownership', '<>', 'Government')->get();
             $this->data['nmb_shulesoft_schools'] = \collect(DB::select("select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=" . $refer_bank_id))->first()->count;
             return view('analyse.bank', $this->data);
         } elseif (Auth::user()->department == 10 && Auth::user()->id != 36) {
+            return redirect('sales/school');
             $id = Auth::user()->id;
             $this->data['branch'] = $branch = \App\Models\PartnerUser::where('user_id', $id)->first();
             $this->data['use_shulesoft'] = \App\Models\School::whereIn('ward_id', \App\Models\Ward::where('district_id', $branch->branch->district_id)->get(['id']))->whereNotNull('schema_name')->count();
