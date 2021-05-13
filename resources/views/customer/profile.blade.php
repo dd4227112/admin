@@ -1,7 +1,11 @@
 @extends('layouts.app')
 @section('content')
+
 <?php
 $root = url('/') . '/public/';
+
+
+
 define('SCHEMA', $schema);
 
 function check_status($table, $where = null) {
@@ -24,7 +28,7 @@ return $echo;
 }
 ?>
 
-
+<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
 <div class="main-body">
 <div class="page-wrapper">
     <!-- Page-header start -->
@@ -66,7 +70,9 @@ return $echo;
                                                     frameborder="0" scrolling="no" marginheight="0"
                                                     marginwidth="0"></iframe><a
                                                     href="https://www.embedgooglemap.net/blog/nordvpn-coupon-code/">nordvpn
-                                                    coupon</a></div>
+                                                    coupon</a>
+                                            </div>
+                                            
                                             <style>
                                             .mapouter {
                                                 position: relative;
@@ -1583,9 +1589,10 @@ return $echo;
 
                                             <div class="row">
                                                 <div class="card">
-                                                    <button type="button" class="btn btn-primary waves-effect"
-                                                        data-toggle="modal" data-target="#standing-order-Modal">
-                                                        Standing Order </button>
+                                                    <a type="button" class="btn btn-primary waves-effect"
+                                                        href="{{ url('Customer/uploadstandingorder') }}">
+                                                        Standing Order 
+                                                    </a>
                                                 </div>
 
                                                 <div class="modal fade" id="standing-order-Modal" tabindex="-1"
@@ -1600,15 +1607,14 @@ return $echo;
                                                                         <span aria-hidden="true">×</span>
                                                                     </button>
                                                                 </div>
-                                                                <form action="{{ url('Customer/addStandingOrder') }}" method="post"  enctype="multipart/form-data">
+                                                                <form action="{{ url('Customer/createSI') }}" method="post"  enctype="multipart/form-data">
                                                                     <div class="modal-body">
                                                                         
                                                                         <div class="form-group">
                                                                             <div class="row">
                                                                                 <div class="col-md-6">
-                                                                                    <strong> Branch name </strong>
-                                                                                    <select name="branch_id"  required
-                                                                                        class="form-control select2">
+                                                                                  <strong> Branch name </strong>
+                                                                                    <select name="branch_id" class="form-control select2" required>
                                                                                         <?php
                                                                                         $branches = \App\Models\PartnerBranch::orderBy('id','asc')->get();
                                                                                         if (!empty($branches)) {
@@ -1626,8 +1632,7 @@ return $echo;
                                                                                 </div>
                                                                                 <div class="col-md-6">
                                                                                     <strong> Contact person </strong>
-                                                                                    <select name="school_contact_id"  required
-                                                                                        class="form-control select2">
+                                                                                    <select name="school_contact_id"  class="form-control select2"  >
                                                                                         <?php
                                                                                         $this_school = \App\Models\ClientSchool::where('client_id', $client_id)->first();
                                                                                         if (!empty($this_school)){
@@ -1641,13 +1646,12 @@ return $echo;
                                                                                         <?php
                                                                                             }
                                                                                         }
-                                                                                    }
-                                                                                        ?>
-
+                                                                                    }?>
                                                                                     </select>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
+
                                                                         <div class="form-group">
                                                                             <div class="row">
                                                                                 <div class="col-md-6">
@@ -1658,12 +1662,14 @@ return $echo;
                                                                                         required>
                                                                                 </div>
                                                                                 <div class="col-md-6">
-                                                                                    <strong> Basis  </strong>
-                                                                                    <input type="text"
-                                                                                        class="form-control"
-                                                                                        placeholder="eg. Quarter"
-                                                                                        name="which_basis"
-                                                                                        required>
+                                                                                    <strong> Basis </strong>
+                                                                                    <select name="which_basis"  class="form-control select2" required>
+                                                                                        <option value=""></option>
+                                                                                        <option value="Annually">Annually</option>
+                                                                                        <option value="Semiannually">Semi Annually</option>
+                                                                                        <option value="Quarterly">Quarterly</option>
+                                                                                        <option value="Monthly">Monthly</option>
+                                                                                    </select>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1702,6 +1708,63 @@ return $echo;
                                                                                         name="standing_order_file"
                                                                                         required>
                                                                                 </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="form-group">
+                                                                            <div class="row">
+                                                                                <div class="col-md-6">
+                                                                                    <strong> Refer bank</strong>
+                                                                                    <select name="refer_bank_id"  required
+                                                                                        class="form-control select2">
+                                                                                        <?php
+                                                                                        $banks = DB::table('constant.refer_banks')->get();
+                                                                                        if(!empty($banks)) {
+                                                                                            foreach ($banks as $bank) {
+                                                                                                ?>
+                                                                                        <option
+                                                                                            value="<?= $bank->id ?>">
+                                                                                            <?= $bank->name ?>
+                                                                                        </option>
+                                                                                        <?php
+                                                                                            }
+                                                                                        }
+                                                                                        ?>
+                                                                                    </select>
+                                                                                </div>
+                                                                                <div class="col-md-6">
+                                                                                    <strong> Contract type </strong>
+                                                                                    <select name="contract_type_id"  required
+                                                                                        class="form-control select2">
+                                                                                        <?php
+                                                                                        $contracts = DB::table('contracts_types')->get();
+                                                                                        if (!empty($contracts)) {
+                                                                                            foreach ($contracts as $contract) {
+                                                                                                ?>
+                                                                                        <option
+                                                                                            value="<?= $contract->id ?>">
+                                                                                            <?= $contract->name ?>
+                                                                                        </option>
+                                                                                        <?php
+                                                                                            }
+                                                                                        }
+                                                                                        ?>
+                                                                                    </select>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        
+                                                                        <div class="form-group">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12">
+                                                                                    <strong> Note</strong>
+                                                                                    <input type="text"
+                                                                                        class="form-control"
+                                                                                        name="note"
+                                                                                        required>
+                                                                                </div>
+                                                                              
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1825,71 +1888,6 @@ return $echo;
                                             </div>
 
 
-                                        <?php /*
-                                            <div class="row">
-                                                <div class="card table-responsive">
-                                                    <table id="invoice_table"
-                                                        class="table table-striped table-bordered nowrap dataTable">
-                                                        <thead>
-                                                            <tr>
-                                                            <th>No.</th>
-                                                            <th>Branch</th>
-                                                            <th>School contact</th>
-                                                            <th>Occurance</th>
-                                                            <th>Basis</th>
-                                                            <th>Occurance amount</th>
-                                                            <th>Total amount</th>
-                                                            <th>Maturity date</th>
-                                                            <th colspan="2" class="text-center">Actions</th>
-                                                    </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                  <?php $i = 1; ?>
-                                                  <?php  $standingorders = \App\Models\StandingOrder::where('client_id',$client_id)->get(); ?>
-                                                  @if(count($standingorders))
-                                                    @foreach ($standingorders as $key => $standing)
-                                                    <tr>
-                                                        <td><?= $i ?></td>
-                                                        <td>{{ $standing->branch->name }}</td>
-                                                        <td>{{ $standing->schoolcontact->name }}</td>
-                                                        <td>{{ $standing->occurrence }}</td>
-                                                        <td>{{ $standing->basis }}</td>
-                                                        <td>{{ $standing->occurance_amount }}</td>
-                                                        <td>{{ $standing->total_amount }}</td>
-                                                        <td><?= date('d M Y', strtotime($standing->date)) ?></td>
-                                                       @if(can_access('manage_finance'))
-                                                   
-                                                        <td>
-                                                          <a  target="_break" href="<?= url('customer/viewContract/'.$standing->id.'/standing') ?>" class="btn btn-sm btn-success">View</a>
-
-                                        
-                                                          @if($standing->status == 0)
-                                                          <a  href="<?= url('account/approveStandingOrder/'.$standing->id) ?>" class="btn btn-sm btn-success"> Confirm </a>
-                                                          <a href="<?= url('account/rejectStandingOrder/'.$standing->id) ?>" class="btn btn-sm btn-danger">Reject</a>
-                                                          @else
-                                                           <a  class="btn btn-sm btn-secondary">Approved</a>
-                                                          @endif 
-                                                        </td>
-                                                        
-                                                     @endif
-                                                    </tr>
-                                                    <?php $i++; ?>
-                                                    @endforeach
-                                                    @endif
-                                                </tbody>
-                                                        <tfoot>
-                                                            <tr>
-                                                                <td colspan="2">Total</td>
-                                                                <td><?= money($total_amount) ?></td>
-                                                                <td><?= money($total_paid) ?></td>
-                                                                <td><?= money($total_unpaid) ?></td>
-                                                                <td colspan="2"></td>
-                                                            </tr>
-                                                        </tfoot>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                       */ ?>
 
 
 
@@ -2253,6 +2251,14 @@ $('.slot').change(function() {
             notify('Success', 'Success', 'success');
         }
     });
+});
+
+
+$(".select2").select2({
+    theme: "bootstrap",
+    dropdownAutoWidth: false,
+    allowClear: false,
+    debug: true
 });
 
 $('.task_allocated_id').change(function() {

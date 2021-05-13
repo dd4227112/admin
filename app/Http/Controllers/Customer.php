@@ -496,31 +496,41 @@ class Customer extends Controller {
         }
     }
 
-    public function addStandingOrder() {
+    public function uploadstandingorder(){
+        return view('account.invoice.add_si');
+    }
+
+    public function createSI() {
         if ($_POST) {
             $file = request('standing_order_file');
             $company_file_id = $this->saveFile($file, 'company/contracts');
-
             $data = [
                 'client_id' => request('client_id'),
                 'branch_id' => request('branch_id'),
                 'company_file_id' => $company_file_id,
                 'school_contact_id' => request('school_contact_id'),
-                'user_id' => Auth::user()->id,
+                'created_by' => Auth::user()->id,
                 'occurrence' => request('number_of_occurrence'),
-                'basis' => request('which_basis'),
-                'total_amount' => request('total_amount'),
+                'type' => request('which_basis'),
+                'amount' => request('total_amount'),
                 'occurance_amount' => request('occurance_amount'),
-                'date' => request('maturity_date')
-            ];
+                'payment_date' => request('maturity_date'),
+                'refer_bank_id' => request('refer_bank_id'),
+                'note' => request('note'),
+                'contract_type_id' => request('contract_type_id')
+            ]; 
             DB::table('standing_orders')->insert($data);
-            return redirect()->back()->with('success', 'Standing order added successfully!');
+         //   return redirect()->back()->with('success', 'Standing order added successfully!');
+            return redirect('account/standingOrders')->with('success', 'Standing order added successfully!');
         }
+        
     }
+
 
     public function activity() {
         $tab = request()->segment(3);
         $id = request()->segment(4);
+      //  dd(request('user_id'));
         if ($tab == 'add') {
             $this->data['types'] = DB::table('task_types')->where('department', Auth::user()->department)->get();
             $this->data['departments'] = DB::table('departments')->get();
@@ -599,31 +609,58 @@ class Customer extends Controller {
         }
     }
 
+
+
     public function getschools() {
-        $sql = "SELECT id,upper(name)|| ' '||upper(type) as name FROM admin.schools
-			WHERE lower(name) LIKE '%" . str_replace("'", null, strtolower(request('term'))) . "%'
-			LIMIT 10";
+        $sql = "SELECT A.id,upper(A.name)|| ' '||upper(A.type) as name, CASE WHEN B.client_id is not null THEN 1 ELSE 0 END AS client FROM admin.schools A left join admin.client_schools B on A.id = B.school_id WHERE lower(A.name) LIKE '%" . str_replace("'", null, strtolower(request('term'))) . "%' LIMIT 10";
         die(json_encode(DB::select($sql)));
     }
 
         public function choices(){
             $type = request('type');
             if($type == 'year'){
-                $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->whereYear('created_at', date('Y'))->orderBy('created_at', 'desc')->get();
+                 if (Auth::user()->role_id == 1) {
+            $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->whereYear('updated_at', date('Y'))->orderBy('updated_at', 'desc')->get();
+                 } else {
+            $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->where('user_id',Auth::user()->id)->whereYear('updated_at', date('Y'))->orderBy('updated_at', 'desc')->get();  
+                 }
             } else if($type == 'quoter'){
                 $date = \Carbon\Carbon::today()->subDays(120);
-                $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->where('created_at','>=',$date)->orderBy('created_at', 'desc')->get();
+                if (Auth::user()->role_id == 1){
+                    $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->where('updated_at','>=',$date)->orderBy('updated_at', 'desc')->get();
+                } else {
+                      $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->where('user_id',Auth::user()->id)->where('updated_at','>=',$date)->orderBy('updated_at', 'desc')->get();
+                }
             } else if($type == 'month'){
-                $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->whereMonth('created_at', Carbon::now()->month)
-                ->whereYear('created_at', date('Y'))->orderBy('created_at', 'desc')->get();
+                   if (Auth::user()->role_id == 1){
+                     $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->whereMonth('updated_at', Carbon::now()->month)->whereYear('updated_at', date('Y'))->orderBy('updated_at', 'desc')->get();
+                   } else{
+                     $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->where('user_id',Auth::user()->id)->whereMonth('updated_at', Carbon::now()->month)->whereYear('updated_at', date('Y'))->orderBy('updated_at', 'desc')->get();
+                   }
             } else if($type == 'week'){
-                $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->orderBy('created_at', 'desc')->get();
+                 if (Auth::user()->role_id == 1){
+                    $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->whereBetween('updated_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->orderBy('updated_at', 'desc')->get();
+                 } else{
+                    $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->where('user_id',Auth::user()->id)->whereBetween('updated_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->orderBy('updated_at', 'desc')->get();
+                 }
             } else if($type == 'yesterday'){
-                $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->whereDate('created_at', Carbon::yesterday())->orderBy('created_at', 'desc')->get();
+                if (Auth::user()->role_id == 1){
+                     $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->whereDate('updated_at', Carbon::yesterday())->orderBy('updated_at', 'desc')->get();
+                } else{
+                     $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->where('user_id',Auth::user()->id)->whereDate('updated_at', Carbon::yesterday())->orderBy('updated_at', 'desc')->get();
+                }
             } else if($type == 'today') {
-               $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->whereDate('created_at', Carbon::today())->orderBy('created_at', 'desc')->get();
+                if (Auth::user()->role_id == 1){
+                    $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->whereDate('updated_at', Carbon::today())->orderBy('updated_at', 'desc')->get();
+                } else{
+                    $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->where('user_id',Auth::user()->id)->whereDate('updated_at', Carbon::today())->orderBy('updated_at', 'desc')->get();
+                }
             } else{
-                $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->orderBy('created_at', 'desc')->limit(100)->get();
+                if (Auth::user()->role_id == 1){
+                   $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->orderBy('updated_at', 'desc')->limit(100)->get();
+                } else {
+                    $this->data['completetasks']  = \App\Models\Task::where('status', 'complete')->where('user_id',Auth::user()->id)->orderBy('updated_at', 'desc')->limit(100)->get();
+                }
             }
             return view('customer.activity', $this->data);
         }

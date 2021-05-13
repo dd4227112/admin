@@ -31,34 +31,32 @@
               <div class="steamline">
                 <div class="card-block">
 
-                <div class="m-10">
-                    <a href="<?= url('users/usergroup/add') ?>" class="btn btn-sm btn-primary">Add user group</a>
-                </div>
-
                   <div class="table-responsive dt-responsive">
                     <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                       <thead>
                         <tr>
                           <th>#</th>
-                          <th>Group name</th>
+                          <th>School name</th>
                           <th>Email</th>
+                          <th>No of students</th>
+                          <th>code</th>
                           <th>Phone</th>
-                          <th class="text-center">Action</th>
+                         
                         </tr>
                       </thead>
                       <tbody>
                       <?php 
-                      if(sizeof($groups) > 0){
+                      if(sizeof($schools) > 0){
                         $i = 1;
-                        foreach($groups as $group){ ?>
+                        foreach($schools as $group){ ?>
                       <tr>
                           <td><?=$i++?> </td>
                           <td><?=$group->name?></td>
                           <td><?=$group->email?></td>
-                          <td><?=$group->phone_number?></td>  
-                          <td>
-                               <a  href="<?= url('users/group_clients/' . $group->id) ?>" class="btn btn-warning btn-sm">view</a>
-                          </td>
+                          <td><?=$group->estimated_students?></td>
+                          <td><?=$group->code?></td>
+                          <td><?=$group->phone?></td>
+                         
                         </tr>
                         <?php }  ?>
                     <?php }  ?>

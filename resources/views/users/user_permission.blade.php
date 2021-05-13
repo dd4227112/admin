@@ -72,7 +72,7 @@
                                         role="tabpanel" aria-labelledby="headingTwo">
                                         @foreach($group->permissions()->get() as $sub)
                                         <?php
-                                            $check = \App\Models\PermissionRole::where('role_id', $set)->where('permission_id', $sub->id)->first();
+             $check = \App\Models\PermissionRole::where('role_id', $set)->where('permission_id', $sub->id)->first();
                                             !empty($check) ? $checked = 'checked' : $checked = '';
                                         ?>
                                         <label class="container">

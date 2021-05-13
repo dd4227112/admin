@@ -17,7 +17,7 @@ class StandingOrder extends Model
     }
 
     public function branch() {
-        return $this->belongsTo(\App\Models\PartnerBranch::class, 'branch_id', 'id');
+        return $this->belongsTo(\App\Models\PartnerBranch::class, 'branch_id', 'id')->withDefault(['name' => 'Not Defined']);
     }
 
     public function companyFile() {

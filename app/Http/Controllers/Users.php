@@ -689,13 +689,13 @@ class Users extends Controller {
                 if (!empty($group_id) && request('to_client_id')) {
                     $clients = request('to_client_id');
                     foreach ($clients as $key => $client) {
-                        if (request('to_client_id')[$key] != '') {
-                            $array = ['client_id' => request('to_client_id')[$key], 'group_id' => $group_id];
-                            $check_unique = \App\Models\ClientGroup::where($array);
-                            if (empty($check_unique->first())) {
+                      if (request('to_client_id')[$key] != '') {
+                        $array = ['client_id' => request('to_client_id')[$key], 'group_id' => $group_id];
+                          $check_unique = \App\Models\ClientGroup::where($array);
+                            if(empty($check_unique->first())) {
                                 \App\Models\ClientGroup::create($array);
                             } else{
-                                return redirect()->back()->with('error','Client arleady belong to groups');
+                            return redirect()->back()->with('error','Client arleady belong to groups');
                             }
                         }
                     }
@@ -705,6 +705,15 @@ class Users extends Controller {
             return view('users.groups.add', $this->data);
         }
         return view('users.groups.usergroups', $this->data);
+    }
+
+
+    public function group_clients(){
+        $g_id = request()->segment(3);
+        if($g_id > 0){
+            $this->data['schools'] = \App\Models\Client::whereIn('id',\App\Models\ClientGroup::where('group_id', $g_id)->get(['client_id']))->get();
+        }
+        return view('users.groups.schools', $this->data);
     }
 
 

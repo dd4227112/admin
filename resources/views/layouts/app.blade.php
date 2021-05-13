@@ -702,7 +702,7 @@
                                      data-i18n="nav.extra-components.session-timeout">User permission</a></li>
                                 </ul>
                             </li>
-                            <?php } ?>
+                        <?php } ?>
 
 
                             <?php if (can_access('manage_users')) { ?>
@@ -836,7 +836,19 @@
                             </li>
                         <?php } ?>
 
-                        
+                         
+                        <?php if(Auth::user()->role_id == '1') { ?>
+                            <li class="nav-item">
+                                <a href="#!">
+                                    <i class="ti-gift "></i>
+                                    <span data-i18n="nav.extra-components.main">Applications</span>
+                                </a>
+                                <ul class="tree-1">
+                                    <li><a href="<?= url('Applicants/evaluations') ?>"
+                                     data-i18n="nav.extra-components.session-timeout">Evaluation</a></li>
+                                </ul>
+                            </li>
+                        <?php } ?>
 
 
                         <?php if (can_access('manage_finance')) { ?>
@@ -848,6 +860,7 @@
                                 <ul class="tree-1">
                                     <!-- <li><a href="<?= url('account/projection') ?>" data-i18n="nav.advance-components.draggable">Projections</a></li> -->
                                     <li><a href="<?= url('account/invoice') ?>" data-i18n="nav.advance-components.grid-stack">Invoice</a></li>
+                                    <li><a href="<?= url('account/standingOrders') ?>" data-i18n="nav.advance-components.grid-stack">Standing orders</a></li>
                                     <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Transactions</a>
                                         <ul class="tree-2">
                                             <a href="<?= url('account/revenue') ?>"><i class="fa icon-account"></i> Revenue</a>
@@ -907,6 +920,8 @@
                             </li>
                         <?php } ?>
 
+                    
+
 
                         <?php if (can_access('manage_expenses')) { ?>
                              {{-- <li class="nav-item single-item has-class">
@@ -917,10 +932,10 @@
                                             </a>
                                         </li> --}}
                             <?php } ?>
-
-
-
                     <?php } ?>
+
+         
+
                     <?php /* if (preg_match('/localhost/', url()->current()) && can_access('manage_software')) { ?>
                       <li class="nav-item">
                       <a href="#">
@@ -993,51 +1008,7 @@
             @include('layouts.notifications')
             @yield('content')
         </div>
-        <!-- Main-body end-->
-        <!-- Warning Section Starts -->
-        <!-- Older IE warning message -->
-        <!--[if lt IE 9]>
-    <div class="ie-warning">
-        <h1>Warning!!</h1>
-        <p>You are using an outdated version of Internet Explorer, please upgrade <br/>to any of the following web browsers to access this website.</p>
-        <div class="iew-container">
-            <ul class="iew-download">
-                <li>
-                    <a href="http://www.google.com/chrome/">
-                        <img src="<?= $root ?>assets/images/browser/chrome.png" alt="Chrome">
-                        <div>Chrome</div>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://www.mozilla.org/en-US/firefox/new/">
-                        <img src="<?= $root ?>assets/images/browser/firefox.png" alt="Firefox">
-                        <div>Firefox</div>
-                    </a>
-                </li>
-                <li>
-                    <a href="http://www.opera.com">
-                        <img src="<?= $root ?>assets/images/browser/opera.png" alt="Opera">
-                        <div>Opera</div>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://www.apple.com/safari/">
-                        <img src="<?= $root ?>assets/images/browser/safari.png" alt="Safari">
-                        <div>Safari</div>
-                    </a>
-                </li>
-                <li>
-                    <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">
-                        <img src="<?= $root ?>assets/images/browser/ie.png" alt="">
-                        <div>IE (9 & above)</div>
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <p>Sorry for the inconvenience!</p>
-    </div>
-    <![endif]-->
-        <!-- Warning Section Ends -->
+      
 
         <script src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/tether/dist/js/tether.min.js"></script>

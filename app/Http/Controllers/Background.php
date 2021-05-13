@@ -600,25 +600,7 @@ class Background extends Controller {
         // }
     }
 
-    public function standingOrderRemainder() {
-        $users = \App\Models\User::where('role_id',1)->get();
-        foreach ($users as $user) {
-            $standingorders = \App\Models\StandingOrder::whereDate('date', date('Y-m-d', time() - 86400));
-            $msg = '';
-            foreach ($standingorders as $st) {
-                $msg .= '<tr><td>' . $st->client->name . '</td><td>' . $st->occurance_amount . '</td></tr>';
-            }
-            $message = ''
-                    . '<h2>Today standing orders</h2>'
-                    . '<p>This is the list of todays standing orders to confirm</p>'
-                    . '<table><thead><tr><th>Client name</th><th> Amount </th></tr></thead><tbody>' . $msg . '</tbody></table>';
-            DB::table('public.email')->insert([
-                'subject' => date('Y M d') . ' Standing order remainder',
-                'body' => $message,
-                'email' => $user->email
-            ]);
-        }
-    }
+  
 
     public function searchDistrict() {
         $region_id = request('region_id');

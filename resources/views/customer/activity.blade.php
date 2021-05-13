@@ -6,6 +6,7 @@
 <!-- Sidebar inner chat end-->
 <!-- Main-body start -->
 
+
 <style>
     a:hover {
      text-decoration: underline;
@@ -43,13 +44,10 @@
                     <!-- Ajax data source (Arrays) table start -->
                     <div class="card">
                         <div class="card-header">
-                          <?php if(can_access('add_task')) { ?>
-                            <a class="btn btn-success btn-sm" href="<?= url('customer/activity/add') ?>"> Add New Task</a>
-                          <?php } ?>
+                          
                             <?php
-                            if (Auth::user()->role_id == 1) {
-                                $users = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get();
-                            ?>
+                            if (Auth::user()->role_id == 1) { ?>
+                            <?php    $users = \App\Models\User::where('status', 1)->where('role_id', '<>', 7)->get(); ?>
                                 <span style="float: right">
                                     <select class="form-control" style="width:300px;" id='taskdate'>
                                         <option></option>
@@ -57,9 +55,8 @@
                                             <option value="<?= $user->id ?>" <?= (int) request('user_id') > 0 && request('user_id') == $user->id ? 'selected' : '' ?>><?= $user->firstname . ' ' . $user->lastname ?></option>
                                         <?php } ?>
                                     </select>
-                                </span>
-
-                            <?php } ?>
+                                </span>                  
+                            <?php } ?> 
 
                         </div>
                         <div class="col-lg-12 col-xl-12">
@@ -79,11 +76,15 @@
                                     </li>
 
                                     <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#home1" role="tab">All Tasks</a>
+                                        <a class="nav-link" data-toggle="tab" href="#home" role="tab">All Tasks</a>
                                     </li>
                
                                     <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#profile1" role="tab">Calender & Schedules</a>
+                                        <a class="nav-link" data-toggle="tab" href="#profile" role="tab">Calender & Schedules</a>
+                                    </li>
+                                  
+                                    <li class="nav-item" style="float:right;">
+                                        <a class="nav-link" href="<?= url('customer/activity/add') ?>" role="tab"><b>  <i class="ti-pencil"> </i> Add New </b></a>
                                     </li>
                                 </ul>
 
@@ -91,65 +92,80 @@
                                 <div class="tab-content tabs">
                                         {{-- New tasks --}}
 
-                                        <div class="tab-pane" id="home1" role="tabpanel">
-                                            <div class="table-responsive  table-striped table-bordered table-hover">
-                                                <table class="table dataTable">
-                                                    <tr>
-                                                        <th>All tasks</th>
-                                                        <th>New tasks</th>
-                                                        <th>Progressed tasks</th>
-                                                        <th>Completed tasks</th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th class="text-center"><?= \App\Models\Task::count();  ?></th>
-                                                        <th class="text-center"><?= \App\Models\Task::where('status', 'new')->count();  ?></th>
-                                                        <th class="text-center"><?= \App\Models\Task::where('status', 'on progress')->count(); ?></th>
-                                                        <th class="text-center"><?= \App\Models\Task::where('status', 'complete')->count();?></th>
-                                                    </tr>
-                                                </table>
-                                            </div>
+                            <div class="tab-pane" id="home" role="tabpanel">
+                                <div class="table-responsive  table-bordered table-hover">
+                                    <table class="table dataTable">
+                                <tr>
+                                    <th>All tasks</th>
+                                    <th>New tasks</th>
+                                    <th>Progressed tasks</th>
+                                    <th>Completed tasks</th>
+                                </tr>
+                                <tr>
+                                    <th class="text-center">
+                                        <?= Auth::user()->role_id == 1 ? \App\Models\Task::count() : 
+                                        \App\Models\Task::where('user_id',Auth::user()->id)->count();  ?>
+                                    </th>
+                                    <th class="text-center">
+                                        <?= Auth::user()->role_id == 1 ? \App\Models\Task::where('status', 'new')->count() :
+                                        \App\Models\Task::where('status', 'new')->where('user_id',Auth::user()->id)->count();  ?>   
+                                    </th>
+                                    <th class="text-center">
+                                        <?= Auth::user()->role_id == 1 ? \App\Models\Task::where('status', 'on progress')->count() : 
+                                        \App\Models\Task::where('status', 'on progress')->where('user_id',Auth::user()->id)->count(); ?></th>
+                                    <th class="text-center">
+                                        <?= Auth::user()->role_id == 1 ? \App\Models\Task::where('status', 'complete')->count() : 
+                                        \App\Models\Task::where('status', 'complete')->where('user_id',Auth::user()->id)->count();?>    
+                                    </th>
+                                </tr>
+                                </table>
+                            </div>
 
-                                            <div class="table-responsive">
-                                                <table class="display nowrap table dataTable dt-ajax-array table-bordered">
-                                                  <thead>
-                                                      <tr>
-                                                          <th>No.</th>
-                                                          <th>Ticket</th>
-                                                          <th>Task type</th>
-                                                          <th>Priority</th>
-                                                          <th>School</th>
-                                                          <th>Activity</th>
-                                                       
-                                                          <th>Status</th>
-                                                      </tr>
-                                                  </thead>
-                                                  <tbody>
-                                                 </tbody>
-                                              </table>
-                                          </div>
-                                      </div>
+                             <div class="table-responsive">
+                                 <table class="display nowrap table dataTable dt-ajax-array table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Ticket</th>
+                                            <th>Task type</th>
+                                            <th>Priority</th>
+                                            <th>School</th>
+                                            <th>Activity</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                          </tr>
+                                        </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                               </div>
+                            </div>
 
 
-                                 <div class="tab-pane active" id="newtask" role="tabpanel">
-                                        <div class="table-responsive  table-striped table-bordered table-hover">
-                                            <table class="table dataTable">
+                                    <div class="tab-pane active" id="newtask" role="tabpanel">
+                                        <div class="table-responsive">
+                                            <table   class="display table dataTable table-bordered">
                                                 <thead>
                                                     <tr>
-                                                        <th>No.</th>
+                                                        <th style="display:none;">#</th>
                                                         <th>Ticket</th>
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
-                                                        <th>End date</th>
+                                                        <th>Date</th>
                                                         <th>Status</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <?php
-                                                    $i = 1; $date = \Carbon\Carbon::today()->subDays(7);
-                                                    $tasks = \App\Models\Task::where('created_at','>=',$date)->where('status', 'new')->orderBy('created_at', 'desc')->limit(100)->get();
-                                                  //  dd($tasks);
-                                                    if (!empty($tasks)) { 
+                                                    
+            <?php
+          $date = \Carbon\Carbon::today()->subDays(28);
+          if(Auth::user()->role_id == 1) {
+            $tasks = \App\Models\Task::where('status', 'new')->orderBy('updated_at', 'desc')->limit(100)->get();  
+           } else{
+            $tasks = \App\Models\Task::where('status', 'new')->where('updated_at','>=',$date)->where('user_id',Auth::user()->id)->orderBy('updated_at', 'desc')->limit(100)->get();    
+           }
+                                                if (!empty($tasks)) { $i=1;
                                                         foreach ($tasks as $act) {
                                                                if ($act->priority == '1') {
                                                                     $status = 'success';
@@ -178,8 +194,12 @@
                                                                     }
                                                                  ?>
                                                             <tr>
-                                                                <td><?= $i++ ?></td>
-                                                                <td><?= $act->ticket_no?></td>
+                                                                 <td style="display:none;">
+                                                                    <?= $i ?>
+                                                                 </td>
+                                                                <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> 
+                                                                   <?= $act->ticket_no ?> 
+                                                                 </td>
                                                                 <?php if(can_access('view_task')) { ?>
                                                                 <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->tasktype->name ?> </a> </td>
                                                                 <?php } else { ?>
@@ -191,23 +211,22 @@
                                                                 <td style="width: 100px;word-break: break-all;">
                                                                     <?= substr($act->activity, 0, 30) ?>
                                                                 </td>
-                                                                <td><?= cdate($act->end_date) ?></td>
+                                                                <td> <?= date('d-m-Y', strtotime($act->updated_at))?></td>
                                                                 <td> 
                                                                     <div class="dropdown-secondary dropdown f-right"><button class="btn btn-<?=$stat?> btn-mini dropdown-toggle waves-effect waves-light"  type="button" id="dropdown6<?=$act->id?>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?=$msg?></button><div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onclick="change_status('on progress', <?=$act->id ?>)"><span class="point-marker bg-danger"></span>On progress</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onclick="change_status('complete',<?=$act->id ?>)"><span class="point-marker bg-warning"></span>Complete</a><a class="dropdown-item waves-light waves-effect" href="#!" onclick="change_status('new',<?=$act->id ?>)"><span class="point-marker bg-warning"></span>New</a></div> </div>
                                                                 </td>
                                                             </tr>
-                                                        <?php } ?>
+                                                        <?php $i++;} ?>
                                                     <?php } ?>
-                                            
-                                                </tbody>
+                                                    </tbody>
+                                               
                                                 <tfooter>
                                                     <tr>
-                                                        <th>No.</th>
                                                         <th>Ticket</th>
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
-                                                        <th>End date </th>
+                                                        <th>Created Date </th>
                                                         <th>Status</th>
                                                     </tr>
                                                 </tfooter>
@@ -216,24 +235,28 @@
                                     </div>
 
                                         {{-- New Progress --}}
-                                    <div class="tab-pane" id="Progress" role="tabpanel">
-                                        <div class="table-responsive  table-striped table-bordered table-hover">
-                                            <table class="table dataTable">
+                                        <div class="tab-pane" id="Progress" role="tabpanel">
+                                        <div class="table-responsive table-bordered table-hover">
+                                            <table  class="display table dataTable  table-bordered">
                                                 <thead>
                                                     <tr>
-                                                        <th>No.</th>
+                                                        <th style="display:none;">#</th>
                                                         <th>Ticket</th>
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
-                                                        <th>Last update</th>
+                                                        <th> Date</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <?php
-                                                    $i = 1;
-                                                    $tasks = \App\Models\Task::where('status', 'on progress')->orderBy('created_at', 'desc')->limit(100)->get();
-                                                    if (!empty($tasks)) {
+                                                 <?php $i = 1;
+                                                if(Auth::user()->role_id == 1) {
+                                                   $tasks = \App\Models\Task::where('status', 'on progress')->orderBy('updated_at', 'desc')->limit(100)->get(); 
+                                                  } else{
+                                                    $tasks = \App\Models\Task::where('status', 'on progress')->where('user_id',Auth::user()->id)->orderBy('updated_at', 'desc')->limit(100)->get();    
+                                                    }
+            
+                                                    if (!empty($tasks)) { 
                                                         foreach ($tasks as $act) {
                                                             if ($act->priority == '1') {
                                                                     $status = 'success';
@@ -250,8 +273,8 @@
                                                                 }
                                                           ?>
                                                             <tr>
-                                                                <td><?= $i++ ?></td>
-                                                                <td><?= $act->ticket_no?></td>
+                                                                <td style="display:none;">#</td>
+                                                                <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"><?= $act->ticket_no?></td>
                                                                 <?php if(can_access('view_task')) { ?>
                                                                 <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->tasktype->name ?> </a> </td>
                                                                 <?php } else { ?>
@@ -260,20 +283,20 @@
                                                                 <td>  
                                                                 <div class="dropdown-secondary dropdown f-right text-center"><button class="btn btn-<?=$status ?>  btn-mini dropdown-toggle waves-effect waves-light"  type="button" id="dropdown7<?=$act->id?>"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= $message ?></button><div class="dropdown-menu" aria-labelledby="dropdown7" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_priority(1,<?= $act->id?>)"><span class="point-marker bg-danger"></span>High</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_priority(2,<?= $act->id?>)"><span class="point-marker bg-warning"></span>Medium</a><a class="dropdown-item waves-light waves-effect" href="#!" onmousedown="change_priority(3,<?= $act->id?>)"><span class="point-marker bg-warning"></span>Less</a></div> </div>
                                                                 </td>
-                                                                <td><?= substr($act->activity, 0, 60) ?></td>
-                                                                <td><?= Carbon\Carbon::parse($act->updated_at)->diffForHumans() ?></td>
+                                                                <td><?= substr($act->activity, 0, 30) ?></td>
+                                                                <td><?= date('d-m-Y', strtotime($act->updated_at))?></td>
                                                             </tr>
                                                         <?php } ?>
-                                                    <?php } ?>
+                                                    <?php $i++;} ?>
                                                 </tbody>
                                                 <tfooter>
                                                     <tr>
-                                                        <th>No.</th>
+                                                        <th style="display:none;">#</th>
                                                         <th>Ticket</th>
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
-                                                        <th>Last update</th>
+                                                        <th>Date</th>
                                                     </tr>
                                                 </tfooter>
                                             </table>
@@ -284,7 +307,7 @@
                                     <!-- Completed Tasks -->
                                     <div class="tab-pane" id="Completed" role="tabpanel">
 
-                                        <div class="table-responsive  table-striped table-bordered table-hover">
+                                        <div class="table-responsive  table-bordered table-hover">
                                          <form class="form-horizontal">
                                             <div class="form-group col-md-4">
                                                 <label class="col-sm-5 col-sm-offset-2 control-label">Select period</label>
@@ -303,16 +326,16 @@
                                         </div>
 
                                   
-                                        <div class="table-responsive  table-striped table-bordered table-hover">
-                                            <table class="table dataTable">
+                                        <div class="table-responsive  table-bordered table-hover">
+                                            <table class="display table dataTable table-bordered">
                                                 <thead>
                                                     <tr>
-                                                        <th>No.</th>
+                                                        <th style="display:none;">#</th>
                                                         <th>Ticket</th>
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
-                                                        <th>Last update </th>
+                                                        <th>Date </th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -337,30 +360,32 @@
                                                                 }
                                                             ?>
                                                             <tr>
-                                                                <td><?= $i++ ?></td>
-                                                                <td><?= $act->ticket_no?></td>
+                                                                <td style="display:none;">#</td>
+                                                                <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"><?= $act->ticket_no?></td>
                                                                 <?php if(can_access('view_task')) { ?>
-                                                                <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->tasktype->name ?> </a> </td>
+                                                                <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->tasktype->name ?> </a> 
+                                                                </td>
                                                                 <?php } else { ?>
-                                                                 <td> <?= $act->tasktype->name ?> </td>
+                                                                 <td> <?= $act->tasktype->name ?>
+                                                                 </td>
                                                                 <?php } ?>
                                                                 <td>  
                                                                 <div class="dropdown-secondary dropdown f-right text-center"><button class="btn btn-<?=$status ?>  btn-mini dropdown-toggle waves-effect waves-light"  type="button" id="dropdown7<?=$act->id?>"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><?= $message ?></button><div class="dropdown-menu" aria-labelledby="dropdown7" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"><a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_priority(1,<?= $act->id?>)"><span class="point-marker bg-danger"></span>High</a> <a class="dropdown-item waves-light waves-effect" href="#!"  onmousedown="change_priority(2,<?= $act->id?>)"><span class="point-marker bg-warning"></span>Medium</a><a class="dropdown-item waves-light waves-effect" href="#!" onmousedown="change_priority(3,<?= $act->id?>)"><span class="point-marker bg-warning"></span>Less</a></div> </div>
                                                                 </td>
                                                                 <td><?= substr($act->activity, 0, 60) ?></td>
-                                                                <td><?= Carbon\Carbon::parse($act->updated_at)->diffForHumans() ?></td>
+                                                                <td><?= date('d-m-Y', strtotime($act->updated_at))?></td>
                                                             </tr>
-                                                        <?php } ?>
+                                                        <?php $i++;} ?>
                                                     <?php } ?>
                                                 </tbody>
                                                 <tfooter>
                                                     <tr>
-                                                        <th>No.</th>
+                                                        <th style="display:none;">#</th>
                                                         <th>Ticket</th>
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
-                                                        <th>Last Update</th>
+                                                        <th>Date</th>
                                                     </tr>
                                                 </tfooter>
                                             </table>
@@ -368,7 +393,7 @@
                                     </div>
 
                 
-                                    <div class="tab-pane" id="profile1" role="tabpanel">
+                                    <div class="tab-pane" id="profile" role="tabpanel">
                                         <p class="m-0">
                                             <div id='calendar'></div>
                                         </p>
@@ -390,11 +415,13 @@
         <!-- data-table js -->
 
         <!-- calender js -->
+    
         <script type="text/javascript" src="<?= $root ?>/bower_components/moment/min/moment.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>/bower_components/fullcalendar/dist/fullcalendar.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>assets/pages/full-calender/calendar.js?v=2"></script>
         <div id="ajax_data_results" style="display: none"></div>
         <script type="text/javascript">
+
             load_tasks = function() {
                 var event;
                 var table = $('.dt-ajax-array').DataTable({
@@ -405,31 +432,25 @@
                         'url': "<?= url('sales/show/null?page=tasks&user_id=' . request('user_id')) ?>"
                     },
                     "columns": [
-
-                        {
-                            "data": "id"
-                        },
-                        {
-                            "data": "ticket_no"
-                        },
-                        {
-                            "data": ""
-                        },
-                        {
-                            "data": ""
-                        },
-                        {
-                            "data": "school_name"
-                        },
-                        {
-                            "data": ""
-                        },
-                        {
-                            "data": ""
-                        }
-                      
+                        {"data": "id"},
+                        {"data": ""},
+                        {"data": ""},
+                        {"data": ""},
+                        { "data": "school_name"},
+                        {"data": ""},
+                        {"data": "updated_at"},
+                        {"data": ""}
                     ],
-                    "columnDefs": [{
+                    "columnDefs": [
+                             {
+                            "targets":1,
+                            "data": null,
+                            "render": function(data, type, row, meta) {
+                                return '<a href="<?= url('customer/activity/show/') ?>/' + row.id + '"> ' + row.ticket_no + '  </a>';
+                             }
+                           },
+                         
+                           {
                             "targets":2,
                             "data": null,
                             "render": function(data, type, row, meta) {
@@ -466,7 +487,7 @@
                              }
                          },
                         {
-                            "targets": 6,
+                            "targets": 7,
                             "data": null,
                             "render": function(data, type, row, meta) {
                                 var status;
@@ -614,5 +635,10 @@ SELECT b.task_id, s.name as school_name, 'Not Client' as client from admin.tasks
                     ]
                 });
             });
+
+            $(document).ready(function() {
+                $('table.display').DataTable();
+             });
+
         </script>
         @endsection

@@ -1656,48 +1656,43 @@ select * from tempb");
         return view('account.report.summary', $this->data);
     }
 
-
     public function standingOrders() { 
         $this->data['client_id'] = request()->segment(3);
-        $this->data['standingorders'] = \App\Models\StandingOrder::whereYear('date', date('Y'))->get();;
+        $this->data['standingorders'] = \App\Models\StandingOrder::whereYear('payment_date', date('Y'))->get();
         $this->data['schools'] = \App\Models\Client::get();
         return view('account.standing_order', $this->data);
     }
 
     public function approveStandingOrder() { 
-        $this->data['standing_id'] = $standing_id = request()->segment(3);
-        $standing = \App\Models\StandingOrder::where('id', $standing_id)->first();
-        $invoice = \App\Models\Invoice::where('client_id',$standing->client_id)->orderBy('id', 'DESC')->first();
-        \App\Models\StandingOrder::where('id', $standing_id)->update(['status' => 1]);
+        $this->data['so_id'] = $so_id = request()->segment(3);
+        if(!empty($so_id)){
+            \App\Models\StandingOrder::where('id', $so_id)->update(['is_approved' => 1,'approved_by' => Auth::user()->id]);
+        }
+        return redirect()->back()->with('success', 'Standing order approved!');
+    } 
+
+    public function confirmSI(){
+        $this->data['so_id'] = $so_id = request()->segment(3);
+        $standing = \App\Models\StandingOrder::where('id', $so_id)->first();
+        $invoice = \App\Models\Invoice::where('client_id',$standing->client_id)->first();
+       // dd($invoice);
         if(!empty($invoice)){
             return redirect('account/payment/'.$invoice->id);
-        }else{
-            return redirect()->back()->with('success', 'No Invoice A');
         }
+        //After add payment the receipt should be sent to client
     }
 
-
-    public function rejectStandingOrder()
-    {  
-        $_id = (request()->segment(3));
+    public function rejectStandingOrder(){  
+        $_id = request()->segment(3);
         $standing = \App\Models\StandingOrder::where('id',$_id)->first();
-        $email = \App\Models\Client::where('id',$standing->client_id)->first()->email;
-        $this->sendSMSandEmail($email);
-        return redirect()->back()->with('success', 'Msg sent');
+        $client = \App\Models\Client::where('id',$standing->client_id)->first();
+        $message = '<p>The standing order has failed to be recorded</p>';
+        $this->send_email($client->email, 'Standing Order Rejected!' . $message);
+        return redirect()->back()->with('success', 'Standing order rejected!');
     }
 
 
-     function sendSMSandEmail($email) 
-     {
-        $message = ''
-                    . '<h2>Today standing orders</h2>'
-                    . '<p>The standing rejected  due to incomplete data</p>';
-        DB::table('public.email')->insert([
-                'subject' => date('Y M d') . ' Standing order rejection',
-                'body' => $message,
-                'email' => $email
-         ]);
-      }
+  
   
     public function uploadExpenses() 
     {
@@ -1709,14 +1704,12 @@ select * from tempb");
     public function budget(){
         $id = request()->segment(3);
         if ($_POST) {
-        
             $array = [
                 'created_by' => Auth::user()->id,
                 'type' => request('type'),
                 'amount' => request('amount'),
                 'description' => request('description'),
             ];
-            //\App\Models\Budget::find($id)->update($array);
             return redirect('users/kpi_list')->with('success', 'KPI Updated successfully');
          }
 
