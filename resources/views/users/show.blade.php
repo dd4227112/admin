@@ -621,8 +621,8 @@ foreach ($user_permission as $permis) {
                                         if ($user->id == Auth::user()->id) {?>
                                             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#large-Modal"><i class="fa fa-plus"></i>Add Attendance</button>
                                         <?php } ?>
-                                        <div class="card-block ">
-                                            <table class="table table-responsive dataTable">
+                                        <div class="mt-3 table-responsive table-sm table-striped table-bordered table-hover">
+                                            <table class="table dataTable">
                                                 <thead>
                                                     <tr>
                                                         <th>Date</th>

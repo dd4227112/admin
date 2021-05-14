@@ -109,7 +109,7 @@ class Users extends Controller {
         //default number of days 22 to minutes
         $this->data['minutes'] = 22*24*60;
 
-        if ($_POST) {  $this->perMinute();
+        if ($_POST) { 
             //check if its attendance or not
             $ip = $_SERVER['REMOTE_ADDR'] ?: ($_SERVER['HTTP_X_FORWARDED_FOR'] ?: $_SERVER['HTTP_CLIENT_IP']);
             
