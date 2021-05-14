@@ -845,7 +845,7 @@
                                 </a>
                                 <ul class="tree-1">
                                     <li><a href="<?= url('Applicants/evaluations') ?>"
-                                     data-i18n="nav.extra-components.session-timeout">Evaluation</a></li>
+                                     data-i18n="nav.extra-components.session-timeout">General Applicants</a></li>
                                 </ul>
                             </li>
                         <?php } ?>

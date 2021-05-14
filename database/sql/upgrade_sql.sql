@@ -959,7 +959,9 @@ CREATE INDEX fki_recruiments_country_id_foreign
 ALTER TABLE admin.recruiments
     ADD COLUMN country integer;
 
-11/05/2021
+
+
+-- 11/05/2021
 ALTER TABLE admin.recruiment_answers
     ADD COLUMN answer integer;
 
@@ -968,3 +970,21 @@ ALTER TABLE admin.recruiments
 
 ALTER TABLE admin.recruiments
     ADD COLUMN status smallint;
+
+
+
+    -- 13/05/2021
+    CREATE TABLE admin."sheetTest"
+(
+    id serial,
+    "Timestamp" timestamp without time zone,
+    "Name" character varying,
+    "Email" character varying,
+    "Address" character varying,
+    "Phone number" character varying,
+    "Comments" character varying,
+    PRIMARY KEY (id)
+);
+
+ALTER TABLE admin."sheetTest"
+    OWNER to postgres;

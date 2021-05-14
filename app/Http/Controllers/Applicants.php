@@ -54,7 +54,7 @@ class Applicants extends Controller {
         .'<h4>I trust this email finds you well.</h4>'
         .'<p>Kindly open this link below</p>'
         .'<br/>'
-        .'<p>Link: https://admin.shulesoft.com/nda_form </p>'
+        .'<p>Link: https://admin.shulesoft.com/nda_form/'.$id. '</p>'
         .'<br/>'
         .'<p>Download a NDA file from link,Fill it and submit if on the provided form.Remember to fill correctly the form before submit</p>'
         .'<br>'
@@ -62,10 +62,8 @@ class Applicants extends Controller {
         .'<p><b>Shulesoft Team</b></p>'
         .'<p> Call: +255 655 406 004 </p>';
         $this->send_email($applicant->email, 'ShuleSoft Job application ', $message);
-        //dd($id);
       }
       return redirect('Applicants/evaluations');
-    
 }
 
 
