@@ -182,7 +182,7 @@
                 <div class="card-header">
                     <h5>Add New Members</h5>
                     <span>Import Calls  from a CSV file. In Excel, add an required column of  New call, and save the file in a CSV format. Click A CSV file, then drag and drop your .csv file, or click choose file to browse files on your computer. Then click <b>Submit. <br>  <br></b>
-                    <a href="<?=url('public/sample_files/upload_phone_call.csv')?>" class="right"> <u><b>#Download Sample</b></u> </a>
+                    <a href="<?=url('public/sample_files/upload_sample_phone_call.csv')?>" class="right"> <u><b>#Download Sample</b></u> </a>
                     </span>
                 </div>
                 <form id="add-form" action="{{ url('Phone_call/CallsUpload') }}" method="POST" enctype="multipart/form-data">

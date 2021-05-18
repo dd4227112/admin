@@ -57,10 +57,11 @@ class Account extends Controller {
             $end_date = date('Y-m-d',strtotime('+30 days',strtotime($start_date)));
         }
 
-        $value=\DB::select("select reference from admin.invoices where reference = '. $reference .'");
-        if(!empty($value)){
+        $check=\DB::select("select reference from admin.invoices where reference = '. $reference .'");
+        if(!empty($check)){
           $reference = time().rand(456, 789);
          } 
+
 
         $data = ['reference' => $reference, 
                  'client_id' => $client_id, 

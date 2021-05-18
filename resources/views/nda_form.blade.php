@@ -58,7 +58,7 @@
 </style>
 </head>
 <body class="fix-menu"   style=" overflow-y:auto; height: auto;">
-            <!-- Container-fluid starts -->
+   <?php  ?>
     <div class="container-fluid">
       <div class="page-wrapper">
         <div class="page-body">
@@ -92,6 +92,7 @@
 
             
                       <div class="modal-footer">
+                        <input type="hidden" name="applicant_id"  value="<?=$id?>">
                         <button type="submit" class="btn btn-primary waves-effect waves-light ">Submit Here</button>
                       </div>
                       <?= csrf_field() ?>
@@ -106,6 +107,8 @@
      
 </body>
 </html>
+
+
 
 
 

@@ -249,14 +249,14 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                 <?php $i = 1;
+                                                 <?php 
                                                 if(Auth::user()->role_id == 1) {
                                                    $tasks = \App\Models\Task::where('status', 'on progress')->orderBy('updated_at', 'desc')->limit(100)->get(); 
                                                   } else{
                                                     $tasks = \App\Models\Task::where('status', 'on progress')->where('user_id',Auth::user()->id)->orderBy('updated_at', 'desc')->limit(100)->get();    
                                                     }
             
-                                                    if (!empty($tasks)) { 
+                                                    if (!empty($tasks)) { $i = 1;
                                                         foreach ($tasks as $act) {
                                                             if ($act->priority == '1') {
                                                                     $status = 'success';
@@ -273,7 +273,9 @@
                                                                 }
                                                           ?>
                                                             <tr>
-                                                                <td style="display:none;">#</td>
+                                                                <td style="display:none;">
+                                                                    <?= $i ?>
+                                                                 </td>
                                                                 <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"><?= $act->ticket_no?></td>
                                                                 <?php if(can_access('view_task')) { ?>
                                                                 <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->tasktype->name ?> </a> </td>
@@ -360,7 +362,9 @@
                                                                 }
                                                             ?>
                                                             <tr>
-                                                                <td style="display:none;">#</td>
+                                                                 <td style="display:none;">
+                                                                    <?= $i ?>
+                                                                 </td>
                                                                 <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"><?= $act->ticket_no?></td>
                                                                 <?php if(can_access('view_task')) { ?>
                                                                 <td><a href="<?= url('customer/activity/show/' . $act->id) ?>"> <?= $act->tasktype->name ?> </a> 

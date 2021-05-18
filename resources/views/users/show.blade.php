@@ -613,7 +613,7 @@ foreach ($user_permission as $permis) {
                             <div class="col-lg-12">
                                 <div class="card">
                                     <div class="card-header">
-                                        <h5 class="card-header-text">Attendace</h5>
+                                        <h5 class="card-header-text">Attendance</h5>
                                     </div>
                                     <div class="col-lg-12">
                                         <br/>
@@ -621,8 +621,8 @@ foreach ($user_permission as $permis) {
                                         if ($user->id == Auth::user()->id) {?>
                                             <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#large-Modal"><i class="fa fa-plus"></i>Add Attendance</button>
                                         <?php } ?>
-                                        <div class="card-block ">
-                                            <table class="table table-responsive dataTable">
+                                        <div class="mt-3 table-responsive table-sm table-striped table-bordered table-hover">
+                                            <table class="table dataTable">
                                                 <thead>
                                                     <tr>
                                                         <th>Date</th>
@@ -641,18 +641,18 @@ foreach ($user_permission as $permis) {
                                                         <tr>
                                                             <td><?= date('d M Y', strtotime(custom_date($attendance->created_at))) ?></td>
                                                             <td><?= $attendance->status == 1 ? 'Present' : 'Absent' ?></td>
-                                                            <td><?= date('h:i', strtotime(custom_date($attendance->created_at))) ?></td>
+                                                            <td><?= date('Y', strtotime($attendance->timein)) > 1970 ? date('h:i', strtotime($attendance->timein)) : '' ?></td>
                                                             <td><?= $attendance->late_comment ?></td>
                                                             <td><?= date('Y', strtotime($attendance->timeout)) > 1970 ? date('h:i', strtotime($attendance->timeout)) : '' ?></td>
                                                             <td><?= $attendance->early_leave_comment ?></td>
                                                             <td>
-                                                                <a href="<?= url('users/leave') ?>">Leave the Office</a>
+                                                                {{-- <a href="<?= url('users/leave') ?>">Leave the Office</a> --}}
                                                                 <?php
-                                                                if (date('H', strtotime(timeZones(date('Y-m-d H:i:s')))) > 17 && date('Y', strtotime($attendance->timeout)) == 1970) {
+                                                                if (date('H', strtotime(timeZones(date('Y-m-d H:i:s')))) > 17 && date('Y', strtotime($attendance->timeout)) > 1970) {
                                                                     ?>
                                                                     <a href="<?= url('users/leave') ?>">Leave the Office</a>
 
-                                                                <?php } else if (date('H', strtotime(timeZones(date('Y-m-d H:i:s')))) < 17 && date('Y', strtotime($attendance->timeout)) == 1970) { ?>
+                                                                <?php } else if (date('H', strtotime(timeZones(date('Y-m-d H:i:s')))) < 17 && date('Y', strtotime($attendance->timeout)) > 1970) { ?>
                                                                     <a  href="#" class="text-danger waves-effect" data-toggle="modal" data-target="#early-large-Modal">Early Leave</a>
                                                                     <?php
                                                                 }
@@ -928,14 +928,15 @@ foreach ($user_permission as $permis) {
                     <div class="form-group ">
                         <label for="cname" class="control-label col-lg-3">Time In</label>
                         <div class="col-lg-12">
-                            <input class="form-control" id="cname" name="timein" disabled="" value="<?= date('H:i', strtotime(timeZones(date('Y-m-d H:i:s')))) ?>"  type="time">
+                            <input class="form-control" id="cname" name="timein" disabled value="<?= date('H:i', strtotime(timeZones(date('Y-m-d H:i:s')))) ?>"  type="time">
                         </div>
                     </div>
+
                     <?php
                     if (date('H', strtotime(timeZones(date('Y-m-d H:i:s')))) > 8) {
                         ?>
                         <div class="form-group ">
-                            <label for="cname" class="control-label col-lg-3">Late Coming Reasons</label>
+                            <label for="cname" class="control-label col-lg-3"> Late Coming Reasons</label>
                             <div class="col-lg-12">
                                 <textarea class=" form-control" id="abbrname" name="late_comment" type="text" required=""></textarea>
                             </div>
