@@ -7,6 +7,7 @@ use App\Imports\UsersImport;
 use DB;
 use Intervention\Image\ImageManagerStatic as Image;
 use Auth;
+use DateTime;
 
 class Users extends Controller {
 
@@ -108,10 +109,11 @@ class Users extends Controller {
         //default number of days 22 to minutes
         $this->data['minutes'] = 22*24*60;
 
-        if ($_POST) {
+        if ($_POST) { 
             //check if its attendance or not
             $ip = $_SERVER['REMOTE_ADDR'] ?: ($_SERVER['HTTP_X_FORWARDED_FOR'] ?: $_SERVER['HTTP_CLIENT_IP']);
-            if ($ip == '102.69.167.173') {
+            
+            if ($ip !== '102.69.167.173') {
                 if (strlen(request('early_leave_comment')) > 2) {
                     DB::table('attendances')->where('user_id', $id)->whereDate('created_at', date('Y-m-d'))->update([
                         'timeout' => 'now()',
@@ -120,6 +122,7 @@ class Users extends Controller {
                 } else {
                     DB::table('attendances')->insert([
                         'status' => 1,
+                        'timein' => date('Y-m-d H:i:s', strtotime(timeZones(date('Y-m-d H:i:s')))),
                         'user_id' => $id,
                         'late_comment' => request('late_comment')
                     ]);
@@ -130,6 +133,32 @@ class Users extends Controller {
             }
         }
         return view('users.show', $this->data);
+    }
+
+
+    public function perMinute(){
+        $allMinutes = [];
+        //Assume user id
+        $user_id =  118;
+        //Selet all date of that month, divide one from another , get hours and add them in a loop
+        // by array push method, 
+        //  if the outtime is less than 17, with ealry leave comment available , then ealry leave time - intime
+        // date('Y', strtotime($attendance->timein)) > 1970 ? date('h:i', strtotime($attendance->timein)) : ''
+
+        $times = DB::table('attendances')->select(['timein','timeout'])->where('user_id', $user_id)
+        ->whereMonth('created_at', date('m'))->get();
+        foreach($times as $value){
+           $startTime =  date('h:i', strtotime($value->timein));
+           $OutTime =  '17:00';
+           $endTime  =  date('h:i', strtotime($value->timeout)) > $OutTime  ?  $OutTime  : date('H:i', strtotime($value->timeout));
+           $startTime = new DateTime($startTime);
+           $endTime = new DateTime($endTime);
+           $time = explode(':', $startTime->diff($endTime)->format('%H:%i'));
+           $minutes = $time[0]*60 +$time[1];
+           array_push($allMinutes, $minutes);
+        }
+        dd($allMinutes);
+
     }
 
     public function leave() {

@@ -1,9 +1,6 @@
-
-
-
-
 @extends('layouts.app')
 @section('content')
+
 
 <!-- Sidebar inner chat end-->
 <!-- Main-body start -->
@@ -38,11 +35,7 @@
           <!-- Ajax data source (Arrays) table start -->
           <div class="card tab-card">
             <div class="card-block">
-            <span>
-          <?php if(can_access('add_event')) { ?>
-          <a class="btn btn-success btn-sm" href="<?= url('Marketing/addEvent') ?>"> Add New Event </a>
-          <?php } ?>
-        </span>
+         
               <div class="steamline">
                 <div class="card-block">
 
@@ -62,7 +55,7 @@
                       </thead>
                        
                       <tbody>
-                        <?php $i = 1; ?>
+                        <?php $i = 1; if(!empty($applicants)) { ?>
                         @foreach ($applicants as $key => $value)
                         <tr>
                             <td><?= $i ?></td>
@@ -70,7 +63,7 @@
                             <td>{{ $value->phone }}</td>
                             <td>{{ date('d M Y',strtotime($value->dob)) }}</td>
                             <td>{{ $value->sex }}</td>
-                            <td>{{ $value->field }}</td>
+                            <td>{{ $value->skills }}</td>
                             <td>{{ $value->location }}</td>
                             <td>
                                 <a class="btn btn-info btn-sm" href="{{ url('applicants/show/'.$value->id) }}">view</a>
@@ -80,7 +73,8 @@
                             </td>
                         </tr>
                         <?php $i++; ?>
-                        @endforeach
+                        @endforeach 
+                        <?php } ?>
                     </tbody>
 
                     </table>
