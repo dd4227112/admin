@@ -21,7 +21,7 @@ class PhoneCall_Import implements ToModel, WithHeadingRow
             'call_detail' => $row['call_detail'],
             'phone_number' => $row['phone_number'],
             'call_type' => $row['call_type'],
-            'call_time' => $row['call_time'],
+            'call_time' => date("Y-m-d H:i:s", strtotime($row['call_time'])),
             'next_followup' => date("H:i:s"),
             'call_duration' => $row['duration'],
             'followup_date' => $row['next_followup'],
