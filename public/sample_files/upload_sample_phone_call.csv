@@ -1,0 +1,5 @@
+﻿name,phone_number,call_type,call_time,duration,email,location,next_followup,call_detail
+Haule Helman,2.55763E+11,Incoming,2021-03-05 16:25,203,,,,
+Juma Hussein,2.55621E+11,Incoming,2021-03-05 16:20,52,,,,
+Salim Sadick,2.5548E+11,Outgoing,2021-03-05 16:15,-99,,,,
+Jane Joseph,2.55338E+11,Missed Call,2021-03-05 16:10,-250,,,,

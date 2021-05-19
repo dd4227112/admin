@@ -61,7 +61,7 @@ class Phone_call extends Controller {
        
         //PhoneCall::create(array_merge($request->all(), ['user_id' => Auth::user()->id]));
        $report->save();
-        return redirect('Phone_calls/index')->with('success', 'Call recorded successfully');
+        return redirect('Phone_call/index')->with('success', 'Call recorded successfully');
     }
 
     public function resetPassword() {
@@ -244,7 +244,7 @@ class Phone_call extends Controller {
     public function CallsUpload() 
     {
         Excel::import(new PhoneCall_Import, request()->file('call_file'));
-        return redirect('Phone_calls/index')->with('success', 'All Call Histories Uploaded Successfully!');
+        return redirect('Phone_call/index')->with('success', 'All Call Histories Uploaded Successfully!');
     }
 
 }
