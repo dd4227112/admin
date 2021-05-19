@@ -995,11 +995,4 @@ ALTER TABLE admin."sheetTest"
 
 
 
-
-   ALTER TABLE admin.zone_managers
-    ADD CONSTRAINT zone_managers_user_id_foreign FOREIGN KEY (user_id)
-    REFERENCES admin.users (id)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE;
-CREATE INDEX fki_zone_managers_user_id_foreign
-    ON admin.zone_managers(user_id);
+ 
