@@ -886,17 +886,6 @@ ALTER TABLE admin.phone_number
 -- ))
 
 
--- ALTER TABLE admin.schools
---     ADD COLUMN region character varying COLLATE pg_catalog."default";
-
--- ALTER TABLE admin.schools
---     ADD COLUMN district character varying COLLATE pg_catalog."default";
-
--- ALTER TABLE admin.schools
---     ADD COLUMN ward character varying COLLATE pg_catalog."default";
-
-
--- 11/04/2021
 
 ALTER TABLE admin.absents
     ADD COLUMN end_date timestamp without time zone;
@@ -905,7 +894,6 @@ ALTER TABLE admin.absents
  -- 12/04/2021
  ALTER TABLE admin.users
     ADD COLUMN bank_name character varying;
-
 -- select count(X.*) from (select b.*,w.name as ward, d.name as district,r.name as region from (select a.*, (select count(*) from admin.tasks where school_id=a.id) 
 -- 		as activities from admin.schools a  where lower(a.ownership) <>'government') as b join 
 -- 		admin.wards as w on b.ward_id = w.id join admin.districts as d on d.id=w.district_id
@@ -972,7 +960,6 @@ ALTER TABLE admin.recruiments
     ADD COLUMN status smallint;
 
 
-
     -- 13/05/2021
     CREATE TABLE admin."sheetTest"
 (
@@ -988,3 +975,31 @@ ALTER TABLE admin.recruiments
 
 ALTER TABLE admin."sheetTest"
     OWNER to postgres;
+
+
+
+
+    -- 18/05/2021
+
+    select count (DISTINCT school_id) from admin.tasks
+
+    select * from admin.all_exam_report
+
+
+    select * from admin.join_all('tmember','student_id,transport_route_id,tjoindate,
+							 vehicle_id,is_oneway');
+
+   select count (distinct schema_name) from admin.all_tmembers
+
+
+
+
+
+
+   ALTER TABLE admin.zone_managers
+    ADD CONSTRAINT zone_managers_user_id_foreign FOREIGN KEY (user_id)
+    REFERENCES admin.users (id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE;
+CREATE INDEX fki_zone_managers_user_id_foreign
+    ON admin.zone_managers(user_id);
