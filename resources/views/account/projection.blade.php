@@ -157,11 +157,11 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                 </table>
                                             </div>
                                         </div>
+
                                     </div>
                                     <div class="tab-pane" id="home7" role="tabpanel">
                                     <div class="card-header">
                                             <h5>Current Sent School Invoices</h5>
-                                           <!-- <span>This part shows list of invoices sent.</span> -->
                                         </div>
                                         <div class="card-block">
                                             <div class="table-responsive dt-responsive">
@@ -182,16 +182,13 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                         $total_price = 0;
                                                         $schools = App\Models\InvoiceSent::orderBy('id', 'DESC')->get();
                                                         if(count($schools)){
-                                                        foreach ($schools as $school) {
-                                                            
-                                                            ?>
+                                                        foreach ($schools as $school) {?>
                                                             <tr>
                                                                 <td><?= ucfirst($school->schema_name) ?></td>
                                                                 <td><?php echo $school->student; $total_students += $school->student; ?></td>
                                                                 <td><?php echo $school->amount; $total_price += $school->amount;?> </td>
                                                                 <td><?php echo $school->user->name;?> </td>
                                                                 <td><?= $school->date ?></td>
-                                                               
                                                                 <td ><a href="<?= url('account/invoiceView/' . $school->schema_name) ?>" class="btn btn-sm btn-success">View</a></td>
                                                             </tr>
                                                         <?php } 
