@@ -335,15 +335,15 @@
         if (strlen(request('token')) < 3) {
             ?>
             <!-- Menu aside start -->
-            <div class="main-menu">
-                <div class="main-menu-header">
+            <div class="main-menu" style="height: 900px;">
+                {{-- <div class="main-menu-header">
                     <img class="img-40" src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image">
                     <div class="user-details">
                         <span>{{ Auth::user()->name() }}</span>
                         <span id="more-details"> <?php // Auth::user()->role->display_name?></span>
                     </div>
-                </div>
-                <div class="main-menu-content">
+                </div> --}}
+                <div class="main-menu-content" >
                     <ul class="main-navigation">
 
                         <hr style="background:white"/>
@@ -444,7 +444,7 @@
                                   </li>
                                 
                                     <li><a href="<?= url('Marketing/systemUser') ?>" data-i18n="nav.extra-components.session-idle-timeout">System Users</a></li>
-                                    
+                                    <?php if (can_access('communications')) { ?>
                                     <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Communications</a>
                                         <ul class="tree-2">
                                             <li><a href="<?= url('Marketing/Communication') ?>" data-i18n="nav.extra-components.session-idle-timeout">Communication</a></li>
@@ -454,6 +454,8 @@
                                             <li><a href="<?= url('customer/update') ?>" data-i18n="nav.page_layout.horizontal.static-with-icon">ShuleSoft Updates </a></li>
                                         </ul>
                                     </li>
+                                    <?php } ?>
+
                                     <li><a href="<?= url('customer/requirements') ?>" data-i18n="nav.page_layout.bottom-menu">Customer Requirements</a></li>
                                    
                                 </ul>
@@ -468,10 +470,11 @@
                             <li class="nav-item">
                                 <a href="#!">
                                     <i class="ti-bell "></i>
-                                    <span data-i18n="nav.extra-components.main">Oparations</span>
+                                    <span data-i18n="nav.extra-components.main">Operations</span>
                                 </a>
 
                                 <ul class="tree-1">
+                                    <?php if (can_access('manage_users'))  { ?>
                                     <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
                                         class="icon-arrow-right"></i>Human Resources</a>
                                         <ul class="tree-2">
@@ -482,7 +485,7 @@
                                                 
                                          <?php if (can_access('meeting_minutes')) { ?>
                                             <li><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">
-                                                Meeting Minutes</a>
+                                                Meetings</a>
                                             </li>
                                          <?php } ?>
                                             <li><a href="<?= url('attendance/index') ?>"
@@ -508,6 +511,7 @@
                                             <?php } ?>
                                         </ul>
                                    </li>
+                                   <?php } ?>
 
                                    <?php if ((int) Auth::user()->role_id == 7) { ?>
                                      <li class="nav-sub-item">
@@ -574,11 +578,6 @@
                                 </ul>
                                </li>
 
-
-                               <?php if (can_access('meeting_minutes')) { ?>
-                                    <li> <a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">  Meetings</a></li>
-                                <?php } ?>
-
                                 <?php if (Auth::user()->role_id != 7 && Auth::user()->role_id <> 3) { ?>
                                     <li>
                                         <a href="<?= url('customer/activity') ?>" data-i18n="nav.extra-components.offline">
@@ -614,7 +613,7 @@
                                 <?php } ?>
 
 
-                              <?php  if (can_access('manage_users') && !in_array(Auth::user()->department, [9, 10]) || in_array(Auth::user()->role_id, array(14, 8, 2, 3, 9, 20))) { ?>
+                              <?php  if (can_access('my_schools') && !in_array(Auth::user()->department, [9, 10]) || in_array(Auth::user()->role_id, array(14, 8, 2, 3, 9, 20))) { ?>
                                 <li class="nav-sub-item">
                                    <a href="#" data-i18n="nav.page_layout.vertical.main"><i
                                    class="icon-arrow-right"></i>My Schools </a>
