@@ -566,7 +566,7 @@
                                    </li>
                                  <?php } ?>
 
-                                 <?php  if (can_access('training') { ?>
+                                 <?php  if (can_access('training') ){ ?>
                                  <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
                                     class="icon-arrow-right"></i>Training</a>
                                  <ul class="tree-2">
