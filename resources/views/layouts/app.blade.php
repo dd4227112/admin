@@ -474,7 +474,7 @@
                                 </a>
 
                                 <ul class="tree-1">
-                                    <?php if (can_access('manage_users'))  { ?>
+                                    <?php if (can_access('manage_users') )  { ?>
                                     <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
                                         class="icon-arrow-right"></i>Human Resources</a>
                                         <ul class="tree-2">
@@ -566,10 +566,10 @@
                                    </li>
                                  <?php } ?>
 
-                               <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
+                                 <?php  if (can_access('training') { ?>
+                                 <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
                                     class="icon-arrow-right"></i>Training</a>
                                  <ul class="tree-2">
-
                                  <li><a href="<?= url('customer/guide') ?>" data-i18n="nav.page_layout.vertical.header-fixed">User Guide</a></li>
                                   <li><a href="<?= url('customer/faq') ?>" data-i18n="nav.page_layout.vertical.compact"> FAQ </a>
                                   </li>
@@ -577,8 +577,9 @@
                                   <li><a href="<?= url('customer/sequence') ?>" data-i18n="nav.page_layout.vertical.static-layout">Sequence </a></li>
                                 </ul>
                                </li>
+                               <?php } ?>
 
-                                <?php if (Auth::user()->role_id != 7 && Auth::user()->role_id <> 3) { ?>
+                                <?php if (Auth::user()->role_id != 7 ) { ?>
                                     <li>
                                         <a href="<?= url('customer/activity') ?>" data-i18n="nav.extra-components.offline">
                                             Tasks Allocation
@@ -621,7 +622,9 @@
                                     <li><a href="<?= url('Analyse/myschools') ?>" data-i18n="nav.extra-components.session-timeout"> List of Schools</a></li>
                                     <li><a href="<?= url('Analyse/myreport') ?>" data-i18n="nav.extra-components.offline">Task Report</a></li>
                                     <li><a href="<?= url('sales/schoolVisit/1') ?>" data-i18n="nav.extra-components.session-timeout">School Visitation</a></li>
-                                    <li><a href="<?= url('Sales/generalreport') ?>" data-i18n="nav.extra-components.session-timeout">Perfomance report</a></li>
+                                     <?php if (can_access('hr_report')) { ?>
+                                     <li><a href="<?= url('Sales/generalreport') ?>" data-i18n="nav.extra-components.session-timeout">Perfomance report</a></li>
+                                     <?php } ?>
                                  </ul>
                                </li>
                              <?php } ?>
