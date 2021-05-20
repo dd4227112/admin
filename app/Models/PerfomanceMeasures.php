@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PerfomanceMeasures extends Model {
 
-    protected $table = 'perfomance_meaures';
+    protected $table = 'perfomance_measures';
 
     protected $fillable = ['id', 'date', 'user_id', 'school_id','module','created_at','updated_at'];
 
