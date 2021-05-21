@@ -1053,13 +1053,67 @@ class Sales extends Controller {
 
 
     public function storeperfomance(){
+        $school_id = request('school_id');
+        $module_type = request('perf');
+        $number_of_students = \App\Models\Client::where('id',\App\Models\ClientSchool::where('school_id',$school_id)->first()->client_id)->first()->estimated_students;
+    
         $data = [
             'module' => request('perf'),
             'school_id' => request('school_id'),
             'user_id' => Auth::user()->id,
             'date' => date('Y-m-d')
         ];
-       \App\Models\PerfomanceMeasures::create($data);
+         \App\Models\PerfomanceMeasures::create($data);
+        
+       if($number_of_students < 300){
+            $module_id = \App\Models\Module::where('name',$module_type)->first()->id;
+            $module_amount = \App\Models\CustomerSupportModule::where('module_id',$module_id)->first()->low;
+            $bonus_data = [
+            'user_id' => Auth::user()->id,
+            'bonus_amount' => $module_amount,
+            'name' => $module_type,
+            'role_id' => \App\Models\RoleUser::where('user_id',Auth::user()->id)->first()->role_id,
+            'date' => date('Y-m-d'),
+            'school_id' => $school_id
+          ];
+          \App\Models\MonthlyBonus::create($bonus_data);
+       } else if($number_of_students >= 300 && $number_of_students < 600){
+             $module_id = \App\Models\ModuleBonus::where('name',$module_type)->first()->id;
+             $module_amount = \App\Models\CustomerSupportModule::where('module_id',$module_id)->first()->medium;
+             $bonus_data = [
+            'user_id' => Auth::user()->id,
+            'bonus_amount' => $module_amount,
+            'name' => $module_type,
+            'role_id' => \App\Models\RoleUser::where('user_id',Auth::user()->id)->first()->role_id,
+            'date' => date('Y-m-d'),
+            'school_id' => $school_id
+            ];
+            \App\Models\MonthlyBonus::create($bonus_data);
+       } else if($number_of_students >= 600 && $number_of_students < 1000){
+             $module_id = \App\Models\ModuleBonus::where('name',$module_type)->first()->id;
+             $module_amount = \App\Models\CustomerSupportModule::where('module_id',$module_id)->first()->high;
+             $bonus_data = [
+            'user_id' => Auth::user()->id,
+            'bonus_amount' => $module_amount,
+            'name' => $module_type,
+            'role_id' => \App\Models\RoleUser::where('user_id',Auth::user()->id)->first()->role_id,
+            'date' => date('Y-m-d'),
+            'school_id' => $school_id
+            ];
+            \App\Models\MonthlyBonus::create($bonus_data);
+       } else{
+             $module_id = \App\Models\ModuleBonus::where('name',$module_type)->first()->id;
+             $module_amount = \App\Models\CustomerSupportModule::where('module_id',$module_id)->first()->higher;
+             $bonus_data = [
+            'user_id' => Auth::user()->id,
+            'bonus_amount' => $module_amount,
+            'name' => $module_type,
+            'role_id' => \App\Models\RoleUser::where('user_id',Auth::user()->id)->first()->role_id,
+            'date' => date('Y-m-d'),
+            'school_id' => $school_id
+          ];
+        \App\Models\MonthlyBonus::create($bonus_data);
+       }
     }
 
     public function removeperfomance(){
@@ -1067,7 +1121,7 @@ class Sales extends Controller {
         $school_id = request('school_id');
         $check = \App\Models\PerfomanceMeasures::whereMonth('date', Carbon::now()->month)->where('school_id',$school_id)
         ->where('module', $module)->first(); 
-        $check->delete();
+         $check->delete();
     }
 
 

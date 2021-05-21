@@ -227,13 +227,14 @@ $root = url('/') . '/public/' ?>
 
             <div class="card">
                 <div class="card-header">
-                    <h5>Task Performance</h5>
+                    <h5>Amount</h5>
                  </div>
 
                  <div class="card-block">
                     <div class="j-wrapper j-wrapper-640">
-                            
-                        <td align="center"><span id="sum"></span></td>
+                          <th class="text-bold"> 
+                             <?php $sum = \DB::table('monthly_bonus')->whereMonth('date', Carbon::now()->month)->where(['school_id'=>$school->id,'user_id'=>Auth::user()->id])->sum('bonus_amount'); echo money($sum); ?>
+                         </th>
                     </div>
                  </div>
                 </div>
@@ -251,10 +252,8 @@ function submit_perfomance(perfomance) {
 
     if(!perfomance.checked){
         var url_obj = "<?= url('Sales/removeperfomance') ?>";
-        remove(perf);
     } else {
         var url_obj = "<?= url('Sales/storeperfomance') ?>";
-        summation(perf);
     }
     $.ajax({
         url: url_obj,

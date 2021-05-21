@@ -514,17 +514,17 @@
                                    <?php } ?>
 
                                    <?php if ((int) Auth::user()->role_id == 7) { ?>
-                                     <li class="nav-sub-item">
+                                     {{-- <li class="nav-sub-item">
                                         <a href="#" data-i18n="nav.page_layout.vertical.main"><i
                                         class="icon-arrow-right"></i>Partnership </a>
 
                                         <ul class="tree-2">
                                             <li><a href="<?= url('Partner/index') ?>" data-i18n="nav.extra-components.session-timeout">Onboard Requests</a></li>
                                       </ul>
-                                    </li>
+                                    </li> --}}
                                   <?php } ?>  
 
-                                  <?php if (can_access('manage_pertnerships'))  { ?>
+                                  
                                     <li class="nav-sub-item">
                                        <a href="#" data-i18n="nav.page_layout.vertical.main"><i
                                        class="icon-arrow-right"></i>Partnership </a>
@@ -534,7 +534,7 @@
                                         {{-- <li><a href="#" data-i18n="nav.extra-components.session-timeout">Reports</a></li> --}}
                                      </ul>
                                    </li>
-                                 <?php } ?>
+                             
 
 
 
