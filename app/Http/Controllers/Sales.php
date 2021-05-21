@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Charts\SimpleChart;
 use DB;
 use Auth;
+use Carbon\Carbon;
 
 class Sales extends Controller {
 
@@ -124,6 +125,7 @@ class Sales extends Controller {
     }
 
     public function school() {
+  
         $this->data['use_shulesoft'] = DB::table('admin.all_setting')->count() - 5;
         $this->data['nmb_schools'] = DB::table('admin.nmb_schools')->count();
         $this->data['nmb_shulesoft_schools'] = \collect(DB::select("select count(distinct schema_name) as count from admin.all_bank_accounts where refer_bank_id=22"))->first()->count;
@@ -244,7 +246,15 @@ class Sales extends Controller {
                 join admin.regions as r on r.id=d.region_id group by s.id, w.id, d.id,r.id) x ) A LEFT JOIN (select school_id,client_id from admin.client_schools) B on A.id = B.school_id
                 ) C  left  join (select id,username from admin.clients) D on C.client_id = D.id"; 
                 } else if ((int) request('type') == 2) {
-                    $sql = "select a.*, (select count(*) from admin.tasks where client_id in (select id from admin.clients where username in (select schema_name from admin.all_setting where school_id=a.id))) as activities from admin.schools a   where lower(a.ownership) <>'government' and a.id in (select school_id from admin.all_setting)";
+                    $sql = "select B.id,B.name,B.ownership,B.type,B.registration_number,B.status,B.status,B.students,
+                    B.created_at,B.updated_at,B.nmb_branch,B.account_number,B.branch_name,B.branch_code,
+                    B.nmb_zone,B.registered,B.zone,B.schema_name,B.activities,B.ward_id,T.region,T.ward,T.district
+                    from (select a.*, (select count(*) from admin.tasks where client_id in 
+                    (select id from admin.clients where username in (select schema_name from admin.all_setting where school_id=a.id)))
+                    as activities from admin.schools a   where lower(a.ownership) <>'government' and a.id in 
+                    (select school_id from admin.all_setting)) B join 
+                    (select D.name as district,W.id,W.name as ward,R.name as region from admin.districts as D join
+                    admin.wards as W on D.id = W.district_id join admin.regions R on R.id = D.region_id ) T on B.ward_id = T.id";
                 } else {
                  //$sql = "select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a  where lower(a.ownership) <>'government'";
                 $sql = "select C.*,D.username from (select A.*,B.* from (select b.*,w.name as ward, d.name as district,r.name as region from (select a.*, (select count(*) from admin.tasks where school_id=a.id) 
@@ -1014,6 +1024,67 @@ class Sales extends Controller {
         $id = request('task_id');
         \App\Models\Task::where('id', $id)->update(['status' => request('status'), 'start_date' => request('start_time'), 'end_date' => request('end_time'), 'task_type_id' => request('task_type_id'), 'updated_at' => date('Y-m-d H:i:s')]);
         return redirect()->back()->with('success', 'School record updated successfully');
+    }
+
+
+    public function generalreport(){
+        if (request()->segment(3) != '') {
+            $id = request()->segment(3);
+        } else {
+            $id = Auth::user()->id;
+        }
+        $school_ids = \App\Models\UsersSchool::where('user_id', $id)->get(['school_id']);
+
+       // $schools = \App\Models\ClientSchool::whereIn('client_id', \App\Models\UserClient::where('user_id', $id)->get(['client_id']))->get();
+        // $school_ids = [];
+        // foreach ($schools as $school) {
+        //     array_push($school_ids, $school->school_id);
+        // }
+        $this->data['schools'] =  \App\Models\School::whereIn('id', $school_ids)->where(DB::raw('lower(ownership)'),'<>','government')->get();
+        return view('sales.performance_report',$this->data);
+    }
+
+
+    public function addperfomance() {
+        $this->data['id']  = $id = request()->segment(3);
+        $this->data['school'] =  \App\Models\School::where('id', $id)->where(DB::raw('lower(ownership)'),'<>','government')->first();
+        return view('sales.add_perfomance',$this->data);
+    }
+
+
+    public function storeperfomance(){
+        $data = [
+            'module' => request('perf'),
+            'school_id' => request('school_id'),
+            'user_id' => Auth::user()->id,
+            'date' => date('Y-m-d')
+        ];
+       \App\Models\PerfomanceMeasures::create($data);
+    }
+
+    public function removeperfomance(){
+        $module = request('perf');
+        $school_id = request('school_id');
+        $check = \App\Models\PerfomanceMeasures::whereMonth('date', Carbon::now()->month)->where('school_id',$school_id)
+        ->where('module', $module)->first(); 
+        $check->delete();
+    }
+
+
+    public function hrReport(){
+        $this->data['schools'] = [];
+        $this->data['name'] = '';
+        $this->data['month_num'] = 1;
+        if($_POST){
+            $this->data['user_id'] = $user_id = request('user_id');
+            $this->data['month_num'] = $month_num = request('month');
+            $this->data['name'] = \App\Models\User::where('id',$user_id)->first()->name; 
+            
+           $this->data['schools'] = $schools = DB::table('users_schools')
+                   ->join('schools','users_schools.school_id', '=', 'schools.id')
+                   ->select('schools.id','schools.name')->where('users_schools.user_id',$user_id)->get();
+        }
+        return view('sales.report.index',$this->data);
     }
 
 }

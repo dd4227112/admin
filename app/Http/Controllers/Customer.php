@@ -530,14 +530,15 @@ class Customer extends Controller {
     public function activity() {
         $tab = request()->segment(3);
         $id = request()->segment(4);
-      //  dd(request('user_id'));
         if ($tab == 'add') {
             $this->data['types'] = DB::table('task_types')->where('department', Auth::user()->department)->get();
             $this->data['departments'] = DB::table('departments')->get();
             if ($_POST) {
-                $random = time();
+               // $random = time();
              
-                $data = array_merge(request()->except(['to_user_id','start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date'))),'ticket_no' => $random]);
+                $data = array_merge(request()->except(['to_user_id','start_date', 'end_date']), 
+                ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 
+                'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date')))]);
                
                 $task = \App\Models\Task::create($data);
                 $users = request('to_user_id');

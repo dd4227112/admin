@@ -14,4 +14,6 @@ class Country extends Model {
     public function regions() {
         return $this->hasMany(\App\Models\Region::class, 'country_id', 'id');
     }
+
+  
 }

@@ -149,124 +149,7 @@
                                     <i class="ti-fullscreen"></i>
                                 </a>
                             </li>
-                            <!--                            <li class="mega-menu-top">
-                                                                                                                        <a href="#">
-                                                                                                                            Mega
-                                                                                                                            <i class="ti-angle-down"></i>
-                                                                                                                        </a>
-                                                            <ul class="show-notification row">
-                                                                <li class="col-sm-3">
-                                                                    <h6 class="mega-menu-title">Popular Links</h6>
-                                                                    <ul class="mega-menu-links">
-                                                                        <li><a href="form-elements-component.html">Form Elements</a></li>
-                                                                        <li><a href="button.html">Buttons</a></li>
-                                                                        <li><a href="map-google.html">Maps</a></li>
-                                                                        <li><a href="user-card.html">Contact Cards</a></li>
-                                                                        <li><a href="user-profile.html">User Information</a></li>
-                                                                        <li><a href="auth-lock-screen.html">Lock Screen</a></li>
-                                                                    </ul>
-                                                                </li>
-                                                                <li class="col-sm-3">
-                                                                    <h6 class="mega-menu-title">Mailbox</h6>
-                                                                    <ul class="mega-mailbox">
-                                                                        <li>
-                                                                            <a href="#" class="media">
-                                                                                <div class="media-left">
-                                                                                    <i class="ti-folder"></i>
-                                                                                </div>
-                                                                                <div class="media-body">
-                                                                                    <h5>Data Backup</h5>
-                                                                                    <small class="text-muted">Store your data</small>
-                                                                                </div>
-                                                                            </a>
-                                                                        </li>
-                                                                        <li>
-                                                                            <a href="#" class="media">
-                                                                                <div class="media-left">
-                                                                                    <i class="ti-headphone-alt"></i>
-                                                                                </div>
-                                                                                <div class="media-body">
-                                                                                    <h5>Support</h5>
-                                                                                    <small class="text-muted">24-hour support</small>
-                                                                                </div>
-                                                                            </a>
-                                                                        </li>
-                                                                        <li>
-                                                                            <a href="#" class="media">
-                                                                                <div class="media-left">
-                                                                                    <i class="ti-dropbox"></i>
-                                                                                </div>
-                                                                                <div class="media-body">
-                                                                                    <h5>Drop-box</h5>
-                                                                                    <small class="text-muted">Store large amount of data in one-box only
-                                                                                    </small>
-                                                                                </div>
-                                                                            </a>
-                                                                        </li>
-                                                                        <li>
-                                                                            <a href="#" class="media">
-                                                                                <div class="media-left">
-                                                                                    <i class="ti-location-pin"></i>
-                                                                                </div>
-                                                                                <div class="media-body">
-                                                                                    <h5>Location</h5>
-                                                                                    <small class="text-muted">Find Your Location with ease of use</small>
-                                                                                </div>
-                                                                            </a>
-                                                                        </li>
-                                                                    </ul>
-                                                                </li>
-                                                                <li class="col-sm-3">
-                                                                    <h6 class="mega-menu-title">Gallery</h6>
-                                                                    <div class="row m-b-20">
-                                                                        <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/01.jpg" alt="Gallery-1">
-                                                                        </div>
-                                                                        <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/02.jpg" alt="Gallery-2">
-                                                                        </div>
-                                                                        <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/03.jpg" alt="Gallery-3">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row m-b-20">
-                                                                        <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/04.jpg" alt="Gallery-4">
-                                                                        </div>
-                                                                        <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/05.jpg" alt="Gallery-5">
-                                                                        </div>
-                                                                        <div class="col-sm-4"><img class="img-fluid img-thumbnail" src="<?= $root ?>assets/images/mega-menu/06.jpg" alt="Gallery-6">
-                                                                        </div>
-                                                                    </div>
-                                                                    <button class="btn btn-primary btn-sm btn-block">Browse Gallery</button>
-                                                                </li>
-                                                                <li class="col-sm-3">
-                                                                    <h6 class="mega-menu-title">Contact Us</h6>
-                                                                    <div class="mega-menu-contact">
-                                                                        <div class="form-group row">
-                                                                            <label for="example-text-input" class="col-3 col-form-label">Name</label>
-                                                                            <div class="col-9">
-                                                                                <input class="form-control" type="text" placeholder="Artisanal kale" id="example-text-input">
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="form-group row">
-                                                                            <label for="example-search-input" class="col-3 col-form-label">Email</label>
-                                                                            <div class="col-9">
-                                                                                <input class="form-control" type="email" placeholder="Enter your E-mail Id" id="example-search-input">
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="form-group row">
-                                                                            <label for="example-search-input" class="col-3 col-form-label">Contact</label>
-                                                                            <div class="col-9">
-                                                                                <input class="form-control" type="number" placeholder="+91-9898989898" id="example-search-input">
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="form-group row">
-                                                                            <label for="exampleTextarea" class="col-3 col-form-label">Message</label>
-                                                                            <div class="col-9">
-                                                                                <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </li>
-                                                            </ul>
-                                                        </li>-->
+                      
                                                     </ul>
                                                     <?php
                                                     if (strlen(request('token')) < 4) {
@@ -452,15 +335,15 @@
         if (strlen(request('token')) < 3) {
             ?>
             <!-- Menu aside start -->
-            <div class="main-menu">
-                <div class="main-menu-header">
+            <div class="main-menu" style="height: 900px;">
+                {{-- <div class="main-menu-header">
                     <img class="img-40" src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image">
                     <div class="user-details">
                         <span>{{ Auth::user()->name() }}</span>
-                        <span id="more-details"> <?php // Auth::user()->role->display_name              ?></span>
+                        <span id="more-details"> <?php // Auth::user()->role->display_name?></span>
                     </div>
-                </div>
-                <div class="main-menu-content">
+                </div> --}}
+                <div class="main-menu-content" >
                     <ul class="main-navigation">
 
                         <hr style="background:white"/>
@@ -475,185 +358,329 @@
                                 <a href="<?= url('/') ?>">
                                     <span data-i18n="nav.dash.main">Dashboard</span>
                                 </a> 
-                            <?php }
-                            ?>
+                            <?php } ?>
                             <ul class="tree-1 has-class">
-
-                                <?php if (can_access('manage_users')) { ?>
-                                    <li>
-                                        <a href="<?= url('analyse/index') ?>" data-i18n="nav.dash.default"> Home </a></li>
-
-                                <?php } if ((can_access('manage_users') || Auth::user()->department == 2) && Auth::user()->role_id <> 3) { ?>
-
+                                <?php if (can_access('view_home_dashboard')) { ?>
+                                  <li><a href="<?= url('analyse/index') ?>" data-i18n="nav.dash.default"> Home </a></li>
+                                <?php } if ((can_access('view_marketing_dashboard') || Auth::user()->department == 2) && Auth::user()->role_id <> 3) { ?>
                                     <li><a href="<?= url('analyse/marketing') ?>" data-i18n="nav.dash.ecommerce"> Marketing </a></li>
-                                <?php } if (can_access('manage_users') || Auth::user()->department == 2) { ?>
+                                <?php } if (can_access('view_sales_dashboard') || Auth::user()->department == 2) { ?>
                                     <li><a href="<?= url('analyse/sales') ?>" data-i18n="nav.dash.ecommerce"> Sales</a></li>
-                                <?php } if (can_access('manage_users') || Auth::user()->department == 4) { ?>
+                                <?php } if (can_access('view_accounts_dashboard') || Auth::user()->department == 4) { ?>
                                     <li><a href="<?= url('analyse/accounts') ?>" data-i18n="nav.dash.crm">Accounts</a></li>
-                                <?php } if (can_access('manage_users') || Auth::user()->department == 1) { ?>
+                                <?php } if (can_access('view_customer_dashboard') || Auth::user()->department == 1) { ?>
                                     <li><a href="<?= url('analyse/customers') ?>" data-i18n="nav.dash.analytics">Customers</a>
                                         <label class="label label-info menu-caption">NEW</label>
                                     </li>
-                                <?php } if (can_access('manage_users') || Auth::user()->department == 3) { ?>
-                                    <li><a href="<?= url('analyse/software') ?>" data-i18n="nav.dash.project">Software Dev</a></li>
+                                <?php } if (can_access('view_engineering_dashboard') || Auth::user()->department == 3) { ?>
+                                    <li><a href="<?= url('analyse/software') ?>" data-i18n="nav.dash.project">Engineering</a></li>
                                 <?php } ?>
                             </ul>
                         </li>
-                        <?php if (can_access('manage_customers')) { ?>
-                            <li class="nav-title" data-i18n="nav.category.navigation">
-                                <i class="ti-line-dashed"></i>
-                                <span>Operations</span>
-                            </li>
 
+
+
+                        <?php if (can_access('manage_marketing')) { ?>
                             <li class="nav-item">
                                 <a href="#!">
-                                    <i class="ti-layout"></i>
-                                    <span data-i18n="nav.page_layout.main">Customer Service</span>
+                                    <i class="ti-layout-cta-right"></i>
+                                    <span data-i18n="nav.extra-components.main">Marketing</span>
                                 </a>
                                 <ul class="tree-1">
-                                    <li><a href="<?= url('general/show/whatsapp_integrations') ?>" data-i18n="nav.page_layout.bottom-menu">WhatsApp Integration</a></li>
-                                    <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.bottom-menu">System Setup</a></li>
-                                    <li>
-                                        <a href="<?= url('Phone_call/index') ?>" data-i18n="nav.navigate.navbar"> Phone Calls</a>
-                                    </li>
 
-                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
-                                                class="icon-arrow-right"></i>Training</a>
-                                        <ul class="tree-2">
+                                    <?php if (can_access('manage_sales') || Auth::user()->role_id == 14) { ?>
 
-                                            <li><a href="<?= url('customer/guide') ?>" data-i18n="nav.page_layout.vertical.header-fixed">User Guide</a></li>
-                                            <li><a href="<?= url('customer/faq') ?>" data-i18n="nav.page_layout.vertical.compact"> FAQ </a>
-                                            </li>
-                                            <li><a href="<?= url('customer/report') ?>" data-i18n="nav.page_layout.vertical.static-layout">Report </a></li>
-                                            <li><a href="<?= url('customer/sequence') ?>" data-i18n="nav.page_layout.vertical.static-layout">Sequence </a></li>
-                                        </ul>
-                                    </li>
+                                        <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main">
+                                            <i class="icon-arrow-right"></i>Sales</a>
+                                            <ul class="tree-2">
+                                              <li>
+                                                 <a href="<?= url('sales/index') ?>" data-i18n="nav.navigate.navbar">Sales Materials</a>
+                                              </li>
+                                       
+                                              <?php
+                                              if (!preg_match('/crdb/i', Auth::user()->email)) {
+                                                  ?>
+                                                <!--   <li>
+                                                      <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">Schools</a>
+                                                  </li>-->
+                                                  <?php
+                                                  if (Auth::user()->role_id <> 3) {
+                                                      ?>
+                                                      <li>
+                                                          <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">List of Schools</a>
+                                                      </li>
+                                                  <?php } ?>
+                                              <?php } ?>
+                                      
+                                            <li><a href="<?= url('sales/salesStatus') ?>" data-i18n="nav.navigate.navbar">Sales Status</a> </li>
+            
+                                            {{-- <li><a href="<?= url('sales/analysis') ?>" data-i18n="nav.navigate.navbar">Sales Analysis</a></li> --}}
+                                           </ul>
+                                        </li>
+                                  <?php  } ?>
 
-                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
-                                                class="icon-arrow-right"></i>Usage Analysis</a>
-                                        <ul class="tree-2">
-                                            <li><a href="<?= url('customer/modules') ?>" data-i18n="nav.page_layout.vertical.static-layout"> Modules </a></li>
-                                            <li><a href="<?= url('customer/logs') ?>" data-i18n="nav.page_layout.vertical.header-fixed">
-                                                    User Logs</a></li>
-                                            <li><a href="<?= url('customer/karibu') ?>" data-i18n="nav.page_layout.vertical.compact"> karibuSMS </a>
-                                            </li>
-                                            <li><a href="<?= url('customer/epayments') ?>" data-i18n="nav.page_layout.vertical.compact"> e-payments </a>
-                                            </li>
 
-                                        </ul>
-                                    </li>
+                                    <?php if (can_access('digital_marketing')) { ?>
+                                    <li><a href="<?= url('Marketing/socialMedia') ?>" data-i18n="nav.extra-components.session-timeout">Digital Marketing</a></li>
+                                     <?php }  ?>
+                                    <li><a href="<?= url('Marketing/school') ?>" data-i18n="nav.navigate.navbar">Schools Status</a></li>
+                                   
+                                    <li><a href="<?= url('Marketing/Events') ?>" data-i18n="nav.extra-components.session-idle-timeout">Events and seminars</a></li>
 
+                                
+                                  <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main">
+                                      <i class="icon-arrow-right"></i>Usage and analysis</a>
+                                      <ul class="tree-2">
+                                      <li><a href="<?= url('Marketing/moduleUsage') ?>" data-i18n="nav.extra-components.session-idle-timeout">Usage nalysis</a></li>
+                                      <li><a href="<?= url('customer/modules') ?>" data-i18n="nav.page_layout.vertical.static-layout"> Modules </a></li>
+                                      <li><a href="<?= url('customer/logs') ?>" data-i18n="nav.page_layout.vertical.header-fixed">
+                                            User Logs</a>
+                                      </li>
+                                      <li><a href="<?= url('customer/karibu') ?>" data-i18n="nav.page_layout.vertical.compact"> karibuSMS </a>
+                                      </li>
+                                      <li><a href="<?= url('customer/epayments') ?>" data-i18n="nav.page_layout.vertical.compact"> e-payments </a>
+                                     </li>
+                                     </ul>
+                                  </li>
+                                
+                                    <li><a href="<?= url('Marketing/systemUser') ?>" data-i18n="nav.extra-components.session-idle-timeout">System Users</a></li>
+                                    <?php if (can_access('communications')) { ?>
                                     <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Communications</a>
                                         <ul class="tree-2">
+                                            <li><a href="<?= url('Marketing/Communication') ?>" data-i18n="nav.extra-components.session-idle-timeout">Communication</a></li>
                                             <li><a href="<?= url('customer/calls') ?>"  data-i18n="nav.page_layout.horizontal.static-layout"> Call Logs</a></li>
                                             <li><a href="<?= url('customer/emailsms') ?>" data-i18n="nav.page_layout.horizontal.static-layout"> SMS & Email Logs</a></li>
                                             <li><a href="<?= url('customer/feedbacks/null') ?>"  data-i18n="nav.page_layout.horizontal.fixed-layout">Customer Feedbacks </a></li>
                                             <li><a href="<?= url('customer/update') ?>" data-i18n="nav.page_layout.horizontal.static-with-icon">ShuleSoft Updates </a></li>
-
                                         </ul>
                                     </li>
+                                    <?php } ?>
+
                                     <li><a href="<?= url('customer/requirements') ?>" data-i18n="nav.page_layout.bottom-menu">Customer Requirements</a></li>
+                                   
                                 </ul>
                             </li>
                         <?php } ?>
 
-                        <?php if (Auth::user()->role_id == 12) { ?>
 
-                            <li class="nav-item">
-                                <a href="<?= url('customer/activity') ?>">
-                                    <i class="ti-gift "></i>
-                                    <span data-i18n="nav.extra-components.main">Tasks Management</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="<?= url('account/transaction/4') ?>"><i class="fa icon-expense"></i> 
-                                    <span data-i18n="nav.extra-components.main">Record Expense</span>
-                                </a>
-                            </li>
-                        <?php } ?>
 
-                        <?php // if (can_access('manage_sales') || Auth::user()->role_id == 14) { ?>
-                        <li class="nav-item">
-                            <a href="#!">
-                                <i class="ti-layout-cta-right"></i>
-                                <span data-i18n="nav.navigate.main">Sales</span>
-                            </a>
-                            <ul class="tree-1">
-                                <li>
-                                    <a href="<?= url('sales/index') ?>" data-i18n="nav.navigate.navbar">Sales Materials</a>
-                                </li>
 
-                                <?php
-                                if (!preg_match('/crdb/i', Auth::user()->email)) {
-                                    ?>
-<!--                                    <li>
-                                        <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">Schools</a>
-                                    </li>-->
-                                    <?php
-                                    if (Auth::user()->role_id <> 3) {
-                                        ?>
-                                        <li>
-                                            <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">List of Schools</a>
-                                        </li>
-                                    <?php } ?>
-                                <?php } ?>
-                                <li>
-                                    <a href="<?= url('sales/salesStatus') ?>" data-i18n="nav.navigate.navbar">Sales Status</a>
-                                </li>
-
-                                <!--                                    <li>
-                                                                        <a href="<?= url('sales/analysis') ?>" data-i18n="nav.navigate.navbar">Sales Analysis</a>
-                                                                    </li>-->
-                            </ul>
-                        </li>
-                        <?php // } ?>
-
-                        <?php if (Auth::user()->role_id != 7 && Auth::user()->role_id <> 3) { ?>
-
-                            <li class="nav-item">
-                                <a href="<?= url('customer/activity') ?>">
-                                    <i class="ti-gift "></i>
-                                    <span data-i18n="nav.extra-components.main">Tasks Management</span>
-                                </a>
-                            </li>
-
-                        <?php } if (Auth::user()->role_id == 14) { ?>
-                            <li class="nav-item">
-                                <a href="<?= url('customer/modules') ?>">
-                                    <i class="ti-bell"></i>
-                                    <span data-i18n="nav.extra-components.main"> Customer Modules</span>
-                                </a>
-                            </li>
-                            <!-- <li class="nav-item">
-                                <a href="<?= url('sales/school') ?>">
-                                    <i class="ti-list "></i>
-                                    <span data-i18n="nav.extra-components.main"> List of Schools</span>
-                                </a>
-                            </li> -->
-                            <li><a href="<?= url('customer/requirements') ?>" data-i18n="nav.page_layout.bottom-menu">Customer Requirements</a></li>
-                        <?php } ?>
-
-                        <?php if (can_access('manage_marketing') || Auth::user()->id == 33) { ?>
+                        
+                        <?php if (can_access('manage_operations')) { ?>
                             <li class="nav-item">
                                 <a href="#!">
                                     <i class="ti-bell "></i>
-                                    <span data-i18n="nav.extra-components.main">Marketing</span>
+                                    <span data-i18n="nav.extra-components.main">Operations</span>
                                 </a>
+
                                 <ul class="tree-1">
-                                    <li><a href="<?= url('Marketing/socialMedia') ?>" data-i18n="nav.extra-components.session-timeout">Social Media</a></li>
-                                    <li><a href="<?= url('Marketing/school') ?>" data-i18n="nav.navigate.navbar">Schools Status</a></li>
-                                    <li><a href="<?= url('Marketing/Events') ?>" data-i18n="nav.extra-components.session-idle-timeout">Events</a></li>
-                                    <li><a href="<?= url('Marketing/moduleUsage') ?>" data-i18n="nav.extra-components.session-idle-timeout">Module Usage</a></li>
-                                    <li><a href="<?= url('Marketing/systemUser') ?>" data-i18n="nav.extra-components.session-idle-timeout">System Users</a></li>
-                                    <li><a href="<?= url('Marketing/Communication') ?>" data-i18n="nav.extra-components.session-idle-timeout">Communication</a></li>
+                                    <?php if (can_access('manage_users') )  { ?>
+                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
+                                        class="icon-arrow-right"></i>Human Resources</a>
+                                        <ul class="tree-2">
+                                            <li><a href="<?= url('users/index') ?>"
+                                                    data-i18n="nav.extra-components.session-timeout">Users</a></li>
+                                            <li><a href="<?= url('users/kpi_list') ?>"
+                                                data-i18n="nav.extra-components.session-timeout">KPI</a></li>
+                                                
+                                         <?php if (can_access('meeting_minutes')) { ?>
+                                            <li><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">
+                                                Meetings</a>
+                                            </li>
+                                         <?php } ?>
+                                            <li><a href="<?= url('attendance/index') ?>"
+                                                    data-i18n="nav.extra-components.session-timeout">Attendance</a></li>
+                                            <li><a href="<?= url('Partner/partners') ?>"
+                                                    data-i18n="nav.extra-components.session-idle-timeout">Partners</a></li>
+                                            <li><a href="<?= url('users/applicant') ?>"
+                                                    data-i18n="nav.extra-components.session-idle-timeout">Applicants</a>
+                                            </li>
+                                            <li><a href="<?= url('users/template') ?>" data-i18n="nav.extra-components.offline">Forms &
+                                                    Templates</a>
+                                             </li>
+                                            <?php if(can_access('create_user_group')) { ?>
+                                             <li><a href="<?= url('users/usergroup') ?>"
+                                                data-i18n="nav.extra-components.session-idle-timeout">User groups</a>
+                                            </li>
+                                            <?php } ?>
+    
+                                            <?php if(can_access('hr_report')) { ?>
+                                            <li>
+                                             <a href="<?= url('sales/hrReport') ?>" data-i18n="nav.extra-components.session-timeout"> General report</a>                                    
+                                            </li>
+                                            <?php } ?>
+                                        </ul>
+                                   </li>
+                                   <?php } ?>
+
+                                   <?php if ((int) Auth::user()->role_id == 7) { ?>
+                                     <li class="nav-sub-item">
+                                        <a href="#" data-i18n="nav.page_layout.vertical.main"><i
+                                        class="icon-arrow-right"></i>Partnership </a>
+
+                                        <ul class="tree-2">
+                                            <li><a href="<?= url('Partner/index') ?>" data-i18n="nav.extra-components.session-timeout">Onboard Requests</a></li>
+                                      </ul>
+                                    </li>
+                                  <?php } ?>  
+
+                                  <?php if (can_access('manage_pertnerships'))  { ?>
+                                    <li class="nav-sub-item">
+                                       <a href="#" data-i18n="nav.page_layout.vertical.main"><i
+                                       class="icon-arrow-right"></i>Partnership </a>
+                                       <ul class="tree-2">
+                                        <li><a href="<?= url('Partner/index') ?>" data-i18n="nav.extra-components.session-timeout"> Onboard Requests</a></li>
+                                        <!--<li><a href="<?= url('Partner/add') ?>" data-i18n="nav.extra-components.offline">Onboard New School</a></li>-->
+                                        {{-- <li><a href="#" data-i18n="nav.extra-components.session-timeout">Reports</a></li> --}}
+                                     </ul>
+                                   </li>
+                                 <?php } ?>
+
+
+
+                                 <?php if (can_access('manage_customers'))  { ?>
+                                    <li class="nav-sub-item">
+                                       <a href="#" data-i18n="nav.page_layout.vertical.main"><i
+                                       class="icon-arrow-right"></i>Customer Service </a>
+                                       <ul class="tree-2">
+                                        <li><a href="<?= url('general/show/whatsapp_integrations') ?>" data-i18n="nav.page_layout.bottom-menu">WhatsApp Integration</a></li>
+                                        <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.bottom-menu">System Setup</a></li>
+                                        <li>
+                                            <a href="<?= url('Phone_call/index') ?>" data-i18n="nav.navigate.navbar"> Phone Calls</a>
+                                        </li>
+    
+                                        {{-- <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
+                                                    class="icon-arrow-right"></i>Usage Analysis</a>
+                                            <ul class="tree-2">
+                                                <li><a href="<?= url('customer/modules') ?>" data-i18n="nav.page_layout.vertical.static-layout"> Modules </a></li>
+                                                <li><a href="<?= url('customer/logs') ?>" data-i18n="nav.page_layout.vertical.header-fixed">
+                                                        User Logs</a></li>
+                                                <li><a href="<?= url('customer/karibu') ?>" data-i18n="nav.page_layout.vertical.compact"> karibuSMS </a>
+                                                </li>
+                                                <li><a href="<?= url('customer/epayments') ?>" data-i18n="nav.page_layout.vertical.compact"> e-payments </a>
+                                                </li>
+    
+                                            </ul>
+                                        </li> --}}
+                                    </ul>
+                                   </li>
+                                 <?php } ?>
+
+                                 <?php  if (can_access('training') ){ ?>
+                                 <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
+                                    class="icon-arrow-right"></i>Training</a>
+                                 <ul class="tree-2">
+                                 <li><a href="<?= url('customer/guide') ?>" data-i18n="nav.page_layout.vertical.header-fixed">User Guide</a></li>
+                                  <li><a href="<?= url('customer/faq') ?>" data-i18n="nav.page_layout.vertical.compact"> FAQ </a>
+                                  </li>
+                                 <li><a href="<?= url('customer/report') ?>" data-i18n="nav.page_layout.vertical.static-layout">Report </a></li>
+                                  <li><a href="<?= url('customer/sequence') ?>" data-i18n="nav.page_layout.vertical.static-layout">Sequence </a></li>
+                                </ul>
+                               </li>
+                               <?php } ?>
+
+                                <?php if (Auth::user()->role_id != 7 ) { ?>
+                                    <li>
+                                        <a href="<?= url('customer/activity') ?>" data-i18n="nav.extra-components.offline">
+                                            Tasks Allocation
+                                        </a>
+                                    </li>
+        
+                                <?php } if (Auth::user()->role_id == 14) { ?>
+                                    <li>
+                                        <a href="<?= url('customer/modules') ?>" data-i18n="nav.extra-components.offline">
+                                             Customer Modules
+                                        </a>
+                                    </li>
+                                    <li><a href="<?= url('customer/requirements') ?>" data-i18n="nav.page_layout.bottom-menu">Customer Requirements</a></li>
+                                <?php } ?>
+
+
+                                <?php if (Auth::user()->role_id == 12) { ?>
+                                    <li>
+                                        <a href="<?= url('account/transaction/4') ?>" data-i18n="nav.extra-components.main">
+                                            Record Expense
+                                        </a>
+                                    </li>
+                                <?php } ?>
+
+
+                                <?php if (Auth::user()->role_id == 1) { ?>
+                                    <li>
+                                       <a href="<?= url('Role/userPermission') ?>"
+                                             data-i18n="nav.extra-components.session-timeout">Permissions
+                                        </a>
+                                    </li>
+                                <?php } ?>
+
+
+                              <?php  if (can_access('my_schools') && !in_array(Auth::user()->department, [9, 10]) || in_array(Auth::user()->role_id, array(14, 8, 2, 3, 9, 20))) { ?>
+                                <li class="nav-sub-item">
+                                   <a href="#" data-i18n="nav.page_layout.vertical.main"><i
+                                   class="icon-arrow-right"></i>My Schools </a>
+                                   <ul class="tree-2">
+                                    <li><a href="<?= url('Analyse/myschools') ?>" data-i18n="nav.extra-components.session-timeout"> List of Schools</a></li>
+                                    <li><a href="<?= url('Analyse/myreport') ?>" data-i18n="nav.extra-components.offline">Task Report</a></li>
+                                    <li><a href="<?= url('sales/schoolVisit/1') ?>" data-i18n="nav.extra-components.session-timeout">School Visitation</a></li>
+
+                                     <li><a href="<?= url('Sales/generalreport') ?>" data-i18n="nav.extra-components.session-timeout">Perfomance report</a></li>
+                               
+                                 </ul>
+                               </li>
+                             <?php } ?>
+                                 
+                              <?php if (Auth::user()->department == 9 || Auth::user()->department == 10) { ?>
+                                    <li><a href="<?= url('Partner/index') ?>" >  Onboarded Schools</a></li>
+                             <?php }
+                        
+                                if (false) {
+                                    $has_class = preg_match('/exam/', url()->current()) ? 'has-class open' : '';
+                                    ?>
+                                    <li class="nav-item <?= $has_class ?>">
+                                        <a href="#!">
+                                            <i class="ti-crown"></i>
+                                            <span data-i18n="nav.advance-components.main">Schools</span>
+                                        </a>
+                                        <ul class="tree-1 ">
+                                            <!--<li><a href="<?= url('exam/dashboard') ?>" data-i18n="nav.advance-components.draggable">Dashboard</a></li>-->
+        
+                                            <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Exams</a>
+                                                <ul class="tree-2 <?= $has_class ?>">
+                                                    <a href="<?= url('exam/listing') ?>"><i class="fa icon-account"></i> Listing</a>
+                                                    <a href="<?= url('exam/allocate') ?>"><i class="fa icon-account"></i> Definition</a>
+                                                    <!--<a href="<?= url('exam/schedule') ?>"><i class="fa icon-expense"></i> Schedule</a>-->
+                                                    <a href="<?= url('exam/grade') ?>"><i class="fa icon-account"></i> Grades</a>
+        
+                                                    <a href="<?= url('exam/subject') ?>"><i class="fa icon-account"></i> Subjects</a>
+        
+                                                    <li class="nav-sub-item-3">
+                                                        <a href="#" data-i18n="nav.menu-levels.menu-level-22.menu-level-32.main">&nbsp; Reports</a>
+                                                        <ul class="tree-3">
+                                                            <li><a href="<?= url('exam/report/single') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-32.menu-level-41">Single</a> </li>
+                                                            <!--<li><a href="<?= url('exam/report/accumulative') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-32.menu-level-41">Combined</a> </li>-->
+        
+                                                        </ul>
+                                                    </li>
+                                                    <li><a href="<?= url('exam/marking') ?>" data-i18n="nav.advance-components.draggable">Marking</a></li>
+        
+                                                </ul>
+                                            </li>
+                                          <!--  <li class="nav-sub-item"><a href="<?= url('report/index') ?>"> System Reports</a></li> -->
+        
+                                        </ul>
+                                    </li>
+                                <?php } ?>
                                 </ul>
                             </li>
                         <?php } ?>
+
+
+
                         <?php if (can_access('manage_software')) { ?>
                             <li class="nav-item">
                                 <a href="#!">
                                     <i class="ti-layout-grid2-alt"></i>
-                                    <span data-i18n="nav.basic-components.main">Software Development</span>
+                                    <span data-i18n="nav.basic-components.main">Engineering</span>
                                 </a>
                                 <ul class="tree-1">
                                     <li><a href="<?= url('software/template') ?>" data-i18n="nav.basic-components.alert">Templates & Policies</a></li>
@@ -691,113 +718,13 @@
                         <?php } ?>
 
 
-                        <?php if (can_access('manage_users')) { ?>
-                            <li class="nav-item">
-                                <a href="#!">
-                                    <i class="ti-gift "></i>
-                                    <span data-i18n="nav.extra-components.main">User permissions</span>
-                                </a>
-                                <ul class="tree-1">
-                                    <li><a href="<?= url('Role/userPermission') ?>"
-                                     data-i18n="nav.extra-components.session-timeout">User permission</a></li>
-                                </ul>
-                            </li>
-                        <?php } ?>
-
-
-                            <?php if (can_access('manage_users')) { ?>
-                                <li class="nav-item">
-                                    <a href="#!">
-                                        <i class="ti-gift "></i>
-                                        <span data-i18n="nav.extra-components.main">Human Resources</span>
-                                    </a>
-                                    <ul class="tree-1">
-                                        <li><a href="<?= url('users/index') ?>"
-                                                data-i18n="nav.extra-components.session-timeout">Users</a></li>
-                                        <li><a href="<?= url('users/kpi_list') ?>"
-                                            data-i18n="nav.extra-components.session-timeout">KPI</a></li>
-                                            
-                                     <?php if (can_access('meeting_minutes')) { ?>
-                                        <li><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">
-                                            Meeting Minutes</a>
-                                        </li>
-                                     <?php } ?>
-                                        <li><a href="<?= url('attendance/index') ?>"
-                                                data-i18n="nav.extra-components.session-timeout">Attendance</a></li>
-                                        <li><a href="<?= url('Partner/partners') ?>"
-                                                data-i18n="nav.extra-components.session-idle-timeout">Partners</a></li>
-                                        <li><a href="<?= url('users/applicant') ?>"
-                                                data-i18n="nav.extra-components.session-idle-timeout">Applicants</a>
-                                        </li>
-                                        <li><a href="<?= url('users/template') ?>" data-i18n="nav.extra-components.offline">Forms &
-                                                Templates</a>
-                                         </li>
-                                        <?php if(can_access('create_user_group')) { ?>
-                                         <li><a href="<?= url('users/usergroup') ?>"
-                                            data-i18n="nav.extra-components.session-idle-timeout">User groups</a>
-                                        </li>
-                                        <?php } ?>
-                                    </ul>
-                                </li>
-                                <?php } ?>
-
-                                <?php  if (can_access('manage_users') && !in_array(Auth::user()->department, [9, 10]) || in_array(Auth::user()->role_id, array(14, 8, 2, 3, 9, 20))) {
-                                    ?>
-                                   <li class="nav-item">
-                                               <a href="#!">
-                                                   <i class="ti-layers "></i>
-                                                   <span data-i18n="nav.extra-components.main">My Schools</span>
-                                               </a>
-                                               <ul class="tree-1">
-                                                   <li><a href="<?= url('Analyse/myschools') ?>" data-i18n="nav.extra-components.session-timeout"> List of Schools</a></li>
-                                                   <li><a href="<?= url('Analyse/myreport') ?>" data-i18n="nav.extra-components.offline">Task Report</a></li>
-                                                   <li><a href="<?= url('sales/schoolVisit/1') ?>" data-i18n="nav.extra-components.session-timeout">School Visitation</a></li>
-                                                   <!-- <li><a href="<?= url('software/banksetup') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Bank Setup</a></li> -->
-                                               </ul>
-                                           </li>
-                                           <?php } ?>
-
-                                <?php if (can_access('meeting_minutes')) { ?>
-                                    <li class="nav-item"><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline"> <i class="ti-book "> </i> Meeting Minutes</a></li>
-                                <?php } ?>
-
-
-
-
-                                
-                        <?php if ((int) Auth::user()->role_id == 7) { ?>
-                            <li class="nav-item">
-                                <a href="#!">
-                                    <i class="ti-layers "></i>
-                                    <span data-i18n="nav.extra-components.main">Operations</span>
-                                </a>
-                                <ul class="tree-1">
-                                    <li><a href="<?= url('Partner/index') ?>" data-i18n="nav.extra-components.session-timeout">Onboard Requests</a></li>
-                                    <!--<li><a href="<?= url('Partner/add') ?>" data-i18n="nav.extra-components.offline">Onboard New School</a></li>-->
-                                    <!--<li><a href="#" data-i18n="nav.extra-components.session-timeout">Reports</a></li>-->
-                                </ul>
-                            </li>
-                        <?php } if (can_access('manage_users') || in_array(Auth::user()->role_id, array(14, 8))) { ?>
-                            <li class="nav-item">
-                                <a href="#!">
-                                    <i class="ti-layers "></i>
-                                    <span data-i18n="nav.extra-components.main">Partner Operations</span>
-                                </a>
-                                <ul class="tree-1">
-                                    <li><a href="<?= url('Partner/index') ?>" data-i18n="nav.extra-components.session-timeout"> Onboard Requests</a></li>
-                                    <!--<li><a href="<?= url('Partner/add') ?>" data-i18n="nav.extra-components.offline">Onboard New School</a></li>-->
-                                    <li><a href="#" data-i18n="nav.extra-components.session-timeout">Reports</a></li>
-                                </ul>
-                            </li>
-                            <?php
-                        }
-                        if (Auth::user()->department == 9 || Auth::user()->department == 10) {
+                      
+                     <?php  if (Auth::user()->department == 9 || Auth::user()->department == 10) {
                             ?>
                             <li class="nav-item"><a href="<?= url('Partner/index') ?>" > <i class="ti-layers "> </i> Onboarded Schools</a></li>
                             <?php
                         }
-                        // if (can_access('manage_schools')) {
-
+                
                         if (false) {
                             $has_class = preg_match('/exam/', url()->current()) ? 'has-class open' : '';
                             ?>
@@ -838,7 +765,7 @@
 
                          
                         <?php if(Auth::user()->role_id == '1') { ?>
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a href="#!">
                                     <i class="ti-gift "></i>
                                     <span data-i18n="nav.extra-components.main">Applications</span>
@@ -847,7 +774,7 @@
                                     <li><a href="<?= url('Applicants/evaluations') ?>"
                                      data-i18n="nav.extra-components.session-timeout">General Applicants</a></li>
                                 </ul>
-                            </li>
+                            </li> --}}
                         <?php } ?>
 
 
@@ -855,7 +782,7 @@
                             <li class="nav-item">
                                 <a href="#!">
                                     <i class="ti-crown"></i>
-                                    <span data-i18n="nav.advance-components.main">Accounts & Finance</span>
+                                    <span data-i18n="nav.advance-components.main">Accounting </span>
                                 </a>
                                 <ul class="tree-1">
                                     <!-- <li><a href="<?= url('account/projection') ?>" data-i18n="nav.advance-components.draggable">Projections</a></li> -->
@@ -872,11 +799,12 @@
                                             <a href="<?= url('account/reconciliation') ?>"><i class="fa icon-account"></i> Reconciliation</a>
                                         </ul>
                                     </li>
-                        <li><a href="<?= url('Account/budget') ?>"
-                            data-i18n="nav.advance-components.grid-stack">
+
+                              <li><a href="<?= url('Account/budget') ?>"
+                                data-i18n="nav.advance-components.grid-stack">
                               Budget 
-                        </a>
-                       </li>
+                             </a>
+                           </li>
 
                 
                         <li class="nav-sub-item">
@@ -884,19 +812,16 @@
                                 Payroll
                                 <span class="fa fa-chevron-down"></span></a>
                             <ul class="tree-2">
-                                <a href="<?= url('payroll/taxes') ?>"><i
-                                        class="fa fa-clipboard"></i><span>TAX</span></a>
-                                <a href="<?= url('payroll/pension') ?>"><i class="fa fa-clipboard"></i><span>Pension
-                                        Fund</span></a>
-                                <a href="<?= url('allowance/index') ?>"><i
-                                        class="fa fa-clipboard"></i><span>Allowances</span></a>
-                                <a href="<?= url('deduction/index') ?>"><i
-                                        class="fa fa-clipboard"></i><span>Deductions</span></a>
+                                <a href="<?= url('payroll/taxes') ?>">  <i class="fa fa-clipboard"></i>  <span>TAX</span></a>
+                                <a href="<?= url('payroll/pension') ?>"><i class="fa fa-clipboard"></i><span>Pension Fund</span></a>
+                                <a href="<?= url('allowance/index') ?>"><i class="fa fa-clipboard"></i><span>Allowances</span></a>
+                                <a href="<?= url('deduction/index') ?>"><i class="fa fa-clipboard"></i><span>Deductions</span></a>
+
                                 <li class="nav-sub-item-3">
                                     <a>
                                         Loans
                                         <span class="fa fa-chevron-down"></span></a>
-                                    <ul class="tree-3">
+                                <ul class="tree-3">
 
                                         <a href="<?= url('loan/type') ?>"><i class="fa fa-clipboard"></i><span
                                                 style="color: white; line-height: 25px;"> Loan Types</span></a>
@@ -907,8 +832,11 @@
                                     </li>
                
                                     <li><a href="<?= url('account/report') ?>" data-i18n="nav.advance-components.light-box">Reports</a></li>
-                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Settings</a>
-                                        <ul class="tree-2">
+
+                                    <li class="nav-sub-item-3">
+                                        <a>Settings<span class="fa fa-chevron-down"></span></a>
+                                        
+                                        <ul class="tree-3">
                                             <a href="<?= url('account/client') ?>"><i class="fa icon-account"></i>  Clients</a>
                                             <a href="<?= url('account/bank') ?>"><i class="fa icon-account"></i> Banking</a>
                                             <a href="<?= url('account/groups') ?>"><i class="fa icon-account"></i> Account Groups</a>

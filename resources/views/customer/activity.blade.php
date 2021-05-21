@@ -144,7 +144,7 @@
 
                                     <div class="tab-pane active" id="newtask" role="tabpanel">
                                         <div class="table-responsive">
-                                            <table   class="display table dataTable table-bordered">
+                                            <table  class="display table dataTable table-bordered">
                                                 <thead>
                                                     <tr>
                                                         <th style="display:none;">#</th>
@@ -219,25 +219,15 @@
                                                         <?php $i++;} ?>
                                                     <?php } ?>
                                                     </tbody>
-                                               
-                                                <tfooter>
-                                                    <tr>
-                                                        <th>Ticket</th>
-                                                        <th>Task type</th>
-                                                        <th>Priority</th>
-                                                        <th>Activity</th>
-                                                        <th>Created Date </th>
-                                                        <th>Status</th>
-                                                    </tr>
-                                                </tfooter>
+                                      
                                         </table>
                                       </div>
                                     </div>
 
                                         {{-- New Progress --}}
                                         <div class="tab-pane" id="Progress" role="tabpanel">
-                                        <div class="table-responsive table-bordered table-hover">
-                                            <table  class="display table dataTable  table-bordered">
+                                            <div class="table-responsive">
+                                                <table  class="display table dataTable table-bordered">
                                                 <thead>
                                                     <tr>
                                                         <th style="display:none;">#</th>
@@ -245,7 +235,8 @@
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
-                                                        <th> Date</th>
+                                                        <th>Date</th>
+                                                        
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -291,16 +282,7 @@
                                                         <?php } ?>
                                                     <?php $i++;} ?>
                                                 </tbody>
-                                                <tfooter>
-                                                    <tr>
-                                                        <th style="display:none;">#</th>
-                                                        <th>Ticket</th>
-                                                        <th>Task type</th>
-                                                        <th>Priority</th>
-                                                        <th>Activity</th>
-                                                        <th>Date</th>
-                                                    </tr>
-                                                </tfooter>
+                                            
                                             </table>
                                         </div>
                                     </div>
@@ -337,7 +319,8 @@
                                                         <th>Task type</th>
                                                         <th>Priority</th>
                                                         <th>Activity</th>
-                                                        <th>Date </th>
+                                                        <th>Date</th>
+                                                     
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -382,16 +365,7 @@
                                                         <?php $i++;} ?>
                                                     <?php } ?>
                                                 </tbody>
-                                                <tfooter>
-                                                    <tr>
-                                                        <th style="display:none;">#</th>
-                                                        <th>Ticket</th>
-                                                        <th>Task type</th>
-                                                        <th>Priority</th>
-                                                        <th>Activity</th>
-                                                        <th>Date</th>
-                                                    </tr>
-                                                </tfooter>
+                                            
                                             </table>
                                         </div>
                                     </div>
