@@ -30,7 +30,7 @@
                                   <div class="slide"></div>
                               </li>
                               <li class="nav-item">
-                                  <a class="nav-link" data-toggle="tab" href="#home7" role="tab"><i class="icofont icofont-home"></i>Sent Invoice</a>
+                                  <a class="nav-link" data-toggle="tab" href="#home7" role="tab"><i class="icofont icofont-home"></i></a>
                                   <div class="slide"></div>
                               </li>
                             

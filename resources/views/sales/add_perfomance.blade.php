@@ -56,34 +56,7 @@ $root = url('/') . '/public/' ?>
                                             <span>Fee Collection</span>
                                            </label>
                                        </div>
-
-
-                                        <div class="checkbox-fade fade-in-primary">
-                                            <?php  $check = check('Expenses',$school->id);
-                                            !empty($check) ? $checked = 'checked' : $checked = '';?>
-                                            <label>
-                                             <input type="checkbox" {{ $checked }} value="Expenses" onclick="submit_perfomance(this)">
-                                              <span class="cr">
-                                            <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                                               </span>
-                                             <span>Expenses</span>
-                                             </label>
-                                          </div>
-
-                                          <div class="checkbox-fade fade-in-primary">
-                                            <?php  $check = check('SMS',$school->id);
-                                              !empty($check) ? $checked = 'checked' : $checked = '';?>
-                                            <label>
-                                             <input type="checkbox" {{ $checked }} value="SMS" onclick="submit_perfomance(this)">
-                                              <span class="cr">
-                                            <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                                               </span>
-                                             <span>SMS</span>
-                                            </label>
-                                          </div>
                                     </div>
-
-
 
                                     <div class="j-span6 j-unit j-input">
                                         <div class="checkbox-fade fade-in-primary">
@@ -109,19 +82,6 @@ $root = url('/') . '/public/' ?>
                                                     <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
                                                 </span>
                                                 <span>Inventory</span>
-                                            </label>
-                                        </div>
-
-                                        <div class="checkbox-fade fade-in-primary">
-                                             <?php  $check = check('Transport',$school->id);
-                                              !empty($check) ? $checked = 'checked' : $checked = '';
-                                             ?>
-                                            <label>
-                                                <input type="checkbox"  {{ $checked }} value="Transport" onclick="submit_perfomance(this)">
-                                                <span class="cr">
-                                                    <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                                                </span>
-                                                <span>Transport</span>
                                             </label>
                                         </div>
                                     </div>
@@ -153,37 +113,11 @@ $root = url('/') . '/public/' ?>
                                                 <span>Library</span>
                                             </label>
                                         </div>
-
-                                        <div class="checkbox-fade fade-in-primary">
-                                            <?php  $check = check('Character',$school->id);
-                                              !empty($check) ? $checked = 'checked' : $checked = '';
-                                             ?>
-                                            <label>
-                                                <input type="checkbox" {{ $checked }} value="Character" onclick="submit_perfomance(this)">
-                                                <span class="cr">
-                                                    <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                                                </span>
-                                                <span>Character</span>
-                                            </label>
-                                        </div>
                                     </div>
 
 
 
                                     <div class="j-span6 j-unit j-input">
-                                        <div class="checkbox-fade fade-in-primary">
-                                            <?php  $check = check('Parent Login',$school->id);
-                                               !empty($check) ? $checked = 'checked' : $checked = '';
-                                            ?>
-                                            <label>
-                                                <input type="checkbox" {{ $checked }}  value="Parent Login" onclick="submit_perfomance(this)">
-                                                <span class="cr">
-                                                    <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
-                                                </span>
-                                                <span>Parent login</span>
-                                            </label>
-                                        </div>
-
                                         <div class="checkbox-fade fade-in-primary">
                                             <?php  $check = check('Staff Login',$school->id);
                                               !empty($check) ? $checked = 'checked' : $checked = '';
@@ -210,8 +144,99 @@ $root = url('/') . '/public/' ?>
                                             </label>
                                         </div>
                                     </div>
+
+
+                                    <div class="j-span6 j-unit j-input">
+                                        <div class="checkbox-fade fade-in-primary">
+                                            <?php  $check = check('Parent Login',$school->id);
+                                               !empty($check) ? $checked = 'checked' : $checked = '';
+                                            ?>
+                                            <label>
+                                                <input type="checkbox" {{ $checked }}  value="Parent Login" onclick="submit_perfomance(this)">
+                                                <span class="cr">
+                                                    <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                                </span>
+                                                <span>Parent login</span>
+                                            </label>
+                                        </div>
+
+                                        <div class="checkbox-fade fade-in-primary">
+                                            <?php  $check = check('Character',$school->id);
+                                              !empty($check) ? $checked = 'checked' : $checked = '';
+                                             ?>
+                                            <label>
+                                                <input type="checkbox" {{ $checked }} value="Character" onclick="submit_perfomance(this)">
+                                                <span class="cr">
+                                                    <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                                </span>
+                                                <span>Character</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="j-span6 j-unit j-input">
+                                         <div class="checkbox-fade fade-in-primary">
+                                             <?php  $check = check('Expenses',$school->id);
+                                               !empty($check) ? $checked = 'checked' : $checked = '';?>
+                                             <label>
+                                               <input type="checkbox" {{ $checked }} value="Expenses" onclick="submit_perfomance(this)">
+                                              <span class="cr">
+                                            <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                               </span>
+                                             <span>Expenses</span>
+                                             </label>
+                                          </div>
+
+                                          
+                                        <div class="checkbox-fade fade-in-primary">
+                                            <?php  $check = check('Transport',$school->id);
+                                             !empty($check) ? $checked = 'checked' : $checked = '';
+                                            ?>
+                                           <label>
+                                               <input type="checkbox"  {{ $checked }} value="Transport" onclick="submit_perfomance(this)">
+                                               <span class="cr">
+                                                   <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                               </span>
+                                               <span>Transport</span>
+                                           </label>
+                                       </div>
+                                    </div>
+
+                                    <div class="j-span6 j-unit j-input">
+                                        <div class="checkbox-fade fade-in-primary">
+                                            <?php  $check = check('SMS',$school->id);
+                                              !empty($check) ? $checked = 'checked' : $checked = '';?>
+                                            <label>
+                                             <input type="checkbox" {{ $checked }} value="SMS" onclick="submit_perfomance(this)">
+                                              <span class="cr">
+                                            <i class="cr-icon icofont icofont-ui-check txt-primary"></i>
+                                               </span>
+                                             <span>SMS</span>
+                                            </label>
+                                          </div>
+                                    </div>
+
+
                             </div>
                     </div>
+                </div>
+            </div>
+
+
+
+            <div class="card">
+                <div class="card-header">
+                    <h5>Amount</h5>
+                 </div>
+
+                 <div class="card-block">
+                    <div class="j-wrapper j-wrapper-640">
+                          <th class="text-bold"> 
+                             <?php $sum = \DB::table('monthly_bonus')->whereMonth('date', Carbon::now()->month)->where(['school_id'=>$school->id,'user_id'=>Auth::user()->id])->sum('bonus_amount'); echo money($sum); ?>
+                         </th>
+                    </div>
+                 </div>
                 </div>
             </div>
         
@@ -224,7 +249,7 @@ $root = url('/') . '/public/' ?>
 function submit_perfomance(perfomance) {
     var perf = perfomance.value;
     var school_id = '<?=$school->id?>';
-   
+
     if(!perfomance.checked){
         var url_obj = "<?= url('Sales/removeperfomance') ?>";
     } else {
@@ -240,6 +265,46 @@ function submit_perfomance(perfomance) {
         }
     });
 }
+
+function summation(perf){
+    var sum = 0;
+    switch(perf) {
+              case 'Exam Published':
+                var value = 12;
+                console.log(value);
+                break;
+              case 'Payroll':
+                var value = 15;
+                console.log(value);
+                break;
+              case 'Transport':
+                var value = 10;
+                break;
+             default:
+                // code block
+            }
+            sum += value;
+           $("#sum").html(sum);
+  }
+
+function remove(perf){
+    switch(perf) {
+              case 'Exam Published':
+                var value = 25;
+                console.log(value);
+                break;
+              case 'Payroll':
+                var value = 18;
+                break;
+              case 'Transport':
+                var value = 12;
+                break;
+              default:
+                // code block
+            }
+            sum -= value;
+           $("#sum").html(sum);
+  }
 </script>
 
 </div>

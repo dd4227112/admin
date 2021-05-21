@@ -1033,11 +1033,13 @@ class Sales extends Controller {
         } else {
             $id = Auth::user()->id;
         }
-        $schools = \App\Models\ClientSchool::whereIn('client_id', \App\Models\UserClient::where('user_id', $id)->get(['client_id']))->get();
-        $school_ids = [];
-        foreach ($schools as $school) {
-            array_push($school_ids, $school->school_id);
-        }
+        $school_ids = \App\Models\UsersSchool::where('user_id', $id)->get(['school_id']);
+
+       // $schools = \App\Models\ClientSchool::whereIn('client_id', \App\Models\UserClient::where('user_id', $id)->get(['client_id']))->get();
+        // $school_ids = [];
+        // foreach ($schools as $school) {
+        //     array_push($school_ids, $school->school_id);
+        // }
         $this->data['schools'] =  \App\Models\School::whereIn('id', $school_ids)->where(DB::raw('lower(ownership)'),'<>','government')->get();
         return view('sales.performance_report',$this->data);
     }
@@ -1051,13 +1053,67 @@ class Sales extends Controller {
 
 
     public function storeperfomance(){
+        $school_id = request('school_id');
+        $module_type = request('perf');
+        $number_of_students = \App\Models\Client::where('id',\App\Models\ClientSchool::where('school_id',$school_id)->first()->client_id)->first()->estimated_students;
+    
         $data = [
             'module' => request('perf'),
             'school_id' => request('school_id'),
             'user_id' => Auth::user()->id,
             'date' => date('Y-m-d')
         ];
-       \App\Models\PerfomanceMeasures::create($data);
+         \App\Models\PerfomanceMeasures::create($data);
+        
+       if($number_of_students < 300){
+            $module_id = \App\Models\Module::where('name',$module_type)->first()->id;
+            $module_amount = \App\Models\CustomerSupportModule::where('module_id',$module_id)->first()->low;
+            $bonus_data = [
+            'user_id' => Auth::user()->id,
+            'bonus_amount' => $module_amount,
+            'name' => $module_type,
+            'role_id' => \App\Models\RoleUser::where('user_id',Auth::user()->id)->first()->role_id,
+            'date' => date('Y-m-d'),
+            'school_id' => $school_id
+          ];
+          \App\Models\MonthlyBonus::create($bonus_data);
+       } else if($number_of_students >= 300 && $number_of_students < 600){
+             $module_id = \App\Models\ModuleBonus::where('name',$module_type)->first()->id;
+             $module_amount = \App\Models\CustomerSupportModule::where('module_id',$module_id)->first()->medium;
+             $bonus_data = [
+            'user_id' => Auth::user()->id,
+            'bonus_amount' => $module_amount,
+            'name' => $module_type,
+            'role_id' => \App\Models\RoleUser::where('user_id',Auth::user()->id)->first()->role_id,
+            'date' => date('Y-m-d'),
+            'school_id' => $school_id
+            ];
+            \App\Models\MonthlyBonus::create($bonus_data);
+       } else if($number_of_students >= 600 && $number_of_students < 1000){
+             $module_id = \App\Models\ModuleBonus::where('name',$module_type)->first()->id;
+             $module_amount = \App\Models\CustomerSupportModule::where('module_id',$module_id)->first()->high;
+             $bonus_data = [
+            'user_id' => Auth::user()->id,
+            'bonus_amount' => $module_amount,
+            'name' => $module_type,
+            'role_id' => \App\Models\RoleUser::where('user_id',Auth::user()->id)->first()->role_id,
+            'date' => date('Y-m-d'),
+            'school_id' => $school_id
+            ];
+            \App\Models\MonthlyBonus::create($bonus_data);
+       } else{
+             $module_id = \App\Models\ModuleBonus::where('name',$module_type)->first()->id;
+             $module_amount = \App\Models\CustomerSupportModule::where('module_id',$module_id)->first()->higher;
+             $bonus_data = [
+            'user_id' => Auth::user()->id,
+            'bonus_amount' => $module_amount,
+            'name' => $module_type,
+            'role_id' => \App\Models\RoleUser::where('user_id',Auth::user()->id)->first()->role_id,
+            'date' => date('Y-m-d'),
+            'school_id' => $school_id
+          ];
+        \App\Models\MonthlyBonus::create($bonus_data);
+       }
     }
 
     public function removeperfomance(){
@@ -1065,12 +1121,24 @@ class Sales extends Controller {
         $school_id = request('school_id');
         $check = \App\Models\PerfomanceMeasures::whereMonth('date', Carbon::now()->month)->where('school_id',$school_id)
         ->where('module', $module)->first(); 
-        $check->delete();
+         $check->delete();
     }
 
 
     public function hrReport(){
-        return view('sales.report.index');
+        $this->data['schools'] = [];
+        $this->data['name'] = '';
+        $this->data['month_num'] = 1;
+        if($_POST){
+            $this->data['user_id'] = $user_id = request('user_id');
+            $this->data['month_num'] = $month_num = request('month');
+            $this->data['name'] = \App\Models\User::where('id',$user_id)->first()->name; 
+            
+           $this->data['schools'] = $schools = DB::table('users_schools')
+                   ->join('schools','users_schools.school_id', '=', 'schools.id')
+                   ->select('schools.id','schools.name')->where('users_schools.user_id',$user_id)->get();
+        }
+        return view('sales.report.index',$this->data);
     }
 
 }

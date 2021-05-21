@@ -514,17 +514,17 @@
                                    <?php } ?>
 
                                    <?php if ((int) Auth::user()->role_id == 7) { ?>
-                                     <li class="nav-sub-item">
+                                     {{-- <li class="nav-sub-item">
                                         <a href="#" data-i18n="nav.page_layout.vertical.main"><i
                                         class="icon-arrow-right"></i>Partnership </a>
 
                                         <ul class="tree-2">
                                             <li><a href="<?= url('Partner/index') ?>" data-i18n="nav.extra-components.session-timeout">Onboard Requests</a></li>
                                       </ul>
-                                    </li>
+                                    </li> --}}
                                   <?php } ?>  
 
-                                  <?php if (can_access('manage_pertnerships'))  { ?>
+                                  
                                     <li class="nav-sub-item">
                                        <a href="#" data-i18n="nav.page_layout.vertical.main"><i
                                        class="icon-arrow-right"></i>Partnership </a>
@@ -534,7 +534,7 @@
                                         {{-- <li><a href="#" data-i18n="nav.extra-components.session-timeout">Reports</a></li> --}}
                                      </ul>
                                    </li>
-                                 <?php } ?>
+                             
 
 
 
@@ -622,9 +622,9 @@
                                     <li><a href="<?= url('Analyse/myschools') ?>" data-i18n="nav.extra-components.session-timeout"> List of Schools</a></li>
                                     <li><a href="<?= url('Analyse/myreport') ?>" data-i18n="nav.extra-components.offline">Task Report</a></li>
                                     <li><a href="<?= url('sales/schoolVisit/1') ?>" data-i18n="nav.extra-components.session-timeout">School Visitation</a></li>
-                                     <?php if (can_access('hr_report')) { ?>
+
                                      <li><a href="<?= url('Sales/generalreport') ?>" data-i18n="nav.extra-components.session-timeout">Perfomance report</a></li>
-                                     <?php } ?>
+                               
                                  </ul>
                                </li>
                              <?php } ?>
@@ -799,11 +799,12 @@
                                             <a href="<?= url('account/reconciliation') ?>"><i class="fa icon-account"></i> Reconciliation</a>
                                         </ul>
                                     </li>
-                        <li><a href="<?= url('Account/budget') ?>"
-                            data-i18n="nav.advance-components.grid-stack">
+
+                              <li><a href="<?= url('Account/budget') ?>"
+                                data-i18n="nav.advance-components.grid-stack">
                               Budget 
-                        </a>
-                       </li>
+                             </a>
+                           </li>
 
                 
                         <li class="nav-sub-item">
@@ -811,19 +812,16 @@
                                 Payroll
                                 <span class="fa fa-chevron-down"></span></a>
                             <ul class="tree-2">
-                                <a href="<?= url('payroll/taxes') ?>"><i
-                                        class="fa fa-clipboard"></i><span>TAX</span></a>
-                                <a href="<?= url('payroll/pension') ?>"><i class="fa fa-clipboard"></i><span>Pension
-                                        Fund</span></a>
-                                <a href="<?= url('allowance/index') ?>"><i
-                                        class="fa fa-clipboard"></i><span>Allowances</span></a>
-                                <a href="<?= url('deduction/index') ?>"><i
-                                        class="fa fa-clipboard"></i><span>Deductions</span></a>
+                                <a href="<?= url('payroll/taxes') ?>">  <i class="fa fa-clipboard"></i>  <span>TAX</span></a>
+                                <a href="<?= url('payroll/pension') ?>"><i class="fa fa-clipboard"></i><span>Pension Fund</span></a>
+                                <a href="<?= url('allowance/index') ?>"><i class="fa fa-clipboard"></i><span>Allowances</span></a>
+                                <a href="<?= url('deduction/index') ?>"><i class="fa fa-clipboard"></i><span>Deductions</span></a>
+
                                 <li class="nav-sub-item-3">
                                     <a>
                                         Loans
                                         <span class="fa fa-chevron-down"></span></a>
-                                    <ul class="tree-3">
+                                <ul class="tree-3">
 
                                         <a href="<?= url('loan/type') ?>"><i class="fa fa-clipboard"></i><span
                                                 style="color: white; line-height: 25px;"> Loan Types</span></a>
@@ -834,8 +832,11 @@
                                     </li>
                
                                     <li><a href="<?= url('account/report') ?>" data-i18n="nav.advance-components.light-box">Reports</a></li>
-                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Settings</a>
-                                        <ul class="tree-2">
+
+                                    <li class="nav-sub-item-3">
+                                        <a>Settings<span class="fa fa-chevron-down"></span></a>
+                                        
+                                        <ul class="tree-3">
                                             <a href="<?= url('account/client') ?>"><i class="fa icon-account"></i>  Clients</a>
                                             <a href="<?= url('account/bank') ?>"><i class="fa icon-account"></i> Banking</a>
                                             <a href="<?= url('account/groups') ?>"><i class="fa icon-account"></i> Account Groups</a>
