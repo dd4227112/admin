@@ -21,6 +21,7 @@ class ImportExpense implements ToModel, WithHeadingRow
         $i = 0;
         $status = 1;
         $refer_expense = \App\Models\ReferExpense::where('name', $row['name'])->first();
+        //   dd($refer_expense);
         if (empty($refer_expense)) {
             $obj = [
                 'name' => $row['category'],
@@ -69,7 +70,7 @@ class ImportExpense implements ToModel, WithHeadingRow
             "amount" => $row['amount']
         );
 
-        $voucher_no = DB::table('expense')->max('voucher_no');
+        $voucher_no = DB::table('expenses')->max('voucher_no');
         $user = \App\Models\User::where('name', 'ilike', '%' . $payer_name . '%')->first();
         if ((int) $row['user_in_shulesoft'] == 1 && !empty($user)) {
             $obj = array_merge($array, [

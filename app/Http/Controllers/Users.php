@@ -113,7 +113,7 @@ class Users extends Controller {
             //check if its attendance or not
             $ip = $_SERVER['REMOTE_ADDR'] ?: ($_SERVER['HTTP_X_FORWARDED_FOR'] ?: $_SERVER['HTTP_CLIENT_IP']);
             
-            if ($ip !== '102.69.167.173') {
+            if ($ip == '102.69.167.173') {
                 if (strlen(request('early_leave_comment')) > 2) {
                     DB::table('attendances')->where('user_id', $id)->whereDate('created_at', date('Y-m-d'))->update([
                         'timeout' => 'now()',
@@ -724,7 +724,7 @@ class Users extends Controller {
                             if(empty($check_unique->first())) {
                                 \App\Models\ClientGroup::create($array);
                             } else{
-                            return redirect()->back()->with('error','Client arleady belong to groups');
+                            return redirect()->back()->with('error','Client school arleady belong to groups');
                             }
                         }
                     }

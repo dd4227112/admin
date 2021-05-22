@@ -1762,7 +1762,6 @@ select * from tempb");
     private function checkKeysExists($value) {
         $required = array('date', 'amount', 'account_number', 'expense_name');
 
-
         $data = array_change_key_case(array_shift($value), CASE_LOWER);
         $keys = str_replace(' ', '_', array_keys($data));
         $results = array_combine($keys, array_values($data));

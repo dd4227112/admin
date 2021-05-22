@@ -6,7 +6,7 @@
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4>Company   
+                <h4>   
                 <?php
                     $global_id = $id;
                     $name = '';
@@ -56,11 +56,11 @@
                                   Add Expense
                             </a>
                          </div>
-                        <hr>
+                        
 
-                        <div class="col-sm-12 ">
+                        <div class>
                             <form style="" class="form-horizontal" role="form" method="post"> 
-                                <div class="col-md-5">
+                                <div class="col-md-6">
                                     <div class="form-group row">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Start Date</label>
                                         <div class="col-md-9 col-sm-9 col-xs-12">
@@ -70,7 +70,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-5">
+                                <div class="col-md-6">
                                     <div class="form-group row">
                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">End Date</label>
                                         <div class="col-md-9 col-sm-9 col-xs-12">
@@ -80,7 +80,7 @@
                                     </div>
                                 </div>                     
 
-                                <div class="col-md-5">
+                                <div class="col-md-4">
                                     <div class="form-group row">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12"></label>
                                        <div class="col-md-9 col-sm-9 col-xs-12">
@@ -89,7 +89,7 @@
                                     </div>
                                 </div> 
                                 <?= csrf_field() ?>
-                            </form>
+                            </form> 
                         </div>        
 
 
@@ -113,7 +113,7 @@
                                     $total_expense = 0;
                                     $i = 1;
                                     $refer_ids = [];
-                                    if (!empty($expenses)) {
+                                    if (!empty($expenses)) { 
                                         foreach ($expenses as $expense) {
                                             array_push($refer_ids, $expense->id);
                                             ?>

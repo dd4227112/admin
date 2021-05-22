@@ -32,7 +32,7 @@
                             <div class="box-header">
                                 <h3 class="box-title"><i class="fa icon-expense"></i> <?php
                                     if ($id == 4) {
-                                        echo 'Company Expense';
+                                        echo 'Company Expenses';
                                     } elseif ($id == 1) {
                                         echo "Fixed Assets";
                                     } else if ($id == 2) {
@@ -79,7 +79,7 @@
                                                     <div class="form-group row">
                                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Start Date</label>
                                                         <div class="col-md-9 col-sm-9 col-xs-12">
-                                                            <input type="date"  class="form-control" id="from_date" name="from_date" required> 
+                                                            <input type="date"  class="form-control" value="<?= date('Y-01-01') ?>" id="from_date" name="from_date" required> 
                                                         </div>
                                                     </div>
                                                 </div>
@@ -88,7 +88,7 @@
                                                     <div class="form-group row">
                                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">End Date</label>
                                                         <div class="col-md-9 col-sm-9 col-xs-12"> 
-                                                            <input type="date" class="form-control" id="to_date" name="to_date"  required>
+                                                            <input type="date" class="form-control" value="<?= date('Y-m-d') ?>"id="to_date" name="to_date"  required>
                                                         </div>
                                                     </div>
                                                 </div>                     

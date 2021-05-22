@@ -824,7 +824,7 @@ class Account extends Controller {
                 $result = ReferExpense::where('financial_category_id', 7)->get();
                 break;
             case 4:
-                $result = ReferExpense::whereIn('financial_category_id', [2, 3])->get();
+                $result = ReferExpense::whereIn('financial_category_id', [2, 3])->orderBy('created_at', 'DESC')->get();
                 break;
             case 5:
                 $result = ReferExpense::where('financial_category_id', 5)->get();
@@ -1208,13 +1208,13 @@ class Account extends Controller {
         $id = request()->segment(3);
         $refer_id = request()->segment(4);
         $bank_id = request()->segment(5);
+       
         $year = \App\Models\AccountYear::orderBy('start_date', 'asc')->first();
         $account_year = empty($year) ? \App\Models\AccountYear::create(['name' => date('Y'), 'status' => 1, 'start_date' => date('Y-01-01'), 'end_date' => date('Y-12-31')]) : $year;
         $from_date = $account_year->start_date;
         $to_date = date('Y-m-d');
-
         $refer_expense = \App\Models\ReferExpense::find($id);
-
+       
         if ($_POST) {
             if (request("to_date")) {
                 $d1 = request("to_date");
@@ -1229,7 +1229,7 @@ class Account extends Controller {
                 $from_date = request("from_date");
             }
         }
-
+     //   dd($refer_expense);
 
         if ($refer_id == 5) {
             if (strtoupper($refer_expense->name) == 'CASH') {
@@ -1255,9 +1255,9 @@ class Account extends Controller {
             $this->data['expenses'] = DB::select('select coalesce(sum(b.open_balance::numeric * b.depreciation*(\'' . $to_date . '\'::date-a.date::date)/365),0) as open_balance,sum(amount-amount* a.depreciation *(\'' . $to_date . '\'::date-a.date::date)/365) as total,sum(amount* a.depreciation*(\'' . $to_date . '\'::date-a.date::date)/365) as amount, refer_expense_id,a.date,a.note,a.recipient,b.name,a."expenseID",b.predefined from admin.expenses a join admin.refer_expense b  on b.id=a.refer_expense_id where b.financial_category_id=4 AND  a.date  <= \'' . $to_date . '\' group by a.refer_expense_id,b.open_balance,a.date,a.note,b.name,a."expenseID",b.predefined  ORDER BY a.date desc');
              $this->data['depreciation'] = 1;
         } else {
-            //$this->data['expenses'] = DB::SELECT('SELECT b.*,a.* FROM admin.expense a JOIN admin.refer_expense b ON a.refer_expense_id=b.id WHERE b.id=' . $id . ' and a."date" >= ' . "'$from_date'" . ' AND a."date" <= ' . "'$to_date'" . ' ');
+           // $this->data['expenses'] = DB::SELECT('SELECT b.*,a.* FROM admin.expenses a JOIN admin.refer_expense b ON a.refer_expense_id=b.id WHERE b.id=' . $id . ' and a."date" >= ' . "'$from_date'" . ' AND a."date" <= ' . "'$to_date'" . ' ');
             $this->data['expenses'] = \App\Models\ReferExpense::where('refer_expense.id', $id)->join('expenses', 'expenses.refer_expense_id', 'refer_expense.id')->select('payment_types.name as payment_method', 'expenses.recipient as recipient', 'expenses.date', 'expenses.amount', 'expenses.note', 'expenses.transaction_id', 'expenses.id', 'refer_expense.predefined')->leftJoin('payment_types', 'payment_types.id', 'expenses.payment_type_id')->where('expenses.date', '>=', $from_date)->where('expenses.date', '<=', $to_date)->get();
-            // dd($this->data['expenses']);
+        //  dd($this->data['expenses']);
         }
         //$this->data['refer_id'] = $id;
         $this->data['period'] = 1;

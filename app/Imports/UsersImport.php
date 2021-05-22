@@ -26,9 +26,9 @@ class UsersImport implements ToModel, WithHeadingRow
         }
 
         $user = User::create([
-            'firstname' => $row['firstname'],
-            'lastname' => $row['lastname'],
-            'phone' => $row['phone'],
+           'firstname' => $row['firstname'],
+          'lastname' => $row['lastname'],
+          'phone' => $row['phone'],
            'email' => $email,
            'password' => bcrypt($email),
            'role_id' => 20,
