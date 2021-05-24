@@ -1040,7 +1040,7 @@ class Sales extends Controller {
         // foreach ($schools as $school) {
         //     array_push($school_ids, $school->school_id);
         // }
-        $this->data['schools'] =  \App\Models\School::whereIn('id', $school_ids)->where(DB::raw('lower(ownership)'),'<>','government')->get();
+        $this->data['schools'] = \App\Models\School::whereIn('id', $school_ids)->where(DB::raw('lower(ownership)'),'<>','government')->get();
         return view('sales.performance_report',$this->data);
     }
 
@@ -1119,22 +1119,23 @@ class Sales extends Controller {
     public function removeperfomance(){
         $module = request('perf');
         $school_id = request('school_id');
-        $check = \App\Models\PerfomanceMeasures::whereMonth('date', Carbon::now()->month)->where('school_id',$school_id)
-        ->where('module', $module)->first(); 
-         $check->delete();
+       
+        $check = \App\Models\PerfomanceMeasures::whereMonth('date', Carbon::now()->month)->whereYear('date', date('Y'))->where('school_id',$school_id)->where(['module' => $module, 'user_id'=>Auth::user()->id])->first(); 
+        $check->delete();
+        $bonus = \App\Models\MonthlyBonus::whereMonth('date', Carbon::now()->month)->whereYear('date', date('Y'))->where(['school_id' => $school_id,'name'=>$module,'user_id' =>Auth::user()->id])->first(); 
+        $bonus->delete();
     }
 
 
     public function hrReport(){
         $this->data['schools'] = [];
         $this->data['name'] = '';
-        $this->data['month_num'] = 1;
+        $this->data['month_num'] = null;
         if($_POST){
             $this->data['user_id'] = $user_id = request('user_id');
             $this->data['month_num'] = $month_num = request('month');
             $this->data['name'] = \App\Models\User::where('id',$user_id)->first()->name; 
-            
-           $this->data['schools'] = $schools = DB::table('users_schools')
+            $this->data['schools'] = $schools = DB::table('users_schools')
                    ->join('schools','users_schools.school_id', '=', 'schools.id')
                    ->select('schools.id','schools.name')->where('users_schools.user_id',$user_id)->get();
         }

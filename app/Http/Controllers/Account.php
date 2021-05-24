@@ -1420,7 +1420,9 @@ class Account extends Controller {
 
         if ($_POST) {
             $address = request()->file('file');
+          
             $results = Excel::load($address)->all();
+            dd($results);
             //once we upload excel, register students and marks in mark_info table
             $status = '';
             foreach ($results as $value) {

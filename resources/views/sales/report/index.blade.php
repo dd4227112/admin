@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
-<?php
+<?php  use Carbon\Carbon;
   function check_module($school_id,$month,$user_id,$module_name){
     return \App\Models\PerfomanceMeasures::whereMonth('date', $month)->where(['school_id'=>$school_id,'module'=>$module_name,'user_id'=>$user_id])->first(); 
    // return  DB::table('perfomance_measures')->whereMonth('date', $month)->where('user_id',$user_id)->where('school_id',$school_id)->where('module',$module_name)->get(['module']);
@@ -116,10 +116,11 @@
                                                         <th width="5%"> Character</th>
                                                         <th width="5%"> Electronic payment</th>
                                                         <th width="5%"> SMS </th>
+                                                        <th width="5%"> Total </th>
                                                       </tr>
                                                     </thead>
                                                     <tbody> 
-                                                     <?php $i=1;foreach($schools as $school) { ?>
+                                                     <?php $i=1;$total=0;foreach($schools as $school) { ?>
                                                       <tr>
                                                         <td width="10%"><?=$school->name?></td>
                                                         <th width="5%"><?= !empty(check_module($school->id,$month_num,$user_id,'Exam Published')) ?$yes: $no ?></th>
@@ -135,9 +136,16 @@
                                                         <th width="5%"> <?= !empty(check_module($school->id,$month_num,$user_id,'Character')) ?$yes: $no ?></th>
                                                         <th width="5%"> <?= !empty(check_module($school->id,$month_num,$user_id,'Electronic payment')) ?$yes: $no ?></th>
                                                         <th width="5%"> <?= !empty(check_module($school->id,$month_num,$user_id,'SMS')) ?$yes: $no ?> </th>
+                                                        <th width="5%"> 
+                                                          <?php $sum = \DB::table('monthly_bonus')->whereMonth('date', Carbon::now()->month)->where(['school_id'=>$school->id,'user_id'=>Auth::user()->id])->sum('bonus_amount'); echo money($sum);$total+=$sum; ?>
+                                                        </th>
                                                       </tr>
                                                     <?php $i++;} ?>
                                                     </tbody>
+                                                    <tfoot>
+                                                      <th colspan="14" class="text-right"> SUM</th>
+                                                      <th> <?= money($total) ?></th>
+                                                    </tfoot>
                                                </table>
                                                  
                                           </div>
