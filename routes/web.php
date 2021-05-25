@@ -12,6 +12,13 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+ 
+
+
+  if($_SERVER['HTTP_HOST'] != 'localhost') {
+      \URL::forceScheme('https');
+  }
+
 
 
 
@@ -80,3 +87,5 @@ Route::post('/addrecruiment', 'Recruitments@register');
 
 Route::get('/nda_form/{id}', 'Recruitments@nda');
 Route::post('/sendndaform','Recruitments@uploadnda');
+
+

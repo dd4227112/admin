@@ -70,7 +70,7 @@ class ImportExpense implements ToModel, WithHeadingRow
                 "depreciation" => 0,
                 'user_id' => Auth::user()->id,
                 "bank_account_id" => !empty($bank) ? $bank->id : '2',
-                "amount" => str_replace( ',', '', $row['amount']) 
+                "amount" => remove_comma($row['amount']) 
             );
     
             $voucher_no = DB::table('expenses')->max('voucher_no');

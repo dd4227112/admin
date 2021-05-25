@@ -3,9 +3,6 @@
 
 <?php
 $root = url('/') . '/public/';
-
-
-
 define('SCHEMA', $schema);
 
 function check_status($table, $where = null) {
@@ -18,10 +15,8 @@ if ($table == 'admin.vendors') {
     $report = \collect(DB::select('select created_at::date from ' . $schema . '.' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first();
 }
 if (!empty($report)) {
-
     $echo = '<b class="label label-success">' . date('d M Y', strtotime($report->created_at)) . '</b>';
 } else {
-
     $echo = '<b class="label label-warning">Not Defined</b>';
 }
 return $echo;
@@ -34,7 +29,7 @@ return $echo;
     <!-- Page-header start -->
     <div class="page-header">
         <div class="page-header-title">
-            <h4><?= $school->sname ?></h4>
+            <h4><?= isset($school->sname)?$school->sname:'' ?></h4>
         </div>
         <div class="page-header-breadcrumb">
             <ul class="breadcrumb-title">
@@ -43,7 +38,7 @@ return $echo;
                         <i class="icofont icofont-home"></i>
                     </a>
                 </li>
-                <li class="breadcrumb-item"><a href="#!"><?= substr($school->sname, 0, 20) ?> </a>
+                <li class="breadcrumb-item"><a href="#!"><?=isset($school->sname)?substr($school->sname, 0, 20):'' ?> </a>
                 </li>
                 <li class="breadcrumb-item"><a href="#!">Profile</a>
                 </li>
@@ -674,6 +669,7 @@ return $echo;
                                                                                             }
                                                                                             ?></td>
                                                                                 </tr>
+                                                                                <?php if(can_access('reset_school_password')) { ?>
                                                                                 <tr>
                                                                                     <th
                                                                                         class="social-label b-none p-b-0">
@@ -682,9 +678,11 @@ return $echo;
                                                                                         class="social-user-name b-none p-b-0 text-muted">
                                                                                         <?php
                                                                                             echo 'Username - ' . $school->username . '
-                                        <br><a href="' . url('customer/resetPassword/' . $schema) . '" class="btn btn-success btn-sm" ><i class="icofont icofont-refresh"></i> Reset Password</a>';
+                                                                                <br><a href="' . url('customer/resetPassword/' . $schema) . '" class="btn btn-success btn-sm" ><i class="icofont icofont-refresh"></i> Reset Password</a>';
                                                                                             ?></td>
                                                                                 </tr>
+                                                                                <?php } ?>
+                                                                                
                                                                                 <?php } ?>
                                                                             </tbody>
                                                                         </table>

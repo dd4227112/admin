@@ -2,14 +2,8 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class ModuleBonus extends Model {
+class Module extends Model {
 
-    /**
-     * Generated
-     */
-
-    protected $table = 'module_bonus';
+    protected $table = 'modules';
     protected $fillable = ['id', 'name', 'created_at'];
-
-
 }
