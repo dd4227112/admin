@@ -672,6 +672,7 @@ return $echo;
                                                                                 </tr>
                                                                                 <?php if(can_access('reset_school_password')) { ?>
                                                                                 <tr>
+                                                                                   <?php if(can_access('reset_school_password')) { ?>
                                                                                     <th
                                                                                         class="social-label b-none p-b-0">
                                                                                         School Access</th>
@@ -682,6 +683,7 @@ return $echo;
                                                                                 <br><a href="' . url('customer/resetPassword/' . $schema) . '" class="btn btn-success btn-sm" ><i class="icofont icofont-refresh"></i> Reset Password</a>';
                                                                                             ?></td>
                                                                                 </tr>
+                                                                                   <?php } ?>
                                                                                 <?php } ?>
                                                                                 
                                                                                 <?php } ?>
