@@ -1261,6 +1261,11 @@ class Customer extends Controller {
         echo $option;
     }
 
+
+
+
+    
+
     public function download() {
         $client = request()->segment(3);
         $this->data['show_download'] = request()->segment(4);
