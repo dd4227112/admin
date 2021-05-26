@@ -992,7 +992,17 @@ ALTER TABLE admin."sheetTest"
    select count (distinct schema_name) from admin.all_tmembers
 
 
+--  26/05/2021
+ Job-card
+
+ client_job_cards
 
 
+ select T.*,D.name as district,R.name as region from (
+select S.id,C.name as school_name,S.ward_id,C.estimated_students as students,S.zone from admin.clients as C 
+join admin.client_schools as A on A.client_id = C.id join 
+admin.schools as S on S.id = A.school_id		
+WHERE C.created_at BETWEEN '2018-01-01' AND '2020-12-31') T join admin.wards W on T.ward_id = W.id 
+join admin.districts D on D.id = W.district_id join admin.regions R on R.id = D.region_id
 
  

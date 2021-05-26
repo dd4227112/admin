@@ -113,7 +113,7 @@ $root = url('/') . '/public/'
                                                 <tbody>
                                                     <?php
                                                     $x = 1;
-                                                    $customer = new \App\Http\Controllers\Customer();
+                                                 //   $customer = new \App\Http\Controllers\Customer();
                                                     $trainings = \App\Models\TrainItemAllocation::where('client_id', $client->id)->orderBy('id', 'asc')->get();
                                                     foreach ($trainings as $training) {
                                                         ?>
