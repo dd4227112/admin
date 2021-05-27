@@ -1,17 +1,11 @@
-/storage
 /public/admin3
 /public/AdminLTE
 /public/admin5
-/storage/*.key
 /vendor
-/app/config/
-/config/*.key
-config/database.php
 /.vagrant
 Homestead.json
 Homestead.yaml
 npm-debug.log
-.env
 /nbproject/private/
 .idea
 .composer.lock

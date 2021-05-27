@@ -15,14 +15,10 @@ use Illuminate\Support\Facades\Route;
  
  
 
-  if($_SERVER['HTTP_HOST'] != 'localhost') {
-      \URL::forceScheme('https');
-  }
+//   if($_SERVER['HTTP_HOST'] != 'localhost') {
+//       \URL::forceScheme('https');
+//   }
 
- 
-if($_SERVER['HTTP_HOST'] != 'localhost'){
-  \URL::forceScheme('https');
-}
 
 
 /*
