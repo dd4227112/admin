@@ -42,29 +42,11 @@
                                 <div class="tab-pane active" id="home3" role="tabpanel">
                                   <div id="hide-table">
 
-
-
-                                    
-
-
-
         <div class="row">
             <div class="col-sm-12">
                 <form class="form-horizontal" role="form" method="post">
 
-                    <!--  <?php
-                //    if (form_error($errors, 'subject'))
-                //        echo "<div class='form-group has-error' >";
-                //    else
-                //        echo "<div class='form-group' >";
-                      ?>
-                        <label for="subject" class="col-sm-2 control-label">
-                            Specify payment date
-                        </label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control" id="name" placeholder="<?php //__('date')   ?>" name="date" value="<?= date('d M Y') ?>" >
-                        </div>
-                     </div>-->
+           
                     <div class="col-sm-12">
                     <div class="table-responsive table-sm table-striped table-bordered table-hover">
                         <table id="example1" class="table dataTable">
@@ -113,8 +95,6 @@
                                         <td><?= $i ?></td>
                                         <td><?= $user->name ?></td>
                                         <td><?= $user->role->name ?></td>
-                                        <!--<td><?php //$user_info->id_number ?></td>-->
-
                                         <td><span  style=" text-decoration: none; border-bottom: dashed 1px #0088cc;" contenteditable="true" onblur="save('<?= $user->id .  'bank_name' ?>', '<?= $user->id ?>', 'bank_name')" id="<?= $user->id . 'bank_name' ?>"><?= $user->bank_name ?></span>
                                             <span id="stat<?= $user->id . 'bank_name' ?>"></span>
                                         </td>
@@ -275,7 +255,7 @@
                                                             'transaction_id' => time(),
                                                             'bank_account_id'=>DB::table('bank_accounts')->first()->id,
                                                             'created_by' => Auth::user()->id,
-                                                           // 'created_by_table' => session('table')
+                                                         
                                                         ]);
                                                     }
                                                 }
@@ -452,9 +432,7 @@
                                                 "payment_type_id"=>1,
                                                 "bank_account_id"=>$bank_account->id,
                                                 'user_id' => Auth::user()->id,
-                                                // 'uname' => session('username'),
-                                                // 'usertype' => session('usertype'),
-                                                // 'created_by' => '{' . session('id') . ',' . session('table') . '}'
+                                            
                                             );
                                             \DB::table('expenses')->insert($array);
                                         }

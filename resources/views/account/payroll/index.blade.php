@@ -36,7 +36,7 @@
                         <div class="m-10">
                            <h5 class="page-header">
                             <a class="btn btn-success" href="<?php echo url('payroll/create') ?>"><i class="fa fa-plus"></i>
-                                Create Payroll</a>&nbsp; 
+                                Add Payroll</a>&nbsp; 
                           </h5>
                         </div>
 
@@ -67,13 +67,10 @@
                                             <table id="example1" class="table dataTable">
                                                 <thead>
                                                     <tr>
-                                                        <th class="col-sm-1"><?= __('slno') ?></th>
+                                                        <th class="col-sm-1"><?= __('#') ?></th>
                                                         <th class="col-sm-2"><?= __('payment_date') ?></th>
                                                         <th class="col-sm-2"><?= __('total_users') ?></th>
-
-
                                                         <th class="col-sm-2"><?= __('basic_pay') ?></th>
-
                                                         <th class="col-sm-1"><?= __('allowance') ?></th>
                                                         <th class="col-sm-1"><?= __('gross_pay') ?></th>
                                                         <th class="col-sm-1"><?= __('pension') ?></th>

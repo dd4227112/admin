@@ -817,19 +817,20 @@
                                 <a href="<?= url('allowance/index') ?>"><i class="fa fa-clipboard"></i><span>Allowances</span></a>
                                 <a href="<?= url('deduction/index') ?>"><i class="fa fa-clipboard"></i><span>Deductions</span></a>
 
-                                <li class="nav-sub-item-3">
-                                    <a>
+                                <a href="<?= url('Payroll/index') ?>"><i class="fa fa-clipboard"></i> <span>Salaries</span> </a>
+
+                                   <li class="nav-sub-item-3">
+                                       <a>
                                         Loans
                                         <span class="fa fa-chevron-down"></span></a>
-                                <ul class="tree-3">
-
-                                        <a href="<?= url('loan/type') ?>"><i class="fa fa-clipboard"></i><span
+                                           <ul class="tree-3">
+                                            <a href="<?= url('loan/type') ?>"><i class="fa fa-clipboard"></i><span
                                                 style="color: white; line-height: 25px;"> Loan Types</span></a>
-
-                                        <a href="<?= url('loan/index') ?>"><i class="fa fa-clipboard"></i><span
+                                            <a href="<?= url('loan/index') ?>"><i class="fa fa-clipboard"></i><span
                                                 style="color: white; line-height: 25px;"> Borrowers </span></a>
                                         </ul>
                                     </li>
+                                
                
                                     <li><a href="<?= url('account/report') ?>" data-i18n="nav.advance-components.light-box">Reports</a></li>
 
