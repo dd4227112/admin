@@ -1289,7 +1289,6 @@ class Customer extends Controller {
         foreach($module_ids as $module_id) {
             \App\Models\JobCard::create(['module_id' => $module_id, 'client_id' =>$client_id,'user_id' => $user_id,'date'=> $date]);
         }
-
         return redirect()->back()->with('success','Job card modules uploaded succesfully!');
     }
 
@@ -1299,7 +1298,6 @@ class Customer extends Controller {
             $file = request('job_card_file');
             $company_file_id = $this->saveFile($file, 'company/contracts');
           //  $company_file_id = 1;
-
             $data = [
                 'company_file_id' => $company_file_id,
                 'client_id' => request('client_id'),
