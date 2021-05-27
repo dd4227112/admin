@@ -498,7 +498,7 @@
                                 Payroll Date
                             </label>
                             <div class="col-sm-3">
-                                <input type="date" class="form-control calendar" required="" name="payroll_date" value="<?= old('date') ?>" >
+                                <input type="date" class="form-control calendar" required="" name="payroll_date" value="<?= date('Y-m-d') ?>" >
                             </div>
                             <span class="col-sm-4 control-label">
                                 <?php echo form_error($errors, 'email_sms'); ?>

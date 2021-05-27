@@ -130,9 +130,9 @@
                                                                     ?>
                                                                     <td data-title="<?= __('action') ?>">
                                                                         <?php
-                                                                        echo '<a  href="' . url("payroll/show/$salary->payment_date") . '  " class="btn btn-success btn-xs"><i class="fa fa-folder-o"></i> View </a>';
+                                                                        echo '<a  href="' . url("payroll/show/$salary->payment_date") . '  " class="btn btn-success btn-sm"><i class="fa fa-folder-o"></i> View </a>';
 
-                                                                        echo '<a href="' . url("payroll/delete/$salary->reference") . '  " class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a>';
+                                                                        echo '<a href="' . url("payroll/delete/$salary->reference") . '  " class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i> Delete </a>';
                                                                         ?>
                                                                     </td>
                                                                 <?php } ?>
