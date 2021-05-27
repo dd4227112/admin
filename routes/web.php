@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
  
+\URL::forceSchema('https');
 
 
 /*
@@ -83,6 +84,3 @@ Route::get('/nda_form/{id}', 'Recruitments@nda');
 Route::post('/sendndaform','Recruitments@uploadnda');
 
 
-if ($_SERVER['HTTP_HOST'] !== 'localhost') {
-    \URL::forceSchema('https');
-}
