@@ -4,10 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
-if($this->app->environment('production')) {
-    \URL::forceScheme('https');
-   }
-
+URL::forceScheme('https');
    
 /*
 |--------------------------------------------------------------------------
