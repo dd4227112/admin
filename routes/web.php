@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
+//URL::forceSchema('https');
 /*
   |--------------------------------------------------------------------------
   | Web Routes
