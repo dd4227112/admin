@@ -83,6 +83,6 @@ Route::get('/nda_form/{id}', 'Recruitments@nda');
 Route::post('/sendndaform','Recruitments@uploadnda');
 
 
-if ($_SERVER['HTTP_HOST'] !== 'local') {
-    \URL::forceSchema('https');
-}
+// if ($_SERVER['HTTP_HOST'] !== 'localhost') {
+//     \URL::forceSchema('https');
+// }
