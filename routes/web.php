@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\URL;
 
 
 /*
@@ -83,4 +82,4 @@ Route::get('/nda_form/{id}', 'Recruitments@nda');
 Route::post('/sendndaform','Recruitments@uploadnda');
 
 
-URL::forceScheme('https');
+//URL::forceScheme('https');
