@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class ClientJobCard extends Model {
 
-
     protected $table = 'admin.client_job_cards';
     protected $fillable = ['id', 'client_id', 'created_by','date','created_at', 'updated_at','company_file_id'];
 

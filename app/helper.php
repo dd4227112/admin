@@ -282,4 +282,9 @@ function btn_attendance($id, $method, $class, $name) {
         return date('d-m-Y H:i:s');
     }
 
+
+    function remove_comma($string_number) {
+        return trim(str_replace(',', '', $string_number));
+    }
+
    
