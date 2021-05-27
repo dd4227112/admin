@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'pgsql'),
+    'default' => 'pgsql',
 
     /*
     |--------------------------------------------------------------------------
@@ -63,28 +63,49 @@ return [
             ]) : [],
         ],
 
-
-
-
-
-        
-
-        
-        'pgsql' => [
+       
+          'pgsql' => [
             'driver' => 'pgsql',
-            'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE', 'shulesoft'),
-            'username' => env('DB_USERNAME', 'postgres'),
-            'password' => env('DB_PASSWORD','@94Maombi'),
+            'host' => 'shulesoftdb.postgres.database.azure.com',
+            // 'host'=>'localhost',
+            'port' =>'5432',
+            'database' =>'shulesoft_2022',
+            'username' => 'pgeshuleadmin',
+            'password' =>'Shul3@s0ft@202!',
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'admin',
+        ],
+
+        'karibusms' => [
+            'driver' => 'pgsql',
+            'host' => 'shulesoftdb.postgres.database.azure.com',
+            // 'host'=>'localhost',
+            'port' =>'5432',
+            'database' =>'other_app',
+            'username' => 'pgeshuleadmin',
+            'password' =>'Shul3@s0ft@202!',
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
-            'schema' => 'admin',
+            'schema' => 'new_karibusms',
             'sslmode' => 'prefer',
         ],
 
+    'biotime' => [
+            'driver' => 'pgsql',
+            // 'url' => env('DATABASE_URL'),
+            'host' => '51.91.251.252',
+            'port' => '5432',
+            'database' => 'biotime',
+            'username' => 'biotime',
+            'password' => 'biotime_2021_',
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+        ],
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_URL'),
@@ -99,11 +120,6 @@ return [
         ],
 
     ],
-
-
-
-
-
 
     /*
     |--------------------------------------------------------------------------
