@@ -155,7 +155,7 @@
                                             <script type="text/javascript">
                                                 $(function () {
                                                     $('#container').highcharts({
-                                                        title: {
+                                                        title: { 
                                                             text: 'Payrol Summary'
                                                         },
                                                         xAxis: {

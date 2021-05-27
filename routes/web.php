@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use URL;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//URL::forceSchema('https');
+\URL::forceSchema('https');
 /*
   |--------------------------------------------------------------------------
   | Web Routes
