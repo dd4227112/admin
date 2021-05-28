@@ -55,17 +55,17 @@
                                     <th class="col-sm-1"><?= __('#') ?></th>
                                     <th class="col-sm-2"><?= __('Employee name') ?></th>
                                     <th class="col-sm-2">User role</th>
-                                    <!--<th class="col-sm-2"><?= __('employee_number') ?></th>-->
+                                    <!--<th class="col-sm-2"><?= __('Employee Number') ?></th>-->
                                     <th class="col-sm-1">Bank</th>
-                                    <th class="col-sm-2"><?= __('bank_account') ?></th>
-                                    <th class="col-sm-2"><?= __('basic_pay') ?></th>
-                                    <th class="col-sm-1"><?= __('allowance') ?></th>
-                                    <th class="col-sm-1"><?= __('gross_pay') ?></th>
-                                    <th class="col-sm-1"><?= __('pension') ?></th>
+                                    <th class="col-sm-2"><?= __('Bank Account') ?></th>
+                                    <th class="col-sm-2"><?= __('Basic Pay') ?></th>
+                                    <th class="col-sm-1"><?= __('Allowance') ?></th>
+                                    <th class="col-sm-1"><?= __('Gross pay') ?></th>
+                                    <th class="col-sm-1"><?= __('Pension') ?></th>
                                     <th class="col-sm-1"><?= __('deduction') ?></th>
-                                    <th class="col-sm-1"><?= __('taxable_amount') ?></th>
-                                    <th class="col-sm-1"><?= __('paye') ?></th>
-                                    <th class="col-sm-1"><?= __('net_pay') ?></th>
+                                    <th class="col-sm-1"><?= __('Taxable Amount') ?></th>
+                                    <th class="col-sm-1"><?= __('Aaye') ?></th>
+                                    <th class="col-sm-1"><?= __('Net Pay') ?></th>
                                     <?php
                                     if (can_access('manage_payroll')) {
                                         ?>                                                                                                                                                   <!--<th class="col-sm-4"><?= __('action') ?></th>-->
@@ -95,16 +95,13 @@
                                         <td><?= $i ?></td>
                                         <td><?= $user->name ?></td>
                                         <td><?= $user->role->name ?></td>
-                                        <td><span  style=" text-decoration: none; border-bottom: dashed 1px #0088cc;" contenteditable="true" onblur="save('<?= $user->id .  'bank_name' ?>', '<?= $user->id ?>', 'bank_name')" id="<?= $user->id . 'bank_name' ?>"><?= $user->bank_name ?></span>
-                                            <span id="stat<?= $user->id . 'bank_name' ?>"></span>
+                                        <td><?= $user->bank_name ?> </td>
+                                        <td>
+                                           <?= $user->bank_account ?>
                                         </td>
                                         <td>
-                                            <span style=" text-decoration: none; border-bottom: dashed 1px #0088cc;" contenteditable="true" onblur="save('<?= $user->id .  'bank_account_number' ?>', '<?= $user->id ?>', 'bank_account_number')" id="<?= $user->id . 'bank_account_number' ?>"><?= $user->bank_account ?></span>
-                                            <span id="stat<?= $user->id . 'bank_account_number' ?>"></span>
-                                        </td>
-
-                                        <td><span style=" text-decoration: none; border-bottom: dashed 1px #0088cc;" contenteditable="true" onblur="save('<?= $user->id . 'salary' ?>', '<?= $user->id ?>', 'salary')" id="<?= $user->id . 'salary' ?>"><?= (int) $basic_salary == 0 ? 0 : ($basic_salary) ?></span>
-                                            <span id="stat<?= $user->id .'salary' ?>"></span></td>
+                                            <?= (int) $basic_salary == 0 ? 0 : ($basic_salary) ?>
+                                         </td>
                                         <td>
                                             <?php
                                             //calculate user allowances

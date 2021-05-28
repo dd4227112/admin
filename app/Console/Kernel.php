@@ -30,70 +30,70 @@ class Kernel extends ConsoleKernel {
      * @return void
      */
     protected function schedule(Schedule $schedule) {
-        $schedule->call(function () {
-            $this->save_car_track_access_token('public');
+        //$schedule->call(function () {
+        //     $this->save_car_track_access_token('public');
            
            
-        })->everyTwoHours();
+        // })->everyTwoHours();
        
-        $schedule->call(function () {
-            $this->car_track_alert_parent('public'); 
+        // $schedule->call(function () {
+        //     $this->car_track_alert_parent('public'); 
            
-        })->everyTwoHours();
+        // })->everyTwoHours();
 
-        $schedule->call(function () {
-            $this->addAttendance(); 
-        })->everySixHours();
+        // $schedule->call(function () {
+        //     $this->addAttendance(); 
+        // })->everySixHours();
 
-        $schedule->command('inspire')
-                ->hourly();
-        $schedule->call(function () {
+        // $schedule->command('inspire')
+        //         ->hourly();
+        // $schedule->call(function () {
             // sync invoices 
-            $this->syncInvoice();
-            //$this->updateInvoice();
-        })->everyMinute();
+        //     $this->syncInvoice();
+        //     //$this->updateInvoice();
+        // })->everyMinute();
 
-        $schedule->call(function () {
-            // End Deadlock Processes 
-            $this->endDeadlock();
-        })->everyThreeMinutes();
+        // $schedule->call(function () {
+        //     // End Deadlock Processes 
+        //     $this->endDeadlock();
+        // })->everyThreeMinutes();
         
-        $schedule->call(function () {
-            (new Message())->sendSms();
+        // $schedule->call(function () {
+        //     (new Message())->sendSms();
             
-        })->everyMinute();
+        // })->everyMinute();
 
-        $schedule->call(function () {
-            (new Message())->checkPhoneStatus();
+        // $schedule->call(function () {
+        //     (new Message())->checkPhoneStatus();
            
             
-        })->hourly();
+        // })->hourly();
 
 
 
-        $schedule->call(function () {
-            $this->curlServer(['action' => 'payment'], 'http://51.77.212.234:8081/api/cron');
+       // $schedule->call(function () {
+         //   $this->curlServer(['action' => 'payment'], 'http://51.77.212.234:8081/api/cron');
            // (new Message())->sendEmail();
-        })->everyMinute();
-        $schedule->call(function () {
+      ///  })->everyMinute();
+//  $schedule->call(function () {
             //(new Message())->karibusmsEmails();
-        })->everyMinute();
-        $schedule->call(function () {
-            // remind parents to login in shulesoft and check their child performance
-            $this->sendTodReminder();
-        })->dailyAt('03:30'); // Eq to 06:30 AM 
+        // })->everyMinute();
+        // $schedule->call(function () {
+        //     // remind parents to login in shulesoft and check their child performance
+        //     $this->sendTodReminder();
+        // })->dailyAt('03:30'); // Eq to 06:30 AM 
 
-        $schedule->call(function () { 
+        // $schedule->call(function () { 
 
-            $this->sendNotice();
-            $this->sendBirthdayWish();
-            $this->sendTaskReminder();
-            // $this->sendSequenceReminder();
-        })->dailyAt('04:40'); // Eq to 07:40 AM   
+        //     $this->sendNotice();
+        //     $this->sendBirthdayWish();
+        //     $this->sendTaskReminder();
+        //     // $this->sendSequenceReminder();
+        // })->dailyAt('04:40'); // Eq to 07:40 AM   
 
-        $schedule->call(function () { 
-            $this->sendSORemainder();
-        })->dailyAt('04:40'); // Eq to 07:40 AM 
+        // $schedule->call(function () { 
+        //     $this->sendSORemainder();
+        // })->dailyAt('04:40'); // Eq to 07:40 AM 
           
 //        $schedule->call(function() {
 //            //send login reminder to parents in all schema
@@ -105,26 +105,26 @@ class Kernel extends ConsoleKernel {
 //            //$this->notifyUsersDailyReports();
 //        })->weekly()->weekdays()->at('13:00');
 //
-        $schedule->call(function () {
-            // send Birdthday 
-            // $this->sendReportReminder();
-            (new Message())->paymentReminder();
-        })->dailyAt('05:10');
+        // $schedule->call(function () {
+        //     // send Birdthday 
+        //     // $this->sendReportReminder();
+        //     (new Message())->paymentReminder();
+        // })->dailyAt('05:10');
 
 
-        $schedule->call(function () {
-            $this->checkSchedule();
-        })->everyMinute();
+        // $schedule->call(function () {
+        //     $this->checkSchedule();
+        // })->everyMinute();
 
-        $schedule->call(function () {
-            //  (new HomeController())->createTodayReport();
-            (new Background())->officeDailyReport();
-        })->dailyAt('14:50'); // Eq to 17:50 h 
+        // $schedule->call(function () {
+        //     //  (new HomeController())->createTodayReport();
+        //     (new Background())->officeDailyReport();
+        // })->dailyAt('14:50'); // Eq to 17:50 h 
 
-        $schedule->call(function () {
-            //  (new HomeController())->createTodayReport();
-            (new Background())->schoolMonthlyReport();
-        })->monthlyOn(29, '06:36');
+        // $schedule->call(function () {
+        //     //  (new HomeController())->createTodayReport();
+        //     (new Background())->schoolMonthlyReport();
+        // })->monthlyOn(29, '06:36');
     }
 
     function checkPaymentPattern($user, $schema) {

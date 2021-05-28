@@ -170,12 +170,18 @@ foreach ($user_permission as $permis) {
                             <div class="slide"></div>
                         </li>
 
-                    <?php if(can_access('add_contract')) { ?>
+                  
                         <li class="nav-item">
                             <a class="nav-link " data-toggle="tab" href="#legal" role="tab" aria-expanded="false">legal/contract</a>
                             <div class="slide"></div>
                         </li>
-                    <?php } ?>
+
+                        <li class="nav-item">
+                            <a class="nav-link " data-toggle="tab" href="#learning" role="tab" aria-expanded="false">Learning</a>
+                            <div class="slide"></div>
+                        </li>
+                 
+                 
 
                         <?php if (Auth::user()->id == 2) { ?>
                             <li class="nav-item">
@@ -222,7 +228,7 @@ foreach ($user_permission as $permis) {
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">Birth Date</th>
-                                                                        <td>{{ $user->date_of_birth }}</td>
+                                                                        <td>{{ date('d-m-Y', strtotime($user->date_of_birth)) }}</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">Marital Status</th>
@@ -232,13 +238,19 @@ foreach ($user_permission as $permis) {
                                                                         <th scope="row">Location</th>
                                                                         <td> {{ $user->town }}</td>
                                                                     </tr>
+
+                                                                    <tr>
+                                                                        <th scope="row">Bank name</th>
+                                                                        <td> {{ $user->bank_name }}</td>
+                                                                    </tr>
                                                                     <tr>
                                                                         <th scope="row">Academic Certificates</th>
                                                                         <td><a href="<?= url('/storage/uploads/images/' . $user->academic_certificates) ?>" class="btn btn-default btn-sm"> View Certificate</a></td>
                                                                     </tr>
                                                                     <tr>
-                                                                        <td><a href="<?= url('users/resetPassword/' . $user->id) ?>" class="btn btn-warning btn-sm">Reset Password</a></td>
+                                                                         <?php if(can_access('upload_users')) { ?>
                                                                         <td> <button class="btn btn-primary btn-sm text-right" data-toggle="modal"  role="button" data-target="#status-Modal"> Upload Users  <i class="ti-user"></i></button> </td>
+                                                                        <?php } ?>
                                                                         {{-- <td><a href="<?= url('users/uploadprofile/' . $user->id) ?>" class="btn btn-info btn-sm">Upload profile picture</a></td> --}}
 
                                                                     </tr>
@@ -251,7 +263,7 @@ foreach ($user_permission as $permis) {
                                                                 <tbody>
                                                                     <tr>
                                                                         <th scope="row">Email</th>
-                                                                        <td><a href="#!">{{ $user->email }}</a>, <a href="#!">{{ $user->personal_email }}</a></td>
+                                                                        <td><a href="#!">{{ $user->email }}</a>, <br> <a href="#!">{{ $user->personal_email }}</a></td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">Mobile Number</th>
@@ -268,6 +280,10 @@ foreach ($user_permission as $permis) {
                                                                     <tr>
                                                                         <th scope="row">Employment Category</th>
                                                                         <td> <?php echo ucfirst($user->employment_category); ?></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="row">Bank Account</th>
+                                                                        <td> <?php echo ($user->bank_account); ?></td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">Medical Report</th>
@@ -415,21 +431,25 @@ foreach ($user_permission as $permis) {
                                     if (Auth::user()->id != 2) {
                                         ?>
                                         <form class="form-horizontal form-material" method="post" action="<?= url('users/changePhoto/' . $user->id) ?>" enctype="multipart/form-data">
-                                            <div class="form-group">
+                                            <div class="form-group row">
                                                 <label class="col-md-12">Photo</label>
-                                                <div class="col-md-12">
-                                                    <input type="file" name="photo" accept=".png,.jpg,.jpeg,.gif" class="form-control form-control-line">
+                                                <div class="col-md-4">
+                                                    <input type="file" name="photo" accept=".png,.jpg,.jpeg,.gif" class="form-control form-control-line" required>
                                                 </div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <div class="col-sm-12">
+                                           
+                                                <div class="col-sm-6">
                                                     <?= csrf_field() ?>
-                                                    <button class="btn btn-success">Update Profile</button>
+                                                    <button class="btn btn-success">Update Photo</button>
                                                 </div>
                                             </div>
                                         </form>
                                     <?php } ?>
+                                   
+                                    <div class="form-group row">
+                                      <div class="col-md-5">
+                                        <a href="<?= url('users/resetPassword/' . $user->id) ?>" class="btn btn-warning btn-sm">Reset Password</a>
+                                      </div>
+                                    </div>
                                 </div>
                                 <!-- end of card-block -->
                             </div>

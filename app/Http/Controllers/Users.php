@@ -275,12 +275,13 @@ class Users extends Controller {
      *
      * @param  int $id
      *
+     * 
      * @return \Illuminate\Http\Response
      */
     public function edit() {
         $id = request()->segment(3);
         $this->data['user'] = User::find($id);
-
+       
         if ($_POST) {
             $this->validate(request(), [
                 'firstname' => 'required|max:255',
