@@ -586,7 +586,7 @@
                                         </a>
                                     </li>
         
-                                <?php } if (Auth::user()->role_id == 14) { ?>
+                                <?php } if (can_access('customer_module')) { ?>
                                     <li>
                                         <a href="<?= url('customer/modules') ?>" data-i18n="nav.extra-components.offline">
                                              Customer Modules
