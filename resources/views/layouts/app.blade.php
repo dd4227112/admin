@@ -800,13 +800,13 @@
                                         </ul>
                                     </li>
 
-                              <li><a href="<?= url('Account/budget') ?>"
+                               {{-- <li><a href="<?= url('Account/budget') ?>"
                                 data-i18n="nav.advance-components.grid-stack">
-                              Budget 
-                             </a>
-                           </li>
+                                  Budget 
+                                 </a>
+                               </li> --}}
 
-                
+                        <?php if (can_access('manage_payroll')) { ?>
                         <li class="nav-sub-item">
                             <a href="#" data-i18n="nav.page_layout.horizontal.main">
                                 Payroll
@@ -847,6 +847,7 @@
                                     </li>
                                 </ul>
                             </li>
+                            <?php } ?>
                         <?php } ?>
 
                     

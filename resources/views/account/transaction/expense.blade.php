@@ -109,6 +109,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+
                                     <?php
                                     $total_expense = 0;
                                     $i = 1;
@@ -118,19 +119,19 @@
                                             array_push($refer_ids, $expense->id);
                                             ?>
                                             <tr>
-                                                <td data-title="<?= __('slno') ?>">
+                                                <td>
                                                     <?php echo $i; ?>
                                                 </td>
-                                                <td data-title="<?= __('slno') ?>">
+                                                <td>
                                                     <?php echo $expense->code; ?>
                                                 </td>
-                                                <td data-title="<?= __('expense_expense') ?>">
+                                                <td>
                                                     <?php echo $expense->name; ?>
                                                 </td>
-                                                <td data-title="<?= __('category') ?>">
+                                                <td>
                                                     <?php echo $expense->financialCategory->name; ?>
                                                 </td>   
-                                                <td data-title="<?= __('group_name') ?>">
+                                                <td>
                                                     <?php echo isset($expense->accountGroup->name) ? $expense->accountGroup->name : ''; ?>
                                                 </td>
 

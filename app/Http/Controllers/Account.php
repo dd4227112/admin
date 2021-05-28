@@ -825,6 +825,7 @@ class Account extends Controller {
                 break;
             case 4:
                 $result = ReferExpense::whereIn('financial_category_id', [2, 3])->orderBy('created_at', 'DESC')->get();
+   
                 break;
             case 5:
                 $result = ReferExpense::where('financial_category_id', 5)->get();
