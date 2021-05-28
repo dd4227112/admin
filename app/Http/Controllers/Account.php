@@ -810,25 +810,25 @@ class Account extends Controller {
 
     public function getCategories_by_date($id, $from_date, $to_date) {
         $ids =  Expense::whereBetween('date', [$from_date, $to_date])->get(['refer_expense_id']);
-     //  dd($ids);
+    
         $ids = count($ids) == 0 ? Expense::get(['refer_expense_id']) : $ids;
 
         switch ($id) {
             case 1:
-                $result = ReferExpense::where('financial_category_id', 4)->get();
+                $result = ReferExpense::whereBetween('created_at', [$from_date, $to_date])->where('financial_category_id', 4)->orderBy('created_at', 'desc')->get();
                 break;
             case 2:
-                $result = ReferExpense::where('financial_category_id', 6)->get();
+                $result = ReferExpense::whereBetween('created_at', [$from_date, $to_date])->where('financial_category_id', 6)->orderBy('created_at', 'desc')->get();
                 break;
             case 3:
-                $result = ReferExpense::where('financial_category_id', 7)->get();
+                $result = ReferExpense::whereBetween('created_at', [$from_date, $to_date])->where('financial_category_id', 7)->orderBy('created_at', 'desc')->get();
                 break;
             case 4:
-                $result = ReferExpense::whereIn('financial_category_id', [2, 3])->orderBy('created_at', 'DESC')->get();
+                $result = ReferExpense::whereBetween('created_at', [$from_date, $to_date])->whereIn('financial_category_id', [2, 3])->orderBy('created_at', 'desc')->get();
    
                 break;
             case 5:
-                $result = ReferExpense::where('financial_category_id', 5)->get();
+                $result = ReferExpense::whereBetween('created_at', [$from_date, $to_date])->where('financial_category_id', 5)->orderBy('created_at', 'desc')->get();
                 break;
             default:
                 $result = array();

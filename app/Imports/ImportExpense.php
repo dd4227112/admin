@@ -19,7 +19,7 @@ class ImportExpense implements ToModel, WithHeadingRow
     {
         
         if(!empty($row)) {
-          //  dd($row);
+          //  dd(count($row));
             $payer_name = $row['recipient'];
             $i = 0;
             $status = 1;
@@ -41,7 +41,8 @@ class ImportExpense implements ToModel, WithHeadingRow
                     "account_group_id" => $account_group_id,
                     'code' => $row['code'] == '' ? date('is').$i++ : $row['code'],
                     'open_balance' => 0,
-                    "status" => 1
+                    "status" => 1,
+                    "date"  => date('Y-m-d')
                 );
     
                 $refer_expense = \App\Models\ReferExpense::create($array);
