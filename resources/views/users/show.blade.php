@@ -655,6 +655,7 @@ foreach ($user_permission as $permis) {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    <?php if(!empty($attendances)) { ?>
                                                     <?php
                                                     foreach ($attendances as $attendance) {
                                                         ?>
@@ -680,6 +681,7 @@ foreach ($user_permission as $permis) {
 
                                                             </td>
                                                         </tr>
+                                                     <?php } ?>
                                                     <?php } ?>
                                                 </tbody>
                                             </table>
