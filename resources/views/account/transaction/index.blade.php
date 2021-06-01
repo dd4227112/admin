@@ -6,7 +6,7 @@
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4>Company Revenues</h4>
+                <h4>Company Revenue</h4>
                 <span>Show revenue summary</span>
             </div>
             <div class="page-header-breadcrumb">
@@ -37,21 +37,23 @@
                                      <div class="row">
                                         <div class="col-sm-4">
                                             <h5 class="page-header">
-                                                <a class="btn btn-success" href="<?php echo url('account/revenueadd/') ?>">
+                                                <?php if (can_access('add_revenue')) { ?>
+                                                <a class="btn btn-success" href="<?php echo url('revenue/add/') ?>">
                                                     <i class="fa fa-plus"></i> 
                                                     Add Revenue
                                                 </a>
+                                                <?php } ?>
                                             </h5>
                                         </div>
 
                                         <div class="col-sm-8">
-                                            <form style="" class="form-horizontal" role="form" method="post"> 
+                                            <form class="form-horizontal" role="form" method="post"> 
                                               <div class="row">
                                                 <div class="col-md-5">
                                                     <div class="form-group row">
                                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Start Date</label>
                                                         <div class="col-md-9 col-sm-9 col-xs-12">
-                                                            <input type="date"  class="form-control calendar" id="from_date" name="from_date" required> 
+                                                            <input type="date"  class="form-control calendar" id="from_date" name="from_date" value="<?=date('Y-01-01')?>"> 
                                                         </div>
                                                     </div>
                                                 </div>
@@ -60,7 +62,7 @@
                                                     <div class="form-group row">
                                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">End Date</label>
                                                         <div class="col-md-9 col-sm-9 col-xs-12"> 
-                                                            <input type="date" class="form-control" id="to_date" name="to_date"  required>
+                                                            <input type="date" class="form-control" id="to_date" name="to_date"  value="<?=date('Y-m-d')?>">
                                                         </div>
                                                     </div>
                                                 </div>                     
@@ -84,13 +86,13 @@
                                         <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
                                             <thead>
                                                 <tr>
-                                                    <th class="col-sm-1"><?= ('slno') ?></th>
+                                                    <th class="col-sm-1"><?= ('#') ?></th>
                                                     <th class="col-sm-2"><?= ('Name') ?></th>
                                                     <th class="col-sm-2">Payer name</th>
                                                     <th class="col-sm-1">Payer phone</th>
                                                     <th class="col-sm-1"><?= ('Amount') ?></th>
                                                     <th class="col-sm-2">Payment method</th>
-                                                    <th class="col-sm-1">Transaction</th>
+                                                    <th class="col-sm-1">Transaction ID</th>
                                                     <th class="col-sm-2">Date</th>
                                                     <th class="col-sm-2">Note</th>
                                                     <?php if (can_access('edit_revenue') || can_access('delete_revenue')) { ?>
@@ -106,7 +108,7 @@
                                                     foreach ($revenues as $revenue) {
                                                         ?>
                                                         <tr>
-                                                            <td data-title="<?= ('slno') ?>">
+                                                            <td data-title="<?= ('#') ?>">
                                                                 <?php echo $i; ?>
                                                             </td>
                                                             <td data-title="<?= ('expense_name') ?>">
@@ -139,9 +141,9 @@
                                                             <?php if (can_access('edit_revenue') || can_access('delete_revenue')) { ?>
                                                                 <td data-title="<?= ('action') ?>">
                                                                     <?php
-                                                                    echo '<a href="' . url('account/editrevenue/' . $revenue->id . '/') . '" class="btn btn-primary btn-sm mr-1">' . ('edit') . '</a>';
-                                                                    echo '<a href="' . url('account/deleterevenue/' . $revenue->id . '/') . '" class="btn btn-danger btn-sm mr-1">' . ('Delete') . '</a>';
-                                                                    echo '<a href="' . url('account/receipt/' . $revenue->id . '/') . '" class="btn btn-default btn-sm">' . ('Receipt') . '</a>';
+                                                                    echo '<a href="' . url('revenue/edit/' . $revenue->id . '/') . '" class="btn btn-primary btn-sm mr-1">' . ('edit') . '</a>';
+                                                                    echo '<a href="' . url('revenue/delete/' . $revenue->id . '/') . '" class="btn btn-danger btn-sm mr-1">' . ('Delete') . '</a>';
+                                                                    echo '<a href="' . url('revenue/receipt/' . $revenue->id . '/') . '" class="btn btn-default btn-sm">' . ('Receipt') . '</a>';
                                                                     ?>                                                               
                                                                 </td>
                                                             <?php } ?>

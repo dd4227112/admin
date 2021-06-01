@@ -427,8 +427,8 @@ foreach ($user_permission as $permis) {
                                         <!-- end of row -->
                                     </div>
                                     <!-- end of edit-info -->
-                                    <?php
-                                    if (Auth::user()->id != 2) {
+                                    
+                                    <?php if (Auth::user()->id != 2) {
                                         ?>
                                         <form class="form-horizontal form-material" method="post" action="<?= url('users/changePhoto/' . $user->id) ?>" enctype="multipart/form-data">
                                             <div class="form-group row">
@@ -799,6 +799,61 @@ foreach ($user_permission as $permis) {
                                    </div>  
                                  </div>
 
+
+                                 <div class="tab-pane" id="learning" role="tabpanel" aria-expanded="false">
+                                    <div class="col-lg-12">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="card-header-text">Learning</h5>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <br/>
+                                                <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#learning-large-Modal"><i class="fa fa-plus"></i>Learning</button>
+        
+                                                <div class="card-block">
+                                                  <div class="table-responsive table-md table-striped table-bordered table-hover">
+                                                    <table class="table dataTable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Course Name</th>
+                                                                <th>Start date</th>
+                                                                <th>End date</th>
+                                                                <th>Source</th>
+                                                                <th>View</th>
+                                                               
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                         <?php  if(!empty($learnings)) { ?>
+                                                             <?php $i=1; foreach ($learnings as $learning) {
+                                                                ?>
+                                                                <tr>
+                                                                    <td><?= $i?></td>
+                                                                    <td><?= $learning->course_name ?></td>
+                                                                    <td><?= date('d-m-Y', strtotime($learning->from_date)) ?></td>
+                                                                    <td><?= date('d-m-Y', strtotime($learning->to_date)) ?></td>
+                                                                    <td> {{ $learning->source ?? '' }}</td>
+                                                                    <td>
+                                                                        <?php if(date('Y-m-d') > date('Y-m-d', strtotime($learning->to_date))) { ?>
+                                                                        <a type="button" class="btn btn-warning btn-sm waves-effect" href="<?= url('users/learning/' . $learning->id) ?>">Overdue</a>
+                                                                        <?php } else { ?>
+                                                                            <a type="button" class="btn btn-primary btn-sm waves-effect" href="<?= url('users/learning/' . $learning->id) ?>">View</a>
+                                                                        <?php } ?>
+                                                                    </td>
+                                                                </tr>
+                                                              <?php $i++;} ?>
+                                                            <?php } ?>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                               </div>
+                                            </div>
+                                        </div>
+                                       </div>  
+                                     </div>
+
+
                         <div class="tab-pane" id="settings5" role="tabpanel">
                             <div class="email-card p-0">
                                 <div class="card">
@@ -838,7 +893,9 @@ foreach ($user_permission as $permis) {
                                         </table>
                                     </div>
                                 </div>
-                            </div>    </div>
+                            </div>    
+                        </div>
+
                         <div class="tab-pane" id="school_allocations" role="tabpanel" aria-expanded="false">
                             <div class="col-lg-12">
                                 <div class="card">
@@ -1156,6 +1213,102 @@ foreach ($user_permission as $permis) {
         </div>
     </form>
 </div>
+
+
+
+
+<div class="modal fade" id="learning-large-Modal" tabindex="-1" role="dialog" style="z-index: 1050; display: none;" aria-hidden="true">
+    <form class="cmxform form-horizontal " id="commentForms" action="<?= url('users/learning') ?>" method="POST" enctype="multipart/form-data">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"> Learning </h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                 
+                    {{-- <div class="form-group">
+                        <div class="col-sm-12">
+                          <label class="control-label col-lg-3">Course name</label>
+                           <div class="">
+                             <input class="form-control"  name="course_name"   type="text">
+                           </div>
+                        </div>
+                     </div> --}}
+
+                     <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label class="control-label col-lg-3">Course</label>
+                             <div class="col-lg-12">
+                               <input class="form-control"  name="course_name"   type="text">
+                             </div>
+                          </div>
+                         
+                          <div class="col-sm-6">
+                           <label class="control-label">Source</label>
+                             <div class="col-lg-12">
+                               <input class="form-control"  name="source"   type="text">
+                             </div>
+                          </div>
+                      </div>
+
+
+                     <div class="form-group row">
+                        <div class="col-sm-6">
+                            <label class="control-label col-lg-3">Url link</label>
+                             <div class="col-lg-12">
+                               <input class="form-control"  name="link"   type="url">
+                             </div>
+                          </div>
+                         
+                          <div class="col-sm-6">
+                           <label class="control-label">Has certificate</label>
+                             <div class="col-lg-12">
+                                YES: <input type="radio" name="has_certificate" value="1" /> &nbsp;&nbsp;&nbsp;
+                                No: <input type="radio" name="has_certificate" value="0"/>
+                           </div>
+                          </div>
+                      </div>
+
+
+                    <div class="form-group row">
+                       <div class="col-sm-6">
+                         <label class="control-label">Start date</label>
+                          <div class="col-lg-12">
+                            <input class="form-control"  name="from_date"   type="date">
+                          </div>
+                       </div>
+                      
+                       <div class="col-sm-6">
+                        <label class="control-label">End date</label>
+                        <div class="col-lg-12">
+                            <input class="form-control" name="to_date"   type="date">
+                        </div>
+                       </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Description" class="control-label col-lg-3">Description</label>
+                        <div class="col-lg-12">
+                            <textarea class=" form-control"  name="description" type="text" required=""></textarea>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <?= csrf_field() ?>
+                    <input type="hidden" value="<?= $user->id ?>" name="user_id"/>
+                    <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary waves-effect waves-light ">Save </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
 
 <script type="text/javascript">
     permission = function () {

@@ -19,7 +19,7 @@ class ImportExpense implements ToModel, WithHeadingRow
     {
         
         if(!empty($row)) {
-          //  dd(count($row));
+    
             $payer_name = $row['recipient'];
             $i = 0;
             $status = 1;
@@ -30,16 +30,17 @@ class ImportExpense implements ToModel, WithHeadingRow
                     'name' => $row['category'],
                     "financial_category_id" => 2,
                 ];
+                
     
                 $check = DB::table('account_groups')->where('name', $row['category'])->first();
                 $account_group_id = !empty($check) ? $check->id : DB::table('account_groups')->insertGetId($obj);
                 $check = DB::table('account_groups')->where('name', $row['category'])->first();
                 $array = array(
-                    "name" => trim($row['category']),
+                    "name" => trim($row['category']), //  trim($row['name']),
                     "financial_category_id" => $check->financial_category_id,
                     "note" => $row['note'],
                     "account_group_id" => $account_group_id,
-                    'code' => $row['code'] == '' ? date('is').$i++ : $row['code'],
+                    'code' => $row['code'] == '' ? date('is').$i++ : $row['code'], //first problem code repeats
                     'open_balance' => 0,
                     "status" => 1,
                     "date"  => date('Y-m-d')

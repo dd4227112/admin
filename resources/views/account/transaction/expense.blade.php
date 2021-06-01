@@ -1,6 +1,6 @@
 @extends('layouts.app')
-
 @section('content')
+
 <div class="main-body">
     <div class="page-wrapper">
         <!-- Page-header start -->
@@ -51,12 +51,14 @@
 
                     <div class="col-sm-12">
                          <div class="m-10">
+                            <?php if (can_access('add_expense')) { ?>
                             <a style="float: right;" class="btn btn-success" href="<?php echo url('account/addTransaction/' . $id) ?>">
                                 <i class="fa fa-plus"></i> 
                                   Add Expense
                             </a>
+                            <?php } ?>
                          </div>
-                        
+                         
 
                         <div class>
                             <form style="" class="form-horizontal" role="form" method="post"> 
@@ -90,7 +92,7 @@
                                 </div> 
                                 <?= csrf_field() ?>
                             </form> 
-                        </div>        
+                        </div>    
 
 
                         <div class="table-responsive dt-responsive "> 
@@ -114,9 +116,10 @@
                                     $total_expense = 0;
                                     $i = 1;
                                     $refer_ids = [];
-                                    if (!empty($expenses)) { 
+                                    if (!empty($expenses)) {
                                         foreach ($expenses as $expense) {
-                                            array_push($refer_ids, $expense->id);
+                                        array_push($refer_ids, $expense->id);
+                                        
                                             ?>
                                             <tr>
                                                 <td>
@@ -133,10 +136,10 @@
                                                 </td>   
                                                 <td>
                                                     <?php echo isset($expense->accountGroup->name) ? $expense->accountGroup->name : ''; ?>
-                                                </td>
+                                                </td>   
 
                                                 <td data-title="<?= __('sum') ?>">
-                                                    <?php
+                                                    <?php 
                                                     if ($id == 2 && $expense->name == 'Unearned Revenue') {
                                                         $total_amount = $unearned = \App\Models\AdvancePayment::sum('amount') - \App\Models\AdvancePaymentsInvoicesFeesInstallment::sum('amount');
                                                         echo money($total_amount);
@@ -244,6 +247,7 @@
                             <tbody>
                                 <?php
                                 $sql = 'select sum(amount) as total,extract(month from date) as month from admin.expenses where extract(year from date)=' . date('Y', strtotime($to_date)) . ' and refer_expense_id in (' . implode( ',',$refer_ids) . ') group by month order by month';
+                              
                                 $logs = DB::select($sql);
                                 foreach ($logs as $log) {
                                     $monthNum = $log->month;

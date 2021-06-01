@@ -1132,7 +1132,7 @@ return $echo;
                                                             <span aria-hidden="true">×</span>
                                                         </button>
                                                     </div>
-                                                    <form action="<?= url('customer/uploadJobCard')?>" method="post">
+                                                    <form action="<?= url('customer/uploadJobCard')?>" method="post" enctype="multipart/form-data">
                                                         <div class="modal-body">
                                                             <div class="form-group">
                                                                 <div class="row">
@@ -1140,7 +1140,7 @@ return $echo;
                                                                         <strong> Upload Job card</strong>
                                                                         <input type="file"
                                                                             class="form-control"
-                                                                            name="job_card_file">
+                                                                            name="job_card_file" accept=".png,.jpg,.jpeg,.doc,.pdf,.docx" >
                                                                        </div>
                                                               
                                                                     <div class="col-md-6">

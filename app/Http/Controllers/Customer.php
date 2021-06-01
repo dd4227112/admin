@@ -1300,9 +1300,8 @@ class Customer extends Controller {
 
     public function uploadJobCard(){
         if($_POST){
-            $file = request('job_card_file');
-            $company_file_id = $this->saveFile($file, 'company/contracts');
-          //  $company_file_id = 1;
+            $file = request()->file('job_card_file');
+            $company_file_id = $file ? $this->saveFile($file, 'company/employees') : 1; 
             $data = [
                 'company_file_id' => $company_file_id,
                 'client_id' => request('client_id'),
@@ -1317,11 +1316,16 @@ class Customer extends Controller {
 
 
     public function viewFile() {
-        $_date = request()->segment(3);
+        $value = request()->segment(3);
         $type = request()->segment(4);
         if($type == 'jobcard'){
-            $contract = \App\Models\ClientJobCard::where('date',$_date)->first();
+            $contract = \App\Models\ClientJobCard::where('date',$value)->first();
             $this->data['path'] = $contract->companyFile->path;
+        }
+
+        if($type == 'course_certificate'){
+            $certificate = \App\Models\Learning::where('id',$value)->first();
+            $this->data['path'] = $certificate->companyFile->path;
         }
         return view('layouts.file_view', $this->data);
     }
