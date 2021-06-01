@@ -655,8 +655,8 @@ foreach ($user_permission as $permis) {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <?php if($attendances > 0) { ?>
-                                                    <?php
+                                                    
+                                                    <?php  if(!empty($attendances)) 
                                                     foreach ($attendances as $attendance) {
                                                         ?>
                                                         <tr>
@@ -682,7 +682,7 @@ foreach ($user_permission as $permis) {
                                                             </td>
                                                         </tr>
                                                      <?php } ?>
-                                                    <?php } ?>
+                                                   
                                                 </tbody>
                                             </table>
                                         </div>
@@ -715,8 +715,9 @@ foreach ($user_permission as $permis) {
                                                 </thead>
                                                 <tbody>
                                                  
-                                                    <?php if(!empty($absents)) {  ?>
-                                                      <?php foreach($absents as $absent) { ?>
+                                                  
+                                                      <?php if(!empty($absents)) 
+                                                             foreach($absents as $absent) { ?>
                                                         <tr>
                                                             <td><?= date('d M Y', strtotime($absent->date)) ?></td>
                                                             <td><?= $absent->absentReason->name ?></td>
@@ -746,7 +747,7 @@ foreach ($user_permission as $permis) {
                                                             </td>
                                                         </tr>
                                                       <?php } ?>
-                                                    <?php } ?>
+                                                  
                                                 </tbody>
                                             </table>
                                         </div>
@@ -779,7 +780,7 @@ foreach ($user_permission as $permis) {
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <?php
+                                                        <?php  if(!empty($documents)) 
                                                         foreach ($documents as $document) {
                                                             ?>
                                                             <tr>
