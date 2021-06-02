@@ -58,10 +58,9 @@ class Kernel extends ConsoleKernel {
         //     $this->endDeadlock();
         // })->everyThreeMinutes();
         
-        // $schedule->call(function () {
-        //     (new Message())->sendSms();
-            
-        // })->everyMinute();
+        $schedule->call(function () {
+            (new Message())->sendSms();
+        })->everyMinute();
 
         // $schedule->call(function () {
         //     (new Message())->checkPhoneStatus();
