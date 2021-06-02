@@ -19,19 +19,17 @@ class ImportExpense implements ToModel, WithHeadingRow
     {
         
         if(!empty($row)) {
-    
             $payer_name = $row['recipient'];
             $i = 0;
-            $status = 1;
-            $refer_expense = \App\Models\ReferExpense::where('name', $row['name'])->first();
-              
+            $status = 1; 
+            $refer_expense = \App\Models\ReferExpense::where('name', $row['category'])->first();
+         
             if (empty($refer_expense)) {
                 $obj = [
                     'name' => $row['category'],
                     "financial_category_id" => 2,
                 ];
                 
-    
                 $check = DB::table('account_groups')->where('name', $row['category'])->first();
                 $account_group_id = !empty($check) ? $check->id : DB::table('account_groups')->insertGetId($obj);
                 $check = DB::table('account_groups')->where('name', $row['category'])->first();
@@ -44,9 +42,10 @@ class ImportExpense implements ToModel, WithHeadingRow
                     'open_balance' => 0,
                     "status" => 1,
                     "date"  => date('Y-m-d')
-                );
-    
+                ); 
+              
                 $refer_expense = \App\Models\ReferExpense::create($array);
+                
             }
           
             $check_unique = \App\Models\Expense::where('transaction_id', $row['transaction_id'])->first();
@@ -91,7 +90,8 @@ class ImportExpense implements ToModel, WithHeadingRow
                     'payer_name' => $payer_name,
                 ]);
             }
-            return new Expense($obj);
+              \App\Models\Expense::create($obj);
+          //  return new Expense($obj);
            
           }
 

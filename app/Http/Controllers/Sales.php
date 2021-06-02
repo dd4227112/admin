@@ -493,7 +493,6 @@ class Sales extends Controller {
             } else {
                 $client_id = DB::table('admin.clients')->insertGetId([
                     'name' => $school->name,
-                 // 'address' => $school->ward . ' ' . $school->district . ' ' . $school->region,
                     'address' => $school->wards->name . ' ' . $school->wards->district->name . ' ' . $school->wards->district->region->name,
                     'created_at' => date('Y-m-d H:i:s'),
                     'phone' => $school_contact->phone,

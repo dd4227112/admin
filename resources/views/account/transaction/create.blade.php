@@ -135,7 +135,8 @@
 
 
                             <div class=" col-lg-10 col-sm-12">
-                            <div class='form-group' >
+                            <div class='form-group'>
+                              <strong>
                               <label for="amount" class="col-sm-2 control-label">
                                 <?= __("Amount") ?><span class="red">*</span>
                               </strong>
@@ -187,7 +188,7 @@
                             <div class=" col-lg-10 col-sm-12">
                               <div class='form-group' >
                                 <strong>
-                                  <?= __("Ref No") ?>
+                                  <?= __("Reference No.") ?>
                                 </strong>
                                   <input type="text" placeholder="Enter ref number/cheque number" class="form-control" id="ref_no" name="transaction_id" value="<?= old('transaction_id', time()) ?>">
                                 </div>
@@ -196,7 +197,7 @@
                           <div class=" col-lg-10 col-sm-12">
                             <div class='form-group' >
                               <strong>
-                                <?= __("Date Received") ?> <span class="red">*</span>
+                                <?= __("Date") ?> <span class="red">*</span>
                               </strong>
                                 <input type="date" class="form-control calendar" id="date" name="date" value="<?= date('Y-m-d') ?>">
 
@@ -207,7 +208,7 @@
                             <div class=" col-lg-10 col-sm-12">
                             <div class='form-group' >
                               <strong>
-                                <?= __("Note") ?>
+                                <?= __("Descriptions") ?>
                               </strong>
                                 <textarea style="resize:none;" class="form-control" id="note" name="note"><?= old('note') ?></textarea>
                               </div>

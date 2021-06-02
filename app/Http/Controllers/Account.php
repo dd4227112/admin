@@ -685,8 +685,6 @@ class Account extends Controller {
     }
 
 
-
-
     public function receipts() {
         $id = request()->segment(3);
         if ((int) $id > 0) {
@@ -696,10 +694,6 @@ class Account extends Controller {
             return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
         }
     }
-
-
-
-
 
     
     public function getCategories($id) {
@@ -790,9 +784,9 @@ class Account extends Controller {
             $depreciation = (float) request("depreciation") > 0 ? (float) request("depreciation") : (float) request("dep");
             // $type=request("type");
             if ($id == 2 || $id == 5) {
-                $amount = request("type") == 1 ? (request("amount")) : -(request("amount"));
+                $amount = request("type") == 1 ? remove_comma(request("amount")) : -remove_comma(request("amount"));
             } else {
-                $amount = (request("amount"));
+                $amount = remove_comma(request("amount"));
             }
             if ($id == !5) {
                 $refer_expense_id = request("expense");
@@ -806,6 +800,7 @@ class Account extends Controller {
                 return redirect()->back()->with('error', 'Sorry ! Transaction ID already exists');
             }
             $payer_name = request('payer_name');
+            
             $array = array(
                 "date" => request('date'),
                 "note" => request("note"),
@@ -820,17 +815,17 @@ class Account extends Controller {
                 'user_id' => Auth::user()->id,
                 "bank_account_id" => request("bank_account_id"),
                 "amount" => $amount,
-            );
+            ); 
 
             if ($id == 4 || $id == 1) {
                 $voucher_no = DB::table('expenses')->max('voucher_no');
                 if ((int) request('user_in_shulesoft') == 1) {
-                    $user = \App\Models\User::find(request('user_id'));
+                    $user = \App\Models\User::findOrFail(request('user_id'));
                     $obj = array_merge($array, [
                         'recipient' => $user->firstname . ' ' . $user->lastname,
                         'voucher_no' => $voucher_no + 1,
                         'payer_name' => $payer_name,
-                    ]);
+                    ]); 
                     $insert_id = DB::table('expenses')->insertGetId($obj);
                   } else {
                     $obj = array_merge($array, [
@@ -851,7 +846,7 @@ class Account extends Controller {
                     "to_refer_expense_id" => request("to_expense"),
                     'userID' => request('id'),
                     'uname' => request('username'),
-                    "amount" => request('amount'),
+                    "amount" => remove_comma(request('amount')),
                     'voucher_no' => $voucher_no + 1,
                    // "transaction_id" => request("transaction_id")
                    // 'usertype' => session('usertype')
@@ -903,7 +898,7 @@ class Account extends Controller {
                  return redirect()->back()->with('success','Success');
             } else {
                 $obj = array_merge($array, [
-                    'amount' => request('amount'),
+                    'amount' => remove_comma(request('amount')),
                 ]);
                 $insert_id = DB::table('expenses')->insertGetId($obj);
                 $type = (int) $insert_id ? 'success' : 'error';
@@ -1139,8 +1134,7 @@ class Account extends Controller {
                 $from_date = request("from_date");
             }
         }
-     //   dd($refer_expense);
-
+      
         if ($refer_id == 5) {
             if (strtoupper($refer_expense->name) == 'CASH') {
                 $this->data['expenses'] = DB::SELECT('SELECT * from admin.bank_transactions WHERE  payment_type_id =1 and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . '');
@@ -1166,8 +1160,11 @@ class Account extends Controller {
              $this->data['depreciation'] = 1;
         } else {
            // $this->data['expenses'] = DB::SELECT('SELECT b.*,a.* FROM admin.expenses a JOIN admin.refer_expense b ON a.refer_expense_id=b.id WHERE b.id=' . $id . ' and a."date" >= ' . "'$from_date'" . ' AND a."date" <= ' . "'$to_date'" . ' ');
-            $this->data['expenses'] = \App\Models\ReferExpense::where('refer_expense.id', $id)->join('expenses', 'expenses.refer_expense_id', 'refer_expense.id')->select('payment_types.name as payment_method', 'expenses.recipient as recipient', 'expenses.date', 'expenses.amount', 'expenses.note', 'expenses.transaction_id', 'expenses.id', 'refer_expense.predefined')->leftJoin('payment_types', 'payment_types.id', 'expenses.payment_type_id')->where('expenses.date', '>=', $from_date)->where('expenses.date', '<=', $to_date)->get();
-        //  dd($this->data['expenses']);
+            $this->data['expenses'] = \App\Models\ReferExpense::where('refer_expense.id', $id)
+            ->join('expenses', 'expenses.refer_expense_id', 'refer_expense.id')
+            ->select('payment_types.name as payment_method', 'expenses.recipient as recipient', 'expenses.date', 'expenses.amount', 'expenses.note', 'expenses.transaction_id', 'expenses.id', 'refer_expense.predefined')->leftJoin('payment_types', 'payment_types.id', 'expenses.payment_type_id')
+            ->where('expenses.date', '>=', $from_date)->where('expenses.date', '<=', $to_date)->get();
+         // dd($this->data['expenses']);
         }
         //$this->data['refer_id'] = $id;
         $this->data['period'] = 1;
@@ -1527,13 +1524,6 @@ select * from tempb");
         $message = '<p>The standing order has failed to be recorded</p>';
         $this->send_email($client->email, 'Standing Order Rejected!' . $message);
         return redirect()->back()->with('success', 'Standing order rejected!');
-    }
-
-
-    public function uploadExpenses() 
-    {
-        Excel::import(new ImportExpense, request()->file('expense_file'));
-        return redirect('account/transaction/4')->with('success', 'All Expense Uploaded Successfully!');
     }
 
 

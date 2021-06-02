@@ -50,49 +50,55 @@
                 <div class="card">
 
                     <div class="col-sm-12">
-                         <div class="m-10">
-                            <?php if (can_access('add_expense')) { ?>
-                            <a style="float: right;" class="btn btn-success" href="<?php echo url('account/addTransaction/' . $id) ?>">
-                                <i class="fa fa-plus"></i> 
-                                  Add Expense
-                            </a>
-                            <?php } ?>
-                         </div>
-                         
+                            <div class="row m-10">
+                                <div class="col-sm-4">
+                                    <h5 class="page-header">
+                                        <?php if (can_access('add_expense')) { ?>
+                                            <a style="float: left;" class="btn btn-success" href="<?php echo url('account/addTransaction/' . $id) ?>">
+                                                <i class="fa fa-plus"></i> 
+                                                  Add Expense
+                                            </a>
+                                            <?php } ?>
+                                       </h5>
+                                 </div>
 
-                        <div class>
-                            <form style="" class="form-horizontal" role="form" method="post"> 
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Start Date</label>
-                                        <div class="col-md-9 col-sm-9 col-xs-12">
-                                            <?php echo form_error($errors, 'from_date'); ?>
-                                            <input type="date"  class="form-control " id="from_date" name="from_date" value="<?= old('from_date',$from_date) ?>"> 
+                                <div class="col-sm-8">
+                                    <form class="form-horizontal" role="form" method="post"> 
+                                      <div class="row">
+                                        <div class="col-md-5">
+                                            <div class="form-group row">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Start Date</label>
+                                                <div class="col-md-9 col-sm-9 col-xs-12">
+                                                    <?php echo form_error($errors, 'from_date'); ?>
+                                                    <input type="date"  class="form-control " id="from_date" name="from_date" value="<?= old('from_date',$from_date) ?>">
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
 
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">End Date</label>
-                                        <div class="col-md-9 col-sm-9 col-xs-12">
-                                            <?php echo form_error($errors, 'to_date'); ?>
-                                            <input type="date" class="form-control" id="to_date" name="to_date" value="<?= old('to_date',$to_date) ?>" >
-                                        </div>
-                                    </div>
-                                </div>                     
+                                        <div class="col-md-5">
+                                            <div class="form-group row">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">End Date</label>
+                                                <div class="col-md-9 col-sm-9 col-xs-12"> 
+                                                    <?php echo form_error($errors, 'to_date'); ?>
+                                                    <input type="date" class="form-control" id="to_date" name="to_date" value="<?= old('to_date',$to_date) ?>" >
+                                                </div>
+                                            </div>
+                                        </div>                     
 
-                                <div class="col-md-4">
-                                    <div class="form-group row">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12"></label>
-                                       <div class="col-md-9 col-sm-9 col-xs-12">
-                                            <input type="submit" class="btn btn-success" value="Submit"  style="float: right;">
-                                        </div>
-                                    </div>
-                                </div> 
-                                <?= csrf_field() ?>
-                            </form> 
-                        </div>    
+                                        <div class="col-md-2">
+                                          <div class="form-group row">
+                                            <div class="">
+                                                 <input type="submit" class="form-control btn btn-success" value="Submit"  style="float: right;">
+                                                </div>
+                                            </div>
+                                        </div> 
+
+                                      </div>
+                                        <?= csrf_field() ?>
+                                    </form>
+                                </div>  
+                             </div>     
+                        
 
 
                         <div class="table-responsive dt-responsive "> 

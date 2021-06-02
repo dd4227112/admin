@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\ImportExpense;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use DB;
@@ -50,6 +51,7 @@ class Expense extends Controller {
                 break;
             case 4:
                 $result = \App\Models\ReferExpense::whereBetween('created_at', [$from_date, $to_date])->whereIn('financial_category_id', [2, 3])->orderBy('created_at', 'desc')->get();
+    
                 break;
             case 5:
                 $result = \App\Models\ReferExpense::whereBetween('created_at', [$from_date, $to_date])->where('financial_category_id', 5)->orderBy('created_at', 'desc')->get();
@@ -88,6 +90,14 @@ class Expense extends Controller {
                 break;
         }
         return $result;
+    }
+
+
+
+    public function uploadExpenses() 
+    { 
+        Excel::import(new ImportExpense, request()->file('expense_file'));
+        return redirect('account/transaction/4')->with('success', 'All Expense Uploaded Successfully!');
     }
 
    
