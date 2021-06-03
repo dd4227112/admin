@@ -685,25 +685,6 @@ class Account extends Controller {
     }
 
 
-    public function revenue() {
-         $id = request()->segment(3);
-        $page = 'index';
-        if ((int) $id) {
-            $this->data['id'] = $id;
-            if ($_POST) {
-                $this->data['revenues'] = \App\Models\Revenue::where('refer_expense_id', $id)->where('date', '>=', request('from_date'))->where('date', '<=', request('to_date'))->get();
-            } else {
-                $this->data['revenues'] = \App\Models\Revenue::where('refer_expense_id', $id)->get();
-            }
-            $page = 'revenue';
-        } else {
-            $this->data['id'] = null;
-            $this->data['revenues'] = \App\Models\Revenue::all();
-            $this->data['expenses'] = \App\Models\ReferExpense::whereIn('financial_category_id', [1])->get();
-        }
-        return view('account.transaction.' . $page, $this->data);
-    }
-
     public function receipts() {
         $id = request()->segment(3);
         if ((int) $id > 0) {
@@ -712,128 +693,6 @@ class Account extends Controller {
         } else {
             return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
         }
-    }
-
-    public function editRevenue(Request $request) {
-        $id = request()->segment(3);
-        if ((int) $id > 0) {
-            $this->data['invoice'] = Invoice::find($id);
-            $this->data["payment_types"] = \App\Models\PaymentType::all();
-            $this->data['banks'] = \App\Models\BankAccount::all();
-            $this->data['revenue'] = \App\Models\Revenue::where('id', $id)->first();
-            if ($this->data['revenue']) {
-                $this->data["category"] = \App\Models\ReferExpense::whereIn('financial_category_id',[1])->get();
-                if ($_POST) {
-                //    dd($request->all());
-                    $this->data['revenue']->update(request()->all());
-                    return redirect(url("account/revenue"));
-                } else {    
-                  return view('account.transaction.revenue.edit', $this->data);
-                }
-            }
-         
-        } else {
-            return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
-        }
-    }
-
-
-    public function receipt() {
-            $id = request()->segment(3);
-            if ((int) $id) {
-                $this->data['revenue'] = \App\Models\Revenue::find($id);
-                $receipt_setting = \DB::table('receipt_settings')->first();
-                $template = $receipt_setting->template;
-                $file = 'invoices.receipt_templates.' . $template;
-                if ($_POST) {
-                    $settings = DB::table('receipt_settings')->first();
-                    $vars = get_object_vars($settings);
-                    $obj = array();
-                    foreach ($vars as $key => $variable) {
-                        if (!in_array($key, array('id', 'available_templates', 'created_at'))) {
-                            $obj = array_merge($obj, array($key => request($key) == null ? 0 : request($key)));
-                        }
-                    }
-                    !empty($obj) ? \App\Models\ReceiptSetting::first()->update($obj) : '';
-                }
-                $this->data['productcart'] = \App\Models\ProductCart::where('revenue_id', $id)->get();
-                $this->data['invoice'] = Invoice::find($id);
-                return view('account.transaction.revenue.receipt', $this->data);
-            } else {
-                $this->data["subview"] = "error";
-                $this->load->view('_layout_main', $this->data);
-            }
-        
-    }
-
-
-   
-    public function deleteRevenue() {
-        $id = request()->segment(3);
-        if ((int) $id > 0) {
-            $this->data['invoice'] = Invoice::find($id);
-            \App\Models\Revenue::where('id', $id)->delete();
-            return redirect()->back()->with('success', 'Revenue Delete Successfully!!');
-        } else {
-            return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
-        }
-    }
-
-    public function revenueAdd() {
-        $this->data['projects'] = Project::all();
-        $this->data["payment_types"] = \App\Models\PaymentType::all();
-        $this->data['banks'] = \App\Models\BankAccount::all();
-        $this->data["category"] = DB::table('refer_expense')->whereIn('financial_category_id', [1])->get();
-        if ($_POST) {
-          \App\Models\Revenue::create(array_merge(['user_id' => (int) request('user_id')], request()->except('user_id')));
-          return redirect(url('account/revenue'))->with('success', 'success');
-        }
-        return view('account.transaction.create', $this->data);
-    }
-
-    public function transaction() {
-        $this->data['id'] = $id = request()->segment(3);
-        if ((int) $id) {
-            if ($_POST) {
-                $from_date = request("from_date");
-                $to_date = request("to_date");
-            } else {
-                $from_date = date('Y-01-01');
-                $to_date = date('Y-m-d');
-            }
-            $this->data['from_date'] = $from_date;
-            $this->data['to_date'] = $to_date;
-            $this->data['expenses'] = $this->getCategories_by_date($id, $from_date, $to_date);
-        }
-        return view('account.transaction.expense', $this->data);
-    }
-
-    public function getCategories_by_date($id, $from_date, $to_date) {
-        $ids =  Expense::whereBetween('date', [$from_date, $to_date])->get(['refer_expense_id']);
-     //  dd($ids);
-        $ids = count($ids) == 0 ? Expense::get(['refer_expense_id']) : $ids;
-
-        switch ($id) {
-            case 1:
-                $result = ReferExpense::where('financial_category_id', 4)->get();
-                break;
-            case 2:
-                $result = ReferExpense::where('financial_category_id', 6)->get();
-                break;
-            case 3:
-                $result = ReferExpense::where('financial_category_id', 7)->get();
-                break;
-            case 4:
-                $result = ReferExpense::whereIn('financial_category_id', [2, 3])->get();
-                break;
-            case 5:
-                $result = ReferExpense::where('financial_category_id', 5)->get();
-                break;
-            default:
-                $result = array();
-                break;
-        }
-        return $result;
     }
 
     
@@ -864,6 +723,51 @@ class Account extends Controller {
         return $result;
     }
 
+    public function transaction() {
+        $this->data['id'] = $id = request()->segment(3);
+        if ((int) $id) {
+            if ($_POST) {
+                $from_date = request("from_date");
+                $to_date = request("to_date");
+            } else {
+                $from_date = date('Y-01-01');
+                $to_date = date('Y-m-d');
+            }
+            $this->data['from_date'] = $from_date;
+            $this->data['to_date'] = $to_date;
+            $this->data['expenses'] = $this->getCategories_by_date($id, $from_date, $to_date);
+        }
+        return view('account.transaction.expense', $this->data);
+    }
+
+
+
+    public function getCategories_by_date($id, $from_date, $to_date) {
+        switch ($id) {
+            case 1:
+                $result = \App\Models\ReferExpense::whereBetween('created_at', [$from_date, $to_date])->where('financial_category_id', 4)->orderBy('created_at', 'desc')->get();
+                break;
+            case 2:
+                $result = \App\Models\ReferExpense::whereBetween('created_at', [$from_date, $to_date])->where('financial_category_id', 6)->orderBy('created_at', 'desc')->get();
+                break;
+            case 3:
+                $result = \App\Models\ReferExpense::whereBetween('created_at', [$from_date, $to_date])->where('financial_category_id', 7)->orderBy('created_at', 'desc')->get();
+                break;
+            case 4:
+                $result = \App\Models\ReferExpense::whereBetween('created_at', [$from_date, $to_date])->whereIn('financial_category_id', [2, 3])->orderBy('created_at', 'desc')->get();
+                break;
+            case 5:
+                $result = \App\Models\ReferExpense::whereBetween('created_at', [$from_date, $to_date])->where('financial_category_id', 5)->orderBy('created_at', 'desc')->get();
+                break;
+            default:
+                $result = array();
+                break;
+        }
+        return $result;
+    }
+
+
+
     public function addTransaction() {
         $this->data['banks'] = \App\Models\BankAccount::all();
         $id = request()->segment(3);
@@ -880,9 +784,9 @@ class Account extends Controller {
             $depreciation = (float) request("depreciation") > 0 ? (float) request("depreciation") : (float) request("dep");
             // $type=request("type");
             if ($id == 2 || $id == 5) {
-                $amount = request("type") == 1 ? (request("amount")) : -(request("amount"));
+                $amount = request("type") == 1 ? remove_comma(request("amount")) : -remove_comma(request("amount"));
             } else {
-                $amount = (request("amount"));
+                $amount = remove_comma(request("amount"));
             }
             if ($id == !5) {
                 $refer_expense_id = request("expense");
@@ -896,6 +800,7 @@ class Account extends Controller {
                 return redirect()->back()->with('error', 'Sorry ! Transaction ID already exists');
             }
             $payer_name = request('payer_name');
+            
             $array = array(
                 "date" => request('date'),
                 "note" => request("note"),
@@ -910,17 +815,17 @@ class Account extends Controller {
                 'user_id' => Auth::user()->id,
                 "bank_account_id" => request("bank_account_id"),
                 "amount" => $amount,
-            );
+            ); 
 
             if ($id == 4 || $id == 1) {
                 $voucher_no = DB::table('expenses')->max('voucher_no');
                 if ((int) request('user_in_shulesoft') == 1) {
-                    $user = \App\Models\User::find(request('user_id'));
+                    $user = \App\Models\User::findOrFail(request('user_id'));
                     $obj = array_merge($array, [
                         'recipient' => $user->firstname . ' ' . $user->lastname,
                         'voucher_no' => $voucher_no + 1,
                         'payer_name' => $payer_name,
-                    ]);
+                    ]); 
                     $insert_id = DB::table('expenses')->insertGetId($obj);
                   } else {
                     $obj = array_merge($array, [
@@ -941,7 +846,7 @@ class Account extends Controller {
                     "to_refer_expense_id" => request("to_expense"),
                     'userID' => request('id'),
                     'uname' => request('username'),
-                    "amount" => request('amount'),
+                    "amount" => remove_comma(request('amount')),
                     'voucher_no' => $voucher_no + 1,
                    // "transaction_id" => request("transaction_id")
                    // 'usertype' => session('usertype')
@@ -993,7 +898,7 @@ class Account extends Controller {
                  return redirect()->back()->with('success','Success');
             } else {
                 $obj = array_merge($array, [
-                    'amount' => request('amount'),
+                    'amount' => remove_comma(request('amount')),
                 ]);
                 $insert_id = DB::table('expenses')->insertGetId($obj);
                 $type = (int) $insert_id ? 'success' : 'error';
@@ -1208,13 +1113,13 @@ class Account extends Controller {
         $id = request()->segment(3);
         $refer_id = request()->segment(4);
         $bank_id = request()->segment(5);
+       
         $year = \App\Models\AccountYear::orderBy('start_date', 'asc')->first();
         $account_year = empty($year) ? \App\Models\AccountYear::create(['name' => date('Y'), 'status' => 1, 'start_date' => date('Y-01-01'), 'end_date' => date('Y-12-31')]) : $year;
         $from_date = $account_year->start_date;
         $to_date = date('Y-m-d');
-
         $refer_expense = \App\Models\ReferExpense::find($id);
-
+       
         if ($_POST) {
             if (request("to_date")) {
                 $d1 = request("to_date");
@@ -1229,8 +1134,7 @@ class Account extends Controller {
                 $from_date = request("from_date");
             }
         }
-
-
+      
         if ($refer_id == 5) {
             if (strtoupper($refer_expense->name) == 'CASH') {
                 $this->data['expenses'] = DB::SELECT('SELECT * from admin.bank_transactions WHERE  payment_type_id =1 and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . '');
@@ -1255,9 +1159,12 @@ class Account extends Controller {
             $this->data['expenses'] = DB::select('select coalesce(sum(b.open_balance::numeric * b.depreciation*(\'' . $to_date . '\'::date-a.date::date)/365),0) as open_balance,sum(amount-amount* a.depreciation *(\'' . $to_date . '\'::date-a.date::date)/365) as total,sum(amount* a.depreciation*(\'' . $to_date . '\'::date-a.date::date)/365) as amount, refer_expense_id,a.date,a.note,a.recipient,b.name,a."expenseID",b.predefined from admin.expenses a join admin.refer_expense b  on b.id=a.refer_expense_id where b.financial_category_id=4 AND  a.date  <= \'' . $to_date . '\' group by a.refer_expense_id,b.open_balance,a.date,a.note,b.name,a."expenseID",b.predefined  ORDER BY a.date desc');
              $this->data['depreciation'] = 1;
         } else {
-            //$this->data['expenses'] = DB::SELECT('SELECT b.*,a.* FROM admin.expense a JOIN admin.refer_expense b ON a.refer_expense_id=b.id WHERE b.id=' . $id . ' and a."date" >= ' . "'$from_date'" . ' AND a."date" <= ' . "'$to_date'" . ' ');
-            $this->data['expenses'] = \App\Models\ReferExpense::where('refer_expense.id', $id)->join('expenses', 'expenses.refer_expense_id', 'refer_expense.id')->select('payment_types.name as payment_method', 'expenses.recipient as recipient', 'expenses.date', 'expenses.amount', 'expenses.note', 'expenses.transaction_id', 'expenses.id', 'refer_expense.predefined')->leftJoin('payment_types', 'payment_types.id', 'expenses.payment_type_id')->where('expenses.date', '>=', $from_date)->where('expenses.date', '<=', $to_date)->get();
-            // dd($this->data['expenses']);
+           // $this->data['expenses'] = DB::SELECT('SELECT b.*,a.* FROM admin.expenses a JOIN admin.refer_expense b ON a.refer_expense_id=b.id WHERE b.id=' . $id . ' and a."date" >= ' . "'$from_date'" . ' AND a."date" <= ' . "'$to_date'" . ' ');
+            $this->data['expenses'] = \App\Models\ReferExpense::where('refer_expense.id', $id)
+            ->join('expenses', 'expenses.refer_expense_id', 'refer_expense.id')
+            ->select('payment_types.name as payment_method', 'expenses.recipient as recipient', 'expenses.date', 'expenses.amount', 'expenses.note', 'expenses.transaction_id', 'expenses.id', 'refer_expense.predefined')->leftJoin('payment_types', 'payment_types.id', 'expenses.payment_type_id')
+            ->where('expenses.date', '>=', $from_date)->where('expenses.date', '<=', $to_date)->get();
+         // dd($this->data['expenses']);
         }
         //$this->data['refer_id'] = $id;
         $this->data['period'] = 1;
@@ -1340,87 +1247,14 @@ class Account extends Controller {
         return view('account.report.payment_history', $this->data);
     }
 
-    public function uploadRevenue() {
-        if ($_POST) {
-            $address = request()->file('file');
-            $results = Excel::load($address)->all();
-            //once we upload excel, register students and marks in mark_info table
-            $status = '';
-            foreach ($results as $value) {
-                $check = $this->checkKeysExists($value, ['amount', 'transaction_id', 'account_number', 'payment_method', 'revenue_name', 'date']);
-                if ((int) $check <> 1) {
-                    return redirect()->back()->with('error', $check);
-                }
-                $refer_expense = \App\Models\ReferExpense::where('name', $value['revenue_name'])->first();
-                if (empty($refer_expense)) {
-                    $status .= '<p class="alert alert-danger">Revenue not defined. This expense name <b>' . $value['revenue_name'] . '</b> must be defined first in charts of account. This record skipped to be uploaded</p>';
-                    continue;
-                }
-                $check_unique = \App\Models\Revenue::where('transaction_id', $value['transaction_id'])->first();
-                if (empty($check_unique)) {
-                    $status .= '<p class="alert alert-danger">This transaction ID <b>' . $value['transaction_id'] . '</b> already being used. Information skipped</p>';
-                    continue;
-                }
-                $bank = \App\Models\BankAccount::where('number', $value['account_number'])->first();
-
-                $in_data = [
-                    'created_by_id' => Auth::user()->id,
-                    'amount' => $value['amount'],
-                    'payment_method' => $value['payment_method'],
-                    'transaction_id' => $value['transaction_id'],
-                    "refer_expense_id" => $refer_expense->id,
-                    "bank_account_id" => !empty($bank) ? $bank->id : NULL,
-                    'date' => date("Y-m-d", strtotime($value['date'])),
-                    'note' => $value['note']
-                ];
-//                dd($in_data);
-                if ((int) $value['user_in_shulesoft'] == 1) {
-
-                    $user = \App\Models\User::where('name', 'ilike', '%' . $value['payer_name'] . '%')->first();
-                    if (!empty($user)) {
-                        $data = array_merge($in_data, [
-                            'payer_name' => $user->name,
-                            'user_id' => $user->id,
-                            'user_table' => $user->table,
-                            'payer_email' => $user->email,
-                            'payer_phone' => $user->phone
-                        ]);
-                    } else {
-                        $user = Auth::user();
-                        $data = array_merge($in_data, [
-                            'payer_name' => $user->firstname . ' ' . $user->lastname,
-                            'user_id' => $user->id,
-                            'payer_email' => $user->email,
-                            'payer_phone' => $user->phone
-                        ]);
-                    }
-                } else {
-                    $data = [
-                        'payer_name' => $value['payer_name'],
-                        'payer_phone' => $value['payer_phone'],
-                        'payer_email' => $value['payer_email'],
-                        'created_by_id' => session('id'),
-                        'amount' => $value['amount'],
-                        "refer_expense_id" => $refer_expense->id,
-                        "bank_account_id" => !empty($bank) ? $bank->id : NULL,
-                        'payment_method' => $value['payment_method'],
-                        'transaction_id' => $value['transaction_id'],
-                        'date' => date("Y-m-d", strtotime($value['date'])),
-                        'note' => $value['note']
-                    ];
-                }
-
-                \App\Models\Revenue::create($data);
-            }
-            return redirect('account/revenue')->with('success', $status);
-        }
-    }
+  
 
     public function uploadExpense() {
-
         if ($_POST) {
             $address = request()->file('file');
+          
             $results = Excel::load($address)->all();
+            dd($results);
             //once we upload excel, register students and marks in mark_info table
             $status = '';
             foreach ($results as $value) {
@@ -1690,15 +1524,6 @@ select * from tempb");
         $message = '<p>The standing order has failed to be recorded</p>';
         $this->send_email($client->email, 'Standing Order Rejected!' . $message);
         return redirect()->back()->with('success', 'Standing order rejected!');
-    }
-
-
-  
-  
-    public function uploadExpenses() 
-    {
-        Excel::import(new ImportExpense, request()->file('expense_file'));
-        return redirect('account/transaction/4')->with('success', 'All Expense Uploaded Successfully!');
     }
 
 

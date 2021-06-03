@@ -91,6 +91,21 @@ return [
             'schema' => 'new_karibusms',
             'sslmode' => 'prefer',
         ],
+
+    'biotime' => [
+            'driver' => 'pgsql',
+            // 'url' => env('DATABASE_URL'),
+            'host' => '51.91.251.252',
+            'port' => '5432',
+            'database' => 'biotime',
+            'username' => 'biotime',
+            'password' => 'biotime_2021_',
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+        ],
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_URL'),
@@ -130,6 +145,7 @@ return [
     |
     */
 
+
     'redis' => [
 
         'client' => env('REDIS_CLIENT', 'phpredis'),
@@ -157,4 +173,4 @@ return [
 
     ],
 
-];
+]; 

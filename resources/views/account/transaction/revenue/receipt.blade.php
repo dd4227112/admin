@@ -23,15 +23,11 @@ $file = 'invoices.receipt_templates.' . $template;
                                     <div class="well col-sm-12"  id="well">
                                         <div class="row">
                                             <div class="col-sm-6">
-                            
                                                 <button class="btn btn-xs btn-success" onclick="javascript:printDiv('printablediv')"><span class="fa fa-print"></span> <?= ('print') ?> </button>
-                                                <a class="btn btn-xs btn-danger" href="{{url('account.transaction.index')}}"><i class="fa fa-edit"></i> Return Back</a>
+                                                <a class="btn btn-xs btn-danger" href="{{url('revenue/index')}}"><i class="fa fa-edit"></i> Return Back</a>
                                             </div>
                                             <div class="col-sm-6">
-                                                <ol class="breadcrumb">
-                                                    <button class="btn-default btn-cs btn-sm-cs" data-toggle="modal" data-target="#report_setting_model"><span class="fa fa-gear"></span> Options</button>
-                            
-                                                </ol>
+                                              
                                             </div> 
                                         </div>
                                     </div>

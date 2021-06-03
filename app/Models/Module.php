@@ -4,12 +4,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Module extends Model {
 
-    /**
-     * Generated
-     */
-
     protected $table = 'modules';
     protected $fillable = ['id', 'name', 'created_at'];
-
-
 }

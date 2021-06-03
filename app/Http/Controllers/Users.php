@@ -102,9 +102,10 @@ class Users extends Controller {
         $id = (int) request()->segment(3) == 0 ? Auth::user()->id : request()->segment(3);
         $this->data['user'] = User::findOrFail($id);
         $this->data['user_permission'] = \App\Models\Permission::whereIn('id', \App\Models\PermissionRole::where('role_id', $this->data['user']->role_id)->get(['permission_id']))->get(['id']);
-        $this->data['attendances'] = DB::table('attendances')->where('user_id', $id)->get();
-        $this->data['absents'] = \App\Models\Absent::where('user_id', $id)->get();
-        $this->data['documents'] = \App\Models\LegalContract::where('user_id', $id)->get();
+        $this->data['attendances'] = DB::table('attendances')->where('user_id', $id)->orderBy('created_at','desc')->get();
+        $this->data['absents'] = \App\Models\Absent::where('user_id', $id)->orderBy('created_at','desc')->get();
+        $this->data['documents'] = \App\Models\LegalContract::where('user_id', $id)->orderBy('created_at','desc')->get();
+        $this->data['learnings'] = \App\Models\Learning::where('user_id', $id)->orderBy('created_at','desc')->get();
 
         //default number of days 22 to minutes
         $this->data['minutes'] = 22*24*60;
@@ -113,7 +114,7 @@ class Users extends Controller {
             //check if its attendance or not
             $ip = $_SERVER['REMOTE_ADDR'] ?: ($_SERVER['HTTP_X_FORWARDED_FOR'] ?: $_SERVER['HTTP_CLIENT_IP']);
             
-            if ($ip !== '102.69.167.173') {
+            if ($ip == '102.69.167.173') {
                 if (strlen(request('early_leave_comment')) > 2) {
                     DB::table('attendances')->where('user_id', $id)->whereDate('created_at', date('Y-m-d'))->update([
                         'timeout' => 'now()',
@@ -275,12 +276,13 @@ class Users extends Controller {
      *
      * @param  int $id
      *
+     * 
      * @return \Illuminate\Http\Response
      */
     public function edit() {
         $id = request()->segment(3);
         $this->data['user'] = User::find($id);
-
+       
         if ($_POST) {
             $this->validate(request(), [
                 'firstname' => 'required|max:255',
@@ -724,7 +726,7 @@ class Users extends Controller {
                             if(empty($check_unique->first())) {
                                 \App\Models\ClientGroup::create($array);
                             } else{
-                            return redirect()->back()->with('error','Client arleady belong to groups');
+                            return redirect()->back()->with('error','Client school arleady belong to groups');
                             }
                         }
                     }
@@ -744,6 +746,41 @@ class Users extends Controller {
         }
         return view('users.groups.schools', $this->data);
     }
+
+     public function learning(){
+        $learning_id = request()->segment(3);
+     
+         if($_POST){
+             $array= [
+                 'course_name' => request('course_name'),
+                 'source' => request('source'),
+                 'from_date' => request('from_date'),
+                 'to_date' => request('to_date'),
+                 'user_id' => request('user_id'),
+                 'has_certificate' => request('has_certificate'),
+                 'descriptions' => request('description'),
+                 'course_link' => request('link')
+             ];
+            \App\Models\Learning::create($array);
+         }
+       
+         if($learning_id > 0){
+            $this->data['learning'] = \App\Models\Learning::where('id',$learning_id)->first();
+               return view('users.learning_details', $this->data);
+        }
+        return redirect()->back()->with('success', 'success');
+     }
+
+     
+     public function certification(){
+        $learning_id = request()->segment(3);
+        if ($_POST) {
+            $file = request()->file('certificate');
+            $file_id = $file ? $this->saveFile($file, 'company/employees') : 1; 
+             \App\Models\Learning::where('id',$learning_id)->update(['company_file_id' => $file_id]);
+       }
+       return redirect()->back()->with('success', 'updated successful!');
+   }
 
 
 }

@@ -335,15 +335,15 @@
         if (strlen(request('token')) < 3) {
             ?>
             <!-- Menu aside start -->
-            <div class="main-menu">
-                <div class="main-menu-header">
+            <div class="main-menu" style="height: 900px;">
+                {{-- <div class="main-menu-header">
                     <img class="img-40" src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image">
                     <div class="user-details">
                         <span>{{ Auth::user()->name() }}</span>
                         <span id="more-details"> <?php // Auth::user()->role->display_name?></span>
                     </div>
-                </div>
-                <div class="main-menu-content">
+                </div> --}}
+                <div class="main-menu-content" >
                     <ul class="main-navigation">
 
                         <hr style="background:white"/>
@@ -444,7 +444,7 @@
                                   </li>
                                 
                                     <li><a href="<?= url('Marketing/systemUser') ?>" data-i18n="nav.extra-components.session-idle-timeout">System Users</a></li>
-                                    
+                                    <?php if (can_access('communications')) { ?>
                                     <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Communications</a>
                                         <ul class="tree-2">
                                             <li><a href="<?= url('Marketing/Communication') ?>" data-i18n="nav.extra-components.session-idle-timeout">Communication</a></li>
@@ -454,6 +454,8 @@
                                             <li><a href="<?= url('customer/update') ?>" data-i18n="nav.page_layout.horizontal.static-with-icon">ShuleSoft Updates </a></li>
                                         </ul>
                                     </li>
+                                    <?php } ?>
+
                                     <li><a href="<?= url('customer/requirements') ?>" data-i18n="nav.page_layout.bottom-menu">Customer Requirements</a></li>
                                    
                                 </ul>
@@ -468,10 +470,11 @@
                             <li class="nav-item">
                                 <a href="#!">
                                     <i class="ti-bell "></i>
-                                    <span data-i18n="nav.extra-components.main">Oparations</span>
+                                    <span data-i18n="nav.extra-components.main">Operations</span>
                                 </a>
 
                                 <ul class="tree-1">
+                                    <?php if (can_access('manage_users') )  { ?>
                                     <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
                                         class="icon-arrow-right"></i>Human Resources</a>
                                         <ul class="tree-2">
@@ -482,7 +485,7 @@
                                                 
                                          <?php if (can_access('meeting_minutes')) { ?>
                                             <li><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">
-                                                Meeting Minutes</a>
+                                                Meetings</a>
                                             </li>
                                          <?php } ?>
                                             <li><a href="<?= url('attendance/index') ?>"
@@ -508,19 +511,20 @@
                                             <?php } ?>
                                         </ul>
                                    </li>
+                                   <?php } ?>
 
                                    <?php if ((int) Auth::user()->role_id == 7) { ?>
-                                     <li class="nav-sub-item">
+                                     {{-- <li class="nav-sub-item">
                                         <a href="#" data-i18n="nav.page_layout.vertical.main"><i
                                         class="icon-arrow-right"></i>Partnership </a>
 
                                         <ul class="tree-2">
                                             <li><a href="<?= url('Partner/index') ?>" data-i18n="nav.extra-components.session-timeout">Onboard Requests</a></li>
                                       </ul>
-                                    </li>
+                                    </li> --}}
                                   <?php } ?>  
 
-                                  <?php if (can_access('manage_pertnerships'))  { ?>
+                                  
                                     <li class="nav-sub-item">
                                        <a href="#" data-i18n="nav.page_layout.vertical.main"><i
                                        class="icon-arrow-right"></i>Partnership </a>
@@ -530,7 +534,7 @@
                                         {{-- <li><a href="#" data-i18n="nav.extra-components.session-timeout">Reports</a></li> --}}
                                      </ul>
                                    </li>
-                                 <?php } ?>
+                             
 
 
 
@@ -562,10 +566,10 @@
                                    </li>
                                  <?php } ?>
 
-                               <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
+                                 <?php  if (can_access('training') ){ ?>
+                                 <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
                                     class="icon-arrow-right"></i>Training</a>
                                  <ul class="tree-2">
-
                                  <li><a href="<?= url('customer/guide') ?>" data-i18n="nav.page_layout.vertical.header-fixed">User Guide</a></li>
                                   <li><a href="<?= url('customer/faq') ?>" data-i18n="nav.page_layout.vertical.compact"> FAQ </a>
                                   </li>
@@ -573,20 +577,16 @@
                                   <li><a href="<?= url('customer/sequence') ?>" data-i18n="nav.page_layout.vertical.static-layout">Sequence </a></li>
                                 </ul>
                                </li>
+                               <?php } ?>
 
-
-                               <?php if (can_access('meeting_minutes')) { ?>
-                                    <li> <a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">  Meetings</a></li>
-                                <?php } ?>
-
-                                <?php if (Auth::user()->role_id != 7 && Auth::user()->role_id <> 3) { ?>
+                                <?php if (Auth::user()->role_id != 7 ) { ?>
                                     <li>
                                         <a href="<?= url('customer/activity') ?>" data-i18n="nav.extra-components.offline">
                                             Tasks Allocation
                                         </a>
                                     </li>
         
-                                <?php } if (Auth::user()->role_id == 14) { ?>
+                                <?php } if (can_access('customer_module')) { ?>
                                     <li>
                                         <a href="<?= url('customer/modules') ?>" data-i18n="nav.extra-components.offline">
                                              Customer Modules
@@ -614,7 +614,7 @@
                                 <?php } ?>
 
 
-                              <?php  if (can_access('manage_users') && !in_array(Auth::user()->department, [9, 10]) || in_array(Auth::user()->role_id, array(14, 8, 2, 3, 9, 20))) { ?>
+                              <?php  if (can_access('my_schools') && !in_array(Auth::user()->department, [9, 10]) || in_array(Auth::user()->role_id, array(14, 8, 2, 3, 9, 20))) { ?>
                                 <li class="nav-sub-item">
                                    <a href="#" data-i18n="nav.page_layout.vertical.main"><i
                                    class="icon-arrow-right"></i>My Schools </a>
@@ -622,7 +622,9 @@
                                     <li><a href="<?= url('Analyse/myschools') ?>" data-i18n="nav.extra-components.session-timeout"> List of Schools</a></li>
                                     <li><a href="<?= url('Analyse/myreport') ?>" data-i18n="nav.extra-components.offline">Task Report</a></li>
                                     <li><a href="<?= url('sales/schoolVisit/1') ?>" data-i18n="nav.extra-components.session-timeout">School Visitation</a></li>
-                                    <li><a href="<?= url('Sales/generalreport') ?>" data-i18n="nav.extra-components.session-timeout">Perfomance report</a></li>
+
+                                     <li><a href="<?= url('Sales/generalreport') ?>" data-i18n="nav.extra-components.session-timeout">Perfomance report</a></li>
+                               
                                  </ul>
                                </li>
                              <?php } ?>
@@ -709,12 +711,9 @@
 
                                     <li><a href="<?= url('software/server') ?>" data-i18n="nav.basic-components.button">Server Administration</a></li>
                                     <li><a href="<?= url('software/logs') ?>" data-i18n="nav.basic-components.box-shadow">Error Logs</a></li>
-                                   
-
                                 </ul>
                             </li>
                         <?php } ?>
-
 
                       
                      <?php  if (Auth::user()->department == 9 || Auth::user()->department == 10) {
@@ -788,8 +787,8 @@
                                     <li><a href="<?= url('account/standingOrders') ?>" data-i18n="nav.advance-components.grid-stack">Standing orders</a></li>
                                     <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Transactions</a>
                                         <ul class="tree-2">
-                                            <a href="<?= url('account/revenue') ?>"><i class="fa icon-account"></i> Revenue</a>
-                                            <a href="<?= url('account/transaction/4') ?>"><i class="fa icon-expense"></i> Expense</a>
+                                            <a href="<?= url('revenue/index') ?>"><i class="fa icon-account"></i> Revenue</a>
+                                            <a href="<?= url('expense/index/4') ?>"><i class="fa icon-expense"></i> Expense</a>
                                             <a href="<?= url('account/transaction/1') ?>"><i class="fa icon-account"></i> Fixed assets</a>
                                             <a href="<?= url('account/transaction/5') ?>"><i class="fa icon-account"></i> Current assets</a>
                                             <a href="<?= url('account/transaction/2') ?>"><i class="fa icon-account"></i> liabilities</a>
@@ -797,43 +796,45 @@
                                             <a href="<?= url('account/reconciliation') ?>"><i class="fa icon-account"></i> Reconciliation</a>
                                         </ul>
                                     </li>
-                        <li><a href="<?= url('Account/budget') ?>"
-                            data-i18n="nav.advance-components.grid-stack">
-                              Budget 
-                        </a>
-                       </li>
 
-                
+                               {{-- <li><a href="<?= url('Account/budget') ?>"
+                                data-i18n="nav.advance-components.grid-stack">
+                                  Budget 
+                                 </a>
+                               </li> --}}
+
+                        <?php if (can_access('manage_payroll')) { ?>
                         <li class="nav-sub-item">
                             <a href="#" data-i18n="nav.page_layout.horizontal.main">
                                 Payroll
                                 <span class="fa fa-chevron-down"></span></a>
                             <ul class="tree-2">
-                                <a href="<?= url('payroll/taxes') ?>"><i
-                                        class="fa fa-clipboard"></i><span>TAX</span></a>
-                                <a href="<?= url('payroll/pension') ?>"><i class="fa fa-clipboard"></i><span>Pension
-                                        Fund</span></a>
-                                <a href="<?= url('allowance/index') ?>"><i
-                                        class="fa fa-clipboard"></i><span>Allowances</span></a>
-                                <a href="<?= url('deduction/index') ?>"><i
-                                        class="fa fa-clipboard"></i><span>Deductions</span></a>
-                                <li class="nav-sub-item-3">
-                                    <a>
+                                <a href="<?= url('payroll/taxes') ?>">  <i class="fa fa-clipboard"></i>  <span>TAX</span></a>
+                                <a href="<?= url('payroll/pension') ?>"><i class="fa fa-clipboard"></i><span>Pension Fund</span></a>
+                                <a href="<?= url('allowance/index') ?>"><i class="fa fa-clipboard"></i><span>Allowances</span></a>
+                                <a href="<?= url('deduction/index') ?>"><i class="fa fa-clipboard"></i><span>Deductions</span></a>
+
+                                <a href="<?= url('Payroll/index') ?>"><i class="fa fa-clipboard"></i> <span>Salaries</span> </a>
+
+                                   <li class="nav-sub-item-3">
+                                       <a>
                                         Loans
                                         <span class="fa fa-chevron-down"></span></a>
-                                    <ul class="tree-3">
-
-                                        <a href="<?= url('loan/type') ?>"><i class="fa fa-clipboard"></i><span
+                                           <ul class="tree-3">
+                                            <a href="<?= url('loan/type') ?>"><i class="fa fa-clipboard"></i><span
                                                 style="color: white; line-height: 25px;"> Loan Types</span></a>
-
-                                        <a href="<?= url('loan/index') ?>"><i class="fa fa-clipboard"></i><span
+                                            <a href="<?= url('loan/index') ?>"><i class="fa fa-clipboard"></i><span
                                                 style="color: white; line-height: 25px;"> Borrowers </span></a>
                                         </ul>
                                     </li>
+                                
                
                                     <li><a href="<?= url('account/report') ?>" data-i18n="nav.advance-components.light-box">Reports</a></li>
-                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Settings</a>
-                                        <ul class="tree-2">
+
+                                    <li class="nav-sub-item-3">
+                                        <a>Settings<span class="fa fa-chevron-down"></span></a>
+                                        
+                                        <ul class="tree-3">
                                             <a href="<?= url('account/client') ?>"><i class="fa icon-account"></i>  Clients</a>
                                             <a href="<?= url('account/bank') ?>"><i class="fa icon-account"></i> Banking</a>
                                             <a href="<?= url('account/groups') ?>"><i class="fa icon-account"></i> Account Groups</a>
@@ -843,6 +844,7 @@
                                     </li>
                                 </ul>
                             </li>
+                            <?php } ?>
                         <?php } ?>
 
                     

@@ -1261,12 +1261,17 @@ class Customer extends Controller {
         echo $option;
     }
 
+
+
+
+    
+
     public function download() {
         $client = request()->segment(3);
         $this->data['show_download'] = request()->segment(4);
         $this->data['client'] = \App\Models\Client::find($client);
         $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->get();
-        $view = view('customer.training.jobcard', $this->data);
+        $view = view('customer.training.implementation', $this->data);
         if ((int) $this->data['show_download'] == 1) {
             echo $view;
             $file_name = $this->data['client']->username . '.doc';
@@ -1276,6 +1281,63 @@ class Customer extends Controller {
             );
             return response()->download('storage/app/' . $file_name, $file_name, $headers);
         }
+        return $view;
+    }
+
+    public function createJobCard(){
+        if($_POST){
+            $module_ids = request('module_ids');
+            $client_id = request('client_id');
+            $user_id  = Auth::user()->id;
+            $date     = request('date');
+        }
+        foreach($module_ids as $module_id) {
+            \App\Models\JobCard::create(['module_id' => $module_id, 'client_id' =>$client_id,'user_id' => $user_id,'date'=> $date]);
+        }
+        return redirect()->back()->with('success','Job card modules uploaded succesfully!');
+    }
+
+
+    public function uploadJobCard(){
+        if($_POST){
+            $file = request()->file('job_card_file');
+            $company_file_id = $file ? $this->saveFile($file, 'company/employees') : 1; 
+            $data = [
+                'company_file_id' => $company_file_id,
+                'client_id' => request('client_id'),
+                'created_by'  => Auth::user()->id,
+                'date'    => request('date')
+            ];
+            \App\Models\ClientJobCard::create($data);
+          }
+          return redirect()->back()->with('success','uploaded succesfully!');
+       
+    }
+
+
+    public function viewFile() {
+        $value = request()->segment(3);
+        $type = request()->segment(4);
+        if($type == 'jobcard'){
+            $contract = \App\Models\ClientJobCard::where('date',$value)->first();
+            $this->data['path'] = $contract->companyFile->path;
+        }
+
+        if($type == 'course_certificate'){
+            $certificate = \App\Models\Learning::where('id',$value)->first();
+            $this->data['path'] = $certificate->companyFile->path;
+        }
+        return view('layouts.file_view', $this->data);
+    }
+
+
+    public function Jobcard() {
+        $client = request()->segment(3);
+        $date = request()->segment(4);
+        $this->data['show_download'] = request()->segment(5);
+        $this->data['client'] = \App\Models\Client::find($client);
+        $this->data['job_card_modules'] = \App\Models\JobCard::whereDate('date', '=', $date)->get();
+        $view = view('customer.jobcard', $this->data);
         return $view;
     }
 

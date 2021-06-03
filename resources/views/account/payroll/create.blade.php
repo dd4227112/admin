@@ -42,29 +42,11 @@
                                 <div class="tab-pane active" id="home3" role="tabpanel">
                                   <div id="hide-table">
 
-
-
-                                    
-
-
-
         <div class="row">
             <div class="col-sm-12">
                 <form class="form-horizontal" role="form" method="post">
 
-                    <!--  <?php
-                //    if (form_error($errors, 'subject'))
-                //        echo "<div class='form-group has-error' >";
-                //    else
-                //        echo "<div class='form-group' >";
-                      ?>
-                        <label for="subject" class="col-sm-2 control-label">
-                            Specify payment date
-                        </label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control" id="name" placeholder="<?php //__('date')   ?>" name="date" value="<?= date('d M Y') ?>" >
-                        </div>
-                     </div>-->
+           
                     <div class="col-sm-12">
                     <div class="table-responsive table-sm table-striped table-bordered table-hover">
                         <table id="example1" class="table dataTable">
@@ -73,17 +55,17 @@
                                     <th class="col-sm-1"><?= __('#') ?></th>
                                     <th class="col-sm-2"><?= __('Employee name') ?></th>
                                     <th class="col-sm-2">User role</th>
-                                    <!--<th class="col-sm-2"><?= __('employee_number') ?></th>-->
+                                    <!--<th class="col-sm-2"><?= __('Employee Number') ?></th>-->
                                     <th class="col-sm-1">Bank</th>
-                                    <th class="col-sm-2"><?= __('bank_account') ?></th>
-                                    <th class="col-sm-2"><?= __('basic_pay') ?></th>
-                                    <th class="col-sm-1"><?= __('allowance') ?></th>
-                                    <th class="col-sm-1"><?= __('gross_pay') ?></th>
-                                    <th class="col-sm-1"><?= __('pension') ?></th>
+                                    <th class="col-sm-2"><?= __('Bank Account') ?></th>
+                                    <th class="col-sm-2"><?= __('Basic Pay') ?></th>
+                                    <th class="col-sm-1"><?= __('Allowance') ?></th>
+                                    <th class="col-sm-1"><?= __('Gross pay') ?></th>
+                                    <th class="col-sm-1"><?= __('Pension') ?></th>
                                     <th class="col-sm-1"><?= __('deduction') ?></th>
-                                    <th class="col-sm-1"><?= __('taxable_amount') ?></th>
-                                    <th class="col-sm-1"><?= __('paye') ?></th>
-                                    <th class="col-sm-1"><?= __('net_pay') ?></th>
+                                    <th class="col-sm-1"><?= __('Taxable Amount') ?></th>
+                                    <th class="col-sm-1"><?= __('Aaye') ?></th>
+                                    <th class="col-sm-1"><?= __('Net Pay') ?></th>
                                     <?php
                                     if (can_access('manage_payroll')) {
                                         ?>                                                                                                                                                   <!--<th class="col-sm-4"><?= __('action') ?></th>-->
@@ -113,18 +95,13 @@
                                         <td><?= $i ?></td>
                                         <td><?= $user->name ?></td>
                                         <td><?= $user->role->name ?></td>
-                                        <!--<td><?php //$user_info->id_number ?></td>-->
-
-                                        <td><span  style=" text-decoration: none; border-bottom: dashed 1px #0088cc;" contenteditable="true" onblur="save('<?= $user->id .  'bank_name' ?>', '<?= $user->id ?>', 'bank_name')" id="<?= $user->id . 'bank_name' ?>"><?= $user->bank_name ?></span>
-                                            <span id="stat<?= $user->id . 'bank_name' ?>"></span>
+                                        <td><?= $user->bank_name ?> </td>
+                                        <td>
+                                           <?= $user->bank_account ?>
                                         </td>
                                         <td>
-                                            <span style=" text-decoration: none; border-bottom: dashed 1px #0088cc;" contenteditable="true" onblur="save('<?= $user->id .  'bank_account_number' ?>', '<?= $user->id ?>', 'bank_account_number')" id="<?= $user->id . 'bank_account_number' ?>"><?= $user->bank_account ?></span>
-                                            <span id="stat<?= $user->id . 'bank_account_number' ?>"></span>
-                                        </td>
-
-                                        <td><span style=" text-decoration: none; border-bottom: dashed 1px #0088cc;" contenteditable="true" onblur="save('<?= $user->id . 'salary' ?>', '<?= $user->id ?>', 'salary')" id="<?= $user->id . 'salary' ?>"><?= (int) $basic_salary == 0 ? 0 : ($basic_salary) ?></span>
-                                            <span id="stat<?= $user->id .'salary' ?>"></span></td>
+                                            <?= (int) $basic_salary == 0 ? 0 : ($basic_salary) ?>
+                                         </td>
                                         <td>
                                             <?php
                                             //calculate user allowances
@@ -275,7 +252,7 @@
                                                             'transaction_id' => time(),
                                                             'bank_account_id'=>DB::table('bank_accounts')->first()->id,
                                                             'created_by' => Auth::user()->id,
-                                                           // 'created_by_table' => session('table')
+                                                         
                                                         ]);
                                                     }
                                                 }
@@ -452,9 +429,7 @@
                                                 "payment_type_id"=>1,
                                                 "bank_account_id"=>$bank_account->id,
                                                 'user_id' => Auth::user()->id,
-                                                // 'uname' => session('username'),
-                                                // 'usertype' => session('usertype'),
-                                                // 'created_by' => '{' . session('id') . ',' . session('table') . '}'
+                                            
                                             );
                                             \DB::table('expenses')->insert($array);
                                         }
@@ -520,7 +495,7 @@
                                 Payroll Date
                             </label>
                             <div class="col-sm-3">
-                                <input type="date" class="form-control calendar" required="" name="payroll_date" value="<?= old('date') ?>" >
+                                <input type="date" class="form-control calendar" required="" name="payroll_date" value="<?= date('Y-m-d') ?>" >
                             </div>
                             <span class="col-sm-4 control-label">
                                 <?php echo form_error($errors, 'email_sms'); ?>

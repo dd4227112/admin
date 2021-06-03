@@ -86,7 +86,7 @@
                                     <div class="card-block">
 
                                         <header class="panel-heading">
-                                            Add 
+                                            Add new transactions
                                         </header>
                                         <div class="card-block">
 
@@ -105,8 +105,8 @@
                                                                 <div class="col-sm-6">
                                                                     <select name="user_in_shulesoft" id="user_in_shulesoft" class="form-control">
                                                                         <option value="0" selected="true"> <?=('usertype')?></option>
-                                                                        <option value="1"> <?=('userin')?></option>
-                                                                        <option value="2"> <?=('usernot')?></option>
+                                                                        <option value="1"> <?=('User in Shulesoft')?></option>
+                                                                        <option value="2"> <?=('User not in Shulesoft')?></option>
                                                                     </select>
                                                                 </div>
                                                                 <span class="col-sm-4 control-label">
@@ -169,7 +169,7 @@
                                                                     echo "<div class='form-group' >";
                                                                 ?>
                                                                 <label for="expense" class="col-sm-2 control-label">
-                                                                    <?= ("Category") ?>
+                                                                    <?= ("Select Category") ?>
                                                                 </label>
                                                                 <div class="col-sm-6">
                                                                     <?php
@@ -228,8 +228,8 @@
                                                         <?= ("Amount") ?>
                                                     </label>
                                                     <div class="col-sm-6">
-                                
-                                                        <input type="number" class="form-control" id="amount" name="amount" value="<?= old('amount') ?>" required="true">
+                                                        <input type="text" class="form-control transaction_amount"
+                                                        id="amount" name="amount" value="<?= old('amount') ?>" required="true">
                                                     </div>
                                                     <span class="col-sm-4 control-label">
                                                         <?php echo form_error($errors, 'amount'); ?>
@@ -273,7 +273,7 @@
                                                 echo "<div class='form-group' >";
                                             ?>
                                             <label for="amount" class="col-sm-2 control-label">
-                                                <?= ("ref_no") ?>
+                                                <?= ("Reference No.") ?>
                                             </label>
                                             <div class="col-sm-6">
                                 
@@ -321,11 +321,11 @@
                                         echo "<div class='form-group' >";
                                     ?>
                                     <label for="date" class="col-sm-2 control-label">
-                                        <?= ("expense_date") ?>
+                                        <?= ("Date") ?>
                                     </label>
                                     <div class="col-sm-6">
                                         <div class="icon-addon addon-lg">
-                                        <input type="date" class="form-control calendar" id="date" name="date" value="<?= old('date') ?>" required="true" >
+                                        <input type="date" class="form-control calendar" id="date" name="date" value="<?= date('Y-m-d') ?>" required="true" >
                                        <span class="fa fa-calendar"></span>
                                     </div>
                                                 </div>
@@ -373,7 +373,7 @@
                                     echo "<div class='form-group' >";
                                 ?>
                                 <label for="note" class="col-sm-2 control-label">
-                                    <?= ("expense_note") ?>
+                                    <?= ("Description") ?>
                                 </label>
                                 <div class="col-sm-6">
                                     <textarea style="min-height: 100px" placeholder="Make sure you write a well understandable descriptions here,this will help make your accounts clear" 
@@ -412,7 +412,7 @@
                                                     <br/>
                                                     <div class=" form">
                                    
-                                                        <form id="demo-form2" action="<?= url('account/uploadExpenses') ?>" class="form-horizontal" method="POST"
+                                                        <form id="demo-form2" action="<?= url('expense/uploadExpenses') ?>" class="form-horizontal" method="POST"
                                                               enctype="multipart/form-data">
 
                                                             <div class="form-group">
@@ -453,6 +453,14 @@
 
 
 <script>
+          //Format number to thousands
+    $('.transaction_amount').attr("pattern", '^(\\d+|\\d{1,3}(,\\d{3})*)(\\.\\d{2})?$');
+    $('.transaction_amount').on("keyup", function() {
+        var currentValue = $(this).val();
+        currentValue = currentValue.replace(/,/g, '');
+        $(this).val(currentValue.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+    });
+
     payment_method_status = function () {
         $('#payment_method_status').change(function () {
             var val = $(this).val();

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-
+<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
 <?php $root = url('/') . '/public/' ?>
 <div class="main-body">
     <div class="page-wrapper">
@@ -26,7 +26,7 @@
         </div>
         <!-- Page-header end -->
         <!-- Page-body start -->
-        <?php if (can_access('manage_users')) { ?>
+     <?php if (can_access('manage_users')) { ?>
 
         <div class="page-body">
 
@@ -180,7 +180,16 @@
     </div>
 </div>
 
-<script>
+
+<script type="text/javascript">
+  $(".select2").select2({
+    theme: "bootstrap",
+    dropdownAutoWidth: false,
+    allowClear: false,
+    debug: true
+  });
+  
+  
 $('#permission').change(function(event) {
     var id = $(this).val();
     if (id === '') {} else {

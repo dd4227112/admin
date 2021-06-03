@@ -13,9 +13,9 @@
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
                     <li class="breadcrumb-item">
-                        <a href="<?= url("dashboard/index") ?>"><i class="fa fa-laptop"></i> <?= __('menu_dashboard') ?></a>
+                        <a href="<?= url("dashboard/index") ?>"><i class="fa fa-laptop"></i> <?= __('Home') ?></a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!"><?= __('allowance_title') ?></a>
+                    <li class="breadcrumb-item"><a href="#!"><?= __('revenue') ?></a>
                     </li>
                 </ul>
             </div>
@@ -44,28 +44,30 @@
                                     echo "<div class='form-group' >";
                                 ?>
                                 <?php
-                              if(isset($revenue->user_id)){ ?>
+                              if(isset($revenue->user_id) && $revenue->user_id > 0 ){ ?>
                                   
-                     <?php
+                           <?php 
                             if (form_error($errors, 'user_id'))
                                 echo "<div class='form-group has-error' >";
                             else
                                 echo "<div class='form-group' >";
                             ?>
+
+                           
                             <label for="payment method" class="col-sm-2 control-label">
                                 Payer Name <span class="red">*</span>
                             </label>
                             <div class="col-sm-8 col-xs-12">
                                 <?php
                                 
-                                $uarray = array('0' => ("select_expense"));
-                                $users = \App\Models\User::all();
+                                $uarray = array('0' => ("select name"));
+                                $users = \App\Models\User::where('role_id','<>',7)->where('status','<>','0')->get();
                                 if (!empty($users)) {
                                     foreach ($users as $user) {
-                                        $uarray[$user->id] = $user->name . ' (' . $user->usertype . ')';
+                                        $uarray[$user->id] = $user->name;
                                     }
                                 }
-                                echo form_dropdown("user_id", $uarray, old("user_id",$revenue->user_id), "id='user_id' class='form-control select2'");
+                                echo form_dropdown("user_id", $uarray, old("user_id",$user->id), "id='user_id' class='form-control select2'");
                                 
                                 ?>
                             </div>
@@ -84,7 +86,7 @@
                             echo "<div class='form-group' >";
                         ?>
                         <label for="amount" class="col-sm-2 control-label">
-                            <?= ("payer_name") ?><span class="red">*</span>
+                            <?= ("Payer name") ?><span class="red">*</span>
                         </label>
                         <div class="col-sm-8 col-xs-12">
 
@@ -92,13 +94,9 @@
                         </div>
                         <span class="col-sm-4 control-label">
                             <?php echo form_error($errors, 'payer_name'); ?>
-                        </span>           
-                                 
-                                 
-                            <?php } ?>
-                                
-                                
-                        </div>
+                        </span>               
+                         <?php } ?>   
+                     </div>
                           
                   
                     <?php
@@ -108,7 +106,7 @@
                         echo "<div class='form-group' >";
                     ?>
                     <label for="amount" class="col-sm-2 control-label">
-                        <?= ("payer_phone") ?><span class="red">*</span>
+                        <?= ("Payer phone") ?><span class="red">*</span>
                     </label>
                     <div class="col-sm-8 col-xs-12">
 
@@ -122,13 +120,13 @@
                     </span>
                 </div>
                 <?php
-                if (form_error($errors, 'payer_email'))
+                if (form_error($errors, 'Payer email'))
                     echo "<div class='form-group has-error' >";
                 else
                     echo "<div class='form-group' >";
                 ?>
                 <label for="amount" class="col-sm-2 control-label">
-                    <?= ("payer_email") ?>
+                    <?= ("Payer email") ?>
                 </label>
                 <div class="col-sm-8 col-xs-12">
 
@@ -161,7 +159,7 @@
             <?php if (!empty($category)) { ?>
             <?php } ?>
         </div>
-        <span class="col-sm-2 small"><a href="<?= url("expense/financial_category") ?>">Create New</a></span>
+        {{-- <span class="col-sm-2 small"><a href="<?= url("expense/financial_category") ?>">Create New</a></span> --}}
         <span class="col-sm-4 control-label">
             <?php echo form_error($errors, 'refer_expense_id'); ?>
         </span>
@@ -273,7 +271,7 @@ else
 </label>
 <div class="col-sm-8 col-xs-12">
     <div class="icon-addon addon-lg">
-    <input type="date" class="form-control calendar" id="date" name="date" value="<?= old('date', date("m/d/Y", strtotime($revenue->date))) ?>" required="true" >
+    <input type="date" class="form-control calendar" id="date" name="date" value="<?= old('date',$revenue->date) ?>" required="true" >
 <span class="fa fa-calendar"></span>
         </div>
 </div>
@@ -332,5 +330,29 @@ else
             $('#ercentage').val('');
         }
     });
+
+    payment_method_status = function () {
+      $('#payment_method_status').change(function () {
+        var val = $(this).val();
+        if (val !== 'cash') {
+          $('#refer_no').show();
+        } else {
+          $('#refer_no').hide();
+        }
+      });
+      $('#user_in_shulesoft').change(function () {
+        var val = $(this).val();
+        if (val === '1') {
+          $('#user_in_shulesoft_tag').show();
+          $('#user_not_in_shulesoft_tag').hide();
+        } else if (val === '2') {
+          $('#user_in_shulesoft_tag').hide();
+          $('#user_not_in_shulesoft_tag').show();
+        } else {
+          $('#user_in_shulesoft_tag').hide();
+          $('#user_not_in_shulesoft_tag').hide();
+        }
+      });
+    };
 </script>
 @endsection

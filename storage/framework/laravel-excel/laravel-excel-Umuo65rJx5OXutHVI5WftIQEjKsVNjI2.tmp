@@ -1,0 +1,9 @@
+﻿name,category,amount,date,account_number,payment_method,transaction_id,depreciation,user_in_shulesoft,recipient,payer_phone,payer_email,note,code
+Seminar and event costs,General & Administrative expenses,8000,2018-08-21,25400000,Cash,EZ3234343,0,1,Juma Hassan,2.55766E+11,sample@email.com,Seminar and event costs,
+Meal expense,Operational Expenses,16000,2018-08-22,25400000,Bank,EZ3234344,0,1,Omary John,2.55766E+11,sample@email.com,Meal expense,
+Internet Expenses,Operational Expenses,24000,2018-08-23,25400000,Mobile,EZ3234345,0,1,James Issack,2.55766E+11,sample@email.com,Internet Expenses,
+Communication expense,Operational Expenses,32000,2018-08-24,25490000,Cheque,EZ3277346,0,1,Albogast Kiyogoma,2.55766E+11,sample@email.com,Communication expense,
+Fuel expense,General & Administrative expenses,40000,2018-08-25,25400000,CASH,EZ4234347,0,1,Albogast Kiyogoma,2.55766E+11,sample@email.com,Fuel expense,
+Rent expense,General & Administrative expenses,48000,2018-08-26,25400000,Bank,EZ3234348,0,1,Albogast Kiyogoma,2.55766E+11,sample@email.com,Rent expense,
+Legal Fees,Operational Expenses,56000,2018-08-27,25400000,Mobile,EZ3234349,0,1,Albogast Kiyogoma,2.55766E+11,sample@email.com,Legal Fees,
+Training costs,General & Administrative expenses,64000,2018-08-28,25400000,Cheque,EZ3234350,0,1,Albogast Kiyogoma,2.55766E+11,sample@email.com,Training costs,
