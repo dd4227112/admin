@@ -44,6 +44,10 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
             'schema' => 'admin',
+            	'sslmode' => 'prefer',
+        'options' => [
+            \PDO::ATTR_EMULATE_PREPARES => true
+        ]
         ],
 
         'karibusms' => [
@@ -59,6 +63,9 @@ return [
             'prefix_indexes' => true,
             'schema' => 'new_karibusms',
             'sslmode' => 'prefer',
+        'options' => [
+            \PDO::ATTR_EMULATE_PREPARES => true
+        ]
         ],
 
     'biotime' => [
@@ -74,6 +81,9 @@ return [
             'prefix_indexes' => true,
             'schema' => 'public',
             'sslmode' => 'prefer',
+        'options' => [
+            \PDO::ATTR_EMULATE_PREPARES => true
+        ]
         ],
         'sqlsrv' => [
             'driver' => 'sqlsrv',
