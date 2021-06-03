@@ -954,12 +954,14 @@ class Customer extends Controller {
         $table = 'clients';
         $user_id = request('user_id');
         $value = request('val');
+       // dd($value);
         $column = 'username';
         if ($table == 'bank') {
             return $this->setBankParameters();
         } else {
-            $table == 'setting' ? DB::table($schema . '.' . $table)->update([$tag => $value]) :
-                            DB::table($table)->where($column, $schema)->update([$tag => $value]);
+            $table == 'setting' ? DB::table($schema . '.' . $table)->update([$tag => $value]) : 
+            DB::table($table)->where($column, $schema)->update([$tag => $value]);
+                          
             if ($tag == 'institution_code') {
                 //update existing invoices
                 DB::statement('UPDATE ' . $schema . '.invoices SET "reference"=\'' . $value . '\'||"reference"');
@@ -1111,6 +1113,10 @@ class Customer extends Controller {
         $type = request()->segment(4);
         if($type == 'standing'){
             $contract = \App\Models\StandingOrder::find($contract_id);
+            if(empty($contract)) {
+              $contract = \App\Models\Contract::findOrFail($contract_id);
+            }
+           
             $this->data['path'] = $contract->companyFile->path;
         }
         else if($type == 'legal'){
@@ -1163,6 +1169,12 @@ class Customer extends Controller {
         $set = $this->data['set'] = 1;
         if ((int) $invoice_id > 0) {
             $this->data['invoice'] = \App\Models\Invoice::find($invoice_id);
+            $this->data['usage_start_date'] = $this->data['invoice']->client->start_usage_date;
+            $start_usage_date = date('Y-m-d',strtotime($this->data['usage_start_date']));
+            $yearEnd = date('Y-m-d', strtotime('Dec 31'));
+            $to = \Carbon\Carbon::createFromFormat('Y-m-d',  $yearEnd);
+            $from = \Carbon\Carbon::createFromFormat('Y-m-d', $start_usage_date);
+            $this->data['diff_in_months'] = $diff_in_months = $to->diffInMonths($from);
             return view('layouts.invoice_to_share', $this->data);
         }
         else {
@@ -1193,8 +1205,9 @@ class Customer extends Controller {
     public function contract() {
         $client_id = request()->segment(3);
         $file = request()->file('file');
-        $file_id = $this->saveFile($file, 'company/contracts');
+      //  $file_id = $this->saveFile($file, 'company/contracts');
         //save contract
+      
         $contract_id = DB::table('admin.contracts')->insertGetId([
             'name' => request('name'), 'company_file_id' => $file_id, 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'contract_type_id' => request('contract_type_id'), 'user_id' => Auth::user()->id, 'note' => request('description')
         ]);

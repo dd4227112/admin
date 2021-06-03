@@ -63,9 +63,9 @@
         $message = '';
         $message .= 'Habari ';
         $message .= 'Fungua invoice ya malipo ya shulesoft';
-        $message .= 'ya tarehe '.date('d M Y',strtotime($invoice->date)).'';
+        $message .= ' ya tarehe '.date('d M Y',strtotime($invoice->date)).'';
         $message .= chr(10);
-        $message .= ' https://admin.shulesoft/customer/shareinvoicewhatsapp/'.$invoice->id.'';
+        $message .= 'https://admin.shulesoft/customer/shareinvoicewhatsapp/'.$invoice->id.'';
         ?>
         
         <div class="page-body">
@@ -76,8 +76,10 @@
                         <a class="btn btn-secondary btn-sm" href="#" data-toggle="modal" data-target="#large-Modal"> Edit </a>
                         <a href="#" id="printInvoice" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Print </a>
 
-                        <a href="whatsapp://send?text=<?=$message?>" data-action="share/whatsapp/share" title="Share via Whatsapp">
-                            <img src="https://web.whatsapp.com/favicon-64x64.ico">
+                       
+                        <a href="whatsapp://send?text=<?=$message?>" data-action="share/whatsapp/share" 
+                            onClick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;" target="_blank" title="Share on whatsapp">
+                            <img width="50" src="https://web.whatsapp.com/favicon-64x64.ico">
                         </a>
 
                         <?php $link = ''; $link .= 'https://admin.shulesoft/customer/ShareInvoiceEmail/'.$invoice->id; ?> 
@@ -137,9 +139,13 @@
                                             <tr>
                                                 <td>Control #</td>
                                                 <td><?= strlen($invoice->token) < 4 ? $invoice->reference : $invoice->token ?></td>
+                                                <td colspan="2"> </td>
                                             </tr>
 
                                             <tr>
+                                                <td>Start Date #</td>
+                                                <td><?=date('d M Y', strtotime('-30 day', strtotime($invoice->due_date))) ?> </td>
+                                               
                                                 <td>Due Date #</td>
                                                 <td><?= date('d M Y', strtotime($invoice->due_date)) ?></td>
                                             </tr>
@@ -149,7 +155,9 @@
                                                     $am = $invoice->invoiceFees()->sum('amount');
                                                     $paid = $invoice->payments()->sum('amount');
                                                     $unpaid = $am - $paid;
-                                                    ?><b class="amnt-value">Tsh <?= number_format($unpaid) ?></b></td>
+                                                    ?><b class="amnt-value">Tsh <?= number_format($unpaid) ?></b>
+                                                </td>
+                                                <td colspan="2"> </td>
                                             </tr>
                                         </table>
                                     </div>
@@ -190,7 +198,7 @@
 
                                             </tbody>
                                         </table>
-                                        <p class="well-sm "><b>Amount in words:</b> <?= number_to_words($unpaid) ?></p>
+                                        <p class="well-sm "><b>Amount in words:</b> <?= number_to_words($unpaid) ?>    </p>
                                     </div>
                                     <!-- /.col -->
                                     <div class="col-sm-12 col-lg-12">
@@ -207,14 +215,7 @@
                                                            $a = DB::table($invoice->client->username. '.bank_accounts')->where('refer_bank_id', 22)->first();
                                                         } 
                                                  if(!empty($a)){ ?>
-                                                  <p>
-                                                    <b>Account Details :</b><br/>
-                                                    <b>Account Name:</b> INETS COMPANY LIMITED <br/> 
-                                                    <b>Bank Name:</b> NMB BANK PLC <br/> 
-                                                     <b>Account Number:</b> 22510028669
-                                                    <br/>
-                                                    <small>Please notify us after a deposit</small>
-                                                  </p>
+                                                
                                                   <?php }else { ?>
                                                     <p>
                                                         <b>Account Details :</b><br/>
@@ -232,6 +233,7 @@
                                         <!-- <br/>
                                         <b>If you make a bank deposit, you will have to notify us to activate your account</b> -->
                                         <p class="text-muted well well-sm no-shadow">
+                                            This is the payment for shulesoft system for <?=$diff_in_months > 1 ? number_to_words($diff_in_months).' months' : number_to_words($diff_in_months).' month'?>. <br>
                                             Thank you for your business. we're glad to serve you
                                         </p>
                                         </td>

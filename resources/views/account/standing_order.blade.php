@@ -55,7 +55,6 @@
                                                         <th>No.</th>
                                                         <th>School</th>
                                                         <th>Branch</th>
-                                                      
                                                         <th>Type</th>
                                                         <th>Occurance amount</th>
                                                         <th>Total amount</th>
@@ -68,13 +67,13 @@
                                                     @foreach ($standingorders as $key => $standing)
                                                     <tr>
                                                         <td><?= $i ?></td>
-                                                        <td><?=$standing->client->name?></td>
-                                                        <td><?=$standing->branch->name?></td>
+                                                        <td></td>
+                                                        <td><?=$standing->name?></td>
                                                
                                                         <td><?=$standing->type?></td>
                                                         <td><?=money($standing->occurance_amount)?></td>
                                                         <td><?=money($standing->amount)?></td>
-                                                        <td><?= date('d M Y', strtotime($standing->payment_date)) ?></td>
+                                                        <td><?= date('d M Y', strtotime($standing->end_date)) ?></td>
                                                        @if(can_access('manage_finance'))
                                                         <td>
                                                           <a  target="_break" href="<?= url('customer/viewContract/'.$standing->id.'/standing') ?>" class="btn btn-sm btn-success">View</a>

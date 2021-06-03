@@ -182,7 +182,6 @@
                                             $i = 1;
                                             foreach ($invoices as $invoice) {
                                                 $amount = $invoice->invoiceFees()->sum('amount');
-                                                
                                                 $paid = $invoice->payments()->sum('amount');
                                                 $unpaid = $amount - $paid;
                                                 $total_paid += $paid;
@@ -191,7 +190,7 @@
                                                 ?>
 
                                                 <tr>
-                                                    <td><?= $invoice->client->username ?></td>
+                                                <td><?= $invoice->client->username ?></td>
                                                     <td><?= $invoice->reference ?></td>
                                                     <td><?= money($amount) ?></td>
                                                     <td><?= money($paid) ?></td>

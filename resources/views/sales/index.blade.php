@@ -184,7 +184,7 @@
                                                     <p>
                                                         provide this to customer interested to start using ShuleSoft but needs a grace or trial period
                                                     </p>
-                                                      <a href="{{url('downloadMaterial/introduction_letter')}}"  target="_blank" class="badge badge-warning">Download (V 1.0)</a>
+                                                      <a href="https://drive.google.com/file/d/1oRHWY6nt9h5ddQZ7Jjv9VK6XHXdsB0tT/view?usp=sharing"  target="_blank" class="badge badge-warning">Download (V 1.0)</a>
                                                 </div>
                                             </div>
                                         <div class="col-lg-4 col-xl-3 col-sm-6">

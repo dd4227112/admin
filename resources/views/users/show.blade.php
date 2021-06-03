@@ -655,10 +655,8 @@ foreach ($user_permission as $permis) {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    
-                                                    <?php  if(!empty($attendances)) 
-                                                    foreach ($attendances as $attendance) {
-                                                        ?>
+                                                  <?php  if(count($attendances) > 0) { ?>
+                                                    <?php foreach ($attendances as $attendance) { ?>
                                                         <tr>
                                                             <td><?= date('d M Y', strtotime(custom_date($attendance->created_at))) ?></td>
                                                             <td><?= $attendance->status == 1 ? 'Present' : 'Absent' ?></td>
@@ -681,8 +679,8 @@ foreach ($user_permission as $permis) {
 
                                                             </td>
                                                         </tr>
+                                                      <?php } ?>
                                                      <?php } ?>
-                                                   
                                                 </tbody>
                                             </table>
                                         </div>

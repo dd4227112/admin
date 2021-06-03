@@ -38,8 +38,8 @@ class Account extends Controller {
         $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
         $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
         $this->data['invoices'] = ($from != '' && $to != '') ?
-                Invoice::whereBetween('date', [$from_date, $to_date])->get() :
-                Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->get();
+                Invoice::whereBetween('date', [$from_date, $to_date])->orderBy('created_at', 'DESC')->get() :
+                Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->orderBy('created_at', 'DESC')->get();
         return $this;
     }
 
@@ -102,18 +102,19 @@ class Account extends Controller {
         if ((int) $project_id == 1) {
             //create shulesoft invoices
             //check in client table if all schools with students and have generated reports are registered
-            $clients=\DB::select("select * from admin.clients where id not in (select client_id from admin.invoices where account_year_id=(select id from admin.account_years where name='".date('Y')."'))");
+            $clients=\DB::select("select * from admin.clients where id not in (select client_id from admin.invoices where account_year_id=(select id from admin.account_years where name='".date('Y')."')) order by created_at desc");
 
         // if exists, check if invoice exists, else, create new invoice
-           if(!empty($clients)){
-            foreach($clients as $client)
-              {
-                 $invoice = \App\Models\Invoice::where('client_id',$client->id)->where('account_year_id',$account_year_id)->first();
-                 if(empty($invoice)){
-                  $this->createInvoices($client->id);
-               }
-              }
-           }
+
+        //    if(!empty($clients)){
+        //     foreach($clients as $client)
+        //       {
+        //          $invoice = \App\Models\Invoice::where('client_id',$client->id)->where('account_year_id',$account_year_id)->first();
+        //          if(empty($invoice)){
+        //           $this->createInvoices($client->id);
+        //        }
+        //       }
+        //    }
 
             $this->getInvoices($project_id, $account_year_id);
         }
@@ -176,6 +177,17 @@ class Account extends Controller {
                 return redirect()->back()->with('success', 'success');
             }
             $this->data['invoice'] = Invoice::find($invoice_id);
+            $this->data['usage_start_date'] = $this->data['invoice']->client->start_usage_date;
+           
+        
+            $start_usage_date = date('Y-m-d',strtotime($this->data['usage_start_date']));
+           
+            $yearEnd = date('Y-m-d', strtotime('Dec 31'));
+
+            $to = \Carbon\Carbon::createFromFormat('Y-m-d',  $yearEnd);
+            $from = \Carbon\Carbon::createFromFormat('Y-m-d', $start_usage_date);
+            $this->data['diff_in_months'] = $diff_in_months = $to->diffInMonths($from);
+               
             return view('account.invoice.single', $this->data);
         }
     }
@@ -377,6 +389,11 @@ class Account extends Controller {
         $client = \App\Models\Client::find($client_id);
         $year = \App\Models\AccountYear::where('name', date('Y'))->first();
         $reference = time(); // to be changed for selcom ID
+       
+        if (empty($client->start_usage_date)) {
+            //If start usage date 
+            return redirect()->back()->with('error', 'You must specify '.$client->username.' start usage date !');
+        }
         
         $data = ['reference' => $reference, 
                  'client_id' => $client_id, 
@@ -1491,9 +1508,13 @@ select * from tempb");
         return view('account.report.summary', $this->data);
     }
 
+
+    // List of standing orders
     public function standingOrders() { 
         $this->data['client_id'] = request()->segment(3);
-        $this->data['standingorders'] = \App\Models\StandingOrder::whereYear('payment_date', date('Y'))->get();
+      //  $this->data['standingorders'] = \App\Models\StandingOrder::whereYear('payment_date', date('Y'))->get();
+        $this->data['standingorders'] = \App\Models\Contract::where('contract_type_id',8)->get();
+       
         $this->data['schools'] = \App\Models\Client::get();
         return view('account.standing_order', $this->data);
     }
