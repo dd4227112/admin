@@ -281,11 +281,11 @@
                                                 <a href="<?= url('PaymentController/index/' . $invoice->id . '/mobile') ?>" class="mr-4">
                                                     <img src="<?= url('public/assets/images/account/airtel.jpg') ?>" alt="Airtel Money" width="60" height="60">
                                                 </a>
-                                                <a href="<?= url('PaymentController/index/' . $invoice->id . '/paypal') ?>" class="mr-4">
+                                                <a href="" class="mr-4">
                                                     <img src="<?= url('public/assets/images/account/paypal.png') ?>" alt="Pay Pal" width="60" height="60">
                                                 </a>
 
-                                                <a href="<?= url('PaymentController/index/' . $invoice->id . '/checkout') ?>" class="mr-4">
+                                                <a href="" class="mr-4">
                                                     <img src="<?= url('public/assets/images/account/paycard.jpg') ?>" alt="Pay Pal" width="60" height="60">
                                                 </a>
                                               <?php } ?>
