@@ -10,7 +10,7 @@ use \App\Models\User;
 use DB;
 
 use Carbon\Carbon;
-use Illuminate\Http\Exceptions\HttpResponseException;
+
 use Maatwebsite\Excel\Facades\Excel;
 
 class Customer extends Controller {

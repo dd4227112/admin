@@ -56,9 +56,13 @@
                                     <tr>
                                         <td>Control #</td>
                                         <td><?= strlen($invoice->token) < 4 ? $invoice->reference : $invoice->token ?></td>
+                                        <td colspan="2"> </td>
                                     </tr>
 
                                     <tr>
+                                        <td>Start Date #</td>
+                                        <td><?=date('d M Y', strtotime('-30 day', strtotime($invoice->due_date))) ?> </td>
+                                       
                                         <td>Due Date #</td>
                                         <td><?= date('d M Y', strtotime($invoice->due_date)) ?></td>
                                     </tr>
@@ -68,7 +72,9 @@
                                             $am = $invoice->invoiceFees()->sum('amount');
                                             $paid = $invoice->payments()->sum('amount');
                                             $unpaid = $am - $paid;
-                                            ?><b class="amnt-value">Tsh <?= number_format($unpaid) ?></b></td>
+                                            ?><b class="amnt-value">Tsh <?= number_format($unpaid) ?></b>
+                                            </td>
+                                            <td colspan="2"> </td>
                                     </tr>
                                 </table>
                             </div>
@@ -132,11 +138,16 @@
                                 <?php } ?>
                                 <!-- <br/>
                                 <b>If you make a bank deposit, you will have to notify us to activate your account</b> -->
-                                <p class="text-muted well well-sm no-shadow">
-                                             
-                                    This is the payment for shulesoft system for <?=$diff_in_months > 1 ? $diff_in_months.' months' : $diff_in_months.' month'?> <br>
-                                    Thank you for your business. we're glad to serve you
-                                </p>
+                                <?php if($diff_in_months <= 12) { ?>
+                                    <p class="text-muted well well-sm no-shadow">
+                                        This is the payment for shulesoft system for <?=$diff_in_months > 1 ? number_to_words($diff_in_months).' months' : number_to_words($diff_in_months).' month'?>. <br>
+                                        Thank you for your business. we're glad to serve you
+                                    </p>
+                                    <?php } else { ?>
+                                        <p class="text-muted well well-sm no-shadow">
+                                          Thank you for your business. we're glad to serve you
+                                        </p>
+                                    <?php } ?>
                                 </td>
                                 <td>
                                     <b>Summary</b>

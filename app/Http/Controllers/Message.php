@@ -215,24 +215,24 @@ class Message extends Controller {
         }
     }
 
-    public function sendSms() {
-        //get all connected phones first, we use parallel approach to implement this
-        DB::select('REFRESH MATERIALIZED VIEW  public.all_sms');
-        $phones_connected = DB::select('select distinct api_key from public.all_sms');
-        if (count($phones_connected) > 0) {
-            foreach ($phones_connected as $phone) {
+    // public function sendSms() {
+    //     //get all connected phones first, we use parallel approach to implement this
+    //     DB::select('REFRESH MATERIALIZED VIEW  public.all_sms');
+    //     $phones_connected = DB::select('select distinct api_key from public.all_sms');
+    //     if (count($phones_connected) > 0) {
+    //         foreach ($phones_connected as $phone) {
 
-                $messages = DB::select('select * from public.all_sms where api_key=\'' . $phone->api_key . '\' order by priority desc, sms_id asc limit 100');
-                if (!empty($messages)) {
-                    foreach ($messages as $sms) {
+    //             $messages = DB::select('select * from public.all_sms where api_key=\'' . $phone->api_key . '\' order by priority desc, sms_id asc limit 100');
+    //             if (!empty($messages)) {
+    //                 foreach ($messages as $sms) {
 
-                        //here put options to send sms by channels
-                        $this->sendByChannel($sms);
-                    }
-                }
-            }
-        }
-    }
+    //                     //here put options to send sms by channels
+    //                     $this->sendByChannel($sms);
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
     /**
      * @uses We use this method to format SMS into a format easy to be understood by end user
