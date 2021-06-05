@@ -217,7 +217,7 @@ class Message extends Controller {
 
     public function sendSms() {
         //get all connected phones first, we use parallel approach to implement this
-        DB::select('REFRESH MATERIALIZED VIEW  public.all_sms');
+        //DB::select('REFRESH MATERIALIZED VIEW  public.all_sms');
         $phones_connected = DB::select('select distinct api_key from public.all_sms');
         if (count($phones_connected) > 0) {
             foreach ($phones_connected as $phone) {
@@ -360,7 +360,7 @@ class Message extends Controller {
 
     public function sendEmail() {
         //loop through schema names and push emails
-        DB::select('REFRESH MATERIALIZED VIEW  public.all_email');
+        //DB::select('REFRESH MATERIALIZED VIEW  public.all_email');
         $this->emails = DB::select('select * from public.all_email limit 8');
         if (count($this->emails) > 0) {
             foreach ($this->emails as $message) {

@@ -3,9 +3,6 @@
 
 <?php
 $root = url('/') . '/public/';
-
-
-
 define('SCHEMA', $schema);
 
 function check_status($table, $where = null) {
@@ -18,10 +15,8 @@ if ($table == 'admin.vendors') {
     $report = \collect(DB::select('select created_at::date from ' . $schema . '.' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first();
 }
 if (!empty($report)) {
-
     $echo = '<b class="label label-success">' . date('d M Y', strtotime($report->created_at)) . '</b>';
 } else {
-
     $echo = '<b class="label label-warning">Not Defined</b>';
 }
 return $echo;
@@ -34,7 +29,7 @@ return $echo;
     <!-- Page-header start -->
     <div class="page-header">
         <div class="page-header-title">
-            <h4><?= $school->sname ?></h4>
+            <h4><?= isset($school->sname)?$school->sname:'' ?></h4>
         </div>
         <div class="page-header-breadcrumb">
             <ul class="breadcrumb-title">
@@ -43,7 +38,7 @@ return $echo;
                         <i class="icofont icofont-home"></i>
                     </a>
                 </li>
-                <li class="breadcrumb-item"><a href="#!"><?= substr($school->sname, 0, 20) ?> </a>
+                <li class="breadcrumb-item"><a href="#!"><?=isset($school->sname)?substr($school->sname, 0, 20):'' ?> </a>
                 </li>
                 <li class="breadcrumb-item"><a href="#!">Profile</a>
                 </li>
@@ -63,7 +58,8 @@ return $echo;
                                 <div class="col-md-12">
                                     <!-- Social wallpaper start -->
                                     <div class="social-wallpaper">
-                                        <div class="mapouter">
+                                        <div class="mapouter"> 
+                                            <?php if(isset($school->sname)) {?>
                                             <div class="gmap_canvas"><iframe width="100%" height="500"
                                                     id="gmap_canvas"
                                                     src="https://maps.google.com/maps?q=<?= $school->sname ?>&t=&z=13&ie=UTF8&iwloc=&output=embed"
@@ -72,7 +68,7 @@ return $echo;
                                                     href="https://www.embedgooglemap.net/blog/nordvpn-coupon-code/">nordvpn
                                                     coupon</a>
                                             </div>
-                                            
+                                             <?php } ?>
                                             <style>
                                             .mapouter {
                                                 position: relative;
@@ -673,19 +669,21 @@ return $echo;
                                                                                                 }
                                                                                             }
                                                                                             ?></td>
-                                                                                </tr>
+                                                                            
+                                                                                <?php if(can_access('reset_school_password')) { ?>
                                                                                 <tr>
-                                                                                    <th
-                                                                                        class="social-label b-none p-b-0">
-                                                                                        School Access</th>
+                                                                                    <th class="social-label b-none p-b-0">School Access</th>
                                                                                     <td
                                                                                         class="social-user-name b-none p-b-0 text-muted">
                                                                                         <?php
                                                                                             echo 'Username - ' . $school->username . '
-                                        <br><a href="' . url('customer/resetPassword/' . $schema) . '" class="btn btn-success btn-sm" ><i class="icofont icofont-refresh"></i> Reset Password</a>';
-                                                                                            ?></td>
-                                                                                </tr>
+                                                                                              <br><a href="' . url('customer/resetPassword/' . $schema) . '" class="btn btn-success btn-sm" ><i class="icofont icofont-refresh"></i> Reset Password</a>';
+                                                                                            ?>
+                                                                                            </td>
+                                                                                          </tr>
+                                                                                   <?php } ?>
                                                                                 <?php } ?>
+                                                                                
                                                                             </tbody>
                                                                         </table>
                                                                     </form>
@@ -1000,15 +998,190 @@ return $echo;
 
                                             <div class="card">
                                                 <div class="card-header">
+                                                    <h5>Job Card</h5>
+                                                    {{-- <p align="right">
+                                                        <a href="<?= url('customer/Jobcard/' . $client_id) ?>"
+                                                        class="btn btn-warning btn-sx"> School Job card </a>
+                                                    </p> --}}
+                                            <p align="right">
+                                                 <button type="button" class="btn btn-primary waves-effect"
+                                                    data-toggle="modal" data-target="#jobcard-Modal">Create
+                                                    Job card
+                                                </button>
+                                            </p>
+
+                                                <div class="modal fade" id="jobcard-Modal" tabindex="-1"
+                                                    role="dialog" aria-hidden="true"
+                                                    style="z-index: 1050; display: none;">
+                                                    <div class="modal-dialog modal-lg" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h4 class="modal-title">Create Job Card
+                                                                </h4>
+                                                                <button type="button" class="close"
+                                                                    data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">×</span>
+                                                                </button>
+                                                            </div>
+                                                            <form action="<?= url('customer/createJobCard')?>" method="post">
+                                                                <div class="modal-body">
+                                                                    <div class="form-group">
+                                                                        <div class="row">
+                                                                            <div class="col-md-6">
+                                                                                <strong> Date</strong>
+                                                                                <input type="date"
+                                                                                    class="form-control"
+                                                                                    value="<?=date('Y-m-d')?>"
+                                                                                    name="date">
+                                                                               </div>
+                                                                          
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <strong> Pick Modules where task will be
+                                                                            Performed</strong>
+                                                                        <hr>
+                                                                        <?php
+                                                                        $modules = DB::table('modules')->get();
+                                                                        if (!empty($modules)) {
+                                                                            foreach ($modules as $module) {
+                                                                                ?>
+                                                                        <input type="checkbox"
+                                                                            id="feature<?= $module->id ?>"
+                                                                            value="{{$module->id}}"
+                                                                            name="module_ids[]">
+                                                                        <?php echo $module->name; ?> &nbsp;
+                                                                        &nbsp;
+                                                                    <?php } } ?>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="modal-footer">
+                                                                    <button type="button"
+                                                                        class="btn btn-default waves-effect "
+                                                                        data-dismiss="modal">Close</button>
+                                                                    <button type="submit"
+                                                                        class="btn btn-primary waves-effect waves-light ">Save
+                                                                        changes</button>
+                                                                </div>
+                                                                <input type="hidden" value="<?= $client_id ?>"
+                                                                    name="client_id" />
+                                                                <?= csrf_field() ?>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                </div>
+                                                <div class="card-block">
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered dataTable">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Date</th>
+                                                                    <th>Download</th>
+                                                                    <th>Upload</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <?php
+                                                                $x = 1;
+                                                                $jobcards = DB::table('job_cards')->distinct('date')->orderBy('date','desc')->get();
+                                                                foreach ($jobcards as $jobcard) { ?>
+                                                                <tr>
+                                                                    <th scope="row"><?= $x ?></th>
+                                                                    <td><?= date('d-m-Y', strtotime($jobcard->date ))?></td>
+                                                                    <td> <a href="<?= url('customer/Jobcard/' .$client_id.'/'.$jobcard->date) ?>"
+                                                                        class="btn btn-warning btn-sx"> Download form </a></td>
+                                                                    <td>
+                                                                     <?php $card = DB::table('client_job_cards')->where(['date'=>$jobcard->date,'client_id'=>$client_id])->first();?>
+                                                                     <?php if(empty($card)){ ?>
+                                                                     <button type="button" class="user_dialog btn btn-primary waves-effect"
+                                                                        data-toggle="modal" data-target="#uploadjobcard-Modal"
+                                                                        data-id="<?=$jobcard->date?>">
+                                                                        Upload Job card
+                                                                    </button>
+                                                                     <?php } else { ?>
+                                                                        <a  target="_break" href="<?= url('customer/viewFile/'.$jobcard->date.'/jobcard') ?>" class="btn btn-sm btn-success">View job card</a>
+                                                                    <?php } ?>
+                                                                    </td>
+
+                                                                </tr>
+                                                                <?php $x++; } ?>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            
+                                     <div class="modal fade" id="uploadjobcard-Modal" tabindex="-1"
+                                            role="dialog" aria-hidden="true"
+                                            style="z-index: 1050; display: none;">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title">Upload Job Card 
+                                                        </h4>
+                                                        <button type="button" class="close"
+                                                            data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                    <form action="<?= url('customer/uploadJobCard')?>" method="post" enctype="multipart/form-data">
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <strong> Upload Job card</strong>
+                                                                        <input type="file"
+                                                                            class="form-control"
+                                                                            name="job_card_file" accept=".png,.jpg,.jpeg,.doc,.pdf,.docx" >
+                                                                       </div>
+                                                              
+                                                                    <div class="col-md-6">
+                                                                        <strong>Job card date</strong>
+                                                                        <input type="date"
+                                                                            class="form-control"
+                                                                            name="date" id="job_date" disabled required>
+                                                                       </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="modal-footer">
+                                                            <button type="button"
+                                                                class="btn btn-default waves-effect "
+                                                                data-dismiss="modal">Close</button>
+                                                            <button type="submit"
+                                                                class="btn btn-primary waves-effect waves-light ">Save
+                                                                changes</button>
+                                                        </div>
+                                                        <input type="hidden" value="<?= $client_id ?>"
+                                                            name="client_id" />
+                                                        <?= csrf_field() ?>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                            <div class="card">
+                                                <div class="card-header">
                                                     <h5>Project Implementation Schedule</h5>
                                                     <span>This part have to be followed effectively </span>
+                                                 
                                                     <p align="right">
                                                         <a href="<?= url('customer/download/' . $client_id) ?>"
-                                                            class="btn btn-warning btn-sx">Download Implementation
+                                                            class="btn btn-warning btn-sx">Initial Implementation
                                                             Plan</a>
                                                     </p>
                                                 </div>
-                                                <div class="card-block table-border-style">
+                                                <div class="card-block">
                                                     <div class="table-responsive">
                                                         <table class="table table-bordered dataTable">
                                                             <thead>
@@ -2229,6 +2402,11 @@ $('.task_school_group').blur(function() {
             notify('Success', 'Success', 'success');
         }
     });
+});
+
+$(document).on("click", ".user_dialog", function () {
+     var UserName = $(this).data('id');
+     $(".modal-body #job_date").val(UserName);
 });
 
 $('.slot').change(function() {

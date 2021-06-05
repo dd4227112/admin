@@ -173,8 +173,7 @@
                         if (row.client_id != null) {
                             return '<a href="<?= url('customer/profile') ?>/' + row.username + '" class="label label-warning"> Already Customer  </a>';
                         } else {
-                            return '<a href="<?= url('sales/') ?>/profile/' + row.id + '" class="label label-primary">View</a>\n\
-                        <a href="<?= url('sales/') ?>/onboard/' + row.id + '" class="label label-info">Onboard This School</a>';
+                            return '<a href="<?= url('sales/') ?>/profile/' + row.id + '" class="label label-primary">Onboard School</a>';
                         }
 
                     }

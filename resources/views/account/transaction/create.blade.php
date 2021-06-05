@@ -6,7 +6,7 @@
     <!-- Page-header start -->
     <div class="page-header">
       <div class="page-header-title">
-        <h4>Company Invoices</h4>
+        <h4>Company revenue</h4>
         <span>Show payments summary</span>
       </div>
       <div class="page-header-breadcrumb">
@@ -18,7 +18,7 @@
           </li>
           <li class="breadcrumb-item"><a href="#!">Accounts</a>
           </li>
-          <li class="breadcrumb-item"><a href="#!">Invoices</a>
+          <li class="breadcrumb-item"><a href="#!">revenue</a>
           </li>
         </ul>
       </div>
@@ -34,10 +34,10 @@
                 </a>
                 <div class="slide"></div>
               </li>
-              <li class="nav-item complete">
+              {{-- <li class="nav-item complete">
                 <a class="nav-link" data-toggle="tab" href="#profile3" role="tab" aria-expanded="false">Import Revenue From an Excel</a>
                 <div class="slide"></div>
-              </li>
+              </li> --}}
             </ul>
             <div class="tab-content">
 
@@ -84,6 +84,7 @@
 
                               </div>
                             </div>
+
                             <div id="user_not_in_shulesoft_tag"  <?php request('user_in_shulesoft') == 2 ? '' : 'style="display: none;"' ?>>
                               <div class=" col-lg-10 col-sm-6">
                               <div class='form-group' >
@@ -114,9 +115,9 @@
                             <div class=" col-lg-10 col-sm-6">
                               
                             <div class='form-group' >
-                              <strong><?= __("Fee Type") ?><span class="red">*</span></strong>
+                              <strong><?= __("Revenue Type") ?><span class="red">*</span></strong>
                                 <?php
-                                $array = array('0' => __("select expense"));
+                                $array = array('0' => __("select name"));
                                 if (!empty($category)) {
                                   foreach ($category as $categ) {
                                     $array[$categ->id] = $categ->name;
@@ -127,18 +128,19 @@
                                 <?php if (!empty($category)) { ?>
 
                                 <?php } ?>
-                                <span class="col-sm-2 small"><a href="<?= url("expense/financial_category") ?>">Create New</a></span>
+                                {{-- <span class="col-sm-2 small"><a href="<?= url("expense/financial_category") ?>">Create New</a></span> --}}
                               </div>
                              
                             </div>
 
 
                             <div class=" col-lg-10 col-sm-12">
-                            <div class='form-group' >
+                            <div class='form-group'>
+                              <strong>
                               <label for="amount" class="col-sm-2 control-label">
                                 <?= __("Amount") ?><span class="red">*</span>
                               </strong>
-                                <input type="text" class="form-control" id="amount" name="amount" value="<?= old('amount') ?>" required="true">
+                                <input type="text" class="form-control transaction_amount" id="amount" name="amount" value="<?= old('amount') ?>" required="true">
                               </div>
                             </div>
 
@@ -186,7 +188,7 @@
                             <div class=" col-lg-10 col-sm-12">
                               <div class='form-group' >
                                 <strong>
-                                  <?= __("Ref No") ?>
+                                  <?= __("Reference No.") ?>
                                 </strong>
                                   <input type="text" placeholder="Enter ref number/cheque number" class="form-control" id="ref_no" name="transaction_id" value="<?= old('transaction_id', time()) ?>">
                                 </div>
@@ -197,7 +199,7 @@
                               <strong>
                                 <?= __("Date") ?> <span class="red">*</span>
                               </strong>
-                                <input type="date" class="form-control calendar" id="date" name="date" value="<?= old('date') ?>" required="true" >
+                                <input type="date" class="form-control calendar" id="date" name="date" value="<?= date('Y-m-d') ?>">
 
                               </div>
 
@@ -206,7 +208,7 @@
                             <div class=" col-lg-10 col-sm-12">
                             <div class='form-group' >
                               <strong>
-                                <?= __("note") ?>
+                                <?= __("Descriptions") ?>
                               </strong>
                                 <textarea style="resize:none;" class="form-control" id="note" name="note"><?= old('note') ?></textarea>
                               </div>
@@ -223,10 +225,10 @@
 
                         </div>
                       </div>
-
                       </div>
                     </div>
                   </div>
+
                   <div class="tab-pane" id="profile3" role="tabpanel" aria-expanded="false">
                     <div class="card-block">
 
@@ -238,10 +240,12 @@
                             <!--<img src="<?= url('public/images/sample_excel.jpg') ?>"/>-->
                             <br/>
                             <div class=" form">
-                              <!--                                                    <br/>
-                              <p><?= __("file") ?>
-                              <a href="<?= url('storage/uploads/sample/sample_students_upload.xlsx') ?>"><i class="fa fa-2x fa-cloud-download"></i></a></p>-->
-                              <form id="demo-form2" action="<?= url('account/uploadRevenue') ?>" class="form-horizontal" method="POST"
+                              <br/>
+                              {{-- <p>
+                                <?= __("file") ?>
+                               <a href="<?= url('storage/uploads/sample/sample_students_upload.xlsx') ?>"><i class="fa fa-2x fa-cloud-download"></i></a></p> --}}
+
+                              <form id="demo-form2" action="<?= url('revenue/uploadRevenue') ?>" class="form-horizontal" method="POST"
                                 enctype="multipart/form-data">
 
                                 <div class="form-group">
@@ -285,6 +289,15 @@
     </div>
 
     <script>
+
+        //Format number to thousands
+    $('.transaction_amount').attr("pattern", '^(\\d+|\\d{1,3}(,\\d{3})*)(\\.\\d{2})?$');
+    $('.transaction_amount').on("keyup", function() {
+        var currentValue = $(this).val();
+        currentValue = currentValue.replace(/,/g, '');
+        $(this).val(currentValue.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+    });
+
     payment_method_status = function () {
       $('#payment_method_status').change(function () {
         var val = $(this).val();

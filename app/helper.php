@@ -143,7 +143,7 @@ function createRoute() {
     $url = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
     $url_param = explode('/', $url);
 
-    $controller = isset($url_param[1]) && !empty($url_param[1]) ? $url_param[1] . '' : 'Analyse';
+    $controller = isset($url_param[1]) && !empty($url_param[1]) ? $url_param[1] . '' : 'analyse';
     $method = isset($url_param[2]) && !empty($url_param[2]) ? $url_param[2] : 'index';
     $view = $method == 'view' ? 'show' : $method;
 
@@ -283,5 +283,10 @@ function btn_attendance($id, $method, $class, $name) {
     
    function cdate($date){
         return date('d-m-Y H:i:s');
+    }
+
+
+    function remove_comma($string_number) {
+        return trim(str_replace(',', '', $string_number));
     }
 

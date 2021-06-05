@@ -232,13 +232,28 @@
                                             <textarea name="skills" class="form-control">{{$user->skills}}</textarea>
                                         </div>
                                     </div>
+
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group ">
                                             <strong>About:</strong>
-
                                             <textarea name="about"  class="form-control">{{$user->about}}</textarea>
                                         </div>
                                     </div>
+
+                                    <div class="col-xs-6 col-sm-6">
+                                        <div class="form-group ">
+                                            <strong>Bank name:</strong>
+                                            <textarea name="bank_name"  class="form-control">{{$user->bank_name}}</textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xs-6 col-sm-6">
+                                        <div class="form-group ">
+                                            <strong>Bank account:</strong>
+                                            <textarea name="bank_account"  class="form-control">{{$user->bank_account}}</textarea>
+                                        </div>
+                                    </div>
+
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong>Next Kin Information:</strong>

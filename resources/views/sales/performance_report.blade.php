@@ -52,16 +52,7 @@
                                                   <th width="5%">District</th>
                                                   <th width="5%">Region</th>
                                                   <th width="5%">Action</th>
-                                                  {{-- <th width="5%">Inventory</th>
-                                                  <th width="5%">Transport</th>
-                                                  <th width="5%">Attendance</th>
-                                                  <th width="5%">Library</th>
-                                                  <th width="5%">Character</th>
-                                                  <th width="5%">Parent login</th>
-                                                  <th width="5%">Staff login</th>
-                                                  <th width="5%">Electronic payment</th>
-                                                  <th width="5%">Sum</th>
-                                                  <th width="5%">Percentage</th> --}}
+                                             
                                                 </tr>
                                               </thead>
                                               <tbody> 
@@ -78,25 +69,12 @@
                                                   <td width="5%">
                                                     <?= $school->wards->district->name ?>
                                                   </td>
-                                                 
-                                                 
                                                   <td width="5%"> 
                                                     <?= $school->wards->district->region->name ?>
                                                   </td>
-                                                
                                                   <th width="5%">
                                                     <a href="<?= url('Sales/addperfomance/' . $school->id) ?>" class="btn btn-sm btn-success">View</a>
                                                   </th>
-                                                  {{-- <th width="5%"></th>
-                                                  <th width="5%"></th>
-                                                  <th width="5%"></th>
-                                                  <th width="5%"></th>
-                                                  <th width="5%"></th>
-                                                  <th width="5%"> </th>
-                                                  <th width="5%"> </th>
-                                                  <th width="5%"> </th>
-                                                  <th width="5%"></th>
-                                                  <th width="5%"> </th> --}}
                                                 </tr>
                                                 <?php $i++;}  ?>
                                               </tbody>

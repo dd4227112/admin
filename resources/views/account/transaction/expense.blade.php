@@ -1,12 +1,12 @@
 @extends('layouts.app')
-
 @section('content')
+
 <div class="main-body">
     <div class="page-wrapper">
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4>Company   
+                <h4>   
                 <?php
                     $global_id = $id;
                     $name = '';
@@ -50,47 +50,55 @@
                 <div class="card">
 
                     <div class="col-sm-12">
-                         <div class="m-10">
-                            <a style="float: right;" class="btn btn-success" href="<?php echo url('account/addTransaction/' . $id) ?>">
-                                <i class="fa fa-plus"></i> 
-                                  Add Expense
-                            </a>
-                         </div>
-                        <hr>
+                            <div class="row m-10">
+                                <div class="col-sm-4">
+                                    <h5 class="page-header">
+                                        <?php if (can_access('add_expense')) { ?>
+                                            <a style="float: left;" class="btn btn-success" href="<?php echo url('account/addTransaction/' . $id) ?>">
+                                                <i class="fa fa-plus"></i> 
+                                                  Add Expense
+                                            </a>
+                                            <?php } ?>
+                                       </h5>
+                                 </div>
 
-                        <div class="col-sm-12 ">
-                            <form style="" class="form-horizontal" role="form" method="post"> 
-                                <div class="col-md-5">
-                                    <div class="form-group row">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">Start Date</label>
-                                        <div class="col-md-9 col-sm-9 col-xs-12">
-                                            <?php echo form_error($errors, 'from_date'); ?>
-                                            <input type="date"  class="form-control " id="from_date" name="from_date" value="<?= old('from_date',$from_date) ?>"> 
+                                <div class="col-sm-8">
+                                    <form class="form-horizontal" role="form" method="post"> 
+                                      <div class="row">
+                                        <div class="col-md-5">
+                                            <div class="form-group row">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">Start Date</label>
+                                                <div class="col-md-9 col-sm-9 col-xs-12">
+                                                    <?php echo form_error($errors, 'from_date'); ?>
+                                                    <input type="date"  class="form-control " id="from_date" name="from_date" value="<?= old('from_date',$from_date) ?>">
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
 
-                                <div class="col-md-5">
-                                    <div class="form-group row">
-                                        <label class="control-label col-md-3 col-sm-3 col-xs-12">End Date</label>
-                                        <div class="col-md-9 col-sm-9 col-xs-12">
-                                            <?php echo form_error($errors, 'to_date'); ?>
-                                            <input type="date" class="form-control" id="to_date" name="to_date" value="<?= old('to_date',$to_date) ?>" >
-                                        </div>
-                                    </div>
-                                </div>                     
+                                        <div class="col-md-5">
+                                            <div class="form-group row">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">End Date</label>
+                                                <div class="col-md-9 col-sm-9 col-xs-12"> 
+                                                    <?php echo form_error($errors, 'to_date'); ?>
+                                                    <input type="date" class="form-control" id="to_date" name="to_date" value="<?= old('to_date',$to_date) ?>" >
+                                                </div>
+                                            </div>
+                                        </div>                     
 
-                                <div class="col-md-5">
-                                    <div class="form-group row">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12"></label>
-                                       <div class="col-md-9 col-sm-9 col-xs-12">
-                                            <input type="submit" class="btn btn-success" value="Submit"  style="float: right;">
-                                        </div>
-                                    </div>
-                                </div> 
-                                <?= csrf_field() ?>
-                            </form>
-                        </div>        
+                                        <div class="col-md-2">
+                                          <div class="form-group row">
+                                            <div class="">
+                                                 <input type="submit" class="form-control btn btn-success" value="Submit"  style="float: right;">
+                                                </div>
+                                            </div>
+                                        </div> 
+
+                                      </div>
+                                        <?= csrf_field() ?>
+                                    </form>
+                                </div>  
+                             </div>     
+                        
 
 
                         <div class="table-responsive dt-responsive "> 
@@ -109,33 +117,35 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+
                                     <?php
                                     $total_expense = 0;
                                     $i = 1;
                                     $refer_ids = [];
                                     if (!empty($expenses)) {
                                         foreach ($expenses as $expense) {
-                                            array_push($refer_ids, $expense->id);
+                                        array_push($refer_ids, $expense->id);
+                                        
                                             ?>
                                             <tr>
-                                                <td data-title="<?= __('slno') ?>">
+                                                <td>
                                                     <?php echo $i; ?>
                                                 </td>
-                                                <td data-title="<?= __('slno') ?>">
+                                                <td>
                                                     <?php echo $expense->code; ?>
                                                 </td>
-                                                <td data-title="<?= __('expense_expense') ?>">
+                                                <td>
                                                     <?php echo $expense->name; ?>
                                                 </td>
-                                                <td data-title="<?= __('category') ?>">
+                                                <td>
                                                     <?php echo $expense->financialCategory->name; ?>
                                                 </td>   
-                                                <td data-title="<?= __('group_name') ?>">
+                                                <td>
                                                     <?php echo isset($expense->accountGroup->name) ? $expense->accountGroup->name : ''; ?>
-                                                </td>
+                                                </td>   
 
                                                 <td data-title="<?= __('sum') ?>">
-                                                    <?php
+                                                    <?php 
                                                     if ($id == 2 && $expense->name == 'Unearned Revenue') {
                                                         $total_amount = $unearned = \App\Models\AdvancePayment::sum('amount') - \App\Models\AdvancePaymentsInvoicesFeesInstallment::sum('amount');
                                                         echo money($total_amount);
@@ -243,6 +253,7 @@
                             <tbody>
                                 <?php
                                 $sql = 'select sum(amount) as total,extract(month from date) as month from admin.expenses where extract(year from date)=' . date('Y', strtotime($to_date)) . ' and refer_expense_id in (' . implode( ',',$refer_ids) . ') group by month order by month';
+                              
                                 $logs = DB::select($sql);
                                 foreach ($logs as $log) {
                                     $monthNum = $log->month;

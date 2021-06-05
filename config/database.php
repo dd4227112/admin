@@ -68,13 +68,17 @@ return [
             'driver' => 'pgsql',
             'host' => 'shulesoftdb.postgres.database.azure.com',
             // 'host'=>'localhost',
-            'port' =>'6432',
+            'port' =>'5432',
             'database' =>'shulesoft_2022',
             'username' => 'pgeshuleadmin',
             'password' =>'Shul3@s0ft@202!',
             'charset' => 'utf8',
             'prefix' => '',
             'schema' => 'admin',
+           // 	'sslmode' => 'require',
+      //  'options' => [
+        //    \PDO::ATTR_EMULATE_PREPARES => true
+       // ]
         ],
 
         'karibusms' => [
@@ -90,9 +94,11 @@ return [
             'prefix_indexes' => true,
             'schema' => 'new_karibusms',
             'sslmode' => 'prefer',
-        ],
-
-    'biotime' => [
+        'options' => [
+            \PDO::ATTR_EMULATE_PREPARES => true
+        ]
+    ],
+'biotime' => [
             'driver' => 'pgsql',
             // 'url' => env('DATABASE_URL'),
             'host' => '51.91.251.252',
@@ -105,6 +111,9 @@ return [
             'prefix_indexes' => true,
             'schema' => 'public',
             'sslmode' => 'prefer',
+        'options' => [
+            \PDO::ATTR_EMULATE_PREPARES => true
+        ]
         ],
         'sqlsrv' => [
             'driver' => 'sqlsrv',
@@ -172,4 +181,4 @@ return [
 
     ],
 
-];
+]; 

@@ -586,7 +586,7 @@
                                         </a>
                                     </li>
         
-                                <?php } if (Auth::user()->role_id == 14) { ?>
+                                <?php } if (can_access('customer_module')) { ?>
                                     <li>
                                         <a href="<?= url('customer/modules') ?>" data-i18n="nav.extra-components.offline">
                                              Customer Modules
@@ -711,12 +711,9 @@
 
                                     <li><a href="<?= url('software/server') ?>" data-i18n="nav.basic-components.button">Server Administration</a></li>
                                     <li><a href="<?= url('software/logs') ?>" data-i18n="nav.basic-components.box-shadow">Error Logs</a></li>
-                                   
-
                                 </ul>
                             </li>
                         <?php } ?>
-
 
                       
                      <?php  if (Auth::user()->department == 9 || Auth::user()->department == 10) {
@@ -790,8 +787,8 @@
                                     <li><a href="<?= url('account/standingOrders') ?>" data-i18n="nav.advance-components.grid-stack">Standing orders</a></li>
                                     <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Transactions</a>
                                         <ul class="tree-2">
-                                            <a href="<?= url('account/revenue') ?>"><i class="fa icon-account"></i> Revenue</a>
-                                            <a href="<?= url('account/transaction/4') ?>"><i class="fa icon-expense"></i> Expense</a>
+                                            <a href="<?= url('revenue/index') ?>"><i class="fa icon-account"></i> Revenue</a>
+                                            <a href="<?= url('expense/index/4') ?>"><i class="fa icon-expense"></i> Expense</a>
                                             <a href="<?= url('account/transaction/1') ?>"><i class="fa icon-account"></i> Fixed assets</a>
                                             <a href="<?= url('account/transaction/5') ?>"><i class="fa icon-account"></i> Current assets</a>
                                             <a href="<?= url('account/transaction/2') ?>"><i class="fa icon-account"></i> liabilities</a>
@@ -800,13 +797,13 @@
                                         </ul>
                                     </li>
 
-                              <li><a href="<?= url('Account/budget') ?>"
+                               {{-- <li><a href="<?= url('Account/budget') ?>"
                                 data-i18n="nav.advance-components.grid-stack">
-                              Budget 
-                             </a>
-                           </li>
+                                  Budget 
+                                 </a>
+                               </li> --}}
 
-                
+                        <?php if (can_access('manage_payroll')) { ?>
                         <li class="nav-sub-item">
                             <a href="#" data-i18n="nav.page_layout.horizontal.main">
                                 Payroll
@@ -817,19 +814,20 @@
                                 <a href="<?= url('allowance/index') ?>"><i class="fa fa-clipboard"></i><span>Allowances</span></a>
                                 <a href="<?= url('deduction/index') ?>"><i class="fa fa-clipboard"></i><span>Deductions</span></a>
 
-                                <li class="nav-sub-item-3">
-                                    <a>
+                                <a href="<?= url('Payroll/index') ?>"><i class="fa fa-clipboard"></i> <span>Salaries</span> </a>
+
+                                   <li class="nav-sub-item-3">
+                                       <a>
                                         Loans
                                         <span class="fa fa-chevron-down"></span></a>
-                                <ul class="tree-3">
-
-                                        <a href="<?= url('loan/type') ?>"><i class="fa fa-clipboard"></i><span
+                                           <ul class="tree-3">
+                                            <a href="<?= url('loan/type') ?>"><i class="fa fa-clipboard"></i><span
                                                 style="color: white; line-height: 25px;"> Loan Types</span></a>
-
-                                        <a href="<?= url('loan/index') ?>"><i class="fa fa-clipboard"></i><span
+                                            <a href="<?= url('loan/index') ?>"><i class="fa fa-clipboard"></i><span
                                                 style="color: white; line-height: 25px;"> Borrowers </span></a>
                                         </ul>
                                     </li>
+                                
                
                                     <li><a href="<?= url('account/report') ?>" data-i18n="nav.advance-components.light-box">Reports</a></li>
 
@@ -846,6 +844,7 @@
                                     </li>
                                 </ul>
                             </li>
+                            <?php } ?>
                         <?php } ?>
 
                     
