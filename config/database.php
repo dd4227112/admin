@@ -74,6 +74,7 @@ return [
             'prefix' => '',
             'schema' =>'admin',
             'sslmode' => 'prefer',
+
         ],
 
 
@@ -85,18 +86,22 @@ return [
             'database' => 'other_app',
             'username' => 'postgres',
             'password' => 'tabita',
+
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
             'schema' => 'new_karibusms',
             'sslmode' => 'prefer',
+            'options' => [
+                \PDO::ATTR_EMULATE_PREPARES => true
+            ]
         ],
 
     'biotime' => [
             'driver' => 'pgsql',
             // 'url' => env('DATABASE_URL'),
             'host' => '51.91.251.252',
-            'port' => '5432',
+            'port' => '6432',
             'database' => 'biotime',
             'username' => 'biotime',
             'password' => 'biotime_2021_',
@@ -105,6 +110,9 @@ return [
             'prefix_indexes' => true,
             'schema' => 'public',
             'sslmode' => 'prefer',
+            'options' => [
+                \PDO::ATTR_EMULATE_PREPARES => true
+            ]
         ],
         'sqlsrv' => [
             'driver' => 'sqlsrv',

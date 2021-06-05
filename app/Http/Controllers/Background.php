@@ -31,6 +31,7 @@ class Background extends Controller {
                 $this->dispatch((new \App\Jobs\PushEmail()));
     }
 
+
     public function sendSms() {
 //        $messages = DB::select('select * from public.all_sms limit 15');
 //        if (!empty($messages)) {
@@ -50,6 +51,7 @@ class Background extends Controller {
 //            }
 //        }
     }
+
 
     /**
      * Show the form for creating a new resource.

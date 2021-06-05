@@ -9,7 +9,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
     if ((int) request('skip') == 1) {
         $return = $value;
     } else {
-        $return = '<input class="text-muted" type="'. $type. '" schema="' . $schema_name . '" id="' . $column .$schema_name. '" value="' . $value . '" onblur="edit_records(\'' . $column . '\', this.value, \'' . $schema_name . '\')"/><br/><span id="status_' . $column . $schema_name . '"></span>';
+        $return = '<input required class="text-muted" type="'. $type. '" schema="' . $schema_name . '" id="' . $column .$schema_name. '" value="' . $value . '" onblur="edit_records(\'' . $column . '\', this.value, \'' . $schema_name . '\')"/><br/><span id="status_' . $column . $schema_name . '"></span>';
     }
     return $return;
 }
@@ -83,9 +83,9 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                             <th>Date Registered</th>
                                                             <th>Students</th>
                                                             <th>Price</th>
-                                                            <th>Payment Start</th> 
                                                             <th>Payment Deadline</th>
                                                             <th>Estimated Students</th>
+                                                            <th>Start usage date</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </thead>
@@ -100,7 +100,8 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                             <tr>
                                                                 <td><?= $schema->username?></td>
                                                                 <td><?= date('d M Y',strtotime($schema->created_at))  ?></td>
-                                                                <td> <?php 
+                                                                <td> 
+                                                                    <?php 
                                                                     $setting = DB::table('admin.all_setting')->where('schema_name', $schema->username)->first();
                                                                      if(!empty($setting)) {
                                                                         $students = DB::table($schema->username. '.student')->where('status', 1)->count();
@@ -114,7 +115,6 @@ function tagEdit($schema_name, $column, $value, $type = null) {
 
                                                                 <td>
                                                                  <?php
-                                                                   
                                                                     // $price = count($schema) == 1 ? $schema->price_per_student : 0;
                                                                     $price =$schema->price_per_student;
                                                                     $total_price += $price * $students;
@@ -122,25 +122,22 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                                     ?>
                                                                 </td>
 
-                                                                <td> 
-                                                                 
-                                                                 <?php
-                                                                     $start_date = $schema->invoice_start_date;
-                                                                   //  $start_date = !empty($start_date) ? $start_date : date('Y-m-d');
-                                                                     echo tagEdit($schema->username, 'invoice_start_date', $start_date, 'date');
-                                                                     ?>
-                                                                </td> 
                                                            
                                                                 <td> 
                                                                     <?php
                                                                     $end_date =$schema->invoice_end_date;
-                                                                  //  $end_date = !empty($end_date) ? $end_date : date('Y-m-d',strtotime('+30 days',strtotime(date('Y-m-d'))));
                                                                     echo tagEdit($schema->username, 'invoice_end_date', $end_date, 'date');
                                                                     ?>
                                                                 </td> 
 
                                                                 <td>
                                                                     <?= tagEdit($schema->username, 'estimated_students', isset($schema->estimated_students) ? $schema->estimated_students:'') ?>
+                                                                </td>
+                                                                <td>
+                                                                    <?php
+                                                                    $usage_date =$schema->start_usage_date;
+                                                                    echo tagEdit($schema->username, 'start_usage_date', $usage_date, 'date');
+                                                                    ?>
                                                                 </td>
                                                                 <td><a href="<?= url('account/createShuleSoftInvoice/' . $schema->id) ?>" class="btn btn-sm btn-success">Create Invoice</a></td>
                                                             </tr>

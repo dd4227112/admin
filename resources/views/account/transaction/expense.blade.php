@@ -243,6 +243,7 @@
                         <script src="<?= url('/public') ?>/code/modules/export-data.js"></script>
                         <script src="<?= url('/public') ?>/code/modules/series-label.js"></script>
                         <script src="<?= url('/public') ?>/code/modules/data.js"></script>
+                       <?php if (count($expenses) > 0) { ?>
                         <table id="users_table" style="display:none">
                             <thead>
                                 <tr>
@@ -268,6 +269,7 @@
                                 ?> 
                             </tbody>
                         </table>
+                         <?php } ?>
                     </div>
                 </div>
             </div>

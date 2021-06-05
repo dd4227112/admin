@@ -709,7 +709,7 @@
                                         </ul>
                                     </li>
 
-                                    <li><a href="<?= url('software/server') ?>" data-i18n="nav.basic-components.button">Server Administration</a></li>
+                                    {{-- <li><a href="<?= url('software/server') ?>" data-i18n="nav.basic-components.button">Server Administration</a></li> --}}
                                     <li><a href="<?= url('software/logs') ?>" data-i18n="nav.basic-components.box-shadow">Error Logs</a></li>
                                 </ul>
                             </li>

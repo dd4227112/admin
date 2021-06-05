@@ -75,12 +75,12 @@
                     </div>
 		            <?php } ?>
                 </div>
-
-
-            </div> <!-- col-sm-12 -->
+            </div> 
              </div>
-        </div><!-- row -->
-    </div><!-- Body -->
+        </div>
+    </div>
+
+    
 </div><!-- /.box -->
 </div>
 <script type="text/javascript">

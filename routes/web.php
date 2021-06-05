@@ -16,7 +16,8 @@ use Illuminate\Support\Facades\Route;
 
 
 
-//\URL::forceScheme('https');
+
+\URL::forceScheme('https');
 /*
   |--------------------------------------------------------------------------
   | Web Routes
@@ -82,4 +83,3 @@ Route::post('/addrecruiment', 'Recruitments@register');
 
 Route::get('/nda_form/{id}', 'Recruitments@nda');
 Route::post('/sendndaform','Recruitments@uploadnda');
-
