@@ -215,11 +215,11 @@ class Report extends Controller {
       if((int)$id == 16){
         $this->data["title"] = "Sms sent and email sent";
         $this->data["days"] = array(1 => 'Day 1', 2 =>  'Day 2', 3 =>  'Day 3', 4 => 'Day 4', 5 =>  'Day 5', 6 =>  'Day 6', 7 => 'Day 7');
-        $this->data["datas"] = DB::SELECT('SELECT count(sms_id) as ynumber,created_at::date from admin.all_sms group by created_at::date order by created_at desc limit 14');
-        $this->data["users"] = DB::SELECT('SELECT count(sms_id) as ynumber,"table",created_at::date from admin.all_sms where created_at::date=CURRENT_DATE group by created_at::date,"table" order by created_at desc limit 14');
+        $this->data["datas"] =[]; //DB::SELECT('SELECT count(sms_id) as ynumber,created_at::date from admin.all_sms group by created_at::date order by created_at desc limit 14');
+        $this->data["users"] =[]; //DB::SELECT('SELECT count(sms_id) as ynumber,"table",created_at::date from admin.all_sms where created_at::date=CURRENT_DATE group by created_at::date,"table" order by created_at desc limit 14');
         $sql = "with dates as (select min(date_trunc('week', created_at)) as startw, max(date_trunc('week', created_at)) as endw from admin.all_sms),weeks as ( select generate_series(startw, endw, '7 days') as week from dates )select w.week, count(i.created_at) as ycounts from weeks w left outer join admin.all_sms i on date_trunc('week', i.created_at) = w.week group by w.week order by w.week desc limit 7";
-        $this->data["weeks"] = DB::SELECT($sql);
-        $this->data["schools"] = DB::SELECT('SELECT count(schema_name) as ynumber,schema_name from admin.all_sms where created_at::date=CURRENT_DATE group by schema_name order by count(schema_name) desc limit 20');
+        $this->data["weeks"] = [];//DB::SELECT($sql);
+        $this->data["schools"] =[]; // DB::SELECT('SELECT count(schema_name) as ynumber,schema_name from admin.all_sms where created_at::date=CURRENT_DATE group by schema_name order by count(schema_name) desc limit 20');
       }
       if((int)$id == 17){
         $this->data["title"] = "Customer Support & Sales";

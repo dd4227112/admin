@@ -329,8 +329,6 @@ ORDER BY c.oid, a.attnum";
 
     public function logs() {
         $schema = request()->segment(3);
-
-
         $this->data['error_logs'] = strlen($schema) > 3 ? DB::table('error_logs')->whereNull('deleted_at')->where('schema_name', $schema)->count() : DB::table('error_logs')->whereNull('deleted_at')->count();
         $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1 '))->first();
         return view('software.logs', $this->data);

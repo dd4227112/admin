@@ -2,6 +2,8 @@
 /public/AdminLTE
 /public/admin5
 /vendor
+/app/config/
+/config/*.key
 /.vagrant
 Homestead.json
 Homestead.yaml
