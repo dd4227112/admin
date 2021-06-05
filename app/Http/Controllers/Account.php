@@ -865,16 +865,18 @@ class Account extends Controller {
                     'uname' => request('username'),
                     "amount" => remove_comma(request('amount')),
                     'voucher_no' => $voucher_no + 1,
-                   // "transaction_id" => request("transaction_id")
+                   // "transaction_id" => request("transaction_id"),
                    // 'usertype' => session('usertype')
-                   // 'created_by' => $this->createdBy()
+                    'created_by' => Auth::user()->id
                 );
 
-                if (request("from_expense") == request("to_expense")) {
-                 //   $this->session->set_flashdata('error', 'You can not transfer to the same account');
+                 
+
+                if (request("from_expense") !== request("to_expense")) {
                     return redirect()->back()->with('error', 'You can not transfer to the same account');
                 }
                 $refer_expense = \App\Models\ReferExpense::find(request("from_expense"));
+               
                 $total_amount = 0;
                 if ((int) $refer_expense->predefined && $refer_expense->predefined > 0) {
                     $total_bank = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_bank from admin. bank_transactions WHERE bank_account_id=' . $refer_expense->predefined . ' and payment_type_id <> 1 '))->first();
@@ -888,14 +890,14 @@ class Account extends Controller {
                 }
 
                 if (-$amount < $total_amount) {
-                   // $this->session->set_flashdata('warning', 'No enough Credit to transfer');
                     return redirect()->back()->with('warning','No enough credit to transfer');
                 }
-
+                     
                 if (request('user_in_shulesoft') == 1) {
                     $user_request = explode(',', request('user_id'));
+                  
                     $user = \App\Models\User::where('id', $user_request)->first();
-
+                   
                     $obj = array_merge($array, [
                         'recipient' => $user->name,
                         'payer_name' => $payer_name,
@@ -910,9 +912,8 @@ class Account extends Controller {
                     ]);
                     $insert_id = DB::table('current_assets')->insertGetId($obj, "id");
                 }
-               // $this->session->set_flashdata('success', $this->lang->line('menu_success'));
-               // return redirect(url("expense/voucher/$insert_id/$id"));
-                 return redirect()->back()->with('success','Success');
+                return redirect( url("account/transaction/$id"))->with('success', 'success');
+                // return redirect()->back()->with('success','Success');
             } else {
                 $obj = array_merge($array, [
                     'amount' => remove_comma(request('amount')),
@@ -1197,7 +1198,7 @@ class Account extends Controller {
         $this->data['id'] = 4;
         $this->data['check_id'] = $id;
         $this->data["category"] = DB::table('refer_expense')->whereIn('financial_category_id', [2, 3])->get();
-        //dd($this->data['expense']);
+        
         if ($this->data['expense']) {
             if ($_POST) {
                 $refer_expense_id = $this->data['expense']->refer_expense_id;
@@ -1215,8 +1216,8 @@ class Account extends Controller {
                     "transaction_id" => request("transaction_id"),
                     "note" => request("note"),
                     "payment_type_id" => request("payment_type_id"),
-                    "ref_no" => request("transaction_id"),
-                    'recipient' => request('recipient')
+                    "ref_no" => request("transaction_id")
+                   // 'recipient' => request('recipient')
                 );
 
                 $this->data['expense']->update($array);
@@ -1237,6 +1238,7 @@ class Account extends Controller {
         $this->data["payment_types"] = \App\Models\PaymentType::all();
         $this->data['banks'] = \App\Models\BankAccount::all();
         if ($id == 'edit') {
+           
             return $this->editExpense($expense_id);
         } else if ($id == 'delete') {
             \App\Models\Expense::find($expense_id)->delete();

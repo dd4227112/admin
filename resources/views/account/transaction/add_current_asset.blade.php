@@ -77,10 +77,7 @@
                                     </a>
                                     <div class="slide"></div>
                                 </li>
-                                <li class="nav-item complete">
-                                    <a class="nav-link" data-toggle="tab" href="#profile3" role="tab" aria-expanded="false">Import Expenses From an Excel</a>
-                                    <div class="slide"></div>
-                                </li>
+                               
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane active" id="home3" role="tabpanel" aria-expanded="true">
@@ -173,7 +170,7 @@
                                         <?= ("Amount") ?> 
                                     </label>
                                     <div class="col-sm-6">
-                                        <input type="number" class="form-control" id="amount" name="amount" value="<?= old('amount') ?>" required="true">
+                                        <input type="text" class="form-control transaction_amount" id="amount" name="amount" value="<?= old('amount') ?>" required="true">
                                     </div>
                                     <span class="col-sm-4 control-label">
                                         <?php echo form_error($errors, 'amount'); ?>
@@ -227,7 +224,7 @@
                                                         $array[$categ->id] = $categ->name;
                                                     }
                                                 }
-                                                echo form_dropdown("to_expense", $array, old("fto_expense", $sub_id), "id='refer_expense_id' class='form-control' name='to_expense'");
+                                                echo form_dropdown("to_expense", $array, old("to_expense", $sub_id), "id='refer_expense_id' class='form-control' name='to_expense'");
                                                 ?>
                                                 
                                             </div>
@@ -267,7 +264,7 @@
                               </label>
                               <div class="col-sm-6">
                                   <div class="icon-addon addon-lg">
-                                  <input type="date" class="form-control calendar" id="date" name="date" value="<?= old('date') ?>" required="true" >
+                                  <input type="date" class="form-control calendar" id="date" name="date" value="<?= date('Y-m-d') ?>" required="true" >
                           <span class="fa fa-calendar"></span>
                                                           </div>
                               </div>
@@ -283,7 +280,7 @@
                               echo "<div class='form-group' >";
                           ?>
                           <label for="note" class="col-sm-2 control-label">
-                              <?= ("expense_note") ?>
+                              <?= ("Expense note") ?>
                           </label>
                           <div class="col-sm-6">
                               <textarea style="resize:none;" class="form-control" id="note" name="note" required><?= old('note') ?></textarea>
@@ -387,6 +384,20 @@
 
   };
     $(document).ready(payment_method_status)
+
+    $(".select2").select2({
+		theme: "bootstrap",
+		dropdownAutoWidth: false,
+		allowClear: false,
+        debug: true
+	});
+
+    $('.transaction_amount').attr("pattern", '^(\\d+|\\d{1,3}(,\\d{3})*)(\\.\\d{2})?$');
+    $('.transaction_amount').on("keyup", function() {
+        var currentValue = $(this).val();
+        currentValue = currentValue.replace(/,/g, '');
+        $(this).val(currentValue.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+    });
 </script>
 
 @endsection
