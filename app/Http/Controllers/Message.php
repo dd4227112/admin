@@ -215,7 +215,7 @@ class Message extends Controller {
         }
     }
 
-    // public function sendSms() {
+    public function sendSms() {
     //     //get all connected phones first, we use parallel approach to implement this
     //     DB::select('REFRESH MATERIALIZED VIEW  public.all_sms');
     //     $phones_connected = DB::select('select distinct api_key from public.all_sms');
@@ -232,7 +232,7 @@ class Message extends Controller {
     //             }
     //         }
     //     }
-    // }
+    }
 
     /**
      * @uses We use this method to format SMS into a format easy to be understood by end user
@@ -530,40 +530,40 @@ Kind regards,';
     }
 
     public function checkPhoneStatus() {
-        $phones_connected = DB::select('select * from admin.all_sms_keys');
-        foreach ($phones_connected as $sms) {
-            $karibusms = new \karibusms();
-            $karibusms->API_KEY = $sms->api_key;
-            $karibusms->API_SECRET = $sms->api_secret;
-            $result = (object) json_decode($karibusms->check_phone_status());
-//2020-08-06 20:07:28
-            $last_online = isset($result->last_online) ? $result->last_online : date('d-m-Y H:i');
-
-            $time = strtotime($last_online);
-            $tz_date = strtotime('-7 hours', $time);
-
-
-            $current_time = date('d-m-Y H:i', strtotime('+3 hours', time()));
-            $sms_time = date('d-m-Y H:i', $tz_date);
-
-
-            $to_time = strtotime($current_time);
-            $from_time = strtotime($sms_time);
-            $minutes = round(abs($to_time - $from_time) / 60, 2);
-
-            if ((int) $minutes > 120) {
-                // echo $last_online . 'More than 120min the device is offline';
-//                $message = "Hello, Your phone appears to be offline for more than 2 hours. For SMS to be sent from karibuSMS, kindly make sure your phone is connected with internet and you have logged in, or try to logout and login again. Thank you";
-//                $users = DB::table('admin.all_users')->where('schema_name', $sms->schema_name)->where('usertype', 'Admin')->get();
-//                
-//                foreach ($users as $user) {
-//                    if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
-//                        DB::statement("insert into public.email (email,subject,body) values ('" . $user->email . "', 'Payment Reminder','" . $message . "')");
-//                    }
-//                    DB::statement("insert into public.sms (phone_number,body,type) values ('" . $user->phone . "','" . strip_tags($message) . "',0)");
-//                }
-            }
-        }
+//        $phones_connected = DB::select('select * from admin.all_sms_keys');
+//        foreach ($phones_connected as $sms) {
+//            $karibusms = new \karibusms();
+//            $karibusms->API_KEY = $sms->api_key;
+//            $karibusms->API_SECRET = $sms->api_secret;
+//            $result = (object) json_decode($karibusms->check_phone_status());
+////2020-08-06 20:07:28
+//            $last_online = isset($result->last_online) ? $result->last_online : date('d-m-Y H:i');
+//
+//            $time = strtotime($last_online);
+//            $tz_date = strtotime('-7 hours', $time);
+//
+//
+//            $current_time = date('d-m-Y H:i', strtotime('+3 hours', time()));
+//            $sms_time = date('d-m-Y H:i', $tz_date);
+//
+//
+//            $to_time = strtotime($current_time);
+//            $from_time = strtotime($sms_time);
+//            $minutes = round(abs($to_time - $from_time) / 60, 2);
+//
+//            if ((int) $minutes > 120) {
+//                // echo $last_online . 'More than 120min the device is offline';
+////                $message = "Hello, Your phone appears to be offline for more than 2 hours. For SMS to be sent from karibuSMS, kindly make sure your phone is connected with internet and you have logged in, or try to logout and login again. Thank you";
+////                $users = DB::table('admin.all_users')->where('schema_name', $sms->schema_name)->where('usertype', 'Admin')->get();
+////                
+////                foreach ($users as $user) {
+////                    if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
+////                        DB::statement("insert into public.email (email,subject,body) values ('" . $user->email . "', 'Payment Reminder','" . $message . "')");
+////                    }
+////                    DB::statement("insert into public.sms (phone_number,body,type) values ('" . $user->phone . "','" . strip_tags($message) . "',0)");
+////                }
+//            }
+//        }
     }
 
 }
