@@ -1314,6 +1314,7 @@ class Customer extends Controller {
     public function uploadJobCard(){
         if($_POST){
             $file = request()->file('job_card_file');
+            dd($file);
             $company_file_id = $file ? $this->saveFile($file, 'company/employees') : 1; 
             $data = [
                 'company_file_id' => $company_file_id,
