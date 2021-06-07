@@ -1514,9 +1514,20 @@ select * from tempb");
     // List of standing orders
     public function standingOrders() { 
         $this->data['client_id'] = request()->segment(3);
-      //  $this->data['standingorders'] = \App\Models\StandingOrder::whereYear('payment_date', date('Y'))->get();
-        $this->data['standingorders'] = \App\Models\Contract::where('contract_type_id',8)->get();
-       
+
+    //  $sql = "select type as type, created_by as user_id,approved_by as approved_by,client_id as client_id,
+    //         amount as amount,payment_date as maturity_date,occurance_amount as occurance_amount,
+    //         branch_id as branch_id,school_contact_id as contact_id,company_file_id as company_file_id from
+    //         admin.standing_orders
+    //         UNION 
+    //     select null as type,user_id as user_id,null as approved_by,null as client_id,null as amount,
+    //         null as maturity_date,null as occurance_amount,null as branch_id,null as contact_id,
+    //         company_file_id as company_file_id from admin.contracts where contract_type_id = '8'";
+    //     $this->data['standingorders']  = $final = \DB::select($sql);
+                
+       $this->data['standingorders'] = \App\Models\StandingOrder::get();
+      
+        
         $this->data['schools'] = \App\Models\Client::get();
         return view('account.standing_order', $this->data);
     }

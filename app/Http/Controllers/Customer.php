@@ -496,14 +496,15 @@ class Customer extends Controller {
         }
     }
 
-    public function uploadstandingorder(){
-        return view('account.invoice.add_si');
-    }
+    // public function uploadstandingorder(){
+    //     return view('account.invoice.add_si');
+    // }
 
     public function createSI() {
         if ($_POST) {
-            $file = request('standing_order_file');
-            $company_file_id = $this->saveFile($file, 'company/contracts');
+         //   $file = request('standing_order_file');
+          //  $company_file_id = $file  ? $this->saveFile($file, 'company/contracts') : 1;
+            $company_file_id = 1;
             $data = [
                 'client_id' => request('client_id'),
                 'branch_id' => request('branch_id'),
@@ -512,15 +513,14 @@ class Customer extends Controller {
                 'created_by' => Auth::user()->id,
                 'occurrence' => request('number_of_occurrence'),
                 'type' => request('which_basis'),
-                'amount' => request('total_amount'),
-                'occurance_amount' => request('occurance_amount'),
+                'amount' => remove_comma(request('total_amount')),
+                'occurance_amount' => remove_comma(request('occurance_amount')),
                 'payment_date' => request('maturity_date'),
                 'refer_bank_id' => request('refer_bank_id'),
                 'note' => request('note'),
-                'contract_type_id' => request('contract_type_id')
-            ]; 
+                'contract_type_id' => 8
+            ];  
             DB::table('standing_orders')->insert($data);
-         //   return redirect()->back()->with('success', 'Standing order added successfully!');
             return redirect('account/standingOrders')->with('success', 'Standing order added successfully!');
         }
         
@@ -1116,7 +1116,6 @@ class Customer extends Controller {
             if(empty($contract)) {
               $contract = \App\Models\Contract::findOrFail($contract_id);
             }
-           
             $this->data['path'] = $contract->companyFile->path;
         }
         else if($type == 'legal'){
@@ -1131,6 +1130,13 @@ class Customer extends Controller {
             $contract = \App\Models\Contract::find($contract_id);
             $this->data['path'] = $contract->companyFile->path;
         }
+        return view('layouts.file_view', $this->data);
+    }
+
+
+    public function viewStandingOrder(){
+        $company_file_id = request()->segment(3);
+        $this->data['path'] = \App\Models\CompanyFile::where('id',$company_file_id)->first()->path;
         return view('layouts.file_view', $this->data);
     }
 
@@ -1313,15 +1319,16 @@ class Customer extends Controller {
 
     public function uploadJobCard(){
         if($_POST){
+            
             $file = request()->file('job_card_file');
-            dd($file);
             $company_file_id = $file ? $this->saveFile($file, 'company/employees') : 1; 
+          
             $data = [
                 'company_file_id' => $company_file_id,
                 'client_id' => request('client_id'),
                 'created_by'  => Auth::user()->id,
                 'date'    => request('date')
-            ];
+            ]; 
             \App\Models\ClientJobCard::create($data);
           }
           return redirect()->back()->with('success','uploaded succesfully!');

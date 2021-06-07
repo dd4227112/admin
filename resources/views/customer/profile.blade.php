@@ -1132,7 +1132,7 @@ return $echo;
                                                             <span aria-hidden="true">×</span>
                                                         </button>
                                                     </div>
-                                                    
+
                                                     <form action="<?= url('customer/uploadJobCard')?>" method="post" enctype="multipart/form-data">
                                                         <div class="modal-body">
                                                             <div class="form-group">
@@ -1147,8 +1147,8 @@ return $echo;
                                                                     <div class="col-md-6">
                                                                         <strong>Job card date</strong>
                                                                         <input type="date"
-                                                                            class="form-control"
-                                                                            name="date" id="job_date" disabled required>
+                                                                            class="form-control" 
+                                                                            name="date"   required>
                                                                        </div>
                                                                 </div>
                                                             </div>
@@ -1762,18 +1762,19 @@ return $echo;
                                         <div class="tab-pane" id="payments" aria-expanded="false">
 
                                             <div class="row">
-                                                <div class="card">
-                                                    <a type="button" class="btn btn-primary waves-effect"
-                                                        href="{{ url('Customer/uploadstandingorder') }}">
-                                                        Standing Order 
-                                                    </a>
-                                                </div>
+                                            
+                                                 <button type="button" class="btn btn-primary waves-effect"
+                                                        data-toggle="modal" data-target="#standing-order-Modal">
+                                                        Add Standing Order
+                                                    </button>
+                                             
 
                                                 <div class="modal fade" id="standing-order-Modal" tabindex="-1"
                                                         role="dialog" aria-hidden="true"
                                                         style="z-index: 1050; display: none;">
                                                         <div class="modal-dialog modal-lg" role="document">
                                                             <div class="modal-content">
+                                                                <?php if(can_access('add_si')){ ?>
                                                                 <div class="modal-header">
                                                                 <h4 class="modal-title">Add Standing Order</h4>
                                                                     <button type="button" class="close"
@@ -1781,6 +1782,7 @@ return $echo;
                                                                         <span aria-hidden="true">×</span>
                                                                     </button>
                                                                 </div>
+                                                                <?php } ?>
                                                                 <form action="{{ url('Customer/createSI') }}" method="post"  enctype="multipart/form-data">
                                                                     <div class="modal-body">
                                                                         
@@ -1807,20 +1809,18 @@ return $echo;
                                                                                 <div class="col-md-6">
                                                                                     <strong> Contact person </strong>
                                                                                     <select name="school_contact_id"  class="form-control select2"  >
-                                                                                        <?php
-                                                                                        $this_school = \App\Models\ClientSchool::where('client_id', $client_id)->first();
-                                                                                        if (!empty($this_school)){
-                                                                                        $contact_staffs = DB::table('school_contacts')->where('school_id', $this_school->school_id)->get();
-                                                                                        if (count($contact_staffs)) {
-                                                                                            foreach ($contact_staffs as $contact_staff) {?>
-                                                                                        <option
-                                                                                            value="<?= $contact_staff->id ?>">
-                                                                                            <?= $contact_staff->name ?>
-                                                                                        </option>
-                                                                                        <?php
+                                                                                        <?php                            
+                                                                                            $contact_staffs = DB::table('school_contacts')->get();
+                                                                                            if (count($contact_staffs)) {
+                                                                                                foreach ($contact_staffs as $contact_staff) {?>
+                                                                                            <option
+                                                                                                value="<?= $contact_staff->id ?>">
+                                                                                                <?= $contact_staff->name ?>
+                                                                                            </option>
+                                                                                            <?php
+                                                                                                }
                                                                                             }
-                                                                                        }
-                                                                                    }?>
+                                                                                        ?>
                                                                                     </select>
                                                                                 </div>
                                                                             </div>
@@ -1853,14 +1853,14 @@ return $echo;
                                                                                 <div class="col-md-6">
                                                                                     <strong> Total amount</strong>
                                                                                     <input type="text"
-                                                                                        class="form-control"
+                                                                                        class="form-control transaction_amount"
                                                                                         name="total_amount"
                                                                                         required>
                                                                                 </div>
                                                                                 <div class="col-md-6">
                                                                                     <strong> Amount for Every Occurrence </strong>
                                                                                     <input type="text"
-                                                                                        class="form-control"
+                                                                                        class="form-control transaction_amount"
                                                                                         name="occurance_amount"
                                                                                         required>
                                                                                 </div>
@@ -1906,25 +1906,7 @@ return $echo;
                                                                                         ?>
                                                                                     </select>
                                                                                 </div>
-                                                                                <div class="col-md-6">
-                                                                                    <strong> Contract type </strong>
-                                                                                    <select name="contract_type_id"  required
-                                                                                        class="form-control select2">
-                                                                                        <?php
-                                                                                        $contracts = DB::table('contracts_types')->get();
-                                                                                        if (!empty($contracts)) {
-                                                                                            foreach ($contracts as $contract) {
-                                                                                                ?>
-                                                                                        <option
-                                                                                            value="<?= $contract->id ?>">
-                                                                                            <?= $contract->name ?>
-                                                                                        </option>
-                                                                                        <?php
-                                                                                            }
-                                                                                        }
-                                                                                        ?>
-                                                                                    </select>
-                                                                                </div>
+                                                                           
                                                                             </div>
                                                                         </div>
 
@@ -2133,8 +2115,6 @@ aria-hidden="true">
             <form action="<?= url('customer/contract/' . $client_id) ?>" method="POST"
                 enctype="multipart/form-data">
 
-
-
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Contract Name</label>
                     <div class="col-sm-10">
@@ -2149,7 +2129,7 @@ aria-hidden="true">
                         <select name="contract_type_id" class="form-control">
 
                             <?php
-                            $ctypes = DB::table('admin.contracts_types')->get();
+                            $ctypes = DB::table('admin.contracts_types')->where('id','!=','8')->get();
                             if (!empty($ctypes)) {
                                 foreach ($ctypes as $ctype) {
                                     ?>
@@ -2284,6 +2264,15 @@ aria-hidden="true">
 <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.nonblock.js"></script>
 <script type="text/javascript" src="<?= $root ?>assets/pages/pnotify/notify.js"></script>
 <script type="text/javascript">
+
+
+$('.transaction_amount').attr("pattern", '^(\\d+|\\d{1,3}(,\\d{3})*)(\\.\\d{2})?$');
+$('.transaction_amount').on("keyup", function() {
+    var currentValue = $(this).val();
+    currentValue = currentValue.replace(/,/g, '');
+    $(this).val(currentValue.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+});
+
 function save_comment(id) {
 var content = $('#task_comment' + id).val();
 var task_id = $('#task_id' + id).val();

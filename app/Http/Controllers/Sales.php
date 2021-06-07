@@ -205,7 +205,7 @@ class Sales extends Controller {
             $type = rtrim($usr_type, ',');
             $in_array = " AND usertype IN (" . $type . ")";
         }
-        $sql = "insert into public.sms (body,users_id,type,phone_number) select '{$message}',id,'0',phone from admin.all_users WHERE schema_name::text IN ($list_schema) AND usertype !='Student' {$in_array} AND phone is not NULL ";
+        $sql = "insert into public.sms (body,users_id,type,phone_number) select '{$message}',id,'0',phone from admin.all_users WHERE schema_name::text IN ($list_schema) AND usertype !='Student' {$in_array} AND phone is not NULL";
         DB::statement($sql);
         return redirect('message/create');
     }
@@ -1138,6 +1138,16 @@ class Sales extends Controller {
                    ->select('schools.id','schools.name')->where('users_schools.user_id',$user_id)->get();
         }
         return view('sales.report.index',$this->data);
+    }
+
+
+    public function jobcards(){
+        $this->data['jobcards'] = DB::table('client_job_cards')
+                               ->join('clients','clients.id', '=', 'client_job_cards.client_id')
+                               ->join('users','users.id', '=', 'client_job_cards.created_by')
+                               ->select('users.name','client_job_cards.*','clients.name as clientname')
+                               ->whereNotNull('client_job_cards.date')->orderBy('client_job_cards.date','desc')->get();
+        return view('sales.jobcards',$this->data);
     }
 
 }
