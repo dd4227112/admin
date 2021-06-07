@@ -44,6 +44,7 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
             'schema' => 'admin'
+           
         ],
 
         'karibusms' => [
