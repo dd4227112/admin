@@ -265,32 +265,7 @@
                                         </td>
                                       </tr>
                                     </table>
-
-
-                                    <table class="table">
-                                        <tr>
-                                               
-                                            <?php  {  ?>
-                                                <a href="<?= url('PaymentController/index/' . $invoice->id . '/nmbbank') ?>" class="mr-4">
-                                                <img src="<?= url('public/assets/images/account/nmb.jpg') ?>" alt="NMB channels" width="60" height="60"></a>
-                                        
-                                                <a href="<?= url('PaymentController/index/' . $invoice->id . '/mobile') ?>" class="mr-4">
-                                                    <img src="<?= url('public/assets/images/account/mpesa.jpg') ?>" alt="M-pesa" width="60" height="60"></a>
-                                                <a href="<?= url('PaymentController/index/' . $invoice->id . '/mobile') ?>" class="mr-4">
-                                                    <img src="<?= url('public/assets/images/account/tigo.jpg') ?>" alt="TigoPesa" width="60" height="60"></a>
-                                                <a href="<?= url('PaymentController/index/' . $invoice->id . '/mobile') ?>" class="mr-4">
-                                                    <img src="<?= url('public/assets/images/account/airtel.jpg') ?>" alt="Airtel Money" width="60" height="60">
-                                                </a>
-                                                <a href="" class="mr-4">
-                                                    <img src="<?= url('public/assets/images/account/paypal.png') ?>" alt="Pay Pal" width="60" height="60">
-                                                </a>
-
-                                                <a href="" class="mr-4">
-                                                    <img src="<?= url('public/assets/images/account/paycard.jpg') ?>" alt="Pay Pal" width="60" height="60">
-                                                </a>
-                                              <?php } ?>
-                                           </tr>
-                                         </table>
+                   
                                    </div>
                             </div>
                         </div>
