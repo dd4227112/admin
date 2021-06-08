@@ -496,15 +496,13 @@ class Customer extends Controller {
         }
     }
 
-    // public function uploadstandingorder(){
-    //     return view('account.invoice.add_si');
-    // }
+ 
 
     public function createSI() {
         if ($_POST) {
-         //   $file = request('standing_order_file');
-          //  $company_file_id = $file  ? $this->saveFile($file, 'company/contracts') : 1;
-            $company_file_id = 1;
+           $file = request('standing_order_file');
+           $company_file_id = $file  ? $this->saveFile($file, 'company/contracts') : 1;
+           // $company_file_id = 1;
             $data = [
                 'client_id' => request('client_id'),
                 'branch_id' => request('branch_id'),
@@ -513,7 +511,7 @@ class Customer extends Controller {
                 'created_by' => Auth::user()->id,
                 'occurrence' => request('number_of_occurrence'),
                 'type' => request('which_basis'),
-                'amount' => remove_comma(request('total_amount')),
+                'total_amount' => remove_comma(request('total_amount')),
                 'occurance_amount' => remove_comma(request('occurance_amount')),
                 'payment_date' => request('maturity_date'),
                 'refer_bank_id' => request('refer_bank_id'),
@@ -1389,6 +1387,24 @@ class Customer extends Controller {
         }
         $this->data['request'] = DB::table('whatsapp_integrations')->where('id', $id)->first();
         return view('customer.message.approve_integration', $this->data);
+    }
+
+
+
+    public function editStandingOrder(){
+        $this->data['id'] = $id = request()->segment(3);
+        $this->data['order'] = \App\Models\StandingOrder::findOrFail($id);
+      
+        if ($_POST) {
+            $order = \App\Models\StandingOrder::findOrFail($id);
+            $data = ['school_contact_id' => request('school_contact_id'), 'type' => request('which_basis'),
+            'occurance_amount' => remove_comma(request('occurance_amount')),'total_amount' => remove_comma(request('total_amount')),
+            'payment_date' => request('maturity_date'),'refer_bank_id' => request('refer_bank_id'),'branch_id' => request('branch_id'),
+            'client_id' => request('client_id'),'created_by' => Auth::user()->id,'occurrence' => request('occurrence'),'contract_type_id' => 8];
+            $order->update($data);
+             return redirect('account/standingOrders')->with('success', 'Succeessful updated');
+        }
+        return view('account.standingorder.edit', $this->data);
     }
 
 }

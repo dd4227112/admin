@@ -29,17 +29,9 @@
         <div class="page-body">
             <div class="row">
                 <div class="col-sm-12">
-
-                    <!-- Ajax data source (Arrays) table start -->
-                   
-
-                      </div>
                 </div>
             </div>
-
-
-
-
+         </div>
 
             <div class="card tab-card">
                 <ul class="nav nav-tabs md-tabs" role="tablist">
@@ -86,15 +78,18 @@
                                        
                                         <td><?=$standing->type?></td>
                                         <td><?=money($standing->occurance_amount)?></td>
-                                        <td><?=money($standing->amount)?></td>
-                                        <td><?=isset($standing->maturity_date) ? date('d M Y', strtotime($standing->maturity_date)) : ''?></td>
+                                        <td><?=money($standing->total_amount)?></td>
+                                        <td><?=isset($standing->payment_date) ? date('d M Y', strtotime($standing->payment_date)) : ''?></td>
                                         <td>
 
                                         <div class="dropdown-secondary dropdown f-right">
                                         <button class="btn btn-success btn-mini dropdown-toggle waves-effect waves-light" type="button" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</button>
                                         <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
                                          <a  target="_break" href="<?= url('customer/viewContract/'.$standing->id) ?>" class="dropdown-item waves-light waves-effect">View</a>
-                                           
+
+                                         <?php if(!isset($standing->client)) {  ?>
+                                         <a  href="<?= url('customer/editStandingOrder/'.$standing->id) ?>" class="dropdown-item waves-light waves-effect">edit</a>
+                                         <?php } ?>
                                          <a  target="_break" href="<?= url('account/approveStandingOrder/'.$standing->id) ?>" class="dropdown-item waves-light waves-effect">Approve</a>
                                          <a class="dropdown-item waves-light waves-effect" href="<?= url('account/rejectStandingOrder/'.$standing->id) ?>"><span class="point-marker bg-warning"></span>Reject</a> 
     

@@ -1791,8 +1791,7 @@ return $echo;
                                                                                 <div class="col-md-6">
                                                                                   <strong> Branch name </strong>
                                                                                     <select name="branch_id" class="form-control select2" required>
-                                                                                        <?php
-                                                                                        $branches = \App\Models\PartnerBranch::orderBy('id','asc')->get();
+                                                                                        <?php $branches = \App\Models\PartnerBranch::orderBy('id','asc')->get();
                                                                                         if (!empty($branches)) {
                                                                                             foreach ($branches as $branch) {
                                                                                                 ?>
@@ -1800,10 +1799,7 @@ return $echo;
                                                                                             value="<?= $branch->id ?>">
                                                                                             <?= $branch->name ?>
                                                                                         </option>
-                                                                                        <?php
-                                                                                            }
-                                                                                        }
-                                                                                        ?>
+                                                                                        <?php} } ?>
                                                                                     </select>
                                                                                 </div>
                                                                                 <div class="col-md-6">
