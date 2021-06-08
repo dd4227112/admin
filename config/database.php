@@ -1,10 +1,8 @@
 <?php
+
 use Illuminate\Support\Str;
-
 return [
-
-    'default' => env('DB_CONNECTION', 'pgsql'),
-
+    'default' => 'pgsql',
     'connections' => [
         'sqlite' => [
             'driver' => 'sqlite',
@@ -34,21 +32,56 @@ return [
             ]) : [],
         ],
 
-        'pgsql' => [
+       
+          'pgsql' => [
             'driver' => 'pgsql',
-            'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE', 'shulesoft_db'),
-            'username' => env('DB_USERNAME', 'postgres'),
-            'password' => env('DB_PASSWORD','password'),
+            'host' => 'shulesoftdb.postgres.database.azure.com',
+            // 'host'=>'localhost',
+            'port' =>'6432',
+            'database' =>'shulesoft_2022',
+            'username' => 'pgeshuleadmin',
+            'password' =>'Shul3@s0ft@202!',
+            'charset' => 'utf8',
+            'prefix' => '',
+            'schema' => 'admin'
+           
+        ],
+
+        'karibusms' => [
+            'driver' => 'pgsql',
+            'host' => 'shulesoftdb.postgres.database.azure.com',
+            // 'host'=>'localhost',
+            'port' =>'6432',
+            'database' =>'other_app',
+            'username' => 'pgeshuleadmin',
+            'password' =>'Shul3@s0ft@202!',
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
-            'schema' => 'admin',
+            'schema' => 'new_karibusms',
             'sslmode' => 'prefer',
+            'options' => [
+                \PDO::ATTR_EMULATE_PREPARES => true
+            ]
         ],
 
+    'biotime' => [
+            'driver' => 'pgsql',
+            // 'url' => env('DATABASE_URL'),
+            'host' => '51.91.251.252',
+            'port' => '6432',
+            'database' => 'biotime',
+            'username' => 'biotime',
+            'password' => 'biotime_2021_',
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+            'options' => [
+                \PDO::ATTR_EMULATE_PREPARES => true
+            ]
+        ],
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_URL'),
@@ -61,11 +94,15 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
         ],
+
     ],
 
     'migrations' => 'migrations',
+
     'redis' => [
+
         'client' => env('REDIS_CLIENT', 'phpredis'),
+
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
             'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
@@ -78,6 +115,7 @@ return [
             'port' => env('REDIS_PORT', '6379'),
             'database' => env('REDIS_DB', '0'),
         ],
+
         'cache' => [
             'url' => env('REDIS_URL'),
             'host' => env('REDIS_HOST', '127.0.0.1'),
@@ -85,6 +123,7 @@ return [
             'port' => env('REDIS_PORT', '6379'),
             'database' => env('REDIS_CACHE_DB', '1'),
         ],
-    ],
-];
 
+    ],
+
+]; 

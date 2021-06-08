@@ -1,4 +1,9 @@
-<?php $root = url('/') . '/public/' ?>
+<?php $root = url('/') . '/public/';
+$value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
+
+//isset($value) ? dd($value) : 'vaaaaaaaa' 
+
+?>
 
 
 <!DOCTYPE html>
@@ -619,7 +624,14 @@
                                    <a href="#" data-i18n="nav.page_layout.vertical.main"><i
                                    class="icon-arrow-right"></i>My Schools </a>
                                    <ul class="tree-2">
+
+                                    <?php  { ?>
+                                        
+
+                                     <?php } ?>
+                                     
                                     <li><a href="<?= url('Analyse/myschools') ?>" data-i18n="nav.extra-components.session-timeout"> List of Schools</a></li>
+
                                     <li><a href="<?= url('Analyse/myreport') ?>" data-i18n="nav.extra-components.offline">Task Report</a></li>
                                     <li><a href="<?= url('sales/schoolVisit/1') ?>" data-i18n="nav.extra-components.session-timeout">School Visitation</a></li>
 
