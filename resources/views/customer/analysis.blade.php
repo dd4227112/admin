@@ -144,7 +144,7 @@
                                   <?php } ?>
 
                                 </select>
-                              </div>
+                             </div>
 
                           <div class="form-group">
                             <strong> More Details</strong>

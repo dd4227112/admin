@@ -1,8 +1,6 @@
 <?php
 
-function mailConfig() {
-    
-}
+
 
 function custom_date($datatime) {
     $newTZ = new DateTimeZone('America/New_York');

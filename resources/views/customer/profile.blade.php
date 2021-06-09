@@ -1762,11 +1762,7 @@ return $echo;
                                         <div class="tab-pane" id="payments" aria-expanded="false">
 
                                             <div class="row">
-                                            
-                                                 <button type="button" class="btn btn-primary waves-effect"
-                                                        data-toggle="modal" data-target="#standing-order-Modal">
-                                                        Add Standing Order
-                                                    </button>
+                                               
                                              
 
                                                 <div class="modal fade" id="standing-order-Modal" tabindex="-1"
@@ -1774,7 +1770,7 @@ return $echo;
                                                         style="z-index: 1050; display: none;">
                                                         <div class="modal-dialog modal-lg" role="document">
                                                             <div class="modal-content">
-                                                                <?php if(can_access('add_si')){ ?>
+                                                              
                                                                 <div class="modal-header">
                                                                 <h4 class="modal-title">Add Standing Order</h4>
                                                                     <button type="button" class="close"
@@ -1782,7 +1778,7 @@ return $echo;
                                                                         <span aria-hidden="true">×</span>
                                                                     </button>
                                                                 </div>
-                                                                <?php } ?>
+                                                             
                                                                 <form action="{{ url('Customer/createSI') }}" method="post"  enctype="multipart/form-data">
                                                                     <div class="modal-body">
                                                                         
@@ -1799,7 +1795,9 @@ return $echo;
                                                                                             value="<?= $branch->id ?>">
                                                                                             <?= $branch->name ?>
                                                                                         </option>
-                                                                                        <?php} } ?>
+                                                                                        <?php }
+                                                                                        }
+                                                                                         ?>
                                                                                     </select>
                                                                                 </div>
                                                                                 <div class="col-md-6">
@@ -1936,10 +1934,72 @@ return $echo;
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </div>      
 
-                                            <div class="row">
-                                                <div class="card table-responsive">
+                                        
+
+                                            <div class="card">
+                                                <div class="card-header">
+                                                 <div class="table-responsive dt-responsive">
+                                                    <div class="table-responsive">
+                                                  <div class="col-sm-4 my-2">
+                                                    <?php if(can_access('add_si')){ ?>
+                                                      <button type="button" class="btn btn-primary waves-effect"
+                                                        data-toggle="modal" data-target="#standing-order-Modal">
+                                                        Add Standing Orderss
+                                                    </button>
+                                                     <?php } ?>
+                                                    </div>
+                                                    <table id="invoice_table"
+                                                        class="table table-striped table-bordered nowrap dataTable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Type</th>
+                                                                <th>Occurance Amount </th>
+                                                                <th>Total Amount</th>
+                                                                <th>Maturity date</th>
+                                                                <th>Contact</th>
+                                                               
+                                                                <th colspan="2">Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                         
+                                                          <?php $i = 1;  foreach($standingorders as $order) { ?>
+                                                            <tr>
+                                                                <td><?= $i  ?></td>
+                                                                <td><?= $order->type ?></td>
+                                                                <td><?= money($order->occurance_amount) ?></td>
+                                                                <td><?= money($order->total_amount) ?></td>
+                                                                <td><?= date('d/m/Y', strtotime($order->payment_date)) ?></td>
+                                                                <td><?= $order->schoolcontact->name ?></td>
+
+                                                                <td><a  target="_break" href="<?= url('customer/viewContract/'.$order->id) ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a>
+                                                                   <?php if(!isset($order->payment_date) || !isset($order->type)) {  ?>
+                                                                       <a  href="<?= url('account/editStandingOrder/'.$order->id) ?>" class="waves-light waves-effect btn btn-info btn-sm">edit</a>
+                                                                   <?php } ?>
+                                                                </td>
+                                                            </tr>
+                                                            <?php $i++; } ?>
+                                                        </tbody>
+                                                       
+                                                    </table>
+                                                </div>
+                                      
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+
+
+                                           <div class="card">
+                                                <div class="card-header">
+                                                 <div class="table-responsive dt-responsive">
+                                                    <div class="table-responsive">
+                                                    <h5>Invoices </h5>
                                                     <table id="invoice_table"
                                                         class="table table-striped table-bordered nowrap dataTable">
                                                         <thead>
@@ -2036,14 +2096,16 @@ return $echo;
                                                             </tr>
                                                         </tfoot>
                                                     </table>
+                                                  </div>
                                                 </div>
+                                               </div>
                                             </div>
 
 
 
 
 
-                                        </div>
+                                       
                                     </div>
                                     <!-- Row end -->
                                 </div>
@@ -2057,6 +2119,7 @@ return $echo;
     <!-- Page-body end -->
 </div>
 </div>
+
 <div class="card-block">
 <div class="modal fade" id="status-Modal" tabindex="-1" role="dialog" aria-hidden="true"
     style="z-index: 1050; display: none;">

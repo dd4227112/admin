@@ -451,6 +451,7 @@ class Customer extends Controller {
 
         $year = \App\Models\AccountYear::where('name', date('Y'))->first();
         $this->data['invoices'] = \App\Models\Invoice::where('client_id', $client->id)->where('account_year_id', $year->id)->get();
+        $this->data['standingorders'] = \App\Models\StandingOrder::where('client_id', $client->id)->get();
 
         if ($_POST) {
             $data = array_merge(request()->except(['start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date')))]);
@@ -1209,7 +1210,7 @@ class Customer extends Controller {
     public function contract() {
         $client_id = request()->segment(3);
         $file = request()->file('file');
-      //  $file_id = $this->saveFile($file, 'company/contracts');
+        $file_id = $this->saveFile($file, 'company/contracts');
         //save contract
       
         $contract_id = DB::table('admin.contracts')->insertGetId([
@@ -1278,10 +1279,6 @@ class Customer extends Controller {
         echo $option;
     }
 
-
-
-
-    
 
     public function download() {
         $client = request()->segment(3);
@@ -1391,20 +1388,6 @@ class Customer extends Controller {
 
 
 
-    public function editStandingOrder(){
-        $this->data['id'] = $id = request()->segment(3);
-        $this->data['order'] = \App\Models\StandingOrder::findOrFail($id);
-      
-        if ($_POST) {
-            $order = \App\Models\StandingOrder::findOrFail($id);
-            $data = ['school_contact_id' => request('school_contact_id'), 'type' => request('which_basis'),
-            'occurance_amount' => remove_comma(request('occurance_amount')),'total_amount' => remove_comma(request('total_amount')),
-            'payment_date' => request('maturity_date'),'refer_bank_id' => request('refer_bank_id'),'branch_id' => request('branch_id'),
-            'client_id' => request('client_id'),'created_by' => Auth::user()->id,'occurrence' => request('occurrence'),'contract_type_id' => 8];
-            $order->update($data);
-             return redirect('account/standingOrders')->with('success', 'Succeessful updated');
-        }
-        return view('account.standingorder.edit', $this->data);
-    }
+ 
 
 }

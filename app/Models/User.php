@@ -96,6 +96,11 @@ class User extends Model {
         return $this->hasMany(\App\Models\Uattendance::class, 'user_id', 'id');
     }
 
+
+    public function udesignation() {
+        return $this->hasOne(\App\Models\ReferDesignation::class,'user_id', 'id');
+    }
+
 }
 
 

@@ -1515,26 +1515,13 @@ select * from tempb");
 
 
     // List of standing orders
-    public function standingOrders() { 
-        $this->data['client_id'] = request()->segment(3);
-
-    //  $sql = "select type as type, created_by as user_id,approved_by as approved_by,client_id as client_id,
-    //         amount as amount,payment_date as maturity_date,occurance_amount as occurance_amount,
-    //         branch_id as branch_id,school_contact_id as contact_id,company_file_id as company_file_id from
-    //         admin.standing_orders
-    //         UNION 
-    //     select null as type,user_id as user_id,null as approved_by,null as client_id,null as amount,
-    //         null as maturity_date,null as occurance_amount,null as branch_id,null as contact_id,
-    //         company_file_id as company_file_id from admin.contracts where contract_type_id = '8'";
-    //     $this->data['standingorders']  = $final = \DB::select($sql);
-                
-       $this->data['standingorders'] = \App\Models\StandingOrder::get();
-      
-        
-        $this->data['schools'] = \App\Models\Client::get();
+    public function standingOrders() {              
+         $this->data['standingorders'] = \App\Models\StandingOrder::get();
+         $this->data['schools'] = \App\Models\Client::get();
         return view('account.standing_order', $this->data);
     }
 
+    // Approve standing orders
     public function approveStandingOrder() { 
         $this->data['so_id'] = $so_id = request()->segment(3);
         if(!empty($so_id)){
@@ -1543,24 +1530,58 @@ select * from tempb");
         return redirect()->back()->with('success', 'Standing order approved!');
     } 
 
+
+
+    // Confirm standing order
     public function confirmSI(){
         $this->data['so_id'] = $so_id = request()->segment(3);
         $standing = \App\Models\StandingOrder::where('id', $so_id)->first();
         $invoice = \App\Models\Invoice::where('client_id',$standing->client_id)->first();
-       // dd($invoice);
         if(!empty($invoice)){
             return redirect('account/payment/'.$invoice->id);
         }
         //After add payment the receipt should be sent to client
     }
 
+    // Reject standing order, specify reason send to associate
     public function rejectStandingOrder(){  
-        $_id = request()->segment(3);
-        $standing = \App\Models\StandingOrder::where('id',$_id)->first();
-        $client = \App\Models\Client::where('id',$standing->client_id)->first();
-        $message = '<p>The standing order has failed to be recorded</p>';
-        $this->send_email($client->email, 'Standing Order Rejected!' . $message);
-        return redirect()->back()->with('success', 'Standing order rejected!');
+        $this->data['id'] = $id = request()->segment(3);
+        $this->data['standing']  = $standing = \App\Models\StandingOrder::where('id',$id)->first();
+        if($_POST){ 
+            \App\Models\StandingOrder::where('id', $id)->update(['note' => request('reason')]);
+            $client = \App\Models\Client::where('id',$standing->client_id)->first();
+            $message =  request('reason');
+            $this->send_email($standing->user->email,'Standing Order Rejection',$message);
+            return redirect('account/standingorders')->with('success', 'Sent successful to '.$standing->user->name);
+        }
+        return view('account.standingorder.reject', $this->data);
+    }
+
+
+
+    public function editStandingOrder(){
+        $this->data['id'] = $id = request()->segment(3);
+        $this->data['order'] = \App\Models\StandingOrder::findOrFail($id);
+      
+        if ($_POST) {
+            $order = \App\Models\StandingOrder::findOrFail($id);
+            $data = ['school_contact_id' => request('school_contact_id'), 'type' => request('which_basis'),
+            'occurance_amount' => remove_comma(request('occurance_amount')),'total_amount' => remove_comma(request('total_amount')),
+            'payment_date' => request('maturity_date'),'refer_bank_id' => request('refer_bank_id'),'branch_id' => request('branch_id'),
+            'client_id' => request('client_id'),'created_by' => Auth::user()->id,'occurrence' => request('occurrence'),'contract_type_id' => 8];
+            
+            $order->update($data);
+                
+            // if(date('Y-m-d') < date('Y-m-d',strtotime(request('maturity_date')))) {
+            //     echo 'greater than';
+            // }
+            // $maturity_date = request('maturity_date');
+            // dd($maturity_date);
+             return redirect('account/standingOrders')->with('success', 'Succeessful updated');
+        }
+         // If maturity date is greater than today send email to accountant
+          
+        return view('account.standingorder.edit', $this->data);
     }
 
 

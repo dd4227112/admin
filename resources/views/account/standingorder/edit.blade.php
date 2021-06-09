@@ -51,9 +51,9 @@
                                     </header>
                                     <div class="panel-body">
                                         <div id="error_area"></div>
-                                        <div class=" form">
-                                            <form class="cmxform form-horizontal" method="post" action="<?= url('customer/editStandingOrder/'.$id) ?>">
-                                             
+                                        <div class="form">
+
+                                            <form class="cmxform form-horizontal" method="post" action="<?= url('account/editStandingOrder/'.$id) ?>">
                                                  <div class="form-group ">
                                                     <label for="type" class="control-label col-lg-3">School contact</label>
                                                     <div class="col-lg-6">
@@ -97,8 +97,6 @@
                                                     <div class="col-lg-6"> <span id="date_error"></span></div>
                                                 </div> 
 
-                                               
-
                                                 <div class="form-group ">
                                                   <label for="number" class="control-label col-lg-3">Occurance amount</label>
                                                     <div class="col-lg-6">
@@ -113,7 +111,7 @@
                                                         <input type="text"
                                                         class="form-control transaction_amount"
                                                         name="total_amount"
-                                                        value="<?=$order->amount ?>">
+                                                        value="<?=$order->total_amount ?>">
                                                     </div>
                                                     <?php echo form_error($errors, 'total_amount'); ?>
                                                     <div class="col-lg-6"> <span id="date_error"></span></div>
@@ -122,7 +120,7 @@
                                                 <div class="form-group ">
                                                     <label for="number" class="control-label col-lg-3">Maturity date</label>
                                                     <div class="col-lg-6">
-                                                        <input type="date"
+                                                     <input type="date"
                                                         class="form-control"
                                                         name="maturity_date" value="<?=$order->payment_date ?>">
                                                     </div>
