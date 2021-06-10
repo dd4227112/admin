@@ -953,6 +953,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
 private function client($client_id = null){
     return \App\Models\Client::where('id',$client_id)->first()->name;
 }
+
 //Send email remainder to accountant, ie role_id 13 = Financial accountant
 public function sendSORemainder() {
   $users = \App\Models\User::where('role_id',13)->get();

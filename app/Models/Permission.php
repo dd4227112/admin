@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Permission extends Model {
 
-    protected $table = 'permissions';
+    protected $table = 'admin.permissions';
     protected $fillable = ['id', 'name', 'display_name', 'description','permission_group_id'];
 
 
