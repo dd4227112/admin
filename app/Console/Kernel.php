@@ -291,7 +291,7 @@ class Kernel extends ConsoleKernel {
             if (isset($result) && !empty($result)) {
                 //update invoice no
                 DB::table($invoice->schema_name . '.invoices')
-                        ->where('reference', $invoice->reference)->update(['sync' => 0, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
+                        ->where('reference', $invoice->reference)->update(['sync' => 0,'status'=>0, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
             }
             DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
         }
