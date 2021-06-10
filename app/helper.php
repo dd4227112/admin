@@ -1,8 +1,6 @@
 <?php
 
-function mailConfig() {
-    
-}
+
 
 function custom_date($datatime) {
     $newTZ = new DateTimeZone('America/New_York');
@@ -138,6 +136,7 @@ function can_access($permission) {
         return in_array($permission, $global) ? 1 : 0;
     }
 }
+
 
 function createRoute() {
     $url = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';

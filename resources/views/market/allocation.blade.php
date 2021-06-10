@@ -1,9 +1,15 @@
 @extends('layouts.app')
 @section('content')
+<?php 
+  if(Auth::user()->role_id == 17){
+    $zone_id = \App\Models\ZoneManager::where('user_id',Auth::user()->id)->first()->zone_id;
+    
+  }
+?>
 
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
+        
         <div class="page-header">
             <div class="page-header-title">
                 <h4 class="box-title">Schools</h4>
@@ -73,22 +79,20 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
 
+                        <div class="row">
                            <?php if(can_access('add_school')) { ?>
                              <div class="col-lg-3">
                                  <a href="<?= url('sales/addSchool') ?>" data-i18n="nav.navigate.navbar" class="btn btn-success">add New School</a>
                              </div>
                            <?php } ?>
-                           
+                        
                             <div class="col-lg-6">
                                 <?php
                                 if (can_access('manage_customers')) {
                                     ?>
                                     <p align="center">
                                         <?php
-                                        // $demo=DB::table('admin.website_demo_requests')->count();
-                                        // $join=DB::table('admin.website_join_shulesoft')->count();
                                         ?>
                                         <a href="<?= url('sales/prospect/demo') ?>"> <button class="btn btn-success btn-skew"> Demo Requests <span class="badge badge-danger"><?php //echo $demo     ?></span></button></a>
                                         <a href="<?= url('sales/prospect/join') ?>"> <button class="btn btn-info btn-skew">Join Requests <span class="badge badge-danger"><?php // echo $join      ?></span></button></a>
@@ -100,23 +104,18 @@
                                     <option value="3"<?php // selected(3)  ?>>Sales On Progress</option>
                                 </select>
                             </div>
-                            <div class="col-lg-3"></div>
                         </div>
+
+
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="white-box">
-                                    <h3 class="box-title">List of Schools</h3>
-                                    <div class="row">
-                                        <div class="col-lg-4">
-
-                                        </div>
-                                        <div class="col-lg-4 row">
-                                        </div>
-                                        <div class="col-lg-4"></div>
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table id="list_of_schools"  class="display nowrap table">
-                                            <thead>
+                                    <h3 class="box-title">List of all Schools</h3>
+                                    
+                                        <div class="card-block">
+                                             <div class="table-responsive">
+                                             <table id="list_of_schools" class="display nowrap table-borderd table dataTable">
+                                              <thead>
                                                 <tr>
                                                     <th>#</th>
                                                     <th>School Name</th>
@@ -135,6 +134,7 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                  </div>
                                 </div>
                             </div>
                         </div>

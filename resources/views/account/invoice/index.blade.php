@@ -179,7 +179,6 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                        
                                             <?php  
                                             $total_amount = 0;
                                             $total_paid = 0;

@@ -49,9 +49,7 @@
                             <div class="box-body">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <?php
-                                        $usertype = session("usertype");
-                                        ?>
+                                     
                                         <h5 class="page-header">
                                             <?php
                                             if (isset($refer_expense_name) && !empty($refer_expense_name)) {
@@ -65,10 +63,12 @@
                                      <div class="row">
                                         <div class="col-sm-4">
                                             <h5 class="page-header">
-                                                <a class="btn btn-success" href="<?php echo url('account/addtransaction/4/' . $refer_id . '') ?>">
+                                                
+                                                <a class="btn btn-success" href="<?php echo url('account/addtransaction/' . $id . '/' . $refer_id . '') ?>">
                                                     <i class="fa fa-plus"></i> 
                                                     Add Transaction 
                                                 </a>
+
                                             </h5>
                                         </div>
 
@@ -113,7 +113,7 @@
                                                 <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
                                                     <thead>
                                                         <tr>
-                                                            <th class="col-sm-1"><?= __('slno') ?></th>
+                                                            <th class="col-sm-1"><?= __('#') ?></th>
 
                                                             <th class="col-sm-2">Name</th>
 

@@ -29,17 +29,9 @@
         <div class="page-body">
             <div class="row">
                 <div class="col-sm-12">
-
-                    <!-- Ajax data source (Arrays) table start -->
-                   
-
-                      </div>
                 </div>
             </div>
-
-
-
-
+         </div>
 
             <div class="card tab-card">
                 <ul class="nav nav-tabs md-tabs" role="tablist">
@@ -53,12 +45,7 @@
                         <a class="nav-link" data-toggle="tab" href="#profile3" role="tab" aria-expanded="false">Summary</a>
                         <div class="slide"></div>
                     </li>
-                    <?php if(can_access('add_si')){?>
-                    <li class="nav-item complete">
-                        <a class="nav-link" style="color: blue;" href="<?=url('Customer/uploadstandingorder')?>"> <b>Create</b> </a>
-                        <div class="slide"></div>
-                    </li> 
-                    <?php }?>
+                  
                 </ul>
 
                 <div class="tab-content">
@@ -70,8 +57,8 @@
                                 <thead>
                                     <tr>
                                         <th>No.</th>
-                                        <th>School</th>
-                                        <th>Branch</th>
+                                        <th>School </th>
+                                        <th>Contact </th>
                                         <th>Type</th>
                                         <th>Occurance amount</th>
                                         <th>Total amount</th>
@@ -81,34 +68,45 @@
                                 </thead>
                                 <tbody>
                                 
-                                    <?php $i = 1; if(count($standingorders) > 0) { ?>
+
+                                    <?php if(count($standingorders) > 0) { ?>
                                         @foreach ($standingorders as $key => $standing)
                                         <tr>
                                         <td><?=$key+1?></td>
-                                        <td></td>
-                                        <td><?=$standing->name?></td>
-                                               
+                                        <td><?= isset($standing->client) ? $standing->client->name: ''?></td>
+
+                                        <td><?= isset($standing->schoolcontact) ? $standing->schoolcontact->name: ''?></td>
+                                       
                                         <td><?=$standing->type?></td>
                                         <td><?=money($standing->occurance_amount)?></td>
-                                        <td><?=money($standing->amount)?></td>
-                                        <td><?= date('d M Y', strtotime($standing->end_date)) ?></td>
+                                        <td><?=money($standing->total_amount)?></td>
+                                        <td><?=isset($standing->payment_date) ? date('d M Y', strtotime($standing->payment_date)) : ''?></td>
                                         <td>
+                                          
+                                        {{-- <div class="dropdown-secondary dropdown f-right"> --}}
+                                        {{-- <button class="btn btn-success btn-mini dropdown-toggle waves-effect waves-light" type="button" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</button> --}}
+                                        {{-- <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"> --}}
+                                         <a  target="_break" href="<?= url('customer/viewContract/'.$standing->id) ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a>
 
-                                        <div class="dropdown-secondary dropdown f-right">
-                                        <button class="btn btn-success btn-mini dropdown-toggle waves-effect waves-light" type="button" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
-                                         <a  target="_break" href="<?= url('customer/viewContract/'.$standing->id.'/standing') ?>" class="dropdown-item waves-light waves-effect">View</a>
+                                       
 
-                                         <a  target="_break" href="<?= url('account/approveStandingOrder/'.$standing->id) ?>" class="dropdown-item waves-light waves-effect">Approve</a>
-                                        <a class="dropdown-item waves-light waves-effect" href="<?= url('account/rejectStandingOrder/'.$standing->id) ?>"><span class="point-marker bg-warning"></span>Reject</a>
-    
-                                       </div>
-                                       </div>   
+                                         <?php if(isset($standing->client)) {  ?>
+                                            <?php if((int) $standing->is_approved == 1) { ?>
+                                                  <button type="button" class="btn btn-dark btn-sm">Approved</button>
+                                            <?php } else { ?>
+                                              <a href="<?= url('account/approvestandingorder/'.$standing->id) ?>" class="waves-light waves-effect btn btn-warning btn-sm">Approve</a>
+                                            <?php } ?>
+                                            <?php if((int) $standing->is_approved != 1) { ?>
+                                             <a href="<?= url('account/rejectstandingorder/'.$standing->id) ?>" class="waves-light waves-effect btn btn-danger btn-sm">Reject</a> 
+                                             <?php } ?>
+
+                                         <?php } ?>
+
                                        </td>
 
                                   </tr>
                                   @endforeach
-                                 <?php $i++; } ?>
+                                 <?php } ?>
                                 </tbody>
                             
                             </table>
@@ -116,6 +114,9 @@
                             </div>
                         </div>
                     </div>
+
+
+               
 
 
                     <div class="tab-pane" id="profile3" role="tabpanel" aria-expanded="false">

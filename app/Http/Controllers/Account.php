@@ -129,6 +129,7 @@ class Account extends Controller {
             return redirect()->back()->with('success', 'success');
         } */
 
+
         if ($project_id == 'edit') {
             $id = request()->segment(4);
             $this->data['invoice'] = Invoice::find($id);
@@ -191,6 +192,7 @@ class Account extends Controller {
             return view('account.invoice.single', $this->data);
         }
     }
+
 
 
  // Edit invoice details such as description,quantity and price
@@ -365,14 +367,14 @@ class Account extends Controller {
         $client = \App\Models\Client::find($invoice->client_id);
         $client->update(['price_per_student' => request('price_per_student'), 'estimated_students' => request('estimated_students')]);
 
-        if ((int) request('price_per_student') == 10000) {
-            $months_remains = 12 - (int) date('m', strtotime(request('onboard_date'))) + 1;
-            $unit_price = $months_remains * request('price_per_student') / 12;
-            $amount = $unit_price * request('estimated_students');
-        } else {
+        // if ((int) request('price_per_student') == 10000) {
+        //     $months_remains = 12 - (int) date('m', strtotime(request('onboard_date'))) + 1;
+        //     $unit_price = $months_remains * request('price_per_student') / 12;
+        //     $amount = $unit_price * request('estimated_students');
+        // } else {
             $unit_price = request('price_per_student');
             $amount = $unit_price * request('estimated_students');
-        }
+       // }
 
         if (date('Y', strtotime($client->created_at)) == 1970) {
             $client->update([
@@ -409,14 +411,15 @@ class Account extends Controller {
             //both price per students and Estimated students cannot be 0
             return redirect()->back()->with('error', 'Both price per students and Estimated students cannot be 0, please set them first');
         }
-        if ((int) $client->price_per_student == 10000) {
-            $months_remains = 12 - (int) date('m', strtotime($client->created_at)) + 1;
-            $unit_price = $months_remains * $client->price_per_student / 12;
-            $amount = $unit_price * $client->estimated_students;
-        } else {
+        // if ((int) $client->price_per_student == 10000) {
+        //     $months_remains = 12 - (int) date('m', strtotime($client->created_at)) + 1;
+        //     $unit_price = $months_remains * $client->price_per_student / 12;
+        //     $amount = $unit_price * $client->estimated_students;
+        // } else {
             $unit_price = $client->price_per_student;
             $amount = $unit_price * $client->estimated_students;
-        }
+           // dd($amount);
+        //}
         \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' => $client->estimated_students, 'unit_price' => $unit_price]);
         return redirect()->back()->with('success', 'Invoice Created Successfully');
     }
@@ -865,16 +868,18 @@ class Account extends Controller {
                     'uname' => request('username'),
                     "amount" => remove_comma(request('amount')),
                     'voucher_no' => $voucher_no + 1,
-                   // "transaction_id" => request("transaction_id")
+                   // "transaction_id" => request("transaction_id"),
                    // 'usertype' => session('usertype')
-                   // 'created_by' => $this->createdBy()
+                    'created_by' => Auth::user()->id
                 );
 
-                if (request("from_expense") == request("to_expense")) {
-                 //   $this->session->set_flashdata('error', 'You can not transfer to the same account');
+                 
+
+                if (request("from_expense") !== request("to_expense")) {
                     return redirect()->back()->with('error', 'You can not transfer to the same account');
                 }
                 $refer_expense = \App\Models\ReferExpense::find(request("from_expense"));
+               
                 $total_amount = 0;
                 if ((int) $refer_expense->predefined && $refer_expense->predefined > 0) {
                     $total_bank = \collect(DB::SELECT('SELECT sum(coalesce(amount,0)) as total_bank from admin. bank_transactions WHERE bank_account_id=' . $refer_expense->predefined . ' and payment_type_id <> 1 '))->first();
@@ -888,14 +893,14 @@ class Account extends Controller {
                 }
 
                 if (-$amount < $total_amount) {
-                   // $this->session->set_flashdata('warning', 'No enough Credit to transfer');
                     return redirect()->back()->with('warning','No enough credit to transfer');
                 }
-
+                     
                 if (request('user_in_shulesoft') == 1) {
                     $user_request = explode(',', request('user_id'));
+                  
                     $user = \App\Models\User::where('id', $user_request)->first();
-
+                   
                     $obj = array_merge($array, [
                         'recipient' => $user->name,
                         'payer_name' => $payer_name,
@@ -910,9 +915,8 @@ class Account extends Controller {
                     ]);
                     $insert_id = DB::table('current_assets')->insertGetId($obj, "id");
                 }
-               // $this->session->set_flashdata('success', $this->lang->line('menu_success'));
-               // return redirect(url("expense/voucher/$insert_id/$id"));
-                 return redirect()->back()->with('success','Success');
+                return redirect( url("account/transaction/$id"))->with('success', 'success');
+                // return redirect()->back()->with('success','Success');
             } else {
                 $obj = array_merge($array, [
                     'amount' => remove_comma(request('amount')),
@@ -1197,7 +1201,7 @@ class Account extends Controller {
         $this->data['id'] = 4;
         $this->data['check_id'] = $id;
         $this->data["category"] = DB::table('refer_expense')->whereIn('financial_category_id', [2, 3])->get();
-        //dd($this->data['expense']);
+        
         if ($this->data['expense']) {
             if ($_POST) {
                 $refer_expense_id = $this->data['expense']->refer_expense_id;
@@ -1215,8 +1219,8 @@ class Account extends Controller {
                     "transaction_id" => request("transaction_id"),
                     "note" => request("note"),
                     "payment_type_id" => request("payment_type_id"),
-                    "ref_no" => request("transaction_id"),
-                    'recipient' => request('recipient')
+                    "ref_no" => request("transaction_id")
+                   // 'recipient' => request('recipient')
                 );
 
                 $this->data['expense']->update($array);
@@ -1237,6 +1241,7 @@ class Account extends Controller {
         $this->data["payment_types"] = \App\Models\PaymentType::all();
         $this->data['banks'] = \App\Models\BankAccount::all();
         if ($id == 'edit') {
+           
             return $this->editExpense($expense_id);
         } else if ($id == 'delete') {
             \App\Models\Expense::find($expense_id)->delete();
@@ -1510,15 +1515,13 @@ select * from tempb");
 
 
     // List of standing orders
-    public function standingOrders() { 
-        $this->data['client_id'] = request()->segment(3);
-      //  $this->data['standingorders'] = \App\Models\StandingOrder::whereYear('payment_date', date('Y'))->get();
-        $this->data['standingorders'] = \App\Models\Contract::where('contract_type_id',8)->get();
-       
-        $this->data['schools'] = \App\Models\Client::get();
+    public function standingOrders() {              
+         $this->data['standingorders'] = \App\Models\StandingOrder::get();
+         $this->data['schools'] = \App\Models\Client::get();
         return view('account.standing_order', $this->data);
     }
 
+    // Approve standing orders
     public function approveStandingOrder() { 
         $this->data['so_id'] = $so_id = request()->segment(3);
         if(!empty($so_id)){
@@ -1527,24 +1530,58 @@ select * from tempb");
         return redirect()->back()->with('success', 'Standing order approved!');
     } 
 
+
+
+    // Confirm standing order
     public function confirmSI(){
         $this->data['so_id'] = $so_id = request()->segment(3);
         $standing = \App\Models\StandingOrder::where('id', $so_id)->first();
         $invoice = \App\Models\Invoice::where('client_id',$standing->client_id)->first();
-       // dd($invoice);
         if(!empty($invoice)){
             return redirect('account/payment/'.$invoice->id);
         }
         //After add payment the receipt should be sent to client
     }
 
+    // Reject standing order, specify reason send email to school associate
     public function rejectStandingOrder(){  
-        $_id = request()->segment(3);
-        $standing = \App\Models\StandingOrder::where('id',$_id)->first();
-        $client = \App\Models\Client::where('id',$standing->client_id)->first();
-        $message = '<p>The standing order has failed to be recorded</p>';
-        $this->send_email($client->email, 'Standing Order Rejected!' . $message);
-        return redirect()->back()->with('success', 'Standing order rejected!');
+        $this->data['id'] = $id = request()->segment(3);
+        $this->data['standing']  = $standing = \App\Models\StandingOrder::where('id',$id)->first();
+        if($_POST){ 
+            \App\Models\StandingOrder::where('id', $id)->update(['note' => request('reason')]);
+            $client = \App\Models\Client::where('id',$standing->client_id)->first();
+            $message =  request('reason');
+            $this->send_email($standing->user->email,'Standing Order Rejection',$message);
+            return redirect('account/standingorders')->with('success', 'Sent successful to '.$standing->user->name);
+        }
+        return view('account.standingorder.reject', $this->data);
+    }
+
+
+
+    public function editStandingOrder(){
+        $this->data['id'] = $id = request()->segment(3);
+        $this->data['order'] = \App\Models\StandingOrder::findOrFail($id);
+      
+        if ($_POST) {
+            $order = \App\Models\StandingOrder::findOrFail($id);
+            $data = ['school_contact_id' => request('school_contact_id'), 'type' => request('which_basis'),
+            'occurance_amount' => remove_comma(request('occurance_amount')),'total_amount' => remove_comma(request('total_amount')),
+            'payment_date' => request('maturity_date'),'refer_bank_id' => request('refer_bank_id'),'branch_id' => request('branch_id'),
+            'client_id' => request('client_id'),'created_by' => Auth::user()->id,'occurrence' => request('occurrence'),'contract_type_id' => 8];
+            
+            $order->update($data);
+                
+            // if(date('Y-m-d') < date('Y-m-d',strtotime(request('maturity_date')))) {
+            //     echo 'greater than';
+            // }
+            // $maturity_date = request('maturity_date');
+            // dd($maturity_date);
+             return redirect('account/standingOrders')->with('success', 'Succeessful updated');
+        }
+         // If maturity date is greater than today send email to accountant
+          
+        return view('account.standingorder.edit', $this->data);
     }
 
 

@@ -71,7 +71,7 @@
                                                     <div class="col-lg-6"> <span id="project_id_error"></span></div>
                                                 </div>
 
-<div class="form-group ">
+                                                     <div class="form-group ">
                                                     <label for="number" class="control-label col-lg-3">Students</label>
                                                     <div class="col-lg-6">
                                                         <input type="number" value="<?= $invoice->client->estimated_students ?>" name="estimated_students" id="date" class="form-control"/>
@@ -116,7 +116,7 @@
 
                                                 <div class="form-group">
                                                     <div class="col-lg-offset-3 col-lg-6">
-<?= csrf_field() ?>
+                                                       <?= csrf_field() ?>
                                                         <button class="btn btn-primary" type="submit" >Update Invoice</button>
                                                     </div>
                                                 </div>

@@ -86,7 +86,19 @@
                                     <div class="card-block">
 
                                         <header class="panel-heading">
-                                            Add new transactions
+                                            
+                                            <?php
+                                            if ($id == 4) {
+                                                echo "Add transactions";
+                                            } elseif ($id == 1) {
+                                                echo "Fixed Assets";
+                                            } else if ($id == 2) {
+                                                echo "Liabilities";
+                                            } else if ($id == 3) {
+                                                echo "Capital Management";
+                                            }else if($id==5){
+                                                echo 'Current Assets';
+                                            } ?>
                                         </header>
                                         <div class="card-block">
 
@@ -100,10 +112,10 @@
                                                                     echo "<div class='form-group' >";
                                                                 ?>
                                                                 <label for="payment method" class="col-sm-2 control-label">
-                                                                <?=('userform')?><span class="red">*</span>
+                                                                <?=('User from')?><span class="red">*</span>
                                                                 </label>
                                                                 <div class="col-sm-6">
-                                                                    <select name="user_in_shulesoft" id="user_in_shulesoft" class="form-control">
+                                                                    <select name="user_in_shulesoft" id="user_in_shulesoft" class="form-control select2">
                                                                         <option value="0" selected="true"> <?=('usertype')?></option>
                                                                         <option value="1"> <?=('User in Shulesoft')?></option>
                                                                         <option value="2"> <?=('User not in Shulesoft')?></option>
@@ -181,9 +193,7 @@
                                                                     }
                                                                     echo form_dropdown("expense", $array, old("expense", $sub_id), "id='refer_expense_id' class='form-control select2' name='expense'");
                                                                     ?>
-                                                                    <?php if (empty($category)) { ?>
-                                                                        <span class="red">Please click  <a href="<?= url("expense/financial_category/$check_id") ?>" class="btn btn-primary" role="button">add category</a> to add category</span>
-                                                                    <?php } ?>
+                                                                  
                                                                 </div>
                                                                 <span class="col-sm-4 control-label">
                                                                     <?php echo form_error($errors, 'expense'); ?>
@@ -248,7 +258,7 @@
                                                 </label>
                                                 <div class="col-sm-6">
                                 
-                                                    <select name="payment_type_id" id="payment_method_status" class="form-control" required="">
+                                                    <select name="payment_type_id" id="payment_method_status" class="form-control select2" required="">
                                                          <option value="">Select Payment type</option>
                                             <?php
                                             
@@ -276,11 +286,9 @@
                                                 <?= ("Reference No.") ?>
                                             </label>
                                             <div class="col-sm-6">
-                                
                                                 <input type="text" placeholder="Enter ref number/cheque number" class="form-control" id="ref_no" name="transaction_id" value="<?= $transaction_id ?>">
                                             </div>
                                             <span class="col-sm-4 control-label">
-                                
                                                 <?php echo form_error($errors, 'transaction_id'); ?>
                                             </span>
                                         </div>
@@ -335,7 +343,6 @@
                                 </div>
                                 
                                 <?php if ($check_id == 1) { ?>
-                                
                                     <?php
                                     if (form_error($errors, 'depreciation'))
                                         echo "<div class='form-group has-error' >";
@@ -346,8 +353,7 @@
                                         Depreciation*
                                     </label>
                                     <div class="col-sm-6">
-                                
-                                        <select name="depreciation" id="status" class="form-control">
+                                        <select name="depreciation" class="form-control status">
                                             <option value=" ">Select Depreciation</option>
                                             <option value="0.125">Class three -12.5%</option>
                                             <option value="0.25">Class two -25%</option>
@@ -355,16 +361,14 @@
                                             <option value="0">Custom Depreciation</option>
                                         </select>
                                         <span> <a href="#" id="custom_id">  &nbsp;&nbsp;</a> </span>
-                                        <input type="text" placeholder="Enter depreciation eg 0.13" hidden="true" class="form-control " id="dep" name="dep" value="" style="display: none;">
-                                
+                                        <input type="text" placeholder="Enter depreciation eg 0.13" hidden="true" 
+                                        class="form-control dept"  name="dep"  style="display: none;">
                                     </div>
                                     <span class="col-sm-4 control-label">
                                         <?php echo form_error($errors, 'depreciation'); ?>
                                     </span>
                                     </div>
-                                
-                                <?php }
-                                ?>
+                                <?php } ?>
                                 
                                 <?php
                                 if (form_error($errors, 'note'))
@@ -454,13 +458,7 @@
 
 <script>
           //Format number to thousands
-    $('.transaction_amount').attr("pattern", '^(\\d+|\\d{1,3}(,\\d{3})*)(\\.\\d{2})?$');
-    $('.transaction_amount').on("keyup", function() {
-        var currentValue = $(this).val();
-        currentValue = currentValue.replace(/,/g, '');
-        $(this).val(currentValue.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
-    });
-
+   
     payment_method_status = function () {
         $('#payment_method_status').change(function () {
             var val = $(this).val();
@@ -472,14 +470,17 @@
         });
 
 
-        $('#status').click(function () {
-            var depreciation = $('#status').val();
-            if (depreciation == '0') {
-                $('#dep').show();
-            } else {
-                $('#dep').hide();
-            }
-        });
+    
+        $('.status').change(function () {
+        var val = $('.status').val();
+         if (val === '0') {
+          
+            $('.dept').show();
+        } else {
+            $('.dept').hide();
+        }
+      });
+
         $('#user_in_shulesoft').change(function () {
             var val = $(this).val();
             if (val === '1') {
@@ -503,6 +504,14 @@
 		allowClear: false,
         debug: true
 	});
+
+    $('.transaction_amount').attr("pattern", '^(\\d+|\\d{1,3}(,\\d{3})*)(\\.\\d{2})?$');
+    $('.transaction_amount').on("keyup", function() {
+        var currentValue = $(this).val();
+        currentValue = currentValue.replace(/,/g, '');
+        $(this).val(currentValue.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+    });
+
 </script>
 
 @endsection

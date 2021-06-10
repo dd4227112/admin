@@ -9,8 +9,8 @@ class StandingOrder extends Model
 {
     protected $table = 'standing_orders';
 
-    protected $fillable = ['client_id', 'branch_id', 'company_file_id','school_contact_id','user_id',
-    'occurrence','basis','total_amount','occurance_amount','date','status','created_at','updated_at'];
+    protected $fillable = ['client_id', 'type', 'refer_bank_id','branch_id', 'company_file_id','school_contact_id','created_by',
+    'occurrence','total_amount','occurance_amount','payment_date','status','created_at','updated_at'];
 
     public function client() {
         return $this->belongsTo(\App\Models\Client::class, 'client_id', 'id');
@@ -29,7 +29,7 @@ class StandingOrder extends Model
     }
 
     public function user() {
-        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
+        return $this->belongsTo(\App\Models\User::class, 'created_by', 'id');
     }
 
 

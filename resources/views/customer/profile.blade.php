@@ -1132,6 +1132,7 @@ return $echo;
                                                             <span aria-hidden="true">×</span>
                                                         </button>
                                                     </div>
+
                                                     <form action="<?= url('customer/uploadJobCard')?>" method="post" enctype="multipart/form-data">
                                                         <div class="modal-body">
                                                             <div class="form-group">
@@ -1140,14 +1141,14 @@ return $echo;
                                                                         <strong> Upload Job card</strong>
                                                                         <input type="file"
                                                                             class="form-control"
-                                                                            name="job_card_file" accept=".png,.jpg,.jpeg,.doc,.pdf,.docx" >
+                                                                            name="job_card_file">
                                                                        </div>
                                                               
                                                                     <div class="col-md-6">
                                                                         <strong>Job card date</strong>
                                                                         <input type="date"
-                                                                            class="form-control"
-                                                                            name="date" id="job_date" disabled required>
+                                                                            class="form-control" 
+                                                                            name="date"   required>
                                                                        </div>
                                                                 </div>
                                                             </div>
@@ -1761,18 +1762,15 @@ return $echo;
                                         <div class="tab-pane" id="payments" aria-expanded="false">
 
                                             <div class="row">
-                                                <div class="card">
-                                                    <a type="button" class="btn btn-primary waves-effect"
-                                                        href="{{ url('Customer/uploadstandingorder') }}">
-                                                        Standing Order 
-                                                    </a>
-                                                </div>
+                                               
+                                             
 
                                                 <div class="modal fade" id="standing-order-Modal" tabindex="-1"
                                                         role="dialog" aria-hidden="true"
                                                         style="z-index: 1050; display: none;">
                                                         <div class="modal-dialog modal-lg" role="document">
                                                             <div class="modal-content">
+                                                              
                                                                 <div class="modal-header">
                                                                 <h4 class="modal-title">Add Standing Order</h4>
                                                                     <button type="button" class="close"
@@ -1780,6 +1778,7 @@ return $echo;
                                                                         <span aria-hidden="true">×</span>
                                                                     </button>
                                                                 </div>
+                                                             
                                                                 <form action="{{ url('Customer/createSI') }}" method="post"  enctype="multipart/form-data">
                                                                     <div class="modal-body">
                                                                         
@@ -1788,8 +1787,7 @@ return $echo;
                                                                                 <div class="col-md-6">
                                                                                   <strong> Branch name </strong>
                                                                                     <select name="branch_id" class="form-control select2" required>
-                                                                                        <?php
-                                                                                        $branches = \App\Models\PartnerBranch::orderBy('id','asc')->get();
+                                                                                        <?php $branches = \App\Models\PartnerBranch::orderBy('id','asc')->get();
                                                                                         if (!empty($branches)) {
                                                                                             foreach ($branches as $branch) {
                                                                                                 ?>
@@ -1797,29 +1795,26 @@ return $echo;
                                                                                             value="<?= $branch->id ?>">
                                                                                             <?= $branch->name ?>
                                                                                         </option>
-                                                                                        <?php
-                                                                                            }
+                                                                                        <?php }
                                                                                         }
-                                                                                        ?>
+                                                                                         ?>
                                                                                     </select>
                                                                                 </div>
                                                                                 <div class="col-md-6">
                                                                                     <strong> Contact person </strong>
                                                                                     <select name="school_contact_id"  class="form-control select2"  >
-                                                                                        <?php
-                                                                                        $this_school = \App\Models\ClientSchool::where('client_id', $client_id)->first();
-                                                                                        if (!empty($this_school)){
-                                                                                        $contact_staffs = DB::table('school_contacts')->where('school_id', $this_school->school_id)->get();
-                                                                                        if (count($contact_staffs)) {
-                                                                                            foreach ($contact_staffs as $contact_staff) {?>
-                                                                                        <option
-                                                                                            value="<?= $contact_staff->id ?>">
-                                                                                            <?= $contact_staff->name ?>
-                                                                                        </option>
-                                                                                        <?php
+                                                                                        <?php                            
+                                                                                            $contact_staffs = DB::table('school_contacts')->get();
+                                                                                            if (count($contact_staffs)) {
+                                                                                                foreach ($contact_staffs as $contact_staff) {?>
+                                                                                            <option
+                                                                                                value="<?= $contact_staff->id ?>">
+                                                                                                <?= $contact_staff->name ?>
+                                                                                            </option>
+                                                                                            <?php
+                                                                                                }
                                                                                             }
-                                                                                        }
-                                                                                    }?>
+                                                                                        ?>
                                                                                     </select>
                                                                                 </div>
                                                                             </div>
@@ -1852,14 +1847,14 @@ return $echo;
                                                                                 <div class="col-md-6">
                                                                                     <strong> Total amount</strong>
                                                                                     <input type="text"
-                                                                                        class="form-control"
+                                                                                        class="form-control transaction_amount"
                                                                                         name="total_amount"
                                                                                         required>
                                                                                 </div>
                                                                                 <div class="col-md-6">
                                                                                     <strong> Amount for Every Occurrence </strong>
                                                                                     <input type="text"
-                                                                                        class="form-control"
+                                                                                        class="form-control transaction_amount"
                                                                                         name="occurance_amount"
                                                                                         required>
                                                                                 </div>
@@ -1905,25 +1900,7 @@ return $echo;
                                                                                         ?>
                                                                                     </select>
                                                                                 </div>
-                                                                                <div class="col-md-6">
-                                                                                    <strong> Contract type </strong>
-                                                                                    <select name="contract_type_id"  required
-                                                                                        class="form-control select2">
-                                                                                        <?php
-                                                                                        $contracts = DB::table('contracts_types')->get();
-                                                                                        if (!empty($contracts)) {
-                                                                                            foreach ($contracts as $contract) {
-                                                                                                ?>
-                                                                                        <option
-                                                                                            value="<?= $contract->id ?>">
-                                                                                            <?= $contract->name ?>
-                                                                                        </option>
-                                                                                        <?php
-                                                                                            }
-                                                                                        }
-                                                                                        ?>
-                                                                                    </select>
-                                                                                </div>
+                                                                           
                                                                             </div>
                                                                         </div>
 
@@ -1957,10 +1934,72 @@ return $echo;
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </div>      
 
-                                            <div class="row">
-                                                <div class="card table-responsive">
+                                        
+
+                                            <div class="card">
+                                                <div class="card-header">
+                                                 <div class="table-responsive dt-responsive">
+                                                    <div class="table-responsive">
+                                                  <div class="col-sm-4 my-2">
+                                                    <?php if(can_access('add_si')){ ?>
+                                                      <button type="button" class="btn btn-primary waves-effect"
+                                                        data-toggle="modal" data-target="#standing-order-Modal">
+                                                        Add Standing Orderss
+                                                    </button>
+                                                     <?php } ?>
+                                                    </div>
+                                                    <table id="invoice_table"
+                                                        class="table table-striped table-bordered nowrap dataTable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Type</th>
+                                                                <th>Occurance Amount </th>
+                                                                <th>Total Amount</th>
+                                                                <th>Maturity date</th>
+                                                                <th>Contact</th>
+                                                               
+                                                                <th colspan="2">Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                         
+                                                          <?php $i = 1;  foreach($standingorders as $order) { ?>
+                                                            <tr>
+                                                                <td><?= $i  ?></td>
+                                                                <td><?= $order->type ?></td>
+                                                                <td><?= money($order->occurance_amount) ?></td>
+                                                                <td><?= money($order->total_amount) ?></td>
+                                                                <td><?= date('d/m/Y', strtotime($order->payment_date)) ?></td>
+                                                                <td><?= $order->schoolcontact->name ?></td>
+
+                                                                <td><a  target="_break" href="<?= url('customer/viewContract/'.$order->id) ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a>
+                                                                   <?php if(!isset($order->payment_date) || !isset($order->type)) {  ?>
+                                                                       <a  href="<?= url('account/editStandingOrder/'.$order->id) ?>" class="waves-light waves-effect btn btn-info btn-sm">edit</a>
+                                                                   <?php } ?>
+                                                                </td>
+                                                            </tr>
+                                                            <?php $i++; } ?>
+                                                        </tbody>
+                                                       
+                                                    </table>
+                                                </div>
+                                      
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+
+
+                                           <div class="card">
+                                                <div class="card-header">
+                                                 <div class="table-responsive dt-responsive">
+                                                    <div class="table-responsive">
+                                                    <h5>Invoices </h5>
                                                     <table id="invoice_table"
                                                         class="table table-striped table-bordered nowrap dataTable">
                                                         <thead>
@@ -2057,14 +2096,16 @@ return $echo;
                                                             </tr>
                                                         </tfoot>
                                                     </table>
+                                                  </div>
                                                 </div>
+                                               </div>
                                             </div>
 
 
 
 
 
-                                        </div>
+                                       
                                     </div>
                                     <!-- Row end -->
                                 </div>
@@ -2078,6 +2119,7 @@ return $echo;
     <!-- Page-body end -->
 </div>
 </div>
+
 <div class="card-block">
 <div class="modal fade" id="status-Modal" tabindex="-1" role="dialog" aria-hidden="true"
     style="z-index: 1050; display: none;">
@@ -2132,8 +2174,6 @@ aria-hidden="true">
             <form action="<?= url('customer/contract/' . $client_id) ?>" method="POST"
                 enctype="multipart/form-data">
 
-
-
                 <div class="form-group row">
                     <label class="col-sm-2 col-form-label">Contract Name</label>
                     <div class="col-sm-10">
@@ -2148,7 +2188,7 @@ aria-hidden="true">
                         <select name="contract_type_id" class="form-control">
 
                             <?php
-                            $ctypes = DB::table('admin.contracts_types')->get();
+                            $ctypes = DB::table('admin.contracts_types')->where('id','!=','8')->get();
                             if (!empty($ctypes)) {
                                 foreach ($ctypes as $ctype) {
                                     ?>
@@ -2283,6 +2323,15 @@ aria-hidden="true">
 <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.nonblock.js"></script>
 <script type="text/javascript" src="<?= $root ?>assets/pages/pnotify/notify.js"></script>
 <script type="text/javascript">
+
+
+$('.transaction_amount').attr("pattern", '^(\\d+|\\d{1,3}(,\\d{3})*)(\\.\\d{2})?$');
+$('.transaction_amount').on("keyup", function() {
+    var currentValue = $(this).val();
+    currentValue = currentValue.replace(/,/g, '');
+    $(this).val(currentValue.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+});
+
 function save_comment(id) {
 var content = $('#task_comment' + id).val();
 var task_id = $('#task_id' + id).val();

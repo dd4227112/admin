@@ -149,10 +149,11 @@
                                             $school_phone = '';
                                             $use_nmb = '';
                                            $schema_name = DB::table('admin.clients')->select('clients.*')->join('admin.client_schools', 'admin.client_schools.client_id','=','admin.clients.id')->join('admin.schools', 'admin.schools.id','=','admin.client_schools.school_id')
-                                              ->where(['schools.id' => $school->id])->first()->username;
+                                              ->where(['schools.id' => $school->id])->first()->username; 
+                                              //dd($schema_name);
                                             
                                             if (strlen($schema_name) > 3) {
-                                                $setting = \DB::table($schema_name . '.setting')->first();
+                                                $setting = \DB::table($schema_name.'.setting')->first();
                                                 $school_phone = $setting->phone;
 
                                                 if (\DB::table($schema_name . '.student')->count() < 5) {

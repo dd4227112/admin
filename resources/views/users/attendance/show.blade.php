@@ -120,7 +120,7 @@ if (!empty($user)) {
                 </ul>
 
                 <div id="myTabContent" class="tab-content">
-                    <div role="card-body" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
+                    <div role="card-body" class="tab-pane fade active" id="tab_content1" aria-labelledby="home-tab">
                     
                         <table id="datatables" style="" class="table">
                           <tr>
@@ -204,73 +204,69 @@ if (!empty($user)) {
                    </div>
                 </div>
               </div>
-            </div>
 
-            <div class="col-sm-12">
-              <section class="card">
-                <div class="profile-view-dis">
-                    <h3><?= ("Attendance information") ?></h3>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <?php
-                            for ($m = 1; $m <= (int) date('m'); $m++) {
-    
-                                $dateObj = DateTime::createFromFormat('!m', $m);
-                                $monthName = $dateObj->format('F');
-                                ?>
-                                <h3><?= $monthName ?></h3>
-                                <div id="hide-table  table-sm table-striped">
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <?php
-                                                for ($i = 1; $i <= 31; $i++) {
-                                                    echo "<th>" . ($i) . "</th>";
-                                                }
-                                                ?>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-    
-                                            <tr>
-                                                <td></td>
-                                                <?php
-                                                for ($i = 1; $i <= 31; $i++) {
-                                                    $att = $user->uattendance()->where('date', date('Y-m-d', strtotime(date('Y') . '-' . $m . '-' . $i)))->first();
-                                                    if (!empty($att) && $att->present == 1) {
-                                                        $att = "P";
-                                                    } elseif(!empty($att->absent_reason_id)) {
-                                                        $reason = \DB::table('constant.absent_reasons')->where('id', $att->absent_reason_id)->first();
-                                                        if (!empty($reason)) {
-                                                            $att = $reason->reason;
-                                                        }else{
-                                                            $att = 'ABS';
-                                                        }
-                                                    }else {
-                                                        $att = '';
-                                                    }
-                                                    echo "<td>" . $att . "</td>";
-                                                }
-                                                ?> 
-                                            </tr>
-                                        </tbody>
-    
-                                    </table>
-                                </div>
-                            <?php } ?>
+
+                <div class="col-sm-12">
+                    <div class="card">
+                      <h5 class="text-center"><?= ("Attendance information") ?></h5>
+                      <div class="rowr">
+                          <div class="col-sm-12">
+                              <?php
+                              for ($m = 1; $m <= (int) date('m'); $m++) {
+                                  $dateObj = DateTime::createFromFormat('!m', $m);
+                                  $monthName = $dateObj->format('F');
+                                  ?>
+                                  <h6 class="text-left"><?= $monthName ?></h6>
+                                  <div id="hide-table  table-sm table-striped">
+                                      <table class="table">
+                                          <thead>
+                                              <tr>
+                                                  <?php
+                                                  for ($i = 1; $i <= 31; $i++) {
+                                                      echo "<th style='font-size='5px;''>" . ($i) . "</th>";
+                                                  }
+                                                  ?>
+                                              </tr>
+                                          </thead>
+                                          <tbody>
+      
+                                              <tr>
+                                                  <?php
+                                                  for ($i = 1; $i <= 31; $i++) { 
+                                                      $att = $user->uattendance()->where('date', date('Y-m-d', strtotime(date('Y') . '-' . $m . '-' . $i)))->first();
+                                                      
+                                                      if (!empty($att) && $att->present == 1) {
+                                                          $att = "P";
+                                                      } elseif(!empty($att->absent_reason_id)) {
+                                                          $reason = \DB::table('constant.absent_reasons')->where('id', $att->absent_reason_id)->first();
+                                                          if (!empty($reason)) {
+                                                              $att = $reason->reason;
+                                                          }else{
+                                                              $att = 'ABS';
+                                                          }
+                                                      }else {
+                                                          $att = '';
+                                                      }
+                                                      echo "<td>" . $att . "</td>";
+                                                  }
+                                                  ?> 
+                                              </tr>
+                                          </tbody>
+      
+                                      </table>
+                                  </div>
+                              <?php } ?>
+                          </div>
                         </div>
-                    </div>
-    
-                </div>
-               </section>
+                  </div>
+            
             </div>
+          </div>
 
 
-           </div>
-         </div>
-
-      </div>
+          </div>
+        </div>
+    </div>
   
       
       <script language="javascript" type="text/javascript">
