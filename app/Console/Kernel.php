@@ -274,9 +274,9 @@ class Kernel extends ConsoleKernel {
                 "token" => $token
             );
 
-            $push_status = 'invoice_cancel'.$invoice->schema_name;
+            $push_status = 'invoice_cancel';
             //$push_status = 'invoice_submission';
-            echo $push_status;
+            echo $push_status.$invoice->schema_name;
             if ($invoice->schema_name == 'beta_testing') {
                 //testing invoice
                 $setting = DB::table('beta_testing.setting')->first();
@@ -364,7 +364,7 @@ class Kernel extends ConsoleKernel {
     }
 
     public function updateInvoiceStatus($fields, $invoice, $token) {
-        $push_status = 'invoice_update'.$invoice->schema_name;
+        $push_status = 'invoice_update';
         if ($invoice->schema_name == 'beta_testing') {
             //testing invoice
             $setting = DB::table('beta_testing.setting')->first();
@@ -374,6 +374,7 @@ class Kernel extends ConsoleKernel {
             $setting = DB::table($invoice->schema_name . '.setting')->first();
             $url = 'https://api.mpayafrica.co.tz/v2/' . $push_status;
         }
+        echo 'invoice update'.$invoice->schema_name;
         $curl = $this->curlServer($fields, $url);
         $result = json_decode($curl);
 

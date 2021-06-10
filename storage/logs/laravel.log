@@ -5818,3 +5818,415 @@ CONTEXT:  JSON data, line 1: <... at /usr/share/nginx/html/admin/vendor/laravel/
 #33 /usr/share/nginx/html/admin/artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle()
 #34 {main}
 "} 
+[2021-06-10 16:24:02] local.ERROR: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  invalid input syntax for type json
+LINE 1: ...to "api"."requests" ("return", "content") values ('<!DOCTYPE...
+                                                             ^
+DETAIL:  Token "<" is invalid.
+CONTEXT:  JSON data, line 1: <... (SQL: insert into "api"."requests" ("return", "content") values (<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>404 Page Not Found</title>
+<style type="text/css">
+
+::selection { background-color: #E13300; color: white; }
+::-moz-selection { background-color: #E13300; color: white; }
+
+body {
+	background-color: #fff;
+	margin: 40px;
+	font: 13px/20px normal Helvetica, Arial, sans-serif;
+	color: #4F5155;
+}
+
+a {
+	color: #003399;
+	background-color: transparent;
+	font-weight: normal;
+}
+
+h1 {
+	color: #444;
+	background-color: transparent;
+	border-bottom: 1px solid #D0D0D0;
+	font-size: 19px;
+	font-weight: normal;
+	margin: 0 0 14px 0;
+	padding: 14px 15px 10px 15px;
+}
+
+code {
+	font-family: Consolas, Monaco, Courier New, Courier, monospace;
+	font-size: 12px;
+	background-color: #f9f9f9;
+	border: 1px solid #D0D0D0;
+	color: #002166;
+	display: block;
+	margin: 14px 0 14px 0;
+	padding: 12px 10px 12px 10px;
+}
+
+#container {
+	margin: 10px;
+	border: 1px solid #D0D0D0;
+	box-shadow: 0 0 8px #D0D0D0;
+}
+
+p {
+	margin: 12px 15px 12px 15px;
+}
+</style>
+</head>
+<body>
+	<div id="container">
+		<h1>404 Page Not Found</h1>
+		<p>The page you requested was not found.</p>	</div>
+</body>
+</html>, {"reference":"SAS685741","token":"4258M20210610162402E12641604U6280"})) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 22P02): SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  invalid input syntax for type json
+LINE 1: ...to \"api\".\"requests\" (\"return\", \"content\") values ('<!DOCTYPE...
+                                                             ^
+DETAIL:  Token \"<\" is invalid.
+CONTEXT:  JSON data, line 1: <... (SQL: insert into \"api\".\"requests\" (\"return\", \"content\") values (<!DOCTYPE html>
+<html lang=\"en\">
+<head>
+<meta charset=\"utf-8\">
+<title>404 Page Not Found</title>
+<style type=\"text/css\">
+
+::selection { background-color: #E13300; color: white; }
+::-moz-selection { background-color: #E13300; color: white; }
+
+body {
+\tbackground-color: #fff;
+\tmargin: 40px;
+\tfont: 13px/20px normal Helvetica, Arial, sans-serif;
+\tcolor: #4F5155;
+}
+
+a {
+\tcolor: #003399;
+\tbackground-color: transparent;
+\tfont-weight: normal;
+}
+
+h1 {
+\tcolor: #444;
+\tbackground-color: transparent;
+\tborder-bottom: 1px solid #D0D0D0;
+\tfont-size: 19px;
+\tfont-weight: normal;
+\tmargin: 0 0 14px 0;
+\tpadding: 14px 15px 10px 15px;
+}
+
+code {
+\tfont-family: Consolas, Monaco, Courier New, Courier, monospace;
+\tfont-size: 12px;
+\tbackground-color: #f9f9f9;
+\tborder: 1px solid #D0D0D0;
+\tcolor: #002166;
+\tdisplay: block;
+\tmargin: 14px 0 14px 0;
+\tpadding: 12px 10px 12px 10px;
+}
+
+#container {
+\tmargin: 10px;
+\tborder: 1px solid #D0D0D0;
+\tbox-shadow: 0 0 8px #D0D0D0;
+}
+
+p {
+\tmargin: 12px 15px 12px 15px;
+}
+</style>
+</head>
+<body>
+\t<div id=\"container\">
+\t\t<h1>404 Page Not Found</h1>
+\t\t<p>The page you requested was not found.</p>\t</div>
+</body>
+</html>, {\"reference\":\"SAS685741\",\"token\":\"4258M20210610162402E12641604U6280\"})) at /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Database/Connection.php:685)
+[stacktrace]
+#0 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Database/Connection.php(645): Illuminate\\Database\\Connection->runQueryCallback()
+#1 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Database/Connection.php(479): Illuminate\\Database\\Connection->run()
+#2 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Database/Connection.php(431): Illuminate\\Database\\Connection->statement()
+#3 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(2949): Illuminate\\Database\\Connection->insert()
+#4 /usr/share/nginx/html/admin/app/Console/Kernel.php(296): Illuminate\\Database\\Query\\Builder->insert()
+#5 /usr/share/nginx/html/admin/app/Console/Kernel.php(319): App\\Console\\Kernel->deleteInvoice()
+#6 /usr/share/nginx/html/admin/app/Console/Kernel.php(265): App\\Console\\Kernel->pushInvoice()
+#7 /usr/share/nginx/html/admin/app/Console/Kernel.php(245): App\\Console\\Kernel->syncInvoicePerSchool()
+#8 /usr/share/nginx/html/admin/app/Console/Kernel.php(46): App\\Console\\Kernel->syncInvoice()
+#9 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): App\\Console\\Kernel->App\\Console\\{closure}()
+#10 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Closure->__invoke()
+#11 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#12 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#13 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#14 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/Container.php(614): Illuminate\\Container\\BoundMethod::call()
+#15 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Console/Scheduling/CallbackEvent.php(79): Illuminate\\Container\\Container->call()
+#16 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Console/Scheduling/ScheduleRunCommand.php(143): Illuminate\\Console\\Scheduling\\CallbackEvent->run()
+#17 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Console/Scheduling/ScheduleRunCommand.php(102): Illuminate\\Console\\Scheduling\\ScheduleRunCommand->runEvent()
+#18 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Console\\Scheduling\\ScheduleRunCommand->handle()
+#19 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#20 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#21 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#22 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/Container.php(614): Illuminate\\Container\\BoundMethod::call()
+#23 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Console/Command.php(136): Illuminate\\Container\\Container->call()
+#24 /usr/share/nginx/html/admin/vendor/symfony/console/Command/Command.php(288): Illuminate\\Console\\Command->execute()
+#25 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Console/Command.php(121): Symfony\\Component\\Console\\Command\\Command->run()
+#26 /usr/share/nginx/html/admin/vendor/symfony/console/Application.php(974): Illuminate\\Console\\Command->run()
+#27 /usr/share/nginx/html/admin/vendor/symfony/console/Application.php(291): Symfony\\Component\\Console\\Application->doRunCommand()
+#28 /usr/share/nginx/html/admin/vendor/symfony/console/Application.php(167): Symfony\\Component\\Console\\Application->doRun()
+#29 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Console/Application.php(92): Symfony\\Component\\Console\\Application->run()
+#30 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(129): Illuminate\\Console\\Application->run()
+#31 /usr/share/nginx/html/admin/artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle()
+#32 {main}
+
+[previous exception] [object] (PDOException(code: 22P02): SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  invalid input syntax for type json
+LINE 1: ...to \"api\".\"requests\" (\"return\", \"content\") values ('<!DOCTYPE...
+                                                             ^
+DETAIL:  Token \"<\" is invalid.
+CONTEXT:  JSON data, line 1: <... at /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Database/Connection.php:478)
+[stacktrace]
+#0 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Database/Connection.php(478): PDOStatement->execute()
+#1 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Database/Connection.php(678): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}()
+#2 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Database/Connection.php(645): Illuminate\\Database\\Connection->runQueryCallback()
+#3 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Database/Connection.php(479): Illuminate\\Database\\Connection->run()
+#4 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Database/Connection.php(431): Illuminate\\Database\\Connection->statement()
+#5 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(2949): Illuminate\\Database\\Connection->insert()
+#6 /usr/share/nginx/html/admin/app/Console/Kernel.php(296): Illuminate\\Database\\Query\\Builder->insert()
+#7 /usr/share/nginx/html/admin/app/Console/Kernel.php(319): App\\Console\\Kernel->deleteInvoice()
+#8 /usr/share/nginx/html/admin/app/Console/Kernel.php(265): App\\Console\\Kernel->pushInvoice()
+#9 /usr/share/nginx/html/admin/app/Console/Kernel.php(245): App\\Console\\Kernel->syncInvoicePerSchool()
+#10 /usr/share/nginx/html/admin/app/Console/Kernel.php(46): App\\Console\\Kernel->syncInvoice()
+#11 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): App\\Console\\Kernel->App\\Console\\{closure}()
+#12 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Closure->__invoke()
+#13 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#14 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#15 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#16 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/Container.php(614): Illuminate\\Container\\BoundMethod::call()
+#17 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Console/Scheduling/CallbackEvent.php(79): Illuminate\\Container\\Container->call()
+#18 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Console/Scheduling/ScheduleRunCommand.php(143): Illuminate\\Console\\Scheduling\\CallbackEvent->run()
+#19 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Console/Scheduling/ScheduleRunCommand.php(102): Illuminate\\Console\\Scheduling\\ScheduleRunCommand->runEvent()
+#20 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Console\\Scheduling\\ScheduleRunCommand->handle()
+#21 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#22 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#23 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#24 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/Container.php(614): Illuminate\\Container\\BoundMethod::call()
+#25 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Console/Command.php(136): Illuminate\\Container\\Container->call()
+#26 /usr/share/nginx/html/admin/vendor/symfony/console/Command/Command.php(288): Illuminate\\Console\\Command->execute()
+#27 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Console/Command.php(121): Symfony\\Component\\Console\\Command\\Command->run()
+#28 /usr/share/nginx/html/admin/vendor/symfony/console/Application.php(974): Illuminate\\Console\\Command->run()
+#29 /usr/share/nginx/html/admin/vendor/symfony/console/Application.php(291): Symfony\\Component\\Console\\Application->doRunCommand()
+#30 /usr/share/nginx/html/admin/vendor/symfony/console/Application.php(167): Symfony\\Component\\Console\\Application->doRun()
+#31 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Console/Application.php(92): Symfony\\Component\\Console\\Application->run()
+#32 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(129): Illuminate\\Console\\Application->run()
+#33 /usr/share/nginx/html/admin/artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle()
+#34 {main}
+"} 
+[2021-06-10 16:24:26] local.ERROR: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  invalid input syntax for type json
+LINE 1: ...to "api"."requests" ("return", "content") values ('<!DOCTYPE...
+                                                             ^
+DETAIL:  Token "<" is invalid.
+CONTEXT:  JSON data, line 1: <... (SQL: insert into "api"."requests" ("return", "content") values (<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>404 Page Not Found</title>
+<style type="text/css">
+
+::selection { background-color: #E13300; color: white; }
+::-moz-selection { background-color: #E13300; color: white; }
+
+body {
+	background-color: #fff;
+	margin: 40px;
+	font: 13px/20px normal Helvetica, Arial, sans-serif;
+	color: #4F5155;
+}
+
+a {
+	color: #003399;
+	background-color: transparent;
+	font-weight: normal;
+}
+
+h1 {
+	color: #444;
+	background-color: transparent;
+	border-bottom: 1px solid #D0D0D0;
+	font-size: 19px;
+	font-weight: normal;
+	margin: 0 0 14px 0;
+	padding: 14px 15px 10px 15px;
+}
+
+code {
+	font-family: Consolas, Monaco, Courier New, Courier, monospace;
+	font-size: 12px;
+	background-color: #f9f9f9;
+	border: 1px solid #D0D0D0;
+	color: #002166;
+	display: block;
+	margin: 14px 0 14px 0;
+	padding: 12px 10px 12px 10px;
+}
+
+#container {
+	margin: 10px;
+	border: 1px solid #D0D0D0;
+	box-shadow: 0 0 8px #D0D0D0;
+}
+
+p {
+	margin: 12px 15px 12px 15px;
+}
+</style>
+</head>
+<body>
+	<div id="container">
+		<h1>404 Page Not Found</h1>
+		<p>The page you requested was not found.</p>	</div>
+</body>
+</html>, {"reference":"SAS685981","token":"4907M20210610162423E12641605U3082"})) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 22P02): SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  invalid input syntax for type json
+LINE 1: ...to \"api\".\"requests\" (\"return\", \"content\") values ('<!DOCTYPE...
+                                                             ^
+DETAIL:  Token \"<\" is invalid.
+CONTEXT:  JSON data, line 1: <... (SQL: insert into \"api\".\"requests\" (\"return\", \"content\") values (<!DOCTYPE html>
+<html lang=\"en\">
+<head>
+<meta charset=\"utf-8\">
+<title>404 Page Not Found</title>
+<style type=\"text/css\">
+
+::selection { background-color: #E13300; color: white; }
+::-moz-selection { background-color: #E13300; color: white; }
+
+body {
+\tbackground-color: #fff;
+\tmargin: 40px;
+\tfont: 13px/20px normal Helvetica, Arial, sans-serif;
+\tcolor: #4F5155;
+}
+
+a {
+\tcolor: #003399;
+\tbackground-color: transparent;
+\tfont-weight: normal;
+}
+
+h1 {
+\tcolor: #444;
+\tbackground-color: transparent;
+\tborder-bottom: 1px solid #D0D0D0;
+\tfont-size: 19px;
+\tfont-weight: normal;
+\tmargin: 0 0 14px 0;
+\tpadding: 14px 15px 10px 15px;
+}
+
+code {
+\tfont-family: Consolas, Monaco, Courier New, Courier, monospace;
+\tfont-size: 12px;
+\tbackground-color: #f9f9f9;
+\tborder: 1px solid #D0D0D0;
+\tcolor: #002166;
+\tdisplay: block;
+\tmargin: 14px 0 14px 0;
+\tpadding: 12px 10px 12px 10px;
+}
+
+#container {
+\tmargin: 10px;
+\tborder: 1px solid #D0D0D0;
+\tbox-shadow: 0 0 8px #D0D0D0;
+}
+
+p {
+\tmargin: 12px 15px 12px 15px;
+}
+</style>
+</head>
+<body>
+\t<div id=\"container\">
+\t\t<h1>404 Page Not Found</h1>
+\t\t<p>The page you requested was not found.</p>\t</div>
+</body>
+</html>, {\"reference\":\"SAS685981\",\"token\":\"4907M20210610162423E12641605U3082\"})) at /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Database/Connection.php:685)
+[stacktrace]
+#0 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Database/Connection.php(645): Illuminate\\Database\\Connection->runQueryCallback()
+#1 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Database/Connection.php(479): Illuminate\\Database\\Connection->run()
+#2 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Database/Connection.php(431): Illuminate\\Database\\Connection->statement()
+#3 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(2949): Illuminate\\Database\\Connection->insert()
+#4 /usr/share/nginx/html/admin/app/Console/Kernel.php(296): Illuminate\\Database\\Query\\Builder->insert()
+#5 /usr/share/nginx/html/admin/app/Console/Kernel.php(319): App\\Console\\Kernel->deleteInvoice()
+#6 /usr/share/nginx/html/admin/app/Console/Kernel.php(265): App\\Console\\Kernel->pushInvoice()
+#7 /usr/share/nginx/html/admin/app/Console/Kernel.php(245): App\\Console\\Kernel->syncInvoicePerSchool()
+#8 /usr/share/nginx/html/admin/app/Console/Kernel.php(46): App\\Console\\Kernel->syncInvoice()
+#9 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): App\\Console\\Kernel->App\\Console\\{closure}()
+#10 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Closure->__invoke()
+#11 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#12 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#13 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#14 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/Container.php(614): Illuminate\\Container\\BoundMethod::call()
+#15 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Console/Scheduling/CallbackEvent.php(79): Illuminate\\Container\\Container->call()
+#16 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Console/Scheduling/ScheduleRunCommand.php(143): Illuminate\\Console\\Scheduling\\CallbackEvent->run()
+#17 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Console/Scheduling/ScheduleRunCommand.php(102): Illuminate\\Console\\Scheduling\\ScheduleRunCommand->runEvent()
+#18 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Console\\Scheduling\\ScheduleRunCommand->handle()
+#19 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#20 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#21 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#22 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/Container.php(614): Illuminate\\Container\\BoundMethod::call()
+#23 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Console/Command.php(136): Illuminate\\Container\\Container->call()
+#24 /usr/share/nginx/html/admin/vendor/symfony/console/Command/Command.php(288): Illuminate\\Console\\Command->execute()
+#25 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Console/Command.php(121): Symfony\\Component\\Console\\Command\\Command->run()
+#26 /usr/share/nginx/html/admin/vendor/symfony/console/Application.php(974): Illuminate\\Console\\Command->run()
+#27 /usr/share/nginx/html/admin/vendor/symfony/console/Application.php(291): Symfony\\Component\\Console\\Application->doRunCommand()
+#28 /usr/share/nginx/html/admin/vendor/symfony/console/Application.php(167): Symfony\\Component\\Console\\Application->doRun()
+#29 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Console/Application.php(92): Symfony\\Component\\Console\\Application->run()
+#30 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(129): Illuminate\\Console\\Application->run()
+#31 /usr/share/nginx/html/admin/artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle()
+#32 {main}
+
+[previous exception] [object] (PDOException(code: 22P02): SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  invalid input syntax for type json
+LINE 1: ...to \"api\".\"requests\" (\"return\", \"content\") values ('<!DOCTYPE...
+                                                             ^
+DETAIL:  Token \"<\" is invalid.
+CONTEXT:  JSON data, line 1: <... at /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Database/Connection.php:478)
+[stacktrace]
+#0 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Database/Connection.php(478): PDOStatement->execute()
+#1 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Database/Connection.php(678): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}()
+#2 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Database/Connection.php(645): Illuminate\\Database\\Connection->runQueryCallback()
+#3 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Database/Connection.php(479): Illuminate\\Database\\Connection->run()
+#4 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Database/Connection.php(431): Illuminate\\Database\\Connection->statement()
+#5 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(2949): Illuminate\\Database\\Connection->insert()
+#6 /usr/share/nginx/html/admin/app/Console/Kernel.php(296): Illuminate\\Database\\Query\\Builder->insert()
+#7 /usr/share/nginx/html/admin/app/Console/Kernel.php(319): App\\Console\\Kernel->deleteInvoice()
+#8 /usr/share/nginx/html/admin/app/Console/Kernel.php(265): App\\Console\\Kernel->pushInvoice()
+#9 /usr/share/nginx/html/admin/app/Console/Kernel.php(245): App\\Console\\Kernel->syncInvoicePerSchool()
+#10 /usr/share/nginx/html/admin/app/Console/Kernel.php(46): App\\Console\\Kernel->syncInvoice()
+#11 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): App\\Console\\Kernel->App\\Console\\{closure}()
+#12 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Closure->__invoke()
+#13 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#14 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#15 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#16 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/Container.php(614): Illuminate\\Container\\BoundMethod::call()
+#17 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Console/Scheduling/CallbackEvent.php(79): Illuminate\\Container\\Container->call()
+#18 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Console/Scheduling/ScheduleRunCommand.php(143): Illuminate\\Console\\Scheduling\\CallbackEvent->run()
+#19 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Console/Scheduling/ScheduleRunCommand.php(102): Illuminate\\Console\\Scheduling\\ScheduleRunCommand->runEvent()
+#20 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Illuminate\\Console\\Scheduling\\ScheduleRunCommand->handle()
+#21 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/Util.php(40): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#22 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure()
+#23 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(37): Illuminate\\Container\\BoundMethod::callBoundMethod()
+#24 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Container/Container.php(614): Illuminate\\Container\\BoundMethod::call()
+#25 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Console/Command.php(136): Illuminate\\Container\\Container->call()
+#26 /usr/share/nginx/html/admin/vendor/symfony/console/Command/Command.php(288): Illuminate\\Console\\Command->execute()
+#27 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Console/Command.php(121): Symfony\\Component\\Console\\Command\\Command->run()
+#28 /usr/share/nginx/html/admin/vendor/symfony/console/Application.php(974): Illuminate\\Console\\Command->run()
+#29 /usr/share/nginx/html/admin/vendor/symfony/console/Application.php(291): Symfony\\Component\\Console\\Application->doRunCommand()
+#30 /usr/share/nginx/html/admin/vendor/symfony/console/Application.php(167): Symfony\\Component\\Console\\Application->doRun()
+#31 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Console/Application.php(92): Symfony\\Component\\Console\\Application->run()
+#32 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(129): Illuminate\\Console\\Application->run()
+#33 /usr/share/nginx/html/admin/artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle()
+#34 {main}
+"} 
