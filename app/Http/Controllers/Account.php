@@ -181,7 +181,7 @@ class Account extends Controller {
             $this->data['usage_start_date'] = $this->data['invoice']->client->start_usage_date;
            
         
-            $start_usage_date = date('Y-m-d',strtotime($this->data['usage_start_date']));
+            $start_usage_date = !empty($this->data['usage_start_date']) ? date('Y-m-d',strtotime($this->data['usage_start_date'])) : date('Y-m-d', strtotime('Jan 01'));
            
             $yearEnd = date('Y-m-d', strtotime('Dec 31'));
 
