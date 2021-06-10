@@ -270,7 +270,7 @@ class Kernel extends ConsoleKernel {
                 "token" => $token
             );
 
-            $push_status = $invoice->status == 3 ? 'invoice_cancel' : 'invoice_submission';
+            $push_status = 'invoice_cancel'.$invoice->schema_name;
             //$push_status = 'invoice_submission';
             echo $push_status;
             if ($invoice->schema_name == 'beta_testing') {
@@ -325,7 +325,7 @@ class Kernel extends ConsoleKernel {
     public function pushStudentInvoice($fields, $invoice, $token) {
         $push_status = 'invoice_submission';
         //$push_status = 'invoice_submission';
-        echo $push_status;
+        echo $push_status.$invoice->schema_name;
         if ($invoice->schema_name == 'beta_testing') {
             //testing invoice
             $setting = DB::table('beta_testing.setting')->first();
@@ -360,7 +360,7 @@ class Kernel extends ConsoleKernel {
     }
 
     public function updateInvoiceStatus($fields, $invoice, $token) {
-        $push_status = 'invoice_update';
+        $push_status = 'invoice_update'.$invoice->schema_name;
         if ($invoice->schema_name == 'beta_testing') {
             //testing invoice
             $setting = DB::table('beta_testing.setting')->first();
