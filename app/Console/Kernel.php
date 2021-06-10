@@ -905,11 +905,11 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     }
 }
 
-
+// Need to be reviewed for further improvement
 public function sendSORemainder() {
     $users = \App\Models\User::where('role_id',1)->get();
     foreach ($users as $user) {
-        $standingorders = DB::select('select * from admin.standing_orders  WHERE  payment_date-CURRENT_DATE=0 and status=1');
+        $standingorders = DB::select('select * from admin.standing_orders  WHERE  payment_date-CURRENT_DATE = 1 and is_approved =1');
         $msg = '';
         foreach ($standingorders as $st) {
             $msg .= '<tr><td>' . $st->client->name . '</td><td>' . $st->occurance_amount . '</td></tr>';

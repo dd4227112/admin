@@ -1543,7 +1543,7 @@ select * from tempb");
         //After add payment the receipt should be sent to client
     }
 
-    // Reject standing order, specify reason send to associate
+    // Reject standing order, specify reason send email to school associate
     public function rejectStandingOrder(){  
         $this->data['id'] = $id = request()->segment(3);
         $this->data['standing']  = $standing = \App\Models\StandingOrder::where('id',$id)->first();

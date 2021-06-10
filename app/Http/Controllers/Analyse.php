@@ -214,10 +214,8 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
             $id = Auth::user()->id;
         }
 
-        // $all_schools = [];
-        // $all_schoolz = [];
-       
-        $schools = \App\Models\ClientSchool::whereIn('client_id', \App\Models\UserClient::where('user_id', $id)->get(['client_id']))->get();
+   
+        $schools = \App\Models\ClientSchool::whereIn('client_id', \App\Models\UsersSchool::where('user_id', $id)->get(['client_id']))->get();
       
         // $ward_id=[];
         // $wards = DB::table('users_schools_wards')->where('user_id',$id)->get(['ward_id']);
@@ -235,23 +233,17 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
 
         $this->data['schools'] =  \App\Models\School::whereIn('id', $school_ids)->where(DB::raw('lower(ownership)'),'<>','government')->get();
         
-       // dd($this->data['schools']);
+
+       // $schools = \App\Models\ClientSchool::whereIn('client_id', \App\Models\UsersSchool::where('user_id', $id)->get(['client_id']))->get();
+
+      //  dd($s_ids);
 
     //    foreach ($schools as $school) {
     //        array_push($all_schools, "'" . $school->client->username . "'");
     //        array_push($all_schoolz, $school->client->username);
     //    }
       
-         //  $days = "'" . date("Y-m-d", strtotime("-7 day")) . "'";
-        //    $this->data['users'] = $users = DB::table('admin.all_users')->select(DB::raw('count(*) as user_count, "table"'))->whereIn('schema_name', $all_schoolz)->where('status', 1)->where('table', '<>', 'setting')->groupBy('table')->get();
-        //   $this->data['active'] = DB::table('admin.all_log')->select(DB::raw('count(*) as school_count, "schema_name"'))->whereIn('schema_name', $all_schoolz)->where('table', '<>', 'setting')->whereDate('created_at', '>', $days)->groupBy('schema_name')->get();
-        //   $arrayTxt = implode(',', $all_schools);
-
-     
-    //    if (count($all_schools) > 0) {
-    //        $sql = 'select count(*) as count, "schema_name" from "admin"."all_log" where created_at::date>' . $days . ' AND "schema_name" in (' . $arrayTxt . ') group by "schema_name"';
-    //        $this->data['logs'] = $sql;
-    //    }
+  
       
     
         // $this->data['staffs'] = \App\Models\User::where('status', 1)->where('department', '<>', 10)->get();
