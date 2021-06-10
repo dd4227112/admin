@@ -1779,7 +1779,7 @@ return $echo;
                                                                     </button>
                                                                 </div>
                                                              
-                                                                <form action="{{ url('Customer/createSI') }}" method="post"  enctype="multipart/form-data">
+                                                                <form action="{{ url('Customer/addstandingorder') }}" method="post"  enctype="multipart/form-data">
                                                                     <div class="modal-body">
                                                                         
                                                                         <div class="form-group">
@@ -1824,10 +1824,8 @@ return $echo;
                                                                             <div class="row">
                                                                                 <div class="col-md-6">
                                                                                     <strong> Number of occurrence </strong>
-                                                                                    <input type="number"
-                                                                                        class="form-control"
-                                                                                        name="number_of_occurrence"
-                                                                                        required>
+                                                                                    <input type="number" placeholder="must be number eg 2, 3, 12 etc" oninput="calculate()" 
+                                                                                        class="form-control" id="box1" name="number_of_occurrence" required>
                                                                                 </div>
                                                                                 <div class="col-md-6">
                                                                                     <strong> Basis </strong>
@@ -1844,19 +1842,16 @@ return $echo;
 
                                                                         <div class="form-group">
                                                                             <div class="row">
-                                                                                <div class="col-md-6">
-                                                                                    <strong> Total amount</strong>
-                                                                                    <input type="text"
-                                                                                        class="form-control transaction_amount"
-                                                                                        name="total_amount"
-                                                                                        required>
-                                                                                </div>
+                                
                                                                                 <div class="col-md-6">
                                                                                     <strong> Amount for Every Occurrence </strong>
-                                                                                    <input type="text"
-                                                                                        class="form-control transaction_amount"
-                                                                                        name="occurance_amount"
-                                                                                        required>
+                                                                                    <input type="text" oninput="calculate()" 
+                                                                                        class="form-control"  name="occurance_amount" id="box2" required>
+                                                                                </div>
+
+                                                                                <div class="col-md-6">
+                                                                                    <strong> Total amount</strong>
+                                                                                    <input type="text" class="form-control" name="total_amount"  id="result" required>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1965,7 +1960,7 @@ return $echo;
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                         
+                                                         <?php if(count($standingorders) > 0) { ?>
                                                           <?php $i = 1;  foreach($standingorders as $order) { ?>
                                                             <tr>
                                                                 <td><?= $i  ?></td>
@@ -1982,6 +1977,7 @@ return $echo;
                                                                 </td>
                                                             </tr>
                                                             <?php $i++; } ?>
+                                                         <?php } ?>
                                                         </tbody>
                                                        
                                                     </table>
@@ -2324,6 +2320,13 @@ aria-hidden="true">
 <script type="text/javascript" src="<?= $root ?>assets/pages/pnotify/notify.js"></script>
 <script type="text/javascript">
 
+    function calculate() {
+		var myBox1 = document.getElementById('box1').value;	
+		var myBox2 = document.getElementById('box2').value;
+		var result = document.getElementById('result');	
+		var myResult = myBox1 * myBox2;
+		result.value = myResult;
+	}
 
 $('.transaction_amount').attr("pattern", '^(\\d+|\\d{1,3}(,\\d{3})*)(\\.\\d{2})?$');
 $('.transaction_amount').on("keyup", function() {

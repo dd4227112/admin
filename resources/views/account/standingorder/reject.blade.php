@@ -49,6 +49,11 @@
                                         <th scope="row">Type</th>
                                         <td><?=$standing->type?></td>
                                     </tr>
+
+                                    <tr>
+                                       <th scope=""> Standing order file</th>
+                                       <td> <a  target="_break" href="<?= url('customer/viewContract/'.$standing->id) ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a> </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
