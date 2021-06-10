@@ -280,8 +280,8 @@ foreach ($user_permission as $permis) {
                                                                     </tr>
 
                                                                     <tr>
-                                                                        <th scope="row">Company Designation</th>
-                                                                        <td> {{ $user->userdesignation }}</td>
+                                                                        <th scope="row"> Designation</th>
+                                                                        <td><?= $user->designation->abbreviation ? $user->designation->name.'  ' . '('.$user->designation->abbreviation.')' : '' ?></td> 
                                                                     </tr>
 
                                                                     <tr>
@@ -298,7 +298,7 @@ foreach ($user_permission as $permis) {
                                                                     </tr>
 
                                                                     <tr>
-                                                                       <?php if(!can_access('update_designation')) { ?>
+                                                                       <?php if(can_access('update_designation')) { ?>
                                                                         <td> 
                                                                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
                                                                             Update designation 
@@ -309,10 +309,6 @@ foreach ($user_permission as $permis) {
                                                                     
 
 
-                                                                  
-
-  
- 
                                                             <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                                                                 <div class="modal-dialog" role="document">
                                                                     <div class="modal-content">

@@ -785,14 +785,8 @@ class Users extends Controller {
 
     public function updateDesignation(){
         if($_POST){
-            $check = \App\Models\UserDesignation::where(['user_id'=>request('user_id')]);
-            if(empty($check)){
-                \App\Models\UserDesignation::create(['user_id'=>request('user_id'),'designation_id'=>request('designation_id')]);
-            }else{
-                \App\Models\UserDesignation::where('user_id',request('user_id'))->update(['designation_id' => request('designation_id')]);
+             \App\Models\User::where('id',request('user_id'))->update(['designation_id' => request('designation_id')]);
             }
-  
-        }
         return redirect()->back()->with('success', 'updated successful!');
     }
 
