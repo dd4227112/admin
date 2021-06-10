@@ -42,7 +42,8 @@ return [
             'charset' => 'utf8',
             'prefix' => '',
             'schema' => 'admin',
-            'sslmode' => 'prefer',
+            'sslmode' => 
+                'prefer',
             'options' => [
                 \PDO::ATTR_EMULATE_PREPARES => true
             ]
@@ -68,7 +69,7 @@ return [
             'driver' => 'pgsql',
             // 'url' => env('DATABASE_URL'),
             'host' => '51.91.251.252',
-            'port' => '6432',
+            'port' => '5432',
             'database' => 'biotime',
             'username' => 'biotime',
             'password' => 'biotime_2021_',

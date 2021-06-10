@@ -499,11 +499,13 @@ class Customer extends Controller {
 
  
 
-    public function createSI() {
+    public function addstandingorder() {
         if ($_POST) {
            $file = request('standing_order_file');
            $company_file_id = $file  ? $this->saveFile($file, 'company/contracts') : 1;
-           // $company_file_id = 1;
+          //  $company_file_id = 1;
+            $total_amount = empty(request('total_amount')) ? request('occurance_amount') * request('number_of_occurrence') : request('total_amount');
+         
             $data = [
                 'client_id' => request('client_id'),
                 'branch_id' => request('branch_id'),
@@ -512,13 +514,14 @@ class Customer extends Controller {
                 'created_by' => Auth::user()->id,
                 'occurrence' => request('number_of_occurrence'),
                 'type' => request('which_basis'),
-                'total_amount' => remove_comma(request('total_amount')),
                 'occurance_amount' => remove_comma(request('occurance_amount')),
+                'total_amount' => remove_comma($total_amount),
                 'payment_date' => request('maturity_date'),
                 'refer_bank_id' => request('refer_bank_id'),
                 'note' => request('note'),
                 'contract_type_id' => 8
             ];  
+          //  dd($data);
             DB::table('standing_orders')->insert($data);
             return redirect('account/standingOrders')->with('success', 'Standing order added successfully!');
         }
@@ -1385,6 +1388,8 @@ class Customer extends Controller {
         $this->data['request'] = DB::table('whatsapp_integrations')->where('id', $id)->first();
         return view('customer.message.approve_integration', $this->data);
     }
+
+
 
 
 
