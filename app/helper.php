@@ -1,7 +1,5 @@
 <?php
 
-
-
 function custom_date($datatime) {
     $newTZ = new DateTimeZone('America/New_York');
     date_default_timezone_set('America/New_York');
@@ -105,7 +103,6 @@ function number_to_words($number) {
 
 function userAccessRole() {
     $user_id = \Auth::user()->id;
-
     if ((int) $user_id > 0) {
         $user = \App\Models\User::find($user_id);  
         $permission = \App\Models\PermissionRole::where('role_id', $user->role_id)->get();
@@ -115,7 +112,6 @@ function userAccessRole() {
                 array_push($objet, $perm->permission->name);
             }
         }
-       
         return $objet;
     }
 }
