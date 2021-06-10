@@ -37,13 +37,16 @@ return [
             'driver' => 'pgsql',
             'host' => 'shulesoftdb.postgres.database.azure.com',
             // 'host'=>'localhost',
-            'port' =>'6432',
+            'port' =>'5432',
             'database' =>'shulesoft_2022',
             'username' => 'pgeshuleadmin',
             'password' =>'Shul3@s0ft@202!',
             'charset' => 'utf8',
             'prefix' => '',
-            'schema' => 'admin'
+            'schema' => 'admin',
+            'options' => [
+                \PDO::ATTR_EMULATE_PREPARES => true
+            ]
            
         ],
 
@@ -51,7 +54,7 @@ return [
             'driver' => 'pgsql',
             'host' => 'shulesoftdb.postgres.database.azure.com',
             // 'host'=>'localhost',
-            'port' =>'6432',
+            'port' =>'5432',
             'database' =>'other_app',
             'username' => 'pgeshuleadmin',
             'password' =>'Shul3@s0ft@202!',
@@ -69,7 +72,7 @@ return [
             'driver' => 'pgsql',
             // 'url' => env('DATABASE_URL'),
             'host' => '51.91.251.252',
-            'port' => '6432',
+            'port' => '5432',
             'database' => 'biotime',
             'username' => 'biotime',
             'password' => 'biotime_2021_',
