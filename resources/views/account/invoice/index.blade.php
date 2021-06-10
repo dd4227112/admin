@@ -194,7 +194,7 @@
                                                 ?>
 
                                                 <tr>
-                                                <td><?= $invoice->client->username ?></td>
+                                                <td><?= ucfirst(strtolower($invoice->client->name)) ?></td>
                                                     <td><?= $invoice->reference ?></td>
                                                     <td><?= money($amount) ?></td>
                                                     <td><?= money($paid) ?></td>
