@@ -43,7 +43,10 @@ return [
             'password' =>'Shul3@s0ft@202!',
             'charset' => 'utf8',
             'prefix' => '',
-            'schema' => 'admin'
+            'schema' => 'admin',
+            'options' => [
+                \PDO::ATTR_EMULATE_PREPARES => true
+            ]
            
         ],
 
