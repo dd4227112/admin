@@ -291,7 +291,7 @@ class Kernel extends ConsoleKernel {
             if (isset($result) && !empty($result)) {
                 //update invoice no
                 DB::table($invoice->schema_name . '.invoices')
-                        ->where('reference', $invoice->reference)->update(['sync' => 0,'status'=>0, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
+                        ->where('reference', $invoice->reference)->update(['sync' => 0,'status'=>0, 'return_message' => $curl, 'push_status' => 'delete_'.$push_status, 'updated_at' => 'now()']);
             }
             DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
         }
@@ -341,6 +341,8 @@ class Kernel extends ConsoleKernel {
         }
         $curl = $this->curlServer($fields, $url);
         $result = json_decode($curl);
+        print_r($result);
+        echo chr(10);
         // echo $result->description;
         //if (isset($result->description) && (strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
 
