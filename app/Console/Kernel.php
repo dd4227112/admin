@@ -32,68 +32,51 @@ class Kernel extends ConsoleKernel {
     protected function schedule(Schedule $schedule) {
         //$schedule->call(function () {
         //     $this->save_car_track_access_token('public');
-           
-           
         // })->everyTwoHours();
-       
         // $schedule->call(function () {
         //     $this->car_track_alert_parent('public'); 
-           
         // })->everyTwoHours();
-
         // $schedule->call(function () {
         //     $this->addAttendance(); 
         // })->everySixHours();
-
         // $schedule->command('inspire')
         //         ->hourly();
-        // $schedule->call(function () {
-            // sync invoices 
-        //     $this->syncInvoice();
-        //     //$this->updateInvoice();
-        // })->everyMinute();
+        $schedule->call(function () {
+            //sync invoices 
+            $this->syncInvoice();
+            $this->updateInvoice();
+        })->everyMinute();
 
         // $schedule->call(function () {
         //     // End Deadlock Processes 
         //     $this->endDeadlock();
         // })->everyThreeMinutes();
-        
-        $schedule->call(function () {
-            (new Message())->sendSms();
-        })->everyMinute();
-
+//        $schedule->call(function () {
+//            (new Message())->sendSms();
+//        })->everyMinute();
         // $schedule->call(function () {
         //     (new Message())->checkPhoneStatus();
-           
-            
         // })->hourly();
-
-
-
-       // $schedule->call(function () {
-         //   $this->curlServer(['action' => 'payment'], 'http://51.77.212.234:8081/api/cron');
-           // (new Message())->sendEmail();
-      ///  })->everyMinute();
+        // $schedule->call(function () {
+        //   $this->curlServer(['action' => 'payment'], 'http://51.77.212.234:8081/api/cron');
+        // (new Message())->sendEmail();
+        ///  })->everyMinute();
 //  $schedule->call(function () {
-            //(new Message())->karibusmsEmails();
+        //(new Message())->karibusmsEmails();
         // })->everyMinute();
         // $schedule->call(function () {
         //     // remind parents to login in shulesoft and check their child performance
         //     $this->sendTodReminder();
         // })->dailyAt('03:30'); // Eq to 06:30 AM 
-
-        // $schedule->call(function () { 
-
-        //     $this->sendNotice();
-        //     $this->sendBirthdayWish();
-        //     $this->sendTaskReminder();
-        //     // $this->sendSequenceReminder();
-        // })->dailyAt('04:40'); // Eq to 07:40 AM   
-
+        $schedule->call(function () {
+            $this->sendNotice();
+            $this->sendBirthdayWish();
+            $this->sendTaskReminder();
+            $this->sendSequenceReminder();
+        })->dailyAt('04:40'); // Eq to 07:40 AM   
         // $schedule->call(function () { 
         //     $this->sendSORemainder();
         // })->dailyAt('04:40'); // Eq to 07:40 AM 
-          
 //        $schedule->call(function() {
 //            //send login reminder to parents in all schema
 //            $this->sendLoginReminder();
@@ -109,21 +92,17 @@ class Kernel extends ConsoleKernel {
         //     // $this->sendReportReminder();
         //     (new Message())->paymentReminder();
         // })->dailyAt('05:10');
-
-
         // $schedule->call(function () {
         //     $this->checkSchedule();
         // })->everyMinute();
-
         // $schedule->call(function () {
         //     //  (new HomeController())->createTodayReport();
         //     (new Background())->officeDailyReport();
         // })->dailyAt('14:50'); // Eq to 17:50 h 
-
-        // $schedule->call(function () {
-        //     //  (new HomeController())->createTodayReport();
-        //     (new Background())->schoolMonthlyReport();
-        // })->monthlyOn(29, '06:36');
+        $schedule->call(function () {
+            //     //  (new HomeController())->createTodayReport();
+            (new Background())->schoolMonthlyReport();
+        })->monthlyOn(29, '06:36');
     }
 
     function checkPaymentPattern($user, $schema) {
@@ -290,7 +269,7 @@ class Kernel extends ConsoleKernel {
         if (strlen($token) > 4) {
             $fields = array(
                 "reference" => trim($invoice->reference),
-                "student_name" => isset($invoice->student_name) ? $invoice->student_name:'',
+                "student_name" => isset($invoice->student_name) ? $invoice->student_name : '',
                 "student_id" => $invoice->student_id,
                 "amount" => $invoice->amount,
                 // "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
@@ -315,9 +294,9 @@ class Kernel extends ConsoleKernel {
             }
             $curl = $this->curlServer($fields, $url);
             $result = json_decode($curl);
-           // echo $result->description;
-           //if (isset($result->description) && (strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
-            
+            // echo $result->description;
+            //if (isset($result->description) && (strtolower($result->description) == 'success') || $result->description == 'Duplicate Invoice Number') {
+
             if (isset($result) && !empty($result)) {
                 //update invoice no
                 DB::table($invoice->schema_name . '.invoices')
@@ -333,7 +312,7 @@ class Kernel extends ConsoleKernel {
                     }
                     DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
                 }
-            } 
+            }
             DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
         }
     }
@@ -446,123 +425,109 @@ class Kernel extends ConsoleKernel {
 //Force security measures
     }
 
-
-
-    public function save_car_track_access_token($schema='') {
-        $sql = 'select  * from '.$schema.'.car_tracker_key';
+    public function save_car_track_access_token($schema = '') {
+        $sql = 'select  * from ' . $schema . '.car_tracker_key';
         $track_key = \collect(DB::select($sql))->first();
-        if($track_key){
-        $request = $this->JimiServer([
-         'method' => 'jimi.oauth.token.get',
-         'sign_method' => 'md5',
-         'timestamp' => gmdate("Y-m-d H:i:s", time()),
-         'user_id' => $track_key->user_id,
-         'v' => '0.9',
-         'expires_in'=>7200,
-         'app_key' => $track_key->app_key,
-         'user_pwd_md5' => $track_key->user_pwd_md5,
-         'format' => 'json'],'http://open.10000track.com/route/rest');
-     
-         
-         $obj_content = json_decode($request,true);
-     
-         if($obj_content['code'] == 0) {
-    
+        if ($track_key) {
+            $request = $this->JimiServer([
+                'method' => 'jimi.oauth.token.get',
+                'sign_method' => 'md5',
+                'timestamp' => gmdate("Y-m-d H:i:s", time()),
+                'user_id' => $track_key->user_id,
+                'v' => '0.9',
+                'expires_in' => 7200,
+                'app_key' => $track_key->app_key,
+                'user_pwd_md5' => $track_key->user_pwd_md5,
+                'format' => 'json'], 'http://open.10000track.com/route/rest');
+
+
+            $obj_content = json_decode($request, true);
+
+            if ($obj_content['code'] == 0) {
+
                 //dd($obj_content['result']['accessToken']);
-                 DB::table($schema . '.car_tracker_key')->where('id','>', 0)->update(['access_token' => $obj_content['result']['accessToken']]);
-     
-         }
+                DB::table($schema . '.car_tracker_key')->where('id', '>', 0)->update(['access_token' => $obj_content['result']['accessToken']]);
+            }
         }
         echo 'the table is empty';
-     }
-     
-     public function car_track_alert_parent($schema=''){
-     
-        $imeis =  DB::select("select string_agg(imeis::text, ',') as imeis from ".$schema.".vehicles");
-        $key = DB::table('public.sms_keys')->first();
-        $sql = 'select  * from '.$schema.'.car_tracker_key';
-        $track_key = \collect(DB::select($sql))->first();
-     
-     
-        $request = $this->JimiServer([
-         'method' => 'jimi.user.device.location.list',
-         'sign_method' => 'md5',
-         'timestamp' => gmdate("Y-m-d H:i:s", time()),
-         'user_id' => $track_key->user_id,
-         'v' => '0.9',
-         'app_key' => $track_key->app_key,
-         'user_pwd_md5' => $track_key->user_pwd_md5,
-         'format' => 'json',
-         'access_token' => $track_key->access_token,
-         'map_type' => 'GOOGLE',
-         'imeis' => $imeis[0]->imeis,
-         'target' => 'shulesoft',
-         
-             ], 'http://open.10000track.com/route/rest');
-     
-           
-         $obj_content = json_decode($request,true);
-      
-         if($obj_content['code'] == 0) {
-         //$devices=$obj_content['result'];
-     
-         foreach($obj_content['result'] as $device) {
-     $lat=$device['lat'];
-     $lng=$device['lng'];
-     $imeis=$device['imei'];
-     
-     
-     $distance_sql='select * from (select parent_id, phone,name,imeis, 6371 * acos(cos(radians('.$lat.'))
-     * cos(radians(student_gps.lat)) 
-     * cos(radians(student_gps.lng) - radians('.$lng.')) 
-     + sin(radians('.$lat.')) 
-     * sin(radians(student_gps.lat))) AS distance from '.$schema.'.student_gps) as gps_query where imeis=\''.$imeis.'\' and distance >0 and distance <=0.78 ';
-     
-     
-     $near_by_students=DB::select($distance_sql);
-     
-     
-     if(count($near_by_students)>0){
-         $table="table";
-     foreach($near_by_students as $near_by_student){  
-         DB::statement("insert into public.sms (phone_number,body,type,sms_keys_id,user_id,\"$table\") values ('" . $near_by_student->phone . "','" . $track_key->message . "',0," . $key->id . "," . $near_by_student->parent_id . ",'parent' )");
-     
-     
-     }
-     
-     }
-    
-    
-      }
-     
-         }
-     }
-    
-     
-     public function JimiServer($fields, $url) {
-         
-        // Open connection
-                $ch = curl_init();
-        // Set the url, number of POST vars, POST data
-       
-                curl_setopt($ch, CURLOPT_URL, $url);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                    'application/x-www-form-urlencoded'
-                ));
-        
-                curl_setopt($ch, CURLOPT_POST, 1);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($fields));
-        
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                
-        
-                $result = curl_exec($ch);
-                curl_close($ch);
-                return $result;
-            }
-    
-    
+    }
 
+    public function car_track_alert_parent($schema = '') {
+
+        $imeis = DB::select("select string_agg(imeis::text, ',') as imeis from " . $schema . ".vehicles");
+        $key = DB::table('public.sms_keys')->first();
+        $sql = 'select  * from ' . $schema . '.car_tracker_key';
+        $track_key = \collect(DB::select($sql))->first();
+
+
+        $request = $this->JimiServer([
+            'method' => 'jimi.user.device.location.list',
+            'sign_method' => 'md5',
+            'timestamp' => gmdate("Y-m-d H:i:s", time()),
+            'user_id' => $track_key->user_id,
+            'v' => '0.9',
+            'app_key' => $track_key->app_key,
+            'user_pwd_md5' => $track_key->user_pwd_md5,
+            'format' => 'json',
+            'access_token' => $track_key->access_token,
+            'map_type' => 'GOOGLE',
+            'imeis' => $imeis[0]->imeis,
+            'target' => 'shulesoft',
+                ], 'http://open.10000track.com/route/rest');
+
+
+        $obj_content = json_decode($request, true);
+
+        if ($obj_content['code'] == 0) {
+            //$devices=$obj_content['result'];
+
+            foreach ($obj_content['result'] as $device) {
+                $lat = $device['lat'];
+                $lng = $device['lng'];
+                $imeis = $device['imei'];
+
+
+                $distance_sql = 'select * from (select parent_id, phone,name,imeis, 6371 * acos(cos(radians(' . $lat . '))
+     * cos(radians(student_gps.lat)) 
+     * cos(radians(student_gps.lng) - radians(' . $lng . ')) 
+     + sin(radians(' . $lat . ')) 
+     * sin(radians(student_gps.lat))) AS distance from ' . $schema . '.student_gps) as gps_query where imeis=\'' . $imeis . '\' and distance >0 and distance <=0.78 ';
+
+
+                $near_by_students = DB::select($distance_sql);
+
+
+                if (count($near_by_students) > 0) {
+                    $table = "table";
+                    foreach ($near_by_students as $near_by_student) {
+                        DB::statement("insert into public.sms (phone_number,body,type,sms_keys_id,user_id,\"$table\") values ('" . $near_by_student->phone . "','" . $track_key->message . "',0," . $key->id . "," . $near_by_student->parent_id . ",'parent' )");
+                    }
+                }
+            }
+        }
+    }
+
+    public function JimiServer($fields, $url) {
+
+        // Open connection
+        $ch = curl_init();
+        // Set the url, number of POST vars, POST data
+
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'application/x-www-form-urlencoded'
+        ));
+
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($fields));
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+        return $result;
+    }
 
     /**
      * 
@@ -649,15 +614,15 @@ class Kernel extends ConsoleKernel {
     public function sendTodReminder() {
         $users = DB::select('select * from admin.all_teacher_on_duty');
         $all_users = [];
-        
+
         foreach ($users as $user) {
             unset($all_users[$user->name]);
-            $students = DB::SELECT('SELECT name FROM '. $user->schema_name . '.student where student_id in(select student_id from '. $user->schema_name . '.student_duties where duty_id='.$user->duty_id.')');
+            $students = DB::SELECT('SELECT name FROM ' . $user->schema_name . '.student where student_id in(select student_id from ' . $user->schema_name . '.student_duties where duty_id=' . $user->duty_id . ')');
             foreach ($students as $student) {
                 array_push($all_students, $student->name);
             }
             $message = 'Habari  ' . $user->name . ' ,'
-                    . 'Leo '.date("Y-m-d").' umewekwa kama walimu wa zamu Shuleni pamoja na ' . implode(',', $all_students) . ' (Viranja)  . Kumbuka kuandika repoti yako ya siku katika account yako ya ShuleSoft kwa ajili ya kumbukumbu. Asante';
+                    . 'Leo ' . date("Y-m-d") . ' umewekwa kama walimu wa zamu Shuleni pamoja na ' . implode(',', $all_students) . ' (Viranja)  . Kumbuka kuandika repoti yako ya siku katika account yako ya ShuleSoft kwa ajili ya kumbukumbu. Asante';
 
             if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
                 DB::statement("insert into " . $user->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Ratiba Ya Zamu','" . $message . "')");
@@ -857,86 +822,84 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         require base_path('routes/console.php');
     }
 
-
     private function addAttendance() {
         $date = date("Y-m-d");
         $datas = DB::connection('biotime')->table('public.iclock_transaction')->whereDate('punch_time', $date)->where('punch_state', '0')->get();
         if (count($datas) > 0) {
-           foreach($datas as $data){
+            foreach ($datas as $data) {
 
-            // $employee = DB::table('public.personnel_employee')->where('id', $data->emp_id)->first();
-            // if(!empty($employee)){
-            $user = DB::table('admin.all_users')->where('sid', $data->emp_code)->first();
-            $device = DB::table('api.attendance_devices')->where('serial_number', $data->terminal_sn)->first();
+                // $employee = DB::table('public.personnel_employee')->where('id', $data->emp_id)->first();
+                // if(!empty($employee)){
+                $user = DB::table('admin.all_users')->where('sid', $data->emp_code)->first();
+                $device = DB::table('api.attendance_devices')->where('serial_number', $data->terminal_sn)->first();
 
-            if (!empty($user)) {
-                if (empty($device)) {
-                    $device_id = DB::table('api.attendance_devices')->insert(['serial_number' => $data->terminal_sn, 'schema_name' => $user->schema_name]);
-                    $device = DB::table('api.attendance_devices')->where('id', $device_id)->first();
-                }
-                if ($user->table == 'student') {
-                    $attendance = DB::table($user->schema_name . '.sattendances')->where('student_id', $user->id)->whereDate('date', date('Y-m-d'))->first();
-                    if (empty($attendance)) {
-                        DB::table($user->schema_name . '.sattendances')->insert([
-                            'student_id' => $user->id,
-                            'created_by' => $device->id,
-                            'created_by_table' => 'api',
-                            'present' => 1,
-                            'date' => date("Y-m-d", strtotime($data->punch_time))
-                        ]);
+                if (!empty($user)) {
+                    if (empty($device)) {
+                        $device_id = DB::table('api.attendance_devices')->insert(['serial_number' => $data->terminal_sn, 'schema_name' => $user->schema_name]);
+                        $device = DB::table('api.attendance_devices')->where('id', $device_id)->first();
                     }
-                } else {
-                    $uattendance = DB::table($user->schema_name . '.uattendances')->where('user_id', $user->id)->where('user_table', $user->table)->whereDate('date', date('Y-m-d'))->first();
-                    if (empty($uattendance)) {
-                        DB::table($user->schema_name . '.uattendances')->insert([
-                            'user_id' => $user->id,
-                            'user_table' => $user->table,
-                            'created_by' => $device->id,
-                            'created_by_table' => 'api',
-                            'timein' => 'now()',
-                            'date' => date("Y-m-d", strtotime($data->punch_time)),
-                            'present' => 1
-                        ]);
+                    if ($user->table == 'student') {
+                        $attendance = DB::table($user->schema_name . '.sattendances')->where('student_id', $user->id)->whereDate('date', date('Y-m-d'))->first();
+                        if (empty($attendance)) {
+                            DB::table($user->schema_name . '.sattendances')->insert([
+                                'student_id' => $user->id,
+                                'created_by' => $device->id,
+                                'created_by_table' => 'api',
+                                'present' => 1,
+                                'date' => date("Y-m-d", strtotime($data->punch_time))
+                            ]);
+                        }
+                    } else {
+                        $uattendance = DB::table($user->schema_name . '.uattendances')->where('user_id', $user->id)->where('user_table', $user->table)->whereDate('date', date('Y-m-d'))->first();
+                        if (empty($uattendance)) {
+                            DB::table($user->schema_name . '.uattendances')->insert([
+                                'user_id' => $user->id,
+                                'user_table' => $user->table,
+                                'created_by' => $device->id,
+                                'created_by_table' => 'api',
+                                'timein' => 'now()',
+                                'date' => date("Y-m-d", strtotime($data->punch_time)),
+                                'present' => 1
+                            ]);
+                        }
                     }
+                    DB::connection('biotime')->table('public.iclock_transaction')->where('id', $data->id)->update(['punch_state' => '1']);
                 }
-                DB::connection('biotime')->table('public.iclock_transaction')->where('id', $data->id)->update(['punch_state' => '1']);
             }
         }
     }
-}
 
 // Need to be reviewed for further improvement
-public function sendSORemainder() {
-    $users = \App\Models\User::where('role_id',1)->get();
-    foreach ($users as $user) {
-        $standingorders = DB::select('select * from admin.standing_orders  WHERE  payment_date-CURRENT_DATE = 1 and is_approved =1');
-        $msg = '';
-        foreach ($standingorders as $st) {
-            $msg .= '<tr><td>' . $st->client->name . '</td><td>' . $st->occurance_amount . '</td></tr>';
+    public function sendSORemainder() {
+        $users = \App\Models\User::where('role_id', 1)->get();
+        foreach ($users as $user) {
+            $standingorders = DB::select('select * from admin.standing_orders  WHERE  payment_date-CURRENT_DATE = 1 and is_approved =1');
+            $msg = '';
+            foreach ($standingorders as $st) {
+                $msg .= '<tr><td>' . $st->client->name . '</td><td>' . $st->occurance_amount . '</td></tr>';
+            }
+            $message = ''
+                    . '<h2>Standing orders</h2>'
+                    . '<p>This is the list of matured standing orders </p>'
+                    . '<table><thead><tr><th>Client name</th><th> Amount </th></tr></thead><tbody>' . $msg . '</tbody></table>';
+            DB::table('public.email')->insert([
+                'subject' => date('Y M d') . ' Standing order remainder',
+                'body' => $message,
+                'email' => $user->email
+            ]);
+
+            $smsmessage = 'Hello kindly remember to check matured standing orders in the admin panel. Thank you';
+            DB::table('public.sms')->insert([
+                'body' => $smsmessage,
+                'phone_number' => $user->phone,
+                'type' => 0
+            ]);
         }
-        $message = ''
-                . '<h2>Standing orders</h2>'
-                . '<p>This is the list of matured standing orders </p>'
-                . '<table><thead><tr><th>Client name</th><th> Amount </th></tr></thead><tbody>' . $msg . '</tbody></table>';
-        DB::table('public.email')->insert([
-            'subject' => date('Y M d') . ' Standing order remainder',
-            'body' => $message,
-            'email' => $user->email
-        ]);
-
-        $smsmessage = 'Hello kindly remember to check matured standing orders in the admin panel. Thank you';
-        DB::table('public.sms')->insert([
-            'body' => $smsmessage,
-            'phone_number' => $user->phone,
-            'type' => 0
-        ]);
     }
-}
 
+    public function endDeadlock() {
 
-public function endDeadlock() {
-    
-    DB::SELECT("WITH inactive_connections AS (SELECT pid, rank() over (partition by client_addr order by backend_start ASC) as rank
+        DB::SELECT("WITH inactive_connections AS (SELECT pid, rank() over (partition by client_addr order by backend_start ASC) as rank
         FROM pg_stat_activity WHERE pid <> pg_backend_pid( ) AND application_name !~ '(?:psql)|(?:pgAdmin.+)' AND datname = current_database() AND usename = current_user 
         AND state in ('idle', 'idle in transaction', 'idle in transaction (aborted)', 'disabled') AND current_timestamp - state_change > interval '3 minutes') SELECT pg_terminate_backend(pid) FROM inactive_connections WHERE rank > 1");
         return DB::select("SELECT pg_terminate_backend(pid) from pg_stat_activity where state='idle' and query like '%DEALLOCATE%'");
