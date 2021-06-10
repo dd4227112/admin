@@ -88,8 +88,6 @@
                                         {{-- <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"> --}}
                                          <a  target="_break" href="<?= url('customer/viewContract/'.$standing->id) ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a>
 
-                                       
-
                                          <?php if(isset($standing->client)) {  ?>
                                             <?php if((int) $standing->is_approved == 1) { ?>
                                                   <button type="button" class="btn btn-dark btn-sm">Approved</button>

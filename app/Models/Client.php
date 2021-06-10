@@ -36,8 +36,12 @@ class Client extends Model {
         
     }
 
-    public function clientschool() {
+    public function clientschool() { 
         return $this->hasMany(\App\Models\ClientSchool::class,'client_id', 'id');
+    }
+
+    public function standingorder() { 
+        return $this->hasMany(\App\Models\StandingOrder::class,'client_id', 'id');
     }
 
 }
