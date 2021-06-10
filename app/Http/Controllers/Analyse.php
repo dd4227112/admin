@@ -213,42 +213,12 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         } else {
             $id = Auth::user()->id;
         }
+        $schools =  \App\Models\UserClient::where('user_id', $id)->get();
 
-   
-        $schools = \App\Models\ClientSchool::whereIn('client_id', \App\Models\UsersSchool::where('user_id', $id)->get(['client_id']))->get();
-      
-        // $ward_id=[];
-        // $wards = DB::table('users_schools_wards')->where('user_id',$id)->get(['ward_id']);
-        // foreach ($wards as $ward) {
-        //     array_push($ward_id, $ward->ward_id);
-        // }
-        // $this->data['schools'] = $schools = \App\Models\School::whereIn('ward_id', $ward_id)->where(DB::raw('lower(ownership)'),'<>','government')->get();
-        
+        $this->data['schools'] =  $schools;
+        $this->data['users'] = \App\Models\User::where('status', 1)->where('role_id','<>','7')->get();
 
-        $school_ids = [];
-
-        foreach ($schools as $school) {
-            array_push($school_ids, $school->school_id);
-        }
-
-        $this->data['schools'] =  \App\Models\School::whereIn('id', $school_ids)->where(DB::raw('lower(ownership)'),'<>','government')->get();
-        
-
-       // $schools = \App\Models\ClientSchool::whereIn('client_id', \App\Models\UsersSchool::where('user_id', $id)->get(['client_id']))->get();
-
-      //  dd($s_ids);
-
-    //    foreach ($schools as $school) {
-    //        array_push($all_schools, "'" . $school->client->username . "'");
-    //        array_push($all_schoolz, $school->client->username);
-    //    }
-      
-  
-      
-    
-        // $this->data['staffs'] = \App\Models\User::where('status', 1)->where('department', '<>', 10)->get();
         $this->data['staff'] = \App\Models\User::where('id', $id)->first();
-        //DB::table('admin.all_log')->select(DB::raw('count(*) as school_count, "schema_name"'))->whereIn('schema_name', $all_schools)->where('table', '<>', 'setting')->groupBy('schema_name')->get();
         
         return view('analyse.myschool', $this->data);
     }

@@ -48,7 +48,7 @@
                                         <div class="card counter-card-<?= $i ?>">
                                             <div class="card-block-big">
                                                 <div>
-                                                    <h3><?= sizeof($schools) ?></h3>
+                                                    <h3><?= count($schools) ?></h3>
                                                     <p>Private Schools</p>
                                                     <div class="progress ">
                                                         <div class="progress-bar progress-bar-striped progress-xs progress-bar-<?= $i == 1 ? 'pink' : 'success' ?>" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
@@ -62,7 +62,7 @@
                                         <div class="card counter-card-<?= $i ?>">
                                             <div class="card-block-big">
                                                 <div>
-                                                    <h3>Tsh <?= number_format(sizeof($schools)*407*10000) ?> </h3>
+                                                    <h3>Tsh <?= number_format(count($schools)*407*10000) ?> </h3>
                                                     <p>Estimated Value</p>
                                                     <div class="progress ">
                                                         <div class="progress-bar progress-bar-striped progress-xs progress-bar-warning" role="progressbar" style="width: 70%" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
@@ -106,7 +106,6 @@
                             <h5>List of Schools Under <u><?= $staff->name ?></u></h5>
                             <?php
                             if (Auth::user()->role_id == 1) {
-                             $users = \App\Models\User::where('status', 1)->where('role_id','<>','7')->get();
                                 ?>
                                 <span style="float: right">
                                     <select class="form-control" style="width:300px;" id='taskdate'>
@@ -128,13 +127,9 @@
                                         <tr>
                                             <th>#</th>
                                             <th>School Name</th>
-                                            <th>Region</th>
-                                            <th>District</th>
-                                            <th>Ward</th>
-                                            <th>Type</th>
+                                            <th>Address</th>
                                             <th>Phone</th>
-                                            <th>NMB Bank</th>
-                                            <th>Status</th>
+                                            <th>School Link</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -142,54 +137,22 @@
                                     <tbody>
                                         <?php 
                                         $i = 1;
-                                        foreach ($schools as $school) {
+                                            foreach ($schools as $school) {
                                             ?>
-                                            <?php
-                                            $client_status = '';
-                                            $school_phone = '';
-                                            $use_nmb = '';
-                                           $schema_name = DB::table('admin.clients')->select('clients.*')->join('admin.client_schools', 'admin.client_schools.client_id','=','admin.clients.id')->join('admin.schools', 'admin.schools.id','=','admin.client_schools.school_id')
-                                              ->where(['schools.id' => $school->id])->first()->username; 
-                                              //dd($schema_name);
-                                            
-                                            if (strlen($schema_name) > 3) {
-                                                $setting = \DB::table($schema_name.'.setting')->first();
-                                                $school_phone = $setting->phone;
-
-                                                if (\DB::table($schema_name . '.student')->count() < 5) {
-                                                    $client_status = '<span class="label label-danger">Client - Not Active</span>';
-                                                } else {
-                                                    $client_status = '<span class="label label-success">Client</span>';
-                                                }
-                                            } else {
-                                                $client_status = '<span class="label label-warning">Not Client</span>';
-                                            }
-                                            ?>
+                                           
                                             <tr>
                                                 <td><?= $i++ ?></td>
-                                                <td><?= $school->name ?></td>
-                                                <td><?= $school->wards->district->region->name ?></td>
-                                                <td><?= $school->wards->district->name ?></td>
-                                                <td><?= $school->wards->name ?></td>
-                                                <td><?= $school->type ?></td>
-                                                <td><?= $school_phone ?></td>
+                                                <td><?= $school->client->name ?></td>
+                                                <td><?= $school->client->address ?></td>
+                                                <td><?= $school->client->phone ?></td>
                                                 <td>
-                                                    <?php
-                                                    if (strlen($school->account_number) > 4) {
-                                                        echo '<ul><li><span class="label label-success">Use NMB</span></li>'
-                                                        . '<li>Branch: ' . $school->branch_name . '</li>'
-                                                        . '<li>Account No: ' . $school->account_number . '</li>'
-                                                        . '</ul>';
-                                                    }
-                                                    ?>
+                                                    <a href="https://<?=$school->client->username?>.shulesoft.com/" target="_blank" rel="noopener noreferrer"><?=$school->client->username?> Link</a>
                                                 </td>
-                                                <td>
-                                                    <?= $client_status ?>
-                                                </td>
+                                               
                                                 <?php
                                                 echo '<td>';
 
-                                                 echo '<a href="' . url('customer/profile/' . $schema_name) . '" class="btn btn-success btn-sm"> View</a>';
+                                                 echo '<a href="' . url('customer/profile/' . $school->client->username) . '" class="btn btn-success btn-sm"> View</a>';
 
                                                 echo '</td>';
                                                 echo '</tr>';
