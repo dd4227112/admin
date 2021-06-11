@@ -105,7 +105,7 @@ function userAccessRole() {
     $user_id = \Auth::user()->id;
 
     if ((int) $user_id > 0) {
-        $user = \App\Models\User::find($user_id);  
+        $user = \App\Model\User::find($user_id);  
         $permission = \App\Models\PermissionRole::where('role_id', $user->role_id)->get();
         $objet = array();
         if (count($permission) > 0) {
