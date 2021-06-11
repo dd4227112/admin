@@ -35,17 +35,18 @@ return [
        
           'pgsql' => [
             'driver' => 'pgsql',
-             'host'=>'localhost',
-            'port' =>'5432',
-            'database' =>'vps',
-            'username' => 'postgres',
-            'password' =>'tabita',
+            'host' => 'shulesoftdb.postgres.database.azure.com',
+            // 'host'=>'localhost',
+            'port' =>'6432',
+            'database' =>'shulesoft_2022',
+            'username' => 'pgeshuleadmin',
+            'password' =>'Shul3@s0ft@202!',
             'charset' => 'utf8',
             'prefix' => '',
             'schema' => 'admin',
-//              'options' => [
-//                \PDO::ATTR_EMULATE_PREPARES => true
-//            ]
+              'options' => [
+                \PDO::ATTR_EMULATE_PREPARES => true
+            ]
         ],
 
         'karibusms' => [
