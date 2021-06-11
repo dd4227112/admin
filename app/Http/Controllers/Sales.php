@@ -267,6 +267,7 @@ class Sales extends Controller {
                  //$sql = "select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a  where lower(a.ownership) <>'government'";
                  }
                  
+                 
                 return $this->ajaxTable('schools', ['a.name', 'a.region', 'a.ward', 'a.district'], $sql);
                 break;
             case 'prospects':
