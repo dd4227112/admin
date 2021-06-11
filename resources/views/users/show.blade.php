@@ -720,10 +720,10 @@ foreach ($user_permission as $permis) {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                  <?php   if(count($attendances) > 0) { ?>
+                                                  <?php  if(count($attendances)) { ?>
                                                     <?php foreach ($attendances as $attendance) { ?>
                                                         <tr>
-                                                            <td><?= date('d M Y', strtotime(custom_date($attendance->created_at))) ?></td>
+                                                            <td><?= date('d M Y', strtotime($attendance->created_at)) ?></td>
                                                             <td><?= $attendance->status == 1 ? 'Present' : 'Absent' ?></td>
                                                             <td><?= date('Y', strtotime($attendance->timein)) > 1970 ? date('h:i', strtotime($attendance->timein)) : '' ?></td>
                                                             <td><?= $attendance->late_comment ?></td>

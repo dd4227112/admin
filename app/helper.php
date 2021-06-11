@@ -282,6 +282,11 @@ function btn_attendance($id, $method, $class, $name) {
     }
 
 
+    function school_full_name($schema_name = null){
+        return \App\Models\Client::where('username',$schema_name)->first()->name;
+    }
+
+
 
 
    

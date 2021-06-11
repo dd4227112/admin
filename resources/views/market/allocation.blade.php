@@ -1,11 +1,6 @@
 @extends('layouts.app')
 @section('content')
-<?php 
-  if(Auth::user()->role_id == 17){
-    $zone_id = \App\Models\ZoneManager::where('user_id',Auth::user()->id)->first()->zone_id;
-    
-  }
-?>
+
 
 <div class="main-body">
     <div class="page-wrapper">
