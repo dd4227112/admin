@@ -1090,3 +1090,79 @@
 [stacktrace]
 #0 {main}
 "} 
+[2021-06-11 10:51:54] local.ERROR: Cannot redeclare custom_date() (previously declared in C:\xampp\htdocs\shulesoft\app\helper.php:3) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot redeclare custom_date() (previously declared in C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3) at C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3)
+[stacktrace]
+#0 {main}
+"} 
+[2021-06-11 10:52:54] local.ERROR: Cannot redeclare custom_date() (previously declared in C:\xampp\htdocs\shulesoft\app\helper.php:3) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot redeclare custom_date() (previously declared in C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3) at C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3)
+[stacktrace]
+#0 {main}
+"} 
+[2021-06-11 10:53:54] local.ERROR: Cannot redeclare custom_date() (previously declared in C:\xampp\htdocs\shulesoft\app\helper.php:3) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot redeclare custom_date() (previously declared in C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3) at C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3)
+[stacktrace]
+#0 {main}
+"} 
+[2021-06-11 10:54:54] local.ERROR: Cannot redeclare custom_date() (previously declared in C:\xampp\htdocs\shulesoft\app\helper.php:3) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot redeclare custom_date() (previously declared in C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3) at C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3)
+[stacktrace]
+#0 {main}
+"} 
+[2021-06-11 10:55:54] local.ERROR: Cannot redeclare custom_date() (previously declared in C:\xampp\htdocs\shulesoft\app\helper.php:3) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot redeclare custom_date() (previously declared in C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3) at C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3)
+[stacktrace]
+#0 {main}
+"} 
+[2021-06-11 10:56:54] local.ERROR: Cannot redeclare custom_date() (previously declared in C:\xampp\htdocs\shulesoft\app\helper.php:3) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot redeclare custom_date() (previously declared in C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3) at C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3)
+[stacktrace]
+#0 {main}
+"} 
+[2021-06-11 10:57:54] local.ERROR: Cannot redeclare custom_date() (previously declared in C:\xampp\htdocs\shulesoft\app\helper.php:3) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot redeclare custom_date() (previously declared in C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3) at C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3)
+[stacktrace]
+#0 {main}
+"} 
+[2021-06-11 10:58:54] local.ERROR: Cannot redeclare custom_date() (previously declared in C:\xampp\htdocs\shulesoft\app\helper.php:3) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot redeclare custom_date() (previously declared in C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3) at C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3)
+[stacktrace]
+#0 {main}
+"} 
+[2021-06-11 10:59:54] local.ERROR: Cannot redeclare custom_date() (previously declared in C:\xampp\htdocs\shulesoft\app\helper.php:3) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot redeclare custom_date() (previously declared in C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3) at C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3)
+[stacktrace]
+#0 {main}
+"} 
+[2021-06-11 11:00:54] local.ERROR: Cannot redeclare custom_date() (previously declared in C:\xampp\htdocs\shulesoft\app\helper.php:3) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot redeclare custom_date() (previously declared in C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3) at C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3)
+[stacktrace]
+#0 {main}
+"} 
+[2021-06-11 11:01:54] local.ERROR: Cannot redeclare custom_date() (previously declared in C:\xampp\htdocs\shulesoft\app\helper.php:3) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot redeclare custom_date() (previously declared in C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3) at C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3)
+[stacktrace]
+#0 {main}
+"} 
+[2021-06-11 11:02:54] local.ERROR: Cannot redeclare custom_date() (previously declared in C:\xampp\htdocs\shulesoft\app\helper.php:3) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot redeclare custom_date() (previously declared in C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3) at C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3)
+[stacktrace]
+#0 {main}
+"} 
+[2021-06-11 11:03:54] local.ERROR: Cannot redeclare custom_date() (previously declared in C:\xampp\htdocs\shulesoft\app\helper.php:3) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot redeclare custom_date() (previously declared in C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3) at C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3)
+[stacktrace]
+#0 {main}
+"} 
+[2021-06-11 11:04:54] local.ERROR: Cannot redeclare custom_date() (previously declared in C:\xampp\htdocs\shulesoft\app\helper.php:3) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot redeclare custom_date() (previously declared in C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3) at C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3)
+[stacktrace]
+#0 {main}
+"} 
+[2021-06-11 11:05:54] local.ERROR: Cannot redeclare custom_date() (previously declared in C:\xampp\htdocs\shulesoft\app\helper.php:3) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot redeclare custom_date() (previously declared in C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3) at C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3)
+[stacktrace]
+#0 {main}
+"} 
+[2021-06-11 11:06:54] local.ERROR: Cannot redeclare custom_date() (previously declared in C:\xampp\htdocs\shulesoft\app\helper.php:3) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot redeclare custom_date() (previously declared in C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3) at C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3)
+[stacktrace]
+#0 {main}
+"} 
+[2021-06-11 11:07:54] local.ERROR: Cannot redeclare custom_date() (previously declared in C:\xampp\htdocs\shulesoft\app\helper.php:3) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot redeclare custom_date() (previously declared in C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3) at C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3)
+[stacktrace]
+#0 {main}
+"} 
+[2021-06-11 11:08:54] local.ERROR: Cannot redeclare custom_date() (previously declared in C:\xampp\htdocs\shulesoft\app\helper.php:3) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot redeclare custom_date() (previously declared in C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3) at C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3)
+[stacktrace]
+#0 {main}
+"} 
+[2021-06-11 11:09:54] local.ERROR: Cannot redeclare custom_date() (previously declared in C:\xampp\htdocs\shulesoft\app\helper.php:3) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot redeclare custom_date() (previously declared in C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3) at C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3)
+[stacktrace]
+#0 {main}
+"} 
