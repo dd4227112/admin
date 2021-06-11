@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-\URL::forceScheme('https');
+//\URL::forceScheme('https');
 /*
   |--------------------------------------------------------------------------
   | Web Routes
@@ -37,10 +37,12 @@ foreach ($bad_url as $value) {
         exit;
     }
 }
+Route::get('/898uuhihdsdskj/live/{id}/{year}','Customer@usageAnalysis');
 Auth::routes();
 //Route::group(['middleware' => ['guest']], function() {
 //    Auth::routes();
 //});
+
 Route::get('/epayment/i/{id}/{amount?}','Background@epayment');
 Route::any('/create/epayment/{id}/{amount?}','Background@createEpayment');
 
