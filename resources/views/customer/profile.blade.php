@@ -1963,12 +1963,12 @@ return $echo;
                                                          <?php if(count($standingorders) > 0) { ?>
                                                           <?php $i = 1;  foreach($standingorders as $order) { ?>
                                                             <tr>
-                                                                <td><?= $i  ?></td>
-                                                                <td><?= $order->type ?></td>
-                                                                <td><?= money($order->occurance_amount) ?></td>
-                                                                <td><?= money($order->total_amount) ?></td>
-                                                                <td><?= date('d/m/Y', strtotime($order->payment_date)) ?></td>
-                                                                <td><?= $order->schoolcontact->name ?></td>
+                                                                <td><?= $i ?></td>
+                                                                <td><?= isset($order->type) ? $order->type : ''?></td>
+                                                                <td><?= isset($order->occurance_amount) ? money($order->occurance_amount) : '' ?></td>
+                                                                <td><?= isset($order->total_amount) ? money($order->total_amount) : ''?></td>
+                                                                <td><?= isset($order->payment_date) ? date('d/m/Y', strtotime($order->payment_date)) : '' ?></td>
+                                                                <td><?= isset($order->schoolcontact->name) ? $order->schoolcontact->name : '' ?></td>
 
                                                                 <td><a  target="_break" href="<?= url('customer/viewContract/'.$order->id) ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a>
                                                                    <?php if(!isset($order->payment_date) || !isset($order->type)) {  ?>
@@ -2244,6 +2244,7 @@ aria-hidden="true">
 </div>
 </div>
 </div>
+
 <?php $root = url('/') . '/public/' ?>
 <?php
 if (!empty($profile)) {
@@ -2265,21 +2266,22 @@ aria-hidden="true">
                                         <th class="social-label b-none p-t-0">School Name
                                         </th>
                                         <td class="social-user-name b-none p-t-0 text-muted">
-                                            <?= $profile->school->name ?></td>
+                                            <?= isset($profile->school->name) ? $profile->school->name : '' ?></td>
                                     </tr>
                                     <tr>
                                         <th class="social-label b-none">Region</th>
                                         <td class="social-user-name b-none text-muted">
-                                            <?= $profile->school->region ?></td>
+                                            <?= isset($profile->school->region) ? $profile->school->region : '' ?></td>
                                     </tr>
                                     <tr>
                                         <th class="social-label b-none">District</th>
                                         <td class="social-user-name b-none text-muted">
-                                            <?= $profile->school->district ?></td>
+                                            <?= isset($profile->school->district) ? $profile->school->district : '' ?></td>
                                     </tr>
                                     <tr>
                                         <th class="social-label b-none">Ward</th>
-                                        <td class="social-user-name b-none text-muted"><?= $profile->school->ward ?>
+                                        <td class="social-user-name b-none text-muted">
+                                            <?= isset($profile->school->ward) ? $profile->school->ward : '' ?>
                                         </td>
                                     </tr>
 

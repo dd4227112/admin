@@ -258,75 +258,16 @@ class Sales extends Controller {
                     (select D.name as district,W.id,W.name as ward,R.name as region from admin.districts as D join
                     admin.wards as W on D.id = W.district_id join admin.regions R on R.id = D.region_id ) T on B.ward_id = T.id";
                 } else {   
-                     if(Auth::user()->role_id == 17){
-                    $zone_id = \App\Models\ZoneManager::where('user_id',Auth::user()->id)->first()->zone_id;
-                    switch ($zone_id) {
-                        case 1:
-                            $sql = "select C.*,D.username from (select A.*,B.* from (select b.*,w.name as ward, d.name as district,r.name as region from (select a.*, (select count(*) from admin.tasks where school_id=a.id) 
-                            as activities from admin.schools a  where lower(a.ownership) <>'government') as b join admin.wards as w on b.ward_id = w.id join admin.districts as d on d.id=w.district_id
-                            join admin.regions as r on r.id=d.region_id) A LEFT JOIN (select school_id,client_id from admin.client_schools) B
-                            on A.id = B.school_id) C  left  join (select id,username from admin.clients) D on C.client_id = D.id where C.zone = 'Eastern' or C.zone = 'DSM'";
-                        break;
-                        
-                        case 2:
-                            $sql = "select C.*,D.username from (select A.*,B.* from (select b.*,w.name as ward, d.name as district,r.name as region from (select a.*, (select count(*) from admin.tasks where school_id=a.id) 
-                            as activities from admin.schools a  where lower(a.ownership) <>'government') as b join admin.wards as w on b.ward_id = w.id join admin.districts as d on d.id=w.district_id
-                            join admin.regions as r on r.id=d.region_id) A LEFT JOIN (select school_id,client_id from admin.client_schools) B
-                            on A.id = B.school_id) C  left  join (select id,username from admin.clients) D on C.client_id = D.id where C.zone = 'Northern'";
-                        break;
-
-                        case 3:
-                            $sql = "select C.*,D.username from (select A.*,B.* from (select b.*,w.name as ward, d.name as district,r.name as region from (select a.*, (select count(*) from admin.tasks where school_id=a.id) 
-                            as activities from admin.schools a  where lower(a.ownership) <>'government') as b join admin.wards as w on b.ward_id = w.id join admin.districts as d on d.id=w.district_id
-                            join admin.regions as r on r.id=d.region_id) A LEFT JOIN (select school_id,client_id from admin.client_schools) B
-                            on A.id = B.school_id) C  left  join (select id,username from admin.clients) D on C.client_id = D.id where C.zone = 'LAKE zone'";
-                        break;
-
-                        case 4:
-                            $sql = "select C.*,D.username from (select A.*,B.* from (select b.*,w.name as ward, d.name as district,r.name as region from (select a.*, (select count(*) from admin.tasks where school_id=a.id) 
-                            as activities from admin.schools a  where lower(a.ownership) <>'government') as b join admin.wards as w on b.ward_id = w.id join admin.districts as d on d.id=w.district_id
-                            join admin.regions as r on r.id=d.region_id) A LEFT JOIN (select school_id,client_id from admin.client_schools) B
-                            on A.id = B.school_id) C  left  join (select id,username from admin.clients) D on C.client_id = D.id where C.zone = 'Central Zone' or C.zone = 'Central'";
-                        break;
-
-                        case 5:
-                            $sql = "select C.*,D.username from (select A.*,B.* from (select b.*,w.name as ward, d.name as district,r.name as region from (select a.*, (select count(*) from admin.tasks where school_id=a.id) 
-                            as activities from admin.schools a  where lower(a.ownership) <>'government') as b join admin.wards as w on b.ward_id = w.id join admin.districts as d on d.id=w.district_id
-                            join admin.regions as r on r.id=d.region_id) A LEFT JOIN (select school_id,client_id from admin.client_schools) B
-                            on A.id = B.school_id) C  left  join (select id,username from admin.clients) D on C.client_id = D.id where C.zone = 'Western'";
-                        break;
-
-                        case 6:
-                            $sql = "select C.*,D.username from (select A.*,B.* from (select b.*,w.name as ward, d.name as district,r.name as region from (select a.*, (select count(*) from admin.tasks where school_id=a.id) 
-                            as activities from admin.schools a  where lower(a.ownership) <>'government') as b join admin.wards as w on b.ward_id = w.id join admin.districts as d on d.id=w.district_id
-                            join admin.regions as r on r.id=d.region_id) A LEFT JOIN (select school_id,client_id from admin.client_schools) B
-                            on A.id = B.school_id) C  left  join (select id,username from admin.clients) D on C.client_id = D.id where C.zone = 'Highlands'";
-                        break;
-
-                        case 7:
-                            $sql = "select C.*,D.username from (select A.*,B.* from (select b.*,w.name as ward, d.name as district,r.name as region from (select a.*, (select count(*) from admin.tasks where school_id=a.id) 
-                            as activities from admin.schools a  where lower(a.ownership) <>'government') as b join admin.wards as w on b.ward_id = w.id join admin.districts as d on d.id=w.district_id
-                            join admin.regions as r on r.id=d.region_id) A LEFT JOIN (select school_id,client_id from admin.client_schools) B
-                            on A.id = B.school_id) C  left  join (select id,username from admin.clients) D on C.client_id = D.id where C.zone = 'Southern'";
-                        break;
-                           
-                        default:
-                            $sql = "select C.*,D.username from (select A.*,B.* from (select b.*,w.name as ward, d.name as district,r.name as region from (select a.*, (select count(*) from admin.tasks where school_id=a.id) 
-                        as activities from admin.schools a  where lower(a.ownership) <>'government') as b join admin.wards as w on b.ward_id = w.id join admin.districts as d on d.id=w.district_id
-                        join admin.regions as r on r.id=d.region_id) A LEFT JOIN (select school_id,client_id from admin.client_schools) B
-                        on A.id = B.school_id) C  left  join (select id,username from admin.clients) D on C.client_id = D.id where C.zone not null";
-                          }
-
-                      } else {
-
-                        $sql = "select C.*,D.username from (select A.*,B.* from (select b.*,w.name as ward, d.name as district,r.name as region from (select a.*, (select count(*) from admin.tasks where school_id=a.id) 
-                        as activities from admin.schools a  where lower(a.ownership) <>'government') as b join admin.wards as w on b.ward_id = w.id join admin.districts as d on d.id=w.district_id
-                        join admin.regions as r on r.id=d.region_id) A LEFT JOIN (select school_id,client_id from admin.client_schools) B
-                        on A.id = B.school_id) C  left  join (select id,username from admin.clients) D on C.client_id = D.id ";
-                       }
-                 //$sql = "select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a  where lower(a.ownership) <>'government'";
                 
-                  }
+                $sql = "select C.*,D.username from (select A.*,B.* from (select b.*,w.name as ward, d.name as district,r.name as region from (select a.*, (select count(*) from admin.tasks where school_id=a.id) 
+                as activities from admin.schools a  where lower(a.ownership) <>'government') as b join admin.wards as w on b.ward_id = w.id join admin.districts as d on d.id=w.district_id
+                join admin.regions as r on r.id=d.region_id) A LEFT JOIN (select school_id,client_id from admin.client_schools) B
+                on A.id = B.school_id) C  left  join (select id,username from admin.clients) D on C.client_id = D.id ";
+                       
+                 //$sql = "select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a  where lower(a.ownership) <>'government'";
+                 }
+                 
+                 
                 return $this->ajaxTable('schools', ['a.name', 'a.region', 'a.ward', 'a.district'], $sql);
                 break;
             case 'prospects':

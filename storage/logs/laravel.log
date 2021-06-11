@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [2021-06-11 16:26:46] local.ERROR: SQLSTATE[42P01]: Undefined table: 7 ERROR:  relation "admin.all_salaries" does not exist
 LINE 1: ...me", max(created_at) as created_at, count(*) from admin.all_...
                                                              ^ (SQL: select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_salaries  WHERE extract(year from created_at)=2021 AND extract(month from created_at)=11   group by schema_name) (View: C:\xampp\htdocs\admin\resources\views\customer\usage\modules.blade.php) {"userId":2,"exception":"[object] (Facade\\Ignition\\Exceptions\\ViewException(code: 0): SQLSTATE[42P01]: Undefined table: 7 ERROR:  relation \"admin.all_salaries\" does not exist
@@ -2590,3 +2591,5 @@ LINE 1: ...) as created_at from admin.all_login_locations a  and \"table...
 #60 C:\\xampp\\htdocs\\admin\\index.php(21): require_once('C:\\\\xampp\\\\htdocs...')
 #61 {main}
 "} 
+=======
+>>>>>>> a0f3938fcddfcd1220be26b5fe2708980e97fbea

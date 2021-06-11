@@ -625,12 +625,9 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                    class="icon-arrow-right"></i>My Schools </a>
                                    <ul class="tree-2">
 
-                                    <?php  { ?>
-                                        
-
-                                     <?php } ?>
-                                     
+                                    
                                     <li><a href="<?= url('Analyse/myschools') ?>" data-i18n="nav.extra-components.session-timeout"> List of Schools</a></li>
+                                   
 
                                     <li><a href="<?= url('Analyse/myreport') ?>" data-i18n="nav.extra-components.offline">Task Report</a></li>
                                     <li><a href="<?= url('sales/schoolVisit/1') ?>" data-i18n="nav.extra-components.session-timeout">School Visitation</a></li>

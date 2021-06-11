@@ -101,11 +101,11 @@ function number_to_words($number) {
     return $res;
 }
 
+
 function userAccessRole() {
     $user_id = \Auth::user()->id;
-
     if ((int) $user_id > 0) {
-        $user = \App\Models\User::find($user_id);  
+        $user = \App\Model\User::find($user_id);  
         $permission = \App\Models\PermissionRole::where('role_id', $user->role_id)->get();
         $objet = array();
         if (count($permission) > 0) {
@@ -279,6 +279,11 @@ function btn_attendance($id, $method, $class, $name) {
 
     function remove_comma($string_number) {
         return trim(str_replace(',', '', $string_number));
+    }
+
+
+    function school_full_name($schema_name = null){
+        return \App\Models\Client::where('username',$schema_name)->first()->name;
     }
 
 

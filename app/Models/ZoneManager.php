@@ -17,6 +17,6 @@ class ZoneManager extends Model {
     }
 
     public function user() {
-        return $this->hasOne(\App\Models\User::class,'user_id', 'id');
+        return $this->belongsTo(\App\Models\User::class,'user_id', 'id');
     }
 }
