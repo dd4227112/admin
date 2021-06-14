@@ -137,8 +137,8 @@ function createRoute() {
     $url = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
     $url_param = explode('/', $url);
 
-    $controller = isset($url_param[2]) && !empty($url_param[2]) ? $url_param[2] . '' : 'analyse';
-    $method = isset($url_param[3]) && !empty($url_param[3]) ? $url_param[3] : 'index';
+    $controller = isset($url_param[1]) && !empty($url_param[1]) ? $url_param[1] . '' : 'analyse';
+    $method = isset($url_param[2]) && !empty($url_param[2]) ? $url_param[2] : 'index';
     $view = $method == 'view' ? 'show' : $method;
 
     return in_array($controller, array('public', 'storage')) ? NULL : ucfirst($controller) . '@' . $view;
@@ -284,6 +284,10 @@ function btn_attendance($id, $method, $class, $name) {
 
     function school_full_name($schema_name = null){
         return \App\Models\Client::where('username',$schema_name)->first()->name;
+    }
+
+    function warp($word,$size = 20){
+        return wordwrap($word,$size,"<br />\n");
     }
 
 

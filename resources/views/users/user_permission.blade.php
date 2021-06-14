@@ -34,24 +34,22 @@
 
                 <div class="col-lg-6">
                     <div class="card">
-                        <div class="card-header d-flex justify-content-between">
-                            <h5 class="card-header-text">Permission group</h5>
-                            <h5 class="card-header-text">
-
-                                <?php
-                                $user_roles = \App\Models\Role::get();
-                               ?>
-                                <span style="float: right">
-                                    <select class="form-control" style="width:200px;" id='permission'>
+                        <div class="card-header row">
+                            <div class="col-sm-6">
+                              <h6 class="card-header-text">Permission group</h6>
+                            </div>
+                            <div class="col-sm-6">
+                               <?php $user_roles = \App\Models\Role::get(); ?>
+                                <span>
+                                    <select class="form-control select2"  id='permission'>
                                         <option></option>
                                         <?php foreach ($user_roles as $u_role) { ?>
                                         <option value="<?= $u_role->id ?>" <?= (int) request('id') > 0 && request('id') == $u_role->id ? 'selected' : '' ?> ><?= $u_role->name  ?></option>
                                         <?php } ?>
                                     </select>
                                 </span>
-
-                            </h5>
-
+                          
+                            </div>
                         </div>
                         <div class="card-block accordion-block">
                             <div id="accordion" role="tablist" aria-multiselectable="true">

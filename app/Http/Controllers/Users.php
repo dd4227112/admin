@@ -291,25 +291,34 @@ class Users extends Controller {
                 'phone' => 'required|max:255',
             ]);
 
-            $filename = '';
-            if (!empty(request('medical_report'))) {
-                $file = request()->file('medical_report');
-                $filename = time() . rand(11, 8894) . '.' . $file->guessExtension();
-                $filePath = base_path() . '/storage/uploads/images/';
-                $file->move($filePath, $filename);
-            }
+            // $filename = '';
+            // if (!empty(request('medical_report'))) {
+            //     $file = request()->file('medical_report');
+            //     $filename = time() . rand(11, 8894) . '.' . $file->guessExtension();
+            //     $filePath = base_path() . '/storage/uploads/images/';
+            //     $file->move($filePath, $filename);
+            // }
 
-            $filename1 = '';
-            if (!empty(request('academic_certificates'))) {
-                $file = request()->file('academic_certificates');
-                $filename1 = time() . rand(11, 8894) . '.' . $file->guessExtension();
-                $filePath = base_path() . '/storage/uploads/images/';
-                $file->move($filePath, $filename1);
-            }
+            // $filename1 = '';
+            // if (!empty(request('academic_certificates'))) {
+            //     $file = request()->file('academic_certificates');
+            //     $filename1 = time() . rand(11, 8894) . '.' . $file->guessExtension();
+            //     $filePath = base_path() . '/storage/uploads/images/';
+            //     $file->move($filePath, $filename1);
+            // }
 
-            $user = User::find($id)->update(request()->except('medical_report', 'academic_certificates'));
-            User::find($id)->update(['medical_report' => $filename, 'academic_certificates' => $filename1]);
-            return redirect('/')->with('success', 'User ' . request('firstname') . ' ' . request('lastname') . ' updated successfully');
+            // $filename2 = '';
+            // if (!empty(request('employment_contract'))) {
+            //     $file = request()->file('employment_contract');
+            //     $filename2 = time() . rand(11, 8894) . '.' . $file->guessExtension();
+            //     $filePath = base_path() . '/storage/uploads/images/';
+            //     $file->move($filePath, $filename2);
+            // }
+             
+             $user = User::find($id)->update(request()->all());
+         //  $user = User::find($id)->update(request()->except('medical_report', 'academic_certificates','employment_contract'));
+         //  User::find($id)->update(['medical_report' => $filename, 'academic_certificates' => $filename1,'employment_contract' => $filename2]);
+            return redirect('/users/show/'.$id)->with('success', 'User ' . request('firstname') . ' ' . request('lastname') . ' updated successfully');
         }
         $this->data['id'] = $id;
 
@@ -354,7 +363,7 @@ class Users extends Controller {
 
     //Changing user profile image
     public function changePhoto() {
-          $file = request('photo');
+          $file = request()->file('photo');
           $user_file_id = $this->saveFile($file, 'company/contracts');
           $data = [
             'company_file_id' => $user_file_id

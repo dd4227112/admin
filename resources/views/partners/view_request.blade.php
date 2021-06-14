@@ -152,7 +152,7 @@
                     $checksystem = DB::table('admin.all_setting')->where('schema_name', $request->client->username)->first();
                         $bank = \App\Models\IntegrationBankAccount::where('integration_request_id', $request->id)->first();
                         if (!empty($checksystem)) {
-                            $bank = DB::table($request->client->username . '.bank_accounts')->where('refer_bank_id', 8)->first();
+                            $bank = DB::table($request->client->username . '.bank_accounts')->where('id', $request->bank_account_id)->first();
                             if(!empty($bank)){
                                 $refer_bank = $bank->name;
                                 $number = $bank->number;
