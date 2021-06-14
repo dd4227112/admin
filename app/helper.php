@@ -138,7 +138,7 @@ function createRoute() {
     $url_param = explode('/', $url);
 
     $controller = isset($url_param[1]) && !empty($url_param[1]) ? $url_param[1] . '' : 'analyse';
-    $method = isset($url_param[22]) && !empty($url_param[22]) ? $url_param[22] : 'index';
+    $method = isset($url_param[2]) && !empty($url_param[2]) ? $url_param[2] : 'index';
     $view = $method == 'view' ? 'show' : $method;
 
     return in_array($controller, array('public', 'storage')) ? NULL : ucfirst($controller) . '@' . $view;
