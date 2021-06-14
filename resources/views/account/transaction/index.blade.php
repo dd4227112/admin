@@ -53,7 +53,7 @@
                                                     <div class="form-group row">
                                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Start Date</label>
                                                         <div class="col-md-9 col-sm-9 col-xs-12">
-                                                            <input type="date"  class="form-control calendar" id="from_date" name="from_date" value="<?=date('Y-01-01')?>"> 
+                                                            <input type="date"  class="form-control calendar" id="from_date" name="from_date" value="<?=$from_date?>"> 
                                                         </div>
                                                     </div>
                                                 </div>
@@ -62,7 +62,7 @@
                                                     <div class="form-group row">
                                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">End Date</label>
                                                         <div class="col-md-9 col-sm-9 col-xs-12"> 
-                                                            <input type="date" class="form-control" id="to_date" name="to_date"  value="<?=date('Y-m-d')?>">
+                                                            <input type="date" class="form-control" id="to_date" name="to_date"  value="<?=$to_date?>">
                                                         </div>
                                                     </div>
                                                 </div>                     

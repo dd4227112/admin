@@ -144,7 +144,7 @@ $file = 'invoices.receipt_templates.' . $template;
                                                                                        $setting = \App\Models\Setting::first();
                                                                                     }
                                                                                     ?>
-                                                                                    <img src="<?= $setting->signature ?>" width="75"
+                                                                                    <img src="<?= $setting->signature ?? '' ?>" width="75"
                                                                                          height="54">
                                                                                 <?php } ?>---------<br>With Thanks     
                                                                                  <div style="margin-left: -100%;  margin-top: -27%;">

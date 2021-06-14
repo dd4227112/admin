@@ -299,7 +299,7 @@ foreach ($user_permission as $permis) {
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">Medical Report</th>
-                                                                        <td><a target='_break' href="<?= $user->medical_report ?? '' ?>" class="btn btn-info btn-sm"> View Report</a></td>
+                                                                        <td><a target='_break' href="<?=  '/storage/uploads/images/'.$user->medical_report ?? '' ?>" class="btn btn-info btn-sm"> View Report</a></td>
                                                                     </tr>
 
                                                                     <tr>

@@ -29,23 +29,21 @@ class Revenue extends Controller {
            }
            $page = 'revenue';
        } else { 
-            if($_POST) {
-
-                if ($_POST) {
-                    $from_date = request("from_date");
-                    $to_date = request("to_date");
+            
+               if($_POST) {
+                     $from_date = request("from_date");
+                     $to_date = request("to_date");
                  } else {
                     $from_date = date('Y-01-01');
                     $to_date = date('Y-m-d');
-                }
+                } 
+                $this->data['from_date'] = $from_date;
+                $this->data['to_date'] = $to_date;
                 $this->data['id'] = null;
                 $this->data['revenues'] = \App\Models\Revenue::where('date', '>=', $from_date)->where('date', '<=', $to_date)->get();
                 $this->data['expenses'] = \App\Models\ReferExpense::whereIn('financial_category_id', [1])->get();
             }
-          
-        //    dd($this->data['revenues']);
-       }
-       return view('account.transaction.' . $page, $this->data);
+            return view('account.transaction.' . $page, $this->data);
     }
 
 
@@ -70,7 +68,7 @@ class Revenue extends Controller {
             $this->data["payment_types"] = \App\Models\PaymentType::all();
             $this->data['banks'] = \App\Models\BankAccount::all();
             $this->data['revenue'] = \App\Models\Revenue::where('id', $id)->first();
-            dd($this->data['revenue']);
+          
             if ($this->data['revenue']) {
                 $this->data["category"] = \App\Models\ReferExpense::whereIn('financial_category_id',[1])->get();
                 if ($_POST) {
