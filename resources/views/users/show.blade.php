@@ -246,7 +246,12 @@ foreach ($user_permission as $permis) {
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">Academic Certificates</th>
-                                                                        <td><a href="<?=  isset($user->academic_certificates) ? url('/storage/uploads/images/' . $user->academic_certificates) : '' ?>" class="btn btn-default btn-sm"> View Certificate</a></td>
+                                                                        <td><a  target='_break' href="<?=  $user->academic_certificates ??  '' ?>" class="btn btn-default btn-sm"> View Certificate</a></td>
+                                                                    </tr>
+
+                                                                    <tr>
+                                                                        <th scope="row">Employment Contract</th>
+                                                                        <td><a target='_break' href="<?=  $user->employment_contract ??  '' ?>" class="btn btn-info btn-sm"> View Certificate</a></td>
                                                                     </tr>
                                                                     <tr>
                                                                          <?php if(can_access('upload_users')) { ?>
@@ -294,7 +299,7 @@ foreach ($user_permission as $permis) {
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">Medical Report</th>
-                                                                        <td><a href="<?= isset($user->medical_report) ? url('/storage/uploads/images/' . $user->medical_report) : '' ?>" class="btn btn-info btn-sm"> View Report</a></td>
+                                                                        <td><a target='_break' href="<?= $user->medical_report ?? '' ?>" class="btn btn-info btn-sm"> View Report</a></td>
                                                                     </tr>
 
                                                                     <tr>
@@ -307,10 +312,8 @@ foreach ($user_permission as $permis) {
                                                                       <?php } ?>
                                                                     </tr>
                                                                     
-
-
-                                                            <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                                                                <div class="modal-dialog" role="document">
+                                                                <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                                                 <div class="modal-dialog" role="document">
                                                                     <div class="modal-content">
                                                                     <div class="modal-header">
                                                                         <h5 class="modal-title" id="exampleModalLongTitle">Update Designation</h5>
