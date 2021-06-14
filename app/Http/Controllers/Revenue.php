@@ -19,20 +19,31 @@ class Revenue extends Controller {
 
     public function index() {
         $id = request()->segment(3);
-      //  dd(request('from_date'));
-       $page = 'index';
+        $page = 'index';
        if ((int) $id) {
            $this->data['id'] = $id;
-           if ($_POST) {
+           if ($_POST) { 
                $this->data['revenues'] = \App\Models\Revenue::where('refer_expense_id', $id)->where('date', '>=', request('from_date'))->where('date', '<=', request('to_date'))->get();
            } else {
                $this->data['revenues'] = \App\Models\Revenue::where('refer_expense_id', $id)->get();
            }
            $page = 'revenue';
-       } else {
-           $this->data['id'] = null;
-           $this->data['revenues'] = \App\Models\Revenue::all();
-           $this->data['expenses'] = \App\Models\ReferExpense::whereIn('financial_category_id', [1])->get();
+       } else { 
+            if($_POST) {
+
+                if ($_POST) {
+                    $from_date = request("from_date");
+                    $to_date = request("to_date");
+                 } else {
+                    $from_date = date('Y-01-01');
+                    $to_date = date('Y-m-d');
+                }
+                $this->data['id'] = null;
+                $this->data['revenues'] = \App\Models\Revenue::where('date', '>=', $from_date)->where('date', '<=', $to_date)->get();
+                $this->data['expenses'] = \App\Models\ReferExpense::whereIn('financial_category_id', [1])->get();
+            }
+          
+        //    dd($this->data['revenues']);
        }
        return view('account.transaction.' . $page, $this->data);
     }
@@ -59,6 +70,7 @@ class Revenue extends Controller {
             $this->data["payment_types"] = \App\Models\PaymentType::all();
             $this->data['banks'] = \App\Models\BankAccount::all();
             $this->data['revenue'] = \App\Models\Revenue::where('id', $id)->first();
+            dd($this->data['revenue']);
             if ($this->data['revenue']) {
                 $this->data["category"] = \App\Models\ReferExpense::whereIn('financial_category_id',[1])->get();
                 if ($_POST) {

@@ -86,7 +86,7 @@
                                         <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
                                             <thead>
                                                 <tr>
-                                                    <th class="col-sm-1"><?= ('#') ?></th>
+                                                    <th class="col-sm-1"><?= ('##') ?></th>
                                                     <th class="col-sm-2"><?= ('Name') ?></th>
                                                     <th class="col-sm-2">Payer name</th>
                                                     <th class="col-sm-1">Payer phone</th>
@@ -103,7 +103,7 @@
                                             <tbody>
                                                 <?php
                                                 $total_expense = 0;
-                                                if (!empty($revenues)) {
+                                                if (count($revenues) > 0) { //dd($revenues);
                                                     $i = 1;
                                                     foreach ($revenues as $revenue) {
                                                         ?>
@@ -136,7 +136,7 @@
                                                                 <?php echo date("d M Y", strtotime($revenue->date)); ?>
                                                             </td>                               
                                                             <td data-title="<?= ('expense_note') ?>">
-                                                                <?php echo $revenue->note; ?>
+                                                                <?php echo warp($revenue->note); ?>
                                                             </td>
                                                             <?php if (can_access('edit_revenue') || can_access('delete_revenue')) { ?>
                                                                 <td data-title="<?= ('action') ?>">
@@ -155,7 +155,7 @@
                                                     }
                                                 }
                                                 ?>
-                                            </tbody>
+                                            </tbody>  
                                             <?php if (!empty($revenues)) { ?>
                                                 <tfoot>
                                                     <tr>
@@ -166,6 +166,8 @@
                                                 </tfoot>
                                             <?php } ?>
                                         </table>
+
+                                       
                                     </div>
                 
 

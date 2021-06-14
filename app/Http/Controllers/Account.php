@@ -845,7 +845,8 @@ class Account extends Controller {
                         'recipient' => $user->firstname . ' ' . $user->lastname,
                         'voucher_no' => $voucher_no + 1,
                         'payer_name' => $payer_name,
-                    ]); 
+                    ]);             
+                    //dd($obj); 
                     $insert_id = DB::table('expenses')->insertGetId($obj);
                   } else {
                     $obj = array_merge($array, [
