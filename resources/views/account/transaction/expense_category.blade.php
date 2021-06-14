@@ -62,7 +62,7 @@
  
                                      <div class="row">
                                         <div class="col-sm-4">
-                                            <h5 class="page-header">
+                                            <h5 class="page-header"> 
                                                 
                                                 <a class="btn btn-success" href="<?php echo url('account/addtransaction/' . $id . '/' . $refer_id . '') ?>">
                                                     <i class="fa fa-plus"></i> 
@@ -209,7 +209,7 @@
 
                                                         if (isset($current_assets) && !empty($current_assets) && $id == 5) {
 
-                                                            foreach ($current_assets as $current_asset) {
+                                                            foreach ($current_assets as $current_asset) { 
                                                                 ?>
                                                                 <tr>
                                                                     <td data-title="<?= __('slno') ?>">
@@ -239,14 +239,14 @@
                                                                         <?php
                                                                         if (isset($current_asset->transaction_id)) {
                                                                             echo $current_asset->transaction_id;
-                                                                        } else {
+                                                                        } else { 
                                                                             //echo $expense->ref_no;
-                                                                        }
+                                                                        } 
                                                                         ?>
-                                                                    </td>
+                                                                    </td> 
                              
                                                                         <td data-title="<?= __('action') ?>">
-                                                                            <?php echo  '<a class="btn btn-sm" href="'.url('expense/delete/' . $current_asset->id . '/' . $id).'">delete</a>' ?>
+                                                                            <?php  //echo  '<a class="btn btn-sm" href="'.url('expense/delete/' . $current_asset->id . '/' . $id).'">delete</a>' ?> 
                                                                             <?php //echo '<a class="btn btn-sm" href="'.url('expense/voucher/' . $current_asset->id . '/' . $id).'">Payment Voucher</a>'; ?>
                                                                         </td>
                                                             

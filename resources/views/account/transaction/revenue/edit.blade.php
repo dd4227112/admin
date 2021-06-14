@@ -271,7 +271,7 @@ else
 </label>
 <div class="col-sm-8 col-xs-12">
     <div class="icon-addon addon-lg">
-    <input type="date" class="form-control calendar" id="date" name="date" value="<?= old('date',$revenue->date) ?>" required="true" >
+    <input type="date" class="form-control calendar" id="date" name="date" value="<?= $revenue->date ?>" required="true" >
 <span class="fa fa-calendar"></span>
         </div>
 </div>

@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('content')
 <?php $root = url('/') . '/public/' ?>
+<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
+
 <div class="main-body">
     <div class="page-wrapper">
         <!-- Page-header start -->
@@ -102,23 +104,24 @@
             <div class="row" id="schools">
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-header">
+                        <div class="card-header row">
+                         <div class="col-sm-8">
                             <h5>List of Schools Under <u><?= $staff->name ?></u></h5>
-                            <?php
-                            if (Auth::user()->role_id == 1) {
-                                ?>
-                                <span style="float: right">
-                                    <select class="form-control" style="width:300px;" id='taskdate'>
+                         </div>
+
+                          <div class="col-sm-4">
+                            <?php if (Auth::user()->role_id == 1) { ?>
+                                <span style="float: right2">
+                                    <select class="form-control select2" style="width:200px;" id='taskdate'>
                                         <option></option>
                                         <?php foreach ($users as $user) { ?>
                                             <option value="<?= $user->id ?>" <?= (int) request('user_id') > 0 && request('user_id') == $user->id ? 'selected' : '' ?>><?= $user->firstname . ' ' . $user->lastname ?></option>
                                         <?php } ?>
                                     </select>
-
                                 </span>
-
                             <?php } ?>
                         </div>
+                     </div>
                         
                         <div class="card-block">
                             <div class="table-responsive">
@@ -142,20 +145,18 @@
                                            
                                             <tr>
                                                 <td><?= $i++ ?></td>
-                                                <td><?= $school->client->name ?></td>
-                                                <td><?= $school->client->address ?></td>
+                                                <td><?= warp($school->client->name) ?></td>
+                                                <td><?= warp($school->client->address) ?></td>
                                                 <td><?= $school->client->phone ?></td>
                                                 <td>
-                                                    <a href="https://<?=$school->client->username?>.shulesoft.com/" target="_blank" rel="noopener noreferrer"><?=$school->client->username?> Link</a>
+                                                    <a href="https://<?=$school->client->username?>.shulesoft.com/" target="_blank" rel="noopener noreferrer"><?=warp($school->client->name)?></a>
                                                 </td>
                                                
                                                 <?php
-                                                echo '<td>';
-
+                                                 echo '<td>';
                                                  echo '<a href="' . url('customer/profile/' . $school->client->username) . '" class="btn btn-success btn-sm"> View</a>';
-
-                                                echo '</td>';
-                                                echo '</tr>';
+                                                 echo '</td>';
+                                                 echo '</tr>';
                                                  }
                                             ?>
                                     </tbody>
@@ -239,8 +240,16 @@
     </div>
 </div>
 
-<script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
+
 <script type="text/javascript">
+
+    $(".select2").select2({
+        theme: "bootstrap",
+        dropdownAutoWidth: false,
+        allowClear: false,
+        debug: true
+    });
+    
     $('#taskdate').change(function (event) {
         var taskdate = $(this).val();
         if (taskdate === '') {

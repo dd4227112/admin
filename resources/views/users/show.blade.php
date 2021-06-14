@@ -246,7 +246,12 @@ foreach ($user_permission as $permis) {
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">Academic Certificates</th>
-                                                                        <td><a href="<?=  isset($user->academic_certificates) ? url('/storage/uploads/images/' . $user->academic_certificates) : '' ?>" class="btn btn-default btn-sm"> View Certificate</a></td>
+                                                                        <td><a  target='_break' href="<?=  $user->academic_certificates ??  '' ?>" class="btn btn-default btn-sm"> View Certificate</a></td>
+                                                                    </tr>
+
+                                                                    <tr>
+                                                                        <th scope="row">Employment Contract</th>
+                                                                        <td><a target='_break' href="<?=  $user->employment_contract ??  '' ?>" class="btn btn-info btn-sm"> View Certificate</a></td>
                                                                     </tr>
                                                                     <tr>
                                                                          <?php if(can_access('upload_users')) { ?>
@@ -294,7 +299,7 @@ foreach ($user_permission as $permis) {
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">Medical Report</th>
-                                                                        <td><a href="<?= isset($user->medical_report) ? url('/storage/uploads/images/' . $user->medical_report) : '' ?>" class="btn btn-info btn-sm"> View Report</a></td>
+                                                                        <td><a target='_break' href="<?= $user->medical_report ?? '' ?>" class="btn btn-info btn-sm"> View Report</a></td>
                                                                     </tr>
 
                                                                     <tr>
@@ -307,10 +312,8 @@ foreach ($user_permission as $permis) {
                                                                       <?php } ?>
                                                                     </tr>
                                                                     
-
-
-                                                            <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-                                                                <div class="modal-dialog" role="document">
+                                                                <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                                                 <div class="modal-dialog" role="document">
                                                                     <div class="modal-content">
                                                                     <div class="modal-header">
                                                                         <h5 class="modal-title" id="exampleModalLongTitle">Update Designation</h5>
@@ -658,8 +661,8 @@ foreach ($user_permission as $permis) {
                                             <?php  $kpi_ids = \App\Models\KPIUser::where('user_id',$user->id)->get(['kpi_id']);
                                                  $kpis = \App\Models\KeyPerfomanceIndicator::whereIn('id',$kpi_ids)->get();
                                                
-                                            if(sizeof($kpis) > 0){ $i = 1;
-                                                foreach($kpis as $kpi){
+                                            if(sizeof($kpis) > 0){ 
+                                                $i = 1; foreach($kpis as $kpi){
                                                 ?>
                                             <tr>
                                                 <td><?=$i++?> </td>
@@ -670,7 +673,9 @@ foreach ($user_permission as $permis) {
                                                 <a class="btn btn-warning btn-sm" href="{{ url('users/evaluatekpi/'.$kpi->id .'/'.$user->id) }}">Evaluate</a>
                                                 </td>
                                             </tr>
-                                            <?php } } ?>
+                                            <?php } 
+                                               } 
+                                               ?>
                                             </tbody>
 
                                         </table>
@@ -720,10 +725,10 @@ foreach ($user_permission as $permis) {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                  <?php   if(count($attendances) > 0) { ?>
+                                                  <?php  if(sizeof($attendances) > 0) {  ?>
                                                     <?php foreach ($attendances as $attendance) { ?>
                                                         <tr>
-                                                            <td><?= date('d M Y', strtotime(custom_date($attendance->created_at))) ?></td>
+                                                            <td><?= date('d M Y', strtotime($attendance->created_at)) ?></td>
                                                             <td><?= $attendance->status == 1 ? 'Present' : 'Absent' ?></td>
                                                             <td><?= date('Y', strtotime($attendance->timein)) > 1970 ? date('h:i', strtotime($attendance->timein)) : '' ?></td>
                                                             <td><?= $attendance->late_comment ?></td>

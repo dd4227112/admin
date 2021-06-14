@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [2021-06-10 16:06:18] local.ERROR: SQLSTATE[26000]: Invalid sql statement name: 7 ERROR:  prepared statement "pdo_stmt_00000054" does not exist (SQL: select b.id, b.student_id, b.status, b.reference, b.prefix,b.date,b.sync,b.return_message,b.push_status,b.academic_year_id,b.created_at, b.updated_at, a.amount, c.name as student_name, 'faithlight' as schema_name, (select sub_invoice from  faithlight.setting limit 1) as sub_invoice   from  faithlight.invoices b join faithlight.student c on c.student_id=b.student_id join ( select sum(balance) as amount, a.invoice_id from faithlight.invoice_balances a group by a.invoice_id ) a on a.invoice_id=b.id where  a.amount >0  and b.sync <>1 order by random() limit 15) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 26000): SQLSTATE[26000]: Invalid sql statement name: 7 ERROR:  prepared statement \"pdo_stmt_00000054\" does not exist (SQL: select b.id, b.student_id, b.status, b.reference, b.prefix,b.date,b.sync,b.return_message,b.push_status,b.academic_year_id,b.created_at, b.updated_at, a.amount, c.name as student_name, 'faithlight' as schema_name, (select sub_invoice from  faithlight.setting limit 1) as sub_invoice   from  faithlight.invoices b join faithlight.student c on c.student_id=b.student_id join ( select sum(balance) as amount, a.invoice_id from faithlight.invoice_balances a group by a.invoice_id ) a on a.invoice_id=b.id where  a.amount >0  and b.sync <>1 order by random() limit 15) at /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Database/Connection.php:685)
 [stacktrace]
 #0 /usr/share/nginx/html/admin/vendor/laravel/framework/src/Illuminate/Database/Connection.php(645): Illuminate\\Database\\Connection->runQueryCallback()
@@ -15019,3 +15020,5 @@ LINE 1: ...rom \"constant\".\"refer_company_designations\" where \"constant\"...
 #38 /usr/share/nginx/html/admin/artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle()
 #39 {main}
 "} 
+=======
+>>>>>>> 48d1efc26d236fd55d107c5e5486101ee4cb6995

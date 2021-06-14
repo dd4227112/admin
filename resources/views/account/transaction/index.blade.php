@@ -53,7 +53,7 @@
                                                     <div class="form-group row">
                                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">Start Date</label>
                                                         <div class="col-md-9 col-sm-9 col-xs-12">
-                                                            <input type="date"  class="form-control calendar" id="from_date" name="from_date" value="<?=date('Y-01-01')?>"> 
+                                                            <input type="date"  class="form-control calendar" id="from_date" name="from_date" value="<?=$from_date?>"> 
                                                         </div>
                                                     </div>
                                                 </div>
@@ -62,7 +62,7 @@
                                                     <div class="form-group row">
                                                         <label class="control-label col-md-3 col-sm-3 col-xs-12">End Date</label>
                                                         <div class="col-md-9 col-sm-9 col-xs-12"> 
-                                                            <input type="date" class="form-control" id="to_date" name="to_date"  value="<?=date('Y-m-d')?>">
+                                                            <input type="date" class="form-control" id="to_date" name="to_date"  value="<?=$to_date?>">
                                                         </div>
                                                     </div>
                                                 </div>                     
@@ -86,7 +86,7 @@
                                         <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
                                             <thead>
                                                 <tr>
-                                                    <th class="col-sm-1"><?= ('#') ?></th>
+                                                    <th class="col-sm-1"><?= ('##') ?></th>
                                                     <th class="col-sm-2"><?= ('Name') ?></th>
                                                     <th class="col-sm-2">Payer name</th>
                                                     <th class="col-sm-1">Payer phone</th>
@@ -103,7 +103,7 @@
                                             <tbody>
                                                 <?php
                                                 $total_expense = 0;
-                                                if (!empty($revenues)) {
+                                                if (count($revenues) > 0) { //dd($revenues);
                                                     $i = 1;
                                                     foreach ($revenues as $revenue) {
                                                         ?>
@@ -136,7 +136,7 @@
                                                                 <?php echo date("d M Y", strtotime($revenue->date)); ?>
                                                             </td>                               
                                                             <td data-title="<?= ('expense_note') ?>">
-                                                                <?php echo $revenue->note; ?>
+                                                                <?php echo warp($revenue->note); ?>
                                                             </td>
                                                             <?php if (can_access('edit_revenue') || can_access('delete_revenue')) { ?>
                                                                 <td data-title="<?= ('action') ?>">
@@ -155,7 +155,7 @@
                                                     }
                                                 }
                                                 ?>
-                                            </tbody>
+                                            </tbody>  
                                             <?php if (!empty($revenues)) { ?>
                                                 <tfoot>
                                                     <tr>
@@ -166,6 +166,8 @@
                                                 </tfoot>
                                             <?php } ?>
                                         </table>
+
+                                       
                                     </div>
                 
 

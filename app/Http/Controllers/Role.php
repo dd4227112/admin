@@ -11,7 +11,7 @@ class Role extends Controller
         $this->middleware('auth');
     }
 
-    public function userPermission() {
+    public function userpermission() {
         $id = request()->segment(3);
         $this->data['set']  = (int) $id;
         $this->data['roles']  = \App\Models\Role::orderBy('id', 'DESC')->paginate(12);

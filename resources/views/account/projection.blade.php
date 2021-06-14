@@ -98,7 +98,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                         foreach ($schemas as $schema) {
                                                             ?>
                                                             <tr>
-                                                                <td><?= $schema->username?></td>
+                                                                <td><?= school_full_name($schema->username) ?></td>
                                                                 <td><?= date('d M Y',strtotime($schema->created_at))  ?></td>
                                                                 <td> 
                                                                     <?php 
@@ -178,10 +178,10 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                         $total_students = 0;
                                                         $total_price = 0;
                                                         $schools = App\Models\InvoiceSent::orderBy('id', 'DESC')->get();
-                                                        if(count($schools)){
+                                                        if(count($schools)){ 
                                                         foreach ($schools as $school) {?>
                                                             <tr>
-                                                                <td><?= ucfirst($school->schema_name) ?></td>
+                                                                <td><?= school_full_name($school->schema_name) ?></td>
                                                                 <td><?php echo $school->student; $total_students += $school->student; ?></td>
                                                                 <td><?php echo $school->amount; $total_price += $school->amount;?> </td>
                                                                 <td><?php echo $school->user->name;?> </td>
