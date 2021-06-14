@@ -612,7 +612,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
 
                                 <?php if (Auth::user()->role_id == 1) { ?>
                                     <li>
-                                       <a href="<?= url('Role/userPermission') ?>"
+                                       <a href="<?= url('role/userpermission') ?>"
                                              data-i18n="nav.extra-components.session-timeout">Permissions
                                         </a>
                                     </li>

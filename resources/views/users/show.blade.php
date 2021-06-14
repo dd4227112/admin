@@ -658,8 +658,8 @@ foreach ($user_permission as $permis) {
                                             <?php  $kpi_ids = \App\Models\KPIUser::where('user_id',$user->id)->get(['kpi_id']);
                                                  $kpis = \App\Models\KeyPerfomanceIndicator::whereIn('id',$kpi_ids)->get();
                                                
-                                            if(sizeof($kpis) > 0){ $i = 1;
-                                                foreach($kpis as $kpi){
+                                            if(sizeof($kpis) > 0){ 
+                                                $i = 1; foreach($kpis as $kpi){
                                                 ?>
                                             <tr>
                                                 <td><?=$i++?> </td>
@@ -670,7 +670,9 @@ foreach ($user_permission as $permis) {
                                                 <a class="btn btn-warning btn-sm" href="{{ url('users/evaluatekpi/'.$kpi->id .'/'.$user->id) }}">Evaluate</a>
                                                 </td>
                                             </tr>
-                                            <?php } } ?>
+                                            <?php } 
+                                               } 
+                                               ?>
                                             </tbody>
 
                                         </table>
@@ -720,7 +722,7 @@ foreach ($user_permission as $permis) {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                  <?php  if(count($attendances)) { ?>
+                                                  <?php  if(sizeof($attendances) > 0) {  ?>
                                                     <?php foreach ($attendances as $attendance) { ?>
                                                         <tr>
                                                             <td><?= date('d M Y', strtotime($attendance->created_at)) ?></td>
