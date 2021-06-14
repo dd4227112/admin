@@ -876,7 +876,7 @@ class Account extends Controller {
 
                  
 
-                if (request("from_expense") !== request("to_expense")) {
+                if (request("from_expense") == request("to_expense")) {
                     return redirect()->back()->with('error', 'You can not transfer to the same account');
                 }
                 $refer_expense = \App\Models\ReferExpense::find(request("from_expense"));
@@ -909,22 +909,22 @@ class Account extends Controller {
 
                     $insert_id = DB::table('current_assets')->insertGetId($obj, "id");
                 } else {
-
                     $obj = array_merge($array, [
                         'recipient' => request('payer_name'),
                         'payer_name' => $payer_name,
                     ]);
                     $insert_id = DB::table('current_assets')->insertGetId($obj, "id");
                 }
-                return redirect( url("account/transaction/$id"))->with('success', 'success');
+                return redirect(url("account/transaction/$id"))->with('success', 'success');
                 // return redirect()->back()->with('success','Success');
             } else {
                 $obj = array_merge($array, [
                     'amount' => remove_comma(request('amount')),
-                ]);
+                ]); 
                 $insert_id = DB::table('expenses')->insertGetId($obj);
                 $type = (int) $insert_id ? 'success' : 'error';
-                return redirect()->with($type, $type);
+             
+                return redirect()->back()->with($type, $type);
             }
         }
              if($id == 5) {
@@ -1170,9 +1170,9 @@ class Account extends Controller {
             } else if ((int) $bank_id) {
                 $this->data['expenses'] = DB::SELECT('SELECT transaction_id,date,amount,' . "'Bank'" . ' as payment_method , note from admin. bank_transactions WHERE bank_account_id=' . $bank_id . ' and payment_type_id <> 1 and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . 'order by date desc');
                 $this->data['current_assets'] = DB::SELECT('SELECT * from admin. current_asset_transactions WHERE refer_expense_id=' . $id . ' and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . 'order by date desc');
-            } else {
+            } else {  
                 $this->data['expenses'] = array();
-                $this->data['current_assets'] = DB::SELECT('SELECT * from admin. current_asset_transactions WHERE refer_expense_id=' . $id . ' and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . ' ');
+                $this->data['current_assets'] = DB::SELECT('SELECT * from admin.current_asset_transactions WHERE refer_expense_id=' . $id . ' and "date" >= ' . "'$from_date'" . ' AND "date" <= ' . "'$to_date'" . ' ');
             }
         } else if (preg_match('/EC-1001/', $refer_expense->code) && $id = 4 && (int) $refer_expense->predefined > 0) {
             $sql = 'select sum(b.employer_amount) as amount ,payment_date as date,\'' . $refer_expense->name . '\' as note,\' ' . $refer_expense->name . '\' as name, \'Payroll\' as payment_method,null as "expenseID",extract(month from payment_date)||\'\'||extract(year from payment_date) as ref_no, 1 AS predefined, null as id  from admin.salaries a join admin.salary_pensions b on a.id=b.salary_id where b.pension_id=' . $refer_expense->predefined . '  group by a.payment_date UNION ALL (SELECT a.amount, a.date, a.note, b.name, a.payment_method, a."expenseID", a.ref_no, null as predefined, b.id FROM admin.expenses a JOIN admin.refer_expense b ON a.refer_expense_id=b.id WHERE b.id=' . $refer_expense->id . ' ORDER BY a.date DESC)';

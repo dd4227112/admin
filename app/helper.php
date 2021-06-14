@@ -105,7 +105,7 @@ function number_to_words($number) {
 function userAccessRole() {
     $user_id = \Auth::user()->id;
     if ((int) $user_id > 0) {
-        $user = \App\Models\User::find($user_id);  
+        $user = \App\Model\User::find($user_id);  
         $permission = \App\Models\PermissionRole::where('role_id', $user->role_id)->get();
         $objet = array();
         if (count($permission) > 0) {
@@ -138,7 +138,7 @@ function createRoute() {
     $url_param = explode('/', $url);
 
     $controller = isset($url_param[1]) && !empty($url_param[1]) ? $url_param[1] . '' : 'analyse';
-    $method = isset($url_param[1]) && !empty($url_param[1]) ? $url_param[1] : 'index';
+    $method = isset($url_param[2]) && !empty($url_param[2]) ? $url_param[2] : 'index';
     $view = $method == 'view' ? 'show' : $method;
 
     return in_array($controller, array('public', 'storage')) ? NULL : ucfirst($controller) . '@' . $view;

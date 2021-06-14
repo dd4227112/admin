@@ -193,23 +193,23 @@
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong>Scanned Academic Certificates:</strong>
-                                            <input id="certificate" placeholder="Academic Certificates" type="file" class="form-control" name="academic_certificates" value="<?=$user->academic_certificates?>" >
-                                            <span class="hinge">Please Scan all academic certificates, place them into one document, upload them</span>
+                                            <input id="certificate" placeholder="Academic Certificates" type="text" class="form-control" name="academic_certificates" value="<?=$user->academic_certificates?>" >
+                                            <span class="hinge">Please Scan all academic certificates, place them into one document, upload them in company Google drive account, and paste a shared link here</span>
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong>Scanned Medical Report:</strong>
-                                            <input id="location" placeholder="Academic Certificates" type="file" class="form-control" name="medical_report" value="<?=$user->medical_report?>" >
-                                            <span class="hinge">Please Scan health check report from registered hospital, place them into one document, upload them</span>
+                                            <input id="location" placeholder="Academic Certificates" type="text" class="form-control" name="medical_report" value="<?=$user->medical_report?>" >
+                                            <span class="hinge">Please Scan health check report from registered hospital, place them into one document, upload them in company Google drive account, and paste a shared link here</span>
                                         </div>
                                     </div>
 
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong>Scanned Employment contract:</strong>
-                                            <input id="location" placeholder="Employment contract" type="file" class="form-control" name="employment_contract" value="<?=$user->employment_contract?>" >
-                                            <span class="hinge">Please Scan employment contract  place them into one document,Upload them</span>
+                                            <input id="location" placeholder="Employment contract" type="text" class="form-control" name="employment_contract" value="<?=$user->employment_contract?>" >
+                                            <span class="hinge">Please Scan employment contract upload them in company Google drive account, and paste a shared link here</span>
                                         </div>
                                     </div>
 
@@ -305,7 +305,6 @@ $("#town").geocomplete()
 </script>
 <script  src="<?= url('public') ?>/intlTelInput/js/intlTelInput.js"></script>
 <script  src="<?= url('public') ?>/js/customTelInput.js"></script>
-
 <script>
 $(document).ready(function () {
     $(".phoneNumber").intlTelInput();
@@ -320,6 +319,5 @@ $('.phoneNumber').blur(function () {
 
     }
 });
-
 </script>
 @endsection

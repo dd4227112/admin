@@ -6,8 +6,7 @@
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4>Company Revenues</h4>
-                <span>Show revenue summary</span>
+                <h4>Reconciliation</h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -18,7 +17,7 @@
                     </li>
                     <li class="breadcrumb-item"><a href="#!">Accounts</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Revenues</a>
+                    <li class="breadcrumb-item"><a href="#!">Reconciliation</a>
                     </li>
                 </ul>
             </div>
