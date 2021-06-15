@@ -208,7 +208,7 @@
                                     $array = array("0" => __("select"));
                                     $banks = \App\Models\BankAccount::all();
                                     foreach ($banks as $bank) {
-                                        $array[$bank->id] = $bank->name;
+                                        $array[$bank->id] = $bank->branch;
                                     }
                                     echo form_dropdown("bank_account_id", $array, old("bank_account_id"), "id='bank_account_id' class='form-control'");
                                     ?>

@@ -6,18 +6,15 @@
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4> Subscription -<?= $type ?></h4>
+                <h4> Subscription - <?= $type ?></h4>
                 <span></span>
             </div>
         </div>
     
-
         <div class="page-body">
           <div class="row">
             <div class="col-sm-12">
              <div class="card">
-
-                
                 <?php if ($type == 'allowance' || $type == 'deduction') { ?>
                     <div class="col-sm-12 col-xs-12 col-sm-offset-3 list-group">
                         <div class="list-group-item">
@@ -49,9 +46,8 @@
                                 <table id="example1" class="table table-striped table-bordered table-hover no-footer dataTable tablesubscriber">
                                     <thead>
                                         <tr>
-                                            <th class="col-sm-1"><?= __('slno') ?></th>
+                                            <th class="col-sm-1"><?= __('#') ?></th>
                                             <th class="col-sm-2">Name</th>
-                                            <th class="col-sm-2">User type</th>
                                             <th class="col-sm-2">Email</th>
                                             <th class="col-sm-2">Phone Number</th>
                                             <th class="col-sm-2">Amount</th>
@@ -69,16 +65,14 @@
                                                     'table' => $user->table
                                                 );
                                                 ?>
-                                                <tr id="std<?= $user->id; ?>">
-                                                    <td data-title="<?= __('slno') ?>">
+                                                <tr>
+                                                    <td data-title="<?= __('#') ?>">
                                                         <?php echo $i; ?>
                                                     </td>
                                                     <td data-title="<?= __('student_name') ?>">
-                                                        <?php echo $user->name; ?>
+                                                        <?php echo $user->firstname.' '.$user->lastname; ?>
                                                     </td>
-                                                    <td data-title="<?= __('usertype') ?>">
-                                                        <?php echo $user->usertype; ?>
-                                                    </td>
+                                             
                                                     <td data-title="<?= __('email') ?>">
                                                         <?php echo $user->email; ?>
                                                     </td>
@@ -93,17 +87,16 @@
                                                         ?>
                                                         <input placeholder="<?= __("amount") ?>" type="number" class="form-control" id="amount<?= $user->id ?>" name="amount" value="<?= $amount ?>" >
                                                     </td>
-                                                    <td data-title="<?= __('student_section') ?>">
-                                                        <input  type="date" class="form-control calendar" id="deadline<?= $user->id ?>" name="deadline" value="<?= date($deadline)?>" >
+                                                    <td>
+                                                        <input  type="date" class="form-control" id="deadline<?= $user->id ?>" name="deadline" value="<?= date($deadline)?>" >
                                                     </td>
                                                     <td data-title="<?= __('action') ?>">
                                                         <?php
-                                                        if (in_array($user->id . $user->table, $subscriptions)) {
+                                                        if (in_array($user->id, $subscriptions)) {
                                                             ?>
-                                                            <a href="#" onclick="return false" onmousedown="remove_user('<?= $user->id ?>')" class="btn btn-danger btn-xs mrg"><i class="fa fa-trash-o"></i> Remove</a>
+                                                            <a href="#" onclick="return false" onmousedown="remove_user('<?= $user->id ?>')" class="btn btn-danger btn-sm mrg"><i class="fa fa-trash-o"></i> Remove</a>
                                                         <?php } else { ?>
-                                                            <a href="#" onclick="return false" onmousedown="submit_deduction('<?= $user->id ?>')" class="btn btn-sx btn-success">Save</a>
-                                                           
+                                                            <a href="#" onclick="return false" onmousedown="submit_deduction('<?= $user->id ?>')" class="btn btn-sm btn-success">Save</a>
                                                         <?php } ?>
                                                              <span id="stat<?= $user->id ?>"></span>
                                                     </td>

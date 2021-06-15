@@ -1941,7 +1941,7 @@ return $echo;
                                                     <?php if(can_access('add_si')){ ?>
                                                       <button type="button" class="btn btn-primary waves-effect"
                                                         data-toggle="modal" data-target="#standing-order-Modal">
-                                                        Add Standing Orderss
+                                                        Add Standing Orders
                                                     </button>
                                                      <?php } ?>
                                                     </div>
@@ -1963,12 +1963,12 @@ return $echo;
                                                          <?php if(count($standingorders) > 0) { ?>
                                                           <?php $i = 1;  foreach($standingorders as $order) { ?>
                                                             <tr>
-                                                                <td><?= $i ?></td>
-                                                                <td><?= isset($order->type) ? $order->type : ''?></td>
-                                                                <td><?= isset($order->occurance_amount) ? money($order->occurance_amount) : '' ?></td>
-                                                                <td><?= isset($order->total_amount) ? money($order->total_amount) : ''?></td>
-                                                                <td><?= isset($order->payment_date) ? date('d/m/Y', strtotime($order->payment_date)) : '' ?></td>
-                                                                <td><?= isset($order->schoolcontact->name) ? $order->schoolcontact->name : '' ?></td>
+                                                                <td><?=  $i ?></td>
+                                                                <td><?=  $order->type ?? ''?></td>
+                                                                <td><?=  money($order->occurance_amount) ?? '' ?></td>
+                                                                <td><?=  money($order->total_amount) ?? '' ?></td>
+                                                                <td><?=  date('d/m/Y', strtotime($order->payment_date)) ?? '' ?></td>
+                                                                <td><?=  $order->schoolcontact->name ?? '' ?></td>
 
                                                                 <td><a  target="_break" href="<?= url('customer/viewContract/'.$order->id) ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a>
                                                                    <?php if(!isset($order->payment_date) || !isset($order->type)) {  ?>

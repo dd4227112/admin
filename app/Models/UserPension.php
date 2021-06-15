@@ -4,6 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserPension extends Model {
 
+    
     protected $table = 'user_pensions';
     protected $fillable = ['id', 'user_id', 'pension_id', 'created_by', 'checknumber'];
 

@@ -45,7 +45,7 @@ class Allowance extends Controller {
             }
             $this->data['view'] = 'account.payroll.allowance.index';
             return view($this->data['view'], $this->data);
-    }
+       }
 
     public function add() {
             if ($_POST) {
@@ -54,8 +54,16 @@ class Allowance extends Controller {
                 //     "is_percentage" => "required",
                 //     "description" => "required"
                 //         ]);
-                $allowances = request()->all();
-                $allowance = \App\Models\Allowance::create($allowances);
+              //  $allowances = !empty(request('amount')) ? request()->all(request()->except(request('amount'))) : request()->all();
+               
+                if(request('amount') !== null){
+                    $allowances = request()->all(request()->except(request('amount')));
+                    $data = array_merge($allowances,['amount' => remove_comma(request('amount'))]);
+                } else {
+                    $data = request()->all();
+                }
+
+                $allowance = \App\Models\Allowance::create($data);
                 return redirect('allowance/index/'.$allowance->category)->with('success', 'Successfully!');
             } else {
                 $this->data['view'] = 'account.payroll.allowance.add';
@@ -75,7 +83,6 @@ class Allowance extends Controller {
                         //     "is_percentage" => "required",
                         //     "description" => "required"
                         //    ]);
-                      
                      $this->data['allowance']->update(request()->except('_token'));
                      return redirect('allowance/index/'.$this->data['allowance']->category)->with('success', 'Allowance Updated Successfully!');
                     } else {
@@ -116,6 +123,7 @@ class Allowance extends Controller {
             $this->data['set'] = $id;
             $this->data['type'] = 'allowance';
             $this->data['allowance'] = \App\Models\Allowance::find($id);
+            //dd($this->data['allowance']);
             $subscriptions = UserAllowance::where('allowance_id', $id)->get();
             $data = [];
             foreach ($subscriptions as $value) {
