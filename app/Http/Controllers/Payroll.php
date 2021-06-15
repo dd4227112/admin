@@ -18,6 +18,7 @@ class Payroll extends Controller {
 
     public function pension() {
         $this->data['pensions'] = \App\Models\Pension::all();
+      //  dd($this->data['pensions']);
         $id = request()->segment(3);
         $this->data['set'] = $id;
         if ((int) $id) {
@@ -164,19 +165,21 @@ class Payroll extends Controller {
              $table_id => request('tag_id'),
             'created_by' =>  Auth::user()->id  
         );
+        
     
         $insert = $type == 'pension' ?
                 array_merge(array('checknumber' => request('checknumber')), $insert_array) :
                 array_merge($insert_array, ['amount' => (bool) request('is_percentage') == 0 ? (float) request('checknumber') : null,
                     'percent' => (bool) request('is_percentage') == 1 ? (float) request('checknumber') : null]);
-             
+
         $final_array = $type == 'deduction' ? array_merge($insert, [
                     (bool) request('is_percentage') == 1 ? 'employer_percent' : 'employer_amount' => request('employer_amount')
                 ]) : $insert;
+
         $check = ['user_id' => request('user_id'),$table_id => request('tag_id')];
         $validate = DB::table($table)->where($check)->first();
+       
         if (empty($validate)) {
-           
             $user_pensions = DB::table($table)->insertGetId($final_array);
             echo (int) $user_pensions > 0 ? 'Successfully Added' : 'Error occurs on subscribe, please try again later';
         } else {
@@ -261,7 +264,7 @@ class Payroll extends Controller {
 
     //Get users with status 1 and not role id 7
     public function getUsers() {
-        return \App\Models\User::where('status', 1)->where('role_id','<>', 7)->get();
+        return \App\Models\User::where('status', 1)->whereNotIn('role_id',array(7,15))->get();
     }
 
     public function payslip() {

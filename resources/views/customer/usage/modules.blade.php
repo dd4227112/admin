@@ -213,7 +213,7 @@ function select($value, $schema, $sources) {
                             echo $allocation[$school->schema_name];
                         } else {
 
-                            echo '<b>No Person Allocated</b>';
+                            echo 'No Person Allocated';
                         }
                         ?></td>
                     <td><?php
@@ -230,10 +230,10 @@ function select($value, $schema, $sources) {
                         //exam report published
 
                         if (isset($exam_report_status[$school->schema_name])) {
-                            echo '<b class="label label-success">YES</b>';
+                            echo 'YES';
                         } else {
                             $no_exams_published++;
-                            echo '<b class="label label-warning">NO</b>';
+                            echo 'NO';
                         }
                         ?>
                     </td>
@@ -241,10 +241,10 @@ function select($value, $schema, $sources) {
                         //fee collection
                         if (isset($payment_status[$school->schema_name])) {
 
-                            echo '<b class="label label-success">YES</b>';
+                            echo 'YES';
                         } else {
                             $no_payment++;
-                            echo '<b class="label label-warning">NO</b>';
+                            echo 'NO';
                         }
                         ?></td>
 
@@ -252,10 +252,10 @@ function select($value, $schema, $sources) {
                         //expense management
                         if (isset($expense_status[$school->schema_name])) {
 
-                            echo '<b class="label label-success">YES</b>';
+                            echo 'YES';
                         } else {
                             $no_expense++;
-                            echo '<b class="label label-warning">NO</b>';
+                            echo 'NO';
                         }
                         ?></td>
 
@@ -263,18 +263,18 @@ function select($value, $schema, $sources) {
                         <?php
                         //Invoice Issued STATUS
                         if (isset($invoice_issued[$school->schema_name])) {
-                            echo '<b class="label label-success">YES</b>';
+                            echo 'YES';
                         } else {
-                            echo '<b class="label label-warning">NO</b>';
+                            echo 'NO';
                         }
                         ?></td>
                     <td>
                         <?php
                         //SMS STATUS
                         if (isset($sms_status_count[$school->schema_name])) {
-                            echo '<b class="label label-success">YES</b>';
+                            echo 'YES';
                         } else {
-                            echo '<b class="label label-warning">NO</b>';
+                            echo 'NO';
                         }
                         ?></td>
 
@@ -284,9 +284,9 @@ function select($value, $schema, $sources) {
 
                         if (isset($payroll_status[$school->schema_name])) {
 
-                            echo '<b class="label label-success">YES</b>';
+                            echo 'YES';
                         } else {
-                            echo '<b class="label label-warning">NO</b>';
+                            echo 'NO';
                         }
                         ?>
                     </td>
@@ -296,9 +296,9 @@ function select($value, $schema, $sources) {
                         //Inventory
                         if (isset($inventory_status[$school->schema_name])) {
 
-                            echo '<b class="label label-success">YES</b>';
+                            echo 'YES';
                         } else {
-                            echo '<b class="label label-warning">NO</b>';
+                            echo 'NO';
                         }
                         ?>
                     </td>
@@ -309,9 +309,9 @@ function select($value, $schema, $sources) {
                         //transport
                         if (isset($tmember_status[$school->schema_name])) {
 
-                            echo '<b class="label label-success">YES</b>';
+                            echo 'YES';
                         } else {
-                            echo '<b class="label label-warning">NO</b>';
+                            echo 'NO';
                         }
                         ?>
                     </td>
@@ -321,9 +321,9 @@ function select($value, $schema, $sources) {
                         //Hostel
                         if (isset($hmember_status[$school->schema_name])) {
 
-                            echo '<b class="label label-success">YES</b>';
+                            echo 'YES';
                         } else {
-                            echo '<b class="label label-warning">NO</b>';
+                            echo 'NO';
                         }
                         ?>
                     </td>
@@ -333,9 +333,9 @@ function select($value, $schema, $sources) {
                         //Attendance
                         if (isset($sattendance_status[$school->schema_name])) {
 
-                            echo '<b class="label label-success">YES</b>';
+                            echo 'YES';
                         } else {
-                            echo '<b class="label label-warning">NO</b>';
+                            echo 'NO';
                         }
                         ?>
                     </td>
@@ -345,9 +345,9 @@ function select($value, $schema, $sources) {
                         //Library
                         if (isset($issue_status[$school->schema_name])) {
 
-                            echo '<b class="label label-success">YES</b>';
+                            echo 'YES';
                         } else {
-                            echo '<b class="label label-warning">NO</b>';
+                            echo 'NO';
                         }
                         ?>
                     </td>
@@ -357,10 +357,10 @@ function select($value, $schema, $sources) {
                         //Character
                         if (isset($character_status[$school->schema_name])) {
 
-                            echo '<b class="label label-success">YES</b>';
+                            echo 'YES';
                         } else {
                             $no_invoice++;
-                            echo '<b class="label label-warning">NO</b>';
+                            echo 'NO';
                         }
                         ?>
                     </td>
@@ -370,9 +370,9 @@ function select($value, $schema, $sources) {
                         //Parents Login >50%
                         if (isset($parents_status[$school->schema_name])) {
 
-                            echo '<b class="label label-success">YES</b>';
+                            echo 'YES';
                         } else {
-                            echo '<b class="label label-warning">NO</b>';
+                            echo 'NO';
                         }
                         ?>
                     </td>
@@ -382,9 +382,9 @@ function select($value, $schema, $sources) {
                         //Staff login >50%
                         if (isset($staff_status[$school->schema_name])) {
 
-                            echo '<b class="label label-success">YES</b>';
+                            echo 'YES';
                         } else {
-                            echo '<b class="label label-warning">NO</b>';
+                            echo 'NO';
                         }
                         ?>
                     </td>
@@ -394,9 +394,9 @@ function select($value, $schema, $sources) {
                         //Electronic Payment
                         if (isset($epayment_status[$school->schema_name])) {
 
-                            echo '<b class="label label-success">YES</b>';
+                            echo 'YES';
                         } else {
-                            echo '<b class="label label-warning">NO</b>';
+                            echo 'NO';
                         }
                         ?>
                     </td>

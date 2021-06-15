@@ -14,23 +14,15 @@ class Deduction extends Controller {
     }
 
     public function index() {
-        if (can_access('manage_payroll')) {
-         
-            $this->data['type'] = $id = (request()->segment(3));
+            $this->data['type'] = $id = request()->segment(3);
             if ((int) $id > 0) {
                 $this->data['deductions'] = \App\Models\Deduction::where('category', $id)->get();
             } else {
                 $this->data['deductions'] = [];
             }
             $this->data['subview'] = 'account.payroll.deduction.index';
-          //  $this->load->view('_layout_main', $this->data);
             return view($this->data['subview'], $this->data);
-        } else {
-            $this->data["subview"] = "error";
-          //  $this->load->view('_layout_main', $this->data);
-            return view($this->data['subview'], $this->data);
-        }
-    }
+      }
 
     public function monthly() {
         if (can_access('manage_payroll')) {
@@ -45,38 +37,38 @@ class Deduction extends Controller {
     }
 
 
-    public function add(Request $request) {
-        if (can_access('add_deduction')) {
+    public function add() {
             $this->data['type'] = $id = request()->segment(3);
             if ($_POST) {
-                 $request->validate([
-                    'name' => 'required',
-                    'is_percentage' => 'required',
-                    'description' => 'required'
-                ]);
-            
+                //  $request->validate([
+                //     'name' => 'required',
+                //     'is_percentage' => 'required',
+                //     'description' => 'required'
+                // ]);
+                  
                 $deduction = \App\Models\Deduction::create(request()->except('_token'));
-               //  dd($deduction);
+
                 if ((int) $deduction->percent > 0 || (int) $deduction->amount > 0) {
                     $code = strtoupper(substr(0, 2));
                     \App\Models\ReferExpense::create(['name' => $deduction->name, 'financial_category_id' => 2, 'note' => 'Deductions', 'code' => 3232, 'code' => $code . '-OPEX-' . rand(1900, 582222),
                         'predefined' => 1]);
                 }
-               // $this->session->set_flashdata('success', $this->lang->line('menu_success'));
+
                return redirect('deduction/index/'.$id)->with('success', 'Successfully!');
             } else {
-                // $this->data["subview"] = "deduction/add";
-                // $this->load->view('_layout_main', $this->data);
+    
                 $this->data['subview'] = 'account.payroll.deduction.add';
                 return view($this->data['subview'], $this->data);
             }
-        } else {
-            $this->data['type'] = null;
-            $this->data["subview"] = "error";
-           // $this->load->view('_layout_main', $this->data);
-            return view('account/payroll/deduction/index',$this->data);
-        }
+        // } else {
+        //     $this->data['type'] = null;
+       
+        //     return view('account/payroll/deduction/index',$this->data);
+        // }
     }
+
+
+
 
     public function edit() {
             $id = request()->segment(3);
@@ -182,7 +174,6 @@ class Deduction extends Controller {
     function monthlyAddSubscriber() {
         $deduction = UserDeduction::where('user_id', request('user_id'))->where('type', 0)->where('deduction_id', request('deduction_id'));
         $obj=array_merge(request()->except(['_token', 'deadline']), ['deadline'=> date('Y-m-d', strtotime(request('deadline')))]);
-       // dd($obj);
         if (!empty($deduction->first())) {
             $deduction->update($obj);
         } else {
@@ -193,7 +184,6 @@ class Deduction extends Controller {
 
     function excel() {
         $this->data['users'] = \App\Model\Teacher::all();
-
         $this->data["subview"] = "deduction/excel";
         $this->load->view('_layout_main', $this->data);
     }

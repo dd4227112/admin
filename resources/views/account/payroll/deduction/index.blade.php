@@ -29,71 +29,65 @@
                 </ul>
             </div>
         </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
-		
-							
+
         <div class="page-body">
           <div class="row">
             <div class="col-sm-12">
              <div class="card">
-                <?php
-               // $usertype = session("usertype");
-                if (can_access('manage_payroll')) { ?>
-                     <div class="card-header">
+                {{-- $usertype = session("usertype"); --}}
+              
+                   <div class="card-header row">
+                     <?php  if(can_access('add_deduction')) { ?>
+                       <div class="col-sm-6 col-sm-offset-3">
                         <h5 class="page-header"> 
                         <a class="btn btn-success" href="<?php echo url('deduction/add/'.$type) ?>">
                             <i class="fa fa-plus"></i> 
                                Add New Deduction
-                        </a>
-                      </h5>
+                          </a>
+                        </h5>
                       </div>
-                 <?php } ?>
-
-
-                    <div class="col-sm-6 col-sm-offset-3 list-group">
-                        <div class="list-group-item list-group-item-warning">
-                            <form style="" class="form-horizontal" role="form" method="post">  
-                                <div class="form-group">              
-                                    <label for="deduction_type" class="col-sm-2 col-sm-offset-2 control-label">
-                                       <?= __("category") ?>
-                                    </label>
-                                    <div class="col-sm-6">
-                                        <?php
-                                        $array = array("0" => __("select"));
-                                        $deduction_types = [
-                                            '1' => 'Fixed Deductions',
-                                            '2' => 'Monthly Deductions'
-                                        ];
-                                        foreach ($deduction_types as $key => $value) {
-                                            $array[$key] = $value;
-                                        }
-                                        echo form_dropdown("deduction_type", $array, old("deduction_type", $type), "id='deduction_type' class='form-control'");
-                                        ?>
-                                    </div>
+                      <?php } ?>
+                      <div class="col-sm-6">
+                        <form style="" class="form-horizontal" role="form" method="post">  
+                            <div class="form-group">              
+                                <label for="deduction_type" class="col-sm-5 control-label">
+                                   <?= __("Choose category") ?>
+                                </label>
+                                <div class="col-sm-6">
+                                    <?php
+                                    $array = array("0" => __("select"));
+                                    $deduction_types = [
+                                        '1' => 'Fixed Deductions',
+                                        '2' => 'Monthly Deductions'
+                                    ];
+                                    foreach ($deduction_types as $key => $value) {
+                                        $array[$key] = $value;
+                                    }
+                                    echo form_dropdown("deduction_type", $array, old("deduction_type", $type), "id='deduction_type' class='form-control'");
+                                    ?>
                                 </div>
-                                 <?= csrf_field() ?>
-                            </form>
-                        </div>
-                    </div>
-                    
-
+                            </div>
+                             <?= csrf_field() ?>
+                        </form>
+                      </div>
+                     </div>
+                 
 				         <div id="hide-table"  class="card-block">
 					      <div class="table-responsive table-sm table-striped table-bordered table-hover">
                             <?php if (isset($deductions) && !empty($deductions)) { ?>
 								<table class="table dataTable">
 									<thead>
                                         <tr>
-                                            <th ><?= __('slno') ?></th>
-                                            <th ><?= __('name') ?></th>
-                                            <th ><?= __('category') ?></th>
-                                            <th ><?= __('amount') ?></th>
-                                            <th ><?= __('members') ?><i class="fa fa-question-circle" title="This is the total number of users who are (or ware ) in this plan. It include active and in active users"></i></th>
-                                            <th ><?= __('percentage') ?></th>
-                                            <th ><?= __('description') ?></th>
-                                              <th ><?= __('bank_account') ?></th>
-                                            <th ><?= __('account_number') ?></th>
-                                            <th ><?= __('action') ?></th>
+                                            <th ><?= __('#') ?></th>
+                                            <th ><?= __('Name') ?></th>
+                                            <th ><?= __('Category') ?></th>
+                                            <th ><?= __('Amount') ?></th>
+                                            <th ><?= __('Members') ?><i class="fa fa-question-circle" title="This is the total number of users who are (or ware ) in this plan. It include active and in active users"></i></th>
+                                            <th ><?= __('Percentage') ?></th>
+                                            <th ><?= __('Description') ?></th>
+                                            <th ><?= __('Bank account') ?></th>
+                                            <th ><?= __('Account number') ?></th>
+                                            <th ><?= __('Action') ?></th>
                                         </tr>
 									</thead>
                                     <tbody>
@@ -112,7 +106,7 @@
                                                     <?php echo $deduction->category == 1 ? 'Fixed' : 'Monthly'; ?>
                                                 </td>
                                                 <td data-title="<?= __('amount') ?>">
-                                                    <?php echo $deduction->amount; ?>
+                                                    <?php echo money($deduction->amount); ?>
                                                 </td>
                                                  <td data-title="<?= __('amount') ?>">
                                                     <?php echo $deduction->userDeductions()->count(); ?>
@@ -121,7 +115,7 @@
                                                     <?php echo $deduction->is_percentage == null ? 'NONE' : $deduction->percent; ?>
                                                 </td>
                                                 <td data-title="<?= __('description') ?>">
-                                                    <?php echo $deduction->description; ?>
+                                                    <?php echo warp($deduction->description); ?>
                                                 </td>
                                                  <td data-title="<?= __('description') ?>">
                                                     <?php echo $deduction->bankAccount->account_name ?? ''?>

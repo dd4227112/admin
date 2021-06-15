@@ -21,4 +21,10 @@ class Pension extends Model {
     }
 
 
+    public function userPensions(){
+        return $this->hasMany(\App\Models\UserPension::class, 'pension_id', 'id');
+
+    }
+
+
 }

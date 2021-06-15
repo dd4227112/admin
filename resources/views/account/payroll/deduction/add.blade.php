@@ -44,7 +44,7 @@
                                         echo "<div class='form-group' >";
                                     ?>
                                     <label for="grade" class="col-sm-2 control-label">
-                                        <?= __("name") ?><span class="red">*</span>
+                                        <?= __("Name") ?><span class="red">*</span>
                                     </label>
                                     <div class="col-sm-6">
                                         <input type="text" class="form-control" id="name"   placeholder="<?= __('name') ?>" name="name" value="<?= old('name') ?>" required>
@@ -55,7 +55,7 @@
                             </div>
                             <div class="form-group">              
                                 <label for="deduction_type" class="col-sm-2 control-label">
-                                    <?= __("type") ?>
+                                    <?= __("Type") ?>
                                 </label>
                                 <div class="col-sm-6">
                                     <?php
@@ -79,7 +79,7 @@
                                 echo "<div class='form-group' >";
                             ?>
                             <label for="is_penalty" class="col-sm-2 control-label">
-                                <?= __("type") ?>
+                                <?= __("Type") ?>
                             </label>
                             <div class="col-sm-6">
                                 <?= __("percentage") ?>
@@ -99,7 +99,7 @@
                                 echo "<div class='form-group' >";
                             ?>
                             <label for="amount" class="col-sm-2 control-label">
-                                <?= __("employee_amount") ?>
+                                <?= __("Employee amount") ?>
                             </label>
                             <div class="col-sm-6">
                                 <input placeholder="<?= __("employee_amount") ?>" type="number" class="form-control" id="amount" name="amount" value="<?= old('amount') ?>" >
@@ -112,14 +112,14 @@
                                 <?php echo form_error($errors, 'point'); ?>
                             </span>
                         </div>
-                                  <?php
+                            <?php
                             if (form_error($errors, 'employer_amount'))
                                 echo "<div class='form-group has-error' >";
                             else
                                 echo "<div class='form-group' >";
                             ?>
                             <label for="employer_amount" class="col-sm-2 control-label">
-                                 <?= __("employer_amount") ?>
+                                 <?= __("Employer amount") ?>
                             </label>
                             <div class="col-sm-6">
                                 <input placeholder="<?= __("employer_amount") ?>" type="number" class="form-control" id="employer_amount" name="employer_amount" value="<?= old('employer_amount') ?>" >
@@ -143,7 +143,7 @@
                             echo "<div class='form-group' >";
                         ?>
                         <label for="amount" class="col-sm-2 control-label">
-                            <?= __("employee_percent") ?>
+                            <?= __("Employee percent") ?>
                         </label>
                         <div class="col-sm-6">
                             <input placeholder="<?= __("employee_percent") ?>" type="number" class="form-control" id="percentage" name="percent" value="<?= old('percentage') ?>" >
@@ -160,10 +160,10 @@
                             echo "<div class='form-group' >";
                         ?>
                         <label for="employer_percentage" class="col-sm-2 control-label">
-                            <?= __("employer_percent") ?>
+                            <?= __("Employer percent") ?>
                         </label>
                         <div class="col-sm-6">
-                            <input placeholder="<?= __("employer_percent") ?>" type="number" class="form-control" id="employer_percent" name="employer_percent" value="<?= old('employer_percent') ?>" >
+                            <input placeholder="<?= __("Employer percent") ?>" type="number" class="form-control" id="employer_percent" name="employer_percent" value="<?= old('employer_percent') ?>" >
                            
                         </div>
                         <span class="col-sm-4 control-label">
@@ -179,7 +179,7 @@
                     echo "<div class='form-group' >";
                 ?>
                 <label for="note" class="col-sm-2 control-label">
-                    <?= __("description") ?><span class="red">*</span>
+                    <?= __("Description") ?><span class="red">*</span>
                 </label>
                 <div class="col-sm-6">
                     <textarea style="resize:none;" placeholder="<?= __("description") ?>" class="form-control" id="note" name="description" required><?= old('description') ?></textarea>
@@ -208,14 +208,14 @@
                 
                               <div class="form-group">              
                                 <label for="bank_account_id" class="col-sm-2 control-label">
-                                    <?= __("bank_account") ?>
+                                    <?= __("Bank account") ?>
                                 </label>
                                 <div class="col-sm-6">
                                     <?php
                                     $array = array("0" => __("select"));
                                     $banks = \App\Models\BankAccount::all();
                                     foreach ($banks as $bank) {
-                                        $array[$bank->id] = $bank->name;
+                                        $array[$bank->id] = $bank->branch;
                                     }
                                     echo form_dropdown("bank_account_id", $array, old("bank_account_id"), "id='bank_account_id' class='form-control'");
                                     ?>
@@ -230,10 +230,10 @@
                                         echo "<div class='form-group' >";
                                     ?>
                                     <label for="grade" class="col-sm-2 control-label">
-                                        <?= __("account_number") ?><span class="red"></span>
+                                        <?= __("Account number") ?><span class="red"></span>
                                     </label>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control" id="account_number"   placeholder="<?= __('account_number') ?>" name="account_number" value="<?= old('account_number') ?>" >
+                                        <input type="text" class="form-control" id="account_number"   placeholder="<?= __('Account number') ?>" name="account_number" value="<?= old('account_number') ?>" >
                                         
                                     </div>
                                     <span class="col-sm-4 control-label">
@@ -241,9 +241,9 @@
                                     </span>
                                </div>
 
-                               <div class="form-group">              
-                                 <input type="hidden" name='category' value="<?= $type; ?>" >
-                              </div>
+                        <div class="form-group">              
+                            <input type="hidden" name='category' value="<?= $type; ?>" >
+                        </div>
                 
                    <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-6">

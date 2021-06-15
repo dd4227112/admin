@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script> 
 <div class="main-body">
     <div class="page-wrapper">
         <!-- Page-header start -->
@@ -63,7 +64,6 @@
                                         <div class="col-sm-6">
                                             <select class="select2 form-control" required="true"  name="refer_pension_id" id="refer_pension_id">
                                                 <option value="0"><?= __('Select pension') ?></option>
-                
                                                 <?php
                                                 $pensions = DB::SELECT('SELECT * FROM constant.pensions');
                                                 foreach ($pensions as $pension) { ?>
@@ -165,6 +165,13 @@
 </div>
 
 <script type="text/javascript">
+$(".select2").select2({
+    theme: "bootstrap",
+    dropdownAutoWidth: false,
+    allowClear: false,
+    debug: true
+});
+
 document.getElementById("uploadBtn").onchange = function() {
     document.getElementById("uploadFile").value = this.value;
 };
@@ -175,6 +182,8 @@ $(document).ready(function(){
     });
 
 });
+
+
 </script>
 
 @endsection
