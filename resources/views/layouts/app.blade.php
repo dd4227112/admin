@@ -52,6 +52,8 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
 
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2.css">
 
+      
+
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2-bootstrap.css">
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css">       
 
@@ -59,7 +61,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
 
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script>
-
+   
 
         <script type="text/javascript">
             ajax_setup = function () {
@@ -966,6 +968,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <!-- Horizontal-Timeline js -->
         <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/horizontal-timeline/js/main.js"></script>
         <!-- amchart js -->
+        <script type="text/javascript" src="<?= $root ?>assets/select2/select2.js'); ?>"></script>
         <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/amchart/js/amcharts.js"></script>
         <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/amchart/js/serial.js"></script>
         <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/amchart/js/light.js"></script>
@@ -1001,6 +1004,9 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
     if (request('type_id') != 'subject' && !preg_match('/emailsms/', url()->current()) && !preg_match('/sales/', url()->current()) && !preg_match('/logs/', url()->current()) && !preg_match('/activity/', url()->current()) && !preg_match('/payment_history/i', url()->current()) && !preg_match('/api/', url()->current())) {
         ?>
         <script type="text/javascript">
+
+
+                   
                                     send_message = function (id) {
                                         var to_user_id = $('#to_user_id' + id).val();
                                         var body = $('#body').val();

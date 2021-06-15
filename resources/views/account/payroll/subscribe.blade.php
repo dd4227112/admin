@@ -33,7 +33,7 @@
 
                                     <td><?= ucfirst($type) ?></td>
                                     <td><?= $allowance->name ?></td>
-                                    <td><?= $allowance->amount ?></td>
+                                    <td><?= money($allowance->amount) ?></td>
                                     <td><?= $allowance->description ?></td>
                                 </tr>
                             </tbody>
@@ -48,8 +48,7 @@
 								<table class="table dataTable">
 									<thead>
                                         <tr>
-                                            <th class=""><?= __('slno') ?></th>
-                                            <!--<th class="col-sm-2">Photo</th>-->
+                                            <th class=""><?= __('#') ?></th>
                                             <th class="col-sm-2">Name</th>
                                             <th class="col-sm-2">User role</th>
                                             <th class="col-sm-2">Email</th>
@@ -64,7 +63,7 @@
                                             if ($type == 'deduction') {?>
                                                 <th class="col-sm-2"><?= (bool) $allowance->is_percentage == false ? __('employer_amount') : __('Employer percent') ?></th>
                                             <?php } ?> 
-                                            <th class="col-sm-2"><?= __('action') ?></th>
+                                            <th class="col-sm-2" colspan="2"><?= __('action') ?></th>
                                         </tr>
 									</thead>
                                     <tbody>
@@ -94,7 +93,7 @@
                                                     ?>
                                                     <!--</td>-->
                                                     <td data-title="<?= __('Name') ?>">
-                                                        <?php echo $user->name; ?>
+                                                        <?php echo ucfirst($user->firstname.' '.$user->lastname); ?>
                                                     </td>
                                                     <td data-title="<?= __('student_roll') ?>">
                                                         <?php echo $user->role->name; ?>
@@ -131,22 +130,19 @@
                                                                 $deadline = !empty($user_deduction) ? $user_deduction->deadline : '';
                                                             }
                                                             ?>
-                
                                                             <input placeholder="<?= (bool) $allowance->is_percentage == false ? __('amount') : __('percent') ?>" type="number" class="form-control all_deduc" id="amount<?= $user->id ?>" name="amount" data-is_percent="<?= (bool) $allowance->is_percentage == false ? 0 : 1 ?>" value="<?= $amount ?>" >
                                                         </td>
                                                         <?php
-                                                        if ($type == 'deduction') {
-                                                            ?>  
+                                                        if ($type == 'deduction') { ?>  
                                                             <td>
-                                                                <input placeholder="<?= (bool) $allowance->is_percentage == false ? __('employer_amount') : __('Employer percent') ?>" type="number" class="form-control all_deduc" id="employer_amount<?= $user->id  ?>" name="amount" data-is_percent="<?= (bool) $allowance->is_percentage == false ? 0 : 1 ?>" value="<?= $employer_amount ?>" ></td>
+                                                                <input placeholder="<?= (bool) $allowance->is_percentage == false ? __('employer_amount') : __('Employer percent') ?>" type="number" class="form-control all_deduc" id="employer_amount<?= $user->id  ?>" name="amount" data-is_percent="<?= (bool) $allowance->is_percentage == false ? 0 : 1 ?>" value="<?= $employer_amount ?>" >
+                                                            </td>
                                                           <?php }
                                                             }
                                                          ?>
                                                         <?php if ($type == 'pension') { ?>
                                                         <td data-title="<?= __('student_section') ?>">
-                                                            <?php
-                                                            $user_pension = DB::table('user_pensions')->where('user_id', $user->id)->where('pension_id', $set)->first();
-                                                            ?>
+                                                        <?php $user_pension = DB::table('user_pensions')->where('user_id', $user->id)->where('pension_id', $set)->first(); ?>
                                                             <input type="text" <?php
                                                             if (!empty($user_pension) && in_array($user->id, $subscriptions)) {
                                                                 echo strlen($user_pension->checknumber) > 1 ? ' value="' . $user_pension->checknumber . '" ' : ' value="' . $user->national_id . '"';
@@ -244,6 +240,7 @@
         var amount = $('#amount' + user_id ).val();
         var employer_amount = $('#employer_amount' + user_id).val();
         var is_percentage = $('#amount' + user_id).attr('data-is_percent');
+        
         $('#' + user_id).removeAttr('disabled');
 //        if (datatype == 'pension') {
 //            swal({

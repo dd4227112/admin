@@ -39,7 +39,7 @@
 
                                     <div class="form-group"> 
                                       <label for="grade" class="col-sm-2 control-label">
-                                           <span class="red">*</span>
+                                           <span class="red">Name *</span>
                                         </label>
                                         <div class="col-sm-6">
                                             <input type="text" class="form-control" id="name"   placeholder="Name" name="name"  required>
@@ -116,7 +116,7 @@
                         <div class="col-sm-6">
                             <?= __("percentage") ?>
                             <input type="radio" class="allowance_type" name="is_percentage" value="1">
-                            &nbsp;&nbsp; <?= __("fixed_amount") ?> 
+                            &nbsp;&nbsp; <?= __("Fixed amount") ?> 
                             <input type="radio" class="allowance_type" name="is_percentage" value="0">
                         </div>
                         <span class="col-sm-4 control-label">
@@ -131,10 +131,10 @@
                             echo "<div class='form-group' >";
                         ?>
                         <label for="amount" class="col-sm-2 control-label">
-                            <?= __("fixed_amount") ?>
+                            <?= __("Fixed amount") ?>
                         </label>
                         <div class="col-sm-6">
-                            <input placeholder="<?= __("amount") ?>" type="number" class="form-control" id="amount" name="amount" value="<?= old('amount') ?>" >
+                            <input placeholder="<?= __("amount") ?>" type="text" class="form-control transaction_amount" id="amount" name="amount" value="<?= old('amount') ?>" >
                           
                         </div>
                         <span class="col-sm-4 control-label">
@@ -199,6 +199,13 @@
 
 
 <script type="text/javascript">
+    $('.transaction_amount').attr("pattern", '^(\\d+|\\d{1,3}(,\\d{3})*)(\\.\\d{2})?$');
+        $('.transaction_amount').on("keyup", function() {
+            var currentValue = $(this).val();
+            currentValue = currentValue.replace(/,/g, '');
+            $(this).val(currentValue.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+        });
+
     $('.allowance_type').change(function () {
         var val = $(this).val();
         if (val === '1') {

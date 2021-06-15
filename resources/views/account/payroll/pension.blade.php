@@ -49,13 +49,13 @@
                                 <table id="example1" class="table dataTable">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
-                                            <th class="col-lg-2">Name</th>
+                                            <th class="col-lg-1">#</th>
+                                            <th class="col-lg-1">Name</th>
                                             <th class="col-lg-1">Employer Percentage</th>
                                             <th class="col-lg-1">Employee Percentage</th>
-                                            <th class="col-lg-1">Address</th>
+                                            <th class="col-lg-2">Address</th>
                                             <th class="col-lg-1">Members</th>
-                                            <th class="col-lg-1 text-center">Actions</th>
+                                            <th class="col-lg-2 text-center">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -80,7 +80,7 @@
                                                     <?php echo $pension->address; ?>
                                                 </td>
                                                 <td data-title="<?= __('members') ?>">
-                                                    <?php //echo $pension->userPensions->count(); ?>
+                                                    <?php echo $pension->userPensions->count(); ?>
                                                 </td>
                                                 <td data-title="<?= __('employee_percentage') ?>">
                                                     <a href="<?= url('payroll/pension/' . $pension->id) ?>" class="btn btn-info btn-sm mrg" ><i class="fa fa-users"></i> members</a>
