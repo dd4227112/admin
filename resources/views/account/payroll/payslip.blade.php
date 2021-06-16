@@ -2,7 +2,7 @@
 @section('content')
 
 <?php
-$payslip_settings = \DB::table('payslip_settings')->first();
+$payslip_settings = \DB::table('admin.payslip_settings')->first();
 
 if (empty($payslip_settings)) {
     DB::select('insert into payslip_settings (show_employee_signature,show_employer_signature,
@@ -22,6 +22,14 @@ if (empty($payslip_settings)) {
     }
 
     @media print {
+      margin: 2cm 2cm 2cm 2cm;
+        }
+        .invoice-header{
+            margin-right:30% !important;
+        }
+        .invoice-title{
+            float: right !important;
+        }
 
     }
 </style>
@@ -75,7 +83,7 @@ if (empty($payslip_settings)) {
 
                                                             <div class="tab-content card-block">
 
-                                                                <section class="content invoice" id="">
+                                                                <section class="content invoice" id="print_div">
 
                                                                     <!-- title row -->
                                                                     <div class="row">
@@ -93,7 +101,7 @@ if (empty($payslip_settings)) {
                                                                         <table class="table">
                                                                             <thead>
                                                                                 <tr>
-                                                                                    <th class="col-lg-4" style="max-width:30%">
+                                                                                    <th  style="max-width:30%">
                                                                                         <?php
                                                                                         $array = array(
                                                                                             "src" => url('storage/uploads/images/'),
@@ -168,8 +176,8 @@ if (empty($payslip_settings)) {
                                                                                         <td>2</td>
                                                                                         <td>
                                                                                             <b>Allowance</b>
-                                                                                            <div class="x_content col-lg-offset-1">
-                                                                                                <table style=" width: 80%" class="table table-responsive description">
+                                                                                            <div class="x_content offset-lg-1">
+                                                                                                <table >
                                                                                                     <thead>
                                                                                                         <tr>
                                                                                                             <th>Name</th>
@@ -226,7 +234,7 @@ if (empty($payslip_settings)) {
                                                                                         <td>4</td>
                                                                                         <td><b>Deductions</b>
                                                                                             <div class="x_content col-lg-offset-1">
-                                                                                                <table style=" width: 80%" class="table table-responsive description">
+                                                                                                <table>
                                                                                                     <thead>
                                                                                                         <tr>
                                                                                                             <th>Name</th>
@@ -476,15 +484,22 @@ if (empty($payslip_settings)) {
         var oldPage = document.body.innerHTML;
 
         //Reset the page's HTML with div's HTML only
-        //document.body.innerHTML =
-        //       '<html><head><title></title></head><body>' +
-        //       divElements + '</body>';
+        document.body.innerHTML =
+              '<html><head><title></title></head><body>' +
+              divElements + '</body>';
 
         //Print Page
         window.print();
         //Restore orignal HTML
         //  document.body.innerHTML = oldPage;
     }
+
+     $(document).ready(function () {
+        $("#printPayslip").click(function () {
+
+            printDiv("print_div");
+        });
+    });
 </script>
 @endsection
 

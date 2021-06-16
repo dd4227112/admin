@@ -1,3 +1,6 @@
+@extends('layouts.app')
+@section('content')
+
 <style>.count{font-size: 17px !important;}</style>
 <?php
 $users = 0;
@@ -260,7 +263,7 @@ if (!empty($basic_payments)) {
                               <th>#</th>
                               <th>User Type</th>
                               <th>No of Users </th>
-                              <th>Amount (<?= $siteinfos->currency_symbol ?>)</th>
+                             <th>Amount (Tsh)</th> 
                           </tr>
                       </thead>
                       <tbody>
@@ -276,13 +279,13 @@ if (!empty($basic_payments)) {
                                   <tr>
                                       <th scope="row"><?= $i ?></th>
                                       <td><?php
-                                          if ($payment->table == 'setting') {
-                                              echo 'Main Administrator';
-                                          } else if ($payment->table == 'user') {
-                                              echo 'Non Teaching Staff';
-                                          } else {
-                                              echo ucfirst($payment->table);
-                                          }
+                                        //   if ($payment->table == 'setting') {
+                                        //       echo 'Main Administrator';
+                                        //   } else if ($payment->table == 'user') {
+                                        //       echo 'Non Teaching Staff';
+                                        //   } else {
+                                        //       echo ucfirst($payment->table);
+                                        //   }
                                           ?>
                                       </td>
                                       <td><?= $payment->count ?></td>
@@ -322,7 +325,7 @@ if (!empty($basic_payments)) {
                         <tr>
                             <th>#</th>
                             <th>Deduction Name</th>
-                            <th>Amount (<?= $siteinfos->currency_symbol ?>)</th>
+                            <th>Amount (Tsh)</th>
                             <th>Contribution Form</th>
                         </tr>
                         </tr>
@@ -536,25 +539,7 @@ if (!empty($basic_payments)) {
                                 );
                                 ?>
 
-                      <table class=" table-striped center" style="margin: 1px 2px 1px 0px;">
-                          <thead>
-                              <tr>
-                                  <th class="col-md-2" style="padding-bottom:0px">
-                              {{-- <?= img($array); ?> --}}
-                                  </th>
-                                  <th class="col-md-8 text-center letterhead" style="margin: 1% 0 0 16%; padding-top: 2%; color: #000000;">
-
-                                      <h2 style="font-weight: bolder; text-transform: uppercase;"><?= $siteinfos->sname ?></h2>
-                                      <h4><?= 'P.O. BOX ' . $siteinfos->box . ', ' . $siteinfos->address ?></h4>
-
-                                      <h3>Cell: <?= str_replace(',', ' / ', $siteinfos->phone) ?></h3>
-                                      <h3> Email:<?= $siteinfos->email ?></h3>
-                                      <h3>Website: <?= $siteinfos->website ?></h3>
-                                  </th>
-
-                              </tr>
-                          </thead>
-                      </table>
+              
                       <hr/>
                   </div>
 
@@ -730,3 +715,7 @@ if (!empty($basic_payments)) {
           }
       </script>
 -->
+
+@endsection
+
+
