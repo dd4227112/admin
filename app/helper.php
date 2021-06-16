@@ -1,9 +1,8 @@
 <?php
 
-function custom_date($datatime) {
+function customdate($datatime) {
     $newTZ = new DateTimeZone('America/New_York');
     date_default_timezone_set('America/New_York');
-    
     $GMT = new DateTimeZone(Config::get('app.timezone'));
     $date = new DateTime($datatime, $newTZ);
     $date->setTimezone($GMT);
@@ -17,6 +16,8 @@ function validateDate($date, $format = 'Y-m-d')
     // The Y ( 4 digits year ) returns TRUE for any integer with any number of digits so changing the comparison from == to === fixes the issue.
     return $d && $d->format($format) === $date;
 }
+
+
 function json_call($array = null) {
     if (isset($_GET['callback']) === TRUE) {
         header('Content-Type: text/javascript;');
@@ -137,8 +138,8 @@ function createRoute() {
     $url = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
     $url_param = explode('/', $url);
 
-    $controller = isset($url_param[2]) && !empty($url_param[2]) ? $url_param[2] . '' : 'analyse';
-    $method = isset($url_param[3]) && !empty($url_param[3]) ? $url_param[3] : 'index';
+    $controller = isset($url_param[1]) && !empty($url_param[1]) ? $url_param[1] . '' : 'analyse';
+    $method = isset($url_param[2]) && !empty($url_param[2]) ? $url_param[2] : 'index';
     $view = $method == 'view' ? 'show' : $method;
 
     return in_array($controller, array('public', 'storage')) ? NULL : ucfirst($controller) . '@' . $view;

@@ -142,6 +142,32 @@ foreach ($epayments as $epayment) {
 }
 
 
+$ediaries = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_diaries ' . $where . ' group by schema_name');
+$ediary_status = [];
+$ediary_status_count = [];
+foreach ($ediaries as $ediary) {
+    $ediary_status[$ediary->schema_name] = $ediary->created_at;
+    $ediary_status_count[$ediary->schema_name] = $ediary->count;
+}
+
+$digitals = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_assignments ' . $where . ' group by schema_name');
+$digital_status = [];
+$digital_status_count = [];
+foreach ($digitals as $digital) {
+    $digital_status[$digital->schema_name] = $digital->created_at;
+    $digital_status_count[$digital->schema_name] = $digital->count;
+}
+
+
+$admissions = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_admissions ' . $where . ' group by schema_name');
+$admission_status = [];
+$admission_status_count = [];
+foreach ($admissions as $admission) {
+    $admission_status[$admission->schema_name] = $admission->created_at;
+    $admission_status_count[$admission->schema_name] = $admission->count;
+}
+
+
 $school_allocations = DB::select('select c.schema_name,c.source, c.sname,b.firstname, b.lastname from admin.user_clients a join admin.users b on b.id=a.user_id join admin.clients z on z.id=a.client_id join admin.all_setting c on c."schema_name"=z."username" where a.status=1 and c.schema_name is not null');
 $allocation = [];
 $users_allocation = [];
@@ -189,6 +215,9 @@ function select($value, $schema, $sources) {
                 <th>Parents login >20%</th>	
                 <th>Staff login >20%</th>	
                 <th>Electronic Payments</th> 
+                <th>Diary</th>
+                <th>Digital Learning</th>
+                <th>Online Admission</th>
             </tr>
         </thead>
         <tbody>
@@ -401,8 +430,41 @@ function select($value, $schema, $sources) {
                         ?>
                     </td>
 
+                    <td>
+                        <?php
+                        //Diary
+                        if (isset($ediary_status[$school->schema_name])) {
 
+                            echo 'YES';
+                        } else {
+                            echo 'NO';
+                        }
+                        ?>
+                    </td>
 
+                    <td>
+                        <?php
+                        //Digital Learning
+                        if (isset($digital_status[$school->schema_name])) {
+
+                            echo 'YES';
+                        } else {
+                            echo 'NO';
+                        }
+                        ?>
+                    </td>
+
+                    <td>
+                        <?php
+                        //Online admission
+                        if (isset($admission_status[$school->schema_name])) {
+
+                            echo 'YES';
+                        } else {
+                            echo 'NO';
+                        }
+                        ?>
+                    </td>
                 </tr>
             <?php } ?>
         </tbody>
