@@ -140,9 +140,9 @@
                                     <tbody>
                                         <?php 
                                         $i = 1;
+                                           if(count($schools) > 0) {
                                             foreach ($schools as $school) {
                                             ?>
-                                           
                                             <tr>
                                                 <td><?= $i++ ?></td>
                                                 <td><?= warp($school->client->name) ?></td>
@@ -157,7 +157,8 @@
                                                  echo '<a href="' . url('customer/profile/' . $school->client->username) . '" class="btn btn-success btn-sm"> View</a>';
                                                  echo '</td>';
                                                  echo '</tr>';
-                                                 }
+                                                  }
+                                                }
                                             ?>
                                     </tbody>
                                 </table>

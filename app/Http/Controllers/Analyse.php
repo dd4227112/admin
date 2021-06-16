@@ -213,29 +213,27 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         } else {
             $id = Auth::user()->id;
         } 
-        $role_id = \App\Models\User::where('id',$id)->first()->role_id;
-       
-        if(isset($role_id) && $role_id == 17){  
+        $user = \App\Models\User::where('id',$id)->where('status','=',1)->first();
+   
+        if(($user->role_id) && ($user->role_id == 17)){  
             $zone = \App\Models\ZoneManager::where('user_id',$id)->first();
            
-            if(isset($zone)){
+            if($zone){
              //  $schools = DB::SELECT('select * from admin.client_schools where school_id in 
              //  (select id from admin.schools where ward_id in 
              //  (select id from admin.wards where district_id in 
              //  (select id from admin.districts where region_id in 
             //    (select id from admin.regions where refer_zone_id = '. $zone->zone_id . '))))');
-         
               $schools = \App\Models\ClientSchool::whereIn('school_id',\App\Models\School::whereIn('ward_id',\App\Models\Ward::whereIn('district_id',\App\Models\District::whereIn('region_id',\App\Models\Region::where('refer_zone_id',$zone->zone_id)->get(['id']))->get(['id']))->get(['id']))->get(['id']))->get();
-             }else{
+            }else{
               $schools = [];
              }
-         } else if(isset($role_id) && $role_id == 1){
+         } else if(($user->role_id) && ($user->role_id) == 1){
             $schools =  \App\Models\ClientSchool::get();
          } else {
             $schools =  \App\Models\UserClient::where('user_id', $id)->get();
          }
-        // dd($schools);
-
+     
         $this->data['schools'] =  $schools;
         $this->data['users'] = \App\Models\User::where('status', 1)->where('role_id','<>','7')->get();
 

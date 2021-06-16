@@ -621,7 +621,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                 <?php } ?>
 
 
-                              <?php  if (can_access('my_schools') && !in_array(Auth::user()->department, [9, 10]) || in_array(Auth::user()->role_id, array(14, 8, 2, 3, 9, 20))) { ?>
+                              <?php  if (can_access('my_schools') && !in_array(Auth::user()->department, [9, 10]) || in_array(Auth::user()->role_id, array(14, 8, 2, 3, 9))) { ?>
                                 <li class="nav-sub-item">
                                    <a href="#" data-i18n="nav.page_layout.vertical.main"><i
                                    class="icon-arrow-right"></i>My Schools </a>
