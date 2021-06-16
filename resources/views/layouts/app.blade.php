@@ -634,7 +634,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                     <li><a href="<?= url('Analyse/myreport') ?>" data-i18n="nav.extra-components.offline">Task Report</a></li>
                                     <li><a href="<?= url('sales/schoolVisit/1') ?>" data-i18n="nav.extra-components.session-timeout">School Visitation</a></li>
 
-                                     <li><a href="<?= url('Sales/generalreport') ?>" data-i18n="nav.extra-components.session-timeout">Perfomance report</a></li>
+                                     {{-- <li><a href="<?= url('Sales/generalreport') ?>" data-i18n="nav.extra-components.session-timeout">Perfomance report</a></li> --}}
                                      <?php if (can_access('manage_jobcards')) { ?>
                                      <li><a href="<?= url('Sales/jobcards') ?>" data-i18n="nav.extra-components.session-timeout"> School Job cards</a></li>
                                      <?php } ?>

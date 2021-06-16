@@ -103,7 +103,7 @@ function number_to_words($number) {
 }
 
 
-    function userAccessRole() {
+   function userAccessRole() {
      $user_id = \Auth::user()->id;
       if ((int) $user_id > 0) {
         $user = \App\Models\User::where('id',$user_id)->where('status','=',1)->first(); 

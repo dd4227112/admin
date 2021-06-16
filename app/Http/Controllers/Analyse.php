@@ -237,7 +237,7 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
         $this->data['schools'] =  $schools;
         $this->data['users'] = \App\Models\User::where('status', 1)->where('role_id','<>','7')->get();
 
-        $this->data['staff'] = \App\Models\User::where('id', $id)->first();
+        $this->data['staff'] = \App\Models\User::where('id', $id)->where('status','=','1')->first();
         
         return view('analyse.myschool', $this->data);
     }
