@@ -68,16 +68,16 @@
                                                 <thead>
                                                     <tr>
                                                         <th class="col-sm-1"><?= __('#') ?></th>
-                                                        <th class="col-sm-2"><?= __('payment_date') ?></th>
-                                                        <th class="col-sm-2"><?= __('total_users') ?></th>
-                                                        <th class="col-sm-2"><?= __('basic_pay') ?></th>
-                                                        <th class="col-sm-1"><?= __('allowance') ?></th>
-                                                        <th class="col-sm-1"><?= __('gross_pay') ?></th>
-                                                        <th class="col-sm-1"><?= __('pension') ?></th>
-                                                        <th class="col-sm-1"><?= __('deduction') ?></th>
-                                                        <th class="col-sm-1"><?= __('tax') ?></th>
-                                                        <th class="col-sm-1"><?= __('paye') ?></th>
-                                                        <th class="col-sm-1"><?= __('net_pay') ?></th>
+                                                        <th class="col-sm-2"><?= __('Payment date') ?></th>
+                                                        <th class="col-sm-2"><?= __('Total users') ?></th>
+                                                        <th class="col-sm-2"><?= __('Basic pay') ?></th>
+                                                        <th class="col-sm-1"><?= __('Allowance') ?></th>
+                                                        <th class="col-sm-1"><?= __('Gross pay') ?></th>
+                                                        <th class="col-sm-1"><?= __('Pension') ?></th>
+                                                        <th class="col-sm-1"><?= __('Deduction') ?></th>
+                                                        <th class="col-sm-1"><?= __('Tax') ?></th>
+                                                        <th class="col-sm-1"><?= __('Paye') ?></th>
+                                                        <th class="col-sm-1"><?= __('Net pay') ?></th>
 
                                                         <?php
                                                         if (can_access('manage_payroll')) {
@@ -93,7 +93,7 @@
                                                         foreach ($salaries as $salary) {
                                                             ?>
                                                             <tr>
-                                                                <td data-title="<?= __('slno') ?>">
+                                                                <td data-title="<?= __('#') ?>">
                                                                     <?php echo $i; ?>
                                                                 </td>
                                                                 <td data-title="<?= __('payment_date') ?>">

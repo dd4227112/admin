@@ -47,14 +47,14 @@
                 <form class="form-horizontal" role="form" method="post">
 
            
-                    <div class="col-sm-12">
-                    <div class="table-responsive table-sm table-striped table-bordered table-hover">
+                 <div class="col-sm-12">
+                    <div class="table-responsive table-striped table-bordered ">
                         <table id="example1" class="table dataTable">
                             <thead>
                                 <tr>
                                     <th class="col-sm-1"><?= __('#') ?></th>
                                     <th class="col-sm-2"><?= __('Employee name') ?></th>
-                                    <th class="col-sm-2">User role</th>
+                                    <th class="col-sm-2">User designation</th>
                                     <!--<th class="col-sm-2"><?= __('Employee Number') ?></th>-->
                                     <th class="col-sm-1">Bank</th>
                                     <th class="col-sm-2"><?= __('Bank Account') ?></th>
@@ -64,11 +64,11 @@
                                     <th class="col-sm-1"><?= __('Pension') ?></th>
                                     <th class="col-sm-1"><?= __('deduction') ?></th>
                                     <th class="col-sm-1"><?= __('Taxable Amount') ?></th>
-                                    <th class="col-sm-1"><?= __('Aaye') ?></th>
+                                    <th class="col-sm-1"><?= __('Paye') ?></th>
                                     <th class="col-sm-1"><?= __('Net Pay') ?></th>
                                     <?php
-                                    if (can_access('manage_payroll')) {
-                                        ?>                                                                                                                                                   <!--<th class="col-sm-4"><?= __('action') ?></th>-->
+                                    if (can_access('manage_payroll')) {?>   
+                                            {{-- <th class="col-sm-1"><?= __('Action') ?></th>                                                                                                                                        <!--<th class="col-sm-4"><?= __('action') ?></th>--> --}}
                                     <?php } ?>
                                 </tr>
                             </thead>
@@ -85,7 +85,7 @@
                                 $pension_employer_contribution = 0;
                                 $total_net_pay = 0;
                                 $bank_name = '';
-                                $users =  \App\Models\User::where('status', 1)->where('role_id','<>', 7)->get();
+                                $users =  \App\Models\User::where('status', 1)->whereNotIn('role_id',array(7,5,15))->get();
                                 foreach ($users as $user) {
                                    // $user_info = $user->userInfo(DB::table($user->table));
                                     $basic_salary = $special == 0 ? $user->salary : 0;
@@ -93,14 +93,14 @@
                                     ?>
                                     <tr>
                                         <td><?= $i ?></td>
-                                        <td><?= $user->name ?></td>
-                                        <td><?= $user->role->name ?></td>
+                                        <td><?= ucwords($user->firstname. ' ' .$user->lastname) ?></td>
+                                        <td><?= $user->designation->name ?></td>
                                         <td><?= $user->bank_name ?> </td>
                                         <td>
                                            <?= $user->bank_account ?>
                                         </td>
                                         <td>
-                                            <?= (int) $basic_salary == 0 ? 0 : ($basic_salary) ?>
+                                            <?= (int) $basic_salary == 0 ? 0 : money($basic_salary) ?>
                                          </td>
                                         <td>
                                             <?php
@@ -172,7 +172,7 @@
                                                 $total_allowance = 0;
                                                 $taxable_allowances = 0;
                                             }
-                                            echo ($total_allowance);
+                                            echo money($total_allowance);
                                             $sum_of_total_allowances += $total_allowance;
                                             ?>
                                         </td>
@@ -180,7 +180,7 @@
                                             <?php
                                             $gross_pay = $basic_salary + $total_allowance;
                                             $total_gross_pay += $gross_pay;
-                                            echo ($gross_pay);
+                                            echo money($gross_pay);
                                             ?> 
                                         </td>
                                         <td>  
@@ -204,7 +204,7 @@
                                                     $total_pension += $pension_employee_contribution;
                                                 }
                                             }
-                                            echo ($pension_employee_contribution);
+                                            echo money($pension_employee_contribution);
                                             ?>
                                         </td>
                                         <td>
@@ -259,7 +259,7 @@
                                             }
                                             $total_deductions = (int) $special == 0 ? $total_deductions : 0;
                                             $sum_of_total_deductions += $total_deductions;
-                                            echo ($total_deductions);
+                                            echo money($total_deductions);
                                             ?> 
                                         </td>
                                         <td>
@@ -267,7 +267,7 @@
                                             //calculate user taxable amount
                                             $taxable_amount = $gross_pay - $pension_employee_contribution - $non_taxable_allowances;
                                             $total_taxable_amount += $taxable_amount;
-                                            echo ($taxable_amount);
+                                            echo money($taxable_amount);
                                             ?>  
                                         </td>
                                         <td>
@@ -280,7 +280,7 @@
                                                 $paye = 0;
                                             }
                                             $total_paye += $paye;
-                                            echo ($paye);
+                                            echo money($paye);
                                             ?> 
                                         </td>
                                         <td>
@@ -288,12 +288,12 @@
                                             //$net_pay = $gross_pay - $pension_employee_contribution - $total_deductions - $paye ; //all the same
                                             $net_pay = $basic_salary + $taxable_allowances - $pension_employee_contribution - $total_deductions - $paye + $non_taxable_allowances;
                                             $total_net_pay += $net_pay;
-                                            echo ($net_pay);
+                                            echo money($net_pay);
                                             ?>
                                         </td>
-                                       <!-- <td>
-                                            <a href="<?= url('payroll/payslip/null/?id=' . $user->id . '&month=' . date('m')) ?>" class="btn btn-success btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Show Payslip"><i class="fa fa-file"></i>Preview</a> 
-                                        </td> -->
+                                        {{-- <td>
+                                            <a href="<?= url('payroll/payslip/null/?id=' . $user->id . '&month=' . date('m')) ?>" class="btn btn-success btn-sm" data-placement="top" data-toggle="tooltip" data-original-title="Show Payslip"><i class="fa fa-file"></i>Preview</a> 
+                                        </td>  --}}
                                     </tr>
 
                                     <?php
@@ -338,8 +338,8 @@
                                                 $user->name,  $net_pay . '/=', date('Y-M-d', strtotime(request('payroll_date')))
                                             );
                                             $sms = preg_replace($patterns, $replacements, $sms_body);
-                                            \DB::table('sms')->insert(['body' => $sms, 'user_id' => $user->id, 'phone_number' => $user->phone]);
-                                            \DB::table('email')->insert(['body' => $sms, 'subject' => ' Salary for ' . date('Y-M-d', strtotime(request('payroll_date'))), 'user_id' => $user->id, 'email' => $user->email]);
+                                            \DB::table('public.sms')->insert(['body' => $sms, 'user_id' => $user->id, 'phone_number' => $user->phone]);
+                                            \DB::table('public.email')->insert(['body' => $sms, 'subject' => ' Salary for ' . date('Y-M-d', strtotime(request('payroll_date'))), 'user_id' => $user->id, 'email' => $user->email]);
                                         }
                                         //add salary_allowance records. One person can have more than one allowances
                                         if (!empty($allowance_ids)) {
