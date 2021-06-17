@@ -38,6 +38,7 @@ foreach ($bad_url as $value) {
     }
 }
 Route::get('/898uuhihdsdskj/live/{id}/{year}','Customer@usageAnalysis');
+Route::get('/898uuhihdsdskjbank/live/{id}/{year}','Customer@bankAnalysis');
 Auth::routes();
 //Route::group(['middleware' => ['guest']], function() {
 //    Auth::routes();
