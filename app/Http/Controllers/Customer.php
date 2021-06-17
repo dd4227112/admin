@@ -23,7 +23,7 @@ class Customer extends Controller {
     );
 
     public function __construct() {
-        if (request()->segment(1) != '898uuhihdsdskj') {
+        if (!preg_match('898uuhihdsdskj',request()->segment(1))) {
             $this->middleware('auth');
         }
     }
