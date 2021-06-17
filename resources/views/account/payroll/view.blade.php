@@ -6,7 +6,7 @@
         <div class="page-header">
             <div class="page-header-title">
                 <h4>Payroll</h4>
-                <span style="font-size: 16px;"><?= $set ?> Monthly Payroll </span>
+                <span style="font-size: 18px;"><?= date('d/m/Y',strtotime($set)) ?> Monthly Payroll </span>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -36,24 +36,23 @@
                                 <div class="tab-pane active" id="home3" role="tabpanel">
                                   <div id="hide-table">
                                          <div class="table-responsive table-sm table-striped table-bordered table-hover">          
-                                        
-
+                            
                                             <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
                                                 <thead>
                                                     <tr>
-                                                        <th class="col-sm-1"><?= __('slno') ?></th>
-                                                        <th class="col-sm-2"><?= __('employee_name') ?></th>
-                                                        <th class="col-sm-1"><?= __('basic_pay') ?></th>
+                                                        <th class="col-sm-1"><?= __('#') ?></th>
+                                                        <th class="col-sm-2"><?= __('Employee name') ?></th>
+                                                        <th class="col-sm-1"><?= __('Basic pay') ?></th>
                                                         <th class="col-sm-1">Bank</th>
-                                                        <th class="col-sm-2"><?= __('bank_account') ?></th>
-                                                        <th class="col-sm-1"><?= __('allowance') ?></th>
-                                                        <th class="col-sm-1"><?= __('gross_pay') ?></th>
-                                                        <th class="col-sm-1"><?= __('pension') ?></th>
-                                                        <th class="col-sm-1"><?= __('deduction') ?></th>
-                                                        <th class="col-sm-1"><?= __('taxable_amount') ?></th>
-                                                        <th class="col-sm-1"><?= __('paye') ?></th>
-                                                        <th class="col-sm-1"><?= __('net_pay') ?></th>
-                                                         <th class="col-sm-1"><?= __('date') ?></th>
+                                                        <th class="col-sm-2"><?= __('Bank account') ?></th>
+                                                        <th class="col-sm-1"><?= __('Allowance') ?></th>
+                                                        <th class="col-sm-1"><?= __('Gross pay') ?></th>
+                                                        <th class="col-sm-1"><?= __('Pension') ?></th>
+                                                        <th class="col-sm-1"><?= __('Deduction') ?></th>
+                                                        <th class="col-sm-1"><?= __('Taxable amount') ?></th>
+                                                        <th class="col-sm-1"><?= __('Paye') ?></th>
+                                                        <th class="col-sm-1"><?= __('Net pay') ?></th>
+                                                        <th class="col-sm-1"><?= __('Date') ?></th>
                         
                                                         <?php
                                                         if (can_access('manage_payroll')) {
@@ -78,35 +77,36 @@
                                                         $total_basic_pay += $basic_salary;
                                                         $user = \App\Models\User::where('id', $salary->user_id)->first();
                                                         if (!empty($user)) {
-                                                            $name = $user->name;
+                                                            $name = $user->firstname. ' '. $user->lastname;
                                                             $id = $user->id;
-                                                        } else {
-                                                     $table=$salary->table=='student' ? 'student_id': $salary->table.'ID';
-                                                            $us = \DB::table($salary->table)->where($table, $salary->user_id)->first();
-                                                            if (empty($us)) {
-                                                                $name = 'Deleted User';
-                                                                $id = 'removed';
-                                                            } else {
-                                                                $name = $us->name;
-                                                                $id = $us->id_number;
-                                                            }
-                                                        }
+                                                        } 
+                                                        // else {
+                                                        //    $table=$salary->table=='student' ? 'student_id': $salary->table.'ID';
+                                                        //     $us = \DB::table($salary->table)->where($table, $salary->user_id)->first();
+                                                        //     if (empty($us)) {
+                                                        //         $name = 'Deleted User';
+                                                        //         $id = 'removed';
+                                                        //     } else {
+                                                        //         $name = $us->name;
+                                                        //         $id = $us->id_number;
+                                                        //     }
+                                                        // }
                                                         $user_info_bank = \App\Models\User::where('id', $salary->user_id)->first();
                                                         if (!empty($user_info_bank)) {
                                                           //  $bank = $user_info_bank->userInfo(DB::table($salary->table));
-                                                            $bank_name = 'CRDB';
-                                                            $bank_account = '109876543221';
+                                                            $bank_name = $user_info_bank->bank_name;
+                                                            $bank_account = $user_info_bank->bank_account;
                                                         } else {
                                                             $bank_name = '';
                                                             $bank_account = '';
                                                         }
                                                         ?>
                                                         <tr>
-                                                            <td  data-title="<?= __('slno') ?>"><?= $i ?></td>
+                                                            <td  data-title="<?= __('#') ?>"><?= $i ?></td>
                                                             <td  data-title="<?= __('employee_name') ?>"><?= $name ?></td>
-                                                            <td  data-title="<?= __('basic_pay') ?>"><?= $basic_salary ?></td>
-                                                            <td  data-title="<?= __('Bank') ?>"><?= $bank_name == '' ? 'null' : $bank_name ?></td>
-                                                            <td  data-title="<?= __('bank_account') ?>"><?= $bank_account == '' ? 'null' : $bank_account ?></td>
+                                                            <td  data-title="<?= __('basic_pay') ?>"><?= money($basic_salary) ?></td>
+                                                            <td  data-title="<?= __('Bank') ?>"><?= $bank_name == '' ? '' : $bank_name ?></td>
+                                                            <td  data-title="<?= __('bank_account') ?>"><?= $bank_account == '' ? '' : $bank_account ?></td>
                                                             <td  data-title="<?= __('allowance') ?>">
                                                                 <?php
                                                                 //calculate user allowances
@@ -161,8 +161,8 @@
                                                             <td  data-title="<?= __('date') ?>">
                                                                 <?= $set ?> 
                                                             </td>
-                                                            <td  data-title="<?= __('action') ?>">
-                                                                <a href="<?= url('payroll/payslip/null/?id=' . $salary->user_id . '&table=' . $salary->table . '&month=' . date('m') . '&set=' . $set) ?>" class="btn btn-success btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Show Payslip"><i class="fa fa-file"></i>Preview</a>
+                                                            <td  class="text-center" data-title="<?= __('action') ?>">
+                                                                <a href="<?= url('payroll/payslip/null/?id=' . $salary->user_id . '&table=' . $salary->table . '&month=' . date('m') . '&set=' . $set) ?>" class="btn btn-success btn-sm" data-placement="top" data-toggle="tooltip" data-original-title="Show Payslip"><i class="fa fa-file"></i>Preview</a>
                                                             </td>                 
                                                         </tr>
                                                         <?php

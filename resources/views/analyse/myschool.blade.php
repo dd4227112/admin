@@ -2,6 +2,9 @@
 @section('content')
 <?php $root = url('/') . '/public/' ?>
 <script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
+<style>
+    .ui-dialog-titlebar {display:none;}
+</style>
 
 <div class="main-body">
     <div class="page-wrapper">
@@ -106,8 +109,9 @@
                     <div class="card">
                         <div class="card-header row">
                          <div class="col-sm-8">
-                            <h5>List of Schools Under <u><?= $staff->name ?></u></h5>
+                            <h5>List of Schools Under &nbsp;&nbsp;<a  style="font-size: 16px;" href="<?= url('users/show/'.$staff->id) ?>"><?= $staff->name ?></a> </h5>
                          </div>
+                   
 
                           <div class="col-sm-4">
                             <?php if (Auth::user()->role_id == 1) { ?>
@@ -140,9 +144,9 @@
                                     <tbody>
                                         <?php 
                                         $i = 1;
+                                           if(count($schools) > 0) {
                                             foreach ($schools as $school) {
                                             ?>
-                                           
                                             <tr>
                                                 <td><?= $i++ ?></td>
                                                 <td><?= warp($school->client->name) ?></td>
@@ -157,7 +161,8 @@
                                                  echo '<a href="' . url('customer/profile/' . $school->client->username) . '" class="btn btn-success btn-sm"> View</a>';
                                                  echo '</td>';
                                                  echo '</tr>';
-                                                 }
+                                                  }
+                                                }
                                             ?>
                                     </tbody>
                                 </table>

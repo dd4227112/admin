@@ -63,7 +63,7 @@ foreach ($user_permission as $permis) {
                                 <div class="card counter-card-2">
                                     <div class="card-block-big">
                                         <div> 
-                                            <h3>Tsh <?= (isset($salary->basic_pay)) ?  money($salary->basic_pay) : '' ?></h3>
+                                            <h3>Tsh <?=  money($salary->basic_pay) ?? '' ?></h3>
                                             <p>Basic Salary 
                                                 <span class="f-right text-success">
                                                     <i class="icofont icofont-arrow-up"></i>
@@ -281,7 +281,7 @@ foreach ($user_permission as $permis) {
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="row">Role</th>
-                                                                        <td>{{ $user->role->name }}</td>
+                                                                        <td>{{ $user->role->name ?? '' }}</td>
                                                                     </tr>
 
                                                                     <tr>

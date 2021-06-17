@@ -844,6 +844,16 @@ class Customer extends Controller {
         return view('customer.usage.modules', $this->data);
     }
 
+    
+    public function bankAnalysis() {
+
+  
+        $this->data['schools'] = [];
+
+        return view('customer.usage.bank_analysis', $this->data);
+    }
+
+    
     public function modules() {
         //    $schemas = $this->data['schools'] = DB::select("SELECT distinct table_schema as schema_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public')");
         //    Remove comment if you want support person to see only schools allocated to them
