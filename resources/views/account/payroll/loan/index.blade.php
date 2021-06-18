@@ -1,7 +1,6 @@
 @extends('layouts.app')
 @section('content')
 
-
 <div class="main-body">
     <div class="page-wrapper">
         <!-- Page-header start -->
@@ -33,17 +32,16 @@
                 <?php
                // $usertype = session("usertype");
                 if(can_access('manage_payroll')) { ?>
-				   <div class="card-header">
-                    <h5 class="page-header">
+				   <div class="card-header row">
+                     <div class="col-sm-6">
+                         <div>&nbsp;</div>
                         <a class="btn btn-success" href="<?php echo url('loan/loanAdd') ?>">
                             <i class="fa fa-plus"></i> 
                             Add New Application
-                        </a>
-                     </h5>
-					</div>
-
-                    <div class="col-sm-6 col-sm-offset-3 list-group">
-                        <div class="list-group-item list-group-item-warning">
+                         </a>
+					  </div>
+					 
+                        <div class="col-sm-6">
                             <form style="" class="form-horizontal" role="form" method="post">  
                                 <div class="form-group">              
                                     <label for="deduction_type" class="col-sm-2 col-sm-offset-2 control-label">
@@ -65,27 +63,27 @@
                                 </div>
                                 <?= csrf_field() ?>
                             </form>
-                        </div>
-                    </div>
+                         </div>
+                       </div>
+                   <?php } ?>
 
-
-                      <?php } ?>
+                      
 				         <div id="hide-table"  class="card-block">
 					      <div class="table-responsive table-sm table-striped table-bordered table-hover">
 						  <?php if (isset($applications) && count($applications) > 0) { ?>
 								<table class="table dataTable">
 									<thead>
                                         <tr>
-                                            <th class="col-lg-1"><?= __('slno') ?></th>
-                                            <th class="col-lg-2"><?= __('name') ?></th>
-                                            <th class="col-lg-2"><?= __('loan_type') ?></th>
-                                            <th class="col-lg-1"><?= __('amount') ?></th>
-                                            <th class="col-lg-1"><?= __('date_requested') ?></th>
-                                            <th class="col-lg-1"><?= __('date_approved') ?></th>
-                                            <th class="col-lg-1"><?= __('paid_amount') ?></th>
-                                            <th class="col-lg-1"><?= __('remain_amount') ?></th>
-                                            <th class="col-lg-1"><?= __('interest') ?></th>
-                                            <th class="col-lg-2"><?= __('action') ?></th>
+                                            <th class="col-lg-1"><?= __('#') ?></th>
+                                            <th class="col-lg-2"><?= __('Name') ?></th>
+                                            <th class="col-lg-2"><?= __('Loan type') ?></th>
+                                            <th class="col-lg-1"><?= __('Amount') ?></th>
+                                            <th class="col-lg-1"><?= __('Date requested') ?></th>
+                                            <th class="col-lg-1"><?= __('Date approved') ?></th>
+                                            <th class="col-lg-1"><?= __('Paid amount') ?></th>
+                                            <th class="col-lg-1"><?= __('Remain amount') ?></th>
+                                            <th class="col-lg-1"><?= __('Interest') ?></th>
+                                            <th class="col-lg-2"><?= __('Action') ?></th>
                                         </tr>
 									</thead>
                                     <tbody>
@@ -98,7 +96,7 @@
                                                     <?php echo $i; ?>
                                                 </td>
                                                 <td data-title="<?= __('name') ?>">
-                                                    <?php echo $application->user()->name; ?>
+                                                    <?php echo $application->user()->name ?? ''; ?>
                                                 </td>
                                                 <td data-title="<?= __('loan_type') ?>">
                                                     <?php echo $application->loanType->name;  ?>
@@ -107,7 +105,7 @@
                                                     <?php echo money($application->amount); ?>
                                                 </td>
                                                 <td data-title="<?= __('date_requested') ?>">
-                                                    <?php echo $application->created_at; ?>
+                                                    <?php echo date('d-m-Y', strtotime($application->created_at)); ?>
                                                 </td>
                                                 <td data-title="<?= __('date_approved') ?>">
                                                     <?php echo (int) $application->approval_status==1 ?

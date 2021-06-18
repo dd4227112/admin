@@ -724,6 +724,8 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
 
                                     {{-- <li><a href="<?= url('software/server') ?>" data-i18n="nav.basic-components.button">Server Administration</a></li> --}}
                                     <li><a href="<?= url('software/logs') ?>" data-i18n="nav.basic-components.box-shadow">Error Logs</a></li>
+
+                                    <li><a href="<?= url('software/smsStatus') ?>" data-i18n="nav.basic-components.box-shadow">SMS Status</a></li>
                                 </ul>
                             </li>
                         <?php } ?>
@@ -992,6 +994,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <script src="<?= $root ?>assets/pages/data-table/js/jszip.min.js"></script>
         <script src="<?= $root ?>assets/pages/data-table/js/pdfmake.min.js"></script>
         <script src="<?= $root ?>assets/pages/data-table/js/vfs_fonts.js"></script>
+        <script src="<?= $root ?>assets/pages/thousandth/thousands.js"></script>
         <script src="<?= $root ?>bower_components/datatables.net-buttons/js/buttons.print.min.js"></script>
         <script src="<?= $root ?>bower_components/datatables.net-buttons/js/buttons.html5.min.js"></script>
         <script src="<?= $root ?>bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>

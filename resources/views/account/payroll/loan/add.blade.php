@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-
+<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
 <div class="main-body">
     <div class="page-wrapper">
         <!-- Page-header start -->
@@ -11,12 +11,12 @@
             </div>
 
             <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
+                 <ul class="breadcrumb-title">
+                   <li class="breadcrumb-item">
                         <a href="<?= url("dashboard/index") ?>"><i class="fa fa-laptop"></i> <?= __('menu_dashboard') ?></a>
                     </li>
-            <li class="breadcrumb-item"><a href="<?= url("loan/index") ?>"><?= __('loan_application') ?></a> </li>
-            <li class="breadcrumb-item active"><?= __('menu_add') ?> <?= __('loan_application') ?></li>
+                    <li class="breadcrumb-item"><a href="<?= url("loan/index") ?>"><i class="fa fa-laptop"></i> <?= __('loan_application') ?></a>
+                    </li>
                 </ul>
             </div>
 
@@ -28,27 +28,35 @@
                 <div class="col-sm-12">
                     <!-- Zero config.table start -->
                     <div class="card">
-                        <header class="panel-heading">
+                        <header class="card-header">
                            Fill all basic information correctly
                         </header>
                         <div class="card-body row">
-                            <div id="error_area"></div>
-                            <div class="col-lg-8">
-                                
-                                <form class="form-horizontal" role="form" method="post" action="<?= url('Loan/loanAdd') ?>">
+                            <div id="error_area">
 
+                                @if (count($errors) > 0)
+                                    <ul class="alert alert-danger pl-5">
+                                        @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li> 
+                                        @endforeach
+                                    </ul>
+                                @endif
+
+                            </div>
+                            <div class="col-lg-8">
+                                <form class="form-horizontal" role="form" method="post" action="<?= url('Loan/loanAdd') ?>">
                                     <div class="form-group">              
                                         <label for="user" class="col-sm-2 control-label">
                                             Borrower
                                         </label>
                                         <div class="col-sm-6">
                                             <?php
-                                             $users = \App\Models\User::where('status', 1)->where('role_id','<>', 7)->get();
+                                            $users = \App\Models\User::where('status', 1)->whereNotIn('role_id',array(7,15))->get();
                                             $array = array("0" => __("select"));
                                             foreach ($users as $user) {
-                                                $array[$user->id] = $user->name;
+                                                $array[$user->id] = $user->firstname.' '.$user->lastname;
                                             }
-                                            echo form_dropdown("user_id", $array, old("user_id"), "id='user_id' class='form-control'");
+                                            echo form_dropdown("user_id", $array, old("user_id"), "id='user_id' class='form-control select2'");
                                             ?>
                                         </div>
                                     </div>
@@ -68,7 +76,7 @@
                                             foreach ($loan_sources as $source) {
                                                 $array[$source->id] = $source->name;
                                             }
-                                            echo form_dropdown("loan_source_id", $array, old("loan_source_id"), "id='loan_source_id' class='form-control'");
+                                            echo form_dropdown("loan_source_id", $array, old("loan_source_id"), "id='loan_source_id' class='form-control select2'");
                                             ?>
                                         </div>
                                     </div>
@@ -83,7 +91,7 @@
                                             foreach ($loan_types as $loan) {
                                                 $array[$loan->id] = $loan->name;
                                             }
-                                            echo form_dropdown("loan_type_id", $array, old("loan_type_id"), "id='loan_type_id' class='form-control'");
+                                            echo form_dropdown("loan_type_id", $array, old("loan_type_id"), "id='loan_type_id' class='form-control select2'");
                                             ?>
                                         </div>
                                     </div>
@@ -99,7 +107,7 @@
                                             <?= __("amount") ?><span class="red">*</span>
                                         </label>
                                         <div class="col-sm-6">
-                                            <input placeholder="<?= __("amount") ?>" type="number" class="form-control" id="amount" name="amount" value="<?= old('amount') ?>" onkeyup="loan()">
+                                            <input placeholder="<?= __("amount") ?>" type="text" class="form-control transaction_amount" id="amount" name="amount" value="<?= old('amount') ?>" onkeyup="loan()">
                                             <i class="fa fa-question-circle" data-container="body"
                                                data-toggle="popover" data-placement="top" data-trigger="hover"
                                                data-content="Amount of loan requested"
@@ -225,6 +233,13 @@
 </div>
 
 <script type="text/javascript">
+    $(".select2").select2({
+    theme: "bootstrap",
+    dropdownAutoWidth: false,
+    allowClear: false,
+    debug: true
+   });
+
     $('#loan_type_id').change(function () {
         var val = $(this).val();
         if (val == 0) {

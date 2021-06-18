@@ -116,7 +116,7 @@
                                 $schools = DB::table('schools')->where('ownership', 'Non-Government')->get();
                                 foreach ($schools as $school) { 
                                   ?>
-                                  <option value="<?= $school->id ?>"><?= $school->name. ' (<b> '.$school->type. ' </b>) - '.$school->wards->district->region->name ?></option>
+                                  <option value="<?= $school->id ?>"><?= $school->name. ' (<b> '.$school->type. ' </b>) - '. //$school->wards->district->region->name ?></option>
                                 <?php } ?>
 
                               </select> -->

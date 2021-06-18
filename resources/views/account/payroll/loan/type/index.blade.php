@@ -18,7 +18,7 @@
                     </li>
                     <li class="breadcrumb-item"><a href="<?= url("dashboard/index") ?>"><i class="fa fa-laptop"></i> <?= __('menu_dashboard') ?></a>
                     </li>
-                    <li class="active"><?= __('loan_types') ?></li>
+                
                 </ul>
             </div>
         </div>
@@ -48,17 +48,17 @@
 								<table class="table dataTable">
 									<thead>
 									   <tr>
-											<th> <?= __('slno')?>           </th>
-											<th> <?= __('name')?>           </th>
-											<th> <?= __('minimum_amount')?> </th>
-											<th> <?= __('maximum_amount')?> </th>
-											<th> <?= __('minimum_tenor') ?> </th>
-											<th> <?= __('maximum_tenor') ?> </th>
-											<th> <?= __('interest_rate') ?> </th>
-											<th> <?= __('credit_ratio') ?>  </th>
-											<th> <?= __('created_by') ?>    </th>
-											<th> <?= __('description') ?>   </th>
-											<th> <?= __('action') ?>        </th>
+											<th> <?= __('#')?>           </th>
+											<th> <?= __('Name')?>           </th>
+											<th> <?= __('Minimum amount')?> </th>
+											<th> <?= __('Maximum amount')?> </th>
+											<th> <?= __('Minimum tenor') ?> </th>
+											<th> <?= __('Maximum tenor') ?> </th>
+											<th> <?= __('Interest rate') ?> </th>
+											<th> <?= __('Credit ratio') ?>  </th>
+											<th> <?= __('Created by') ?>    </th>
+											<th> <?= __('Description') ?>   </th>
+											<th> <?= __('Action') ?>        </th>
 									  </tr>
 									</thead>
                                     <tbody>
@@ -67,7 +67,7 @@
                                     foreach ($types as $loan_type) {
                                         ?>
                                         <tr>
-                                            <td data-title="<?= __('slno') ?>">
+                                            <td data-title="<?= __('#') ?>">
                                                 <?php echo $i; ?>
                                             </td>
                                             <td data-title="<?= __('name') ?>">
@@ -80,10 +80,10 @@
                                                 <?php echo money($loan_type->maximum_amount); ?>
                                             </td>
                                             <td data-title="<?= __('minimum_tenor') ?>">
-                                                <?php echo $loan_type->minimum_tenor; ?>
+                                                <?php echo money($loan_type->minimum_tenor); ?>
                                             </td>
                                             <td data-title="<?= __('maximum_tenor') ?>">
-                                                <?php echo $loan_type->maximum_tenor; ?>
+                                                <?php echo money($loan_type->maximum_tenor); ?>
                                             </td>
                                             <td data-title="<?= __('interest_rate') ?>">
                                                 <?php echo $loan_type->interest_rate; ?>
@@ -111,18 +111,18 @@
 								 
 								 <table class="table dataTable">
 									<thead>
-									   <tr>
-											<th> <?= __('slno')?>           </th>
-											<th> <?= __('name')?>           </th>
-											<th> <?= __('minimum_amount')?> </th>
-											<th> <?= __('maximum_amount')?> </th>
-											<th> <?= __('minimum_tenor') ?> </th>
-											<th> <?= __('maximum_tenor') ?> </th>
-											<th> <?= __('interest_rate') ?> </th>
-											<th> <?= __('credit_ratio') ?>  </th>
-											<th> <?= __('created_by') ?>    </th>
-											<th> <?= __('description') ?>   </th>
-											<th> <?= __('action') ?>        </th>
+									  <tr>
+											<th> <?= __('#')?>           </th>
+											<th> <?= __('Name')?>           </th>
+											<th> <?= __('Minimum amount')?> </th>
+											<th> <?= __('Maximum amount')?> </th>
+											<th> <?= __('Minimum tenor') ?> </th>
+											<th> <?= __('Maximum tenor') ?> </th>
+											<th> <?= __('Interest rate') ?> </th>
+											<th> <?= __('Credit ratio') ?>  </th>
+											<th> <?= __('Created by') ?>    </th>
+											<th> <?= __('Description') ?>   </th>
+											<th> <?= __('Action') ?>        </th>
 									  </tr>
 									</thead>
 								 </table>

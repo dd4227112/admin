@@ -75,11 +75,16 @@ class Kernel extends ConsoleKernel {
         //     $this->sendBirthdayWish();
         //     $this->sendTaskReminder();
         //     // $this->sendSequenceReminder();
-        // })->dailyAt('04:40'); // Eq to 07:40 AM   
+        // })->dailyAt('04:40'); // Eq to 07:40 AM    
 
         $schedule->call(function () { 
             $this->sendSORemainder();
-        })->dailyAt('04:40'); // Eq to 07:40 AM 
+        })->dailyAt('04:40'); // Eq to 07:40 AM
+        
+
+        $schedule->call(function () { 
+            $this->SMSStatusToSchoolsAdmin();
+        })->dailyAt('05:30'); // Eq 08:30 AM
           
 //        $schedule->call(function() {
 //            //send login reminder to parents in all schema
@@ -981,17 +986,41 @@ public function sendSORemainder() {
           'body' => $sms,
           'phone_number' => $user->phone,
           'type' => 0,
-          'status' => 0
+          'status' => 0,
+          'sent_from' => 'phonesms'
+
       ]);
   }
 }
 
     public function endDeadlock() {
-
         DB::SELECT("WITH inactive_connections AS (SELECT pid, rank() over (partition by client_addr order by backend_start ASC) as rank
         FROM pg_stat_activity WHERE pid <> pg_backend_pid( ) AND application_name !~ '(?:psql)|(?:pgAdmin.+)' AND datname = current_database() AND usename = current_user 
         AND state in ('idle', 'idle in transaction', 'idle in transaction (aborted)', 'disabled') AND current_timestamp - state_change > interval '3 minutes') SELECT pg_terminate_backend(pid) FROM inactive_connections WHERE rank > 1");
         return DB::select("SELECT pg_terminate_backend(pid) from pg_stat_activity where state='idle' and query like '%DEALLOCATE%'");
     }
+
+   // F(x) to send text remainder to keep phone active to school admins
+    public function SMSStatusToSchoolsAdmin(){
+        // select all schools not keep their app active for the past 24 hours
+         $schools = \App\Models\SchoolKeys::where('last_active', '<', \Carbon\Carbon::now()->subDay())->get();
+         foreach($schools as $school){ 
+             // Select school admin contacts to message to
+            // $contacts = DB::table('shulesoft.user')->where('usertype', 'Admin')->get();
+             $contacts = DB::table($school->schema_name.'.user')->where('usertype','Admin')->get();
+             if(count($contacts) > 0) {
+             foreach($contacts as $contact){
+                    $sms = 'MUHIMU: Simu yako yenye app ya KARIBU SMS kwa ajili ya kutuma SMS kwenda kwa wazazi lazima iwe hewani muda wote kuepusha SMS kufeli au kutofika kwa wakati.#SHULESOFT';
+                     DB::table('public.sms')->insert([
+                     'body' => $sms,
+                     'phone_number' => $contact->phone,
+                     'type' => 0,
+                     'status' => 0,
+                     'sent_from' => 'phonesms'
+                   ]);
+             }
+            }
+         }
+     }
 
 }
