@@ -549,7 +549,7 @@ ORDER BY c.oid, a.attnum";
       echo $message;
     }
 
-    // f (x) to show schools sms status
+    
     public function smsStatus(){
         $this->data['sms_status'] = \App\Models\SchoolKeys::latest()->get();
         return view('software.status_sms', $this->data);

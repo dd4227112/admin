@@ -6,8 +6,8 @@
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4>Our Banks</h4>
-                <span>List of bank Accounts</span>
+                <h4>Account Groups</h4>
+                <span>List of account groups</span>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -18,7 +18,7 @@
                     </li>
                     <li class="breadcrumb-item"><a href="#!">Accounts</a>
                     </li>
-                    <li class="breadcrumb-item"><a href="#!">Banking</a>
+                    <li class="breadcrumb-item"><a href="#!">Account Groups</a>
                     </li>
                 </ul>
             </div>
@@ -29,15 +29,9 @@
             <div class="row">
                 <div class="col-sm-12">
                     <div class="card">
-
                         <div class="card-header">
-
                             <h5 class="page-header">
-
-                              
                                 <button class="btn-success btn" data-toggle="modal" data-target="#group" onmousedown="$('#group_id').val('')"><span class="fa fa-plus"></span>Add New Group</button>
-                           
-
                             </h5>
                             <div class="alert alert-info">
                                 Groups to be displayed in the balance sheet </div>
@@ -49,9 +43,7 @@
                                             <th class="col-sm-2">Group Name</th>
                                             <th class="col-sm-2">Financial Category</th>
                                             <th class="col-sm-2">Note</th>
-
-                                                <th class="col-sm-2">Action</th>
-                                           
+                                            <th class="col-sm-2">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -73,23 +65,18 @@
                                                         <span id="fin_id<?=$group->id?>" style="display:none"><?=$group->financial_category_id?></span>
                                                     </td>
 
-
                                                     <td data-title="<?= __('group_note') ?>">
                                                         <span id="note<?=$group->id?>"><?php echo $group->note; ?></span>
                                                     </td>
 
-                                                 
-                                                        <td data-title="<?= __('action') ?>">
-
-                                                            <?php
-                                                           echo '<a class="btn btn-info btn-sm" data-toggle="modal" data-target="#group" href="#" onmousedown="fill_form('.$group->id.')">edit</a>';
-                                                            ?>
-                                                            <?php
-                                                            echo '<a  class="btn btn-danger btn-sm" href="'.url('account/group/delete/' . $group->id . '/').'">delete</a>';
-
-                                                            ?></td>
-
-
+                                                    <td data-title="<?= __('action') ?>">
+                                                    <?php
+                                                      echo '<a class="btn btn-info btn-sm" data-toggle="modal" data-target="#group" href="#" onmousedown="fill_form('.$group->id.')">edit</a>';
+                                                      ?>
+                                                      <?php
+                                                       echo '<a  class="btn btn-danger btn-sm" href="'.url('account/groups/delete/' . $group->id . '/').'">delete</a>';
+                                                       ?>
+                                                     </td>
                                                 </tr>
                                                 <?php
                                                 $i++;
@@ -120,40 +107,30 @@
                 </div>
 
                 <div class="modal-body">
-
                     <div class="form-group row">
-
                         <div class="col-sm-12">
-
                             <label class="control-label required">Name of Group</label>
-                            <input type="text" id="group_name" name="name" class="form-control  ember-text-field text-left ember-view">
-
+                            <input type="text" id="group_name" name="name" class="form-control  ember-text-field text-left ember-view" required>
                         </div>
                     </div>
                     <div class="form-group row">
-
                         <div class="col-sm-12">
                             <label class="control-label required">Financial Category Type</label>
                             <?php
                             $array = array('0' => 'Select Type');
                             foreach ($category as $categ) {
-
-
                                 $array[$categ->id] = $categ->name;
                             }
-                            echo form_dropdown("financial_category_id", $array, old("financial_category_id"), "id='financial_category_id' class='form-control' name='category'");
+                            echo form_dropdown("financial_category_id", $array, old("financial_category_id"), "id='financial_category_id' class='form-control' name='category' ");
                             ?>
-
-                             </div>
+                     </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-12">
                             <label class="control-label required">Notes</label>
-                            <textarea name="note" placeholder="Max 500 characters" id="group_note" class="form-control ember-text-area ember-view"></textarea>
+                            <textarea name="note" placeholder="Max 500 characters" id="group_note" class="form-control ember-text-area ember-view" required></textarea>
                         </div>
                     </div>
-
-
                 </div>
 
 
@@ -170,13 +147,11 @@
 
 <!-- Modal content End here -->
 <script type="text/javascript">
-
     function fill_form(id) {
         $('#group_name').val($('#name'+id).text());
         var fin_id = $('#fin_id'+id).text();
         $('#group_note').text($('#note'+id).text());
         $('#group_id').val(id);
-       
     }
 </script>
 @endsection

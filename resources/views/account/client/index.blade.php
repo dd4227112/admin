@@ -69,15 +69,15 @@
                                         @foreach($clients as $client)
                                         <tr>
                                             <td><?= $i ?></td>
-                                            <td>{{$client->name}}</td>
+                                            <td><?= warp($client->name) ?></td>
                                             <td>{{$client->email}}</td>
                                             <td>{{$client->phone}}</td>
-                                            <td>{{$client->created_at}}</td>
-                                            <td>{{$client->address}}</td>
-                                            <td>{{number_format($client->payments()->sum('amount'))}}</td>
+                                            <td><?= date('d-m-Y H:i:s', strtotime($client->created_at)) ?></td>
+                                            <td><?= warp($client->address) ?></td>
+                                            <td>{{money( $client->payments()->sum('amount') )}}</td>
                                             <td>    
                                                 <a href="<?= url('account/client/edit/' . $client->id) ?>" class="btn btn-sm btn-primary">Edit</a>
-                                                <a href="<?= url('account/client/delete/' . $client->id) ?>" class="btn btn-sm btn-danger">Delete</a></td>
+                                                {{-- <a href="<?= url('account/client/delete/' . $client->id) ?>" class="btn btn-sm btn-danger">Delete</a></td>  --}}
                                         </tr>
                                         <?php $i++; $total_amount+=$client->payments()->sum('amount'); ?>
                                         @endforeach

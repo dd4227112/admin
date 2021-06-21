@@ -43,12 +43,12 @@
                                 </h5>-->
                             <?php } ?>
                             <div id="hide-table">
-                                <table id="example1" class="table table-striped table-bordered table-hover no-footer">
+                                   <div class="table-responsive dt-responsive">
+                                     <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                                     <thead>
                                         <tr>
                                             <th class="col-sm-1">#</th>
                                             <th class="col-sm-1">Bank Name</th>
-
                                             <th class="col-sm-1">Branch</th>
                                             <th class="col-sm-2">Account Name</th>
                                             <th class="col-sm-1">Account Number</th>
@@ -69,7 +69,7 @@
                                                         <?php echo $i; ?>
                                                     </td>
                                                     <td data-title="<?= __('bankaccount_name') ?>">
-                                                         <?php echo $account->referBank->name; ?> 
+                                                         <?php echo warp($account->referBank->name); ?> 
                                                     </td>
                                                     <td data-title="<?= __('bankaccount_branch') ?>">
                                                         <?php echo $account->branch ?>
@@ -89,7 +89,7 @@
                                                     </td>
 
                                                     <td data-title="<?= __('bankaccount_note') ?>">
-                                                        <?php echo $account->note; ?>
+                                                        <?php echo warp($account->note); ?>
                                                     </td>
 <!--                                                    <td data-title="<?= __('action') ?>">
                                                         <?php // echo can_access('edit_bankaccount') ? btn_edit('bankaccount/edit/' . $account->id, __('edit')) : '' ?>
@@ -103,6 +103,7 @@
                                         ?>
                                     </tbody>
                                 </table>
+                              </div>
                             </div>
 
                         </div>
