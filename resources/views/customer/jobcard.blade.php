@@ -1,130 +1,108 @@
+@extends('layouts.app')
+@section('content')
 <?php
 if((int) $show_download){ob_start();}
 $root = url('/') . '/public/'
 ?>
 
-<!DOCTYPE html>
-<html lang="{{ app()->getLocale() }}">
-
-    <head>
-        <title>ShuleSoft Job Card</title>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
-        <meta name="description" content="ShuleSoft Admin">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-        <meta name="keywords" content="ShuleSoft, Admin , Admin Panel">
-        <meta name="author" content="ShuleSoft">
+<link href="<?php echo url('public/assets/print.css'); ?>?v=4" rel="stylesheet" type="text/css">
+    
+      
         <!-- Favicon icon -->
-        <link rel="icon" href="<?= $root ?>assets/images/favicon.ico" type="image/x-icon">
-        <!-- Google font-->
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
-        <!-- Required Fremwork -->
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/bootstrap/dist/css/bootstrap.min.css">
-        <!-- Style.css -->
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css">
+           <style>
+                @page {
+                    margin: 0
+                }
 
-        <style>
-            .left{
-                width: 60% !important; border-right: 5px solid #8CDDCD;
-            }
-            @media print{
-                #print{display: none;}
-            }
+                .letterhead{
+                   font-weight: 100;
+                   font-family: "Adobe Garamond Pro";
+                  }
+                  table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+                    padding: 0.9%;
+                     }
+        
         </style>
-    </head>
-    <body class="horizontal-static">
-        <!-- Pre-loader start -->
 
-        <div class="main-body" >
-            <div class="page-wrapper">
-                <!-- Page header start -->
-
-                <!-- Page header end -->
-                <!-- Page body start -->
-                <div class="page-body">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <!-- Default card start -->
-                            <p align='right' id="print"><a href="#" onclick="window.print()"><i class="fa fa-print" ></i> Print</a></p>
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5><img src="https://admin.shulesoft.com/public/assets/images/auth/shulesoft_logo.png" width="50" height="" style=""/> ShuleSoft Job card</h5>
-                                    
-                                </div>
-                                <div class="card-block">
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <tbody>
-                                                <tr style="border-bottom: 5px solid #8CDDCD;">
-                                                    <td class="left">Services provided to:</td>
-                                                    <td>
-                                                        <table class="table">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td>Name : <b><?= $client->name ?></b></td>
-                                                                </tr>
-                                                              
-                                                            </tbody>
-                                                        </table>  
-                                                    </td>
+   <div class="main-body">
+       <div class="page-wrapper">
+             <button class="btn-cs btn-sm-cs" onclick="javascript:printDiv('printablediv')"><span
+          
+            class="fa fa-print"></span> <?= __('print') ?> </button>
+            
+                  <div id="printablediv" class="page center sheet padding-10mm" >
+	   <div class="card-body">
+        <div class="row">
+        
+            <div class="col-sm-12">
+               
+                <div class="card-header">
+                <table style="margin: 1px 2px 1px 0px;">
+                <thead >
+                    <tr >
+                        <th  class="letterhead" style="margin: 1% 0 0 16%; padding-top: 2%; ">
+                          <h3 style="font-weight: bolder !important; font-size: 24px; text-transform: uppercase;"><img src="https://admin.shulesoft.com/public/assets/images/auth/shulesoft_logo.png" width="50" height="" style=""/> ShuleSoft Job card</h3>
+                        </th>
+                      </tr>              
+                    </thead>
+                  </table>
+                </div>
+                       <table  class="table table-striped table-bordered table-hover">
+               
+                                  <tbody>
+                                         <tr style="border-bottom: 5px solid #8CDDCD; margin: bottom 2px;">
+                                                    <td >Services provided to:</td>
+                                                    <td>Name : <b><td><b><?= $client->name ?></b></td></b></td>
                                                 </tr>
-
                                              
-
                                                  <tr>
-                                                    <td class="left">Start time:</td>
-                                                    <td class="right">End time:</td>
-                                                </tr>
+                                                    <td style="float: left;border-right:5px solid #8CDDCD;">Start time:</td>
+                                                    <td  style="float: right;border-right:5px solid #8CDDCD;">End time:</td>
+                                                 </tr>
                                                 
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                    <div class="">
-                                        <div class="">
-                                            <table class="table table-bordered">
-                                                <thead>
+                                                <div class="table-responsive">      
+                                   
+                                               <table class="table table-bordered table-sm" width="50%" style="font-size: 12px;">
                                                     <tr>
                                                         <th>#</th>
                                                         <th>Task</th>
-                                                        <th style="width:111px;height:80px;">Description</th>
+                                                        <th>Description</th>
                                                         <th>Provided to</th>
                                                         <th>Status</th>
                                                         <th>Signature</th>
                                                     </tr>
-                                                </thead>
-                                                <tbody>
+                                              
+                                               <tbody>
                                                     <?php
                                                     $x = 1;
                                                     foreach ($job_card_modules as $module) {
                                                         ?>
                                                         <tr>
-                                                            <th scope="row"><?= $x ?></th>
-                                                            <td><?= $module->module->name ?></td>
-                                                            <td style="width:111px;height:80px;"> </td>
-                                                            <td> </td>
-                                                            <td> </td>
-                                                            <td> </td>
+                                                            <th width="5%"scope="row"><?= $x ?></th>
+                                                            <td width="10%"><?= $module->module->name ?></td>
+                                                            <td width="55%"> </td>
+                                                            <td width="10%"> </td>
+                                                            <td width="10%"> </td>
+                                                            <td width="10%"> </td>
                                                         </tr>
                                                         <?php
                                                         $x++;
                                                     }
                                                     ?>
-
                                                 </tbody>
                                             </table>
                                         </div>
-                                    </div>
+                                  
 
-                                    <div class="table-responsive">
+                                
                                         <br/>
-                                        <table class="table">
+                                        
+                                        <table class="table  table-sm" style="margin: 1px 2px 1px 0px;">
                                             <thead>
                                                 <tr  style="border-bottom: 5px solid #8CDDCD;">
-                                                    <th colspan="2" style="background:#8CDDCD;text-align: center;
+                                                    <th colspan="2" class="text-white" style="background:#8CDDCD;text-align: center;
                                                         font-size: 18px;
-                                                        color: white;">Client</th>
+                                                        ">Client</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -134,7 +112,7 @@ $root = url('/') . '/public/'
                                                         </div>
                                                     </td>
                                                     <td>  
-                                                        <table class="table">
+                                                        <table class="table" style="margin: 1px;padding:1px;">
                                                             <tbody>
                                                                 <tr>
                                                                     <td>Name:</td>
@@ -155,25 +133,28 @@ $root = url('/') . '/public/'
 
                                             </tbody>
                                         </table>
+                                    
                                         <br>
 
                                   
-                                    </div>
+                                
 
-                                    <div class="table-responsive">
-                                        <table class="table">
+                                
+                                        <table class="table  table-sm" style="margin: 1px 2px 1px 0px;">
                                             <thead>
                                                 <tr  style="border-bottom: 5px solid #8CDDCD;">
-                                                    <th colspan="2" style="background:#8CDDCD;text-align: center;
+                                                    <th colspan="2" class="text-white" style="background:#8CDDCD;text-align: center;
                                                         font-size: 18px;
-                                                        color: white;">INETS COMPANY LIMITED</th>
+                                                       ">INETS COMPANY LIMITED</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td style="width: 60% !important;">For and on behalf of <br/>the INETS Company Limited, <br/>
+                                                    <td style="width: 60% !important;">
+                                                        For and on behalf of <br/>the INETS Company Limited, <br/>
                                                         the aforementioned services headed by</td>
-                                                    <td>    <table class="table">
+                                                        <td>   
+                                                         <table class="table">
                                                             <tbody>
                                                                 <tr>
                                                                     <td>Name:</td>
@@ -195,31 +176,49 @@ $root = url('/') . '/public/'
                                         </table>
                                         <table class="table">
                                             <tr>
-                                                <td style="width: 60% !important;">
-                                                    <img src="<?= url('public/images/ShuleSoft-TM.png') ?>" width="350" height="" style=""/> 
+                                                <td style="width: 30% !important;">
+                                                    <img src="<?= url('public/images/ShuleSoft-TM.png') ?>" width="250" height="" style=""/> 
                                                 </td>
-                                                <td style="width: 60% !important;">
-                                                    <span>
+                                                <td style="width: 30% !important;">
+                                                    <span style="font-size: 12px">
                                                         INETS is a Private Company Limited by shares and registered <br/>under the Company Act 2012 with registration number 9216.<br/> INETS deals solely with Software Development. <br/>Currently focused on a School Management System ShuleSoft </span></td>
                                             </tr>
                                         </table>
                                     </div>
 
                                 </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <!-- Page body end -->
+                            
+                 </div>
+              </div>
             </div>
         </div>
-</html>
-<script type="text/javascript">window.print();</script>
-<?php
-if((int) $show_download){
-$page = ob_get_clean();
-$file_name =$client->username. '.doc';
-Storage::disk('local')->put($file_name, $page);
-}
-?>
+    </div>
+</div>
+<script>
+    function printDiv(divID) {
+
+        //Get the HTML of div
+        var divElements = document.getElementById(divID).innerHTML;
+        //Get the HTML of whole page
+        var oldPage = document.body.innerHTML;
+
+        //Reset the page's HTML with div's HTML only
+        document.body.innerHTML =
+              '<html><head><title></title></head><body>' +
+              divElements + '</body>';
+
+        //Print Page
+        window.print();
+        //Restore orignal HTML
+        //  document.body.innerHTML = oldPage;
+    }
+
+     $(document).ready(function () {
+        $("#printPayslip").click(function () {
+
+            printDiv("print_div");
+        });
+    });
+</script>
+
+@endsection

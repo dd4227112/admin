@@ -7,6 +7,7 @@ define('SCHEMA', $schema);
 
 function check_status($table, $where = null) {
 $schema = SCHEMA;
+
 if ($table == 'admin.vendors') {
     $report = \collect(DB::select('select created_at::date from ' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first();
 }elseif ($table == 'invoices') {
@@ -1147,8 +1148,8 @@ return $echo;
                                                                     <div class="col-md-6">
                                                                         <strong>Job card date</strong>
                                                                         <input type="date"
-                                                                            class="form-control" 
-                                                                            name="date"   required>
+                                                                            class="form-control" id="job_date" 
+                                                                            name="date" disabled required>
                                                                        </div>
                                                                 </div>
                                                             </div>
@@ -1636,16 +1637,15 @@ return $echo;
                                                                         foreach ($logs as $log) {
                                                                             $dateObj = DateTime::createFromFormat('!m', $log->month);
                                                                             $month = $dateObj->format('F');
-                                                                            ?> {
-                                                                                                                                                        name: '<?= ucwords($month) ?>',
-                                                                                                                                                        y: <?php
+                                                                            ?> { name: '<?= ucwords($month) ?>',
+                                                                                    y: <?php
                                                                             echo $log->count;
                                                                             ?>,
-                                                                                                                                                        drilldown: ''
-                                                                                                                                                    },
+                                                                                drilldown: ''
+                                                                                  },
                                                                                   <?php
-                                                                        }
-                                                                        }
+                                                                            }
+                                                                          }
                                                                         ?>
                                                                         ]
                                                                     }]

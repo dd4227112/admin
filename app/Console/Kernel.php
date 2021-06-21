@@ -36,9 +36,7 @@ class Kernel extends ConsoleKernel {
         // $schedule->call(function () {
         //     $this->car_track_alert_parent('public'); 
         // })->everyTwoHours();
-        // $schedule->call(function () {
-        //     $this->addAttendance(); 
-        // })->everySixHours();
+
         // $schedule->command('inspire')
         //         ->hourly();
         $schedule->call(function () {
@@ -76,6 +74,11 @@ class Kernel extends ConsoleKernel {
         //     $this->sendTaskReminder();
         //     // $this->sendSequenceReminder();
         // })->dailyAt('04:40'); // Eq to 07:40 AM    
+
+
+        $schedule->call(function () {
+             $this->addAttendance(); 
+         })->everyThreeMinutes();
 
         $schedule->call(function () { 
             $this->sendSORemainder();
@@ -915,17 +918,29 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         $datas = DB::connection('biotime')->table('public.iclock_transaction')->whereDate('punch_time', $date)->where('punch_state', '0')->get();
         if (count($datas) > 0) {
             foreach ($datas as $data) {
-
-                // $employee = DB::table('public.personnel_employee')->where('id', $data->emp_id)->first();
-                // if(!empty($employee)){
-                $user = DB::table('admin.all_users')->where('sid', $data->emp_code)->first();
                 $device = DB::table('api.attendance_devices')->where('serial_number', $data->terminal_sn)->first();
-
-                if (!empty($user)) {
+                $employee = DB::table('admin.users')->where('sid', $data->emp_code)->first();
                     if (empty($device)) {
-                        $device_id = DB::table('api.attendance_devices')->insert(['serial_number' => $data->terminal_sn, 'schema_name' => $user->schema_name]);
+                        $device_id = DB::table('api.attendance_devices')->insert(['serial_number' => $data->terminal_sn, 'schema_name' => 'admin']);
                         $device = DB::table('api.attendance_devices')->where('id', $device_id)->first();
                     }
+                 if(!empty($employee)){
+                      $uattendance = DB::table('admin.uattendances')->where('user_id', $employee->id)->whereDate('date', date('Y-m-d'))->first();
+                        if (empty($uattendance)) {
+                            DB::table('admin.uattendances')->insert([
+                                'user_id' => $employee->id,
+                                'created_by' => $device->id,
+                                'source' => 'api',
+                                'timein' => 'now()',
+                                'date' => date("Y-m-d", strtotime($data->punch_time)),
+                                'present' => 1
+                            ]);
+                        }
+                }else{
+                $user = DB::table('admin.all_users')->where('sid', $data->emp_code)->first();
+
+                if (!empty($user)) {
+                    
                     if ($user->table == 'student') {
                         $attendance = DB::table($user->schema_name . '.sattendances')->where('student_id', $user->id)->whereDate('date', date('Y-m-d'))->first();
                         if (empty($attendance)) {
@@ -951,6 +966,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                             ]);
                         }
                     }
+                }
                     DB::connection('biotime')->table('public.iclock_transaction')->where('id', $data->id)->update(['punch_state' => '1']);
                 }
             }

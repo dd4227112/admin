@@ -214,7 +214,7 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
             $id = Auth::user()->id;
         } 
         $user = \App\Models\User::where('id',$id)->where('status','=',1)->first();
-   
+         // user role 17 ie zone manager, select schools/clients based on zones
         if(($user->role_id) && ($user->role_id == 17)){  
             $zone = \App\Models\ZoneManager::where('user_id',$id)->first();
            
@@ -224,13 +224,15 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
              //  (select id from admin.wards where district_id in 
              //  (select id from admin.districts where region_id in 
             //    (select id from admin.regions where refer_zone_id = '. $zone->zone_id . '))))');
-              $schools = \App\Models\ClientSchool::whereIn('school_id',\App\Models\School::whereIn('ward_id',\App\Models\Ward::whereIn('district_id',\App\Models\District::whereIn('region_id',\App\Models\Region::where('refer_zone_id',$zone->zone_id)->get(['id']))->get(['id']))->get(['id']))->get(['id']))->get();
+             $schools = \App\Models\ClientSchool::whereIn('school_id',\App\Models\School::whereIn('ward_id',\App\Models\Ward::whereIn('district_id',\App\Models\District::whereIn('region_id',\App\Models\Region::where('refer_zone_id',$zone->zone_id)->get(['id']))->get(['id']))->get(['id']))->get(['id']))->get();
             }else{
-              $schools = [];
+             $schools = [];
              }
+             // user role 1 i.e admin, select all schools/clients
          } else if(($user->role_id) && ($user->role_id) == 1){
             $schools =  \App\Models\ClientSchool::get();
          } else {
+             // Else select schools/clients based on school associates
             $schools =  \App\Models\UserClient::where('user_id', $id)->get();
          }
      

@@ -948,7 +948,10 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <!-- Main-body start-->
         <div class="main-body">
             @include('layouts.notifications')
+            
+            
             @yield('content')
+            
         </div>
       
 
