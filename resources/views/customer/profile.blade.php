@@ -952,19 +952,18 @@ return $echo;
                                                                                     foreach ($client_contracts as $client_contract) {
                                                                                         //  $contract = \App\Models\Contract::where('id', $client_contracts->contract_id)->get();
                                                                                         //  if(!empty($contract)){
-
                                                                                         ?>
                                                                                 <tr>
                                                                                     <th scope="row"><?= $i ?></th>
-                                                                                    <td><?= $client_contract->contract->name ?>
+                                                                                    <td><?= isset($client_contract->contract->name) ? $client_contract->contract->name : ''?>
                                                                                     </td>
                                                                                     <td><?= isset($client_contract->contract->contract_type_id) ? $client_contract->contract->contractType->name : 'Not Defined' ?>
                                                                                     </td>
-                                                                                    <td><?= $client_contract->contract->start_date ?>
+                                                                                    <td><?= isset($client_contract->contract->start_date) ? $client_contract->contract->start_date : ''?>
                                                                                     </td>
-                                                                                    <td><?= $client_contract->contract->end_date ?>
+                                                                                    <td><?= isset($client_contract->contract->end_date) ? $client_contract->contract->end_date : ''?>
                                                                                     </td>
-                                                                                    <td><?= $client_contract->contract->user->name ?>
+                                                                                    <td><?= isset($client_contract->contract->user->name) ? $client_contract->contract->user->name : '' ?>
                                                                                     </td>
                                                                                     <td>
                                                                                         <a type="button"

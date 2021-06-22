@@ -1,5 +1,7 @@
 @extends('layouts.app') 
-@section('content') 
+@section('content')
+<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
+
 <?php $seven_day_weeks = array('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'); ?>
 
 <div class="main-body">
@@ -16,7 +18,7 @@
                     <div class="form-group row">
                         <label class="control-label col-md-2 col-sm-2 col-xs-2">Select Type</label>
                         <div class="col-sm-4">
-                            <select class="form-control" name="request_type" id="category_id">
+                            <select class="form-control select2" name="request_type" id="category_id">
                                 <option value="0">Select Task Source Here...</option>
                                 <option value="date">Day Atteandance</option>
                                 <option value="week">Weekly Atteandance</option>
@@ -46,20 +48,16 @@
            </div>
 
       
-
-
-                 
                   <div class="card tab-card">
                         <ul class="nav nav-tabs md-tabs" role="tablist">
                             <li class="nav-item complete">
                                 <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true">
                                     User Information
                                 </a>
-                                <div class="slide"></div>
+                            
                             </li>
                             <li class="nav-item complete">
                                 <a class="nav-link" data-toggle="tab" href="#profile3" role="tab" aria-expanded="false">Summary</a>
-                                <div class="slide"></div>
                             </li>
                           
                         </ul>
@@ -152,10 +150,7 @@
                                       //  dd($period);
                                         exit;
                                             
-                
                                          $att = $user->uattendance()->where('date', date('Y-m-d', strtotime(date('Y') . '-' . $m . '-' . $i)))->first();
-
-
                                             if (!empty($att) && $att->present == 1) {
                                                 $att = "P";
                                                 $total_press++;
@@ -174,7 +169,6 @@
                                             echo "<td>" . $att . "</td>";
                                         }else{
                                             $att = $user->uattendance()->where('date', $set)->first();
-
                                             if (!empty($att) && $att->present == 1) {
                                                 $att = "P";
                                                 $total_press++;
@@ -206,16 +200,15 @@
                                             <?php } ?>
                                         </div>
                                     </div>
-
-                                
                             </section>
-                        </div>
-                    </div>
+                         </div>
+                     </div>
                  </div>
                 </div>
                       
 
                         <script type="text/javascript">
+                            
                             $('#category_id').change(function () {
                                 var type = $('#category_id').val();
                                 if(type == 'week'){
