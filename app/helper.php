@@ -130,7 +130,11 @@ function can_access($permission) {
     $user_id = \Auth::user()->id;
     if ((int) $user_id > 0) {
         $global = userAccessRole();
-        return in_array($permission, $global) ? 1 : 0;
+        if(!is_array($global)) {
+            return  = [];
+         }else{
+            return in_array($permission, $global) ? 1 : 0; 
+         }
     }
 }
 
