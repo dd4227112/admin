@@ -131,7 +131,7 @@ function can_access($permission) {
     if ((int) $user_id > 0) {
         $global = userAccessRole();
         if(!is_array($global)) {
-            return  = [];
+            return null;
          }else{
             return in_array($permission, $global) ? 1 : 0; 
          }

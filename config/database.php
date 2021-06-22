@@ -43,10 +43,8 @@ return [
             'password' =>'Shul3@s0ft@202!',
             'charset' => 'utf8',
             'prefix' => '',
-            'schema' => 'admin',
-              'options' => [
-                \PDO::ATTR_EMULATE_PREPARES => true
-            ]
+            'schema' => 'admin'
+            
         ],
 
         'karibusms' => [
@@ -61,10 +59,8 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'schema' => 'new_karibusms',
-            'sslmode' => 'prefer',
-            'options' => [
-                \PDO::ATTR_EMULATE_PREPARES => true
-            ]
+            'sslmode' => 'prefer'
+          
         ],
 
     'biotime' => [
@@ -79,10 +75,8 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'schema' => 'public',
-            'sslmode' => 'prefer',
-            'options' => [
-                \PDO::ATTR_EMULATE_PREPARES => true
-            ]
+            'sslmode' => 'prefer'
+           
         ],
         'sqlsrv' => [
             'driver' => 'sqlsrv',
