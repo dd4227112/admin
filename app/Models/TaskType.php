@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
 class TaskType extends Model {
 
     //put your code here
-    protected $table = 'task_types';
+    protected $table = 'admin.task_types';
     protected $fillable = ['id', 'name','created_at', 'updated_at'];
 
 
