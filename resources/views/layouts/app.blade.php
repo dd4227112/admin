@@ -395,7 +395,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                 </a>
                                 <ul class="tree-1">
 
-                                    <?php if (can_access('manage_sales') || Auth::user()->role_id == 14) { ?>
+                                    <?php if (can_access('manage_sales')) { ?>
 
                                         <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main">
                                             <i class="icon-arrow-right"></i>Sales</a>
@@ -603,13 +603,13 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                 <?php } ?>
 
 
-                                <?php if (Auth::user()->role_id == 12) { ?>
-                                    <li>
-                                        <a href="<?= url('account/transaction/4') ?>" data-i18n="nav.extra-components.main">
+                                 <?php  ?>
+                                    {{-- <li>
+                                        <a href="" data-i18n="nav.extra-components.main">
                                             Record Expense
                                         </a>
-                                    </li>
-                                <?php } ?>
+                                    </li> --}}
+                                <?php } ?> 
 
 
                                 <?php if (Auth::user()->role_id == 1) { ?>
