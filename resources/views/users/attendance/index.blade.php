@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
 
 <div class="main-body">
   <div class="page-wrapper">
@@ -79,4 +80,6 @@
     </div>
   </div>
 </div>
+
+
 @endsection
