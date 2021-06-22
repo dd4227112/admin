@@ -969,10 +969,10 @@ return $echo;
                                                                                         <a type="button"
                                                                                             class="btn btn-primary btn-sm waves-effect"
                                                                                             target="_blank"
-                                                                                            href="<?= url('customer/viewContract/' . $client_contract->contract->id) ?>">View</a>
+                                                                                            href="<?= isset($client_contract->contract->id) ? url('customer/viewContract/' . $client_contract->contract->id) : '' ?>">View</a>
                                                                                         <a type="button"
                                                                                             class="btn btn-warning btn-sm waves-effect"
-                                                                                            href="<?= url('customer/deleteContract/' . $client_contract->contract->id) ?>">Delete</a>
+                                                                                            href="<?= isset($client_contract->contract->id) ? url('customer/deleteContract/' . $client_contract->contract->id) : '' ?>">Delete</a>
                                                                                     </td>
                                                                                 </tr>
 
