@@ -6,7 +6,7 @@ class AccountGroup extends Model {
     /**
      * Generated
      */
-    protected $table = 'account_groups';
+    protected $table = 'admin.account_groups';
     protected $fillable = ['id', 'name', 'note', 'financial_category_id'];
 
     public function financialCategory() {

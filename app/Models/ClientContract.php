@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ClientContract extends Model {
 
-    protected $table = 'client_contracts';
+    protected $table = 'admin.client_contracts';
     protected $fillable = ['id', 'client_id', 'contract_id', 'created_at', 'updated_at', 'note'];
 
     public function client() {

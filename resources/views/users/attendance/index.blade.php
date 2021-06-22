@@ -30,13 +30,13 @@
           <div class="card tab-card">
             <div class="card-block">
 
-              <div class="m-6">
-                <a href="<?= url('attendance/add') ?>" class="btn btn-sm btn-primary">Add attendance</a>
-               </div>
+              <div class="card-header float-right">
+                  <a href="<?= url('attendance/report') ?>" class="btn btn-sm btn-primary">View Report</a>
+               </div> 
     
               <div class="steamline">
                 <div class="card-block">
-
+          
                   <div class="table-responsive table-sm table-striped table-bordered table-hover">
                     <table id="dt-ajax-array" class="table dataTable">
                       <thead>
@@ -57,7 +57,7 @@
                           ?>
                       <tr>
                           <td><?=$i++?> </td>
-                          <td><?=$user->name ?></td>
+                          <td><?=$user->firstname. ' ' .$user->lastname ?></td>
                           <td><?=$user->email ?></td>
                           <td><?=$user->phone ?></td>
                           <td><?=$user->role->display_name ?></td>

@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('content')
-
 <div class="main-body">
   <div class="page-wrapper">
     <!-- Page-header start -->
@@ -83,7 +82,7 @@
                           ?>
                       <tr>
                           <td><?=$i++?> </td>
-                          <td><?=$user->name ?></td>
+                          <td><?=$user->firstname. ' '.$user->lastname ?></td>
                           <td><?=$user->role->display_name ?></td>
                           <td><?=$user->phone ?></td>
                           <td><?=$user->email ?></td>
@@ -102,7 +101,7 @@
                             ?>
                           </td>
                         
-                          <td data-title="<?= ('Absent reason') ?>">
+                          <td data-title="<?= ('Absent reason') ?>" class="text-center">
                             <?php
                             $array_ = array("0" => ("select reason"));
                             $absents = \DB::table('constant.absent_reasons')->get();

@@ -946,7 +946,7 @@ return $echo;
                                                                             </thead>
                                                                             <tbody>
                                                                                 <?php
-                                                                                $client_contracts = \App\Models\ClientContract::where('client_id', $client_id)->get();
+                                                                                $client_contracts = DB::table('admin.client_contracts')->where('client_id', $client_id)->get();
                                                                                 $i = 1;
                                                                                 if (!empty($client_contracts)) {
                                                                                     foreach ($client_contracts as $client_contract) {

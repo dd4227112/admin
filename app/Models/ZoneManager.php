@@ -9,7 +9,7 @@ class ZoneManager extends Model {
     /**
      * Generated
      */
-    protected $table = 'zone_managers';
+    protected $table = 'admin.zone_managers';
     protected $fillable = ['id', 'zone_id', 'user_id', 'created_at', 'updated_at'];
     
     public function zone() {

@@ -9,7 +9,7 @@ class Absent extends Model {
     /**
      * Generated
      */
-    protected $table = 'absents';
+    protected $table = 'admin.absents';
     protected $fillable = [
         'id', 'date', 'user_id', 'absent_reason_id', 'note', 'company_file_id', 'approved_by', 'created_at', 
         'updated_at','end_date'];

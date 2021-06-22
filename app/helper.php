@@ -128,10 +128,13 @@ function form_error($errors, $tag) {
 
 function can_access($permission) {
     $user_id = \Auth::user()->id;
-    
     if ((int) $user_id > 0) {
         $global = userAccessRole();
-        return in_array($permission, $global) ? 1 : 0;
+        if(!is_array($global)) {
+            return  = [];
+         }else{
+            return in_array($permission, $global) ? 1 : 0; 
+         }
     }
 }
 
@@ -140,8 +143,8 @@ function createRoute() {
     $url = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
     $url_param = explode('/', $url);
 
-    $controller = isset($url_param[1]) && !empty($url_param[1]) ? $url_param[1] . '' : 'analyse';
-    $method = isset($url_param[2]) && !empty($url_param[2]) ? $url_param[2] : 'index';
+    $controller = isset($url_param[2]) && !empty($url_param[2]) ? $url_param[2] . '' : 'analyse';
+    $method = isset($url_param[3]) && !empty($url_param[3]) ? $url_param[3] : 'index';
     $view = $method == 'view' ? 'show' : $method;
 
     return in_array($controller, array('public', 'storage')) ? NULL : ucfirst($controller) . '@' . $view;
