@@ -603,7 +603,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                 <?php } ?>
 
 
-                                 <?php  ?>
+                                 <?php  { ?>
                                     {{-- <li>
                                         <a href="" data-i18n="nav.extra-components.main">
                                             Record Expense
