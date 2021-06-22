@@ -37,17 +37,20 @@ return [
             'driver' => 'pgsql',
             'host' => 'shulesoftdb.postgres.database.azure.com',
             // 'host'=>'localhost',
-            'port' =>'6432',
+            'port' =>'5432',
             'database' =>'shulesoft_2022',
             'username' => 'pgeshuleadmin',
             'password' =>'Shul3@s0ft@202!',
             'charset' => 'utf8',
-            'prefix' => '',
+            'sslmode' => 'prefer', 
+            'prefix_indexes' => true,
+	    'prefix' => '',
             'schema' => 'admin',
-              'options' => [
+	    'options' => [
                 \PDO::ATTR_EMULATE_PREPARES => true
             ]
-        ],
+	],
+
 
         'karibusms' => [
             'driver' => 'pgsql',

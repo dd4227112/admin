@@ -213,19 +213,7 @@
                                                         $setting = DB::table('admin.all_setting')->where('schema_name', $invoice->client->username)->first();
                                                         if(!empty($setting)) {
                                                            $a = DB::table($invoice->client->username. '.bank_accounts')->where('refer_bank_id', 22)->first();
-                                                        } 
-<<<<<<< HEAD
-                                                 ?>
-                                                  <p>
-                                                    <b>Account Details :</b><br/>
-                                                    <b>Account Name:</b> INETS COMPANY LIMITED <br/> 
-                                                    <b>Bank Name:</b> NMB BANK PLC <br/> 
-                                                     <b>Account Number:</b> 22510028669
-                                                    <br/>
-                                                    <small>Please notify us after a deposit</small>
-                                                  </p>
-                                                 
-=======
+                                                        }
                                                  if(!empty($a)){ ?>
                                                 
                                                   <?php }else { ?>
@@ -238,7 +226,7 @@
                                                         <small>Please notify us after a deposit</small>
                                                     </p>
                                                   <?php  }  ?>
->>>>>>> 26bd8e5c43ae29c6f7c96daff985be28d3d264ec
+
 
                                                 <?php if (strlen($invoice->token) > 4) { ?>
                                                 <p>Or Pay Electronically here <a href="<?= url('epayment/i/' . $invoice->id) ?>" target="_blank"><?= url('epayment/i/' . ($invoice->id)) ?></a></p>
