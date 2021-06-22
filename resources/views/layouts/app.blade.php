@@ -395,7 +395,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                 </a>
                                 <ul class="tree-1">
 
-                                    <?php if (can_access('manage_sales') || Auth::user()->role_id == 14) { ?>
+                                    <?php if (can_access('manage_sales')) { ?>
 
                                         <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main">
                                             <i class="icon-arrow-right"></i>Sales</a>
@@ -603,13 +603,13 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                 <?php } ?>
 
 
-                                <?php if (Auth::user()->role_id == 12) { ?>
-                                    <li>
-                                        <a href="<?= url('account/transaction/4') ?>" data-i18n="nav.extra-components.main">
+                                 <?php  { ?>
+                                    {{-- <li>
+                                        <a href="" data-i18n="nav.extra-components.main">
                                             Record Expense
                                         </a>
-                                    </li>
-                                <?php } ?>
+                                    </li> --}}
+                                <?php } ?> 
 
 
                                 <?php if (Auth::user()->role_id == 1) { ?>
@@ -724,6 +724,8 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
 
                                     {{-- <li><a href="<?= url('software/server') ?>" data-i18n="nav.basic-components.button">Server Administration</a></li> --}}
                                     <li><a href="<?= url('software/logs') ?>" data-i18n="nav.basic-components.box-shadow">Error Logs</a></li>
+
+                                    <li><a href="<?= url('software/smsStatus') ?>" data-i18n="nav.basic-components.box-shadow">SMS Status</a></li>
                                 </ul>
                             </li>
                         <?php } ?>
@@ -946,7 +948,10 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <!-- Main-body start-->
         <div class="main-body">
             @include('layouts.notifications')
+            
+            
             @yield('content')
+            
         </div>
       
 
@@ -992,6 +997,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <script src="<?= $root ?>assets/pages/data-table/js/jszip.min.js"></script>
         <script src="<?= $root ?>assets/pages/data-table/js/pdfmake.min.js"></script>
         <script src="<?= $root ?>assets/pages/data-table/js/vfs_fonts.js"></script>
+        <script src="<?= $root ?>assets/pages/thousandth/thousands.js"></script>
         <script src="<?= $root ?>bower_components/datatables.net-buttons/js/buttons.print.min.js"></script>
         <script src="<?= $root ?>bower_components/datatables.net-buttons/js/buttons.html5.min.js"></script>
         <script src="<?= $root ?>bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>

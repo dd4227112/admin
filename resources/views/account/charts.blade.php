@@ -70,19 +70,18 @@
                                                 </td>
                                                 <td data-title="<?= __('account_type') ?>">
                                                     <?php
-                                                   echo $expense->financialCategory->name;
+                                                      echo warp($expense->financialCategory->name);
 
                                                     ?>
                                                 </td>
                                                 <td data-title="<?= __('account_group') ?>">
                                                     <?php
-                                                    echo $expense->accountGroup->name;
-                                                       
+                                                      echo warp($expense->accountGroup->name);
                                                     ?>
                                                 </td>
 
                                                 <td data-title="<?= __('expense_note') ?>">
-                                                    <p id="note<?=$expense->id?>"><?php echo $expense->note; ?></p>
+                                                    <p id="note<?=$expense->id?>"><?php echo warp($expense->note); ?></p>
                                                 </td>
 
                                                 <td data-title="<?= __('action') ?>">
@@ -92,7 +91,7 @@
                                                         echo '<a class="btn btn-info btn-sm" href="#" data-toggle="modal" data-target="#large-Modal"  onmousedown="fill_form('.$expense->id.')">edit</a>';
                                                         ?>
                                                         <?php
-                                                        echo '<a class="btn btn-danger btn-sm" href="' . url('account/chart/delete/' . $expense->id . '/' . $id) . '">delete</a>';
+                                                      //  echo '<a class="btn btn-danger btn-sm" href="' . url('account/chart/delete/' . $expense->id . '/' . $id) . '">delete</a>';
                                                     } else {
                                                         echo ' <i class="fa fa-question-circle" title="This cannot be deleted or edited because it has been defined somewhere else. Please check in fee section or in banking section and edit/delete it there"></i>';
                                                     }

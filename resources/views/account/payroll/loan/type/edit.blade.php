@@ -44,7 +44,7 @@
                                         echo "<div class='form-group' >";
                                     ?>
                                     <label for="grade" class="col-sm-2 control-label">
-                                        <?= __("name") ?><span class="red">*</span>
+                                        <?= __("Name") ?><span class="red">*</span>
                                     </label>
                                     <div class="col-sm-6">
                                         <input type="text" class="form-control" id="name"   placeholder="<?= __('name') ?>" name="name" value="<?= old('name', $type->name) ?>" required>
@@ -62,7 +62,7 @@
                                 echo "<div class='form-group' >";
                             ?>
                             <label for="is_penalty" class="col-sm-2 control-label">
-                                <?= __("minimum_amount") ?>
+                                <?= __("Minimum amount") ?>
                             </label>
                             <div class="col-sm-6">
                                 <input type="text" class="form-control" id="minimum_amount"   placeholder="<?= __('minimum_amount') ?>" name="minimum_amount" value="<?= old('minimum_amount', $type->minimum_amount) ?>" required>
@@ -80,10 +80,10 @@
                                 echo "<div class='form-group' >";
                             ?>
                             <label for="amount" class="col-sm-2 control-label">
-                                <?= __("maximum_amount") ?>
+                                <?= __("Maximum amount") ?>
                             </label>
                             <div class="col-sm-6">
-                                <input placeholder="<?= __("maximum_amount") ?>" type="text" class="form-control" id="maximum_amount" name="maximum_amount" value="<?= old('maximum_amount', $type->maximum_amount) ?>" >
+                                <input placeholder="<?= __("maximum amount") ?>" type="text" class="form-control" id="maximum_amount" name="maximum_amount" value="<?= old('maximum_amount', $type->maximum_amount) ?>" >
                 
                             </div>
                             <span class="col-sm-4 control-label">
@@ -98,10 +98,10 @@
                                 echo "<div class='form-group' >";
                             ?>
                             <label for="minimum_tenor" class="col-sm-2 control-label">
-                                <?= __("minimum_tenor") ?>
+                                <?= __("Minimum tenor") ?>
                             </label>
                             <div class="col-sm-6">
-                                <input placeholder="<?= __("minimum_tenor") ?>" type="number" class="form-control" id="minimum_tenor" name="minimum_tenor" value="<?= old('minimum_tenor', $type->minimum_tenor) ?>" >
+                                <input placeholder="<?= __("minimum tenor") ?>" type="number" class="form-control" id="minimum_tenor" name="minimum_tenor" value="<?= old('minimum_tenor', $type->minimum_tenor) ?>" >
                 
                             </div>
                             <span class="col-sm-4 control-label">
@@ -115,10 +115,10 @@
                             echo "<div class='form-group' >";
                         ?>
                         <label for="employer_amount" class="col-sm-2 control-label">
-                            <?= __("maximum_tenor") ?>
+                            <?= __("Maximum tenor") ?>
                         </label>
                         <div class="col-sm-6">
-                            <input placeholder="<?= __("maximum_tenor") ?>" type="number" class="form-control" id="maximum_tenor" name="maximum_tenor" value="<?= old('maximum_tenor', $type->maximum_tenor) ?>" >
+                            <input placeholder="<?= __("maximum tenor") ?>" type="number" class="form-control" id="maximum_tenor" name="maximum_tenor" value="<?= old('maximum_tenor', $type->maximum_tenor) ?>" >
                 
                         </div>
                         <span class="col-sm-4 control-label">
@@ -136,10 +136,10 @@
                     echo "<div class='form-group' >";
                 ?>
                 <label for="interest_rate" class="col-sm-2 control-label">
-                    <?= __("interest_rate") ?>
+                    <?= __("Interest rate") ?>
                 </label>
                 <div class="col-sm-6">
-                    <input placeholder="<?= __("interest_rate") ?>" type="number" class="form-control" id="interest_rate" name="interest_rate" value="<?= old('interest_rate', $type->interest_rate) ?>" min="0" max="100" >
+                    <input placeholder="<?= __("interest rate") ?>" type="text" class="form-control" id="interest_rate" name="interest_rate" value="<?= old('interest_rate', $type->interest_rate) ?>" min="0" max="100" >
                 
                 </div>
                 <span class="col-sm-4 control-label">
@@ -153,17 +153,16 @@
                 if (form_error($errors, 'credit_ratio'))
                     echo "<div class='form-group has-error' >";
                 else
-                    echo "<div class='form-group' >";
+                    echo "<div class='form-group'>";
                 ?>
-                <label for="interest_rate" class="col-sm-2 control-label">
-                    <?= __("credit_ratio") ?>
+                <label for="credit_ratio" class="col-sm-2 control-label">
+                    <?= __("Credit ratio") ?>
                 </label>
                 <div class="col-sm-6">
-                    <input placeholder="<?= __("credit_ratio") ?>" type="number" class="form-control" id="credit_ratio" name="credit_ratio" value="<?= old('credit_ratio', $type->credit_ratio) ?>"  min="0" max="100"  >
-                
+                    <input placeholder="<?= __("credit ratio") ?>" type="text" class="form-control" id="credit_ratio" name="credit_ratio" value="<?= old('credit_ratio', $type->credit_ratio) ?>"  min="0" max="100">
                 </div>
                 <span class="col-sm-4 control-label">
-                    <?php echo form_error($errors, 'interest_rate'); ?>
+                    <?php echo form_error($errors, 'credit_ratio'); ?>
                 </span>
                 </div>
                 
@@ -176,7 +175,7 @@
                     echo "<div class='form-group' >";
                 ?>
                 <label for="description" class="col-sm-2 control-label">
-                    <?= __("description") ?><span class="red">*</span>
+                    <?= __("Description") ?><span class="red">*</span>
                 </label>
                 <div class="col-sm-6">
                     <textarea style="resize:none;" placeholder="<?= __("description") ?>" class="form-control" id="note" name="description" required><?= old('description', $type->description) ?></textarea>

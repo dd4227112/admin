@@ -100,7 +100,7 @@ $invoice_issued = [];
 $invoices_current = DB::select('select * from admin.invoices_sent');
 foreach ($invoices_current as $invoice_info) {
     $invoice_issued[$invoice_info->schema_name] = 'Due: ' . date('d M Y', strtotime('30 days', strtotime($invoice_info->date)));
-}
+} 
 
 function select($value, $schema, $sources) {
     return isset($sources[$schema]) && strtolower($sources[$schema]) == strtolower($value) ? 'Selected' : '';
@@ -232,8 +232,8 @@ function select($value, $schema, $sources) {
                                                         $no_expense = 0;
                                                         $no_payment = 0;
                                                         $a = 0;
-                                                        foreach ($schools as $school) {
-
+                                                        if(count($schools) > 0)
+                                                        foreach ($schools as $school) { 
                                                             $students = DB::table($school->schema_name . '.student')->where('status', 1)->count();
                                                             ?>
                                                             <tr>
@@ -366,10 +366,6 @@ function select($value, $schema, $sources) {
                                                                     ?>
                                                                 </td>
 
-
-
-
-
                                                                 <td> <?php
                                                                 //classlevel
                                                                 if (isset($expense_status[$school->schema_name])) {
@@ -393,12 +389,13 @@ function select($value, $schema, $sources) {
                                                                 <td><a href="<?= url('customer/profile/' . $school->schema_name) ?>" class="btn btn-mini waves-effect waves-light btn-primary"><i class="icofont icofont-eye-alt"></i> View</a></td>
 
                                                             </tr>
-                                                        <?php } ?>
+                                                         <?php } ?> 
+                                                       
                                                     </tbody>
                                                     <tfoot>
                                                         <tr>
                                                             <th>School Name</th>
-                                                            <th colspan="6"></th>
+                                                            <th colspan="3"></th>
                                                             <th><?= $no_students ?></th>
                                                             <th><?= $no_marks ?></th>
                                                             <th><?= $no_exams_published ?></th>
@@ -437,7 +434,7 @@ function select($value, $schema, $sources) {
                                                 </thead>
                                                 <tbody>
                                                     <?php
-                                                    $users = \App\Models\User::whereIn('role_id', [14,8])->get();
+                                                    $users = \App\Models\User::whereIn('role_id', [14,8])->where('status','=','1')->get();
                                                     foreach ($users as $user) {
                                                         $schools = $user->usersSchools()->where('role_id', 8);
                                                         ?>
@@ -449,7 +446,7 @@ function select($value, $schema, $sources) {
                                                                 $active = 0;
                                                                 $not_active = 0;
                                                                 foreach ($schools->get() as $school) {
-                                                                    echo $school->school->schema_name . ',';
+                                                                    echo warp($school->school->schema_name) . ',';
                                                                     $active = getActiveStatus($school->school->schema_name) == 1 ? $active + 1 : $active;
                                                                     $not_active = getActiveStatus($school->school->schema_name) == 0 ? $not_active + 1 : $not_active;
                                                                 }

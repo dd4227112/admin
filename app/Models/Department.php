@@ -8,7 +8,7 @@ class Department extends Model {
      * Generated
      */
 
-    protected $table = 'departments';
+    protected $table = 'admin.departments';
     protected $fillable = ['id', 'name', 'note', 'created_at'];
 
 }

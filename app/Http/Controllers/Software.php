@@ -543,11 +543,19 @@ ORDER BY c.oid, a.attnum";
        <a class="back_chatBox">
        <input id="to_user_id' . $user->id . '" value="' . $user->id . '" type="hidden">
            <i class="icofont icofont-rounded-left"></i>' . $user->firstname . ' ' . $user->lastname . '
-       </a>
-   </div>';
+         </a>
+        </div>';
     
-   echo $message;
+      echo $message;
     }
+
+    
+    public function smsStatus(){
+        $this->data['sms_status'] = \App\Models\SchoolKeys::latest()->get();
+        return view('software.status_sms', $this->data);
+    }
+
+    
 
 
 }

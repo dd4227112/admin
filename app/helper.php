@@ -106,8 +106,8 @@ function number_to_words($number) {
    function userAccessRole() {
      $user_id = \Auth::user()->id;
       if ((int) $user_id > 0) {
-        $user = \App\Models\User::where('id',$user_id)->where('status','=',1)->first(); 
-        if($user->role_id){
+        $user = \App\Model\User::where('id',$user_id)->first(); 
+        if($user){
             $permission = \App\Models\PermissionRole::where('role_id', $user->role_id)->get();
             $objet = array();
              if (count($permission) > 0) {
@@ -117,7 +117,6 @@ function number_to_words($number) {
            }
            return $objet;
          }
-         return [];
       }
    }
 

@@ -469,12 +469,6 @@ if (empty($payslip_settings)) {
 </div>
 
 
-
-
-
-
-
-
 <script>
     function printDiv(divID) {
 

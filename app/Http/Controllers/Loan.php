@@ -5,98 +5,67 @@ use Auth;
 use Illuminate\Http\Request;
 use \App\Model\UserDeduction;
 use DB;
+use App\Rules\InterestRateRule;
 
 class Loan extends Controller {
 
-  
     function __construct() {
         $this->middleware('auth');
-       // parent::__construct();
-        // $this->lang->load('email');
-        // $this->lang->load('payroll');
     }
 
     public function index() {
         if (can_access('manage_payroll')) {
-          //  $this->data['type'] = $id = ($this->uri->segment(3));
           $this->data['type'] = $id = (request()->segment(3));
-
             if ((int) $id > 0) {
-                $this->data['applications'] = \App\Models\LoanApplication::where('approval_status', $id)->get();
+                $this->data['applications'] = \App\Models\LoanApplication::where('approval_status', $id)->latest()->get();
             } else {
-                $this->data['applications'] = \App\Models\LoanApplication::all();
+                $this->data['applications'] = \App\Models\LoanApplication::latest()->get();
             }
-           // $this->data['subview'] = 'loan/index';
-         //   $this->load->view('_layout_main', $this->data);
             return view('account.payroll.loan.index',$this->data);
 
         } else if (!can_access('manage_payroll')) {
-           // $this->data['type'] = $id = clean_htmlentities(($this->uri->segment(3)));
              $this->data['type']  = $id = (request()->segment(3));
             if ((int) $id > 0) {
-                $this->data['applications'] = \App\Models\LoanApplication::where('approval_status', $id)->where('user_id', Auth::user()->id)->get();
+                $this->data['applications'] = \App\Models\LoanApplication::where('approval_status', $id)->where('user_id', Auth::user()->id)->latest()->get();
             } else {
-                $this->data['applications'] = \App\Models\LoanApplication::where('user_id', Auth::user()->id)->get();
+                $this->data['applications'] = \App\Models\LoanApplication::where('user_id', Auth::user()->id)->latest()->get();
             }
-           // $this->data['subview'] = 'loan/index';
-            //$this->load->view('_layout_main', $this->data);
             return view('account.payroll.loan.index',$this->data);
 
         } else {
-          //  $this->data["subview"] = "error";
-         //   $this->load->view('_layout_main', $this->data);
             return view('account.payroll.loan.index',$this->data);
         }
     }
 
     public function type() {
-        if (can_access('manage_payroll')) {
                $id = request()->segment(3);
                $loan_id = request()->segment(4);
 
             if ($id == 'edit' && (int) $loan_id > 0) {
                 $this->data['type'] = \App\Models\LoanType::find($loan_id);
                 if ($_POST) {
-                    // $this->validate(request(), [
-                    //     'name' => 'required|max:255',
-                    //     "minimum_amount" => "required|numeric|min:0|max:3000000000",
-                    //     "maximum_amount" => "required|max:3000000000|gt:minimum_amount",
-                    //     "minimum_tenor" => "required|max:1200|min:0",
-                    //     "maximum_tenor" => "required|max:1200|min:0|gt:minimum_tenor",
-                    //     "interest_rate" => "required|min:0|max:100",
-                    //     "credit_ratio" => "required|min:0|max:100",
-                    //     "description" => "required"
-                    //      ]);
                     $this->data['type']->update(request()->all());
-                    return view('account/payroll/loan/type/index',$this->data);
+                    return redirect('loan/type')->with('success','Successfully updated!');
                  }
                 return view('account.payroll.loan.type.edit',$this->data);
             } else if ($id == 'delete' && (int) $loan_id > 0) {
                 \App\Models\LoanType::find($loan_id)->delete();
-                //  $this->data['subview'] = 'account.payroll.loan.type.index';
-                // return view($this->data['subview']);
-                return redirect()->back()->with('success','Successfully!');
+                return redirect()->back()->with('success','Successfully deleted!');
             } else {
-                $this->data['types'] = \App\Models\LoanType::all();
+                $this->data['types'] = \App\Models\LoanType::latest()->get();
                 return view('account.payroll.loan.type.index',$this->data);
             }
-        } else {
- 
-            $this->data["subview"] = "error";
-           // $this->load->view('_layout_main', $this->data);
-            return view('account/payroll/deduction/index',$this->data);
-        }
+        
     }
 
     private function saveLoanApplication() {
         //get all loan parameters
         //insert in application table
            $user_id = request('user_id') == null ? Auth::user()->id : request('user_id');
-        // $table = request('table') == null ? session('table') : request('table');
              $data=[
             'user_id' => $user_id, 
             'created_by' => Auth::user()->id,
-            'amount' => request('amount'),
+            'amount' => remove_comma(request('amount')),
             'payment_start_date' => date('Y-m-d'),
             'loan_type_id' => request('loan_type_id'),
             'qualify' => request('qualify'),
@@ -104,32 +73,26 @@ class Loan extends Controller {
             'description' => request('description'),
             'loan_source_id' => request('loan_source_id'),
             'monthly_repayment_amount' => request('loan_monthly_repayment')
-        ];
-        \App\Models\LoanApplication::create($data);
-          return view('account.payroll.loan.index',$this->data);
+           ]; 
+    
+         \App\Models\LoanApplication::create($data);
+          return redirect('loan/index')->with('success','Loan created successfull');
      }
 
     public function loanAdd() {
         $this->data['type'] = 0;
         $this->data['loan_types'] = \App\Models\LoanType::all();
         if (can_access('manage_payroll')) {
-            if ($_POST) {
+            if ($_POST) { 
                 return $this->saveLoanApplication();
             }
-           // $this->data['subview'] = 'loan/add';
             return view('account.payroll.loan.add',$this->data);
-
-            // $this->load->view('_layout_main', $this->data);
         } else if (!can_access('manage_payroll')) {
             if ($_POST) {
                 return $this->saveLoanApplication();
             }
-            // $this->data['subview'] = 'loan/add';
-            // $this->load->view('_layout_main', $this->data);
             return view('account.payroll.loan.add',$this->data);
         } else {
-            // $this->data["subview"] = "error";
-            // $this->load->view('_layout_main', $this->data);
             return view('account.payroll.loan.type.index',$this->data);
         }
     }
@@ -145,9 +108,7 @@ class Loan extends Controller {
             //create deduction and name it, a loan
             $deduction = \App\Models\Deduction::create(['name' => 'Loan', 'description' => 'Staff Loan Application', 'predefined' => 1]);
         }
-
         $application = \App\Models\LoanApplication::find($application_id);
-
            $arr = [
                 'user_id' => $application->user_id,
                 'deduction_id' => $deduction->id, 
@@ -246,32 +207,34 @@ class Loan extends Controller {
     }
 
     
-    public function add(Request $request) {
+    public function add() {
             $this->data['type'] = $id = request()->segment(3);
             if ($_POST) {
-                 $request->validate([
-                    'name' => 'required|max:255',
-                    "minimum_amount" => "required|numeric|min:0|max:3000000000",
-                    "maximum_amount" => "required|max:3000000000|gt:minimum_amount",
-                    "minimum_tenor" => "required|max:1200|min:0",
-                    "maximum_tenor" => "required|max:1200|min:0|gt:minimum_tenor",
-                    "interest_rate" => "required|min:0|max:100",
-                    "credit_ratio" => "required|min:0|max:100",
-                    "description" => "required"
-                 ]);
-
-                \App\Models\LoanType::create(array_merge(['created_by' => Auth::user()->id], request()->except('_token')));
-
-                // $this->data['subview'] = 'account.payroll.loan.type.';
-                // return view($this->data['subview'], $this->data);
-
-                $this->data['subview'] = 'account.payroll.loan.type.index';
-                return view($this->data['subview'],$this->data);
+                request()->validate([
+                'name' => 'required|max:255',
+                remove_comma("minimum_amount") => "required|min:0|max:3000000000",
+                remove_comma("maximum_amount") => "required|max:3000000000|gt:minimum_amount",
+                "minimum_tenor" => "required|max:1200|min:0",
+                "maximum_tenor" => "required|max:1200|min:0|gt:minimum_tenor",
+                "interest_rate" => ["required",  new InterestRateRule()],
+                "credit_ratio"  => "required|min:0",
+                "description"   => "required"
+                ]);
+               
+                \App\Models\LoanType::create(['name' => request('name'),
+                'minimum_amount' => remove_comma(request('minimum_amount')),
+                'maximum_amount' => remove_comma(request('maximum_amount')),
+                'minimum_tenor'  => remove_comma(request('minimum_tenor')),
+                'maximum_tenor'  => remove_comma(request('maximum_tenor')),
+                'interest_rate'  => request('interest_rate'),
+                'credit_ratio'   => request('credit_ratio'),
+                'description'    => request('description'),
+                'created_by'     => Auth::user()->id
+               ]); 
+                return redirect('loan/type')->with('success','Successfully!');
             } else {
                 $this->data["subview"] = "account.payroll.loan.type.add";
-
                 return view($this->data['subview'], $this->data);
-               // $this->load->view('_layout_main', $this->data);
             }
     }
 
@@ -317,10 +280,7 @@ class Loan extends Controller {
     }
 
     public function delete() {
-        if (can_access('manage_payroll')) {
-           // $id = clean_htmlentities(($this->uri->segment(3)));
             $id = request()->segment(3);
-
             if ((int) $id) {
 
                 //bad enought, there are transactions that dont have reference
@@ -335,8 +295,6 @@ class Loan extends Controller {
                 $user_applications = DB::table('loan_payments')->where('loan_application_id', $id)->first();
 
                 if (!empty($user_applications)) {
-                    //you cannot delete this
-                  //  $this->session->set_flashdata('error', 'You cannot delete this loan because payments already done  on this loan');
                    return redirect()->back()->with('error','You cannot delete this loan because payments already done  on this loan!');
                 } else {
                   $user_deductions = DB::table('user_deductions')->where('loan_application_id', $id)->first();
@@ -356,11 +314,7 @@ class Loan extends Controller {
             } else {
                 return redirect()->back();
             }
-        } else {
-            // $this->data["subview"] = "error";
-            // $this->load->view('_layout_main', $this->data);
-            return redirect()->back();
-        }
+         
     }
 
     public function subscribe() {
@@ -384,13 +338,7 @@ class Loan extends Controller {
         }
     }
 
-    function excel() {
-        $this->data['users'] = \App\Model\Teacher::all();
-
-        $this->data["subview"] = "deduction/excel";
-        $this->load->view('_layout_main', $this->data);
-    }
-
+ 
     public function uploadFileByExcel() {
         ini_set('max_execution_time', 300); //overwrite execution time, 5min
         $data = $this->uploadExcel();

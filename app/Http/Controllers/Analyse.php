@@ -131,7 +131,7 @@ class Analyse extends Controller {
 
         $school_list = '';
         $schools = DB::select("select * from (select sname,schema_name,photo, 1 as is_schema from admin.all_setting where lower(schema_name) like '%" . $q . "%' union select name as sname, name as schema_name,'default.png' as photo, id as is_schema from admin.schools where lower(name) like '%" . $q . "%' ) b limit 10 ");
-
+    
         foreach ($schools as $school) {
             $url = $school->is_schema == 1 ? url('customer/profile/' . $school->schema_name) : url('sales/profile/' . $school->is_schema);
             $type = $school->is_schema == 1 ? ' (Already Client)' : '';
@@ -214,7 +214,7 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
             $id = Auth::user()->id;
         } 
         $user = \App\Models\User::where('id',$id)->where('status','=',1)->first();
-   
+         // user role 17 ie zone manager, select schools/clients based on zones
         if(($user->role_id) && ($user->role_id == 17)){  
             $zone = \App\Models\ZoneManager::where('user_id',$id)->first();
            
@@ -224,13 +224,15 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
              //  (select id from admin.wards where district_id in 
              //  (select id from admin.districts where region_id in 
             //    (select id from admin.regions where refer_zone_id = '. $zone->zone_id . '))))');
-              $schools = \App\Models\ClientSchool::whereIn('school_id',\App\Models\School::whereIn('ward_id',\App\Models\Ward::whereIn('district_id',\App\Models\District::whereIn('region_id',\App\Models\Region::where('refer_zone_id',$zone->zone_id)->get(['id']))->get(['id']))->get(['id']))->get(['id']))->get();
+             $schools = \App\Models\ClientSchool::whereIn('school_id',\App\Models\School::whereIn('ward_id',\App\Models\Ward::whereIn('district_id',\App\Models\District::whereIn('region_id',\App\Models\Region::where('refer_zone_id',$zone->zone_id)->get(['id']))->get(['id']))->get(['id']))->get(['id']))->get();
             }else{
-              $schools = [];
+             $schools = [];
              }
+             // user role 1 i.e admin, select all schools/clients
          } else if(($user->role_id) && ($user->role_id) == 1){
             $schools =  \App\Models\ClientSchool::get();
          } else {
+             // Else select schools/clients based on school associates
             $schools =  \App\Models\UserClient::where('user_id', $id)->get();
          }
      

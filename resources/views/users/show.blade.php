@@ -63,7 +63,7 @@ foreach ($user_permission as $permis) {
                                 <div class="card counter-card-2">
                                     <div class="card-block-big">
                                         <div> 
-                                            <h3>Tsh <?=  money($salary->basic_pay) ?? '' ?></h3>
+                                            <h3>Tsh <?= isset($salary->basic_pay) ? money($salary->basic_pay) : '' ?></h3>
                                             <p>Basic Salary 
                                                 <span class="f-right text-success">
                                                     <i class="icofont icofont-arrow-up"></i>
@@ -854,7 +854,7 @@ foreach ($user_permission as $permis) {
                                                             <tr>
                                                                 <td><?= $document->name ?></td>
                                                                 <td><?= date('d-m-Y', strtotime($document->start_date)) ?></td>
-                                                                <td> {{ $document->end_date ?? '' }}</td>
+                                                                <td> {{ date('d-m-Y', strtotime($document->end_date)) ?? '' }}</td>
                                                                 <td><?= $document->description?></td>
                                                                 <td>
                                                                     <a type="button" class="btn btn-primary btn-sm waves-effect" target="_blank" href="<?= url('customer/viewcontract/' . $document->id . '/legal') ?>">View</a>

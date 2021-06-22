@@ -985,7 +985,7 @@ class Account extends Controller {
     // }
 
     public function bank() {
-        $this->data['bankaccounts'] = \App\Models\BankAccount::all();
+        $this->data['bankaccounts'] = \App\Models\BankAccount::latest()->get();
         return view('account.bank.index', $this->data);
     }
 
@@ -993,7 +993,7 @@ class Account extends Controller {
     function reconciliation() {
         $this->data['payments'] = array();
         $this->data['set'] = '';
-        $this->data['banks'] = \App\Models\BankAccount::all();
+        $this->data['banks'] = \App\Models\BankAccount::latest()->get();
         if ($_POST) {
             $to = date('Y-m-d', strtotime(request("to")));
             $from = date('Y-m-d', strtotime(request("from")));
@@ -1041,13 +1041,13 @@ class Account extends Controller {
 
     public function groups() {
         $this->data['id'] = null;
-        $this->data['groups'] = \App\Models\AccountGroup::all();
-        $this->data["category"] = \App\Models\FinancialCategory::all();
+        $this->data['groups'] = \App\Models\AccountGroup::latest()->get();
+        $this->data["category"] = \App\Models\FinancialCategory::latest()->get();
         $tag = request()->segment(3);
         $id = request()->segment(4);
         if ($tag == 'delete') {
             \App\Models\AccountGroup::find($id)->delete();
-            return redirect()->back()->with('success', 'success');
+            return redirect()->back()->with('success', 'success deleted!');
         } else if ($tag == 'edit') {
             
         }

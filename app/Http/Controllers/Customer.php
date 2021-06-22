@@ -1320,17 +1320,15 @@ class Customer extends Controller {
     }
 
     public function uploadJobCard() {
-        if ($_POST) {
-
+        if ($_POST) { 
             $file = request()->file('job_card_file');
             $company_file_id = $file ? $this->saveFile($file, 'company/employees') : 1;
-
             $data = [
                 'company_file_id' => $company_file_id,
                 'client_id' => request('client_id'),
                 'created_by' => Auth::user()->id,
                 'date' => request('date')
-            ];
+            ]; 
             \App\Models\ClientJobCard::create($data);
         }
         return redirect()->back()->with('success', 'uploaded succesfully!');
