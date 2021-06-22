@@ -689,7 +689,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
 
 
 
-                        <?php if (can_access('manage_software')) { ?>
+                        <?php if(can_access('manage_software')) { ?>
                             <li class="nav-item">
                                 <a href="#!">
                                     <i class="ti-layout-grid2-alt"></i>

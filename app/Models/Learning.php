@@ -8,7 +8,7 @@ class Learning extends Model {
      * Generated
      */
 
-    protected $table = 'learnings';
+    protected $table = 'admin.learnings';
     protected $fillable = ['id', 'course_name','from_date','to_date','source','has_certificate',
                            'company_file_id','user_id','descriptions','course_link','created_at','updated_at'];
 

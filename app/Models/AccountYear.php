@@ -9,7 +9,7 @@ class AccountYear extends Model {
     /**
      * Generated
      */
-    protected $table = 'account_years';
+    protected $table = 'admin.account_years';
     protected $fillable = ['id', 'name', 'status', 'start_date', 'end_date'];
 
 

@@ -24,7 +24,6 @@ class Attendance extends Controller {
 
 
     public function add(){
-    
         $this->data['date'] = date("Y-m-d");
         $this->data['users'] = (new \App\Http\Controllers\Payroll())->getUsers();
         return view('users.attendance.create', $this->data);
@@ -69,8 +68,45 @@ class Attendance extends Controller {
 
     public function getAbsentMinutes(){
         $min = \App\Models\Uattendance::where('date',date('m'));
-        
     }
+
+
+    public function report(){
+        $this->data['type'] = $type = request()->segment(3);
+        $this->data['id'] = $id = request()->segment(4);
+            if(!empty($type) && !empty($id)){
+
+                $this->data["type"] = $type;
+                $this->data["set"] = $id;
+            }
+           // $this->data["user"] = \App\Model\User::where('id', 31)->where('table', 'user')->first();
+            $this->data['users'] = (new \App\Http\Controllers\Payroll())->getUsers();
+            $this->data["weeks"] = $this->loadWeeK();
+            $this->data["subview"] = "users.attendance.report";
+            return view($this->data["subview"],$this->data);
+    }
+
+
+      public function loadWeek(){
+        $year   = date("Y");
+        $firstDayOfYear = mktime(0, 0, 0, 1, 1, $year);
+        $nextMonday     = strtotime('monday', $firstDayOfYear);
+        $nextSunday     = strtotime('sunday', $nextMonday);
+        $this_date = date("Y-m-d", strtotime($nextSunday));
+        $exam_name = '';
+        while (date('Y', $nextMonday) == $year && $this_date <= date("Y-m-d") ) {
+            $week = date('W', strtotime($this_date));
+            $exam_name .= '<option value=' . $nextSunday.'_'.$nextMonday . '>' . date('Y-m-d', $nextMonday). ' - '. date('Y-m-d', $nextSunday). ' - Week'. $week . '</option>';
+            $nextMonday = strtotime('+1 week', $nextMonday);
+            $nextSunday = strtotime('+1 week', $nextSunday);
+            $this_date = date("Y-m-d", $nextSunday);
+        }
+        return $exam_name;
+    }
+
+
+
+
 
 }
 

@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
 class TaskUser extends Model {
 
     //put your code here
-    protected $table = 'tasks_users';
+    protected $table = 'admin.tasks_users';
     protected $fillable = ['id', 'task_id', 'user_id', 'created_at', 'updated_at'];
 
     public function user() {

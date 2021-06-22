@@ -1,12 +1,11 @@
-@extends('layouts.app')
-@section('content')
-
+@extends('layouts.app') 
+@section('content') 
 <div class="main-body">
     <div class="page-wrapper">
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4> Subscription -<?= $type ?></h4>
+                <h4> Subscription - &nbsp;<?= $type ?></h4>
                 <span>Pension Fund Status</span>
             </div>
         </div>					
@@ -81,17 +80,6 @@
                                                         <?php echo $i; ?>
                                                     </td>
                 
-                                                                                                                                                                                                                    <!--<td data-title="<?= __('promotion_photo') ?>">-->
-                                                    <?php
-                                                    //    $array = array(
-                                                    //        "src" => url('storage/uploads/images/'),
-                                                    //        'width' => '35px',
-                                                    //        'height' => '35px',
-                                                    //        'class' => 'img-rounded'
-                                                    //    );
-                                                    //    echo img($array);
-                                                    ?>
-                                                    <!--</td>-->
                                                     <td data-title="<?= __('Name') ?>">
                                                         <?php echo ucfirst($user->firstname.' '.$user->lastname); ?>
                                                     </td>
