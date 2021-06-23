@@ -298,5 +298,42 @@ function btn_attendance($id, $method, $class, $name) {
 
 
 
+    
+if (!function_exists('img')) {
+
+    function img($src = '', $index_page = FALSE) {
+        if (!is_array($src)) {
+            $src = array('src' => $src);
+        }
+
+        // If there is no alt attribute defined, set it to an empty string
+        if (!isset($src['alt'])) {
+            $src['alt'] = '';
+        }
+
+        $img = '<img';
+
+        foreach ($src as $k => $v) {
+
+            if ($k == 'src' AND strpos($v, '://') === FALSE) {
+
+                $img .= ' src="' . url($v) . '"';
+            } else {
+                $img .= " $k=\"$v\"";
+            }
+        }
+
+        $img .= '/>';
+
+        return $img;
+    }
+
+}
+
+    function clean_htmlentities($id) {
+        return htmlentities($id, ENT_QUOTES, "UTF-8");
+    }
+    
+
 
    

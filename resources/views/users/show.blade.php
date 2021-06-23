@@ -162,10 +162,10 @@ foreach ($user_permission as $permis) {
                             <a class="nav-link " data-toggle="tab" href="#messages5" role="tab" aria-expanded="false">Activities</a>
                             <div class="slide"></div>
                         </li>
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a class="nav-link " data-toggle="tab" href="#attendance" role="tab" aria-expanded="false">Attendance</a>
                             <div class="slide"></div>
-                        </li>
+                        </li> --}}
                         <li class="nav-item">
                             <a class="nav-link " data-toggle="tab" href="#leave" role="tab" aria-expanded="false">Leave/Absent</a>
                             <div class="slide"></div>
@@ -789,16 +789,15 @@ foreach ($user_permission as $permis) {
                                                         <tr>
                                                             <td><?= date('d M Y', strtotime($absent->date)) ?></td>
                                                             <td><?= $absent->absentReason->name ?></td>
-                                                            <td><?= $absent->note ?></td>
-                                                            <td><?= $absent->companyFile->name ?></td>
+                                                            <td><?= warp($absent->note) ?></td>
+                                                            <td class="text-center"><a type="button" class="btn btn-primary btn-sm waves-effect" target="_blank" href="<?= url('customer/viewContract/' . $absent->id .'/absent') ?>">View</a></td>
                                                             <td><?= $absent->approvedBy->name ?></td>
-                                                            <td><?= date('d M Y', strtotime($absent->end_date)) ?></td>
+                                                            <td><?= isset($absent->end_date) ? date('d M Y', strtotime($absent->end_date)) : '' ?></td>
                                                             <td class="text-center">
-                                                            
                                                                 <div class="dropdown-secondary dropdown f-right">
                                                                     <button class="btn btn-success btn-mini dropdown-toggle waves-effect waves-light" type="button" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</button>
                                                                     <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
-                                                                      <a type="button" class="btn btn-primary btn-sm waves-effect" target="_blank" href="<?= url('customer/viewContract/' . $absent->id .'/absent') ?>">View</a>
+                                          
                                                                       <?php if ($absent->status == null) { ?>
                                                                          <?php if(can_access('approve_leave')) { ?>
                                                                          <a type="button" class="btn btn-info btn-sm"  href="<?= url('users/askleave/' . $absent->id .'/approve') ?>">Approve</a>
@@ -1147,7 +1146,7 @@ foreach ($user_permission as $permis) {
                     <div class="form-group">
                         <label for="cname" class="control-label col-lg-3">Absent Reason</label>
                         <div class="col-lg-12">
-                            <select name="absent_reason_id" class="form-control">
+                            <select name="absent_reason_id" class="form-control select2 category_id">
                                 <?php
                                 $ctypes = DB::table('admin.absent_reasons')->get();
                                 if (!empty($ctypes)) {
@@ -1187,10 +1186,10 @@ foreach ($user_permission as $permis) {
 
               
                     <div class="form-group row">
-                        <div class="col-sm-6">
-                            <label class="control-label">Download Leave document</label>
+                        <div class="col-sm-6"  id="dates">
+                            <label class="control-label">Sick Leave document</label>
                              <div class="col-lg-12">
-                                <a href="https://drive.google.com/file/d/1NAzGeIi-YlXp6OHvY2dqvoQWfPdxyzIj/view?usp=sharing" target="_blank" class="badge badge-warning badge-sm"> Download </a> 
+                                <a href="https://drive.google.com/file/d/1YhpG4g9OSsylI6aM6SJZw7zZVa7iZYTc/view" target="_blank" class="badge badge-warning badge-sm"> Download </a> 
                              </div>
                           </div>
 
@@ -1295,9 +1294,6 @@ foreach ($user_permission as $permis) {
                     </button>
                 </div>
                 <div class="modal-body">
-                 
-                 
-
                      <div class="form-group row">
                         <div class="col-sm-6">
                             <label class="control-label col-lg-3">Course</label>
@@ -1371,7 +1367,7 @@ foreach ($user_permission as $permis) {
 
 
 <script type="text/javascript">
-
+                        
 $(".select2").select2({
     theme: "bootstrap",
     dropdownAutoWidth: false,

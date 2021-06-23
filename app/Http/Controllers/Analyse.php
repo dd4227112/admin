@@ -233,7 +233,8 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
             $schools =  \App\Models\ClientSchool::get();
          } else {
              // Else select schools/clients based on school associates
-            $schools =  \App\Models\UserClient::where('user_id', $id)->get();
+          //  $schools =  \App\Models\UserClient::where('user_id', $id)->get();
+             $schools =  \App\Models\ClientSchool::get();
          }
      
         $this->data['schools'] =  $schools;
