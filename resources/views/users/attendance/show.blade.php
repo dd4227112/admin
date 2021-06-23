@@ -170,8 +170,8 @@ if (!empty($user)) {
                                       <table class="table">
                                           <thead>
                                               <tr>
-                                                  <?php
-                                                  for ($i = 1; $i <= 31; $i++) {
+                                                  <?php 
+                                                  for ($i = 1; $i <= date('t', strtotime($monthName)); $i++) {
                                                       echo "<th style='font-size='5px;''>" . ($i) . "</th>";
                                                   }
                                                   ?>
@@ -181,20 +181,23 @@ if (!empty($user)) {
       
                                               <tr>
                                                   <?php
-                                                  for ($i = 1; $i <= 31; $i++) { 
+                                                  for ($i = 1; $i <= date('t', strtotime($monthName)); $i++) { 
                                                       $att = $user->uattendance()->where('date', date('Y-m-d', strtotime(date('Y') . '-' . $m . '-' . $i)))->first();
-                                                      
-                                                      if (!empty($att) && $att->present == 1) {
-                                                          $att = "P";
+                                                      if((date('D', strtotime(date('Y') . '-' . $m . '-' . $i)) == 'Sat')){
+                                                          $att = "<strong style='color:green'>SA</strong>";
+                                                      } elseif((date('D', strtotime(date('Y') . '-' . $m . '-' . $i)) == 'Sun')){
+                                                          $att = "<strong style='color:green'>SU</strong>";
+                                                      } elseif (!empty($att) && $att->present == 1) {
+                                                          $att = "<strong>P</strong>";
                                                       } elseif(!empty($att->absent_reason_id)) {
                                                           $reason = \DB::table('constant.absent_reasons')->where('id', $att->absent_reason_id)->first();
                                                           if (!empty($reason)) {
                                                               $att = $reason->reason;
                                                           }else{
-                                                              $att = 'ABS';
+                                                              $att = '<strong>ABS</strong>';
                                                           }
-                                                      }else {
-                                                          $att = '';
+                                                      }else{
+                                                         $att = '';
                                                       }
                                                       echo "<td>" . $att . "</td>";
                                                   }
