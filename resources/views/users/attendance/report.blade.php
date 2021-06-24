@@ -232,7 +232,7 @@
                                     if (request_type == '' && date_criteria == '') {
                                         return false;
                                     } else {
-                                    window.location.href = "<?= url('tattendance/report/') ?>/" + date_criteria + "/" + request_type;
+                                    window.location.href = "<?= url('attendance/report/') ?>/" + date_criteria + "/" + request_type;
                                     }
                                 });
                                 $('#dates').change(function () {
@@ -241,7 +241,7 @@
                                     if (request_type == '' && date_criteria == '') {
                                         return false;
                                     } else {
-                                    window.location.href = "<?= url('tattendance/report/') ?>/" + date_criteria + "/" + request_type;
+                                    window.location.href = "<?= url('attendance/report/') ?>/" + date_criteria + "/" + request_type;
                                     }
                                 });
                                 $('#month').change(function () {
@@ -250,7 +250,7 @@
                                     if (request_type == '' && date_criteria == '') {
                                         return false;
                                     } else {
-                                        window.location.href = "<?= url('tattendance/report/') ?>/" + date_criteria + "/" + request_type;
+                                        window.location.href = "<?= url('attendance/report/') ?>/" + date_criteria + "/" + request_type;
                                     }
                                 });
                                 </script>
