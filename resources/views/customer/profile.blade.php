@@ -110,8 +110,8 @@ return $echo;
                                         <!-- social-profile card start -->
                                         <div class="card">
                                             <div class="social-profile">
-                                                <?php
-                                                $image = strlen($school->photo) > 3 ? 'storage/uploads/images/' . $school->photo : 'storage/uploads/images/defualt.png';
+                                                <?php 
+                                                $image = isset($school->photo) && strlen($school->photo) > 3 ? 'storage/uploads/images/' . $school->photo : 'storage/uploads/images/defualt.png';
                                                 ?>
                                                 <img class="img-fluid width-100"
                                                     src="https://demo.shulesoft.com/<?= $image ?>" alt="">
@@ -121,8 +121,8 @@ return $echo;
                                                 </div>
                                             </div>
                                             <div class="card-block social-follower">
-                                                <h4><?= $school->sname ?></h4>
-                                                <h5><?= $school->address ?></h5>
+                                                <h4><?= $school->sname ?? ''?></h4>
+                                                <h5><?= $school->address ?? '' ?></h5>
                                                 <?php
                                                 if ($is_client == 1) {
                                                     ?>
@@ -158,7 +158,8 @@ return $echo;
                                                         <div class="txt-primary">School Status</div>
                                                         <?php
                                                             $st = DB::table($schema . '.setting')->first();
-                                                            echo '<a data-toggle="modal" data-target="#status-Modal">';
+                                                            if(!empty($st)) {
+                                                               echo '<a data-toggle="modal" data-target="#status-Modal">';
                                                             if ($st->school_status == 1) {
                                                                 echo '<div class="btn btn-primary">Active Paid</div>';
                                                             } elseif ($st->school_status == 2) {
@@ -171,6 +172,8 @@ return $echo;
                                                                 echo '<div>Not defined</div>';
                                                             }
                                                             echo '</a>';
+                                                            }
+                                                            
                                                             ?>
                                                     </div>
                                                 </div>
@@ -633,14 +636,14 @@ return $echo;
                                                                                     </th>
                                                                                     <td
                                                                                         class="social-user-name b-none p-t-0 text-muted">
-                                                                                        <?= $school->sname ?></td>
+                                                                                        <?= $school->sname ?? ''?></td>
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <th class="social-label b-none">
                                                                                         Location</th>
                                                                                     <td
                                                                                         class="social-user-name b-none text-muted">
-                                                                                        <?= $school->address ?></td>
+                                                                                        <?= $school->address ?? '' ?></td>
                                                                                 </tr>
                                                                                 <?php if ($is_client == 1) { ?>
                                                                                 <tr>
@@ -648,7 +651,7 @@ return $echo;
                                                                                         Date On boarded</th>
                                                                                     <td
                                                                                         class="social-user-name b-none text-muted">
-                                                                                        <?= date('d M Y h:i', strtotime($school->created_at)) ?>
+                                                                                        <?= isset($school->created_at) ? date('d M Y h:i', strtotime($school->created_at)) : '' ?>
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr>
@@ -656,7 +659,7 @@ return $echo;
                                                                                         Contact Details</th>
                                                                                     <td
                                                                                         class="social-user-name b-none text-muted">
-                                                                                        <?= $school->phone ?></td>
+                                                                                        <?= $school->phone ?? '' ?></td>
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <th
@@ -676,9 +679,10 @@ return $echo;
                                                                                     <th class="social-label b-none p-b-0">School Access</th>
                                                                                     <td
                                                                                         class="social-user-name b-none p-b-0 text-muted">
-                                                                                        <?php
+                                                                                        <?php if(isset($school->username)) {
                                                                                             echo 'Username - ' . $school->username . '
                                                                                               <br><a href="' . url('customer/resetPassword/' . $schema) . '" class="btn btn-success btn-sm" ><i class="icofont icofont-refresh"></i> Reset Password</a>';
+                                                                                               }
                                                                                             ?>
                                                                                             </td>
                                                                                           </tr>
@@ -771,7 +775,7 @@ return $echo;
                                                                     <table class="table m-b-0">
                                                                         <tbody>
                                                                             <?php
-                                                                            if ($school->school_id == null) {
+                                                                            if (isset($school->school_id) && $school->school_id == null) {
                                                                                 ?>
                                                                             <tr>
                                                                                 <th class="social-label b-none">
@@ -2369,7 +2373,7 @@ $.ajax({
     url: '<?= url('customer/allocate/null') ?>',
     data: {
         user_id: a,
-        school_id: '<?= $school->school_id ?>',
+        school_id: '<?= $school->school_id ?? '' ?>',
         role_id: role_id,
         schema: '<?= $schema ?>'
     },

@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use Auth;
+use PDF;
 
 class Attendance extends Controller {
 
@@ -74,16 +75,22 @@ class Attendance extends Controller {
     public function report(){
         $this->data['type'] = $type = request()->segment(3);
         $this->data['id'] = $id = request()->segment(4);
+           $export = request()->segment(5);
+              $this->data["weeks"] = $this->loadWeeK();
             if(!empty($type) && !empty($id)){
-
                 $this->data["type"] = $type;
                 $this->data["set"] = $id;
+                $this->data['users'] = (new \App\Http\Controllers\Payroll())->getUsers();
+
+             if($export == 'export'){
+                $this->data["export"] = $id;
+                $pdf = PDF::loadView('users.attendance.report', $this->data);
+                $type != 'date' ? $pdf->setPaper('A4', 'landscape') : '';
+                return $pdf->stream('pdf_file.pdf');
+               // return $pdf->download('pdf_file.pdf');
+              }
             }
-           // $this->data["user"] = \App\Model\User::where('id', 31)->where('table', 'user')->first();
-            $this->data['users'] = (new \App\Http\Controllers\Payroll())->getUsers();
-            $this->data["weeks"] = $this->loadWeeK();
-            $this->data["subview"] = "users.attendance.report";
-            return view($this->data["subview"],$this->data);
+            return view("users.attendance.report", $this->data);
     }
 
 

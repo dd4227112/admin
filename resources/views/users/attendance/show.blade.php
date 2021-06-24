@@ -16,8 +16,6 @@ if (!empty($user)) {
         <span>attendance.</span>
       </div>
       <div class="page-header-breadcrumb">
-      
-
         <div class="col-sm-12">
         <ul class="breadcrumb-title">
           <li class="breadcrumb-item">
@@ -35,74 +33,83 @@ if (!empty($user)) {
     </div>
 
     <div class="page-body">
-      <div class="row">
-        <div class="col-sm-12 row">
+      <div class="col-sm-12">
+        <div class="row">
             <div class="col-sm-4">
           
               <div class="card counter-card-1">
                 <div class="card-block-big">
                     <div class="media-left">
-                        <a href="#" class="profile-image">
-                            <img class="user-img img-circle" src="" alt="User-Profile-Image" height="110">
-                        </a>
+                        <div href="#" class="profile-image">
+                         
+                          <img class="user-img img-circle" src="<?= $user->company_file_id !='' ? $user->companyFile->path : $root . 'assets/images/user.png' ?>" alt="User-Profile-Image" height="100">
+
+                          <div class="center">
+                             <h4>Full name: <?= $user->name() ?? '' ?></h4> 
+                             <h6>Phone number: <?= $user->phone ?? '' ?></h6> 
+                             <h6>Email: <?= $user->email ?? '' ?></h6>
+                             <h6>Designation: <?= $user->designation->name ?? '' ?></h6>
+                             <h6>Gender: <?= $user->sex ?? '' ?></h6>
+                             <h6>Location: <?= $user->address ?? '' ?></h6>
+                          </div>
+
+                        </div>
                     </div>
-                    
                 </div>
               </div>
             </div>
 
-          <div class="col-sm-8">
-            <div class="card">
-              <div class="col-md-12">
-                <h4> Attendance Report</h4>
-                <script type="text/javascript">
-                    $(function () {
-                        $('#container').highcharts({
-                            data: {
-                                table: 'datatables'
-                            },
-                            series: [{
-                                    name: '',
-                                    colorByPoint: true}
-                            ],
-                            chart: {
-                                type: 'column'
-                            },
-                            title: {
-                                text: "<?=$user->name?> Attendance Report" 
-                            },
-                            yAxis: {
-                                allowDecimals: false,
-                                title: {
-                                    text: 'Days'
-                                }
-                            },
-                            legend: {
-                                enabled: false
-                            },
-                            plotOptions: {
-                                series: {
-                                    borderWidth: 0,
-                                    dataLabels: {
-                                        enabled: true,
-                                        format: ''
-                                    }
-                                }
-                            },
-                            tooltip: {
-                                formatter: function () {
-                                    return '<b>' + this.series.name + '</b><br/>' +
-                                            this.point.y + ' ' + this.point.name.toUpperCase();
-                                }
-                            }
-                        });
-                    });
-                </script>
-
-                <script src="<?= url('public/assets/js/highchart.js') ?>"></script>
-                <script src="<?= url('public/assets/js/exporting.js') ?>"></script>
-                <script src="<?= url('public/assets/js/data.js') ?>"></script>
-                <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+              <div class="col-sm-8">
+                 <div class="card">
+                    <div class="col-md-12">
+                        <script src="https://code.highcharts.com/highcharts.js"></script>
+                        <script src="https://code.highcharts.com/modules/data.js"></script>
+                           <script type="text/javascript">
+                                    $(function () {
+                                        $('#container').highcharts({
+                                            data: {
+                                                table: 'datatables'
+                                            },
+                                            series: [{
+                                                    name: '',
+                                                    colorByPoint: true}
+                                            ],
+                                            chart: {
+                                                type: 'column'
+                                            },
+                                            title: {
+                                                text: "<?=$user->name?> Attendance Report" 
+                                            },
+                                            yAxis: {
+                                                allowDecimals: false,
+                                                title: {
+                                                    text: 'Days'
+                                                }
+                                            },
+                                            legend: {
+                                                enabled: false
+                                            },
+                                            plotOptions: {
+                                                series: {
+                                                    borderWidth: 0,
+                                                    dataLabels: {
+                                                        enabled: true,
+                                                        format: ''
+                                                    }
+                                                }
+                                            },
+                                            tooltip: {
+                                                formatter: function () {
+                                                    return '<b>' + this.series.name + '</b><br/>' +
+                                                            this.point.y + ' ' + this.point.name.toUpperCase();
+                                                }
+                                            }
+                                        });
+                                    });
+                                </script>
+               
+                         
+                         <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
             </div>
           </div>
          </div>
@@ -110,64 +117,8 @@ if (!empty($user)) {
 
          <div class="col-sm-12">
             <div class="card">
-
-              <div class="" role="tabpanel" data-example-id="togglable-tabs">
-                <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
-                    <li role="presentation" class="active"><a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">User Information</a>
-                    </li>
-                    <li role="presentation" class=""><a href="#tab_content2" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Summary</a>
-                    </li>
-                </ul>
-
-                <div id="myTabContent" class="tab-content">
-                    <div role="card-body" class="tab-pane fade active" id="tab_content1" aria-labelledby="home-tab">
-                    
-                        <table id="datatables" style="" class="table">
-                          <tr>
-                              <td>
-                                Name
-                              </td>
-                              <td>
-                                <?= $user->name ?>
-                              </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              Gender
-                            </td>
-                            <td>
-                              <?= $user->sex ?>
-                            </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            Address
-                          </td>
-                          <td>
-                            <?= $user->address ?>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            Email
-                          </td>
-                          <td>
-                            <?= $user->email ?>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            Phone
-                          </td>
-                          <td>
-                            <?= $user->phone ?>
-                          </td>
-                       </tr>
-                      </table>
-                    </div>
-
-                    <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
-                      <table id="datatables" style="" class="table">
+              <div class="card-header">
+                      <table id="datatables" style="margin:5px;" class="table">
                         <thead>
                             <tr>
                                 <th>Month</th>
@@ -199,8 +150,6 @@ if (!empty($user)) {
                             <td><?= $sum_att ?></td>
                         </tr>
                      </table>
-                     </div>
-                    </div>
                    </div>
                 </div>
               </div>
@@ -221,8 +170,8 @@ if (!empty($user)) {
                                       <table class="table">
                                           <thead>
                                               <tr>
-                                                  <?php
-                                                  for ($i = 1; $i <= 31; $i++) {
+                                                  <?php 
+                                                  for ($i = 1; $i <= date('t', strtotime($monthName)); $i++) {
                                                       echo "<th style='font-size='5px;''>" . ($i) . "</th>";
                                                   }
                                                   ?>
@@ -232,20 +181,23 @@ if (!empty($user)) {
       
                                               <tr>
                                                   <?php
-                                                  for ($i = 1; $i <= 31; $i++) { 
+                                                  for ($i = 1; $i <= date('t', strtotime($monthName)); $i++) { 
                                                       $att = $user->uattendance()->where('date', date('Y-m-d', strtotime(date('Y') . '-' . $m . '-' . $i)))->first();
-                                                      
-                                                      if (!empty($att) && $att->present == 1) {
-                                                          $att = "P";
+                                                      if((date('D', strtotime(date('Y') . '-' . $m . '-' . $i)) == 'Sat')){
+                                                          $att = "<strong style='color:green'>SA</strong>";
+                                                      } elseif((date('D', strtotime(date('Y') . '-' . $m . '-' . $i)) == 'Sun')){
+                                                          $att = "<strong style='color:green'>SU</strong>";
+                                                      } elseif (!empty($att) && $att->present == 1) {
+                                                          $att = "<strong>P</strong>";
                                                       } elseif(!empty($att->absent_reason_id)) {
                                                           $reason = \DB::table('constant.absent_reasons')->where('id', $att->absent_reason_id)->first();
                                                           if (!empty($reason)) {
                                                               $att = $reason->reason;
                                                           }else{
-                                                              $att = 'ABS';
+                                                              $att = '<strong>ABS</strong>';
                                                           }
-                                                      }else {
-                                                          $att = '';
+                                                      }else{
+                                                         $att = '';
                                                       }
                                                       echo "<td>" . $att . "</td>";
                                                   }
