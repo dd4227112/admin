@@ -84,4 +84,10 @@
     'bold' => $fontDir . '/open_sans_bold_51a4a199f07ddf2c33c090c3ea0f03b2',
     '800' => $fontDir . '/open_sans_800_56683585f33dd6b50597d10c69fe6426',
   ),
+  'themify' => array(
+    'normal' => $fontDir . '/themify_normal_a6d57b003325821b29f7d0dcaab19875',
+  ),
+  'icofont' => array(
+    'normal' => $fontDir . '/icofont_normal_f859f9b730bc6f2d1df7e82c82ff52ac',
+  ),
 ) ?>
