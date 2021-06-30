@@ -32,9 +32,9 @@ foreach ($integrations as $integration) {
 
 $bank_accounts = [];
 $accounts_number = [];
-$banks = DB::select('select * from admin.all_bank_accounts');
+$banks = DB::select('select b.abbreviation,a.number,a.schema_name from admin.all_bank_accounts a join constant.refer_banks b on a.refer_bank_id = b.id');
 foreach ($banks as $bank) {
-    $bank_accounts[$bank->schema_name] = $bank->branch;
+    $bank_accounts[$bank->schema_name] = $bank->abbreviation;
     $accounts_number[$bank->schema_name] = $bank->number;
 }
 

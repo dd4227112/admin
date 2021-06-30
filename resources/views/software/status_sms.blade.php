@@ -52,13 +52,19 @@
                                                             <th>School Name</th>
                                                             <th>Status </th>
                                                             <th>Api Key</th>
+                                                            <th>Contacts</th>
                                                             <th>last Active</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <?php $i = 1;
-                                                        if(count($sms_status) > 0)  
-                                                        foreach ($sms_status as $status) { 
+                                                        <?php $i = 1; $cont = [];
+                                                         $contacts = DB::table('admin.all_users')->where('usertype','Admin')->where('status','1')->get();
+                                                         foreach ($contacts as $contact) {
+                                                              $cont[$contact->schema_name] = $contact->phone;
+                                                         }
+                                                         if(count($sms_status) > 0)  
+                                                          foreach ($sms_status as $status) { 
+                                                    
                                                             ?>
                                                             <tr>
                                                                <td>
@@ -69,7 +75,16 @@
                                                                  <td> 
                                                                     <?= $status->last_active == '' ? '<b class="label label-warning">Not Installed</b>' : '<b class="label label-info">Installed</b>' ?>
                                                                   </td>
-                                                                 <td><?= $status->api_key ?></td>
+                                                                  <td><?= $status->api_key ?></td>
+                                                                 <td>
+                                                                 <?php
+                                                                    if(isset($cont[$status->schema_name])) {
+                                                                        echo $cont[$status->schema_name] .'<br/>';
+                                                                    } else {
+                                                                        echo '<b class="label label-info">Not Specified</b>';
+                                                                    }
+                                                                    ?>
+                                                                </td>
                                                                   <td><?= isset($status->last_active) ? \Carbon\Carbon::parse($status->last_active)->diffForHumans() : '' ?></td>
                                                             </tr>
                                                             <?php $i++; } ?>

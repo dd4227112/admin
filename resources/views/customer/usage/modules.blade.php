@@ -229,13 +229,10 @@ function select($value, $schema, $sources) {
             $no_payment = 0;
             $a = 0;
             foreach ($schools as $school) {
-
                 $students = DB::table($school->schema_name . '.student')->where('status', 1)->count();
                 ?>
                 <tr>
-
                     <td><?= $school->schema_name ?></td>
-
                     <td><?php
                         if (isset($allocation[$school->schema_name])) {
                             echo $allocation[$school->schema_name];

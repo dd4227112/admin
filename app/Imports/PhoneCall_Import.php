@@ -12,7 +12,6 @@ class PhoneCall_Import implements ToModel, WithHeadingRow
     /**
      * @param array $row
      * */
-
     public function model(array $row)
     {
       //  dd($row['call_time']);

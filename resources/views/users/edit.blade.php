@@ -211,6 +211,14 @@
                                         </div>
                                     </div>
 
+                                     <div class="col-xs-12 col-sm-12 col-md-12">
+                                        <div class="form-group">
+                                            <strong>Employment CV:</strong>
+                                            <input id="location" placeholder="Employment contract" type="text" class="form-control" name="cv" value="<?=$user->cv?>" >
+                                            <span class="hinge">Please Scan your cv and upload them in company Google drive account, and paste a shared link here</span>
+                                        </div>
+                                    </div>
+
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong>T-shirt Size:</strong>

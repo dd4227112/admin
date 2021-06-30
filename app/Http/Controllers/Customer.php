@@ -873,9 +873,9 @@ class Customer extends Controller {
     public function IntegrationStatus() {
          $skip = ['admin', 'accounts', 'pg_catalog', 'constant', 'api', 'information_schema', 'public', 'academy', 'forum',
                   'beta_testing','beta','betatwo'];
-         $sql = DB::table('admin.all_bank_accounts_integrations')
-                ->whereNotIn('schema_name', $skip);
+         $sql = DB::table('admin.all_bank_accounts_integrations')->whereNotIn('schema_name', $skip);
         $this->data['accounts'] = $sql->get();
+      
         return view('customer.usage.inter_status', $this->data);
     }
 
@@ -886,6 +886,19 @@ class Customer extends Controller {
                 ->whereNotIn('schema_name', $skip);
         $this->data['schools'] = $sql->get();
         return view('customer.usage.bank_status', $this->data);
+     }
+
+     public function Emplist(){
+           $this->data['users'] = User::where('status', 1)->whereNotIn('role_id',array(7,15))->get();
+            return view('customer.usage.empl_list', $this->data);
+     }
+
+     public function customerslist(){
+            $skip = ['admin', 'accounts', 'pg_catalog', 'constant', 'api', 'information_schema', 'public', 'academy', 'forum'];
+            $sql = DB::table('admin.all_setting')->whereNotIn('schema_name', $skip);
+            $this->data['customers'] = $sql->get();
+            return view('customer.usage.customer_list', $this->data);
+
      }
 
     

@@ -10,6 +10,4 @@ class ReferDesignation extends Model {
 
     protected $fillable = ['id', 'name', 'abbreviation', 'created_at', 'updated_at'];
 
-  
-
 }

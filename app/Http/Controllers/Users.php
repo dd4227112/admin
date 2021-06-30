@@ -20,7 +20,7 @@ class Users extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $this->data['users'] = User::where('status', 1)->where('role_id', '<>', 7)->get();
+        $this->data['users'] = User::where('status', 1)->whereNotIn('role_id',array(7,15))->get();
         return view('users.index', $this->data);
     }
 
@@ -315,6 +315,7 @@ class Users extends Controller {
             //     $filePath = base_path() . '/storage/uploads/images/';
             //     $file->move($filePath, $filename2);
             // }
+            
              
              $user = User::find($id)->update(request()->all());
          //  $user = User::find($id)->update(request()->except('medical_report', 'academic_certificates','employment_contract'));
