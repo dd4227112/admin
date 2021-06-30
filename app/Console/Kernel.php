@@ -1022,11 +1022,10 @@ public function sendSORemainder() {
          $schools = \App\Models\SchoolKeys::where('last_active', '<', \Carbon\Carbon::now()->subDay())->get();
          foreach($schools as $school){ 
              // Select school admin contacts to message to
-            // $contacts = DB::table('shulesoft.user')->where('usertype', 'Admin')->get();
              $contacts = DB::table($school->schema_name.'.user')->where('usertype','Admin')->get();
              if(count($contacts) > 0) {
              foreach($contacts as $contact){
-                    $sms = 'MUHIMU: Simu yako yenye app ya KARIBU SMS kwa ajili ya kutuma SMS kwenda kwa wazazi lazima iwe hewani muda wote kuepusha SMS kufeli au kutofika kwa wakati.#SHULESOFT';
+                    $sms = 'Ndugu '.$contact->name. ' Ili kuepusha kufeli au kutokufika kwa SMS kwa wazazi, hakikisha Simu inayotumika kutuma SMS kutoka shule kwa kutumia App ya SMS, inakuwa hewani na internet muda wote.Asante';
                      DB::table('public.sms')->insert([
                      'body' => $sms,
                      'phone_number' => $contact->phone,

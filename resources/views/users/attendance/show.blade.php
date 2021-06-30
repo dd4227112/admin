@@ -184,9 +184,9 @@ if (!empty($user)) {
                                                   for ($i = 1; $i <= date('t', strtotime($monthName)); $i++) { 
                                                       $att = $user->uattendance()->where('date', date('Y-m-d', strtotime(date('Y') . '-' . $m . '-' . $i)))->first();
                                                       if((date('D', strtotime(date('Y') . '-' . $m . '-' . $i)) == 'Sat')){
-                                                          $att = "<strong style='color:green'>SA</strong>";
+                                                          $att = "<strong style='color:green'>S</strong>";
                                                       } elseif((date('D', strtotime(date('Y') . '-' . $m . '-' . $i)) == 'Sun')){
-                                                          $att = "<strong style='color:green'>SU</strong>";
+                                                          $att = "<strong style='color:green'>S</strong>";
                                                       } elseif (!empty($att) && $att->present == 1) {
                                                           $att = "<strong>P</strong>";
                                                       } elseif(!empty($att->absent_reason_id)) {

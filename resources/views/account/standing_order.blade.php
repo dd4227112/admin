@@ -87,8 +87,8 @@
                                         {{-- <button class="btn btn-success btn-mini dropdown-toggle waves-effect waves-light" type="button" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</button> --}}
                                         {{-- <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut"> --}}
                                          <a  target="_break" href="<?= url('customer/viewContract/'.$standing->id) ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a>
-
-                                         
+ 
+                                     <?php if(isset($standing->payment_date)) {  ?>  
                                          <?php if(isset($standing->client)) {  ?>
                                             <?php if((int) $standing->is_approved == 1) { ?>
                                                   <button type="button" class="btn btn-dark btn-sm">Approved</button>
@@ -100,6 +100,7 @@
                                              <?php } ?>
 
                                          <?php } ?>
+                                        <?php } ?>
 
                                        </td>
 

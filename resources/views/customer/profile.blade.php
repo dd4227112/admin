@@ -4,10 +4,8 @@
 <?php
 $root = url('/') . '/public/';
 define('SCHEMA', $schema);
-
 function check_status($table, $where = null) {
 $schema = SCHEMA;
-
 if ($table == 'admin.vendors') {
     $report = \collect(DB::select('select created_at::date from ' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first();
 }elseif ($table == 'invoices') {
@@ -23,14 +21,13 @@ if (!empty($report)) {
 return $echo;
 }
 ?>
-
 <script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
 <div class="main-body">
 <div class="page-wrapper">
     <!-- Page-header start -->
     <div class="page-header">
         <div class="page-header-title">
-            <h4><?= isset($school->sname)?$school->sname:'' ?></h4>
+            <h4><?= isset($school->sname) ? $school->sname : '' ?></h4>
         </div>
         <div class="page-header-breadcrumb">
             <ul class="breadcrumb-title">
@@ -111,7 +108,7 @@ return $echo;
                                         <div class="card">
                                             <div class="social-profile">
                                                 <?php 
-                                                $image = isset($school->photo) && strlen($school->photo) > 3 ? 'storage/uploads/images/' . $school->photo : 'storage/uploads/images/defualt.png';
+                                                $image = isset($school->photo) && strlen($school->photo) > 3 ? 'storage/uploads/images/' . $school->photo : 'storage/uploads/images/default.png';
                                                 ?>
                                                 <img class="img-fluid width-100"
                                                     src="https://demo.shulesoft.com/<?= $image ?>" alt="">
@@ -196,9 +193,7 @@ return $echo;
                                                             ?>
                                                 <div class="media m-b-10">
                                                     <a class="media-left" href="#!">
-                                                        <?php
-                                                                    $user_image = 'storage/uploads/images/defualt.png';
-                                                                    ?>
+                                                        <?php  $user_image = 'storage/uploads/images/defualt.png'; ?>
 
                                                         <img class="media-object img-circle"
                                                             src="https://demo.shulesoft.com/<?= $user_image ?>"
@@ -313,7 +308,7 @@ return $echo;
                                                         <div class="modal-dialog modal-lg" role="document">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
-                                                                    <h4 class="modal-title">Create Task/Activity
+                                                                    <h4 class="modal-title">Create Task/Activity 
                                                                     </h4>
                                                                     <button type="button" class="close"
                                                                         data-dismiss="modal" aria-label="Close">
@@ -332,7 +327,7 @@ return $echo;
                                                                                 name="activity"></textarea>
                                                                         </div>
                                                                         <div class="form-group">
-                                                                            <div class="row">
+                                                                            <div class="row"> 
 
                                                                                 <div class="col-md-6">
                                                                                     Task Type
@@ -462,6 +457,7 @@ return $echo;
                                                         </div>
                                                     </div>
                                                 </div>
+
 
                                                 <div class="col-md-12 timeline-dot">
                                                     <?php
@@ -1383,7 +1379,7 @@ return $echo;
                                                                         /**
                                                                          *
                                                                          * --check if stamp has been defined
-                                                                         *
+                                                                         *Electronic Payments
                                                                          */
                                                                         if (!empty($levels)) {
                                                                             foreach ($levels as $level) {
@@ -2512,6 +2508,23 @@ $('.task_allocated_id').change(function() {
     });
 });
 }
+
+<script src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;key=AIzaSyBgc2zYiUzXGjZ277annFVhIXkrpXdOoXw"></script>
+<script src="{{$root.'/js/jquery.geocomplete.min.js'}}"></script>
+<script>
+
+$("#town").geocomplete()
+        .bind("geocode:result", function (event, result) {
+            var loc = result.geometry.location;
+            $("#location").val(loc.lng() + ", " + loc.lat());
+        })
+        .bind("geocode:error", function (event, status) {
+            console.log("ERROR: " + status);
+        })
+        .bind("geocode:multiple", function (event, results) {
+            console.log("Multiple: " + results.length + " results found");
+        });
+</script>
 
 $(document).ready(task_group);
 </script>

@@ -334,10 +334,14 @@ class Users extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function destroy() {
-        $id = request()->segment(3);
-        DB::table("users")->where('id', $id)->update(['status' => 0]);
-        return redirect()->back()
-                        ->with('success', 'User deleted successfully');
+         $id = request()->segment(3);
+         DB::table("users")->where('id', $id)->update(['status' => 0]);
+         $email = \App\Models\User::where('id',$id)->first()->email;
+  
+        if($email){
+           DB::table("public.user")->where('email', $email)->delete();
+        }
+        return redirect()->back()->with('success', 'User deleted successfully');
     }
 
     public function management() {

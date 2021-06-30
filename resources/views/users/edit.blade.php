@@ -119,9 +119,7 @@
                                                 $roles = DB::table('roles')->get();
                                                 ?>
                                                 @foreach($roles as $value)
-
-                                                <option value="{{$value->id}}">{{$value->display_name}} </option>
-
+                                                 <option value="{{ $value->id }}" {{ $value->id == $user->role_id ? 'selected' : '' }}>{{ $value->display_name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>

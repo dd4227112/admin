@@ -831,7 +831,6 @@ class Customer extends Controller {
     }
 
     public function usageAnalysis() {
-
         $skip = ['admin', 'accounts', 'pg_catalog', 'constant', 'api', 'information_schema', 'public', 'academy', 'forum'];
         $sql = DB::table('admin.all_setting')
                 ->whereNotIn('schema_name', $skip);
@@ -846,12 +845,48 @@ class Customer extends Controller {
 
     
     public function bankAnalysis() {
-
-  
         $this->data['schools'] = [];
-
         return view('customer.usage.bank_analysis', $this->data);
     }
+
+    public function schoolBanks() {
+         $skip = ['admin', 'accounts', 'pg_catalog', 'constant', 'api', 'information_schema', 'public', 'academy', 'forum'];
+         $sql = DB::table('admin.all_setting')
+                ->whereNotIn('schema_name', $skip);
+        $this->data['schools'] = $sql->get();
+        return view('customer.usage.schoolbanks', $this->data);
+    }
+
+
+      public function Banksbranches() {
+         $sql = DB::select("select distinct p.id,p.name,d.name as district,r.name as region,z.name as zone_name, t.branch_id,count(t.school_id) 
+                            as schools  from admin.partner_branches p join admin.districts d 
+                            on p.district_id = d.id join admin.regions r on r.id = d.region_id join constant.refer_zones z on 
+                            z.id = r.refer_zone_id join admin.partner_schools t on t.branch_id = p.id 
+                            group by t.branch_id,p.id,d.name,r.name,z.name");
+        $this->data['branches'] = $sql;
+        
+        return view('customer.usage.banksbranches', $this->data);
+    }
+
+
+    public function IntegrationStatus() {
+         $skip = ['admin', 'accounts', 'pg_catalog', 'constant', 'api', 'information_schema', 'public', 'academy', 'forum'];
+         $sql = DB::table('admin.all_bank_accounts_integrations')
+                ->whereNotIn('schema_name', $skip);
+        $this->data['accounts'] = $sql->get();
+        return view('customer.usage.inter_status', $this->data);
+    }
+
+
+     public function BankStatus(){
+         $skip = ['admin', 'accounts', 'pg_catalog', 'constant', 'api', 'information_schema', 'public', 'academy', 'forum'];
+         $sql = DB::table('admin.all_setting')
+                ->whereNotIn('schema_name', $skip);
+        $this->data['schools'] = $sql->get();
+
+        return view('customer.usage.bank_status', $this->data);
+     }
 
     
     public function modules() {

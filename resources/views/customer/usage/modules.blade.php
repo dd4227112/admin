@@ -19,6 +19,7 @@
 //   ● select distinct &quot;schema_name&quot; from admin.all_expense where extract (year from
 //   created_at)=&#39;2019&#39; -to
 //  */
+
 $month = request()->segment(3);
 $year = request()->segment(4);
 $where = (int) $month > 0 && (int) $year > 0 ? ' WHERE extract(year from created_at)=' . $year . ' AND extract(month from created_at)=' . $month : '';
@@ -59,7 +60,6 @@ foreach ($payments as $payment) {
     $payment_status[$payment->schema_name] = $payment->created_at;
     $payment_count[$payment->schema_name] = $payment->count;
 }
-
 
 
 $payroll = DB::select('select distinct "schema_name", max(created_at) as created_at, count(*) from admin.all_salaries ' . $where . '   group by schema_name');
@@ -171,7 +171,6 @@ foreach ($admissions as $admission) {
 $school_allocations = DB::select('select c.schema_name,c.source, c.sname,b.firstname, b.lastname from admin.user_clients a join admin.users b on b.id=a.user_id join admin.clients z on z.id=a.client_id join admin.all_setting c on c."schema_name"=z."username" where a.status=1 and c.schema_name is not null');
 $allocation = [];
 $users_allocation = [];
-
 foreach ($school_allocations as $school_allocation) {
     $allocation[$school_allocation->schema_name] = $school_allocation->firstname . ' ' . $school_allocation->lastname;
 }
@@ -245,14 +244,16 @@ function select($value, $schema, $sources) {
                             echo 'No Person Allocated';
                         }
                         ?></td>
-                    <td><?php
+                    <td>
+                        <?php
                         if ($students == 0) {
                             echo 0;
                             $no_students++;
                         } else {
                             echo $students;
                         }
-                        ?></td>
+                        ?>
+                        </td>
 
                     <td>
                         <?php

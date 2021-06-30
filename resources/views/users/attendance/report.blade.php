@@ -14,13 +14,13 @@ table td {
     padding-left: 5px;
     border-bottom: 0.01em solid black;
 }
-    
 </style>
-
-<?php } else { ?>
- @extends('layouts.app')
- @section('content')
 <?php } ?>
+
+<?php if(!isset($export) ) { ?>
+@extends('layouts.app')
+@section('content')
+<?php }?>
 
 <?php
     if(isset($type) && $type == 'week'){
@@ -130,7 +130,7 @@ table td {
                                 }
                                 if(isset($export) && !empty($export)){
                                     $array = array(
-                                            "src" => url('storage/uploads/images/default.png'),
+                                            "src" => url('storage/uploads/images/default-logo.png'),
                                             'width' => '120',
                                             'height' => '120',
                                             'class' => 'img-rounded',
@@ -223,7 +223,7 @@ table td {
                                                         $att = substr($reason->reason, 0, 4);
                                                         $total_per++;
                                                     }else{
-                                                        $att = 'ABS';
+                                                        $att = 'AB';
                                                     }
                                                 }else {
                                                     $att = '';
@@ -245,7 +245,7 @@ table td {
                                                     $att = substr($reason->reason, 0,4);
                                                     $total_per++;
                                                 }else{
-                                                    $att = 'ABS';
+                                                    $att = 'AB';
                                                 }
                                             }else {
                                                 $att = '';

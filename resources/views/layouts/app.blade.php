@@ -1,22 +1,15 @@
 <?php $root = url('/') . '/public/';
 $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
-
 //isset($value) ? dd($value) : 'vaaaaaaaa' 
-
 ?>
-
-
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
-
     <head>
         <title>ShuleSoft Admin Panel</title>
-     
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
         <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-
         <meta name="description" content="ShuleSoft Admin">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <meta name="keywords" content="ShuleSoft, Admin , Admin Panel">
@@ -59,8 +52,12 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
 
         <link href="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.css" rel="stylesheet">
 
-        <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
-        <script type="text/javascript" src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script>
+        
+
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+        {{-- <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script> --}}
    
 
         <script type="text/javascript">
@@ -725,7 +722,9 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                     {{-- <li><a href="<?= url('software/server') ?>" data-i18n="nav.basic-components.button">Server Administration</a></li> --}}
                                     <li><a href="<?= url('software/logs') ?>" data-i18n="nav.basic-components.box-shadow">Error Logs</a></li>
 
-                                    <li><a href="<?= url('software/smsStatus') ?>" data-i18n="nav.basic-components.box-shadow">SMS Status</a></li>
+                                     <?php if(can_access('view_sms_status')) { ?>
+                                       <li><a href="<?= url('software/smsStatus') ?>" data-i18n="nav.basic-components.box-shadow">SMS Status</a></li>
+                                    <?php } ?>
                                 </ul>
                             </li>
                         <?php } ?>
@@ -955,7 +954,6 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         </div>
       
 
-        <script src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/tether/dist/js/tether.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
         <!-- jquery slimscroll js -->
