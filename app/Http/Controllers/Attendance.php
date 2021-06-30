@@ -84,6 +84,8 @@ class Attendance extends Controller {
 
              if($export == 'export'){
                 $this->data["export"] = $id;
+                $this->data["printthis"]  = true;
+           
                 $pdf = PDF::loadView('users.attendance.report', $this->data);
                 $type != 'date' ? $pdf->setPaper('A4', 'landscape') : '';
                 return $pdf->stream('pdf_file.pdf');

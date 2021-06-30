@@ -233,7 +233,7 @@ class Sales extends Controller {
 
     public function show() {
         $page = request('page');
-        
+      //   dd(request('type'));
         switch ($page) {
             case 'leads':
                 $sql = 'select a.* from admin.leads a join admin.schools b on a.school_id=b.id join admin.users c on c.id=a.user_id join admin.prospects d on d.id=a.prospect_id join admin.tasks e on e.id=a.task_id';
@@ -259,10 +259,11 @@ class Sales extends Controller {
                     admin.wards as W on D.id = W.district_id join admin.regions R on R.id = D.region_id ) T on B.ward_id = T.id";
                 } else {   
                 
-                $sql = "select C.*,D.username from (select A.*,B.* from (select b.*,w.name as ward, d.name as district,r.name as region from (select a.*, (select count(*) from admin.tasks where school_id=a.id) 
-                as activities from admin.schools a  where lower(a.ownership) <>'government') as b join admin.wards as w on b.ward_id = w.id join admin.districts as d on d.id=w.district_id
-                join admin.regions as r on r.id=d.region_id) A LEFT JOIN (select school_id,client_id from admin.client_schools) B
-                on A.id = B.school_id) C  left  join (select id,username from admin.clients) D on C.client_id = D.id ";
+                $sql = "select a.* from (select s.*,b.name as ward,d.name as district,r.name as region,c.client_id,e.username, 
+                        (select count(*) from admin.tasks where school_id=s.id) 
+                        as activities from admin.schools s join admin.wards b on s.ward_id = b.id join admin.districts as d on d.id=b.district_id
+                        join admin.regions r on r.id=d.region_id left join admin.client_schools c on c.school_id = s.id 
+                        left join admin.clients e on e.id=c.client_id where lower(s.ownership) <>'government') as a";
                        
                  //$sql = "select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a  where lower(a.ownership) <>'government'";
                  }
@@ -479,6 +480,8 @@ class Sales extends Controller {
                     'end_date' => 'required',
                     'description' => 'required'
                 ]);
+
+             
             
             $code = rand(343, 32323) . time();
 

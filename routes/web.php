@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-
 //\URL::forceScheme('https');
 /*
   |--------------------------------------------------------------------------
@@ -39,6 +38,19 @@ foreach ($bad_url as $value) {
     }
 }
 Route::get('/898uuhihdsdskj/live/{id}/{year}','Customer@usageAnalysis');
+
+//list of schools that use particular bank eg NMB, CRDB etc
+Route::get('/898uuhihdsdskjSB/live/','Customer@schoolBanks');
+
+//list of branches
+Route::get('/898uuhihdsdskjSB/live/branches','Customer@Banksbranches');
+
+//Integration status
+Route::get('/898uuhihdsdskjSB/live/instatus','Customer@IntegrationStatus');
+
+//Integration bank status
+Route::get('/898uuhihdsdskjSB/live/banks','Customer@BankStatus');
+
 Auth::routes();
 //Route::group(['middleware' => ['guest']], function() {
 //    Auth::routes();

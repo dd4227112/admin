@@ -230,11 +230,12 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
              }
              // user role 1 i.e admin, select all schools/clients
          } else if(($user->role_id) && ($user->role_id) == 1){
-            $schools =  \App\Models\ClientSchool::get();
+            $schools =  \App\Models\ClientSchool::latest()->get();
          } else {
              // Else select schools/clients based on school associates
           //  $schools =  \App\Models\UserClient::where('user_id', $id)->get();
-             $schools =  \App\Models\ClientSchool::get();
+             $schools =  \App\Models\ClientSchool::latest()->get();
+            
          }
      
         $this->data['schools'] =  $schools;
@@ -366,6 +367,10 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
 
         dd($id);
     }
+
+
+
+    
 
 
 
