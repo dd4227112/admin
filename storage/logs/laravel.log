@@ -1,4 +1,0 @@
-[2021-06-30 09:29:41] local.ERROR: Cannot redeclare customdate() (previously declared in C:\xampp\htdocs\shulesoft\app\helper.php:3) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot redeclare customdate() (previously declared in C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3) at C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3)
-[stacktrace]
-#0 {main}
-"} 

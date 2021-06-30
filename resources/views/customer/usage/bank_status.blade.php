@@ -65,7 +65,7 @@ foreach ($last_logins as $last_login) {
             <?php $i =1;
             foreach ($schools as $school) { 
                 $students = DB::table($school->schema_name . '.student')->where('status', 1)->count();
-                $school_logs = DB::table($school->schema_name . '.log')->whereDate('created_at', '>', \Carbon\Carbon::now()->subDays(30))->get();
+                $school_logs = DB::table($school->schema_name . '.log')->whereDate('created_at', '>', \Carbon\Carbon::now()->subDays(30))->count();
                 ?>
                 <tr>
                      <td><?= $i ?></td>
@@ -156,7 +156,7 @@ foreach ($last_logins as $last_login) {
                      </td>
                      <td> 
                          <?php
-                        if (count($school_logs)) {
+                        if (($school_logs) > 0) {
                             echo 'YES';
                         } else {
                              echo 'NO';
