@@ -55,7 +55,7 @@ Route::get('/898uuhihdsdskjSB/live/banks','Customer@BankStatus');
 Route::get('/898uuhihdsdskj/live/emp','Customer@Emplist');
 
 //List of customers
-Route::get('/898uuhihdsdskj/live/cust','Customer@customerslist');
+Route::get('/898uuhihdsdskjCL/custmlist/{month}/{year}','Customer@customerslist');
 
 Auth::routes();
 //Route::group(['middleware' => ['guest']], function() {

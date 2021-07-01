@@ -192,7 +192,6 @@
                                                 $total_amount += $amount;
                                                 $total_unpaid += $unpaid;
                                                 ?>
-
                                                 <tr>
                                                 <td><?= ucfirst(strtolower($invoice->client->name)) ?></td>
                                                     <td><?= $invoice->reference ?></td>

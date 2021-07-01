@@ -240,7 +240,9 @@ function select($value, $schema, $sources) {
 
                             echo 'No Person Allocated';
                         }
-                        ?></td>
+                        ?>
+                    </td>
+                    
                     <td>
                         <?php
                         if ($students == 0) {

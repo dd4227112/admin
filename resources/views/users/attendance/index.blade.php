@@ -30,9 +30,14 @@
         <div class="col-sm-12">
           <div class="card tab-card">
             <div class="card-block">
-
-              <div class="card-header float-right">
+               
+              <div class="row">
+                <div class="card-header float-left">
+                  <a href="<?= url('attendance/add') ?>" class="btn btn-sm btn-primary">Create</a>
+               </div> 
+               <div class="card-header float-right">
                   <a href="<?= url('attendance/report') ?>" class="btn btn-sm btn-primary">View Report</a>
+               </div> 
                </div> 
     
               <div class="steamline">

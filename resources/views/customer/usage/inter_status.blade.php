@@ -34,19 +34,12 @@ function select($value, $schema, $sources) {
         <tbody>
             <?php $i =1;
             foreach ($accounts as $account) {
-               $data = \collect(DB::select("SELECT distinct a.branch,a.number as acc_number,b.bank_account_id,b.created_at as integration_date FROM  $account->schema_name.bank_accounts a join   $account->schema_name.bank_accounts_integrations b on a.id = b.bank_account_id join 
-                           admin.all_bank_accounts_integrations c on c.bank_account_id = b.bank_account_id where c.bank_account_id = '" . $account->bank_account_id . "'"))->first();
+   
                 ?>
                 <tr>
                      <td><?=  $i ?></td>
                      <td> 
-                        <?php
-                        if (isset($data->branch)) { 
-                             echo $data->branch;
-                        } else {
-                             echo 'Not Specified';
-                        }
-                        ?>
+                     
                     </td>
 
                      <td>
@@ -70,23 +63,11 @@ function select($value, $schema, $sources) {
                     </td>
 
                     <td>
-                        <?php
-                        if (isset($data->acc_number)) { 
-                             echo $data->acc_number;
-                        } else {
-                             echo 'Not Specified';
-                        }
-                        ?>
+                      
                     </td>
 
                     <td> 
-                       <?php
-                        if (isset($data->integration_date)) { 
-                             echo $data->integration_date;
-                        } else {
-                             echo 'Not Specified';
-                        }
-                        ?>
+                     
                     </td>
                 </tr>
             <?php $i++; } ?>
