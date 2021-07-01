@@ -38,8 +38,8 @@ class Account extends Controller {
         $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
         $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
         $this->data['invoices'] = ($from != '' && $to != '') ?
-                Invoice::whereBetween('date', [$from_date, $to_date])->orderBy('created_at', 'DESC')->get() :
-                Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->orderBy('created_at', 'DESC')->get();
+                Invoice::whereBetween('date', [$from_date, $to_date])->latest()->get() :
+                Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->latest()->get();
         return $this;
     }
 

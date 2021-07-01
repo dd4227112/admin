@@ -875,10 +875,8 @@ class Customer extends Controller {
                   'beta_testing','beta','betatwo'];
          $sql = DB::table('admin.all_bank_accounts_integrations')->whereNotIn('schema_name', $skip);
         $this->data['accounts'] = $sql->get();
-      
         return view('customer.usage.inter_status', $this->data);
     }
-
 
      public function BankStatus(){
          $skip = ['admin', 'accounts', 'pg_catalog', 'constant', 'api', 'information_schema', 'public', 'academy', 'forum'];
