@@ -481,7 +481,7 @@ ORDER BY c.oid, a.attnum";
                 if (!empty($data)) {
                 $trans = (object) $data;
                 $i = 1;
-                foreach ($trans as $tran) {
+                foreach ($trans as $tran){
                     $check = DB::table($schema . '.payments')->where('transaction_id', $tran->receipt)->first();
                     if(empty($check)){
                         $this->syncPayments($tran);
@@ -507,7 +507,7 @@ ORDER BY c.oid, a.attnum";
     public function syncPayments($data) {
         $background = new \App\Http\Controllers\Background();
         $url = 'http://51.91.251.252:8081/api/init';
-        $fields = json_decode($data);
+        $fields = $data;
         $curl = $background->curlServer($fields, $url, 'row');
         return $curl;
     }
