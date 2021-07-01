@@ -29,17 +29,25 @@ foreach ($school_locations as $school_location) {
             </tr>
         </thead>
         <tbody>
-            <?php $i =1; $branch = [];
+            <?php $i =1;  $bran = [];$acc_no= [];$dates = [];
             foreach ($schools as $school) {
                $branches = DB::select("select a.bank_account_id,a.created_at as integration_date ,b.number,b.branch,b.id from $school->schema_name.bank_accounts_integrations a join  $school->schema_name.bank_accounts b on a.bank_account_id = b.id ");
                 foreach ($branches as $branch) {
-                        $branch[$school->schema_name] = $branch->branch;
+                        $bran[$school->schema_name] = $branch->branch;
+                        $acc_no[$school->schema_name] = $branch->number;
+                        $dates[$school->schema_name] = $branch->integration_date;
                  }
                 ?>
                 <tr>
                      <td><?=  $i ?></td>
                      <td> 
-                     
+                        <?php
+                        if (isset($bran[$school->schema_name])) {
+                            echo $bran[$school->schema_name] . ',';
+                        } else {
+                            echo 'Not Specified';
+                        }
+                        ?>
                     </td>
 
                      <td>
@@ -63,11 +71,23 @@ foreach ($school_locations as $school_location) {
                     </td>
 
                     <td>
-                      
+                      <?php
+                        if (isset($acc_no[$school->schema_name])) {
+                            echo $acc_no[$school->schema_name] . ',';
+                        } else {
+                            echo 'Not Specified';
+                        }
+                        ?>
                     </td>
 
                     <td> 
-                     
+                       <?php
+                        if (isset($dates[$school->schema_name])) {
+                            echo $dates[$school->schema_name] . ',';
+                        } else {
+                            echo 'Not Specified';
+                        }
+                        ?>
                     </td>
                 </tr>
             <?php $i++; } ?>

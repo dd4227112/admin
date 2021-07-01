@@ -171,7 +171,7 @@ class Background extends Controller {
             //live invoice
             // $setting = DB::table($invoice->schema_name . '.setting')->first();
             $url = 'https://api.mpayafrica.co.tz/v2/auth';
-            $credentials = DB::table($invoice->schema_name . '.bank_accounts_integrations')->where('invoice_prefix', $invoice->prefix)->first();
+            $credentials = DB::table($invoice->schema_name . '.bank_accounts_integrations')->where('invoice_prefix', $invoice->prefix)->where('schema_name', $invoice->schema_name)->first();
             if (!empty($credentials)) {
                 $user = trim($credentials->api_username);
                 $pass = trim($credentials->api_password);
