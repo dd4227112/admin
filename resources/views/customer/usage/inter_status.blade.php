@@ -14,9 +14,6 @@ foreach ($school_locations as $school_location) {
     $zones[$school_location->schema_name] = $school_location->zone_name;
 }
 
-function select($value, $schema, $sources) {
-    return isset($sources[$schema]) && strtolower($sources[$schema]) == strtolower($value) ? 'Selected' : '';
-}
 
 ?>
 <div class="table-responsive dt-responsive">
@@ -32,9 +29,12 @@ function select($value, $schema, $sources) {
             </tr>
         </thead>
         <tbody>
-            <?php $i =1;
-            foreach ($accounts as $account) {
-   
+            <?php $i =1; $branch = [];
+            foreach ($schools as $school) {
+               $branches = DB::select("select a.bank_account_id,a.created_at as integration_date ,b.number,b.branch,b.id from $school->schema_name.bank_accounts_integrations a join  $school->schema_name.bank_accounts b on a.bank_account_id = b.id ");
+                foreach ($branches as $branch) {
+                        $branch[$school->schema_name] = $branch->branch;
+                 }
                 ?>
                 <tr>
                      <td><?=  $i ?></td>
@@ -44,8 +44,8 @@ function select($value, $schema, $sources) {
 
                      <td>
                         <?php
-                        if (isset($zones[$account->schema_name])) {
-                            echo $zones[$account->schema_name];
+                        if (isset($zones[$school->schema_name])) {
+                            echo $zones[$school->schema_name];
                         } else {
                             echo 'Not Specified';
                         }
@@ -54,8 +54,8 @@ function select($value, $schema, $sources) {
 
                     <td>
                          <?php
-                        if (isset($account->schema_name)) {
-                            echo warp($account->schema_name);
+                        if (isset($school->schema_name)) {
+                            echo warp($school->schema_name);
                         } else {
                             echo 'Not Specified';
                         }
