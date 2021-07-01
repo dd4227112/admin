@@ -169,9 +169,10 @@ foreach ($invoices as $invoice) {
 
 //Paid invoices
 $paid = [];
-$all_invoices = \App\Models\Invoice::whereIn('id', \App\Models\InvoiceFee::where('project_id', 1)->get(['invoice_id']))->whereYear('created_at', '=', $year)->latest()->get();
-foreach ($all_invoices as $all_inv) {
-    $paid[$all_inv->schema_name] = $all_inv->payments()->sum('amount');
+$all_invoices = DB::select("select a.id,a.client_id,c.username from admin.invoices a join admin.clients c on a.client_id = c.id where a.id in (select invoice_id from admin.invoice_fees where project_id = '1') and extract(year from a.created_at)=". $year);
+foreach ($all_invoices as $all_inv) {                                 
+   // $paid[$all_inv->username] = $all_inv->payments()->sum('amount');
+    $paid[$all_inv->username] =  \collect(DB::select('select sum(coalesce(amount,0)) from admin.payments where invoice_id=' . $all_inv->id . ''))->first();
 }
 
 ?>
@@ -252,8 +253,8 @@ foreach ($all_invoices as $all_inv) {
                     <td>  
                          <?php
                         //Invoice paid
-                        if (isset($paid[$customer->schema_name])) {
-                            echo $paid[$customer->schema_name];
+                        if (isset($paid[$customer->schema_name]->sum)) {
+                            echo money($paid[$customer->schema_name]->sum);
                         } else {
                             echo '0';
                         }
