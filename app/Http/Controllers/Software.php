@@ -507,7 +507,7 @@ ORDER BY c.oid, a.attnum";
     public function syncPayments($data) {
         $background = new \App\Http\Controllers\Background();
         $url = 'http://51.91.251.252:8081/api/init';
-        $fields = json_decode(urldecode($data));
+        $fields = json_decode($data);
         $curl = $background->curlServer($fields, $url, 'row');
         return $curl;
     }
