@@ -46,10 +46,16 @@ Route::get('/898uuhihdsdskjSB/live/','Customer@schoolBanks');
 Route::get('/898uuhihdsdskjSB/live/branches','Customer@Banksbranches');
 
 //Integration status
-Route::get('/898uuhihdsdskjSB/live/instatus','Customer@IntegrationStatus');
+Route::get('/898uuhihdsdskjSB/live/intergration','Customer@IntegrationStatus');
 
 //Integration bank status
 Route::get('/898uuhihdsdskjSB/live/banks','Customer@BankStatus');
+
+//Employees
+Route::get('/898uuhihdsdskj/live/emp','Customer@Emplist');
+
+//List of customers
+Route::get('/898uuhihdsdskj/live/cust','Customer@customerslist');
 
 Auth::routes();
 //Route::group(['middleware' => ['guest']], function() {

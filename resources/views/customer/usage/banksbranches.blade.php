@@ -54,7 +54,7 @@ foreach ($clients as $client) {
                     </td>
 
                      <td>
-                           <?php
+                        <?php
                         if (isset($branch->district)) {
                             echo warp($branch->district);
                         } else {
@@ -64,7 +64,13 @@ foreach ($clients as $client) {
                     </td>
 
                     <td>
-                      
+                          <?php
+                        if (isset($branch->code)) {
+                            echo warp($branch->code);
+                        } else {
+                            echo 'Undefined';
+                        }
+                        ?>
                     </td>
 
                     <td>

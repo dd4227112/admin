@@ -197,7 +197,6 @@ class Phone_call extends Controller {
     }
 
     public function changePhoto() {
-
         if (request()->file('photo')) {
             $this->validate(\request(), ['image' => 'max:1000'], ['image' => 'The photo size must be less than 1MB']);
             $filename = time() . rand(11, 8844) . '.' . request()->file('photo')->guessExtension();
@@ -242,8 +241,9 @@ class Phone_call extends Controller {
 
     
     public function CallsUpload() 
-    {
+    {  
         Excel::import(new PhoneCall_Import, request()->file('call_file'));
+       
         return redirect('Phone_call/index')->with('success', 'All Call Histories Uploaded Successfully!');
     }
 
