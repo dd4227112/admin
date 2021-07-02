@@ -475,21 +475,7 @@ ORDER BY c.oid, a.attnum";
             }
        }
 
-        if(!empty($returns)){
-            foreach ($returns as $return) {
-                $data = $return->transactions;
-                if (!empty($data)) {
-                $trans = (object) $data;
-                $i = 1;
-                foreach ($trans as $tran){
-                    $check = DB::table($schema . '.payments')->where('transaction_id', $tran->receipt)->first();
-                    if(empty($check)){
-                        $this->syncPayments($tran);
-                    }
-                }
-                }
-            }
-        }
+       
             $this->data['returns'] = $returns;
         }
         return view('software.api.reconciliation', $this->data);
