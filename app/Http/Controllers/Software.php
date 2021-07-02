@@ -474,22 +474,6 @@ ORDER BY c.oid, a.attnum";
                 } //else { return redirect()->back()->with('success', 'invalid token'); }
             }
        }
-
-        if(!empty($returns)){
-            foreach ($returns as $return) {
-                $data = $return->transactions;
-                if (!empty($data)) {
-                $trans = (object) $data;
-                $i = 1;
-                foreach ($trans as $tran) {
-                    $check = DB::table($schema . '.payments')->where('transaction_id', $tran->receipt)->first();
-                    if(empty($check)){
-                        $this->syncPayments($tran);
-                    }
-                }
-                }
-            }
-        }
             $this->data['returns'] = $returns;
         }
         return view('software.api.reconciliation', $this->data);
@@ -502,15 +486,7 @@ ORDER BY c.oid, a.attnum";
         $curl = $background->curlServer($fields, $url, 'row');
         return $curl;
         // return redirect()->back()->with('success',$curl);
-    }
-
-    public function syncPayments($data) {
-        $background = new \App\Http\Controllers\Background();
-        $url = 'http://51.91.251.252:8081/api/init';
-        $fields = json_decode($data);
-        $curl = $background->curlServer($fields, $url, 'row');
-        return $curl;
-    }
+    } 
 
     public function template() {
         $this->data['faqs'] = [];
