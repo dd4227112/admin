@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-
+<?php $root = url('/') . '/public/' ?>
 <script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
 
 <div class="main-body">
@@ -22,7 +22,7 @@
           </li>
         </ul>
       </div>
-    </div>
+    </div> 
     <div class="page-body">
       <div class="row">
         <div class="col-md-12 col-xl-12">
@@ -56,9 +56,9 @@
                         <span>This part shows list of customers and expected amount to be collected per each customer. These information are loaded from Google Sheet </span>
 
                       </div>
-                      <!-- <div class="card-block"  style="height: 35em">
+                        <div class="card-block"  style="height: 35em">
                         <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQoKa03HKhOJyUEWt3mi4PqJvqy9EFmoj8ZTZX7lfNWTI5FbHFTHl40xrBBsi7k2x2vY8htOPJ1wHN8/pubhtml?widget=true&amp;headers=false" width="100%" height="450"></iframe>
-                      </div> -->
+                      </div> 
                     </div>
 
                     <div class="tab-pane" id="requirements" role="tabpanel">
@@ -68,6 +68,7 @@
                           <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                             <thead>
                               <tr>
+                                <th>#</th>
                                 <th>School Name</th>
                                 <th>Contact</th>
                                 <th> Allocated </th>
@@ -77,33 +78,32 @@
                               </tr>
                             </thead>
                             <tbody>
-                              <?php
-                            
-                              if(sizeof($requirements) > 0){
-                              foreach ($requirements as $req) {
-
-                              ?>
+                              <?php $i = 1;
+                              if(count($requirements) > 0){ 
+                              foreach ($requirements as $req) {  ?>
                               <tr>
+                              <td><?= $i ?></td>
                               <td><?= ucfirst($req->school->name) ?></td>
                               <td><?php echo $req->contact; ?></td>
                               <td><?php echo $req->toUser->name;?> </td>
                               <td><?= $req->created_at ?></td>
                               <td><?= $req->status ?></td>
-
                               <td ><a href="<?= url('customer/requirements/show/' . $req->id) ?>" class="btn btn-sm btn-success">View</a></td>
                               </tr>
-                              <?php }
-                            }  ?>
+                              <?php 
+                                $i++; }
+                               }  
+                               ?>
                           </tbody>
                           <tfoot>
                             <tr>
-                            <th>School Name</th>
-                                <th>Contact</th>
-                                <th> Allocated </th>
-                                <th>Issued Date</th>
-                                <th>Status</th>
-                                <th>Action</th>
-
+                              <th>#</th>
+                              <th>School Name</th>
+                              <th>Contact</th>
+                              <th> Allocated </th>
+                              <th>Issued Date</th>
+                              <th>Status</th>
+                              <th>Action</th>
                             </tr>
                           </tfoot>
                         </table>
@@ -137,7 +137,7 @@
                                 <strong> Person Allocated to do</strong>
                                 <select name="to_user_id" class="form-control select2" required>
                                   <?php
-                                  $staffs = DB::table('users')->where('status', 1)->where('role_id', '<>', 7)->get();
+                                  $staffs = DB::table('users')->where('status', 1)->whereNotIn('role_id',array(7,15))->get();
                                   foreach ($staffs as $staff) {
                                     ?>
                                     <option value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
@@ -171,6 +171,12 @@
 </div>
 </div>
 <script>
+$(".select2").select2({
+    theme: "bootstrap",
+    dropdownAutoWidth: false,
+    allowClear: false,
+    debug: true
+}); 
 
 get_schools = function () {
   $("#get_schools").select2({

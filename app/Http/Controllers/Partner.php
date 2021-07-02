@@ -163,7 +163,7 @@ class Partner extends Controller {
                 'number' => request('account_number'), 'branch' => request('branch_name'), 'account_name' => request('account_name'), 'refer_currency_id' => request('refer_currency_id'), 'opening_balance' => request('opening_balance'), 'integration_request_id' => $request_id, 'refer_bank_id' => $refer_bank_id
             ]);
 
-            //Install School Levels
+            //Install School Levels 
             $levels = request('classlevel');
             if (!empty($levels)) {
                 foreach ($levels as $level) {

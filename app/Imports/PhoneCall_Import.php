@@ -1,6 +1,4 @@
 <?php
-
-
 namespace App\Imports;
 use App\Models\PhoneCall;
 use Auth;
@@ -14,7 +12,7 @@ class PhoneCall_Import implements ToModel, WithHeadingRow
      * */
     public function model(array $row)
     {
-      //  dd($row['call_time']);
+    //    dd($row);
         return new PhoneCall([
             'full_name'  => $row['name'],
             'call_detail' => $row['call_detail'],
