@@ -71,7 +71,7 @@
                                                                  <?= $i ?>
                                                                 </td>
                                                                 <td>
-                                                                   <?= warp(school_full_name($status->schema_name)) ?></td>
+                                                                   <?= $status->schema_name ? warp(school_full_name($status->schema_name)) : '' ?></td>
                                                                  <td> 
                                                                     <?= $status->last_active == '' ? '<b class="label label-warning">Not Installed</b>' : '<b class="label label-info">Installed</b>' ?>
                                                                   </td>

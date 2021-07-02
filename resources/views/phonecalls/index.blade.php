@@ -75,7 +75,7 @@
                                                 <td>{{ $call->phone_number }} </td>
                                                 <td>{{ $call->email }}</td>
                                                 <td><?php if($call->call_type==0){
-     echo 'Outgoing';    
+                                                    echo 'Outgoing';    
                                                 } else{
                                                     echo 'Incoming';  
                                                 }?></td>
@@ -85,10 +85,10 @@
                                                 <td>{{ $call->call_duration }}</td> 
                                                 <td>{{ $call->call_detail }}</td> 
                                                 <td>
-                                                   <a class="btn btn-primary btn-sm" href="{{ url('Phone_call/edit/'.$call->id) }}">Edit</a>
+                                                    <a class="btn btn-primary btn-sm" href="{{ url('Phone_call/edit/'.$call->id) }}">Edit</a> 
 
                                                  
-                                                        <a class="btn btn-danger btn-sm" href="{{ url('Phone_call/destroy/'.$call->id) }}">Delete</a>
+                                                    <a class="btn btn-danger btn-sm" href="{{ url('Phone_call/destroy/'.$call->id) }}">Delete</a>
                                                  
                                                 </td>
                                             </tr>

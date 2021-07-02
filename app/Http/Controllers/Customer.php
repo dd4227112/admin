@@ -805,12 +805,9 @@ class Customer extends Controller {
         }
         $this->data['levels'] = [];
         if ($_POST) {
-
             $data = array_merge(request()->all(), ['user_id' => Auth::user()->id]);
-
             $req = \App\Models\Requirement::create($data);
             if ((int) request('to_user_id') > 0) {
-
                 $user = \App\Models\User::find(request('to_user_id'));
                 $message = 'Hello ' . $user->name . '<br/><br/>'
                         . 'There is New School Requirement from ' . $req->school->name . ' (' . $req->school->region . ')'
@@ -819,7 +816,8 @@ class Customer extends Controller {
                 $this->send_email($user->email, 'ShuleSoft New Customer Requirement', $message);
             }
         }
-        $this->data['requirements'] = \App\Models\Requirement::orderBy('id', 'DESC')->get();
+        $this->data['requirements'] = \App\Models\Requirement::latest()->get();
+       
         return view('customer/analysis', $this->data);
     }
 

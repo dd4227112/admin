@@ -31,22 +31,15 @@ foreach ($school_locations as $school_location) {
         <tbody>
             <?php $i =1;  $bran = [];$acc_no= [];$dates = [];
             foreach ($schools as $school) {
-               $branches = DB::select("select a.bank_account_id,a.created_at as integration_date ,b.number,b.branch,b.id from $school->schema_name.bank_accounts_integrations a join  $school->schema_name.bank_accounts b on a.bank_account_id = b.id ");
-                foreach ($branches as $branch) {
-                        $bran[$school->schema_name] = $branch->branch;
-                        $acc_no[$school->schema_name] = $branch->number;
-                        $dates[$school->schema_name] = $branch->integration_date;
-                 }
+               $branches = DB::select("select a.bank_account_id,a.created_at as integration_date ,b.number,b.branch,b.id from $school->schema_name.bank_accounts_integrations a join $school->schema_name.bank_accounts b on a.bank_account_id = b.id");
                 ?>
                 <tr>
-                     <td><?=  $i ?></td>
+                     <td><?= $i ?></td>
                      <td> 
                         <?php
-                        if (isset($bran[$school->schema_name])) {
-                            echo $bran[$school->schema_name] . ',';
-                        } else {
-                            echo 'Not Specified';
-                        }
+                           foreach ($branches as $branch) {
+                               echo isset($branch->branch ) ? $branch->branch . ',<br>' : 'Undefined';
+                           } 
                         ?>
                     </td>
 
@@ -72,21 +65,17 @@ foreach ($school_locations as $school_location) {
 
                     <td>
                       <?php
-                        if (isset($acc_no[$school->schema_name])) {
-                            echo $acc_no[$school->schema_name] . ',';
-                        } else {
-                            echo 'Not Specified';
-                        }
+                       foreach ($branches as $branch) {
+                               echo isset($branch->number ) ? $branch->number . ',<br>' : 'Undefined';
+                           } 
                         ?>
                     </td>
 
                     <td> 
                        <?php
-                        if (isset($dates[$school->schema_name])) {
-                            echo $dates[$school->schema_name] . ',';
-                        } else {
-                            echo 'Not Specified';
-                        }
+                         foreach ($branches as $branch) {
+                               echo isset($branch->integration_date ) ? date('d-m-Y', strtotime($branch->integration_date)) . ',<br>' : 'Not Specified';
+                           } 
                         ?>
                     </td>
                 </tr>

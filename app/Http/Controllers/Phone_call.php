@@ -23,7 +23,7 @@ class Phone_call extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $this->data['phone_calls'] = phoneCall::all();
+        $this->data['phone_calls'] = PhoneCall::latest()->get();
         return view('phonecalls.index', $this->data);
     }
 
@@ -60,80 +60,11 @@ class Phone_call extends Controller {
         $report = new PhoneCall(array_merge($request->all(), ['user_id' => Auth::user()->id]));
        
         //PhoneCall::create(array_merge($request->all(), ['user_id' => Auth::user()->id]));
-       $report->save();
+         $report->save();
         return redirect('Phone_call/index')->with('success', 'Call recorded successfully');
     }
 
-    public function resetPassword() {
-        $id = request()->segment(3);
-        $pass = 'shulesoft_' . rand(32323, 443434344) . '';
-        $user = User::find($id);
-        $user->update(['password' => bcrypt($pass)]);
-        $content = 'Hello ' . $user->name . ' Your password has been updated by administrator. Kindly login  with username ' . $user->email . ' and password ' . $pass;
-        $this->sendEmailAndSms($user, $content);
-        return redirect()->back()->with('success', 'Password sent successfully');
-    }
 
-    public function sendEmailAndSms($requests, $content = null) {
-        $request = (object) $requests;
-        $message = $content == null ? 'Hello ' . $request->name . ' You have been added in ShuleSoft Administration panel. You can login for Administration of schools with username ' . $request->email . ' and password ' . $request->email : $content;
-        \DB::table('public.sms')->insert([
-            'body' => $message,
-            'user_id' => 1,
-            'phone_number' => $request->phone,
-            'table' => 'setting'
-        ]);
-        \DB::table('public.email')->insert([
-            'body' => $message,
-            'subject' => 'ShuleSoft Administration Credentials',
-            'user_id' => 1,
-            'email' => $request->email,
-            'table' => 'setting'
-        ]);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int $id
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function show() {
-        $id = (int) request()->segment(3) == 0 ? Auth::user()->id : request()->segment(3);
-        $this->data['user'] = User::find($id);
-
-        $this->data['user_permission'] = \App\Models\Permission::whereIn('id', \App\Models\PermissionRole::where('role_id', $this->data['user']->role_id)->get(['permission_id']))->get(['id']);
-
-        return view('users.show', $this->data);
-    }
-
-    public function addPermission() {
-        $permission_id = request('id');
-        $role_id = request('role_id');
-        $data = array(
-            'role_id' => $role_id,
-            'permission_id' => $permission_id
-        );
-
-        $insert_id = DB::table('permission_role')->insertGetId($data, 'id');
-        if ($insert_id > 1) {
-            echo 'Success';
-        } else {
-            echo 'Error: Please Refresh this page';
-        }
-    }
-
-    public function removePermission() {
-        $permission_id = request('id');
-        $role_id = request('role_id');
-        $data = array(
-            'role_id' => $role_id,
-            'permission_id' => $permission_id
-        );
-        DB::table('permission_role')->where($data)->delete();
-        echo 'success';
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -144,21 +75,13 @@ class Phone_call extends Controller {
      */
     public function edit() {
         $id = request()->segment(3);
-        $user = User::find($id);
+        $this->data['phonecalls'] = $phonecalls = PhoneCall::find($id);
 
         if ($_POST) {
-            $this->validate(request(), [
-                'firstname' => 'required|max:255',
-                'lastname' => 'required|max:255',
-                'phone' => 'required|max:255',
-            ]);
-            $user = User::find($id)->update(request()->all());
-
-
-            return redirect('users/index')->with('success', 'User ' . request('firstname') . ' ' . request('lastname') . ' updated successfully');
+            $phone = PhoneCall::find($id)->update(request()->all());
+            return redirect('Phone_call/index')->with('Call Updated successfully');
         }
-
-        return view('users.edit', compact('user'));
+        return view('phonecalls.edit', $this->data);
     }
 
     /**
@@ -170,9 +93,8 @@ class Phone_call extends Controller {
      */
     public function destroy() {
         $id = request()->segment(3);
-        DB::table("users")->where('id', $id)->update(['status' => 0]);
-        return redirect()->back()
-                        ->with('success', 'User deleted successfully');
+        DB::table("phone_calls")->where('id', $id)->delete();
+        return redirect()->back()->with('success', 'Call deleted successfully');
     }
 
     public function management() {
@@ -196,17 +118,7 @@ class Phone_call extends Controller {
         return view('users.school_account', $this->data);
     }
 
-    public function changePhoto() {
-        if (request()->file('photo')) {
-            $this->validate(\request(), ['image' => 'max:1000'], ['image' => 'The photo size must be less than 1MB']);
-            $filename = time() . rand(11, 8844) . '.' . request()->file('photo')->guessExtension();
-            $folder = 'storage/uploads/images';
-            is_file($folder) ? mkdir($folder, 0777, TRUE) : '';
-            Image::make(request()->file('photo'))->resize(132, 185)->save('storage/uploads/images/' . $filename);
-            \App\Model\User::where('id', request()->segment(3))->update(['photo' => $filename]);
-            return redirect()->back();
-        }
-    }
+  
 
     public function applicant() {
         $this->data['budget'] = [];
