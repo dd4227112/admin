@@ -19,7 +19,10 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <!-- Google font-->
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
         <!-- Required Fremwork -->
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/bootstrap/dist/css/bootstrap.min.css">
+        {{-- <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/bootstrap/dist/css/bootstrap.min.css"> --}}
+       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" 
+       integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+      
         <!-- themify icon -->
         <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/icon/themify-icons/themify-icons.css">
         <!-- ico font -->
@@ -39,21 +42,12 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/data-table/css/buttons.dataTables.min.css">
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css">
 
-
         <!-- Style.css -->
         <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css">
-
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2.css">
-
-      
-
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2-bootstrap.css">
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css">       
-
         <link href="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.css" rel="stylesheet">
-
-        
-
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
         {{-- <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
@@ -467,9 +461,6 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                         <?php } ?>
 
 
-
-
-                        
                         <?php if (can_access('manage_operations')) { ?>
                             <li class="nav-item">
                                 <a href="#!">
@@ -634,6 +625,21 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                      {{-- <li><a href="<?= url('Sales/generalreport') ?>" data-i18n="nav.extra-components.session-timeout">Perfomance report</a></li> --}}
                                      <?php if (can_access('manage_jobcards')) { ?>
                                      <li><a href="<?= url('Sales/jobcards') ?>" data-i18n="nav.extra-components.session-timeout"> School Job cards</a></li>
+                                     <?php } ?>
+                                 </ul>
+                               </li>
+                             <?php } ?>
+
+                             
+                              <?php  if (can_access('generalreport'))  { ?>
+                                <li class="nav-sub-item">
+                                   <a href="#" data-i18n="nav.page_layout.vertical.main"><i
+                                   class="icon-arrow-right"></i>General report </a>
+                                   <ul class="tree-2">
+
+                                     {{-- <li><a href="<?= url('Sales/generalreport') ?>" data-i18n="nav.extra-components.session-timeout">Perfomance report</a></li> --}}
+                                     <?php if (can_access('generalreport')) { ?>
+                                     <li><a href="<?= url('Sales/generalreport') ?>" data-i18n="nav.extra-components.session-timeout"> general report</a></li>
                                      <?php } ?>
                                  </ul>
                                </li>
@@ -956,13 +962,19 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
 
         <script type="text/javascript" src="<?= $root ?>bower_components/tether/dist/js/tether.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+      
         <!-- jquery slimscroll js -->
-        <script type="text/javascript" src="<?= $root ?>bower_components/jquery-slimscroll/jquery.slimscroll.js"></script>
+        {{-- <script type="text/javascript" src="<?= $root ?>bower_components/jquery-slimscroll/jquery.slimscroll.js"></script> --}}
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-slimscroll@1.3.8/jquery.slimscroll.min.js"></script>
+
         <!-- modernizr js -->
-        <script type="text/javascript" src="<?= $root ?>bower_components/modernizr/modernizr.js"></script>
+        {{-- <script type="text/javascript" src="<?= $root ?>bower_components/modernizr/modernizr.js"></script> --}}
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/modernizr/feature-detects/css-scrollbars.js"></script>
+
         <!-- classie js -->
-        <script type="text/javascript" src="<?= $root ?>bower_components/classie/classie.js"></script>
+        {{-- <script type="text/javascript" src="<?= $root ?>bower_components/classie/classie.js"></script> --}}
+         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/classie/1.0.1/classie.min.js"></script>
         <!-- Rickshow Chart js -->
         <script src="<?= $root ?>bower_components/d3/d3.js"></script>
         <!-- Morris Chart js -->
@@ -1117,11 +1129,8 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                         });
                                     });
 
-
-
                                     $('form').each(function (i, form) {
                                         var $form = $(form);
-
                                         if (!$form.find('input[name="_token"]').length) {
                                             $('form').prepend('<input type="hidden" name="_token" value="' + $('meta[name="csrf-token"]').prop('content') + '"/>');
                                         }
@@ -1132,10 +1141,10 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                     }).find('input').change(function () {
                                         console.log(this.value);
                                     });
-        </script>
-    <?php } ?>
-</html>
-<?php
+                            </script>
+                        <?php } ?>
+                    </html>
+                    <?php
 ///echo url()->current();
 if (preg_match('/localhost/', url()->current())) {
     ?>

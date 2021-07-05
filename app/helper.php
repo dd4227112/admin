@@ -277,16 +277,13 @@ function btn_attendance($id, $method, $class, $name) {
         return $date->format('Y-m-d H:i:s');
     }
 
-    
    function cdate($date){
         return date('d-m-Y H:i:s');
     }
 
-
     function remove_comma($string_number) {
         return trim(str_replace(',', '', $string_number));
     }
-
 
     function school_full_name($schema_name = null){
         return \App\Models\Client::where('username',$schema_name)->first()->name;
@@ -296,9 +293,6 @@ function btn_attendance($id, $method, $class, $name) {
         return wordwrap($word,$size,"<br />\n");
     }
 
-
-
-    
 if (!function_exists('img')) {
 
     function img($src = '', $index_page = FALSE) {
@@ -334,6 +328,8 @@ if (!function_exists('img')) {
         return htmlentities($id, ENT_QUOTES, "UTF-8");
     }
     
+
+
 
 
    

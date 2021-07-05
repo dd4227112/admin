@@ -229,21 +229,22 @@
                     </div>
                   </div>
 
-                  <div class="tab-pane" id="profile3" role="tabpanel" aria-expanded="false">
+         
+                   <div class="tab-pane" id="profile3" role="tabpanel" aria-expanded="true">
                     <div class="card-block">
 
                       <div class="table-responsive dt-responsive">
                         <div class="card-header">
                           <div class="panel-body">
                             <div class="alert alert-info">Use the exactly ShuleSoft template as provided : Excel should contains these keys at the top :'amount', 'transaction_id', 'account_number', 'payment_method', 'revenue_name', 'date'</div>
-                            <!--<p>Sample Excel Format. </p>-->
-                            <!--<img src="<?= url('public/images/sample_excel.jpg') ?>"/>-->
+                            {{-- <p>Sample Excel Format. </p>
+                            <img src="<?= url('public/images/sample_excel.jpg') ?>"/> --}}
                             <br/>
                             <div class=" form">
                               <br/>
-                              {{-- <p>
+                               <p>
                                 <?= __("file") ?>
-                               <a href="<?= url('storage/uploads/sample/sample_students_upload.xlsx') ?>"><i class="fa fa-2x fa-cloud-download"></i></a></p> --}}
+                               <a href="<?= url('storage/uploads/sample/sample_students_upload.xlsx') ?>"><i class="fa fa-2x fa-cloud-download"></i></a></p>
 
                               <form id="demo-form2" action="<?= url('revenue/uploadRevenue') ?>" class="form-horizontal" method="POST"
                                 enctype="multipart/form-data">
@@ -260,15 +261,11 @@
                                     <button type="submit" id="add_revenue" class="btn btn-primary btn-block"><?= __("submit") ?></button>
                                   </div>
                                 </div>
-
                                 <?= csrf_field() ?>
                               </form>
                             </div>
-
                           </div>
-
                         </div>
-
                       </div>
                     </div>
                   </div>

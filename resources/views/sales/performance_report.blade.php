@@ -7,7 +7,7 @@
 <div class="page-wrapper">
   <div class="page-header">
     <div class="page-header-title">
-      <h4>Task Performance </h4>
+      <h4>General reports </h4>
     </div>
     <div class="page-header-breadcrumb">
   </div>
@@ -40,7 +40,6 @@
                            
                               <div class="tab-pane active" id="profile7" role="tabpanel">
                                   <div class="card-block">
-
                                       <div class="table-responsive dt-responsive">
                                           <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                                               <thead>
@@ -82,7 +81,39 @@
                                           </table>
                                       </div>
                                   </div>
-                  
+                              </div>
+
+
+                               <div class="tab-pane" id="home7" role="tabpanel">
+                                  <div class="card-block">
+                                      <div class="table-responsive dt-responsive">
+                                          <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
+                                              <thead>
+                                                <tr>
+                                                  <th width="10%">#</th>
+                                                  <th width="10%">School Name</th>
+                                                  <th width="5%">Number of students</th>
+                                                  <th width="5%">Ward</th>
+                                                </tr>
+                                              </thead>
+                                              <tbody> 
+                                                <?php $i = 1;  foreach($schools as $key => $school) { ?>
+                                                <tr>
+                                                  <th width="10%"><?=$i?></th>
+                                                  <th width="10%"><?=$school->name?></th>
+                                                  <th width="5%">
+                                                    <?=$school->students?>
+                                                  </th>
+                                                  <th width="5%">
+                                                    <?= $school->wards->name ?>
+                                                  </th>
+                                                </tr>
+                                                <?php $i++;}  ?>
+                                              </tbody>
+                                          
+                                          </table>
+                                      </div>
+                                  </div>
                               </div>
                                                              
                           </div>
