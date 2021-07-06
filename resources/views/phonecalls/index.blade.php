@@ -57,12 +57,12 @@
                                                 <th>No</th>
                                                 <th>Full Name</th>
                                                 <th>Phone Number</th>
-                                                 <th>Email</th>
-                                                 <th>Call Type</th>
-                                                 <th>Time</th>
-                                                  <th>Next Follow up</th>
-                                                   <th>Call Duration</th>
-                                                    <th>Call Details</th>
+                                                <th>Email</th>
+                                                <th>Call Type</th>
+                                                <th>Time</th>
+                                                <th>Next Follow up</th>
+                                                <th>Call Duration</th>
+                                                <th>Call Details</th>
                                                 <th width="280px">Action</th>
                                             </tr>
                                         </thead>
@@ -70,7 +70,7 @@
                                             <?php $i = 1; ?>
                                             @foreach ($phone_calls as $key => $call)
                                             <tr>
-                                    <td><?= $i ?></td>
+                                                <td><?= $i ?></td>
                                                 <td>{{ $call->full_name }} </td>
                                                 <td>{{ $call->phone_number }} </td>
                                                 <td>{{ $call->email }}</td>

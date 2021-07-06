@@ -57,11 +57,18 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <?php $i = 1; $cont = [];
-                                                         $contacts = DB::table('admin.all_users')->where('usertype','Admin')->where('status','1')->get();
+                                                        <?php $i = 1; $cont = [];  $schools = [];
+                                                           $contacts = DB::table('admin.all_users')->where('usertype','Admin')->where('status','1')->get();
                                                          foreach ($contacts as $contact) {
                                                               $cont[$contact->schema_name] = $contact->phone;
-                                                         }
+                                                            }
+
+                                                            $clients = DB::select('select c.id,c.name as client_name,c.username,s.school_id,p.branch_id from admin.clients c 
+                                                                    join admin.client_schools s on c.id = s.client_id left join admin.partner_schools p on p.school_id =s.school_id');
+                                                            foreach ($clients as $client) {
+                                                                $schools[$client->username] = $client->client_name;
+                                                            }
+                                                         
                                                          if(count($sms_status) > 0)  
                                                           foreach ($sms_status as $status) { 
                                                     
@@ -71,7 +78,7 @@
                                                                  <?= $i ?>
                                                                 </td>
                                                                 <td>
-                                                                   <?= $status->schema_name ? warp(($status->schema_name)) : '' ?></td>
+                                                                   <?= !empty($status->schema_name) ? $status->schema_name : '' ?></td>
                                                                  <td> 
                                                                     <?= $status->last_active == '' ? '<b class="label label-warning">Not Installed</b>' : '<b class="label label-info">Installed</b>' ?>
                                                                   </td>

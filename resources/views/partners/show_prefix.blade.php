@@ -5,8 +5,10 @@ $integration = '';
     $checksystem = DB::table('admin.all_setting')->where('schema_name', $partner->client->username)->first();
     $bank = \App\Models\IntegrationBankAccount::where('integration_request_id', $partner->id)->first();
     if (!empty($checksystem)) {
-        $bank = DB::table($partner->client->username . '.bank_accounts')->where('refer_bank_id', $partner->refer_bank_id)->first();
-        if(!empty($bank)){
+     //   $bank = DB::table($partner->client->username . '.bank_accounts')->where('refer_bank_id', $partner->refer_bank_id)->first();
+        $bank = DB::table($partner->client->username . '.bank_accounts')->where('id', $partner->bank_account_id)->first();
+
+        if(!empty($bank)){ 
         $banks = DB::table($partner->client->username . '.bank_accounts_integrations')->where('bank_account_id', $bank->id)->first();
         $type = $banks->payment_type;
         $integration = $banks->invoice_prefix;
