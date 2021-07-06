@@ -204,7 +204,9 @@
               </div>
           </div>-->
 
-            <div class="form-group row">
+
+
+            {{-- <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Agreement Type</label>
                 <div class="col-sm-10">
                     <select name="contract_type_id" class="form-control">
@@ -216,9 +218,9 @@
                         <?php } ?>
                     </select>
                 </div>
-            </div>
+            </div> --}}
             
-            <div class="form-group row">
+            {{-- <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Contract Start Date</label>
                 <div class="col-sm-10">
                     <input type="date" class="form-control" value="" name="start_date" required="">
@@ -242,7 +244,7 @@
                     <input type="file" class="form-control" accept=".pdf" name="standing_order" required="">
                     <span class="messages">Client MUST sign a standing order to specify which date he/she will start to pay. <a href="#">Click Here to download </a> Standing Order Template</span>
                 </div>
-            </div>
+            </div> --}}
             <br/><br/>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Areas much interested</label>

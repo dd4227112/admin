@@ -33,14 +33,21 @@
                         <div id="editorForm">
                             <div class="row">
                                 <div class="card-header">
+                            
                                     <div class="pull-left">
-                                        <h2>Phone Calls Management</h2>
+                                            <a class="btn btn-success btn-sm" href="<?= url('Phone_call/create') ?>"> Add phone call</a>
                                     </div>
-                                    <div class="pull-right">
-                                       
-                                            <a class="btn btn-success" href="<?= url('Phone_call/create') ?>">  New Phone Call</a>
-                                      
+
+                                    {{-- <div class="row">
+                                     <div class="col-sm-6">
+                                            <a class="btn btn-success btn-sm" href="<?= url('Phone_call/create') ?>"> create</a>
                                     </div>
+                                     <div class="col-sm-6">
+                                            <a class="btn btn-success btn-sm" href="<?= url('Phone_call/create') ?>"> create</a>
+                                    </div>
+                                   </div> --}}
+
+                                  
                                 </div>
                             </div>
                             @if ($message = Session::get('success'))

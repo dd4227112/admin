@@ -24,6 +24,11 @@ class Phone_call extends Controller {
      */
     public function index() {
         $this->data['phone_calls'] = PhoneCall::latest()->get();
+        if($_POST){
+            $from = date('Y-01-01');
+            $to = date('Y-m-d');
+        $this->data['phone_calls'] = PhoneCall::whereBetween('created_at',[$from,$to])->get();
+        }
         return view('phonecalls.index', $this->data);
     }
 

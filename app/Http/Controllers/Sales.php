@@ -460,12 +460,12 @@ class Sales extends Controller {
         if(Auth::user()->department == 9 || Auth::user()->department == 10){
             return redirect('Partner/add/'.$school_id);
         }
-
+         
        // $this->data['school'] = $school = DB::table('admin.schools')->where('id', $school_id)->first();
         $this->data['school'] = $school  =  \App\Models\School::findOrFail($school_id);
 
         $username = preg_replace('/[^a-z]/', null, strtolower($school->name));
-        
+         
         $this->data['staffs'] = DB::table('users')->where('status', 1)->where('role_id', '<>', 7)->get();
         if ($_POST) {
              $this->validate(request(), 
@@ -476,12 +476,12 @@ class Sales extends Controller {
                     'username' => 'required',
                     'students' => 'required|numeric',
                     'implementation_date' => 'required',
-                    'start_date' => 'required',
-                    'end_date' => 'required',
+                   // 'start_date' => 'required',
+                  //  'end_date' => 'required',
                     'description' => 'required'
                 ]);
 
-             
+           
             
             $code = rand(343, 32323) . time();
 
@@ -495,11 +495,12 @@ class Sales extends Controller {
                DB::table('admin.schools')->where('id', $school_id)->update(['students' => request('students')]);
 
              $schema_name = request('username') != '' ? strtolower(trim(request('username'))) : $username;
-          
+        
             $check_client = DB::table('admin.clients')->where('username', $schema_name)->first();
-         
+             
             if (!empty($check_client)) {
                 $client_id = $check_client->id;
+              
             } else {
                 $client_id = DB::table('admin.clients')->insertGetId([
                     'name' => $school->name,
@@ -514,7 +515,7 @@ class Sales extends Controller {
                     'phone_verified' => 0,
                     'created_by' => Auth::user()->id,
                     'username' => $schema_name
-                ]);
+                ]); 
 
                 //client school
                 DB::table('admin.client_schools')->insert([
@@ -537,40 +538,43 @@ class Sales extends Controller {
                     'school_id' => $school_id
                 ]);
             }
+  
+         
 
 
             //add company file
-            $check_contract = DB::table('admin.client_contracts')->where('client_id', $client_id)->first();
-            if (empty($check_contract)) {
-                $file = request()->file('file');
-                $file_id = $this->saveFile($file, 'company/contracts');
-                //save contract
-                $contract_id = DB::table('admin.contracts')->insertGetId([
-                    'name' => 'ShuleSoft', 'company_file_id' => $file_id, 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'contract_type_id' => request('contract_type_id'), 'user_id' => Auth::user()->id
-                ]);
-                //client contracts
-                DB::table('admin.client_contracts')->insert([
-                    'contract_id' => $contract_id, 'client_id' => $client_id
-                ]);
-            }
+            // $check_contract = DB::table('admin.client_contracts')->where('client_id', $client_id)->first();
+            // if (empty($check_contract)) {
+            //     $file = request()->file('file');
+            //     $file_id = $this->saveFile($file, 'company/contracts');
+            //     //save contract
+            //     $contract_id = DB::table('admin.contracts')->insertGetId([
+            //         'name' => 'ShuleSoft', 'company_file_id' => $file_id, 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'contract_type_id' => request('contract_type_id'), 'user_id' => Auth::user()->id
+            //     ]);
+            //     //client contracts
+            //     DB::table('admin.client_contracts')->insert([
+            //         'contract_id' => $contract_id, 'client_id' => $client_id
+            //     ]);
+            // }
             
-            if (request('standing_order')) {
-                $file = request()->file('standing_order');
-                $file_id = $this->saveFile($file, 'company/contracts');
-                //save contract
-                $contract_id = DB::table('admin.contracts')->insertGetId([
-                    'name' => 'ShuleSoft', 'company_file_id' => $file_id, 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'contract_type_id' => 8, 'user_id' => Auth::user()->id
-                ]);
-                //client contracts
-                DB::table('admin.client_contracts')->insert([
-                    'contract_id' => $contract_id, 'client_id' => $client_id
-                ]);
-            }
+            // if (request('standing_order')) {
+            //     $file = request()->file('standing_order');
+            //     $file_id = $this->saveFile($file, 'company/contracts');
+            //     //save contract
+            //     $contract_id = DB::table('admin.contracts')->insertGetId([
+            //         'name' => 'ShuleSoft', 'company_file_id' => $file_id, 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'contract_type_id' => 8, 'user_id' => Auth::user()->id
+            //     ]);
+            //     //client contracts
+            //     DB::table('admin.client_contracts')->insert([
+            //         'contract_id' => $contract_id, 'client_id' => $client_id
+            //     ]);
+            // }
 
             //once a school has been installed, now create an invoice for this school or create a promo code
             if (request('payment_status') == 1) {
                 // create an invoice for this school
                 $check_booking = DB::table('admin.invoices')->where('client_id', $client_id)->first();
+              
                 if (!empty($check_booking)) {
                     $booking = $check_booking;
                 } else {
@@ -595,16 +599,17 @@ class Sales extends Controller {
                 }
                 $this->scheduleActivities($client_id);
                 return redirect('sales/customerSuccess/1/' . $client_id);
-            } else {
+            } else {   
                 //create a trial code for this school
                 $trial_code = $client_id . time();
-                $client = DB::table('admin.clients')->where('id', $client_id);
+                $client = DB::table('admin.clients')->where('id', $client_id); 
                 DB::table('admin.clients')->where('id', $client_id)->update(['code' => $trial_code]);
                 $user = $client->first();
                 $message = 'Hello ' . $user->name . '. Your Trial Code is ' . $trial_code;
                 //$this->send_sms($user->phone, $message, 1);
                 //$this->send_email($user->email, 'Success: School Onboarded Successfully', $message);
-                $this->scheduleActivities($client_id);
+              
+                $this->scheduleActivities($client_id);  
                 return redirect('sales/customerSuccess/2/' . $client_id);
             }
             //send onboarding message to customer directly
@@ -621,13 +626,14 @@ class Sales extends Controller {
     public function scheduleActivities($client_id) {
         if((int)$client_id == 0){
             $client_id = request()->segment(3);
-        }
+        }  
         $time = 0;
         $sections = \App\Models\TrainItem::orderBy('id', 'asc')->get();
         $start_date = date('Y-m-d H:i');
         foreach ($sections as $section) {
 
             $start_date = date('Y-m-d H:i', strtotime("+{$time} minutes", strtotime(request('implementation_date'))));
+           
             //check if start_date is greater than 17 hours
             if (((int) date('H', strtotime($start_date))) >= 16 && (int) $section->time >= 30) {
                 // we cannot add a task here, so switch this tomorrow
@@ -648,7 +654,7 @@ class Sales extends Controller {
             //later we will check if user attend, holiday etc
 
             $end_date = date('Y-m-d H:i', strtotime("+{$section->time} minutes", strtotime($start_date)));
-
+       
             $slot = \App\Models\Slot::findOrFail(request('slot_id' . $section->id));
             if(empty($slot)){
                 $slot = \App\Models\Slot::first();
@@ -663,7 +669,7 @@ class Sales extends Controller {
                 'start_date' => date('Y-m-d H:i', strtotime($date . ' ' . isset($slot->start_time) ? $slot->start_time : '11:01:00')),
                 'end_date' => date('Y-m-d H:i', strtotime($date . ' ' . isset($slot->end_time) ? $slot->end_time : '12:00:00')),
                 'slot_id' => (int) $slot->id > 0 ? $slot->id : 5
-            ];
+            ]; 
             $time += $section->time;
             $task = \App\Models\Task::create($data);
             if((int) request('person' . $section->id) == 0){
@@ -688,7 +694,7 @@ class Sales extends Controller {
                 'school_person_allocated' => request("train_item{$section->id}"),
                 'max_time' => $section->time
             ]);
-        }
+        }  
     }
 
     //algorithm is very very simple
