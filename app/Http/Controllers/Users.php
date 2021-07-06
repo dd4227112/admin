@@ -8,6 +8,8 @@ use DB;
 use Intervention\Image\ImageManagerStatic as Image;
 use Auth;
 use DateTime;
+use App\Mail\EmailTemplate;
+use Illuminate\Support\Facades\Mail;
 
 class Users extends Controller {
 
@@ -805,6 +807,9 @@ class Users extends Controller {
             }
         return redirect()->back()->with('success', 'updated successful!');
     }
+
+
+
 
 
 }
