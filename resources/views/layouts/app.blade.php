@@ -402,7 +402,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                       <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">Schools</a>
                                                   </li>-->
                                                   <?php
-                                                  if (Auth::user()->role_id <> 3) {
+                                                  if (can_access('onboard_school')) {
                                                       ?>
                                                       <li>
                                                           <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">List of Schools</a>

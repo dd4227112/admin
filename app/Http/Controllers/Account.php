@@ -538,6 +538,7 @@ class Account extends Controller {
      */
     public function addPayment($id) {
         $invoice = Invoice::find($id);
+   
         if (!empty($invoice)) {
                 // This is when a bank return payment status to us
                 //save it in the database
