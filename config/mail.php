@@ -57,7 +57,7 @@ return [
 
     'from' => [
         'address' => 'noreply@shulesoft.com',
-        'name' => 'karibuSMS - Easy way to send SMS notifications',
+        'name' => 'Shulesoft School Management System',
     ],
 
     /*

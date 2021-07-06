@@ -8,6 +8,8 @@ use App\Http\Controllers\Message;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Background;
 use DB;
+use App\Mail\EmailTemplate;
+use Illuminate\Support\Facades\Mail;
 
 class Kernel extends ConsoleKernel {
 
@@ -77,6 +79,7 @@ class Kernel extends ConsoleKernel {
 
 
         $schedule->call(function () {
+             $this->emails();
              $this->addAttendance(); 
          })->everyThreeMinutes();
 
@@ -1037,5 +1040,22 @@ public function sendSORemainder() {
             }
          }
      }
+
+
+
+
+    public function emails()
+    {    
+         $to_user = 'Maombi Amos';
+         $subject = 'A new reminder to us';
+         $emai_to = 'maombibetets@gmail.com';
+         $content = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                        and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.  
+                        and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum";
+         $data = ['subject' => $subject,'emai_to' => $emai_to,'content'=>$content,'to_user'=>$to_user];
+         Mail::send(new EmailTemplate($data));
+    }
 
 }
