@@ -57,7 +57,8 @@ Route::get('/898uuhihdsdskj/live/emp','Customer@Emplist');
 
 //List of customers
 Route::get('/898uuhihdsdskjCL/custmlist/{month}/{year}','Customer@customerslist');
-
+//custom reports
+Route::get('/898uuhihdiuiias/custrpt/{q}','Customer@customSqlReport');
 Auth::routes();
 //Route::group(['middleware' => ['guest']], function() {
 //    Auth::routes();

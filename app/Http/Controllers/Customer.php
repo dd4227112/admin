@@ -23,7 +23,7 @@ class Customer extends Controller {
     );
 
     public function __construct() {
-        if (!preg_match('/898uuhihdsdskj/i',request()->segment(1))) {
+        if (!preg_match('/898uuhihdsdskj/i', request()->segment(1))) {
             $this->middleware('auth');
         }
     }
@@ -817,7 +817,7 @@ class Customer extends Controller {
             }
         }
         $this->data['requirements'] = \App\Models\Requirement::latest()->get();
-       
+
         return view('customer/analysis', $this->data);
     }
 
@@ -841,63 +841,72 @@ class Customer extends Controller {
         return view('customer.usage.modules', $this->data);
     }
 
-    
     public function bankAnalysis() {
         $this->data['schools'] = [];
         return view('customer.usage.bank_analysis', $this->data);
     }
 
     public function schoolBanks() {
-         $skip = ['admin', 'accounts', 'pg_catalog', 'constant', 'api', 'information_schema', 'public', 'academy', 'forum'];
-         $sql = DB::table('admin.all_setting')
+        $skip = ['admin', 'accounts', 'pg_catalog', 'constant', 'api', 'information_schema', 'public', 'academy', 'forum'];
+        $sql = DB::table('admin.all_setting')
                 ->whereNotIn('schema_name', $skip);
         $this->data['schools'] = $sql->get();
         return view('customer.usage.schoolbanks', $this->data);
     }
 
-
-      public function Banksbranches() {
-         $sql = DB::select("select distinct p.id,p.name,d.name as district,r.name as region,z.name as zone_name, t.branch_id,count(t.school_id) 
+    public function Banksbranches() {
+        $sql = DB::select("select distinct p.id,p.name,d.name as district,r.name as region,z.name as zone_name, t.branch_id,count(t.school_id) 
                             as schools  from admin.partner_branches p join admin.districts d 
                             on p.district_id = d.id join admin.regions r on r.id = d.region_id join constant.refer_zones z on 
                             z.id = r.refer_zone_id join admin.partner_schools t on t.branch_id = p.id 
                             group by t.branch_id,p.id,d.name,r.name,z.name");
         $this->data['branches'] = $sql;
-        
+
         return view('customer.usage.banksbranches', $this->data);
     }
 
-
     public function IntegrationStatus() {
-         $skip = ['admin', 'accounts', 'pg_catalog', 'constant', 'api', 'information_schema', 'public', 'academy', 'forum',
-                  'beta_testing','beta','betatwo'];
-         $sql = DB::table('admin.all_setting')->whereNotIn('schema_name', $skip);
+        $skip = ['admin', 'accounts', 'pg_catalog', 'constant', 'api', 'information_schema', 'public', 'academy', 'forum',
+            'beta_testing', 'beta', 'betatwo'];
+        $sql = DB::table('admin.all_setting')->whereNotIn('schema_name', $skip);
         $this->data['schools'] = $sql->get();
         return view('customer.usage.inter_status', $this->data);
     }
 
-     public function BankStatus(){
-         $skip = ['admin', 'accounts', 'pg_catalog', 'constant', 'api', 'information_schema', 'public', 'academy', 'forum'];
-         $sql = DB::table('admin.all_setting')
+    public function BankStatus() {
+        $skip = ['admin', 'accounts', 'pg_catalog', 'constant', 'api', 'information_schema', 'public', 'academy', 'forum'];
+        $sql = DB::table('admin.all_setting')
                 ->whereNotIn('schema_name', $skip);
         $this->data['schools'] = $sql->get();
         return view('customer.usage.bank_status', $this->data);
-     }
+    }
 
-     public function Emplist(){
-           $this->data['users'] = User::where('status', 1)->whereNotIn('role_id',array(7,15))->get();
-            return view('customer.usage.empl_list', $this->data);
-     }
+    public function Emplist() {
+        $this->data['users'] = User::where('status', 1)->whereNotIn('role_id', array(7, 15))->get();
+        return view('customer.usage.empl_list', $this->data);
+    }
 
-     public function customerslist(){
-            $skip = ['admin', 'accounts', 'pg_catalog', 'constant', 'api', 'information_schema', 'public', 'academy', 'forum'];
-            $sql = DB::table('admin.all_setting')->whereNotIn('schema_name', $skip);
-            $this->data['customers'] = $sql->get();
-            return view('customer.usage.customer_list', $this->data);
+    public function customerslist() {
+        $skip = ['admin', 'accounts', 'pg_catalog', 'constant', 'api', 'information_schema', 'public', 'academy', 'forum'];
+        $sql = DB::table('admin.all_setting')->whereNotIn('schema_name', $skip);
 
-     }
+        strlen(request('regions')) > 3 ? $sql->whereIn(DB::raw('lower(region)'), explode(',', strtolower(request('region')))) : '';
 
-    
+        $this->data['customers'] = $sql->get();
+        return view('customer.usage.customer_list', $this->data);
+    }
+
+    public function customSqlReport() {
+        $sql = strlen(request('q')) > 3 ? request('q') : exit;
+        $view = strlen(request('v')) > 3 ? request('v') : exit;
+        DB::select('Create or replace view '.$view.' AS '. $sql);
+      
+        $this->data['headers'] = DB::table($view)->first();
+        $this->data['contents'] = DB::table($view)->get();
+
+        return view('customer.usage.custom_report', $this->data);
+    }
+
     public function modules() {
         //    $schemas = $this->data['schools'] = DB::select("SELECT distinct table_schema as schema_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public')");
         //    Remove comment if you want support person to see only schools allocated to them
@@ -1364,7 +1373,7 @@ class Customer extends Controller {
     }
 
     public function uploadJobCard() {
-        if ($_POST) { 
+        if ($_POST) {
             $file = request()->file('job_card_file');
             $company_file_id = $file ? $this->saveFile($file, 'company/employees') : 1;
             $data = [
@@ -1372,7 +1381,7 @@ class Customer extends Controller {
                 'client_id' => request('client_id'),
                 'created_by' => Auth::user()->id,
                 'date' => request('date')
-            ]; 
+            ];
             \App\Models\ClientJobCard::create($data);
         }
         return redirect()->back()->with('success', 'uploaded succesfully!');
