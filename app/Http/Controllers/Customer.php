@@ -890,7 +890,7 @@ class Customer extends Controller {
         $skip = ['admin', 'accounts', 'pg_catalog', 'constant', 'api', 'information_schema', 'public', 'academy', 'forum'];
         $sql = DB::table('admin.all_setting')->whereNotIn('schema_name', $skip);
 
-        strlen(request('regions')) > 3 ? $sql->whereIn(DB::raw('lower(region)'), explode(',', strtolower(request('region')))) : '';
+        strlen(request('region')) > 3 ? $sql->whereIn(DB::raw('lower(region)'), explode(',', strtolower(request('region')))) : '';
 
         $this->data['customers'] = $sql->get();
         return view('customer.usage.customer_list', $this->data);
