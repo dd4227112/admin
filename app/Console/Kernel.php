@@ -89,9 +89,9 @@ class Kernel extends ConsoleKernel {
         })->dailyAt('04:40'); // Eq to 07:40 AM
         
 
-        $schedule->call(function () { 
-            $this->SMSStatusToSchoolsAdmin();
-        })->tuesdays(); // Eq 08:30 AM
+        // $schedule->call(function () { 
+        //     $this->SMSStatusToSchoolsAdmin();
+        // })->tuesdays(); // Eq 08:30 AM
           
 //        $schedule->call(function() {
 //            //send login reminder to parents in all schema

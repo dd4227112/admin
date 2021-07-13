@@ -117,7 +117,7 @@
                                                   <div class="form-group ">
                                                     <label for="number" class="control-label col-lg-3">Start Usage date</label>
                                                     <div class="col-lg-6">
-                                                        <input type="text" value="<?= date('Y-01-01') ?>" name="start_usage_date" id="start_usage_date" class="form-control"/>
+                                                        <input type="date" value="<?= date('Y-m-d',strtotime($invoice->client->start_usage_date)) ?>" name="start_usage_date" id="start_usage_date" class="form-control"/>
                                                     </div>
                                                     <?php echo form_error($errors, 'date'); ?>
                                                     <div class="col-lg-6"> <span id="date_error"></span></div>
