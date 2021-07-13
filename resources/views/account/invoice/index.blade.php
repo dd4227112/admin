@@ -202,8 +202,8 @@
                                                     <td><?= money($unpaid) ?></td>
                                                     {{-- <td>
                                                       <?php
-                                                          $previous_amount = collect(\DB::SELECT("select sum(balance) as last_balance from admin.client_invoice_balances where extract(year from created_at) < ' $accountyear->name ' and client_id = ' $invoice->client_id '"))->first();
-                                                          echo money($previous_amount->last_balance);
+                                                       //   $previous_amount = collect(\DB::SELECT("select sum(balance) as last_balance from admin.client_invoice_balances where extract(year from created_at) < ' $accountyear->name ' and client_id = ' $invoice->client_id '"))->first();
+                                                        //  echo money($previous_amount->last_balance);
                                                      ?> 
                                                     </td>   --}}
                                                     <td><?= date('d M Y', strtotime($invoice->due_date)) ?></td>

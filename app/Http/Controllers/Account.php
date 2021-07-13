@@ -361,12 +361,15 @@ class Account extends Controller {
     }
 
     public function editShuleSoftInvoice() {
+       // dd(request()->all()); 
         $invoice_id = request()->segment(3);
         $invoice = Invoice::find($invoice_id);
         $date = date("Y-m-d H:i:s");
         $invoice->update(['due_date' => date('d M Y', strtotime(request('due_date')))]);
         $client = \App\Models\Client::find($invoice->client_id);
-        $client->update(['price_per_student' => request('price_per_student'), 'estimated_students' => request('estimated_students')]);
+        $data = ['price_per_student' => request('price_per_student'),'estimated_students' => request('estimated_students'), 'start_usage_date' => request('start_usage_date')];
+         
+        $client->update($data);
 
         // if ((int) request('price_per_student') == 10000) {
         //     $months_remains = 12 - (int) date('m', strtotime(request('onboard_date'))) + 1;

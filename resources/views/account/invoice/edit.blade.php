@@ -94,7 +94,7 @@
                                                
 
                                                 <div class="form-group ">
-                                                    <label for="number" class="control-label col-lg-3">Due Date</label>
+                                                    <label for="number" class="control-label col-lg-3">Invoice Due Date</label>
                                                     <div class="col-lg-6">
                                                         <input type="text" value="<?= date('Y-m-d',strtotime($invoice->due_date)) ?>" name="due_date" id="date" class="form-control"/>
 
@@ -102,12 +102,22 @@
                                                     <?php echo form_error($errors, 'date'); ?>
                                                     <div class="col-lg-6"> <span id="date_error"></span></div>
                                                 </div>
-
+                                               
+                                                {{-- 
                                                   <div class="form-group ">
                                                     <label for="number" class="control-label col-lg-3">Start Date</label>
                                                     <div class="col-lg-6">
                                                         <input type="text" value="<?= date('Y-m-d',strtotime($invoice->client->created_at)) ?>" name="onboard_date" id="onboard_date" class="form-control"/>
 
+                                                    </div>
+                                                    <?php echo form_error($errors, 'date'); ?>
+                                                    <div class="col-lg-6"> <span id="date_error"></span></div>
+                                                </div> --}}
+
+                                                  <div class="form-group ">
+                                                    <label for="number" class="control-label col-lg-3">Start Usage date</label>
+                                                    <div class="col-lg-6">
+                                                        <input type="text" value="<?= date('Y-01-01') ?>" name="start_usage_date" id="start_usage_date" class="form-control"/>
                                                     </div>
                                                     <?php echo form_error($errors, 'date'); ?>
                                                     <div class="col-lg-6"> <span id="date_error"></span></div>
