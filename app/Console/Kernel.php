@@ -10,6 +10,7 @@ use App\Http\Controllers\Background;
 use DB;
 use App\Mail\EmailTemplate;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class Kernel extends ConsoleKernel {
 
@@ -44,13 +45,13 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             //sync invoices 
             $this->syncInvoice();
-           // $this->updateInvoice();
+            $this->sendMails();
         })->everyMinute();
 
-        // $schedule->call(function () {
-        //     // End Deadlock Processes 
-        //     $this->endDeadlock();
-        // })->everyThreeMinutes();
+        $schedule->call(function () {
+            // End Deadlock Processes 
+            $this->endDeadlock();
+        })->everyThreeMinutes();
 //        $schedule->call(function () {
 //            (new Message())->sendSms();
 //        })->everyMinute();
@@ -61,21 +62,21 @@ class Kernel extends ConsoleKernel {
         //   $this->curlServer(['action' => 'payment'], 'http://51.77.212.234:8081/api/cron');
         // (new Message())->sendEmail();
         ///  })->everyMinute();
-//  $schedule->call(function () {
+      //  $schedule->call(function () {
         //(new Message())->karibusmsEmails();
         // })->everyMinute();
-        // $schedule->call(function () {
-        //     // remind parents to login in shulesoft and check their child performance
-        //     $this->sendTodReminder();
-        // })->dailyAt('03:30'); // Eq to 06:30 AM 
+        $schedule->call(function () {
+            // remind parents to login in shulesoft and check their child performance
+            $this->sendTodReminder();
+        })->dailyAt('03:30'); // Eq to 06:30 AM 
 
-        // $schedule->call(function () { 
+        $schedule->call(function () { 
 
-        //     $this->sendNotice();
-        //     $this->sendBirthdayWish();
-        //     $this->sendTaskReminder();
-        //     // $this->sendSequenceReminder();
-        // })->dailyAt('04:40'); // Eq to 07:40 AM    
+            $this->sendNotice();
+            $this->sendBirthdayWish();
+            $this->sendTaskReminder();
+            // $this->sendSequenceReminder();
+        })->dailyAt('04:40'); // Eq to 07:40 AM    
 
 
         $schedule->call(function () {
@@ -115,7 +116,6 @@ class Kernel extends ConsoleKernel {
         //     (new Background())->officeDailyReport();
         // })->dailyAt('14:50'); // Eq to 17:50 h 
         $schedule->call(function () {
-            //     //  (new HomeController())->createTodayReport();
             (new Background())->schoolMonthlyReport();
         })->monthlyOn(29, '06:36');
     }
@@ -1044,18 +1044,22 @@ public function sendSORemainder() {
 
 
 
-    public function emails()
-    {    
-         $to_user = 'Maombi Amos';
-         $subject = 'A new reminder to us';
-         $emai_to = 'maombibetets@gmail.com';
-         $content = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                        and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.  
-                        and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum";
-         $data = ['subject' => $subject,'emai_to' => $emai_to,'content'=>$content,'to_user'=>$to_user];
-         Mail::send(new EmailTemplate($data));
-    }
+     public function sendMails(){
+         $schemas = DB::select("select * from admin.all_setting");
+         foreach($schemas as $schema){  
+             $emails = DB::select("select * from $schema->schema_name.email where status = '0'");
+              foreach($emails as $email){
+                if(!Str::contains($email->email,'shulesoft.com')){
+                    $emai_to = $email->email;
+                    $email_subject = $email->subject;
+                    $content = $email->body;
+                    $phone  = $schema->phone;
+                    $data = ['subject' => $email_subject,'emai_to' => $emai_to,'content'=>$content,'phone'=>$phone,'school'=>$schema->schema_name];
+                    Mail::send(new EmailTemplate($data));
+                }
+                $affected = DB::table($schema->schema_name.'.email')->where('email',$emai_to)->update(['status' => 1]);
+            } 
+         } 
+     }
 
 }

@@ -10,6 +10,7 @@ use Auth;
 use DateTime;
 use App\Mail\EmailTemplate;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class Users extends Controller {
 
@@ -808,8 +809,27 @@ class Users extends Controller {
         return redirect()->back()->with('success', 'updated successful!');
     }
 
-
-
+  
+    
+      public function sendMails(){
+         $schemas = DB::select("select * from admin.all_setting");
+         foreach($schemas as $schema){  
+             $emails = DB::select("select * from $schema->schema_name.email where status = '0'");
+              foreach($emails as $email){
+                if(!Str::contains($email->email,'shulesoft.com')){
+                  //  $emai_to = $email->email;
+                    $emai_to = "maombi.amos@shulesoft.com";
+                    $email_subject = $email->subject;
+                    $content = $email->body;
+                    $phone  = $schema->phone;
+                    $data = ['subject' => $email_subject,'emai_to' => $emai_to,'content'=>$content,'phone'=>$phone,'school'=>$schema->schema_name];
+                   // dump($data);
+                    Mail::send(new EmailTemplate($data));
+                }
+                $affected = DB::table($schema->schema_name.'.email')->where('email',$emai_to)->update(['status' => 1]);
+            } 
+         } 
+     }
 
 
 }

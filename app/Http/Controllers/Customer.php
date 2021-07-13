@@ -1432,4 +1432,10 @@ class Customer extends Controller {
         return view('customer.message.approve_integration', $this->data);
     }
 
+
+
+  
+
 }
+
+      

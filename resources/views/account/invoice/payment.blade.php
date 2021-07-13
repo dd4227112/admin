@@ -1,6 +1,11 @@
 @extends('layouts.app')
 @section('content')
-<?php $root = url('/') . '/public/'; ?>
+<?php $root = url('/') . '/public/'; 
+
+    $previous_amount = collect(\DB::SELECT("select  sum(coalesce(balance,0))  as last_balance from admin.client_invoice_balances where extract(year from created_at) < ' $invoice->year' and client_id = ' $invoice->client_id '"))->first();
+   // dd($previous_amount->last_balance);
+                                                     
+?>
 
 <div class="main-body">
     <div class="page-wrapper">
@@ -48,12 +53,26 @@
                                  <br/>
                                  <br/>
                         <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
+                           <?php if($previous_amount->last_balance > 0) { ?>
+                            {{-- <div class='form-group row'>
+                                <label for="amount" class="col-sm-2 control-label">
+                                    Previous Amount
+                                </label>
+                                <div class="col-sm-6">
+                                    <input type="text" disabled class="form-control" id="previous_amount" name="previous_amount" value="<?= old('previous_amount', number_format($previous_amount->last_balance)) ?>">
+                                </div>
+                                <span class="col-sm-4 control-label">
+                                    <?php echo form_error($errors, 'previous_amount'); ?>
+                                </span>
+                            </div> --}}
+                           <?php } ?>
+
                             <div class='form-group row'>
                                 <label for="amount" class="col-sm-2 control-label">
                                     Due Amount
                                 </label>
                                 <div class="col-sm-6">
-                                    <input type="text" disabled class="form-control" id="amount_topay" name="amount_topay" value="<?= old('amount', number_format($invoice->invoiceFees()->sum('amount')-$invoice->payments()->sum('amount'))) ?>" required="true" >
+                                    <input type="text" disabled class="form-control" id="amount_topay" name="amount_topay" value="<?= old('amount', number_format($invoice->invoiceFees()->sum('amount') - $invoice->payments()->sum('amount'))) ?>" required="true" >
                                 </div>
                                 <span class="col-sm-4 control-label">
                                     <?php echo form_error($errors, 'amount_topay'); ?>
@@ -205,7 +224,9 @@
 
     </div>
     <div class="form-group row">
-        <div class="col-sm-6"></div>
+        {{-- <div class="col-sm-6"> 
+            Cut from previous amount <input type="checkbox"  name="number" id="number">
+        </div> --}}
         <div class="col-sm-4">
             <input type="hidden" value="" name="number" id="number">
             <?php
@@ -213,9 +234,9 @@
             ?>
             <input  <?= $enabled ?> type="submit" class="btn btn-success" value="<?= __("add_payment") ?>" >
                   </div>
-              </div>
-                       <?= csrf_field() ?>
-                     </form>
+            </div>
+         <?= csrf_field() ?>
+    </form>
 
 
                              </div>
