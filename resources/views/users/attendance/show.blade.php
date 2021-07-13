@@ -63,7 +63,7 @@ if (!empty($user)) {
                  <div class="card">
                     <div class="col-md-12">
                         <script src="https://code.highcharts.com/highcharts.js"></script>
-                        <script src="https://code.highcharts.com/modules/data.js"></script>
+                          <script src="https://code.highcharts.com/modules/data.js"></script>
                            <script type="text/javascript">
                                     $(function () {
                                         $('#container').highcharts({
@@ -107,12 +107,10 @@ if (!empty($user)) {
                                         });
                                     });
                                 </script>
-               
-                         
                          <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-            </div>
-          </div>
-         </div>
+                   </div>
+               </div>
+             </div>
         </div>
 
          <div class="col-sm-12">

@@ -33,4 +33,12 @@ class Payment extends Model {
         return $this->belongsTo(\App\Models\Client::class, 'client_id', 'id');
     }
 
+    public function dueAmounts() {
+        return $this->belongsToMany(\App\Models\DueAmount::class, 'due_amounts_payments', 'payment_id', 'due_amount_id');
+    }
+
+     public function advancePayments() {
+        return $this->hasMany(\App\Models\AdvancePayment::class, 'payment_id', 'id');
+    }
+
 }

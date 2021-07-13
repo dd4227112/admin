@@ -40,6 +40,7 @@ class Account extends Controller {
         $this->data['invoices'] = ($from != '' && $to != '') ?
                 Invoice::whereBetween('date', [$from_date, $to_date])->latest()->get() :
                 Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->latest()->get();
+        $this->data['accountyear']= \App\Models\AccountYear::where('id', $account_year_id)->first();
         return $this;
     }
 
@@ -597,12 +598,12 @@ class Account extends Controller {
             'transaction_time' => $timestamp,
             'token' => $token,
             'date' => date('Y-m-d', strtotime($date)),
-                // 'financial_entity_id' => $financial_id,
-                //special case for CRDB payments only
-//            'checksum' => request('checksum'),
-//            'payment_type_id' => request('payment_type'),
-//            'amount_type' => request('amountType'),
-//            'currency' => request('currency')
+        // 'financial_entity_id' => $financial_id,
+        //  special case for CRDB payments only
+        // 'checksum' => request('checksum'),
+        // 'payment_type_id' => request('payment_type'),
+       //  'amount_type' => request('amountType'),
+       //   'currency' => request('currency')
         );
 
         $payment_id = DB::table('admin.payments')->insertGetId($payment_array);

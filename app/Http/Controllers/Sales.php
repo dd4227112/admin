@@ -1166,4 +1166,79 @@ class Sales extends Controller {
         return view('sales.jobcards',$this->data);
     }
 
+
+
+      public function allData(){
+        $this->data['type'] = $type = request()->segment(3);
+        $kigezo = request()->segment(4);
+        $today = date('Y-m-d');
+
+        switch ($type) {
+            //All logins per day, week, month and year
+        case 'logins':
+            //today
+                $this->data['today'] = \collect(DB::select("select  count(schema_name)  as total from admin.all_login_locations where created_at::date='{$today}'"))->first();
+            //thisweek
+                $this->data['week'] = \collect(DB::select("select  count(schema_name)  as total from admin.all_login_locations where created_at >= date_trunc('week',current_date)"))->first();
+            //thismonth
+                $this->data['month'] = \collect(DB::select("select  count(schema_name)  as total from admin.all_login_locations where created_at >= date_trunc('month',current_date)"))->first();
+            // thisyear
+                $this->data['year'] = \collect(DB::select("select  count(schema_name) as total from admin.all_login_locations where created_at >= date_trunc('year',current_date)"))->first();
+            break;
+
+        //All teachers
+        case 'allteachers':
+            $this->data['teachers'] = \collect(DB::select("select count(*) as total from admin.all_teacher where status = '1'"))->first();
+            break;
+
+        //All staffs
+        case 'allstaffs':
+             $this->data['allstaffs'] = \collect(DB::select("select count(*) as total from admin.all_users where status = '1'"))->first();
+             break;
+
+        //All students, male and female
+        case 'allstudents':
+            // Male students
+            $male="Male";
+            $this->data['mstudents'] = \collect(DB::select("select count(*) as total from admin.all_student where status = '1' and sex = '$male'"))->first(); 
+            // Female students
+            $female="Female";
+            $this->data['fstudents']  = \collect(DB::select("select count(*) as total from admin.all_student where status = '1' and sex = '$female'"))->first();
+            // All students
+            $this->data['allstudents'] = \collect(DB::select("select count(*) as total from admin.all_student where status = '1'"))->first();
+            break;
+
+        //All parents
+        case 'allparents':
+            $this->data['allparents'] = \collect(DB::select("select count(*) as total from admin.all_parent where status = '1'"))->first();
+            break;
+
+        //All users
+        case 'allusers':
+            $this->data['teachers'] = \collect(DB::select("select count(*) as total from admin.all_teacher where status = '1'"))->first();
+            $this->data['allstudents'] = \collect(DB::select("select count(*) as total from admin.all_student where status = '1'"))->first();
+            $this->data['allparents'] = \collect(DB::select("select count(*) as total from admin.all_parent where status = '1'"))->first();
+            $this->data['allstaffs'] = \collect(DB::select("select count(*) as total from admin.all_users where status = '1'"))->first();
+            break;
+
+        //All schools sent sms per day
+        case 'allschools_sms':
+           // $this->data['allschools_sms'] = \collect(DB::select("select count(*) as total from admin.school_keys"))->first();
+
+            //today
+            $this->data['today_sms'] = \collect(DB::select("select count(schema_name)  as total from admin.school_keys where created_at::date='{$today}'"))->first();
+            //thisweek
+            $this->data['week_sms'] = \collect(DB::select("select  count(schema_name)  as total from admin.school_keys where created_at >= date_trunc('week',current_date)"))->first();
+            //thismonth
+            $this->data['month_sms'] = \collect(DB::select("select count(schema_name)  as total from admin.school_keys where created_at >= date_trunc('month',current_date)"))->first();
+            // thisyear
+            $this->data['year_sms'] = \collect(DB::select("select  count(schema_name)  as total from admin.school_keys where created_at >= date_trunc('year',current_date)"))->first();
+            break;
+        }
+        return view('sales.performance_report',$this->data);
+    }
+
+
+ 
+
 }

@@ -93,7 +93,8 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                         <?php
                                                         $total_students = 0;
                                                         $total_price = 0;
-                                                        $schemas=\DB::select("select * from admin.clients where id not in (select client_id from admin.invoices where account_year_id=(select id from admin.account_years where name='".date('Y')."'))" );
+                                                      //  $schemas=\DB::select("select * from admin.clients where id not in (select client_id from admin.invoices where account_year_id=(select id from admin.account_years where name='".date('Y')."'))" );
+                                                        $schemas=\DB::select("select * from admin.clients" );
                                                         //dd($schemas);
                                                         foreach ($schemas as $schema) {
                                                             ?>

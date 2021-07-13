@@ -795,7 +795,6 @@ class Customer extends Controller {
     }
 
     public function requirements() {
-
         $tab = request()->segment(3);
         $id = request()->segment(4);
         if ($tab == 'show' && $id > 0) {
@@ -1441,4 +1440,10 @@ class Customer extends Controller {
         return view('customer.message.approve_integration', $this->data);
     }
 
+
+
+  
+
 }
+
+      
