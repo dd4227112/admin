@@ -499,9 +499,9 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                             </li>
                                             <?php } ?>
     
-                                            <?php if(can_access('hr_report')) { ?>
+                                            <?php if(can_access('general_report')) { ?>
                                             <li>
-                                             <a href="<?= url('sales/hrReport') ?>" data-i18n="nav.extra-components.session-timeout"> General report</a>                                    
+                                             <a href="<?= url('sales/allData') ?>" data-i18n="nav.extra-components.session-timeout"> General report</a>                                    
                                             </li>
                                             <?php } ?>
                                         </ul>
