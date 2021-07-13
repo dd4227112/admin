@@ -56,3 +56,14 @@ admin.invoice_fees_payments a join  admin.invoice_fees b on a.invoice_fee_id = b
 join admin.invoices c on c.id = b.invoice_id 
 group by a.invoice_fee_id,c.client_id,b.amount,b.created_at
 )
+
+
+
+
+
+<td>
+<?php
+    $previous_amount = collect(\DB::SELECT("select sum(balance) as last_balance from admin.client_invoice_balances where extract(year from created_at) < ' $accountyear->name ' and client_id = ' $invoice->client_id '"))->first();
+    echo money($previous_amount->last_balance);
+?> 
+</td> 
