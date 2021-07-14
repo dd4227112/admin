@@ -1567,12 +1567,18 @@ return $echo;
                                                                     </td>
                                                                     <td></td>
                                                                 </tr>
-                                                                <tr>
+                                                                 <tr>
                                                                     <th scope="row">2</th>
                                                                     <td>Routine Usage</td>
                                                                     <td> <?= check_status('routine'); ?></td>
                                                                     <td></td>
-                                                                </tr>
+                                                                 </tr>
+                                                                 {{-- <tr>
+                                                                    <th scope="row">2</th>
+                                                                    <td>General Character assessment</td>
+                                                                    <td> </td>
+                                                                    <td></td>
+                                                                 </tr> --}}
                                                             </tbody>
                                                         </table>
                                                     </div>
