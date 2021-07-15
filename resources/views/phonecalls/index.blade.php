@@ -35,6 +35,10 @@
                         <a class="nav-link" data-toggle="tab" href="#OutgoingCall" role="tab"> <h6 class="text-center">Outgoing calls </h6></a>
                         <div class="slide"></div>
                     </li>
+
+                     <li class="nav-item">
+                        <a  href="<?= url('Phone_call/create') ?>" class="text-center" > <h6 class="text-center"> Add calls </h6></a>
+                    </li>
                 </ul> 
                         
                    <div class="tab-content card-block">
@@ -67,15 +71,13 @@
                                         <thead>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Full Name</th>
                                                 <th>Phone Number</th>
-                                                <th>Email</th>
                                                 <th>Call Type</th>
                                                 <th>Time</th>
                                                 <th>Next Follow up</th>
                                                 <th>Call Duration</th>
-                                                <th>Call Details</th>
-                                                <th width="280px">Action</th>
+                                                {{-- <th>Call Details</th> --}}
+                                                <th colspan="1">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -83,9 +85,8 @@
                                             @foreach ($phone_calls as $key => $call)
                                             <tr>
                                                 <td><?= $i ?></td>
-                                                <td>{{ $call->full_name }} </td>
                                                 <td>{{ $call->phone_number }} </td>
-                                                <td>{{ $call->email }}</td>
+                                                {{-- <td>{{ $call->email }}</td> --}}
                                                 <td><?php if($call->call_type==0){
                                                     echo 'Outgoing';    
                                                 } else{
@@ -95,7 +96,7 @@
                                                 <td>{{ $call->created_at}}<br> {{ $call->call_time}}</td>
                                                 <td>{{ $call->followup_date }}<br> {{ $call->next_followup }}</td>
                                                 <td>{{ $call->call_duration }}</td> 
-                                                <td>{{ $call->call_detail }}</td> 
+                                                {{-- <td>{{ $call->call_detail }}</td>  --}}
                                                 <td>
                                                   <a class="btn btn-primary btn-sm" href="{{ url('Phone_call/edit/'.$call->id) }}">Edit</a> 
                                                   <a class="btn btn-danger btn-sm" href="{{ url('Phone_call/destroy/'.$call->id) }}">Delete</a>

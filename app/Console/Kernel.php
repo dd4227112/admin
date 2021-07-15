@@ -1055,11 +1055,9 @@ public function sendSORemainder() {
                     $contact  = $schema->phone;
                     $data = ['subject' => $email_subject,'email_to' => $email_to,'content'=>$content,'contact'=>$contact,'school'=>$schema->schema_name];
                     Mail::send(new EmailTemplate($data)); 
-                  $affected = DB::table($schema->schema_name.'.email')->where('email',$email_to)->update(['status' => 0]);
                  }
-    
+                 $affected = DB::table($schema->schema_name.'.email')->where('email_id',$schema_email->email_id)->update(['status' => 1]);
                } 
-
             }
          } 
       }

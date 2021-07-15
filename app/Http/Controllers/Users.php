@@ -810,26 +810,6 @@ class Users extends Controller {
     }
 
   
-    
-        public function sendMails(){
-         $schemas = DB::select("select * from admin.all_setting");
-         foreach($schemas as $schema){  
-             $schema_emails = DB::select("select * from $schema->schema_name.email where status = '0'");
-              foreach($schema_emails as $schema_email){
-                if(!empty($schema_email->email) && !Str::contains($schema_email->email,'shulesoft.com')){
-                   // $email_to = $schema_email->email;
-                    $email_to = 'maombi.amos@shulesoft.com';
-                    $email_subject = $schema_email->subject;
-                    $content = $schema_email->body;
-                    $contact  = $schema->phone;
-                    $data = ['subject' => $email_subject,'email_to' => $email_to,'content'=>$content,'contact'=>$contact,'school'=>$schema->schema_name];
-                    Mail::send(new EmailTemplate($data)); 
-                }
-                $affected = DB::table($schema->schema_name.'.email')->where('email',$email_to)->update(['status' => 0]);
-                 
-            } 
-         } 
-     }
 
 
 }
