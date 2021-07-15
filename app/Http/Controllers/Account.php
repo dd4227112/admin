@@ -37,9 +37,7 @@ class Account extends Controller {
         $to = $this->data['to'] = request('to');
         $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
         $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
-        $this->data['invoices'] = ($from != '' && $to != '') ?
-                Invoice::whereBetween('date', [$from_date, $to_date])->latest()->get() :
-                Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->latest()->get();
+        $this->data['invoices'] = ($from != '' && $to != '') ? Invoice::whereBetween('date', [$from_date, $to_date])->latest()->get() : Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->latest()->get();
         $this->data['accountyear']= \App\Models\AccountYear::where('id', $account_year_id)->first();
         return $this;
     }
@@ -99,7 +97,6 @@ class Account extends Controller {
         $this->data['budget'] = [];
         $project_id = $this->data['project_id'] = request()->segment(3);
         $this->data['account_year_id'] = $account_year_id = request()->segment(4);
-     
         if ((int) $project_id == 1) {
             //create shulesoft invoices
             //check in client table if all schools with students and have generated reports are registered
@@ -116,7 +113,6 @@ class Account extends Controller {
         //        }
         //       }
         //    }
-
             $this->getInvoices($project_id, $account_year_id);
         }
       /*    if ($project_id == 'delete') {
@@ -126,11 +122,8 @@ class Account extends Controller {
                 \App\Models\Revenue::where('transaction_id', $payments->transaction_id)->delete();
             }
             \App\Models\Invoice::find($invoice_id)->delete();
-
             return redirect()->back()->with('success', 'success');
         } */
-
-
         if ($project_id == 'edit') {
             $id = request()->segment(4);
             $this->data['invoice'] = Invoice::find($id);
@@ -522,27 +515,47 @@ class Account extends Controller {
         return view('account.client.create', $this->data);
     }
 
-    public function payment() {
+    // public function payment() {
+    //     $id = request()->segment(3);
+    //     $this->data['invoice'] = Invoice::find($id);
+    //     $this->data["payment_types"] = \App\Models\PaymentType::all();
+    //     $this->data['banks'] = \App\Models\BankAccount::all();
+    //     if ($_POST) {
+    //         return $this->addPayment($id);
+    //     }
+    //     $this->data["category"] = DB::table('refer_expense')->whereIn('financial_category_id', [1])->get();
+    //     return view('account.invoice.payment', $this->data);
+    // }
+
+     public function payment() {
         $id = request()->segment(3);
-        $this->data['invoice'] = Invoice::find($id);
+        $this->data['invoice'] = $invoice = Invoice::find($id);
+        $year = \App\Models\AccountYear::where('name', date('Y'))->first();
+        
         $this->data["payment_types"] = \App\Models\PaymentType::all();
         $this->data['banks'] = \App\Models\BankAccount::all();
         if ($_POST) {
-            return $this->addPayment($id);
+            $previous_amount = collect(\DB::SELECT("select sum(coalesce(balance,0))  as last_balance from 
+            admin.client_invoice_balances where client_id = '$invoice->client_id' and extract(year from created_at) < '$year->name' "))->first();
+             if($previous_amount->last_balance > 0){
+                $invoices = \DB::table('admin.client_invoice_balances')->where('client_id',$invoice->client_id)->get();
+                 foreach($invoices as $invoice){
+                    // dd($invoice->invoice_id);
+                      return $this->addPayment($invoice->invoice_id);
+                 }
+             } else{
+                 // dd('Everything');
+                  return $this->addPayment($id);
+             }
         }
         $this->data["category"] = DB::table('refer_expense')->whereIn('financial_category_id', [1])->get();
         return view('account.invoice.payment', $this->data);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+   
     public function addPayment($id) {
         $invoice = Invoice::find($id);
-   
+        
         if (!empty($invoice)) {
                 // This is when a bank return payment status to us
                 //save it in the database
@@ -564,10 +577,12 @@ class Account extends Controller {
             $advanced_amount = 0;
             $amount = request('amount');
             $mobile_transaction_id = request('mobile_transaction_id');
+        
            // dd($mobile_transaction_id);
             if (request('amount') > $unpaid) {
                 $advanced_amount = request('amount') - $unpaid;
                 $amount = $unpaid;
+               // dd($invoice->id);
                 //return redirect()->back()->with('error', 'Payment not accepted. Amount paid is greater than amount required');
             }
             $refer_expense_id = request('refer_expense_id');

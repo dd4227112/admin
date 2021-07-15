@@ -411,6 +411,7 @@ group by ownership');
         $this->data['type'] = $type = request()->segment(4);
         $this->data['status'] = $status = request()->segment(3);
         $end_date = date('Y-m-01');
+       // dd($end_date);
         $this->data['where'] = $where = "a.created_at::date >='" . $end_date . "'";
         // $this->data['active_users'] = DB::SELECT('SELECT "table", count(*) as count from admin.all_users where status=1 and ("table",id) in (select "table", user_id from admin.all_log a where ' . $where .' group by "table",user_id) group by "table"  order by "table"');
         //$this->data['notactive_users'] = DB::SELECT('SELECT "table", count(*) as count from admin.all_users where status=1 and ("table",id) in (select "table", user_id from admin.all_log a where ' . $where .'group by "table",user_id) group by "table"  order by "table"');
