@@ -264,8 +264,8 @@
                <tr>
               	<td class="wrapper">
               		<h4 style="margin-bottom: 8px;"> Regards: <?= $school ?></h4>
-              		<h5 style="margin-top: 8px;"> Email: <?= $emai_to ?></h5>
-              		<h5> Phone: <?= $phone ?></h5>
+              		<h5 style="margin-top: 8px;"> Email: <?= $email_to ?></h5>
+              		<h5> Phone: <?= $contact ?></h5>
               	</td>
               </tr>
 

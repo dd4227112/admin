@@ -12,24 +12,24 @@ class EmailTemplate extends Mailable
     use Queueable, SerializesModels;
 
     public $title;
-    public $emai_to;
+    public $email_to;
     public $content;
     public $school;
-    public $phone;
+    public $contact;
 
   
     public function __construct($data = array())
     {
          $this->title   = $data['subject'];
-         $this->emai_to = $data['emai_to'];
+         $this->email_to = $data['email_to'];
          $this->content = $data['content'];
          $this->school  = $data['school'];
-         $this->phone  = $data['phone'];
+         $this->contact  = $data['contact'];
     }
 
     public function build()
     { 
-        return $this->view('emails.emailTemplate')->to($this->emai_to)->subject($this->title)
-        ->with(['content' => $this->content,'school' => $this->school,'phone' => $this->phone,'emai_to' => $this->emai_to]);
+        return $this->view('emails.emailTemplate')->to($this->email_to)->subject($this->title)
+        ->with(['content' => $this->content,'school' => $this->school,'contact' => $this->contact,'email_to' => $this->email_to]);
     }
 }
