@@ -917,7 +917,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     }
 
     private function addAttendance() {
-        $date = date("Y-m-d");
+        $date = date("Y-m-d", strtotime("-14 days"));
         $datas = DB::connection('biotime')->table('public.iclock_transaction')->whereDate('punch_time', $date)->where('punch_state', '0')->get();
         if (count($datas) > 0) {
             foreach ($datas as $data) {
