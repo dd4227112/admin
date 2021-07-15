@@ -24,7 +24,8 @@ class Phone_call extends Controller {
      */
     public function index() {
         $this->data['phone_calls'] = PhoneCall::latest()->get();
-        
+
+    
         if($_POST){
             if(request('start_date') !== '' && request('end_date') !== ''){
                $from = request('start_date');
