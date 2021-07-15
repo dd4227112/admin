@@ -59,7 +59,10 @@
                                         </div>
                                     </div>
                                 </div>
-                                <?php } }    ?>
+                                <?php 
+                                     } 
+                                   }    
+                                ?>
                                 
                                 </div>
                                 </div>

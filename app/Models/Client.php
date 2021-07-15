@@ -12,7 +12,7 @@ class Client extends Model {
 
     protected $fillable = ['id', 'name', 'email', 'phone', 'address', 'lat', 'long', 'google_map', 'username',
     'status','code','email_verified','phone_verified','created_by','estimated_students','special_trial_code',
-    'price_per_student'];
+    'price_per_student','start_usage_date'];
 
     public function invoices() {
         return $this->hasMany(\App\Models\Invoice::class, 'client_id', 'id');

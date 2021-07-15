@@ -10,6 +10,7 @@ use App\Http\Controllers\Background;
 use DB;
 use App\Mail\EmailTemplate;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class Kernel extends ConsoleKernel {
 
@@ -44,13 +45,13 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             //sync invoices 
             $this->syncInvoice();
-           // $this->updateInvoice();
+            $this->sendeMails();
         })->everyMinute();
 
-        // $schedule->call(function () {
-        //     // End Deadlock Processes 
-        //     $this->endDeadlock();
-        // })->everyThreeMinutes();
+        $schedule->call(function () {
+            // End Deadlock Processes 
+            $this->endDeadlock();
+        })->everyThreeMinutes();
 //        $schedule->call(function () {
 //            (new Message())->sendSms();
 //        })->everyMinute();
@@ -61,25 +62,24 @@ class Kernel extends ConsoleKernel {
         //   $this->curlServer(['action' => 'payment'], 'http://51.77.212.234:8081/api/cron');
         // (new Message())->sendEmail();
         ///  })->everyMinute();
-//  $schedule->call(function () {
+      //  $schedule->call(function () {
         //(new Message())->karibusmsEmails();
         // })->everyMinute();
-        // $schedule->call(function () {
-        //     // remind parents to login in shulesoft and check their child performance
-        //     $this->sendTodReminder();
-        // })->dailyAt('03:30'); // Eq to 06:30 AM 
+        $schedule->call(function () {
+            // remind parents to login in shulesoft and check their child performance
+            $this->sendTodReminder();
+        })->dailyAt('03:30'); // Eq to 06:30 AM 
 
-        // $schedule->call(function () { 
+        $schedule->call(function () { 
 
-        //     $this->sendNotice();
-        //     $this->sendBirthdayWish();
-        //     $this->sendTaskReminder();
-        //     // $this->sendSequenceReminder();
-        // })->dailyAt('04:40'); // Eq to 07:40 AM    
+            $this->sendNotice();
+            $this->sendBirthdayWish();
+            $this->sendTaskReminder();
+            // $this->sendSequenceReminder();
+        })->dailyAt('04:40'); // Eq to 07:40 AM    
 
 
         $schedule->call(function () {
-             $this->emails();
              $this->addAttendance(); 
          })->everyThreeMinutes();
 
@@ -88,9 +88,9 @@ class Kernel extends ConsoleKernel {
         })->dailyAt('04:40'); // Eq to 07:40 AM
         
 
-        $schedule->call(function () { 
-            $this->SMSStatusToSchoolsAdmin();
-        })->dailyAt('05:30'); // Eq 08:30 AM
+        // $schedule->call(function () { 
+        //     $this->SMSStatusToSchoolsAdmin();
+        // })->tuesdays(); // Eq 08:30 AM
           
 //        $schedule->call(function() {
 //            //send login reminder to parents in all schema
@@ -115,7 +115,6 @@ class Kernel extends ConsoleKernel {
         //     (new Background())->officeDailyReport();
         // })->dailyAt('14:50'); // Eq to 17:50 h 
         $schedule->call(function () {
-            //     //  (new HomeController())->createTodayReport();
             (new Background())->schoolMonthlyReport();
         })->monthlyOn(29, '06:36');
     }
@@ -917,7 +916,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     }
 
     private function addAttendance() {
-        $date = date("Y-m-d");
+        $date = date("Y-m-d", strtotime("-14 days"));
         $datas = DB::connection('biotime')->table('public.iclock_transaction')->whereDate('punch_time', $date)->where('punch_state', '0')->get();
         if (count($datas) > 0) {
             foreach ($datas as $data) {
@@ -1042,20 +1041,25 @@ public function sendSORemainder() {
      }
 
 
-
-
-    public function emails()
-    {    
-         $to_user = 'Maombi Amos';
-         $subject = 'A new reminder to us';
-         $emai_to = 'maombibetets@gmail.com';
-         $content = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                        and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.  
-                        and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum";
-         $data = ['subject' => $subject,'emai_to' => $emai_to,'content'=>$content,'to_user'=>$to_user];
-         Mail::send(new EmailTemplate($data));
-    }
+     public function sendeMails(){
+         $schemas = DB::select("select * from admin.all_setting");
+         foreach($schemas as $schema){  
+             $schema_emails = DB::select("select * from $schema->schema_name.email where status = '0'");
+             if(!empty($schema_emails)) {
+                  
+              foreach($schema_emails as $schema_email){
+                if(!empty($schema_email->email) && !Str::contains($schema_email->email,'shulesoft.com')){
+                    $email_to = $schema_email->email;
+                    $email_subject = $schema_email->subject;
+                    $content = $schema_email->body;
+                    $contact  = $schema->phone;
+                    $data = ['subject' => $email_subject,'email_to' => $email_to,'content'=>$content,'contact'=>$contact,'school'=>$schema->schema_name];
+                    Mail::send(new EmailTemplate($data)); 
+                 }
+                 $affected = DB::table($schema->schema_name.'.email')->where('email_id',$schema_email->email_id)->update(['status' => 1]);
+               } 
+            }
+         } 
+      }
 
 }

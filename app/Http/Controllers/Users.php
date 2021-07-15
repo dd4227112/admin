@@ -10,6 +10,7 @@ use Auth;
 use DateTime;
 use App\Mail\EmailTemplate;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class Users extends Controller {
 
@@ -808,8 +809,7 @@ class Users extends Controller {
         return redirect()->back()->with('success', 'updated successful!');
     }
 
-
-
+  
 
 
 }

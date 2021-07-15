@@ -174,6 +174,7 @@
                                                 <th>Amount</th>
                                                 <th>Paid Amount</th>
                                                 <th>Remained Amount</th>
+                                                <th>Previous Amount</th>
                                                 <th>Due Date</th>
                                                 <th>Action</th>
                                             </tr>
@@ -183,7 +184,7 @@
                                             $total_amount = 0;
                                             $total_paid = 0;
                                             $total_unpaid = 0;
-                                            $i = 1;
+                                            $i = 1; 
                                             foreach ($invoices as $invoice) {
                                                 $amount = $invoice->invoiceFees()->sum('amount');
                                                 $paid = $invoice->payments()->sum('amount');
@@ -193,11 +194,16 @@
                                                 $total_unpaid += $unpaid;
                                                 ?>
                                                 <tr>
-                                                <td><?= ucfirst(strtolower($invoice->client->name)) ?></td>
+                                                <td><?= warp(strtoupper($invoice->client->name)) ?></td>
                                                     <td><?= $invoice->reference ?></td>
                                                     <td><?= money($amount) ?></td>
                                                     <td><?= money($paid) ?></td>
                                                     <td><?= money($unpaid) ?></td>
+                                                    <td><?php 
+                                                          $previous_amount = \collect(DB::SELECT("select  sum(coalesce(balance,0))  as last_balance from admin.client_invoice_balances where extract(year from created_at) < '$accountyear->name' and client_id = '$invoice->client_id' "))->first();
+                                                          echo money($previous_amount->last_balance)
+                                                         ?>
+                                                    </td>
                                                     <td><?= date('d M Y', strtotime($invoice->due_date)) ?></td>
                                                     <td>
 

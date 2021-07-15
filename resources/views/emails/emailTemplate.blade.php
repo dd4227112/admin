@@ -253,19 +253,27 @@
                       <td>
                         <h1 class="float-left"><?= $title ?></h1>
                          {{-- message --}}
-                         <h3 class="text-left m-3">Dear <?= $to_user ?> </h3>
                         <p><?= $content ?>.</p>
                       </td>
                     </tr>
+                 
                   </table>
                 </td>
+              </tr>
+
+               <tr>
+              	<td class="wrapper">
+              		<h4 style="margin-bottom: 8px;"> Regards: <?= $school ?></h4>
+              		<h5 style="margin-top: 8px;"> Email: <?= $email_to ?></h5>
+              		<h5> Phone: <?= $contact ?></h5>
+              	</td>
               </tr>
 
             <!-- END MAIN CONTENT AREA -->
             </table>
 
             <!-- START FOOTER -->
-            <div class="footer">
+            {{-- <div class="footer">
               <table border="0" cellpadding="0" cellspacing="0">
                 <tr>
                   <td class="content-block powered-by">
@@ -273,7 +281,7 @@
                   </td>
                 </tr>
               </table>
-            </div>
+            </div> --}}
      
           </div>
         </td>

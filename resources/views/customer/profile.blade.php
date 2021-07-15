@@ -9,7 +9,7 @@ $schema = SCHEMA;
 if ($table == 'admin.vendors') {
     $report = \collect(DB::select('select created_at::date from ' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first();
 }elseif ($table == 'invoices') {
-    $report = \collect(DB::select('select date::date as created_at from ' . $table . '  ' . $where . ' order by date::date desc limit 1'))->first();
+    $report = \collect(DB::select('select date::date as created_at from ' . $schema . '.' . $table . '  ' . $where . ' order by date::date desc limit 1'))->first();
 } else {
     $report = \collect(DB::select('select created_at::date from ' . $schema . '.' . $table . '  ' . $where . ' order by created_at::date desc limit 1'))->first();
 }
@@ -1412,7 +1412,7 @@ return $echo;
                                                                 <tr>
                                                                     <th scope="row">4</th>
                                                                     <td>Invoice Created</td>
-                                                                    <td> <?= check_status('invoices'); ?></td>
+                                                                    <td> <?= check_status('invoices') ?></td>
                                                                     <td></td>
                                                                 </tr>
                                                                 <tr>
@@ -1552,7 +1552,7 @@ return $echo;
                                                                     <td></td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <th scope="row">1</th>
+                                                                    <th scope="row">2</th>
                                                                     <td>Attendance Usage</td>
                                                                     <td>
                                                                         Student:
@@ -1567,12 +1567,18 @@ return $echo;
                                                                     </td>
                                                                     <td></td>
                                                                 </tr>
-                                                                <tr>
-                                                                    <th scope="row">2</th>
+                                                                 <tr>
+                                                                    <th scope="row">3</th>
                                                                     <td>Routine Usage</td>
                                                                     <td> <?= check_status('routine'); ?></td>
                                                                     <td></td>
-                                                                </tr>
+                                                                 </tr>
+                                                                 <tr>
+                                                                    <th scope="row">4</th>
+                                                                    <td>General Character assessment</td>
+                                                                    <td> <?= check_status('general_character_assessment'); ?> </td>
+                                                                    <td></td>
+                                                                 </tr>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -1955,7 +1961,7 @@ return $echo;
                                                                 <th>Maturity date</th>
                                                                 <th>Contact</th>
                                                                
-                                                                <th colspan="2">Action</th>
+                                                                <th colspan="1">Action</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
