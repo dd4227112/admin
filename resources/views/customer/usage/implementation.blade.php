@@ -77,6 +77,17 @@
                                 }
                                 
                                 
+                            }else if (preg_match('/sms/i', strtolower($content->activity))) {
+                                //check transport and hostel
+                                $parent = DB::table($content->school_name . '.parent')->count();
+                                $sms_count = DB::table($content->school_name . '.sms')->count();
+                                if ($sms_count >= $parent) {
+                                    $status = 'Implemented';
+                                } else {
+                                    $status = 'Not Implemented';
+                                }
+                                
+                                
                             }
                             ?>
                         </td>
