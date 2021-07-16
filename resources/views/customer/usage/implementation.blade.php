@@ -46,13 +46,42 @@
                                 } else {
                                     $status = ' Not Implemented';
                                 }
-                            } else if (preg_match('/account/i', strtolower($content->activity))) {
+                            } else if (preg_match('/invoices/i', strtolower($content->activity))) {
                                 //receive at least 10 payments
 
 
                                 $payments = DB::table($content->school_name . '.payments')->whereYear('created_at', 2021)->count();
+                                if ($payments >= 10) {
+                                    $status = 'Implemented';
+                                } else {
+                                    $status = ' Not Implemented';
+                                }
+                            }else if (preg_match('/transaction/i', strtolower($content->activity))) {
+                                //receive at least 10 payments
+
+
                                 $expense = DB::table($content->school_name . '.expense')->whereYear('created_at', 2021)->count();
-                                if ($payments >= 10 && $expense >= 10) {
+                                if ($expense >= 10) {
+                                    $status = 'Implemented';
+                                } else {
+                                    $status = ' Not Implemented';
+                                }
+                            }else if (preg_match('/payroll/i', strtolower($content->activity))) {
+                                //receive at least 10 payments
+
+
+                                $salary = DB::table($content->school_name . '.salaries')->whereYear('created_at', 2021)->count();
+                                if ($salary>0) {
+                                    $status = 'Implemented';
+                                } else {
+                                    $status = ' Not Implemented';
+                                }
+                            }else if (preg_match('/inventory/i', strtolower($content->activity))) {
+                                //receive at least 10 payments
+
+
+                                $inventory = DB::table($content->school_name . '.product_alert_quantity')->whereYear('created_at', 2021)->count();
+                                if ($inventory >= 10) {
                                     $status = 'Implemented';
                                 } else {
                                     $status = ' Not Implemented';
