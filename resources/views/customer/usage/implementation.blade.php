@@ -56,7 +56,32 @@
                                 } else {
                                     $status = ' Not Implemented';
                                 }
-                            }else if (preg_match('/transaction/i', strtolower($content->activity))) {
+                            } else if (preg_match('/nmb/i', strtolower($content->activity))) {
+                                //receive at least 10 payments
+
+
+                                $nmb_payments = DB::table($content->school_name . '.payments')->whereYear('created_at', 2021)->whereNotNull('token')->count();
+                                $mappend = DB::table($content->school_name . '.bank_accounts_integrations')->whereYear('invoice_prefix', '<>', 'SAS')->count();
+                                $is_mappend = (int) $mappend == 0 ? 'Not Mapped: ' : 'Mapped: ';
+                                if ($nmb_payments >= 10) {
+                                    $status = $is_mappend . 'Implemented';
+                                } else {
+                                    $status = $is_mappend . ' Not Implemented';
+                                }
+                            } else if (preg_match('/crdb/i', strtolower($content->activity))) {
+                                //receive at least 10 payments
+
+
+                                $crdb_payments = DB::table($content->school_name . '.payments')->whereYear('created_at', 2021)->whereNotNull('token')->count();
+
+                                $mappend = DB::table($content->school_name . '.bank_accounts_integrations')->whereYear('invoice_prefix', 'SAS')->count();
+                                $is_mappend = (int) $mappend == 0 ? 'Not Mapped: ' : 'Mapped: ';
+                                if ($crdb_payments >= 10) {
+                                    $status = $is_mappend.'Implemented';
+                                } else {
+                                    $status = $is_mappend.' Not Implemented';
+                                }
+                            } else if (preg_match('/transaction/i', strtolower($content->activity))) {
                                 //receive at least 10 payments
 
 
@@ -66,17 +91,17 @@
                                 } else {
                                     $status = ' Not Implemented';
                                 }
-                            }else if (preg_match('/payroll/i', strtolower($content->activity))) {
+                            } else if (preg_match('/payroll/i', strtolower($content->activity))) {
                                 //receive at least 10 payments
 
 
                                 $salary = DB::table($content->school_name . '.salaries')->whereYear('created_at', 2021)->count();
-                                if ($salary>0) {
+                                if ($salary > 0) {
                                     $status = 'Implemented';
                                 } else {
                                     $status = ' Not Implemented';
                                 }
-                            }else if (preg_match('/inventory/i', strtolower($content->activity))) {
+                            } else if (preg_match('/inventory/i', strtolower($content->activity))) {
                                 //receive at least 10 payments
 
 
@@ -116,7 +141,7 @@
                             }
                             ?>
                         </td>
-                        <?php } else if ($key == 'status') { ?>
+                    <?php } else if ($key == 'status') { ?>
                         <td><?= $status ?></td>
 
                     <?php } else { ?>
@@ -124,11 +149,11 @@
 
 
 
-            <?php
-        }
-    }
-    ?>
+                        <?php
+                    }
+                }
+                ?>
             </tr>
-            <?php } ?>
+        <?php } ?>
     </tbody>
 </table>
