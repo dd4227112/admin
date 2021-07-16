@@ -77,7 +77,7 @@
                                 }
                             } else if (preg_match('/sms/i', strtolower($content->activity))) {
                                 //check transport and hostel
-                                $sms_config = DB::table('admin.school_keys')->where('api_key', '<>', 1234567894)->where('schema_name', $content->school_name)->count();
+                                $sms_config = DB::table('admin.school_keys')->where('api_key', '<>', '1234567894')->where('schema_name', $content->school_name)->count();
 
                                 if ((int) $sms_config > 0) {
                                     $status = 'Implemented';
