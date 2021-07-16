@@ -40,7 +40,7 @@
                                 //all classes have published an exam
 
                                 $classes = DB::table($content->school_name . '.classes')->count();
-                                $exams = DB::table($content->school_name . '.exam_report_settings')->whereYear('created_at', 2021)->count();
+                                $exams = DB::table($content->school_name . '.exam_report')->whereYear('created_at', 2021)->count();
                                 if ($exams >= $classes) {
                                     $status = ' Implemented';
                                 } else {
