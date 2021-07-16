@@ -61,7 +61,7 @@
 
 
                                 $nmb_payments = DB::table($content->school_name . '.payments')->whereYear('created_at', 2021)->whereNotNull('token')->count();
-                                $mappend = DB::table($content->school_name . '.bank_accounts_integrations')->whereYear('invoice_prefix', '<>', 'SAS')->count();
+                                $mappend = DB::table($content->school_name . '.bank_accounts_integrations')->where('invoice_prefix', '<>', 'SAS')->count();
                                 $is_mappend = (int) $mappend == 0 ? 'Not Mapped: ' : 'Mapped: ';
                                 if ($nmb_payments >= 10) {
                                     $status = $is_mappend . 'Implemented';
@@ -74,7 +74,7 @@
 
                                 $crdb_payments = DB::table($content->school_name . '.payments')->whereYear('created_at', 2021)->whereNotNull('token')->count();
 
-                                $mappend = DB::table($content->school_name . '.bank_accounts_integrations')->whereYear('invoice_prefix', 'SAS')->count();
+                                $mappend = DB::table($content->school_name . '.bank_accounts_integrations')->where('invoice_prefix', 'SAS')->count();
                                 $is_mappend = (int) $mappend == 0 ? 'Not Mapped: ' : 'Mapped: ';
                                 if ($crdb_payments >= 10) {
                                     $status = $is_mappend.'Implemented';
