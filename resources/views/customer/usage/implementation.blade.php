@@ -46,7 +46,7 @@
                                 } else {
                                     $status = ' Not Implemented';
                                 }
-                            } else if (preg_match('/invoices/i', strtolower($content->activity))) {
+                            } else if (preg_match('/invoice/i', strtolower($content->activity))) {
                                 //receive at least 10 payments
 
 
