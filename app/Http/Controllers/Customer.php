@@ -911,7 +911,7 @@ class Customer extends Controller {
         // $sql = strlen(request('q')) > 3 ? request('q') : exit;
         //$view = strlen(request('v')) > 3 ? request('v') : exit;
         $sql = 'select b.username as school_name, f.content as activity, a.created_at, a.created_at + make_interval(days => a.max_time) as deadline, a.completed_at, 1 as status
-from admin.train_items_allocations a join admin.clients b on b.id=a.client_id join admin.tasks c on c.id=a.task_id JOIN admin.all_setting d on d."schema_name"=b.username join admin.train_items f on f.id=a.train_item_id where f.status=1 and a.user_id=' . $user_id;
+from admin.train_items_allocations a join admin.clients b on b.id=a.client_id join admin.tasks c on c.id=a.task_id JOIN admin.all_setting d on d."schema_name"=b.username join admin.train_items f on f.id=a.train_item_id where f.status=1 and (a.client_id in (select client_id from admin.payments where extract(year from date)=2021) OR a.client_id in (select client_id from admin.standing_orders) ) and a.user_id=' . $user_id;
         $view = 'implementation_report_' . $user_id;
         DB::select('Create or replace view ' . $view . ' AS ' . $sql);
 
