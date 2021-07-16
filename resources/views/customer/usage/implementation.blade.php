@@ -40,7 +40,7 @@
                                 //all classes have published an exam
 
                                 $classes = DB::table($content->school_name . '.classes')->count();
-                                $exams = DB::table($content->school_name . '.exam_report_settings')->count();
+                                $exams = DB::table($content->school_name . '.exam_report_settings')->whereYear('created_at', 2021)->count();
                                 if ($exams >= $classes) {
                                     $status = ' Implemented';
                                 } else {
@@ -50,8 +50,8 @@
                                 //receive at least 10 payments
 
 
-                                $payments = DB::table($content->school_name . '.payments')->count();
-                                $expense = DB::table($content->school_name . '.expense')->count();
+                                $payments = DB::table($content->school_name . '.payments')->whereYear('created_at', 2021)->count();
+                                $expense = DB::table($content->school_name . '.expense')->whereYear('created_at', 2021)->count();
                                 if ($payments >= 10 && $expense >= 10) {
                                     $status = 'Implemented';
                                 } else {
@@ -68,30 +68,26 @@
                                 }
                             } else if (preg_match('/operation/i', strtolower($content->activity))) {
                                 //check transport and hostel
-                                $tmembers = DB::table($content->school_name . '.tmembers')->count();
-                                $hmembers = DB::table($content->school_name . '.hmembers')->count();
+                                $tmembers = DB::table($content->school_name . '.tmembers')->whereYear('created_at', 2021)->count();
+                                $hmembers = DB::table($content->school_name . '.hmembers')->whereYear('created_at', 2021)->count();
                                 if ($tmembers >= 20 || $hmembers >= 20) {
                                     $status = 'Transport/Hostel Implemented';
                                 } else {
                                     $status = 'Transport/Hostel  Not Implemented';
                                 }
-                                
-                                
-                            }else if (preg_match('/sms/i', strtolower($content->activity))) {
+                            } else if (preg_match('/sms/i', strtolower($content->activity))) {
                                 //check transport and hostel
-                                $parent = DB::table($content->school_name . '.parent')->count();
-                                $sms_count = DB::table($content->school_name . '.sms')->count();
-                                if ($sms_count >= $parent) {
+                                $sms_config = DB::table('admin.school_keys')->where('api_key', '<>', 1234567894)->where('schema_name', $content->school_name)->count();
+
+                                if ((int) $sms_config > 0) {
                                     $status = 'Implemented';
                                 } else {
                                     $status = 'Not Implemented';
                                 }
-                                
-                                
                             }
                             ?>
                         </td>
-                    <?php } else if ($key == 'status') { ?>
+                        <?php } else if ($key == 'status') { ?>
                         <td><?= $status ?></td>
 
                     <?php } else { ?>
@@ -99,11 +95,11 @@
 
 
 
-                        <?php
-                    }
-                }
-                ?>
+            <?php
+        }
+    }
+    ?>
             </tr>
-        <?php } ?>
+            <?php } ?>
     </tbody>
 </table>
