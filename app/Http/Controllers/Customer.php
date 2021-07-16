@@ -898,12 +898,27 @@ class Customer extends Controller {
     public function customSqlReport() {
         $sql = strlen(request('q')) > 3 ? request('q') : exit;
         $view = strlen(request('v')) > 3 ? request('v') : exit;
-        DB::select('Create or replace view '.$view.' AS '. $sql);
-      
+        DB::select('Create or replace view ' . $view . ' AS ' . $sql);
+
         $this->data['headers'] = DB::table($view)->first();
         $this->data['contents'] = DB::table($view)->get();
 
         return view('customer.usage.custom_report', $this->data);
+    }
+
+    public function implementationReport() {
+        $user_id = request()->segment(2); 
+        // $sql = strlen(request('q')) > 3 ? request('q') : exit;
+        //$view = strlen(request('v')) > 3 ? request('v') : exit;
+        $sql = 'select b.username as school_name, c.activity, a.created_at, a.created_at + make_interval(days => a.max_time) as deadline, a.completed_at, 1 as status
+from admin.train_items_allocations a join admin.clients b on b.id=a.client_id join admin.tasks c on c.id=a.task_id WHERE a.user_id='.$user_id;
+        $view = 'testing_report';
+        DB::select('Create or replace view ' . $view . ' AS ' . $sql);
+
+        $this->data['headers'] = DB::table($view)->first();
+        $this->data['contents'] = DB::table($view)->get();
+
+        return view('customer.usage.implementation', $this->data);
     }
 
     public function modules() {
@@ -1440,10 +1455,4 @@ class Customer extends Controller {
         return view('customer.message.approve_integration', $this->data);
     }
 
-
-
-  
-
 }
-
-      

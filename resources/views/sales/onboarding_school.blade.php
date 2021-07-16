@@ -1,5 +1,10 @@
-@extends('layouts.app')
-@section('content')
+<?php
+if (request()->ajax() == FALSE) {
+    ?>
+    @extends('layouts.app')
+    @section('content')
+
+<?php } ?>
 <div class="card">
     <div class="card-header">
         <h5>Customer Onboarding</h5>
@@ -37,18 +42,6 @@
                             <option value="<?= $type->id ?>"><?= $type->name ?></option>
                         <?php } ?>
 
-                    </select>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label">Support Person</label>
-                <div class="col-sm-10">
-                    <select name="support_user_id" class="form-control">
-                        <?php
-                        foreach ($staffs as $staff) {
-                            ?>
-                            <option value="<?= $staff->id ?>"><?= $staff->firstname . ' ' . $staff->lastname ?></option>
-                        <?php } ?>
                     </select>
                 </div>
             </div>
@@ -99,114 +92,121 @@
                     <input type="number" class="form-control" value="<?= $school->students ?>" name="students" required="">
                 </div>
             </div>
-            <!--            <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Data Format Available</label>
-                            <div class="col-sm-10">
-                                <select name="data_type_id" class="form-control">
-                                    <option value="1">Excel With Parent Phone Numbers</option>
-                                    <option value="2">Physical Files Format</option>
-                                    <option value="3">Softcopy but without parents phone numbers</option>
-            
-                                </select>
-                            </div>
-                        </div>-->
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Data Format Available</label>
+                <div class="col-sm-10">
+                    <select name="data_type_id" class="form-control">
+                        <option value="1">Excel With Parent Phone Numbers</option>
+                        <option value="2">Physical Files Format</option>
+                        <option value="3">Softcopy but without parents phone numbers</option>
+
+                    </select>
+                </div>
+            </div>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Implementation Start Date</label>
                 <div class="col-sm-10">
                     <input type="datetime-local" class="form-control" value="" name="implementation_date" required="">
                 </div>
             </div>
-            <!--  <div class="form-group row">
-                 <label class="col-sm-2 col-form-label">Available Tasks Roles</label>
-                 <div class="col-sm-10">
- <!--                    <table class="table table-bordered">
-                         <thead>
-                             <tr>
-                                 <th>Tasks</th>
-                                 <th>Person Role Responsible at School</th>
- 
-                             </tr>
-                         </thead> 
-                         <tbody>
-            <?php
-            $sections = \App\Models\TrainItem::orderBy('id', 'asc')->get();
-            foreach ($sections as $section) {
-                ?>
-             
-                                                     <tr>
-                                                         <td><?= $section->content ?></td>
-                                                         <td> <input type="text" class="form-control" value="" name="train_item<?= $section->id ?>" required=""></td>
-                                                     </tr>
-            <?php } ?>
- 
-                         </tbody>
-                     </table>-->
-            <!--      <div class="card-block table-border-style">
-                      <div class="table-responsive">
-                          <table class="table table-bordered">
-                              <thead>
-                                  <tr>
-                                      <th>#</th>
-                                      <th style="width:20%">Task</th>
-                                      <th>ShuleSoft Person Allocated</th>
-                                      <th>School Person/Role Allocated</th>
-                                      <th>Start Date : Time</th>
-                                      <th>End Date : Time</th>
-                                  </tr>
-                              </thead>
-                              <tbody>
-            <?php
-            $x = 1;
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label"> Module Selected</label>
+                <div class="col-sm-10">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                       
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Tasks</th>
+                                    <th>Person Responsible <br/>at School (Name & Phone)</th>
 
-            $trainings = \App\Models\trainItem::orderBy('id', 'asc')->get();
-            $trainings = [];
-            foreach ($trainings as $training) {
-                ?>
-                                                  <tr>
-                                                      <th scope="row"><?= $x ?></th>
-                                                      <td><?= $training->content ?></td>
-                                                      <td> 
-                <?php ?>   
-                                                          <select class="task_allocated_id"  name="person<?= $training->id ?>" id="<?= $training->id ?>" >
-                <?php
-                foreach ($staffs as $staff) {
-                    ?>
-                                                                              <option value="<?= $staff->id ?>">
-                    <?= $staff->firstname . ' ' . $staff->lastname ?></option>
-                    <?php
-                }
-                ?>
-                                                          </select>
-                                                      </td>
-                                                      <td> 
-                                                          <input type="text" class="form-control" value="" name="train_item<?= $training->id ?>" required="">
-                                                      </td>
-                                                      <td>
+                                </tr>
+                            </thead> 
+                            <tbody>
+                                <?php
+                                $sections = \App\Models\TrainItem::where('status', 1)->orderBy('id', 'asc')->get();
+                                foreach ($sections as $section) {
+                                    ?>
 
-                                                          <select class="task_group" name="slot_date<?= $training->id ?>" id="slot_for<?= $training->id ?>" data-task-id="<?= $training->id ?>"><?= $customer->getDate($staff->id) ?></select>
-                                                          <select type="text" data-attr="start_date" class="slot" id="start_slot<?= $training->id ?>"  name="slot_id<?= $training->id ?>"></select>
-                                                      </td>
-                                                      <td>
+                                    <tr>
+                                        <td>
+                                            <b><input type="checkbox" value="<?=$section->id?>" name="module[]" multiple="" /></b>
+                                        </td>
+                                        <td><?= $section->content ?></td>
+                                        <td> <input type="text" class="form-control" value="" name="train_item<?= $section->id ?>" required=""></td>
+                                    </tr>
+                                <?php } ?>
 
-                                                          <b data-attr="end_date" id="task_end_date_id<?= $training->id ?>"> </b>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-block table-border-style">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th style="width:20%">Task</th>
+                                        <th>ShuleSoft Person Allocated</th>
+                                        <th>School Person/Role Allocated</th>
+                                        <th>Start Date : Time</th>
+                                        <th>End Date : Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $x = 1;
 
-                                                      </td>
-                                                  </tr>
-                <?php
-                $x++;
-            }
-            ?>
+                                    $trainings = \App\Models\trainItem::orderBy('id', 'asc')->get();
+                                    $trainings = [];
+                                    foreach ($trainings as $training) {
+                                        ?>
+                                        <tr>
+                                            <th scope="row"><?= $x ?></th>
+                                            <td><?= $training->content ?></td>
+                                            <td> 
+                                                <?php ?>   
+                                                <select class="task_allocated_id"  name="person<?= $training->id ?>" id="<?= $training->id ?>" >
+                                                    <?php
+                                                    foreach ($staffs as $staff) {
+                                                        ?>
+                                                        <option value="<?= $staff->id ?>">
+                                                            <?= $staff->firstname . ' ' . $staff->lastname ?></option>
+                                                        <?php
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </td>
+                                            <td> 
+                                                <input type="text" class="form-control" value="" name="train_item<?= $training->id ?>" required="">
+                                            </td>
+                                            <td>
 
-                              </tbody>
-                          </table>
-                      </div>
-                  </div>
-              </div>
-          </div>-->
+                                                <select class="task_group" name="slot_date<?= $training->id ?>" id="slot_for<?= $training->id ?>" data-task-id="<?= $training->id ?>"><?= $customer->getDate($staff->id) ?></select>
+                                                <select type="text" data-attr="start_date" class="slot" id="start_slot<?= $training->id ?>"  name="slot_id<?= $training->id ?>"></select>
+                                            </td>
+                                            <td>
+
+                                                <b data-attr="end_date" id="task_end_date_id<?= $training->id ?>"> </b>
+
+                                            </td>
+                                        </tr>
+                                        <?php
+                                        $x++;
+                                    }
+                                    ?>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
 
-            {{-- <div class="form-group row">
+            <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Agreement Type</label>
                 <div class="col-sm-10">
                     <select name="contract_type_id" class="form-control">
@@ -218,9 +218,9 @@
                         <?php } ?>
                     </select>
                 </div>
-            </div> --}}
-            
-            {{-- <div class="form-group row">
+            </div> 
+
+            <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Contract Start Date</label>
                 <div class="col-sm-10">
                     <input type="date" class="form-control" value="" name="start_date" required="">
@@ -244,7 +244,7 @@
                     <input type="file" class="form-control" accept=".pdf" name="standing_order" required="">
                     <span class="messages">Client MUST sign a standing order to specify which date he/she will start to pay. <a href="#">Click Here to download </a> Standing Order Template</span>
                 </div>
-            </div> --}}
+            </div>
             <br/><br/>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Areas much interested</label>
@@ -362,4 +362,9 @@
     $(document).ready(task_group);
 
 </script>
-@endsection
+<?php
+if (request()->ajax() == FALSE) {
+    ?>
+    @endsection
+<?php
+}?>
