@@ -664,12 +664,11 @@ class Sales extends Controller {
             $support_user_id= $this->getSupportUser($section->id);
             $data = [
                 'activity' => $section->content,
-                'date' => date('Y-m-d', strtotime($start_date)),
-                
+                'date' => date('Y-m-d', strtotime($start_date)),             
                 'user_id' => $support_user_id,
                 'task_type_id' => preg_match('/data/i', $section->content) ? 3 : 4,
-                'start_date' => date('Y-m-d H:i', strtotime($date . ' ' . isset($slot->start_time) ? $slot->start_time : '11:01:00')),
-                'end_date' => date('Y-m-d H:i', strtotime($date . ' ' . isset($slot->end_time) ? $slot->end_time : '12:00:00')),
+                'start_date' => date('Y-m-d H:i', strtotime($start_date)),
+                'end_date' => date('Y-m-d H:i', strtotime($start_date." + {$section->time} days")),
                 'slot_id' => (int) $slot->id > 0 ? $slot->id : 5
             ]; 
             $time += $section->time;
