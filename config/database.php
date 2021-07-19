@@ -35,12 +35,11 @@ return [
        
           'pgsql' => [
             'driver' => 'pgsql',
-            'host' => 'shulesoftdb.postgres.database.azure.com',
-            // 'host'=>'localhost',
+            'host'=>'localhost',
             'port' =>'5432',
-            'database' =>'shulesoft_2022',
-            'username' => 'pgeshuleadmin',
-            'password' =>'Shul3@s0ft@202!',
+            'database' =>'shulesoft_2021',
+            'username' => 'postgres',
+            'password' =>'20_sHULEsoft_21',
             'charset' => 'utf8',
             'sslmode' => 'prefer', 
             'prefix_indexes' => true,
