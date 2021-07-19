@@ -41,6 +41,7 @@
                                             <div class="col-lg-4"></div>
                                             <div class="col-lg-4">
                                                 <?php
+                                                $root = url('/') . '/public/';
                                                 $array = array('0' => trans('select school'));
                                                 foreach ($schemas as $schema_name) {
                                                     $array[$schema_name->table_schema] = $schema_name->table_schema;
@@ -72,7 +73,7 @@
                                                         <?php
                                                         $x = 1;
                                                         $customer = new \App\Http\Controllers\Customer();
-                                                        $client = DB::table('clients')->where('username', $schema)->first();
+
                                                         $trainings = \App\Models\TrainItemAllocation::where('client_id', $client->id)->orderBy('id', 'asc')->get();
                                                         foreach ($trainings as $training) {
                                                             $status = check_implementation($training->trainItem->content, $schema);
@@ -171,15 +172,41 @@
 </div>
 
 <script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
+<link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.css">
+<link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.brighttheme.css">
+<link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.buttons.css">
+<link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.history.css">
+<link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.mobile.css">
+<link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/pnotify/notify.css">
 
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.js"></script>
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.desktop.js"></script>
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.buttons.js"></script>
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.confirm.js"></script>
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.callbacks.js"></script>
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.animate.js"></script>
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.history.js"></script>
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.mobile.js"></script>
+<script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.nonblock.js"></script>
+<script type="text/javascript" src="<?= $root ?>assets/pages/pnotify/notify.js"></script>
 <script>
+    notify = function (title, message, type) {
+        new PNotify({
+            title: title,
+            text: message,
+            type: type,
+            hide: 'false',
+            icon: 'icofont icofont-info-circle'
+        });
+    }
     task_group = function () {
+
         $('.task_allocated_id').mousedown(function () {
             var task_id = $(this).attr('task-id');
             var start_date = $('#start_date' + task_id).val();
             var school_person = $('#school_person' + task_id).text();
             var section_id = $(this).attr('section_id');
-            var task_user=$('#task_user'+task_id).val();
+            var task_user = $('#task_user' + task_id).val();
             $.ajax({
                 url: '<?= url('customer/editTrain') ?>/null',
                 method: 'get',
@@ -188,7 +215,7 @@
                     start_date: start_date,
                     school_person: school_person,
                     section_id: section_id,
-                    task_user:task_user
+                    task_user: task_user
                 },
                 success: function (data) {
                     notify('Success', data, 'success');

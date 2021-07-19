@@ -994,12 +994,32 @@ class Customer extends Controller {
     }
 
     public function logs() {
-
         $this->data['start'] = request('start_date');
         $this->data['end'] = request('end_date');
         $this->data['schema'] = request()->segment(3);
+        $this->data['client'] = strlen($this->data['schema']) > 3 ? DB::table('clients')->where('username', $this->data['schema'])->first() : '';
         $this->data['schemas'] = (new \App\Http\Controllers\Software())->loadSchema();
         $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->get();
+
+        //check allocation of trainings
+        if (strlen($this->data['schema']) > 3) {
+            $checks = DB::select('select * from admin.train_items where status=1');
+       
+            foreach ($checks as $check) {
+                $check_train = \App\Models\TrainItemAllocation::where('client_id', $this->data['client']->id)->where('train_item_id', $check->id)->first();
+                if (empty($check_train)) {
+                
+                    \App\Models\TrainItemAllocation::create([
+                        'task_id' => 1,
+                        'client_id' => $this->data['client']->id,
+                        'user_id' => Auth::user()->id,
+                        'train_item_id' => $check->id,
+                        'school_person_allocated' => '',
+                        'max_time' => $check->time
+                    ]);
+                }
+            }
+        }
         // $this->data['users'] = DB::table('admin.all_users')->distinct('usertype')->get(['usertype']);
         //$this->data['data'] = DB::select('select count(*) as total_logs,"schema_name"::text from admin.all_log group by "schema_name"::text order by count(*)');
         return view('customer.usage.implementation_allocation', $this->data);
