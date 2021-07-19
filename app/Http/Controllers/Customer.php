@@ -193,11 +193,16 @@ class Customer extends Controller {
         $ttask_id = request('task_id');
         $section_id = request('section_id');
         $start_date = request('start_date');
-        $end_date = request('end_date');
+        $task_user = request('task_user');
         $attr = request('attr');
         $school_person = request('school_person');
-        $sales = new \App\Http\Controllers\Sales();
-        $user_id = $sales->getSupportUser($section_id);
+
+        if ((int) $task_user == 0) {
+            $sales = new \App\Http\Controllers\Sales();
+            $user_id = $sales->getSupportUser($section_id);
+        } else {
+            $user_id = (int) $task_user;
+        }
 
         $train = \App\Models\TrainItemAllocation::find($ttask_id);
 
@@ -989,14 +994,15 @@ class Customer extends Controller {
     }
 
     public function logs() {
+
         $this->data['start'] = request('start_date');
         $this->data['end'] = request('end_date');
-        $this->data['schema'] = request('schema');
-        $this->data['user'] = request('usertype');
+        $this->data['schema'] = request()->segment(3);
         $this->data['schemas'] = (new \App\Http\Controllers\Software())->loadSchema();
-        $this->data['users'] = DB::table('admin.all_users')->distinct('usertype')->get(['usertype']);
-        $this->data['data'] = DB::select('select count(*) as total_logs,"schema_name"::text from admin.all_log group by "schema_name"::text order by count(*)');
-        return view('customer.logsummary', $this->data);
+        $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->get();
+        // $this->data['users'] = DB::table('admin.all_users')->distinct('usertype')->get(['usertype']);
+        //$this->data['data'] = DB::select('select count(*) as total_logs,"schema_name"::text from admin.all_log group by "schema_name"::text order by count(*)');
+        return view('customer.usage.implementation_allocation', $this->data);
     }
 
     public function pages() {

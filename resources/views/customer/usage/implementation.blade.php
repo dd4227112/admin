@@ -1,8 +1,10 @@
+<?php    if(!empty($headers)){ ?>
 <table>
     <thead>
         <tr>
             <th></th>
             <?php
+         
             $vars = get_object_vars($headers);
             ?>
 
@@ -55,3 +57,11 @@
         <?php } ?>
     </tbody>
 </table>
+<?php } else {
+     echo '<table>
+    <thead>
+        <tr>
+            <th>Status</th>
+            </tr>
+            </thead><tbody><tr><td>No Data</td></tr></tbody></table>';            
+} ?>
