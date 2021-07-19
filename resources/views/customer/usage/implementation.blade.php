@@ -36,7 +36,7 @@
                         ?>
                         <td>
                             <?php                           
-                            check_implementation($content->activity,$content->school_name);
+                           echo check_implementation($content->activity,$content->school_name);
                             ?>
                         </td>
                     <?php } else if ($key == 'status') { ?>
