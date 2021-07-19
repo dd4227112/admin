@@ -206,21 +206,20 @@ class Customer extends Controller {
         if ((int) $user_id > 0 && (int) $task_id > 0) {
             $section = \App\Models\TrainItem::find($section_id);
             $obj = [
-                'start_date' => date('Y-m-d H:i', strtotime($start_date)),
-                'end_date' => date('Y-m-d H:i', strtotime($start_date . " + {$section->time} days")),
+                'start_date' => date('Y-m-d H:i:s', strtotime($start_date)),
+                'end_date' => date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")),
                 'updated_at' => date('Y-m-d H:i:s'),
+                'user_id' => $user_id,
+                'school_person_allocated' => trim($school_person),
             ];
 
-            $task = \App\Models\Task::find($task_id)->update(['user_id' => $user_id, 'updated_at' => date('Y-m-d H:i:s')]);
+            DB::table('train_items_allocations')->where('id', $ttask_id)->update($obj);
+            
             DB::table('tasks_users')->where('task_id', $task_id)->update([
                 'user_id' => $user_id,
                 'updated_at' => date('Y-m-d H:i:s')
             ]);
-            $train->update([
-                'school_person_allocated' => trim($school_person),
-                'user_id' => $user_id,
-                'updated_at' => date('Y-m-d H:i:s')
-            ]);
+
             die(json_encode(array_merge(array('task_id' => $task_id), $obj)));
         }
         //insert into training allocation
@@ -1455,51 +1454,6 @@ class Customer extends Controller {
         }
         $this->data['request'] = DB::table('whatsapp_integrations')->where('id', $id)->first();
         return view('customer.message.approve_integration', $this->data);
-    }
-
-    public function deleteschema() {
-        $schemas = DB::select('select distinct "table_schema" from information_schema.tables where "table_schema" '
-                        . 'not in (select "schema_name" from (select "schema_name", count(*) from admin.all_student group by "schema_name") c ) and "table_schema" not'
-                        . ' in (\'ssdemo\',\'academy\',\'api\',\'information_schema\',\'admin\',\'pg_catalog\',\'constant\',\'forum\')');
-        foreach ($schemas as $schema) {
-            echo $schema->table_schema;
-            $sql = DB::statement("select admin.deleteschema('" . $schema->table_schema . "')");
-            print_r($sql);
-        }
-        DB::statement("CREATE MATERIALIZED VIEW admin.school_sales_status
-TABLESPACE pg_default
-AS
- SELECT a.username AS school,
-    b.name AS region,
-    c.name AS zone,
-    ( SELECT count(*) AS count
-           FROM admin.all_student
-          WHERE all_student.status = 1 AND all_student.schema_name = a.username::text) AS students,
-    ( SELECT sum(standing_orders.total_amount) AS sum
-           FROM admin.standing_orders
-          WHERE standing_orders.client_id = a.id AND date_part('year'::text, standing_orders.created_at) = 2021::double precision) AS standing_order,
-    ( SELECT sum(payments.amount) AS sum
-           FROM admin.payments
-          WHERE payments.client_id = a.id AND date_part('year'::text, payments.created_at) = 2021::double precision) AS paid_amount,
-    ( SELECT all_login_locations.created_at
-           FROM admin.all_login_locations
-          WHERE all_login_locations.schema_name = a.username::text AND (all_login_locations.\"table\"::text = ANY (ARRAY['setting'::character varying, 'user'::character varying, 'teacher'::character varying]::text[]))
-          ORDER BY all_login_locations.id DESC
-         LIMIT 1) AS last_login,
-    a.phone,
-    ( SELECT ((((('on '::text || x.created_at) || ': by '::text) || y.firstname::text) || y.lastname::text) || ' :: <br/>'::text) || x.activity
-           FROM admin.tasks x
-             JOIN admin.users y ON y.id = x.user_id
-          WHERE x.client_id = a.id
-          ORDER BY x.created_at DESC
-         LIMIT 1) AS last_activity,
-    c.id AS zone_id,
-    a.region_id
-   FROM admin.clients a
-     JOIN admin.regions b ON b.id = a.region_id
-     JOIN constant.refer_zones c ON c.id = b.refer_zone_id
-WITH DATA;
-");
     }
 
 }
