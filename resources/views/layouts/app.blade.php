@@ -432,7 +432,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                       <li><a href="<?= url('Marketing/moduleUsage') ?>" data-i18n="nav.extra-components.session-idle-timeout">Usage nalysis</a></li>
                                       <li><a href="<?= url('customer/modules') ?>" data-i18n="nav.page_layout.vertical.static-layout"> Modules </a></li>
                                       <li><a href="<?= url('customer/logs') ?>" data-i18n="nav.page_layout.vertical.header-fixed">
-                                            User Logs</a>
+                                            Task Logs</a>
                                       </li>
                                       <li><a href="<?= url('customer/karibu') ?>" data-i18n="nav.page_layout.vertical.compact"> karibuSMS </a>
                                       </li>
