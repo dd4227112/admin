@@ -58,7 +58,7 @@ function check_status($table, $where = null) {
                                         <!-- Social wallpaper start -->
                                         <div class="social-wallpaper">
                                             <div class="mapouter"> 
-<?php if (isset($school->sname)) { ?>
+                                                <?php if (isset($school->sname)) { ?>
                                                     <div class="gmap_canvas"><iframe width="100%" height="500"
                                                                                      id="gmap_canvas"
                                                                                      src="https://maps.google.com/maps?q=<?= $school->sname ?>&t=&z=13&ie=UTF8&iwloc=&output=embed"
@@ -67,7 +67,7 @@ function check_status($table, $where = null) {
                                                             href="https://www.embedgooglemap.net/blog/nordvpn-coupon-code/">nordvpn
                                                             coupon</a>
                                                     </div>
-<?php } ?>
+                                                <?php } ?>
                                                 <style>
                                                     .mapouter {
                                                         position: relative;
@@ -127,27 +127,27 @@ function check_status($table, $where = null) {
                                                         <div class="row follower-counter">
                                                             <div class="col-md-12 col-lg-3">
                                                                 <div class="txt-primary">
-    <?= \DB::table($schema . '.student')->where('status', 1)->count() ?>
+                                                                    <?= \DB::table($schema . '.student')->where('status', 1)->count() ?>
                                                                 </div>
                                                                 <div>Students</div>
                                                             </div>
                                                             <div class="col-md-12 col-lg-3">
                                                                 <div class="txt-primary">
-    <?= \DB::table($schema . '.parent')->where('status', 1)->count() ?>
+                                                                    <?= \DB::table($schema . '.parent')->where('status', 1)->count() ?>
                                                                 </div>
                                                                 <div>Parents</div>
                                                             </div>
 
                                                             <div class="col-md-12 col-lg-3">
                                                                 <div class="txt-primary">
-    <?= \DB::table($schema . '.user')->where('status', 1)->count() ?>
+                                                                    <?= \DB::table($schema . '.user')->where('status', 1)->count() ?>
                                                                 </div>
                                                                 <div>Staff</div>
                                                             </div>
 
                                                             <div class="col-md-12 col-lg-3">
                                                                 <div class="txt-primary">
-    <?= \DB::table($schema . '.teacher')->where('status', 1)->count() ?>
+                                                                    <?= \DB::table($schema . '.teacher')->where('status', 1)->count() ?>
                                                                 </div>
                                                                 <div>Teacher</div>
                                                             </div>
@@ -511,11 +511,13 @@ function check_status($table, $where = null) {
                                                                                                 ?>
                                                                                                     <?= $module->module->name ?> &nbsp;
                                                                                                 &nbsp; |
-                                                                                            <?php }
-                                                                                        } ?>
+                                                                                            <?php
+                                                                                            }
+                                                                                        }
+                                                                                        ?>
                                                                                         <p>Start Date- <?= $task->start_date ?>
                                                                                             {{-- &nbsp; &nbsp; | &nbsp; &nbsp; End
-                                                                                        Date - $task->end_date ?></p> --}}
+                                                                                                        Date - $task->end_date ?></p> --}}
                                                                                     </div>
 
                                                                                     <div class="user-box">
@@ -557,7 +559,7 @@ function check_status($table, $where = null) {
                                                                                             <a href="#"
                                                                                                class="btn btn-success btn-sm right"
                                                                                                onclick="return                                                                                       false"
-                                                                                                    onmousedown="$('#comment_area<?= $task->id ?>').toggle()"><i
+                                                                                                          onmousedown="$('#comment_area<?= $task->id ?>').toggle()"><i
                                                                                                         class="ti-comment"></i>
                                                                                                     Comment </a>
                                                                                             <div class="media-body"
@@ -579,9 +581,9 @@ function check_status($table, $where = null) {
                                                                                                                 type="button"
                                                                                                                 class="btn btn-primary"
                                                                                                                 onmousedown="save_comment(<?= $task->id ?>)">Send</button>
-                                                                                                    <                                                                                                        /span>
+                                                                                                                    <                                                                                                        /span>
 
-                                                                                                                    <span
+                   <span
                                                                                                                         class="fs1 text-info"
                                                                                                                         aria-hidden="true"
                                                                                                                         data-icon=""></span>
@@ -683,7 +685,7 @@ function check_status($table, $where = null) {
                                                                                                                                                                         ?>
                                                                                                                                                                 </td>
                                                                                                                                                             </tr>
-    <?php } ?>
+                                                                                                                                                        <?php } ?>
 <?php } ?>
 
                                                                                                                                                 </tbody>
@@ -796,7 +798,7 @@ function check_status($table, $where = null) {
                                                                                                                                                         Support Personnel </th>
                                                                                                                                                     <td
                                                                                                                                                         class="social-user-name b-none text-muted">
-                                                                                                                                                        <?php
+                                                                                                                                                            <?php
                                                                                                                                                         $school_allocations = \collect(DB::select("select b.id from admin.users_schools a join admin.users b on b.id=a.user_id join admin.schools c on c.id=a.school_id where a.role_id=8 and a.status=1 and c.schema_name='" . $schema . "'"))->first();
                                                                                                                                                         ?> <select class="form-control"
                                                                                                                                                                 id="support_id"
@@ -826,8 +828,8 @@ function check_status($table, $where = null) {
                                                                                                                                                         class="social-user-name b-none text-muted">
                                                                                                                                                         <input type="button"
                                                                                                                                                                value="save"
-                                                                                                                                                               onmousedown="allocate($('#support_id').val(), 8)"
-                                                                                                                                                                                                                class="btn btn-success btn-sm">
+                                                                                                                                                        onmousedown="allocate($('#support_id').val(), 8)"
+                                                                                                                                                                      class="btn btn-success btn-sm">
                                                                                                                                                         <span id="supportl"> </span>
                                                                                                                                                     </td>
                                                                                                                                                 </tr>
@@ -836,7 +838,7 @@ function check_status($table, $where = null) {
                                                                                                                                                         Sales Personnel </th>
                                                                                                                                                     <td
                                                                                                                                                         class="social-user-name b-none text-muted">
-                                                                                                                                                        <?php
+                                                                                                                                                            <?php
                                                                                                                                                         $school_sales_allocations = \collect(DB::select("select b.id from admin.users_schools a join admin.users b on b.id=a.user_id join admin.schools c on c.id=a.school_id where a.role_id=3 and a.status=1 and c.schema_name='" . $schema . "'"))->first();
                                                                                                                                                         ?> <select class="form-control"
                                                                                                                                                                 id="sales_id"
@@ -869,21 +871,21 @@ function check_status($table, $where = null) {
                                                                                                                                                         class="social-user-name b-none text-muted">
                                                                                                                                                         <input type="button"
                                                                                                                                                                value="save"
-                                                                                                                                                               onmousedown="allocate($('#sales_id').val(), 3)"
-                                                                                                                                                                                                                    class="btn btn-success btn-sm">
-                                                                                                                                                                              </td>
-                          </tr>
+                                                                                                                                                onmousedown="allocate($('#sales_id').val(), 3)"
+                                                                                                                                                                              class="btn btn-success btn-sm">
+                                                                                                                                                                   </td>
+                                                                                                                                                               </tr>
 
 
-                                                                                                                                                                 </tbody>
-                                                                                                                                                         </table>
+             </tbody>
+                                                                                                                                                       </table>
+                                                                                                                                                   </div>
                                                                                                                                                </div>
-                                                                                                                                           </div>
-                                                                                                                                                                                 <div id="edit-contact-info" class="row"
-                                                                                                                                                                    style="display: none;">
-                                                                                                                                                                                  <div class="col-lg-12 col-md-12">
-                                                                                                                                                               <form>
-                                                                                                                                                                                          <div class="input-group">
+                                                                                                                                               <div id="edit-contact-info" class="row"
+                                                                                                                                                    style="display: none;">
+                                                                                                                                                   <div class="col-lg-12 col-md-12">
+                                                                                                                                                       <form>
+                                                                                                                                                           <div class="input-group">
                                                                                                                                                 <input type="text" class="form-control"
                                                                                                                                                        placeholder="Mobile number">
                                                                                                                                             </div>
@@ -1001,10 +1003,10 @@ function check_status($table, $where = null) {
                                                                                                                     <div class="card-header">
                                                                                                                         <h5>Job Card</h5>
                                                                                                                         {{-- <p align="right">
-                                                                                                                        <a href="<?= url('customer/Jobcard/' . $client_id) ?>"
-                                                                                                                                                                     class="btn btn-warning btn-sx"> School Job card </a>
-                                                                                                                            </p> --}}
-                                                                                                                            <p align="right">
+                                                                                                                                <a href="<?= url('customer/Jobcard/' . $client_ id) ?>"
+                                                                                                                               class="btn btn-warning btn-sx"> School Job card </a>
+                                                                                                                                                              </p> --}}
+                                                                                                                                                              <p align="right">
                                                                                                                                     <button type="button" class="btn btn-primary waves-effect"
                                                                                                                                             data-toggle="modal" data-target="#jobcard-Modal">Create
                                                                                                                                         Job card
@@ -1051,11 +1053,13 @@ function check_status($table, $where = null) {
                                                                                                                                                                 <input type="checkbox"
                                                                                                                                                                        id="features<?= $module->id ?>"
                                                                                                                                                                        value="{{$module->id}}"
-                                                                                    name="module_ids[]">
+                                                                                                    name="module_ids[]">
                                                                                                                                                                        <?php echo $module->name; ?> &nbsp;
                                                                                                                                                                        &nbsp;
-    <?php }
-} ?>
+                                                                                                                                                                   <?php
+                                                                                                                                                                   }
+                                                                                                                                                               }
+                                                                                                                                                               ?>
                                                                                                                                                     </div>
                                                                                                                                                 </div>
 
@@ -1106,14 +1110,16 @@ function check_status($table, $where = null) {
                                                                                                                                                             data-id="<?= $jobcard->date ?>">
                                                                                                                                                         Upload Job card
                                                                                                                                                     </button>
-    <?php } else { ?>
+                                                                                                                                                <?php } else { ?>
                                                                                                                                                     <a  target="_break" href="<?= url('customer/viewFile/' . $jobcard->date . '/jobcard') ?>" class="btn btn-sm btn-success">View job card</a>
-                                                                                                                                        <?php } ?>
+    <?php } ?>
                                                                                                                                             </td>
 
                                                                                                                                         </tr>
-    <?php $x++;
-} ?>
+                                                                                                                                        <?php
+                                                                                                                                        $x++;
+                                                                                                                                    }
+                                                                                                                                    ?>
 
                                                                                                                                 </tbody>
                                                                                                                             </table>
@@ -1225,11 +1231,11 @@ function check_status($table, $where = null) {
                                                                                                                                                             class="task_group"
                                                                                                                                                             data-task-id="<?= $training->id ?>"
                                                                                                                                                             data-user_id="<?= $training->task->user_id ?>"><?= $customer->getDate($training->task->user_id, $training->task->start_date) ?></select>
-    <?php
-    } else {
-        echo date('d M Y', strtotime($training->task->start_date));
-    }
-    ?>         
+                                                                                                                                                            <?php
+                                                                                                                                                        } else {
+                                                                                                                                                            echo date('d M Y', strtotime($training->task->start_date));
+                                                                                                                                                        }
+                                                                                                                                                        ?>         
                                                                                                                                             </td>
                                                                                                                                             <td>
 
@@ -1242,10 +1248,10 @@ function check_status($table, $where = null) {
                                                                                                                                                 <button task-id="<?= $training->id ?>" section_id="<?= $training->trainItem->id ?>" class="btn btn-sucess btn-sm btn-xs task_allocated_id">Save</button>
                                                                                                                                             </td>
                                                                                                                                         </tr>
-    <?php
-    $x++;
-}
-?>
+                                                                                                                                        <?php
+                                                                                                                                        $x++;
+                                                                                                                                    }
+                                                                                                                                    ?>
 
                                                                                                                                 </tbody>
                                                                                                                             </table>
@@ -1505,7 +1511,7 @@ function check_status($table, $where = null) {
                                                                                                                                             <br />
 
                                                                                                                                             Capital :
-<?= check_status('revenues', ' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id=7) '); ?><br />
+                                                                                                                                            <?= check_status('revenues', ' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id=7) '); ?><br />
                                                                                                                                             Fixed Assets:
 <?= check_status('expense', ' WHERE refer_expense_id in (select id from ' . $schema . '.refer_expense where financial_category_id=4) '); ?><br />
                                                                                                                                             Liabilities :
@@ -1538,7 +1544,7 @@ function check_status($table, $where = null) {
                                                                                                                                         <td>Attendance Usage</td>
                                                                                                                                         <td>
                                                                                                                                             Student:
-                                                                                                                                            <?= check_status('sattendances'); ?>
+<?= check_status('sattendances'); ?>
                                                                                                                                             <br />
                                                                                                                                             Teacher: <?= check_status('tattendance'); ?>
                                                                                                                                             <br />
@@ -1573,51 +1579,51 @@ function check_status($table, $where = null) {
                                                                                                                     <div id="container_log" style="min-width: 80%;  height: 480px; margin: 0 auto">
                                                                                                                     </div>
                                                                                                                     <scri                                                                                                                    pt src="https://code.highcharts.com/highcharts.js">
-                                                                                                                                      </script>
-                                                                                                                    <script
-                                                                                                                            src="https://code.highcharts.com/modules/data.js">
-                                                                                                                                      </script>
-                                                                                                                    <script type="text/javascript">
-                                                                                                                                                                   graph_disc = function() {
-                                                                                                                                                                   Highcharts.chart('container', {
-                                                                                                                                                                   chart: {
-                                                                                                                                                                   type: 'column'
-                                                                                                                                                                   },
-                                                                                                                                                            title: {
-                                                                                                                                                                                                                                                                                                                   text: "System usage by Month"
-                                                                                                                                                                                                                                                                                                                   },
-                                                                                                                                                                subtitle: {
-                                                                                                                                                                text: ''
-                                                                                                                                                                                                                                                                                                                           },
-                                                                                                                                                        xAxis: {
-                                                                                                                                                                                                                                                                                                                           type: 'category'
-                                                                                                                                            },
-                                                                                                                                                                                                                                                                                                                           yAxis: {
-                                                                                                                                                       title: {
-                                                                                                                                                       text: 'Log Requests'
-                                                                                                                                                                                                                                                                                                                           }
-
-                                                                                                                                                        },
-                                                                                                                                                        legend: {
-                                                                                                                                                        enabled: false
-                                                                                                                                                    },
-                                                                                                                                                    plotOptions: {
-                                                                                                                                                                                                                                                                                                                                   series: {
-                                                                                                                                                                                                                                                                                                                                   borderWidth: 0,
-                                                                                                                                                                                                                                                                                                                                           dataLabels: {
-                                                                                                                                                                                                                                                                                                                                                   enabled: true,
-                                                                                            format: '{point.y:.1f}'
+                                                                                                                        </script>
+                                                                                                                        <script
+                                                                                                                        src="https://code.highcharts.com/modules/data.js">
+                                                                                                                            </script>
+                                                                                                                                              <script type="text/javascript">
+                                                                                                                                                  graph_disc = function() {
+                                                                                                                                                  Highcharts.chart('container', {
+                                                                                                                                                  chart: {
+                                                                                                                                                  type: 'column'
+                                                                                                                                                  },
+                                                                                                                                                          title: {
+                                                                                                                                                          text: "System usage by Month"
+                                                                                                                                                          },
+                                                                                                                                                          subtitle: {
+                                                                                                                                                          text: ''
+                                                                                                                                                          },
+                                                                                                                                                          xAxis: {
+                                                                                                                                                          type: 'category'
+                                                                                                                                                          },
+                                                                                                                                                          yAxis: {
+                                                                                                                                                          title: {
+                                                                                                                                                          text: 'Log Requests'
                                                                                                                                                           }
-                                                                                                                                            }
-                                                                                                                                            },
-                                                                                                                                                                                                                                                                                                                                                   tooltip: {
-                                                                                                                                                                                                                                                                                                                                                               headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                                                                                                                                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
-                                                                        },
-                                                                                                                                                                                                                                                                                                                                                                                   series: [{
-                                                                                        name: 'Log Requests',
-                                                                                                                                                                                                                                                                                                                                                                                   colorByPoint: true,
-                                                                                                                                                                                                                                                                                                                                                                                   data: [
+
+                                                                                                                                                          },
+                                                                                                                                                          legend: {
+                                                                                                                                                          enabled: false
+                                                                                                                                                          },
+                                                                                                                                                          plotOptions: {
+                                                                                                                                                          series: {
+                                                                                                                                                          borderWidth: 0,
+                                                                                                                                                                  dataLabels: {
+                                                                                                                                                                  enabled: true,
+                                                                                                                                                                          format: '{point.y:.1f}'
+                                                                                                                                                                  }
+                                                                                                                                                          }
+                                                                                                                                                          },
+                                                                                                                                                          tooltip: {
+                                                                                                                                                          headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                                                                                                                                                                  pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+                                                                                                                                                          },
+                                                                                                                                                          series: [{
+                                                                                                                                                          name: 'Log Requests',
+                                                                                                                                                                  colorByPoint: true,
+                                                                                                                                                                  data: [
 <?php
 $logs = DB::select('select count(*), extract(month from created_at) as month from ' . $schema . '.log where user_id is not null and extract(year from created_at)=' . date('Y') . '  group by extract(month from created_at) order by extract(month from created_at) asc');
 if (!empty($logs)) {
@@ -1625,57 +1631,57 @@ if (!empty($logs)) {
         $dateObj = DateTime::createFromFormat('!m', $log->month);
         $month = $dateObj->format('F');
         ?> { name: '<?= ucwords($month) ?>',
-                                                                                                                                                                                                                                                   y: <?php
+                                                                                                                                                                                          y: <?php
         echo $log->count;
         ?>,
-                                                                                                                                    drilldown: ''
-                                                                                                                                        },
+                                                                                                                                                                                          drilldown: ''
+                                                                                                                                                                                  },
         <?php
     }
 }
 ?>
-                                                                                                                                        ]
-                                                                                                                                                                                                                                                                                                                                                                                                   }]
-                                                                                                                                                });
-                                                                                                                                                                                                                                                                                                                                                                                                           Highcharts.chart('container_log', {
-                                                                                                                                                    chart: {
-                                                                                                                                                                                                                                                                                                                                                                                                           type: 'column'
-                                                                                                                                                               },
-                                                                                                                                                                                                                                                                                                                                                                                                           title: {
-                                                                                                                                                               text: "Number of System User Login by Day."
-                                                                                                                                                                                                                                                                                                                                                                                                           },
-                                                                                                                                                        subtitle: {
-                                                                                                                                                                                                                                                                                                                                                                                                                   text: ''
-                                                                                       },
-                                                                                                                                                xAxis: {
-                                                                                                                                                                                                                                                                                                                                                                                                                   type: 'category'
-                                                                                                                                                                                                                                                                                                                                                                                                                   },
-                                                                                       yAxis: {
-                                                                                                                                                                                                                                                                                                                                                                                                                           title: {
-                                                                                    text: 'Number of Logins'
-                                                                                        }
+                                                                                                                                                                  ]
+                                                                                                                                                          }]
+                                                                                                                                                  });
+                                                                                                                                                  Highcharts.chart('container_log', {
+                                                                                                                                                  chart: {
+                                                                                                                                                  type: 'column'
+                                                                                                                                                  },
+                                                                                                                                                          title: {
+                                                                                                                                                          text: "Number of System User Login by Day."
+                                                                                                                                                          },
+                                                                                                                                                          subtitle: {
+                                                                                                                                                          text: ''
+                                                                                                                                                          },
+                                                                                                                                                          xAxis: {
+                                                                                                                                                          type: 'category'
+                                                                                                                                                          },
+                                                                                                                                                          yAxis: {
+                                                                                                                                                          title: {
+                                                                                                                                                          text: 'Number of Logins'
+                                                                                                                                                          }
 
-                                                                                        },
-                                                                                                                                                                                                                                                                                                                                                                                                                                   legend: {
-                                                                                                                                                                                                                                                                                                                                                                                                                                   enabled: false
-                                                                                                    },
-                                                                                                                                                                                                                                                                                                                                                                                                                                   plotOptions: {
-                                                                                                                                                                                                                                                                                                                                                                                                                                   series: {
-                                                                                                                                                                                                                                                                                                                                                                                                                                   borderWidth: 0,
-                                                                                            dataLabels: {
-                                                                                                enabled: true,
-                                                                                                                                                                                                                                                                                                           format: '{point.y:.1f}'
-                                                                                            }
-                                                                                                                                                                                                                                                                                                           }
-                                                                                                                                                                                                                                                                                                                   },
-                                                                                                                                                                                                                                                                                                                                                                                                                                           tooltip: {
-                                                                        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                   pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> of total<br/>'
-                                                                                                                                                               },
-                                                                                                                                                                                                                                                                                                                           series: [{
-                                                    name: 'Number of Logins',
-                                                    colorByPoint: true,
-                                                                                                                                                                                                                data: [
+                                                                                                                                                          },
+                                                                                                                                                          legend: {
+                                                                                                                                                          enabled: false
+                                                                                                                                                          },
+                                                                                                                                                          plotOptions: {
+                                                                                                                                                          series: {
+                                                                                                                                                          borderWidth: 0,
+                                                                                                                                                                  dataLabels: {
+                                                                                                                                                                  enabled: true,
+                                                                                                                                                                          format: '{point.y:.1f}'
+                                                                                                                                                                  }
+                                                                                                                                                          }
+                                                                                                                                                          },
+                                                                                                                                                          tooltip: {
+                                                                                                                                                          headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                                                                                                                                                                  pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b> of total<br/>'
+                                                                                                                                                          },
+                                                                                                                                                          series: [{
+                                                                                                                                                          name: 'Number of Logins',
+                                                                                                                                                                  colorByPoint: true,
+                                                                                                                                                                  data: [
 <?php
 $setting = "'setting'";
 $logins = DB::select('select count(user_id), created_at::date as month from ' . $schema . '.login_locations where user_id is not null AND  "table" != ' . $setting . ' and extract(year from created_at) = ' . date('Y') . '  group by created_at::date order by created_at::date desc limit 10');
@@ -1684,843 +1690,840 @@ if (!empty($logins)) {
         // $dateObj = DateTime::createFromFormat('!m', $log->month);
         // $month = $dateObj->format('F');
         ?> {
-                                                                                            name: '<?= $log->month . "<br><b>" . date("l", strtotime($log->month)) . "</b>" ?>',
-                                                                                            y: <?php echo $log->count; ?>,
-                                                                                    drilldown: ''
-                                                                                            },
+                                                                                                                                                                                  name: '<?= $log->month . "<br><b>" . date("l", strtotime($log->month)) . "</b>" ?>',
+                                                                                                                                                                                          y: <?php echo $log->count; ?>,
+                                                                                                                                                                                          drilldown: ''
+                                                                                                                                                                                  },
         <?php
     }
 }
 ?>
-                                                                ]
-                                                                                            }]
-                                                                        });
-                                                                                                                                                            }
-                                                                            $(document).ready(graph_disc);
-                                                                                                </script                                                                                                                            >
-                                                
-                                            <hr>
-                                                                                                    <div id="container"
-                                                                                                style="min-width: 70%;  height: 480px; margin: 0 auto">                                                                                                                        
-                                                                                                </                                                                                                                    div>
-                                                                            </div>
-                                                    </div>
-                                                        
-                                                                                                <!-- Photos tab end -->                                                                                                                    
-                                                                            <!-- Friends tab start -->
-                                                                                        <div class="tab-pane" id="friends" aria-expanded="fa                                                                                                                            lse">
-                                                                                                    <div class="row">
-                                                                                <div class="card table-responsive">
-                                                                                                <table class="table dataTable">
-                                                                                <thead>
-                                                                                                                                                    <tr>
-                                                                                        <th>#</th>
-                                                                                                                                                    <th>Name</th>
-                                                                                                                                                        <th>Phone</th>
-                                                                                <th>Email</th>
-                                                                                <th>Title</th>
-                                                                                                                                                        </tr>
-                                                                                                                                                               </thead>
-                                                                                    <tbody>
+                                                                                                                                                                  ]
+                                                                                                                                                          }]
+                                                                                                                                                  });
+                                                                                                                                                  }
+                                                                                                                                                  $(document).ready(graph_disc);
+                                                                                                                            </script>
+                                                                                                                                             
+                                                                                                                                             <hr>
+                                                                                                                                                                                                                         <div id="container"
+                                                                                                style="min-width: 70%;  height: 480px; margin: 0 auto">                                                                                                                                                                                                                         
+                                                                                                </                                                                                                                                                                                                                     div>
+                                                                                                                                                                       </div>
+                           </div>
+                                                                                                                                             
+                                                                                                <!-- Photos tab end -->                                                                                                                                                                                                         
+                                                                                                                                                                                           <!-- Friends tab start -->
+                                                                                        <div class="tab-pane" id="friends" aria-expanded="fa                                                                                                                                                                                                                          lse">
+                                                                                                                                                                                                                  <div class="row">
+                                                                                <div                                                                                                                                class="card table-responsive">
+                                                                                                                                <table class="table dataTable">
+                                                                                                                                        <thead>
+                                                                                                                                            <tr>
+                                                                                                                                                <th>#</th>
+                                                                                                                                                <th>Name</th>
+                                                                                                                                                <th>Phone</th>
+                                                                                                                                                <th>Email</th>
+                                                                                                                                                <th>Title</th>
+                                                                                                                                            </tr>
+                                                                                                                                        </thead>
+                                                                                                                                        <tbody>
                                                                                                                                             <?php
                                                                                                                                             $users = DB::table($schema . '.user')->where('status', 1)->get();
                                                                                                                                             if (!empty($users)) {
                                                                                                                                                 foreach ($users as $user) {
                                                                                                                                                     ?>
-                                                                                                <tr>
-                                                                                                                                                                 <td></td>
-                                                                                                                                                   <td><?= $user->name ?></td>
-                                                                                                                                                                                         <td><?= $user->phone ?></td>
-                                                                                                                                                                            <td><?= $user->email ?></td>
-                                                                                                                                                                                          <td><?= $user->usertype ?></td>
-                                                                                        </tr>
-        <?php
-    }
-}
-?>
-                                                                                </tbody>
-                                                                                                                                                       </table>
-                                                                            </div>
-                                                                                                                                            </div>
-                                                                                  </div>
-                                                                                                                                                <!-- Friends tab end -->
-                                                                                                                                                       <div class="tab-pane" id="payments" aria-expanded="false">
-
-                                                                                            <div class="row">
-                                                                                                                                            
-                                                                                            
-                                                                                                                                                
-                                                                                                                                                       <div class="modal fade" id="standing-order-Modal" tabindex="-1"
-                                                                                                                                            role="dialog" aria-hidden="true"
-                                                                                style="z-index: 1050; display: none;">
-                                                                                                                                                <div class="modal-dialog modal-lg" role="document">
-                                                                                        <div class="modal-content">
-                                                                                             
-                                                                                                                                            <div class="modal-header">
-                                                                                    <h4 class="modal-title">Add Standing Order</h4>
-                                                                                                                                                   <button type="button" class="close"
-                                                                                        data-dismiss="modal" aria-label="Close">
-                                                                                        <span aria-hidden="true">×</span>
-                                                                                                                                                   </button>
-                                                                                                                                                   </div>
-                                                                                                
-                                                                                                                                    <for                                                                                                                                                m action="{{ url('Customer/addstandingorder') }}" method="post"  enctype="multipart/form-data">
-                                                                                                                                <d                                                                                                                                                    iv class="modal-body">
-                                                                                        
-                                                                                    <div class="form-group"                                                                                                                                                            >
-                                                                                                                            <div class="row">
-                                                                                                                    <div class="col-md-6">
-                                                                                <strong> Branch name </strong>
-                                                                                                                        <select name="branch_id" class="form-control select2" required>
-<?php
-$branches = \App\Models\PartnerBranch::orderBy('id', 'asc')->get();
-if (!empty($branches)) {
-    foreach ($branches as $branch) {
-        ?>
-                                                                                               <option
-                                                                                                                                                value="<?= $branch->id ?>">
-        <?= $branch->name ?>
-                                                                                                        </option>
-    <?php
-    }
-}
-?>
-                                                                                    </select>
+                                                                                                                                                    <tr>
+                                                                                                                                                        <td></td>
+                                                                                                                                                        <td><?= $user->name ?></td>
+                                                                                                                                                        <td><?= $user->phone ?></td>
+                                                                                                                                                        <td><?= $user->email ?></td>
+                                                                                                                                                        <td><?= $user->usertype ?></td>
+                                                                                                                                                    </tr>
+                                                                                                                                                    <?php
+                                                                                                                                                }
+                                                                                                                                            }
+                                                                                                                                            ?>
+                                                                                                                                        </tbody>
+                                                                                                                                    </table>
                                                                                                                             </div>
-                                                                                         <div class="col-md-6">
-                                                                                        <strong> Contact person </strong>
-                                                                                            <select name="school_contact_id"  class="form-control select2"  >
-                                                                                                                                                                        <?php
-                                                                                                                                                                        $contact_staffs = DB::table('school_contacts')->get();
-                                                                                                                                                                        if (count($contact_staffs)) {
-                                                                                                                                                                            foreach ($contact_staffs as $contact_staff) {
-                                                                                                                                                                                ?>
-                                                                                                                                                <option
-                                                                                                                  value="<?= $contact_staff->id ?>">
-        <?= $contact_staff->name ?>
-                                                                                                        </option>
-        <?php
-    }
-}
-?>
-                                                                                                                                            </select>
-                                                                                                       </div>
-                                                                                                                                                </div>
-                                                                                                                                                        </div>
-                                                                                                    
-                                                                                                                                                        <div class="form-group">
-                                                                                                                                                        <div class="row">
-                                                                                                                                                        <div class="col-md-6">
-                                                                                                        <strong> Number of occurrence </strong>
-                                                                                                                                                        <input type="number" placeholder="must be number eg 2, 3, 12 etc" oninput="calculate()" 
-                                                                                                            class="form-control" id="box1" name="number_of_occurrence" required>
-                                                                                                                </div>
-                                                                                                                <div class="col-md-6">
-                                                                                                                <strong> Basis </strong>
-                                                                                                            <select name="which_basis"  class="form-control select2" required>
-                                                                                                            <option value=""></option>
-                                                                                                            <option value="Annually">Annually</option>
-                                                                                                            <option value="Semiannually">Semi Annually</option>
-                                                                                                            <option value="Quarterly">Quarterly</option>
-                                                                                                            <option value="Monthly">Monthly</option>
-                                                                                                            </select>
-                                                                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                                                                            <div class="form-group">
-                                                                                                            <div class="row">
-                                                                                                            
-                                                                                                            <div class="col-md-6">
-                                                                                                            <strong> Amount for Every Occurrence </strong>
-                                                                                                            <input type="text" oninput="calculate()" 
-                                                                                                                class="form-control"  name="occurance_amount" id="box2" required>
+                                                                                                                        </div>
                                                                                                                     </div>
-                                                                                                                        
-                                                                                                                            <div class="col-md-6">
-                                                                                                                                <strong> Total amount</strong>
-                                                                                                                                <input type="text" class="form-control" name="total_amount"  id="result" required>
+                                                                                                                    <!-- Friends tab end -->
+                                                                                                                    <div class="tab-pane" id="payments" aria-expanded="false">
+
+                                                                                                                        <div class="row">
+
+
+
+                                                                                                                            <div class="modal fade" id="standing-order-Modal" tabindex="-1"
+                                                                                                                                 role="dialog" aria-hidden="true"
+                                                                                                                                 style="z-index: 1050; display: none;">
+                                                                                                                                <div class="modal-dialog modal-lg" role="document">
+                                                                                                                                    <div class="modal-content">
+
+                                                                                                                                        <div class="modal-header">
+                                                                                                                                            <h4 class="modal-title">Add Standing Order</h4>
+                                                                                                                                            <button type="button" class="close"
+                                                                                                                                                    data-dismiss="modal" aria-label="Close">
+                                                                                                                                                <span aria-hidden="true">×</span>
+                                                                                                                                            </button>
                                                                                                                                         </div>
-                                                                                                                                        </div>
-                                                                                                                                    </div>
-                                                                                                                                    
-                                                                                                                                    <div class="form-group">
-                                                                                                                                <div class="row">
-                                                                                                                            <div class="col-md-6">
-                                                                                                                            <strong> Maturity Date</strong>
-                                                                                                                                <input type="date"
-                                                                                                                                    class="form-control"
-                                                                                                                                        name="maturity_date" required>
-                                                                                                                                            </div>
-                                                                                                                                                <div class="col-md-6">
-                                                                                                                                                    <strong> Standing order  </strong>
-                                                                                                                                                            <input type="file"
-                                                                                                                                                            class="form-control"
-                                                                                                                                                        name="standing_order_file"
-                                                                                                                                                        required>
-                                                                                                                                                            </div>
-                                                                                                                                                            </div>
+
+                                                                                                                                        <for                                                                                                                                                m action="{{ url('Customer/addstandingorder') }}" method="post"  enc                                                                                                                                                type="multipart/form-data">
+                                                                                                                                <d                                                                                                                                               iv class="modal-body">
+                                                                                                                                                                                                                 
+                                                                                    <div class="form-group"                                                                                                                                                                                                                                                                                          >
+                                                                                                                                                                                                                                                                              <div class="row">
+                                                                                                                                                                                                                                                                               <div class="col-md-6">
+                                                                                                                                                                <strong> Branch name </strong>
+                                                                                                                                                                <select name="branch_id" class="form-control select2" required>
+                                                                                                                                                                    <?php
+                                                                                                                                                                    $branches = \App\Models\PartnerBranch::orderBy('id', 'asc')->get();
+                                                                                                                                                                    if (!empty($branches)) {
+                                                                                                                                                                        foreach ($branches as $branch) {
+                                                                                                                                                                            ?>
+                                                                                                                                                                            <option
+                                                                                                                                                                                value="<?= $branch->id ?>">
+                                                                                                                                                                            <?= $branch->name ?>
+                                                                                                                                                                            </option>
+                                                                                                                                                                            <?php
+                                                                                                                                                                        }
+                                                                                                                                                                    }
+                                                                                                                                                                    ?>
+                                                                                                                                                                </select>
+                                                                                                                                                        </div>
+                                                                                                                                                        <div class="col-md-6">
+                                                                                                                                                            <strong> Contact person </strong>
+                                                                                                                                                            <select name="school_contact_id"  class="form-control select2"  >
+                                                                                                                                                                <?php
+                                                                                                                                                                $contact_staffs = DB::table('school_contacts')->get();
+                                                                                                                                                                if (count($contact_staffs)) {
+                                                                                                                                                                    foreach ($contact_staffs as $contact_staff) {
+                                                                                                                                                                        ?>
+                                                                                                                                                                        <option
+                                                                                                                                                                            value="<?= $contact_staff->id ?>">
+                                                                                                                                                                        <?= $contact_staff->name ?>
+                                                                                                                                                                        </option>
+                                                                                                                                                                        <?php
+                                                                                                                                                                    }
+                                                                                                                                                                }
+                                                                                                                                                                ?>
+                                                                                                                                                            </select>
+                                                                                                                                                        </div>
                                                                                                                                                     </div>
-                                                                                                                                                    
-                                                                                                                                                        <div class="form-group">
-                                                                                                                                                            <div class="row">
+                                                                                                                                                </div>
+
+                                                                                                                                                <div class="form-group">
+                                                                                                                                                    <div class="row">
+                                                                                                                                                        <div class="col-md-6">
+                                                                                                                                                            <strong> Number of occurrence </strong>
+                                                                                                                                                            <input type="number" placeholder="must be number eg 2, 3, 12 etc" oninput="calculate()" 
+                                                                                                                                                                   class="form-control" id="box1" name="number_of_occurrence" required>
+                                                                                                                                                        </div>
+                                                                                                                                                        <div class="col-md-6">
+                                                                                                                                                            <strong> Basis </strong>
+                                                                                                                                                            <select name="which_basis"  class="form-control select2" required>
+                                                                                                                                                                <option value=""></option>
+                                                                                                                                                                <option value="Annually">Annually</option>
+                                                                                                                                                                <option value="Semiannually">Semi Annually</option>
+                                                                                                                                                                <option value="Quarterly">Quarterly</option>
+                                                                                                                                                                <option value="Monthly">Monthly</option>
+                                                                                                                                                            </select>
+                                                                                                                                                        </div>
+                                                                                                                                                    </div>
+                                                                                                                                                </div>
+
+                                                                                                                                                <div class="form-group">
+                                                                                                                                                    <div class="row">
+
+                                                                                                                                                        <div class="col-md-6">
+                                                                                                                                                            <strong> Amount for Every Occurrence </strong>
+                                                                                                                                                            <input type="text" oninput="calculate()" 
+                                                                                                                                                                   class="form-control"  name="occurance_amount" id="box2" required>
+                                                                                                                                                        </div>
+
+                                                                                                                                                        <div class="col-md-6">
+                                                                                                                                                            <strong> Total amount</strong>
+                                                                                                                                                            <input type="text" class="form-control" name="total_amount"  id="result" required>
+                                                                                                                                                        </div>
+                                                                                                                                                    </div>
+                                                                                                                                                </div>
+
+                                                                                                                                                <div class="form-group">
+                                                                                                                                                    <div class="row">
+                                                                                                                                                        <div class="col-md-6">
+                                                                                                                                                            <strong> Maturity Date</strong>
+                                                                                                                                                            <input type="date"
+                                                                                                                                                                   class="form-control"
+                                                                                                                                                                   name="maturity_date" required>
+                                                                                                                                                        </div>
+                                                                                                                                                        <div class="col-md-6">
+                                                                                                                                                            <strong> Standing order  </strong>
+                                                                                                                                                            <input type="file"
+                                                                                                                                                                   class="form-control"
+                                                                                                                                                                   name="standing_order_file"
+                                                                                                                                                                   required>
+                                                                                                                                                        </div>
+                                                                                                                                                    </div>
+                                                                                                                                                </div>
+
+                                                                                                                                                <div class="form-group">
+                                                                                                                                                    <div class="row">
                                                                                                                                                         <div class="col-md-6">
                                                                                                                                                             <strong> Refer bank</strong>
-                                                                                        <select name="refer_bank_id"  required
-                                                                                                                                                    class="form-control select2">
+                                                                                                                                                            <select name="refer_bank_id"  required
+                                                                                                                                                                    class="form-control select2">
                                                                                                                                                                         <?php
                                                                                                                                                                         $banks = DB::table('constant.refer_banks')->get();
                                                                                                                                                                         if (!empty($banks)) {
                                                                                                                                                                             foreach ($banks as $bank) {
                                                                                                                                                                                 ?>
-                                                                                                                                                            <option
-                                                                                                                                                                value="<?= $bank->id ?>">
-        <?= $bank->name ?>
-                                                                                                                                                                </option>
+                                                                                                                                                                        <option
+                                                                                                                                                                            value="<?= $bank->id ?>">
+                                                                                                                                                                        <?= $bank->name ?>
+                                                                                                                                                                        </option>
+                                                                                                                                                                        <?php
+                                                                                                                                                                    }
+                                                                                                                                                                }
+                                                                                                                                                                ?>
+                                                                                                                                                            </select>
+                                                                                                                                                        </div>
+
+                                                                                                                                                    </div>
+                                                                                                                                                </div>
+
+
+                                                                                                                                                <div class="form-group">
+                                                                                                                                                    <div class="row">
+                                                                                                                                                        <div class="col-md-12">
+                                                                                                                                                            <strong> Note</strong>
+                                                                                                                                                            <input type="text"
+                                                                                                                                                                   class="form-control"
+                                                                                                                                                                   name="note"
+                                                                                                                                                                   required>
+                                                                                                                                                        </div>
+
+                                                                                                                                                    </div>
+                                                                                                                                                </div>
+                                                                                                                                                </div>
+
+                                                                                                                                                <div class="modal-footer">
+                                                                                                                                                    <button type="button"
+                                                                                                                                                            class="btn btn-default waves-effect "
+                                                                                                                                                            data-dismiss="modal">Close</button>
+                                                                                                                                                    <button type="submit"
+                                                                                                                                                            class="btn btn-primary waves-effect waves-light ">Save
+                                                                                                                                                        changes</button>
+                                                                                                                                                </div>
+                                                                                                                                                <input type="hidden" value="<?= $client_id ?>"
+                                                                                                                                                       name="client_id" />
+<?= csrf_field() ?>
+                                                                                                                                                </form>
+                                                                                                                                                </div>
+                                                                                                                                                </div>
+                                                                                                                                                </div>
+                                                                                                                                                </div>      
+
+
+
+                                                                                                                                                <div class="card">
+                                                                                                                                                    <div class="card-header">
+                                                                                                                                                        <div class="table-responsive dt-responsive">
+                                                                                                                                                            <div class="table-responsive">
+                                                                                                                                                                <div class="col-sm-4 my-2">
+<?php if (can_access('add_si')) { ?>
+                                                                                                                                                                        <button type="button" class="btn btn-primary waves-effect"
+                                                                                                                                                                                data-toggle="modal" data-target="#standing-order-Modal">
+                                                                                                                                                                            Add Standing Orders
+                                                                                                                                                                        </button>
+<?php } ?>
+                                                                                                                                                                </div>
+                                                                                                                                                                <table id="invoice_table"
+                                                                                                                                                                       class="table table-striped table-bordered nowrap dataTable">
+                                                                                                                                                                    <thead>
+                                                                                                                                                                        <tr>
+                                                                                                                                                                            <th>#</th>
+                                                                                                                                                                            <th>Type</th>
+                                                                                                                                                                            <th>Occurance Amount </th>
+                                                                                                                                                                            <th>Total Amount</th>
+                                                                                                                                                                            <th>Maturity date</th>
+                                                                                                                                                                            <th>Contact</th>
+
+                                                                                                                                                                            <th colspan="1">Action</th>
+                                                                                                                                                                        </tr>
+                                                                                                                                                                    </thead>
+                                                                                                                                                                    <tbody>
+                                                                                                                                                                        <?php if (count($standingorders) > 0) { ?>
+    <?php
+    $i = 1;
+    foreach ($standingorders as $order) {
+        ?>
+                                                                                                                                                                                <tr>
+                                                                                                                                                                                    <td><?= $i ?></td>
+                                                                                                                                                                                    <td><?= $order->type ?? '' ?></td>
+                                                                                                                                                                                    <td><?= money($order->occurance_amount) ?? '' ?></td>
+                                                                                                                                                                                    <td><?= money($order->total_amount) ?? '' ?></td>
+                                                                                                                                                                                    <td><?= date('d/m/Y', strtotime($order->payment_date)) ?? '' ?></td>
+                                                                                                                                                                                    <td><?= $order->schoolcontact->name ?? '' ?></td>
+
+                                                                                                                                                                                    <td><a  target="_break" href="<?= url('customer/viewContract/' . $order->id) ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a>
+                                                                                                                                                                                <?php if (!isset($order->payment_date) || !isset($order->type)) { ?>
+                                                                                                                                                                                            <a  href="<?= url('account/editStandingOrder/' . $order->id) ?>" class="waves-light waves-effect btn btn-info btn-sm">edit</a>
+                                                                                                                                                                                <?php } ?>
+                                                                                                                                                                                    </td>
+                                                                                                                                                                                </tr>
+        <?php
+        $i++;
+    }
+    ?>
+<?php } ?>
+                                                                                                                                                                    </tbody>
+
+                                                                                                                                                                </table>
+                                                                                                                                                            </div>
+
+                                                                                                                                                        </div>
+                                                                                                                                                    </div>
+                                                                                                                                                </div>
+
+
+
+
+
+                                                                                                                                                <div class="card">
+                                                                                                                                                    <div class="card-header">
+                                                                                                                                                        <div class="table-responsive dt-responsive">
+                                                                                                                                                            <div class="table-responsive">
+                                                                                                                                                                <h5>Invoices </h5>
+                                                                                                                                                                <table id="invoice_table"
+                                                                                                                                                                       class="table table-striped table-bordered nowrap dataTable">
+                                                                                                                                                                    <thead>
+                                                                                                                                                                        <tr>
+                                                                                                                                                                            <th>Client Name</th>
+                                                                                                                                                                            <th>Reference #</th>
+                                                                                                                                                                            <th>Amount</th>
+                                                                                                                                                                            <th>Paid Amount</th>
+                                                                                                                                                                            <th>Remained Amount</th>
+                                                                                                                                                                            <th>Due Date</th>
+                                                                                                                                                                            <th>Action</th>
+                                                                                                                                                                        </tr>
+                                                                                                                                                                    </thead>
+                                                                                                                                                                    <tbody>
+                                                                                                                                                                        <?php
+                                                                                                                                                                        $total_amount = 0;
+                                                                                                                                                                        $total_paid = 0;
+                                                                                                                                                                        $total_unpaid = 0;
+                                                                                                                                                                        $i = 1;
+                                                                                                                                                                        foreach ($invoices as $invoice) {
+                                                                                                                                                                            $amount = $invoice->invoiceFees()->sum('amount');
+                                                                                                                                                                            $paid = $invoice->payments()->sum('amount');
+                                                                                                                                                                            $unpaid = $amount - $paid;
+                                                                                                                                                                            $total_paid += $paid;
+                                                                                                                                                                            $total_amount += $amount;
+                                                                                                                                                                            $total_unpaid += $unpaid;
+                                                                                                                                                                            ?>
+
+                                                                                                                                                                            <tr>
+                                                                                                                                                                                <td><?= $invoice->client->username ?></td>
+                                                                                                                                                                                <td><?= $invoice->reference ?></td>
+                                                                                                                                                                                <td><?= money($amount) ?></td>
+                                                                                                                                                                                <td><?= money($paid) ?></td>
+                                                                                                                                                                                <td><?= money($unpaid) ?></td>
+                                                                                                                                                                                <td><?= date('d M Y', strtotime($invoice->due_date)) ?>
+                                                                                                                                                                                </td>
+                                                                                                                                                                                <td>
+
+                                                                                                                                                                                    <div
+                                                                                                                                                                                        class="dropdown-secondary dropdown f-right">
+                                                                                                                                                                                        <button
+                                                                                                                                                                                            class="btn btn-success btn-mini dropdown-toggle waves-effect waves-light"
+                                                                                                                                                                                            type="button" id="dropdown"
+                                                                                                                                                                                            data-toggle="dropdown"
+                                                                                                                                                                                            aria-haspopup="true"
+                                                                                                                                                                                            aria-expanded="false">Options</button>
+                                                                                                                                                                                        <div class="dropdown-menu"
+                                                                                                                                                                                             aria-labelledby="dropdown6"
+                                                                                                                                                                                             data-dropdown-in="fadeIn"
+                                                                                                                                                                                             data-dropdown-out="fadeOut"><a
+                                                                                                                                                                                                class="dropdown-item waves-light waves-effect"
+                                                                                                                                                                                                href="<?= url('account/invoiceView/' . $invoice->id) ?>"><span
+                                                                                                                                                                                                    class="point-marker bg-danger"></span>View</a>
+                                                                                                                                                                                            <a class="dropdown-item waves-light waves-effect"
+                                                                                                                                                                                               href="<?= url('account/invoice/edit/' . $invoice->id) ?>"><span
+                                                                                                                                                                                                    class="point-marker bg-warning"></span>Edit</a><a
+                                                                                                                                                                                                class="dropdown-item waves-light waves-effect"
+                                                                                                                                                                                                href="<?= url('account/invoice/delete/' . $invoice->id) ?>"><span
+                                                                                                                                                                                                    class="point-marker bg-warning"></span>Delete</a>
+                                                                                                                                                                                            <?php if ((int) $unpaid > 0) { ?>
+                                                                                                                                                                                                <hr />
+                                                                                                                                                                                                <a class="dropdown-item waves-light waves-effect"
+                                                                                                                                                                                                   href="<?= url('account/payment/' . $invoice->id) ?>"><span
+                                                                                                                                                                                                        class="point-marker bg-warning"></span>Add
+                                                                                                                                                                                                    Payments</a>
+    <?php } ?>
+                                                                                                                                                                                                <?php if ((int) $unpaid > 0) { ?>
+                                                                                                                                                                                                <a class="dropdown-item waves-light waves-effect"
+                                                                                                                                                                                                   href="#" data-toggle="modal"
+                                                                                                                                                                                                   data-target="#large-Modal"
+                                                                                                                                                                                                   onclick="$('#invoice_id').val('<?= $invoice->id ?>')"><span
+                                                                                                                                                                                                        class="point-marker bg-warning"></span>Send Invoice</a>
+                                                                                                                                                                                                <?php } ?>
+                                                                                                                                                                                                <?php if ((int) $paid > 0) { ?>
+                                                                                                                                                                                                <a class="dropdown-item waves-light waves-effect"
+                                                                                                                                                                                                   href="<?= url('account/receipts/' . $invoice->id) ?>"
+                                                                                                                                                                                                   target="_blank"><span
+                                                                                                                                                                                                        class="point-marker bg-warning"></span>Receipt</a>
+                                                                                                                                                                            <?php }
+                                                                                                                                                                            ?>
+                                                                                                                                                                                        </div>
+                                                                                                                                                                                    </div>
+                                                                                                                                                                                </td>
+                                                                                                                                                                            </tr>
+    <?php
+    $i++;
+}
+?>
+                                                                                                                                                                    </tbody>
+                                                                                                                                                                    <tfoot>
+                                                                                                                                                                        <tr>
+                                                                                                                                                                            <td colspan="2">Total</td>
+                                                                                                                                                                            <td><?= money($total_amount) ?></td>
+                                                                                                                                                                            <td><?= money($total_paid) ?></td>
+                                                                                                                                                                            <td><?= money($total_unpaid) ?></td>
+                                                                                                                                                                            <td colspan="2"></td>
+                                                                                                                                                                        </tr>
+                                                                                                                                                                    </tfoot>
+                                                                                                                                                                </table>
+                                                                                                                                                            </div>
+                                                                                                                                                        </div>
+                                                                                                                                                    </div>
+                                                                                                                                                </div>
+
+
+
+
+
+
+                                                                                                                                                </div>
+                                                                                                                                                <!-- Row end -->
+                                                                                                                                                </div>
+                                                                                                                                                </div>
+                                                                                                                                                </div>
+                                                                                                                                                </div>
+                                                                                                                                                </div>
+                                                                                                                                                </div>
+                                                                                                                                                </div>
+                                                                                                                                                </div>
+                                                                                                                                                <!-- Page-body end -->
+                                                                                                                                                </div>
+                                                                                                                                                </div>
+
+                                                                                                                                                <div class="card-block">
+                                                                                                                                                    <div class="modal fade" id="status-Modal" tabindex="-1" role="dialog" aria-hidden="true"
+                                                                                                                                                         style="z-index: 1050; display: none;">
+                                                                                                                                                        <div class="modal-dialog modal-lg" role="document">
+                                                                                                                                                            <div class="modal-content">
+                                                                                                                                                                <div class="modal-header">
+                                                                                                                                                                    <h4 class="modal-title">Change Schools Status</h4>
+                                                                                                                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                                                                                                        <span aria-hidden="true">×</span>
+                                                                                                                                                                    </button>
+                                                                                                                                                                </div>
+                                                                                                                                                                <form action="<?= url('customer/schoolStatus') ?>" method="post">
+                                                                                                                                                                    <div class="modal-body">
+                                                                                                                                                                        <div class="form-group">
+                                                                                                                                                                            <input type="hidden" value="<?= $schema ?>" name="schema_name" />
+                                                                                                                                                                        </div>
+                                                                                                                                                                        <div class="form-group">
+                                                                                                                                                                            School <?= ucfirst($schema) ?> status
+                                                                                                                                                                            <select name="status" class="form-control select2">
+                                                                                                                                                                                <option value="">Select status</option>
+                                                                                                                                                                                <option value="1">Active Paid</option>
+                                                                                                                                                                                <option value="2">Active</option>
+                                                                                                                                                                                <option value="3">Resale</option>
+                                                                                                                                                                                <option value="4">Inactive</option>
+                                                                                                                                                                            </select>
+                                                                                                                                                                        </div>
+
+                                                                                                                                                                    </div>
+                                                                                                                                                                    <div class="modal-footer">
+                                                                                                                                                                        <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
+                                                                                                                                                                        <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
+                                                                                                                                                                    </div>
+<?= csrf_field() ?>
+                                                                                                                                                                </form>
+                                                                                                                                                            </div>
+                                                                                                                                                        </div>
+                                                                                                                                                    </div>
+                                                                                                                                                </div>
+                                                                                                                                                <div class="modal fade" id="customer_contracts_model" tabindex="-1" role="dialog" style="z-index: 1050; display: none;"
+                                                                                                                                                     aria-hidden="true">
+                                                                                                                                                    <div class="modal-dialog modal-lg" role="document">
+                                                                                                                                                        <div class="modal-content">
+                                                                                                                                                            <div class="modal-header">
+                                                                                                                                                                <h4 class="modal-title">Upload Contract</h4>
+                                                                                                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                                                                                                    <span aria-hidden="true">×</span>
+                                                                                                                                                                </button>
+                                                                                                                                                            </div>
+                                                                                                                                                            <div class="modal-body">
+                                                                                                                                                                <p align='center'><span class="label label-danger">Once you upload a contract, you cannot EDIT</span>
+                                                                                                                                                                </p>
+                                                                                                                                                                <form action="<?= url('customer/contract/' . $client_id) ?>" method="POST"
+                                                                                                                                                                      enctype="multipart/form-data">
+
+                                                                                                                                                                    <div class="form-group row">
+                                                                                                                                                                        <label class="col-sm-2 col-form-label">Contract Name</label>
+                                                                                                                                                                        <div class="col-sm-10">
+                                                                                                                                                                            <input type="text" class="form-control" name="name" required="">
+                                                                                                                                                                        </div>
+                                                                                                                                                                    </div>
+
+
+                                                                                                                                                                    <div class="form-group row">
+                                                                                                                                                                        <label class="col-sm-2 col-form-label">Agreement Type</label>
+                                                                                                                                                                        <div class="col-sm-10">
+                                                                                                                                                                            <select name="contract_type_id" class="form-control">
+
+                                                                                                                                                                                <?php
+                                                                                                                                                                                $ctypes = DB::table('admin.contracts_types')->where('id', '!=', '8')->get();
+                                                                                                                                                                                if (!empty($ctypes)) {
+                                                                                                                                                                                    foreach ($ctypes as $ctype) {
+                                                                                                                                                                                        ?>
+                                                                                                                                                                                        <option value="<?= $ctype->id ?>"><?= $ctype->name ?></option>
         <?php
     }
 }
 ?>
-                                                                                                                                                            </select>
-                                                                                        </div>
-                                                                                                                                                        
-                                                                                                                                                    </div>
-                                                                                                                                                    </div>
-                                                                                                                                                        
-                                                                                                                                                            
-                                                                                                                                                        <div class="form-group">
-                                                                                                                                                            <div class="row">
-                                                                                        <div class="col-md-12">
-                                                                                                                                                    <strong> Note</strong>
-                                                                                                                                                    <input type="text"
-                                                                                                                                                        class="form-control"
-                                                                                                                                                            name="note"
-                                                                                                                                                            required>
-                                                                                                                                                        </div>
-                                                                                                                                                            
-                                                                                                                                                            </div>
-                                                                                                </div>
-                                                                                                </div>
-                                                                                                    
-                                                                                                <div class="modal-footer">
-                                                                                            <button type="button"
-                                                                                            class="btn btn-default waves-effect "
-                                                                                data-dismiss="modal">Close</button>
-                                                                                                                                                    <button type="submit"
-                                                                                                                                                        class="btn btn-primary waves-effect waves-light ">Save
-                                                                                                                                                        changes</button>
-                                                                                                                                                            </div>
-                                                                                        <input type="hidden" value="<?= $client_id ?>"
-                                                                                            name="client_id" />
+
+                                                                                                                                                                            </select>
+                                                                                                                                                                        </div>
+                                                                                                                                                                    </div>
+                                                                                                                                                                    <div class="form-group row">
+                                                                                                                                                                        <label class="col-sm-2 col-form-label">Contract Start Date</label>
+                                                                                                                                                                        <div class="col-sm-10">
+                                                                                                                                                                            <input type="date" class="form-control" value="" name="start_date" required="">
+                                                                                                                                                                        </div>
+                                                                                                                                                                    </div>
+                                                                                                                                                                    <div class="form-group row">
+                                                                                                                                                                        <label class="col-sm-2 col-form-label">Contract Start Date</label>
+                                                                                                                                                                        <div class="col-sm-10">
+                                                                                                                                                                            <input type="date" class="form-control" name="end_date" required="">
+                                                                                                                                                                        </div>
+                                                                                                                                                                    </div>
+                                                                                                                                                                    <div class="form-group row">
+                                                                                                                                                                        <label class="col-sm-2 col-form-label">Upload Document</label>
+                                                                                                                                                                        <div class="col-sm-10">
+                                                                                                                                                                            <input type="file" class="form-control" accept=".pdf" name="file" required="">
+                                                                                                                                                                        </div>
+                                                                                                                                                                    </div>
+                                                                                                                                                                    <div class="form-group row">
+                                                                                                                                                                        <label class="col-sm-2 col-form-label">Notes</label>
+                                                                                                                                                                        <div class="col-sm-10">
+                                                                                                                                                                            <textarea rows="5" cols="5" name="description" class="form-control"
+                                                                                                                                                                                      placeholder="Any important details about this document"></textarea>
+                                                                                                                                                                        </div>
+                                                                                                                                                                    </div>
+
+                                                                                                                                                                    <div class="form-group row">
+                                                                                                                                                                        <label class="col-sm-2 col-form-label"></label>
+                                                                                                                                                                        <div class="col-sm-10">
 <?= csrf_field() ?>
-                                                                                              </form>
-                                                                                               </div>
-                                                                                            </div>
-                                                                                                                                                        </div>
-                                                                                                                                                    </div>      
-                                                                                   
-                                                                                
-                                                                                                                                                
-                                                                                                                                            <div class="card">
-                                                                                                                                        <div class="card-header">
-                                                                                                                                    <div class="table-responsive dt-responsive">
-                                                                                                                                <div class="table-responsive">
-                                                                                                                                <div class="col-sm-4 my-2">
-<?php if (can_access('add_si')) { ?>
-                                                                                                                                            <button type="button" class="btn btn-primary waves-effect"
-                                                                                                                                                data-toggle="modal" data-target="#standing-order-Modal">
-                                                                                                                                                    Add Standing Orders
-                                                                                                                                                           </button>
-<?php } ?>
-                                                                                                                                            </div>
-                                                                                                                                                <table id="invoice_table"
-                                                                                                                                                    class="table table-striped table-bordered nowrap dataTable">
-                                                                                                                                                        <thead>
-                                                                                                                                                            <tr>
-                                                                                                                                                        <th>#</th>
-                                                                                                                                                            <th>Type</th>
-                                                                                                                                                                <th>Occurance Amount </th>
-                                                                                                                                                                       <th>Total Amount</th>
-                                                                                                                                                                       <th>Maturity date</th>
-                                                                                                                                                                <th>Contact</th>
-                                                                                                                                                                    
-                                                                                                                                                            <th colspan="1">Action</th>
-                                                                                                                                                </tr>
-                                                                                                                                            </thead>
-                                                                                                                                            <tbody>
-<?php if (count($standingorders) > 0) { ?>
-    <?php $i = 1;
-    foreach ($standingorders as $order) { ?>
-                                                                                                                                                        <tr>
-                                                                                                                                                            <td><?= $i ?></td>
-                                                                                                                                                            <td><?= $order->type ?? '' ?></td>
-                                                                                                                                                            <td><?= money($order->occurance_amount) ?? '' ?></td>
-                                                                                                                                                            <td><?= money($order->total_amount) ?? '' ?></td>
-                                                                                                                                                            <td><?= date('d/m/Y', strtotime($order->payment_date)) ?? '' ?></td>
-                                                                                                                                                            <td><?= $order->schoolcontact->name ?? '' ?></td>
+                                                                                                                                                                            <button type="submit" class="btn btn-success" placeholder="Default textarea">Submit</button>
+                                                                                                                                                                        </div>
+                                                                                                                                                                    </div>
+                                                                                                                                                                </form>
 
-                                                                                                                                                            <td><a  target="_break" href="<?= url('customer/viewContract/' . $order->id) ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a>
-        <?php if (!isset($order->payment_date) || !isset($order->type)) { ?>
-                                                                                                                                                                    <a  href="<?= url('account/editStandingOrder/' . $order->id) ?>" class="waves-light waves-effect btn btn-info btn-sm">edit</a>
-        <?php } ?>
-                                                                                                                                                            </td>
-                                                                                                                                                        </tr>
-        <?php $i++;
-    } ?>
-<?php } ?>
-                                                                                                                                            </tbody>
-
-                                                                                                                                        </table>
-                                                                                                                                    </div>
-
-                                                                                                                                </div>
-                                                                                                                            </div>
-                                                                                                                        </div>
-
-
-
-
-
-                                                                                                                        <div class="card">
-                                                                                                                            <div class="card-header">
-                                                                                                                                <div class="table-responsive dt-responsive">
-                                                                                                                                    <div class="table-responsive">
-                                                                                                                                        <h5>Invoices </h5>
-                                                                                                                                        <table id="invoice_table"
-                                                                                                                                               class="table table-striped table-bordered nowrap dataTable">
-                                                                                                                                            <thead>
-                                                                                                                                                <tr>
-                                                                                                                                                    <th>Client Name</th>
-                                                                                                                                                    <th>Reference #</th>
-                                                                                                                                                    <th>Amount</th>
-                                                                                                                                                    <th>Paid Amount</th>
-                                                                                                                                                    <th>Remained Amount</th>
-                                                                                                                                                    <th>Due Date</th>
-                                                                                                                                                    <th>Action</th>
-                                                                                                                                                </tr>
-                                                                                                                                            </thead>
-                                                                                                                                            <tbody>
-                                                                                                                                                <?php
-                                                                                                                                                $total_amount = 0;
-                                                                                                                                                $total_paid = 0;
-                                                                                                                                                $total_unpaid = 0;
-                                                                                                                                                $i = 1;
-                                                                                                                                                foreach ($invoices as $invoice) {
-                                                                                                                                                    $amount = $invoice->invoiceFees()->sum('amount');
-                                                                                                                                                    $paid = $invoice->payments()->sum('amount');
-                                                                                                                                                    $unpaid = $amount - $paid;
-                                                                                                                                                    $total_paid += $paid;
-                                                                                                                                                    $total_amount += $amount;
-                                                                                                                                                    $total_unpaid += $unpaid;
-                                                                                                                                                    ?>
-
-                                                                                                                                                    <tr>
-                                                                                                                                                        <td><?= $invoice->client->username ?></td>
-                                                                                                                                                        <td><?= $invoice->reference ?></td>
-                                                                                                                                                        <td><?= money($amount) ?></td>
-                                                                                                                                                        <td><?= money($paid) ?></td>
-                                                                                                                                                        <td><?= money($unpaid) ?></td>
-                                                                                                                                                        <td><?= date('d M Y', strtotime($invoice->due_date)) ?>
-                                                                                                                                                        </td>
-                                                                                                                                                        <td>
-
-                                                                                                                                                            <div
-                                                                                                                                                                class="dropdown-secondary dropdown f-right">
-                                                                                                                                                                <button
-                                                                                                                                                                    class="btn btn-success btn-mini dropdown-toggle waves-effect waves-light"
-                                                                                                                                                                    type="button" id="dropdown"
-                                                                                                                                                                    data-toggle="dropdown"
-                                                                                                                                                                    aria-haspopup="true"
-                                                                                                                                                                    aria-expanded="false">Options</button>
-                                                                                                                                                                <div class="dropdown-menu"
-                                                                                                                                                                     aria-labelledby="dropdown6"
-                                                                                                                                                                     data-dropdown-in="fadeIn"
-                                                                                                                                                                     data-dropdown-out="fadeOut"><a
-                                                                                                                                                                        class="dropdown-item waves-light waves-effect"
-                                                                                                                                                                        href="<?= url('account/invoiceView/' . $invoice->id) ?>"><span
-                                                                                                                                                                            class="point-marker bg-danger"></span>View</a>
-                                                                                                                                                                    <a class="dropdown-item waves-light waves-effect"
-                                                                                                                                                                       href="<?= url('account/invoice/edit/' . $invoice->id) ?>"><span
-                                                                                                                                                                            class="point-marker bg-warning"></span>Edit</a><a
-                                                                                                                                                                        class="dropdown-item waves-light waves-effect"
-                                                                                                                                                                        href="<?= url('account/invoice/delete/' . $invoice->id) ?>"><span
-                                                                                                                                                                            class="point-marker bg-warning"></span>Delete</a>
-    <?php if ((int) $unpaid > 0) { ?>
-                                                                                                                                                                        <hr />
-                                                                                                                                                                        <a class="dropdown-item waves-light waves-effect"
-                                                                                                                                                                           href="<?= url('account/payment/' . $invoice->id) ?>"><span
-                                                                                                                                                                                class="point-marker bg-warning"></span>Add
-                                                                                                                                                                            Payments</a>
-    <?php } ?>
-    <?php if ((int) $unpaid > 0) { ?>
-                                                                                                                                                                        <a class="dropdown-item waves-light waves-effect"
-                                                                                                                                                                           href="#" data-toggle="modal"
-                                                                                                                                                                           data-target="#large-Modal"
-                                                                                                                                                                           onclick="$('#invoice_id').val('<?= $invoice->id ?>')"><span
-                                                                                                                                                                                class="point-marker bg-warning"></span>Send Invoice</a>
-    <?php } ?>
-    <?php if ((int) $paid > 0) { ?>
-                                                                                                                                                                        <a class="dropdown-item waves-light waves-effect"
-                                                                                                                                                                           href="<?= url('account/receipts/' . $invoice->id) ?>"
-                                                                                                                                                                           target="_blank"><span
-                                                                                                                                                                                class="point-marker bg-warning"></span>Receipt</a>
-    <?php }
-    ?>
+                                                                                                                                                                <div class="modal-footer">
+                                                                                                                                                                    <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
                                                                                                                                                                 </div>
                                                                                                                                                             </div>
-                                                                                                                                                        </td>
-                                                                                                                                                    </tr>
-    <?php $i++;
-} ?>
-                                                                                                                                            </tbody>
-                                                                                                                                            <tfoot>
-                                                                                                                                                <tr>
-                                                                                                                                                    <td colspan="2">Total</td>
-                                                                                                                                                    <td><?= money($total_amount) ?></td>
-                                                                                                                                                    <td><?= money($total_paid) ?></td>
-                                                                                                                                                    <td><?= money($total_unpaid) ?></td>
-                                                                                                                                                    <td colspan="2"></td>
-                                                                                                                                                </tr>
-                                                                                                                                            </tfoot>
-                                                                                                                                        </table>
-                                                                                                                                    </div>
-                                                                                                                                </div>
-                                                                                                                            </div>
-                                                                                                                        </div>
-
-
-
-
-
-
-                                                                                                                    </div>
-                                                                                                                    <!-- Row end -->
-                                                                                                                    </div>
-                                                                                                                    </div>
-                                                                                                                    </div>
-                                                                                                                    </div>
-                                                                                                                    </div>
-                                                                                                                    </div>
-                                                                                                                    </div>
-                                                                                                                    </div>
-                                                                                                                    <!-- Page-body end -->
-                                                                                                                    </div>
-                                                                                                                    </div>
-
-                                                                                                                    <div class="card-block">
-                                                                                                                        <div class="modal fade" id="status-Modal" tabindex="-1" role="dialog" aria-hidden="true"
-                                                                                                                             style="z-index: 1050; display: none;">
-                                                                                                                            <div class="modal-dialog modal-lg" role="document">
-                                                                                                                                <div class="modal-content">
-                                                                                                                                    <div class="modal-header">
-                                                                                                                                        <h4 class="modal-title">Change Schools Status</h4>
-                                                                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                                                                            <span aria-hidden="true">×</span>
-                                                                                                                                        </button>
-                                                                                                                                    </div>
-                                                                                                                                    <form action="<?= url('customer/schoolStatus') ?>" method="post">
-                                                                                                                                        <div class="modal-body">
-                                                                                                                                            <div class="form-group">
-                                                                                                                                                <input type="hidden" value="<?= $schema ?>" name="schema_name" />
-                                                                                                                                            </div>
-                                                                                                                                            <div class="form-group">
-                                                                                                                                                School <?= ucfirst($schema) ?> status
-                                                                                                                                                <select name="status" class="form-control select2">
-                                                                                                                                                    <option value="">Select status</option>
-                                                                                                                                                    <option value="1">Active Paid</option>
-                                                                                                                                                    <option value="2">Active</option>
-                                                                                                                                                    <option value="3">Resale</option>
-                                                                                                                                                    <option value="4">Inactive</option>
-                                                                                                                                                </select>
-                                                                                                                                            </div>
-
-                                                                                                                                        </div>
-                                                                                                                                        <div class="modal-footer">
-                                                                                                                                            <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                                                                                                                                            <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
-                                                                                                                                        </div>
-<?= csrf_field() ?>
-                                                                                                                                    </form>
-                                                                                                                                </div>
-                                                                                                                            </div>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                    <div class="modal fade" id="customer_contracts_model" tabindex="-1" role="dialog" style="z-index: 1050; display: none;"
-                                                                                                                         aria-hidden="true">
-                                                                                                                        <div class="modal-dialog modal-lg" role="document">
-                                                                                                                            <div class="modal-content">
-                                                                                                                                <div class="modal-header">
-                                                                                                                                    <h4 class="modal-title">Upload Contract</h4>
-                                                                                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                                                                        <span aria-hidden="true">×</span>
-                                                                                                                                    </button>
-                                                                                                                                </div>
-                                                                                                                                <div class="modal-body">
-                                                                                                                                    <p align='center'><span class="label label-danger">Once you upload a contract, you cannot EDIT</span>
-                                                                                                                                    </p>
-                                                                                                                                    <form action="<?= url('customer/contract/' . $client_id) ?>" method="POST"
-                                                                                                                                          enctype="multipart/form-data">
-
-                                                                                                                                        <div class="form-group row">
-                                                                                                                                            <label class="col-sm-2 col-form-label">Contract Name</label>
-                                                                                                                                            <div class="col-sm-10">
-                                                                                                                                                <input type="text" class="form-control" name="name" required="">
-                                                                                                                                            </div>
-                                                                                                                                        </div>
-
-
-                                                                                                                                        <div class="form-group row">
-                                                                                                                                            <label class="col-sm-2 col-form-label">Agreement Type</label>
-                                                                                                                                            <div class="col-sm-10">
-                                                                                                                                                <select name="contract_type_id" class="form-control">
-
-<?php
-$ctypes = DB::table('admin.contracts_types')->where('id', '!=', '8')->get();
-if (!empty($ctypes)) {
-    foreach ($ctypes as $ctype) {
-        ?>
-                                                                                                                                                            <option value="<?= $ctype->id ?>"><?= $ctype->name ?></option>
-        <?php
-    }
-}
-?>
-
-                                                                                                                                                </select>
-                                                                                                                                            </div>
-                                                                                                                                        </div>
-                                                                                                                                        <div class="form-group row">
-                                                                                                                                            <label class="col-sm-2 col-form-label">Contract Start Date</label>
-                                                                                                                                            <div class="col-sm-10">
-                                                                                                                                                <input type="date" class="form-control" value="" name="start_date" required="">
-                                                                                                                                            </div>
-                                                                                                                                        </div>
-                                                                                                                                        <div class="form-group row">
-                                                                                                                                            <label class="col-sm-2 col-form-label">Contract Start Date</label>
-                                                                                                                                            <div class="col-sm-10">
-                                                                                                                                                <input type="date" class="form-control" name="end_date" required="">
-                                                                                                                                            </div>
-                                                                                                                                        </div>
-                                                                                                                                        <div class="form-group row">
-                                                                                                                                            <label class="col-sm-2 col-form-label">Upload Document</label>
-                                                                                                                                            <div class="col-sm-10">
-                                                                                                                                                <input type="file" class="form-control" accept=".pdf" name="file" required="">
-                                                                                                                                            </div>
-                                                                                                                                        </div>
-                                                                                                                                        <div class="form-group row">
-                                                                                                                                            <label class="col-sm-2 col-form-label">Notes</label>
-                                                                                                                                            <div class="col-sm-10">
-                                                                                                                                                <textarea rows="5" cols="5" name="description" class="form-control"
-                                                                                                                                                          placeholder="Any important details about this document"></textarea>
-                                                                                                                                            </div>
-                                                                                                                                        </div>
-
-                                                                                                                                        <div class="form-group row">
-                                                                                                                                            <label class="col-sm-2 col-form-label"></label>
-                                                                                                                                            <div class="col-sm-10">
-<?= csrf_field() ?>
-                                                                                                                                                <button type="submit" class="btn btn-success" placeholder="Default textarea">Submit</button>
-                                                                                                                                            </div>
-                                                                                                                                        </div>
-                                                                                                                                    </form>
-
-                                                                                                                                    <div class="modal-footer">
-                                                                                                                                        <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                                                                                                                                    </div>
-                                                                                                                                </div>
-                                                                                                                            </div>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                    </div>
-                                                                                                                    </div>
-                                                                                                                    </div>
-                                                                                                                    </div>
-                                                                                                                    </div>
+                                                                                                                                                        </div>
+                                                                                                                                                    </div>
+                                                                                                                                                </div>
+                                                                                                                                                </div>
+                                                                                                                                                </div>
+                                                                                                                                                </div>
+                                                                                                                                                </div>
+                                                                                                                                                </div>
 
 <?php $root = url('/') . '/public/' ?>
 <?php
 if (!empty($profile)) {
     ?>
-                                                                                                                        <div class="modal fade" id="school_details" tabindex="-1" role="dialog" style="z-index: 1050; display: none;"
-                                                                                                                             aria-hidden="true">
-                                                                                                                            <div class="modal-dialog modal-lg" role="document">
-                                                                                                                                <div class="modal-content">
-                                                                                                                                    <div class="modal-header">
-                                                                                                                                        <div class="card-block">
+                                                                                                                                                    <div class="modal fade" id="school_details" tabindex="-1" role="dialog" style="z-index: 1050; display: none;"
+                                                                                                                                                         aria-hidden="true">
+                                                                                                                                                        <div class="modal-dialog modal-lg" role="document">
+                                                                                                                                                            <div class="modal-content">
+                                                                                                                                                                <div class="modal-header">
+                                                                                                                                                                    <div class="card-block">
 
-                                                                                                                                            <div id="view-info" class="row">
-                                                                                                                                                <div class="col-lg-12 col-md-12">
-                                                                                                                                                    <form action="<?= url('customer/contract/' . $client_id) ?>" method="POST"
-                                                                                                                                                          enctype="multipart/form-data">
-                                                                                                                                                        <table class="table m-b-0">
-                                                                                                                                                            <tbody>
-                                                                                                                                                                <tr>
-                                                                                                                                                                    <th class="social-label b-none p-t-0">School Name
-                                                                                                                                                                    </th>
-                                                                                                                                                                    <td class="social-user-name b-none p-t-0 text-muted">
-                                                                                                                                                                        <?= isset($profile->school->name) ? $profile->school->name : '' ?></td>
-                                                                                                                                                                </tr>
-                                                                                                                                                                <tr>
-                                                                                                                                                                    <th class="social-label b-none">Region</th>
-                                                                                                                                                                    <td class="social-user-name b-none text-muted">
-                                                                                                                                                                        <?= isset($profile->school->region) ? $profile->school->region : '' ?></td>
-                                                                                                                                                                </tr>
-                                                                                                                                                                <tr>
-                                                                                                                                                                    <th class="social-label b-none">District</th>
-                                                                                                                                                                    <td class="social-user-name b-none text-muted">
+                                                                                                                                                                        <div id="view-info" class="row">
+                                                                                                                                                                            <div class="col-lg-12 col-md-12">
+                                                                                                                                                                                <form action="<?= url('customer/contract/' . $client_id) ?>" method="POST"
+                                                                                                                                                                                      enctype="multipart/form-data">
+                                                                                                                                                                                    <table class="table m-b-0">
+                                                                                                                                                                                        <tbody>
+                                                                                                                                                                                            <tr>
+                                                                                                                                                                                                <th class="social-label b-none p-t-0">School Name
+                                                                                                                                                                                                </th>
+                                                                                                                                                                                                <td class="social-user-name b-none p-t-0 text-muted">
+    <?= isset($profile->school->name) ? $profile->school->name : '' ?></td>
+                                                                                                                                                                                            </tr>
+                                                                                                                                                                                            <tr>
+                                                                                                                                                                                                <th class="social-label b-none">Region</th>
+                                                                                                                                                                                                <td class="social-user-name b-none text-muted">
+    <?= isset($profile->school->region) ? $profile->school->region : '' ?></td>
+                                                                                                                                                                                            </tr>
+                                                                                                                                                                                            <tr>
+                                                                                                                                                                                                <th class="social-label b-none">District</th>
+                                                                                                                                                                                                <td class="social-user-name b-none text-muted">
     <?= isset($profile->school->district) ? $profile->school->district : '' ?></td>
-                                                                                                                                                                </tr>
-                                                                                                                                                                <tr>
-                                                                                                                                                                    <th class="social-label b-none">Ward</th>
-                                                                                                                                                                    <td class="social-user-name b-none text-muted">
+                                                                                                                                                                                            </tr>
+                                                                                                                                                                                            <tr>
+                                                                                                                                                                                                <th class="social-label b-none">Ward</th>
+                                                                                                                                                                                                <td class="social-user-name b-none text-muted">
     <?= isset($profile->school->ward) ? $profile->school->ward : '' ?>
-                                                                                                                                                                    </td>
-                                                                                                                                                                </tr>
+                                                                                                                                                                                                </td>
+                                                                                                                                                                                            </tr>
 
-                                                                                                                                                            </tbody>
-                                                                                                                                                        </table>
-                                                                                                                                                </div>
-                                                                                                                                            </div>
-                                                                                                                                            </form>
+                                                                                                                                                                                        </tbody>
+                                                                                                                                                                                    </table>
+                                                                                                                                                                            </div>
+                                                                                                                                                                        </div>
+                                                                                                                                                                        </form>
 
-                                                                                                                                            <div class="modal-footer">
-                                                                                                                                                <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Submit</button>
-                                                                                                                                            </div>
-                                                                                                                                        </div>
-                                                                                                                                        <br />
-                                                                                                                                    </div>
-                                                                                                                                </div>
+                                                                                                                                                                        <div class="modal-footer">
+                                                                                                                                                                            <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Submit</button>
+                                                                                                                                                                        </div>
+                                                                                                                                                                    </div>
+                                                                                                                                                                    <br />
+                                                                                                                                                                </div>
+                                                                                                                                                            </div>
 
-                                                                                                                            </div>
-                                                                                                                        </div>
+                                                                                                                                                        </div>
+                                                                                                                                                    </div>
 <?php } ?>
-                                                                                                                    <!-- notify js Fremwork -->
-                                                                                                                    <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.css">
-                                                                                                                    <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.brighttheme.css">
-                                                                                                                    <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.buttons.css">
-                                                                                                                    <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.history.css">
-                                                                                                                    <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.mobile.css">
-                                                                                                                    <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/pnotify/notify.css">
+                                                                                                                                                <!-- notify js Fremwork -->
+                                                                                                                                                <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.css">
+                                                                                                                                                <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.brighttheme.css">
+                                                                                                                                                <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.buttons.css">
+                                                                                                                                                <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.history.css">
+                                                                                                                                                <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/pnotify/dist/pnotify.mobile.css">
+                                                                                                                                                <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/pnotify/notify.css">
 
-                                                                                                                    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.js"></script>
-                                                                                                                    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.desktop.js"></script>
-                                                                                                                    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.buttons.js"></script>
-                                                                                                                    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.confirm.js"></script>
-                                                                                                                    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.callbacks.js"></script>
-                                                                                                                    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.animate.js"></script>
-                                                                                                                    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.history.js"></script>
-                                                                                                                    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.mobile.js"></script>
-                                                                                                                    <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.nonblock.js"></script>
-                                                                                                                    <script type="text/javascript" src="<?= $root ?>assets/pages/pnotify/notify.js"></script>
-                                                                                                                    <script src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;key=AIzaSyBgc2zYiUzXGjZ277annFVhIXkrpXdOoXw"></script>
-                                                                                                                    <script src="{{$root}}/js/jquery.geocomplete.min.js"></script>
-                                                                                <script type="text/javascript">
-                                                                                
-                                                                                function calculate() {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                   var myBox1 = document.getElementById('box1').value;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                   var myBox2 = document.getElementById('box2').val                                                                                                                            ue;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                   var result = document.getElementById('result');
-                                                                                                                                                                                                                                                                                                                                                                                                                                                   var myResult = myBox1 * myBo                                                                                                                            x2;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                   result.value = myResult;
-                                                                                                                                                        }
-                                                                                                                                                        
-                                                                                                                                                        $('.transaction_amount').attr("pattern", '^(\\d+|\                                                                                                                            \d{1, 3}(,\\d{3})*)(\\.\\d{2})?$');
-                                                                                                                                                            $('.transaction_amount').on("keyup", function() {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                           var currentValue = $(this).val();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                   currentValue = currentValue.replace(/,/g, '');
-                                                                                                                                                                                                                                                                                                                                                                                                                                                   $(this).val(currentValue.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
-                                                                                        });
-                                                                                
-                                                                                        function save_comment(id) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                           var content = $('#task_comment' + id).val();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                   var task_id = $('#task_id' + id).val();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                   $.ajax({
-                                                                                                                                                                                                                                                                                                                                                                                                                                                   type: 'POST',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                           url: "<?= url('customer/taskComment/null') ?>",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                           data: {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                           content: content,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                   task_id: task_id
-                                                                                                                                },
-                                                                                                                                dataType: "html",
-                                                                                                                                     success: function(data) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                   $('input[type="text"],textarea').val('');
-                                                                                                                                                                                                                                                                                                                                                                                                                                                           $('.new_comment' + id).after(data);
-                                                                                                                                                }
-                                                                                                                                                });
-                                                                                                                                                        }
-                                                                                                                                                    
-                                                                                                                                                notify = function(title, message, type) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                   new PNotify({
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                   title: title,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                           text: message,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                           type: type,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                           hide: 'false',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                           icon: 'icofont icofont-info-circle'
-                                                                                                                                                            });
-                                                                                                                                                        }
-                                                                        
-                                                                        allocate = function(a, role_id) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                           $.ajax({
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                           url: '<?= url('customer/allocate/null') ?>',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   data: {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   user_id: a,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           school_id: '<?= $school->school_id ?? '' ?>',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           role_id: role_id,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           schema: '<?= $schema ?>'
-                                                                                                                                            },
-                                                                                                                                        dataType: 'html',
-                                                                                                                                    success: function(data) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           $('#supportl').html(data);
-                                                                                                                        }
-                                                                                                                            });
-                                                                                                                                }
-                                                                                                                                    
-                                                                                                                                        show_tabs = function(a) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           $('.live_tabs').hide(function() {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   $('#' + a).show();
-                                                                });
-                                                                }
-                                                                
-                                                                                                                                    $('#school_id').click(function() {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           var val = $(this).val();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   $.ajax({
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   url: '<?= url('customer/search/null') ?>',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           data: {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           val: val,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   type: 'school',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   schema: '<?= $schema ?>'
-                                                                                                                },
-                                                                                                                dataType: 'html',
-                                                                                                                     success: function(data) {
+                                                                                                                                                <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.js"></script>
+                                                                                                                                                <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.desktop.js"></script>
+                                                                                                                                                <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.buttons.js"></script>
+                                                                                                                                                <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.confirm.js"></script>
+                                                                                                                                                <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.callbacks.js"></script>
+                                                                                                                                                <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.animate.js"></script>
+                                                                                                                                                <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.history.js"></script>
+                                                                                                                                                <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.mobile.js"></script>
+                                                                                                                                                <script type="text/javascript" src="<?= $root ?>bower_components/pnotify/dist/pnotify.nonblock.js"></script>
+                                                                                                                                                <script type="text/javascript" src="<?= $root ?>assets/pages/pnotify/notify.js"></script>
+                                                                                                                                                <script src="http://maps.googleapis.com/maps/api/js?libraries=places&amp;key=AIzaSyBgc2zYiUzXGjZ277annFVhIXkrpXdOoXw"></script>
+                                                                                                                                                <script src="{{$root}}/js/jquery.ge                                                                                                                                                ocomplete.min.js"></script>
+                                                                                                                                                <script>
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   $('#search_result').html(data);
-                                                                                                                            }
-                                                                                                                                });
-                                                                                                                                });
-                                                                                                                                
-                                                                                                                                removeTag = function(a) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   $.ajax({
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   url: '<?= url('customer/removeTag') ?>/null',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           method: 'get',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           data: {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           id: a
-                                                                                                                                                },
-                                                                                                                                                success: function(data) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   if (data == '1') {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           $('#removetag' + a).fadeOut();
-                                                                                                                                    }
-                                                                                                                                            }
-                                                                                                                                            });
-                                                                                                                                            }
-                                                                                                                                    
-                                                                                                                                            task_group = function() {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   $('.task_groups').change(function() {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           var val = $(this).val();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           var task_id = $(this).attr('data-task-id');
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           var data_attr = $('#task_user' + task_id).val();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           $.ajax({
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           url: '<?= url('customer/getAvailableSlot') ?>/null',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   method: 'get',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   data: {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   start_date: val,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           user_id: data_attr
-                                                                },
-                                                                    success: function(data) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           $('#start_slot' + task_id).html(data);
-                                                                                                                                        }
-                                                                                                                                                });
-                                                                                                                                                });
-                                                                                                                                                
-                                                                                                                                                $('.task_school_group').blur(function() {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           var val = $(this).text();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   var data_attr = $(this).attr('data-attr');
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   var task_id = $(this).attr('task-id');
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   // var date=$('#'+task_id).val();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   $.ajax({
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   url: '<?= url('customer/editTrain') ?>/null',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           method: 'get',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           dataType: 'html',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           data: {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           task_id: task_id,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   value: val,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   attr: data_attr
-                                                                                                            },
-                                                                                                            success: function(data) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   // $(this).after(data).addClass('label label-success');
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   notify('Success', 'Success', 'success');
-                                                                                                        }
-                                                                                                    });
-                                                                                                    });
-                                                                                                
-                                                                                                $(document).on("click", ".user_dialog", function () {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   var UserName = $(this).data('id');
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           $(".modal-body #job_date").val(UserName);
-                                                                                                                        });
-                                                                                                                        
-                                                                                                                            $('.slot').change(function() {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   var val = $(this).val();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           //var data_attr = $(this).attr('data-attr');
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           var task_id = $(this).attr('data-id');
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           var date = $('#' + task_id).val();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           $.ajax({
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           url: '<?= url('customer/editTrain') ?>/null',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   method: 'get',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   dataType: 'json',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   data: {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   task_id: task_id,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           value: date,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           slot_id: val,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           attr: 'start_date'
-                                                                                    },
-                                                                                    success: function(data) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           $('#task_end_date_id' + data.task_id).html(data.end_date);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   notify('Success', 'Success', 'success');
-                                                                                }
-                                                                                    });
-                                                                                    });
-                                                                                
-                                                                            
-                                                                        $(".select2").select2({
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           theme: "bootstrap",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           dropdownAutoWidth: false,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           allowClear: false,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           debug: true
-                                                                                                                                        });
-                                                                                                                                        
-                                                                                                                                        $('.task_allocated_id').mousedown(function() {
+                                                                                                                                                                                               function calculate() {
+                                                                                                                                                                                               var myBox1 = document.getElementById('box1').value;
+                                                                                                                                                                                               var myBox2 = document.getElementById('box2').val                                                                                                                            ue;
+                                                                                                                                                                                               var result = document.getElementById('result');
+                                                                                                                                                                                               var myResult = myBox1 * myBo                                                                                                                            x2;
+                                                                                                                                                                                               result.value = myResult;
+                                                                                                                                                                                               }
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           var task_id = $(this).attr('task-id');
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   var start_date = $('#start_date' + task_id).val();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   var school_person = $('#school_person' + task_id).text();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   var section_id = $(this).attr('section_id');
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   $.ajax({
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   url: '<?= url('customer/editTrain') ?>/null',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           method: 'get',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           data: {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           task_id: task_id,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   start_date: start_date,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   school_person:school_person,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   section_id:section_id
-                                                                                                                                        },
-                                                                                                                                        success: function(data) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   notify('Success', data, 'success');
-                                                                                                                                        }
-                                                                                                                                    });
-                                                                                                                                    });
-                                                                                                                                        }
-                                                                                                                                            $(document).ready(task_group);
-                                                                                                                                                
-                                                                                                                                                    $("#town").geocomplete()
-                                                                                                                                            .bind("geocode:result", function (event, result) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   var loc = result.geometry.location;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           $("#location").val(loc.lng() + ", " + loc.lat());
-                                                                                                                                    })
-                                                                                                                                        .bind("geocode:error", function (event, status) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   console.log("ERROR: " + status);
-                                                                                                                                            })
-                                                                        .bind("geocode:multiple", function (event, results) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   console.log("Multiple: " + results.length + " results found");
-                                                                                                                                        });
-                                                                                                                                        </script>
+                                                                                                                                                                                               $('.transaction_amount').attr("pattern", '^(\\d+|\                                                                                                                                                                                                                                                                   \d{1, 3}(,\\d{3})*)(\\.\\d{2})?$');
+                                                                                                                                                                                               $('.transaction_amount').on("keyup", function() {
+                                                                                                                                                                                               var currentValue = $(this).val();
+                                                                                                                                                                                               currentValue = currentValue.replace(/,/g, '');
+                                                                                                                                                                                               $(this).val(currentValue.replace(/(\                                                                                                                                                        d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+                                                                                                                                                                                               });
+                                                                                                                                                                                               function save_comment(id) {
+                                                                                                                                                                                               var content = $('#task_comment' + id).val();
+                                                                                                                                                                                               var task_id = $('#task_id' + id).val();
+                                                                                                                                                                                               $.ajax({
+                                                                                                                                                                                               type: 'POST',
+                                                                                                                                                                                                       url: "<?= url('customer/taskComment/null') ?>",
+                                                                                                                                                                                                       data: {
+                                                                                                                                                                                                       content: content,
+                                                                                                                                                                                                               task_id: task_id
+                                                                                                                                                                                                       },
+                                                                                                                                                                                                       dataType: "html",
+                                                                                                                                                                                                       success: function(data) {
+                                                                                                                                                                                                       $('input[type="text"],textarea').val('');
+                                                                                                                                                                                                       $('.new_comment' + id).after(data);
+                                                                                                                                                                                                       }
+                                                                                                                                                                                               });
+                                                                                                                                                                                               }
+
+                                                                                                                                                                                               notify = function(title, message, type) {
+                                                                                                                                                                                               new PNotify({
+                                                                                                                                                                                               title: title,
+                                                                                                                                                                                                       text: message,
+                                                                                                                                                                                                       type: type,
+                                                                                                                                                                                                       hide: 'false',
+                                                                                                                                                                                                       icon: 'icofont icofont-info-circle'
+                                                                                                                                                                                               });
+                                                                                                                                                                                               }
+
+                                                                                                                                                                                               allocate = function(a, role_id) {
+                                                                                                                                                                                               $.ajax({
+                                                                                                                                                                                               url: '<?= url('customer/allocate/null') ?>',
+                                                                                                                                                                                                       data: {
+                                                                                                                                                                                                       user_id: a,
+                                                                                                                                                                                                               school_id: '<?= $school->school_id ?? '' ?>',
+                                                                                                                                                                                                               role_id: role_id,
+                                                                                                                                                                                                               schema: '<?= $schema ?>'
+                                                                                                                                                                                                       },
+                                                                                                                                                                                                       dataType: 'html',
+                                                                                                                                                                                                       success: function(data) {
+                                                                                                                                                                                                       $('#supportl').html(data);
+                                                                                                                                                                                                       }
+                                                                                                                                                                                               });
+                                                                                                                                                                                               }
+
+                                                                                                                                                                                               show_tabs = function(a) {
+                                                                                                                                                                                               $('.live_tabs').hide(function() {
+                                                                                                                                                                                               $('#' + a).show();
+                                                                                                                                                                                               });
+                                                                                                                                                                                               }
+
+                                                                                                                                                                                               $('#school_id').click(function() {
+                                                                                                                                                                                               var val = $(this).val();
+                                                                                                                                                                                               $.ajax({
+                                                                                                                                                                                               url: '<?= url('customer/search/null') ?>',
+                                                                                                                                                                                                       data: {
+                                                                                                                                                                                                       val: val,
+                                                                                                                                                                                                               type: 'school',
+                                                                                                                                                                                                               schema: '<?= $schema ?>'
+                                                                                                                                                                                                       },
+                                                                                                                                                                                                       dataType: 'html',
+                                                                                                                                                                                                       success: function(data) {
+
+                                                                                                                                                                                                       $('#search_result').html(data);
+                                                                                                                                                                                                       }
+                                                                                                                                                                                               });
+                                                                                                                                                                                               });
+                                                                                                                                                                                               removeTag = function(a) {
+                                                                                                                                                                                               $.ajax({
+                                                                                                                                                                                               url: '<?= url('customer/removeTag') ?>/null',
+                                                                                                                                                                                                       method: 'get',
+                                                                                                                                                                                                       data: {
+                                                                                                                                                                                                       id: a
+                                                                                                                                                                                                       },
+                                                                                                                                                                                                       success: function(data) {
+                                                                                                                                                                                                       if (data == '1') {
+                                                                                                                                                                                                       $('#removetag' + a).fadeOut();
+                                                                                                                                                                                                       }
+                                                                                                                                                                                                       }
+                                                                                                                                                                                               });
+                                                                                                                                                                                               }
+
+                                                                                                                                                                                               task_group = function() {
+                                                                                                                                                                                               $('.task_groups').change(function() {
+                                                                                                                                                                                               var val = $(this).val();
+                                                                                                                                                                                               var task_id = $(this).attr('data-task-id');
+                                                                                                                                                                                               var data_attr = $('#task_user' + task_id).val();
+                                                                                                                                                                                               $.ajax({
+                                                                                                                                                                                               url: '<?= url('customer/getAvailableSlot') ?>/null',
+                                                                                                                                                                                                       method: 'get',
+                                                                                                                                                                                                       data: {
+                                                                                                                                                                                                       start_date: val,
+                                                                                                                                                                                                               user_id: data_attr
+                                                                                                                                                                                                       },
+                                                                                                                                                                                                       success: function(data) {
+                                                                                                                                                                                                       $('#start_slot' + task_id).html(data);
+                                                                                                                                                                                                       }
+                                                                                                                                                                                               });
+                                                                                                                                                                                               });
+                                                                                                                                                                                               $('.task_school_group').blur(function() {
+                                                                                                                                                                                               var val = $(this).text();
+                                                                                                                                                                                               var data_attr = $(this).attr('data-attr');
+                                                                                                                                                                                               var task_id = $(this).attr('task-id');
+                                                                                                                                                                                               // var date=$('#'+task_id).val();
+                                                                                                                                                                                               $.ajax({
+                                                                                                                                                                                               url: '<?= url('customer/editTrain') ?>/null',
+                                                                                                                                                                                                       method: 'get',
+                                                                                                                                                                                                       dataType: 'html',
+                                                                                                                                                                                                       data: {
+                                                                                                                                                                                                       task_id: task_id,
+                                                                                                                                                                                                               value: val,
+                                                                                                                                                                                                               attr: data_attr
+                                                                                                                                                                                                       },
+                                                                                                                                                                                                       success: function(data) {
+                                                                                                                                                                                                       // $(this).after(data).addClass('label label-success');
+                                                                                                                                                                                                       notify('Success', 'Success', 'success');
+                                                                                                                                                                                                       }
+                                                                                                                                                                                               });
+                                                                                                                                                                                               });
+                                                                                                                                                                                               $(document).on("click", ".user_dialog", function () {
+                                                                                                                                                                                               var UserName = $(this).data('id');
+                                                                                                                                                                                               $(".modal-body #job_date").val(UserName);
+                                                                                                                                                                                               });
+                                                                                                                                                                                               $('.slot').change(function() {
+                                                                                                                                                                                               var val = $(this).val();
+                                                                                                                                                                                               //var data_attr = $(this).attr('data-attr');
+                                                                                                                                                                                               var task_id = $(this).attr('data-id');
+                                                                                                                                                                                               var date = $('#' + task_id).val();
+                                                                                                                                                                                               $.ajax({
+                                                                                                                                                                                               url: '<?= url('customer/editTrain') ?>/null',
+                                                                                                                                                                                                       method: 'get',
+                                                                                                                                                                                                       dataType: 'json',
+                                                                                                                                                                                                       data: {
+                                                                                                                                                                                                       task_id: task_id,
+                                                                                                                                                                                                               value: date,
+                                                                                                                                                                                                               slot_id: val,
+                                                                                                                                                                                                               attr: 'start_date'
+                                                                                                                                                                                                       },
+                                                                                                                                                                                                       success: function(data) {
+                                                                                                                                                                                                       $('#task_end_date_id' + data.task_id).html(data.end_date);
+                                                                                                                                                                                                       notify('Success', 'Success', 'success');
+                                                                                                                                                                                                       }
+                                                                                                                                                                                               });
+                                                                                                                                                                                               });
+                                                                                                                                                                                               $(".select2").select2({
+                                                                                                                                                                                               theme: "bootstrap",
+                                                                                                                                                                                                       dropdownAutoWidth: false,
+                                                                                                                                                                                                       allowClear: false,
+                                                                                                                                                                                                       debug: true
+                                                                                                                                                                                               });
+                                                                                                                                                                                               $('.task_allocated_id').mousedown(function() {
+
+                                                                                                                                                                                               var task_id = $(this).attr('task-id');
+                                                                                                                                                                                               var start_date = $('#start_date' + task_id).val();
+                                                                                                                                                                                               var school_person = $('#school_person' + task_id).text();
+                                                                                                                                                                                               var section_id = $(this).attr('section_id');
+                                                                                                                                                                                               $.ajax({
+                                                                                                                                                                                               url: '<?= url('customer/editTrain') ?>/null',
+                                                                                                                                                                                                       method: 'get',
+                                                                                                                                                                                                       data: {
+                                                                                                                                                                                                       task_id: task_id,
+                                                                                                                                                                                                               start_date: start_date,
+                                                                                                                                                                                                               school_person:school_person,
+                                                                                                                                                                                                               section_id:section_id
+                                                                                                                                                                                                       },
+                                                                                                                                                                                                       success: function(data) {
+                                                                                                                                                                                                       notify('Success', data, 'success');
+                                                                                                                                                                                                       }
+                                                                                                                                                                                               });
+                                                                                                                                                                                               });
+                                                                                                                                                                                               }
+                                                                                                                                                                                               $(document).ready(task_group);
+                                                                                                                                                                                               $("#town").geocomplete()
+                                                                                                                                                                                                       .bind("geocode:result", function (event, result) {
+                                                                                                                                                                                                       var loc = result.geometry.location;
+                                                                                                                                                                                                       $("#location").val(loc.lng() + ", " + loc.lat());
+                                                                                                                                                                                                       })
+                                                                                                                                                                                                       .bind("geocode:error", function (event, status) {
+                                                                                                                                                                                                       console.log("ERROR: " + status);
+                                                                                                                                                                                                       })
+                                                                                                                                                                                                       .bind("geocode:multiple", function (event, results) {
+                                                                                                                                                                                                       console.log("Multiple: " + results.length + " results found");
+                                                                                                                                                                                                       });
+                                                                                                                                                        </script>
 
 
-                                                                                                                            @endsection
+                                                                                                                                                        @endsection
