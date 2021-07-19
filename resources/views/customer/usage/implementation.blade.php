@@ -34,18 +34,18 @@
                     <?php
                     if ($key == 'completed_at') {
                         ?>
+                  <td></td>
                         <td>
                             <?php                           
                            echo check_implementation($content->activity,$content->school_name);
                             ?>
                         </td>
                     <?php } else if ($key == 'status') { ?>
+                       
                         <td><?= $status ?></td>
 
                     <?php } else { ?>
                         <td><?= $content->{$key} ?></td>
-
-
 
                         <?php
                     }
