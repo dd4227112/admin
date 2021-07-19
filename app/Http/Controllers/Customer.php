@@ -210,11 +210,12 @@ class Customer extends Controller {
                 'end_date' => date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")),
                 'updated_at' => date('Y-m-d H:i:s'),
                 'user_id' => $user_id,
+                'is_allocated' => 1,
                 'school_person_allocated' => trim($school_person),
             ];
 
             DB::table('train_items_allocations')->where('id', $ttask_id)->update($obj);
-            
+
             DB::table('tasks_users')->where('task_id', $task_id)->update([
                 'user_id' => $user_id,
                 'updated_at' => date('Y-m-d H:i:s')
@@ -911,8 +912,8 @@ class Customer extends Controller {
 //where extract(year from date)=2021) OR a.client_id in (select client_id from admin.standing_orders) ) and a.user_id=' . $user_id;
 
         $where_user = (int) $user_id == 0 ? ' ' : ' user_id=' . $user_id . ' and ';
-         $sql = 'select b.username as school_name, f.content as activity, a.created_at, a.created_at + make_interval(days => a.max_time) as deadline, a.completed_at, 1 as status from admin.train_items_allocations a join admin.clients b on b.id=a.client_id join admin.tasks c on c.id=a.task_id JOIN admin.all_setting d on d."schema_name"=b.username join admin.train_items f on f.id=a.train_item_id where f.status=1 and (a.client_id in (select client_id from admin.payments where extract(year from date)=2021) OR a.client_id in (select client_id from admin.standing_orders) ) and  a.train_item_id in (select train_item_id from admin.user_train_items where '.$where_user.'  user_id=a.user_id)';
-       // $sql = 'select b.username as school_name, f.content as activity, a.created_at, a.created_at + make_interval(days => a.max_time) as deadline, a.completed_at, 1 as status from admin.train_items_allocations a join admin.clients b on b.id=a.client_id join admin.tasks c on c.id=a.task_id JOIN admin.all_setting d on d."schema_name"=b.username join admin.train_items f on f.id=a.train_item_id where f.status=1 and (a.client_id in (select client_id from admin.payments where extract(year from date)=2021) OR a.client_id in (select client_id from admin.standing_orders) )';
+        $sql = 'select b.username as school_name, f.content as activity, a.created_at, a.created_at + make_interval(days => a.max_time) as deadline, a.completed_at, 1 as status from admin.train_items_allocations a join admin.clients b on b.id=a.client_id join admin.tasks c on c.id=a.task_id JOIN admin.all_setting d on d."schema_name"=b.username join admin.train_items f on f.id=a.train_item_id where a.is_allocated=1 and f.status=1 and (a.client_id in (select client_id from admin.payments where extract(year from date)=2021) OR a.client_id in (select client_id from admin.standing_orders) ) and  a.train_item_id in (select train_item_id from admin.user_train_items where ' . $where_user . '  user_id=a.user_id)';
+        // $sql = 'select b.username as school_name, f.content as activity, a.created_at, a.created_at + make_interval(days => a.max_time) as deadline, a.completed_at, 1 as status from admin.train_items_allocations a join admin.clients b on b.id=a.client_id join admin.tasks c on c.id=a.task_id JOIN admin.all_setting d on d."schema_name"=b.username join admin.train_items f on f.id=a.train_item_id where f.status=1 and (a.client_id in (select client_id from admin.payments where extract(year from date)=2021) OR a.client_id in (select client_id from admin.standing_orders) )';
         $view = 'implementation_report_' . $user_id;
         DB::select('Create or replace view ' . $view . ' AS ' . $sql);
 
