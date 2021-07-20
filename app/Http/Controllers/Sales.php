@@ -471,14 +471,13 @@ class Sales extends Controller {
              $this->validate(request(), 
                    ['name' => 'required',
                     'sales_user_id' => 'required',
-                    'support_user_id' => 'required',
                     'price' => 'required|numeric',
                     'username' => 'required',
                     'students' => 'required|numeric',
                     'implementation_date' => 'required',
                    // 'start_date' => 'required',
                   //  'end_date' => 'required',
-                    'description' => 'required'
+                   // 'description' => 'required'
                 ]);
 
            
@@ -528,7 +527,7 @@ class Sales extends Controller {
                 //sales person
                 //support person
                 DB::table('admin.users_schools')->insert([
-                    'school_id' => $school_id, 'client_id' => $client_id, 'user_id' => request('support_user_id'), 'role_id' => 8, 'status' => 1
+                    'school_id' => $school_id, 'client_id' => $client_id, 'user_id' =>Auth::user()->id, 'role_id' => 8, 'status' => 1
                 ]);
                 //post task, onboarded
                 $data = ['user_id' => Auth::user()->id, 'school_id' => $school_id, 'activity' => 'Onboarding', 'task_type_id' => request('task_type_id'), 'user_id' => Auth::user()->id];
@@ -628,7 +627,7 @@ class Sales extends Controller {
             $client_id = request()->segment(3);
         }  
         $time = 0;
-        $sections = \App\Models\TrainItem::orderBy('id', 'asc')->get();
+        $sections = \App\Models\TrainItem::where('status',1)->orderBy('id', 'asc')->get();
         $start_date = date('Y-m-d H:i');
         foreach ($sections as $section) {
 
@@ -655,31 +654,29 @@ class Sales extends Controller {
 
             $end_date = date('Y-m-d H:i', strtotime("+{$section->time} minutes", strtotime($start_date)));
        
-            $slot = \App\Models\Slot::findOrFail(request('slot_id' . $section->id));
+            $slot = \App\Models\Slot::find(request('slot_id' . $section->id));
+            
             if(empty($slot)){
                 $slot = \App\Models\Slot::first();
             }
             $date = date('Y-m-d', strtotime(request('slot_date' . $section->id)));
 
+            $support_user_id= $this->getSupportUser($section->id);
             $data = [
                 'activity' => $section->content,
-                'date' => date('Y-m-d', strtotime($start_date)),
-                'user_id' => request('support_user_id'),
+                'date' => date('Y-m-d', strtotime($start_date)),             
+                'user_id' => $support_user_id,
                 'task_type_id' => preg_match('/data/i', $section->content) ? 3 : 4,
-                'start_date' => date('Y-m-d H:i', strtotime($date . ' ' . isset($slot->start_time) ? $slot->start_time : '11:01:00')),
-                'end_date' => date('Y-m-d H:i', strtotime($date . ' ' . isset($slot->end_time) ? $slot->end_time : '12:00:00')),
+                'start_date' => date('Y-m-d H:i', strtotime($start_date)),
+                'end_date' => date('Y-m-d H:i', strtotime($start_date." + {$section->time} days")),
                 'slot_id' => (int) $slot->id > 0 ? $slot->id : 5
             ]; 
             $time += $section->time;
             $task = \App\Models\Task::create($data);
-            if((int) request('person' . $section->id) == 0){
-                $user_task_id = Auth::user()->id;
-            }else{
-                $user_task_id = (int) request('person' . $section->id);
-            }
+          
             DB::table('tasks_users')->insert([
                 'task_id' => $task->id,
-                'user_id' => $user_task_id,
+                'user_id' => $support_user_id,
             ]);
 
             DB::table('tasks_clients')->insert([
@@ -689,7 +686,7 @@ class Sales extends Controller {
             \App\Models\TrainItemAllocation::create([
                 'task_id' => $task->id,
                 'client_id' => $client_id,
-                'user_id' => $user_task_id,
+                'user_id' => $support_user_id,
                 'train_item_id' => $section->id,
                 'school_person_allocated' => request("train_item{$section->id}"),
                 'max_time' => $section->time
@@ -697,6 +694,18 @@ class Sales extends Controller {
         }  
     }
 
+    public function getSupportUser($section_id) {
+        
+       // $implementation=DB::table('admin.train_items_allocations')->where('train_item_id',$section_id);
+        $user=DB::table('admin.user_train_items')->where('train_item_id',$section_id)->where('status',1)->first();
+        //we will check if user exists in db or not, and if not we will allocate any user within the company to take that role
+        
+        //we will check if this user is already allocated specific school and try to skip the implementation if maximum schools already being alllocated
+        
+        //but now, we shall return default
+        return $user->user_id;
+        
+    }
     //algorithm is very very simple
     /**
      * 1. check that user if he has a task at that particular time

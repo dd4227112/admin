@@ -1,5 +1,114 @@
 <?php
 
+function check_implementation($activity,$schema_name) {
+    $status = '';
+    if (preg_match('/exam/i', strtolower($activity))) {
+        //all classes have published an exam
+
+        $classes = DB::table($schema_name . '.classes')->count();
+        $exams = DB::table($schema_name . '.exam_report')->whereYear('created_at', 2021)->count();
+        if ($exams >= $classes) {
+            $status = ' Implemented';
+        } else {
+            $status = ' Not Implemented';
+        }
+    } else if (preg_match('/invoice/i', strtolower($activity))) {
+        //receive at least 10 payments
+
+
+        $payments = DB::table($schema_name . '.payments')->whereYear('created_at', 2021)->count();
+        if ($payments >= 10) {
+            $status = 'Implemented';
+        } else {
+            $status = ' Not Implemented';
+        }
+    } else if (preg_match('/nmb/i', strtolower($activity))) {
+        //receive at least 10 payments
+
+
+        $nmb_payments = DB::table($schema_name . '.payments')->whereYear('created_at', 2021)->whereNotNull('token')->count();
+        $mappend = DB::table($schema_name . '.bank_accounts_integrations')->where('invoice_prefix', '<>', 'SAS')->count();
+        $is_mappend = (int) $mappend == 0 ? 'Not Mapped: ' : 'Mapped: ';
+        if ($nmb_payments >= 10) {
+            $status = $is_mappend . 'Implemented';
+        } else {
+            $status = $is_mappend . ' Not Implemented';
+        }
+    } else if (preg_match('/crdb/i', strtolower($activity))) {
+        //receive at least 10 payments
+
+
+        $crdb_payments = DB::table($schema_name . '.payments')->whereYear('created_at', 2021)->whereNotNull('token')->count();
+
+        $mappend = DB::table($schema_name . '.bank_accounts_integrations')->where('invoice_prefix', 'SAS')->count();
+        $is_mappend = (int) $mappend == 0 ? 'Not Mapped: ' : 'Mapped: ';
+        if ($crdb_payments >= 10) {
+            $status = $is_mappend . 'Implemented';
+        } else {
+            $status = $is_mappend . ' Not Implemented';
+        }
+    } else if (preg_match('/transaction/i', strtolower($activity))) {
+        //receive at least 10 payments
+
+
+        $expense = DB::table($schema_name . '.expense')->whereYear('created_at', 2021)->count();
+        if ($expense >= 10) {
+            $status = 'Implemented';
+        } else {
+            $status = ' Not Implemented';
+        }
+    } else if (preg_match('/payroll/i', strtolower($activity))) {
+        //receive at least 10 payments
+
+
+        $salary = DB::table($schema_name . '.salaries')->whereYear('created_at', 2021)->count();
+        if ($salary > 0) {
+            $status = 'Implemented';
+        } else {
+            $status = ' Not Implemented';
+        }
+    } else if (preg_match('/inventory/i', strtolower($activity))) {
+        //receive at least 10 payments
+
+
+        $inventory = DB::table($schema_name . '.product_alert_quantity')->whereYear('created_at', 2021)->count();
+        if ($inventory >= 10) {
+            $status = 'Implemented';
+        } else {
+            $status = ' Not Implemented';
+        }
+    } elseif (preg_match('/onboarding/i', strtolower($activity))) {
+        //track no of users
+        $client = DB::table('admin.clients')->where('username', $schema_name)->first();
+        $students = DB::table($schema_name . '.student')->count();
+        if ($students >= (int) $client->estimated_students) {
+            $status = 'Implemented';
+        } else {
+            $status = ' Not Implemented';
+        }
+    } else if (preg_match('/operation/i', strtolower($activity))) {
+        //check transport and hostel
+        $tmembers = DB::table($schema_name . '.tmembers')->whereYear('created_at', 2021)->count();
+        $hmembers = DB::table($schema_name . '.hmembers')->whereYear('created_at', 2021)->count();
+        if ($tmembers >= 20 || $hmembers >= 20) {
+            $status = 'Transport/Hostel Implemented';
+        } else {
+            $status = 'Transport/Hostel  Not Implemented';
+        }
+    } else if (preg_match('/sms/i', strtolower($activity))) {
+        //check transport and hostel
+        $sms_config = DB::table('admin.school_keys')->where('api_key', '<>', '1234567894')->where('schema_name', $schema_name)->count();
+
+        if ((int) $sms_config > 0) {
+            $status = 'Implemented';
+        } else {
+            $status = 'Not Implemented';
+        }
+    }
+    return $status;
+}
+
+
 function customdate($datatime) {
     $newTZ = new DateTimeZone('America/New_York');
     date_default_timezone_set('America/New_York');

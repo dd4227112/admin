@@ -19,7 +19,7 @@ class TrainItemAllocation extends Model {
 
     //put your code here
     protected $table = 'admin.train_items_allocations';
-    protected $fillable = ['id', 'train_item_id', 'user_id','client_id','max_time','school_person_allocated','task_id', 'created_at', 'updated_at'];
+    protected $fillable = ['id', 'train_item_id', 'user_id','client_id','max_time','school_person_allocated','task_id', 'created_at', 'updated_at','is_allocated'];
 
 
     public function trainItem() {

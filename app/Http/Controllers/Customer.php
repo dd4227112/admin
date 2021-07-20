@@ -190,42 +190,43 @@ class Customer extends Controller {
     }
 
     public function editTrain() {
-        $task_id = request('task_id');
-        $user_id = request('user_id');
+        $ttask_id = request('task_id');
+        $section_id = request('section_id');
         $start_date = request('start_date');
-        $end_date = request('end_date');
+        $task_user = request('task_user');
         $attr = request('attr');
-        $value = request('value');
+        $school_person = request('school_person');
+
+        if ((int) $task_user == 0) {
+            $sales = new \App\Http\Controllers\Sales();
+            $user_id = $sales->getSupportUser($section_id);
+        } else {
+            $user_id = (int) $task_user;
+        }
+
+        $train = \App\Models\TrainItemAllocation::find($ttask_id);
+
+        $task_id = $train->task_id;
+
         if ((int) $user_id > 0 && (int) $task_id > 0) {
-            $task = \App\Models\Task::find($task_id)->update(['user_id' => $user_id, 'updated_at' => date('Y-m-d H:i:s')]);
+            $section = \App\Models\TrainItem::find($section_id);
+            $obj = [
+                'start_date' => date('Y-m-d H:i:s', strtotime($start_date)),
+                'end_date' => date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'user_id' => $user_id,
+                'is_allocated' => 1,
+                'school_person_allocated' => trim($school_person),
+            ];
+
+            DB::table('train_items_allocations')->where('id', $ttask_id)->update($obj);
+
             DB::table('tasks_users')->where('task_id', $task_id)->update([
                 'user_id' => $user_id,
                 'updated_at' => date('Y-m-d H:i:s')
             ]);
-            \App\Models\TrainItemAllocation::where('task_id', $task_id)->update([
-                'user_id' => $user_id,
-                'updated_at' => date('Y-m-d H:i:s')
-            ]);
-        }
-        if ($attr == 'school_person' && (int) $task_id > 0) {
-            \App\Models\TrainItemAllocation::where('task_id', $task_id)->update([
-                'school_person_allocated' => $value,
-                'updated_at' => date('Y-m-d H:i:s')
-            ]);
-        }
-        if ($attr == 'start_date' && (int) $task_id > 0) {
-            $slot_id = request('slot_id');
-            $slot = DB::table('admin.slots')->where('id', $slot_id)->first();
-            $obj = [
-                'start_date' => date('Y-m-d H:i', strtotime($value . ' ' . $slot->start_time)),
-                'end_date' => date('Y-m-d H:i', strtotime($value . ' ' . $slot->end_time)),
-                'updated_at' => date('Y-m-d H:i:s'),
-                'slot_id' => $slot_id];
-            \App\Models\Task::find($task_id)->update($obj);
+
             die(json_encode(array_merge(array('task_id' => $task_id), $obj)));
-        }
-        if ($attr == 'end_date' && (int) $task_id > 0) {
-            \App\Models\Task::find($task_id)->update(['end_date' => $value, 'updated_at' => date('Y-m-d H:i:s')]);
         }
         //insert into training allocation
         echo 'success';
@@ -898,12 +899,33 @@ class Customer extends Controller {
     public function customSqlReport() {
         $sql = strlen(request('q')) > 3 ? request('q') : exit;
         $view = strlen(request('v')) > 3 ? request('v') : exit;
-        DB::select('Create or replace view '.$view.' AS '. $sql);
-      
+        DB::select('Create or replace view ' . $view . ' AS ' . $sql);
+
         $this->data['headers'] = DB::table($view)->first();
         $this->data['contents'] = DB::table($view)->get();
 
         return view('customer.usage.custom_report', $this->data);
+    }
+
+    public function implementationReport() {
+        $user_id = request()->segment(2);
+        // $sql = strlen(request('q')) > 3 ? request('q') : exit;
+        //$view = strlen(request('v')) > 3 ? request('v') : exit;
+        //$sql = 'select b.username as school_name, f.content as activity, a.created_at, a.created_at + make_interval(days => a.max_time) as deadline, a.completed_at, 1 as status
+//from admin.train_items_allocations a join admin.clients b on b.id=a.client_id join admin.tasks c on c.id=a.task_id JOIN admin.all_setting d on d."schema_name"=b.username join admin.train_items f on f.id=a.train_item_id where 
+//f.status=1 and (a.client_id in (select client_id from admin.payments 
+//where extract(year from date)=2021) OR a.client_id in (select client_id from admin.standing_orders) ) and a.user_id=' . $user_id;
+
+        $where_user = (int) $user_id == 0 ? ' ' : ' user_id=' . $user_id . ' and ';
+        $sql = 'select b.username as school_name, f.content as activity, a.created_at, a.created_at + make_interval(days => a.max_time) as deadline, a.completed_at, 1 as status from admin.train_items_allocations a join admin.clients b on b.id=a.client_id join admin.tasks c on c.id=a.task_id JOIN admin.all_setting d on d."schema_name"=b.username join admin.train_items f on f.id=a.train_item_id where a.is_allocated=1 and f.status=1 and (a.client_id in (select client_id from admin.payments where extract(year from date)=2021) OR a.client_id in (select client_id from admin.standing_orders) ) and  a.train_item_id in (select train_item_id from admin.user_train_items where ' . $where_user . '  user_id=a.user_id)';
+        // $sql = 'select b.username as school_name, f.content as activity, a.created_at, a.created_at + make_interval(days => a.max_time) as deadline, a.completed_at, 1 as status from admin.train_items_allocations a join admin.clients b on b.id=a.client_id join admin.tasks c on c.id=a.task_id JOIN admin.all_setting d on d."schema_name"=b.username join admin.train_items f on f.id=a.train_item_id where f.status=1 and (a.client_id in (select client_id from admin.payments where extract(year from date)=2021) OR a.client_id in (select client_id from admin.standing_orders) )';
+        $view = 'implementation_report_' . $user_id;
+        DB::select('Create or replace view ' . $view . ' AS ' . $sql);
+
+        $this->data['headers'] = DB::table($view)->first();
+        $this->data['contents'] = DB::table($view)->get();
+
+        return view('customer.usage.implementation', $this->data);
     }
 
     public function modules() {
@@ -974,12 +996,33 @@ class Customer extends Controller {
     public function logs() {
         $this->data['start'] = request('start_date');
         $this->data['end'] = request('end_date');
-        $this->data['schema'] = request('schema');
-        $this->data['user'] = request('usertype');
-        $this->data['schemas'] = (new \App\Http\Controllers\Software())->loadSchema();
-        $this->data['users'] = DB::table('admin.all_users')->distinct('usertype')->get(['usertype']);
-        $this->data['data'] = DB::select('select count(*) as total_logs,"schema_name"::text from admin.all_log group by "schema_name"::text order by count(*)');
-        return view('customer.logsummary', $this->data);
+        $this->data['schema'] = request()->segment(3);
+        $this->data['client'] = strlen($this->data['schema']) > 3 ? DB::table('clients')->where('username', $this->data['schema'])->first() : '';
+        $this->data['schemas'] = DB::select('select username as "table_schema"  from admin.clients where id in (select client_id from admin.payments) or id in (select client_id from admin.standing_orders)');
+        $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->get();
+
+        //check allocation of trainings
+        if (strlen($this->data['schema']) > 3) {
+            $checks = DB::select('select * from admin.train_items where status=1');
+       
+            foreach ($checks as $check) {
+                $check_train = \App\Models\TrainItemAllocation::where('client_id', $this->data['client']->id)->where('train_item_id', $check->id)->first();
+                if (empty($check_train)) {
+                
+                    \App\Models\TrainItemAllocation::create([
+                        'task_id' => 1,
+                        'client_id' => $this->data['client']->id,
+                        'user_id' => Auth::user()->id,
+                        'train_item_id' => $check->id,
+                        'school_person_allocated' => '',
+                        'max_time' => $check->time
+                    ]);
+                }
+            }
+        }
+        // $this->data['users'] = DB::table('admin.all_users')->distinct('usertype')->get(['usertype']);
+        //$this->data['data'] = DB::select('select count(*) as total_logs,"schema_name"::text from admin.all_log group by "schema_name"::text order by count(*)');
+        return view('customer.usage.implementation_allocation', $this->data);
     }
 
     public function pages() {
@@ -1447,13 +1490,10 @@ class Customer extends Controller {
         $this->data['allusers'] = DB::table('admin.all_users')->where('status',1)->get();
     
         return view('customer.usage.alluser', $this->data);
-
-         
+ 
     }
 
 
   
 
 }
-
-      
