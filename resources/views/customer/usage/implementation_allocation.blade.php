@@ -54,7 +54,7 @@
                                         </div>
                                         <br/>
                                         <br/>
-                                        <?php if (strlen($schema) > 3) { ?>
+                                        <?php if (strlen($schema) > 2) { ?>
                                             <div class="table-responsive">
                                                 <table class="table table-bordered dataTable">
                                                     <thead>
