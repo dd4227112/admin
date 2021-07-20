@@ -8974,3 +8974,11 @@ LINE 1: ... and ( lower(a.name::text) like '%nuru%' or lower(a.region::...
 [stacktrace]
 #0 {main}
 "} 
+[2021-07-20 15:26:20] local.ERROR: Cannot redeclare customdate() (previously declared in C:\xampp\htdocs\shulesoft\app\helper.php:3) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot redeclare customdate() (previously declared in C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3) at C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3)
+[stacktrace]
+#0 {main}
+"} 
+[2021-07-20 15:27:20] local.ERROR: Cannot redeclare customdate() (previously declared in C:\xampp\htdocs\shulesoft\app\helper.php:3) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot redeclare customdate() (previously declared in C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3) at C:\\xampp\\htdocs\\shulesoft\\app\\helper.php:3)
+[stacktrace]
+#0 {main}
+"} 

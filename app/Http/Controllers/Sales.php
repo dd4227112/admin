@@ -618,7 +618,7 @@ class Sales extends Controller {
         }
         return view('sales.onboarding_school', $this->data);
     }
-
+ 
     /**
      * Make this very easy for users to get a specific schedule
      * @param type $client_id

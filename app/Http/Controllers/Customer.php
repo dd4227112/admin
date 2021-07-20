@@ -1430,7 +1430,7 @@ class Customer extends Controller {
             empty($school) ? DB::table($schema_name . '.sms_keys')->insert([
                                 'api_secret' => request('token'),
                                 'api_key' => request('url'),
-                                'name' => 'whatsapp',
+                                 'name' => 'whatsapp',
                                 'phone_number' => request('phone')
                             ]) : '';
             DB::table('whatsapp_integrations')->where('id', $id)->update(['approved' => 1]);
