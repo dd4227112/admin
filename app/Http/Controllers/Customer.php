@@ -998,7 +998,7 @@ class Customer extends Controller {
         $this->data['end'] = request('end_date');
         $this->data['schema'] = request()->segment(3);
         $this->data['client'] = strlen($this->data['schema']) > 3 ? DB::table('clients')->where('username', $this->data['schema'])->first() : '';
-        $this->data['schemas'] = (new \App\Http\Controllers\Software())->loadSchema();
+        $this->data['schemas'] = DB::select('select username as "table_schema"  from admin.clients where id in (select client_id from admin.payments) or id in (select client_id from admin.standing_orders)');
         $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->get();
 
         //check allocation of trainings
