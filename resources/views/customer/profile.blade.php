@@ -1209,7 +1209,7 @@ function check_status($table, $where = null) {
                                                                                                                                 <?php
                                                                                                                                 $x = 1;
                                                                                                                                 $customer = new \App\Http\Controllers\Customer();
-                                                                                                                                $trainings = \App\Models\TrainItemAllocation::where('client_id', $client_id)->orderBy('id', 'asc')->get();
+                                                                                                                                $trainings = \App\Models\TrainItemAllocation::where('client_id', $client_id)->orderBy('id', 'asc')->whereIn('train_item_id',\App\Models\TrainItem::where('status',1)->get(['id']))->get();
                                                                                                                                 foreach ($trainings as $training) {
                                                                                                                                       $status=check_implementation($training->trainItem->content, $schema);
                                                                                                                                     ?>
@@ -1242,7 +1242,7 @@ function check_status($table, $where = null) {
                                                                                                                                         <td>
 
                                                                                                                                             <b data-attr="end_date"
-                                                                                                                                               id="task_end_date_id<?= $training->id ?>"><?= date('d M Y', strtotime($training->end_date)) ?>
+                                                                                                                                               id="task_end_date_id<?= $training->id ?>"><?= date('Y', strtotime($training->end_date))==1970 ? '':date('d M Y', strtotime($training->end_date)) ?>
                                                                                                                                             </b>
 
                                                                                                                                         </td>
