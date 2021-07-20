@@ -132,7 +132,7 @@
                                                                 <td>
 
                                                                     <b data-attr="end_date"
-                                                                       id="task_end_date_id<?= $training->id ?>"><?= date('d M Y', strtotime($training->end_date)) ?>
+                                                                       id="task_end_date_id<?= $training->id ?>"><?=date('Y', strtotime($training->end_date))==1970?'': date('d M Y', strtotime($training->end_date)) ?>
                                                                     </b>
 
                                                                 </td>
