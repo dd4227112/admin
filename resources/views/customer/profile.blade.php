@@ -288,7 +288,6 @@ function check_status($table, $where = null) {
                                                         <div class="slide"></div>
                                                     </li>
                                                 <?php } ?>
-
                                             </ul>
                                         </div>
 
@@ -517,7 +516,7 @@ function check_status($table, $where = null) {
                                                                                         ?>
                                                                                         <p>Start Date- <?= $task->start_date ?>
                                                                                             {{-- &nbsp; &nbsp; | &nbsp; &nbsp; End
-                                                                                                                                                                        Date - $task->end_date ?></p> --}}
+                                                                                              Date - $task->end_date ?></p> --}}
                                                                                     </div>
 
                                                                                     <div class="user-box">
@@ -1002,9 +1001,9 @@ function check_status($table, $where = null) {
                                                                                                             <div class="card">
                                                                                                                 <div class="card-header">
                                                                                                                     <h5>Job Card</h5>
-                                                                                                                    <p align="right">
+                                                                                                                    {{-- <p align="right">
                                                                                                                         <a href="<?= url('customer/Jobcard/' . $client_id) ?>" class="btn btn-warning btn-sx"> School Job card </a>
-                                                                                                                    </p>
+                                                                                                                    </p> --}}
                                                                                                                     <p align="right">
                                                                                                                         <button type="button" class="btn btn-primary waves-effect"
                                                                                                                                 data-toggle="modal" data-target="#jobcard-Modal">Create
@@ -1592,23 +1591,20 @@ function check_status($table, $where = null) {
                                                                                                                 <br>                                                
                                                                                                                 <div id="container_log" style="min-width: 80%;  height: 480px; margin: 0 auto">
                                                                                                                 </div>
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/data.js"></script>
-
-     
-
+                                                                                                                    <script src="https://code.highcharts.com/highcharts.js"></script>
+                                                                                                                    <script src="https://code.highcharts.com/modules/data.js"></script>
                                                                                                                         <hr/>
                                                                                                                         <div id="contain" style="min-width: 70%;  height: 480px; margin: 0 auto">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
                                                                                                                         </div>
                                                                                                                     </div>
                                                                                                                 </div>
 
-       <!-- Photos tab end -->                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
-                                                                                                                <!-- Friends tab start                                                                                                                                                                                                                                             --                                                                                                                                >
-             <div class="tab-pane" id="friends" aria-expanded="fa                                                                                                                                                                                                                          ls                                                                                                                                                                                                                                                    e"                                                                                                                                    >
+                                                                                                            <!-- Photos tab end -->                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+                                                                                                                {{-- {{-- <!-- Friends tab start                                                                                                                                                                                                                                             --                                                                                                                                > --}}
+                                                                                                                  <div class="tab-pane" id="friends" aria-expanded="fa                                                                                                                                                                                                                          ls                                                                                                                                                                                                                                                    e"                                                                                                                                    >
                                                                                                                                        <div class="ro                                                                                                                                                                                                                                                            w"                                                                                                                                        >
-        <div                                                                                                                                class="card table-r                                                                                                                                            esponsive">
-                                                                         <table class="table dataTable">
+                                                                                                                                          <div                                                                                                                                class="card table-r                                                                                                                                            esponsive">
+                                                                                                                                       <table class="table dataTable">
                                                                                                                                     <thead>
                                                                                                                                         <tr>
                                                                                                                                             <th>#</th>
@@ -1618,35 +1614,34 @@ function check_status($table, $where = null) {
                                                                                                                                             <th>Title</th>
                                                                                                                                         </tr>
                                                                                                                                     </thead>
-                                                                                                                                    <tbody>
-                                                                                                        <?php
+                                                                                                                                    <tbody> 
+                                                                                                        <?php $i = 1;
                                                                                                         $users = DB::table($schema . '.user')->where('status', 1)->get();
                                                                                                         if (!empty($users)) {
                                                                                                             foreach ($users as $user) {
                                                                                                                 ?>
-                                                                                                                                                                                        <tr>
-                                                                                                                                                                                            <td></td>
-                                                                                                                                                                                            <td><?= $user->name ?></td>
-                                                                                                                                                                                            <td><?= $user->phone ?></td>
-                                                                                                                                                                                            <td><?= $user->email ?></td>
-                                                                                                                                                                                            <td><?= $user->usertype ?></td>
-                                                                                                                                                                                        </tr>
+                                                                                                                <tr>
+                                                                                                                    <td><?= $i ?></td>
+                                                                                                                    <td><?= $user->name ?></td>
+                                                                                                                    <td><?= $user->phone ?></td>
+                                                                                                                    <td><?= $user->email ?></td>
+                                                                                                                    <td><?= $user->usertype ?></td>
+                                                                                                                </tr>
                                                                                                                 <?php
+                                                                                                              $i++;  }
                                                                                                             }
-                                                                                                        }
                                                                                                         ?>
-                                                                                                                                    </tbody>
-                                                                                                                                </table>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>
+                                                                                                                    </tbody>
+                                                                                                                </table>
+                                                                                                             </div>
+                                                                                                         </div>
+                                                                                                   </div>
+
+
                                                                                                         <!-- Friends tab end -->
+
                                                                                                         <div class="tab-pane" id="payments" aria-expanded="false">
-
                                                                                                             <div class="row">
-
-
-
                                                                                                                 <div class="modal fade" id="standing-order-Modal" tabindex="-1"
                                                                                                                      role="dialog" aria-hidden="true"
                                                                                                                      style="z-index: 1050; display: none;">
@@ -1661,10 +1656,9 @@ function check_status($table, $where = null) {
                                                                                                                                 </button>
                                                                                                                             </div>
 
-                                                                                                                            <for                                                                                                                                                m action="{{ url('Customer/addstandingorder') }}" method="post"  enc                                                                                                                                                type                                                                                                                                                ="multipart/                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    form-data">
-                                                                                                                                                    <d                                                                                                                                    iv class="modal-                                                                                                                                       body">
-        
-       <div class="form-group"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        >
+                                                                                                                                <form action="{{ url('Customer/addstandingorder') }}" method="post"  enctype="multipart/form-data">
+                                                                                                                                                    <div class="modal-body">
+                                                                                                                                                       <div class="form-group"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        >
                                                                                                                                                             <div c                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    lass="row">
                                                                                                                                                                 <div class=                                                                                                                                                                                                                                                                                                                                            "col-md-6">
                                                                                                                                                                     <strong> Branch name </strong>
