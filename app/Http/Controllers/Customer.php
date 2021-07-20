@@ -1441,6 +1441,16 @@ class Customer extends Controller {
     }
 
 
+    public function allusers()
+    {
+        $notIn = ['Student','Teacher','Parent','Descipline Master','Head Teacher','Academic Master'];
+        $this->data['allusers'] = DB::table('admin.all_users')->where('status',1)->get();
+    
+        return view('customer.usage.alluser', $this->data);
+
+         
+    }
+
 
   
 
