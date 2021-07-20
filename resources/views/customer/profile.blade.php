@@ -1178,7 +1178,7 @@ return $echo;
                                                  
                                                     <p align="right">
                                                         <a href="<?= url('customer/download/' . $client_id) ?>"
-                                                            class="btn btn-warning btn-sx">Initial Implementation
+                                                            class="btn btn-warning btn-sm">Initial Implementation
                                                             Plan</a>
                                                     </p>
                                                 </div>
