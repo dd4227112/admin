@@ -661,6 +661,7 @@ class Sales extends Controller {
             }
             $date = date('Y-m-d', strtotime(request('slot_date' . $section->id)));
 
+            /// who will attend the task
             $support_user_id= $this->getSupportUser($section->id);
             $data = [
                 'activity' => $section->content,
@@ -691,6 +692,15 @@ class Sales extends Controller {
                 'school_person_allocated' => request("train_item{$section->id}"),
                 'max_time' => $section->time
             ]);
+                
+                //notification
+                /**
+                
+                1. to support person
+                 * 2. to client
+                 * 3. to school person allocated
+                */
+                
         }  
     }
 
