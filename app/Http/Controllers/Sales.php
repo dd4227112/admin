@@ -1239,6 +1239,12 @@ class Sales extends Controller {
     }
 
 
+     
+        public function ifnotImplemented()
+        {
+        
+        }
+
  
 
 }

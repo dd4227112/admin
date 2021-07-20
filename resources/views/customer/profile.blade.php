@@ -1226,12 +1226,12 @@ return $echo;
                                                                                         }
                                                                                         ?>>
                                                                                 <?= $user->firstname . ' ' . $user->lastname ?>
-                                                                            </option>
-                                                                            <?php
+                                                                                 </option>
+                                                                                        <?php
                                                                                             }
                                                                                         }
                                                                                         ?>
-                                                                        </select>
+                                                                                    </select>
                                                                     </td>
                                                                     <td> <b data-attr="school_person"
                                                                             task-id="<?= $training->task->id ?>"
