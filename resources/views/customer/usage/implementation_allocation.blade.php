@@ -54,7 +54,7 @@
                                         </div>
                                         <br/>
                                         <br/>
-                                        <?php if (strlen($schema) > 3) { ?>
+                                        <?php if (strlen($schema) > 2) { ?>
                                             <div class="table-responsive">
                                                 <table class="table table-bordered dataTable">
                                                     <thead>
@@ -132,7 +132,7 @@
                                                                 <td>
 
                                                                     <b data-attr="end_date"
-                                                                       id="task_end_date_id<?= $training->id ?>"><?= date('d M Y', strtotime($training->end_date)) ?>
+                                                                       id="task_end_date_id<?= $training->id ?>"><?=date('Y', strtotime($training->end_date))==1970?'': date('d M Y', strtotime($training->end_date)) ?>
                                                                     </b>
 
                                                                 </td>

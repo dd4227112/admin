@@ -657,6 +657,7 @@ class Sales extends Controller {
             }
             $date = date('Y-m-d', strtotime(request('slot_date' . $section->id)));
 
+            /// who will attend the task
             $support_user_id= $this->getSupportUser($section->id);
             $data = [
                 'activity' => $section->content,
