@@ -120,7 +120,6 @@ if (request()->ajax() == FALSE) {
                                     <th>#</th>
                                     <th>Tasks</th>
                                     <th>Person Responsible <br/>at School (Name & Phone)</th>
-
                                 </tr>
                             </thead> 
                             <tbody>
@@ -128,13 +127,10 @@ if (request()->ajax() == FALSE) {
                                 $sections = \App\Models\TrainItem::where('status', 1)->orderBy('id', 'asc')->get();
                                 foreach ($sections as $section) {
                                     ?>
-
                                     <tr>
-                                        <td>
-                                            <b><input type="checkbox" value="<?=$section->id?>" name="module[]" multiple="" /></b>
-                                        </td>
+                                        <td><b><input type="checkbox" value="<?=$section->id?>" name="module[]" multiple="" /></b></td>
                                         <td><?= $section->content ?></td>
-                                        <td> <input type="text" class="form-control" value="" name="train_item<?= $section->id ?>" required=""></td>
+                                        <td><input type="text" class="form-control" value="" name="train_item<?= $section->id ?>" ></td>
                                     </tr>
                                 <?php } ?>
 

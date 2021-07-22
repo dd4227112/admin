@@ -61,9 +61,9 @@ group by a.invoice_fee_id,c.client_id,b.amount,b.created_at
 
 
 
-<td>
-<?php
-    $previous_amount = collect(\DB::SELECT("select sum(balance) as last_balance from admin.client_invoice_balances where extract(year from created_at) < ' $accountyear->name ' and client_id = ' $invoice->client_id '"))->first();
-    echo money($previous_amount->last_balance);
-?> 
-</td> 
+-- select A.id,A.name,A.client_id,A.students,A.username,A.activities,A.ward,A.district,A.region from
+-- admin.schools B left join 
+-- (select s.id,s.ward_id,s.name,c.client_id,n.estimated_students as students,n.username,count(t.*) as activities, w.name as ward, d.name as district,r.name as region
+-- from admin.schools s  join admin.client_schools c on c.school_id = s.id join admin.clients n on n.id = c.client_id join admin.tasks t on t.school_id = s.id join admin.wards w on w.id = s.ward_id join admin.districts as d on d.id= w.district_id join admin.regions r on  r.id=d.region_id 
+-- where s.ownership <> 'Government'  group by s.id,c.client_id,n.estimated_students,n.username,w.name,d.name,
+-- r.name) A on B.id = A.id

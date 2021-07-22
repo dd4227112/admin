@@ -197,12 +197,15 @@ class Customer extends Controller {
         $attr = request('attr');
         $school_person = request('school_person');
 
+       //dd(request()->all());
+
         if ((int) $task_user == 0) {
             $sales = new \App\Http\Controllers\Sales();
             $user_id = $sales->getSupportUser($section_id);
         } else {
             $user_id = (int) $task_user;
         }
+
 
         $train = \App\Models\TrainItemAllocation::find($ttask_id);
 
@@ -217,19 +220,56 @@ class Customer extends Controller {
                 'user_id' => $user_id,
                 'is_allocated' => 1,
                 'school_person_allocated' => trim($school_person),
-            ];
+            ]; 
 
-            DB::table('train_items_allocations')->where('id', $ttask_id)->update($obj);
+            DB::table('admin.train_items_allocations')->where('id', $ttask_id)->update($obj);
 
             DB::table('tasks_users')->where('task_id', $task_id)->update([
                 'user_id' => $user_id,
                 'updated_at' => date('Y-m-d H:i:s')
             ]);
 
+            $user = \App\Models\User::where('id',$user_id)->first();
+            // email to shulesoft personel
+            $message = 'Hello ' . $user->firstname . '<br/>'
+                        . 'A task ' . $train->trainItem->content .' been allocated to you'
+                        . '<ul>'
+                        . '<li>At : ' . $train->client->name . '</li>'
+                        . '<li>Start date: ' . date('Y-m-d H:i:s', strtotime($start_date)) . '</li>'
+                        . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
+                        . '</ul>';
+            $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+
+            //email to zone manager
+            // find zone manager based on school location
+             $user_id = $this->zonemanager($train->client->id);
+             if(isset($user_id) && !empty((int)$user_id->user_id)){
+              $manager = \App\Models\User::where('id',$user_id->user_id)->first();
+              $manager_message = 'Hello ' . $manager->firstname . '<br/>'
+                        . 'A task ' . $train->trainItem->content .' been scheduled to'
+                        . '<li>' . $train->client->name . '</li>'
+                        . '<li>Start date: ' . date('Y-m-d H:i:s', strtotime($start_date)) . '</li>'
+                        . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
+                        . '</ul>';
+              $this->send_email($manager->email, 'ShuleSoft Task Allocation', $manager_message);
+             }
+
+
+            //sms to school person
+            $school_personel = '';
+            if($school_personel){
+               $message = 'Hello #someone task #something will start at ' . date('Y-m-d H:i:s', strtotime($start_date)) . '';
+               $this->send_sms($school_personel->phone, 'ShuleSoft Task Allocation', $message);
+            }
+
             die(json_encode(array_merge(array('task_id' => $task_id), $obj)));
         }
         //insert into training allocation
         echo 'success';
+    }
+
+    public function zonemanager($id){
+         return  \collect(DB::select("select user_id from admin.zone_managers where zone_id in ( select refer_zone_id from admin.regions where id in(select region_id from admin.districts where id in (select district_id from admin.wards where id in (select ward_id from admin.schools where id in (select school_id from admin.client_schools where client_id =  $id )))) )"))->first();
     }
 
     public function getData() {
@@ -1473,7 +1513,7 @@ class Customer extends Controller {
             empty($school) ? DB::table($schema_name . '.sms_keys')->insert([
                                 'api_secret' => request('token'),
                                 'api_key' => request('url'),
-                                'name' => 'whatsapp',
+                                 'name' => 'whatsapp',
                                 'phone_number' => request('phone')
                             ]) : '';
             DB::table('whatsapp_integrations')->where('id', $id)->update(['approved' => 1]);
@@ -1482,5 +1522,18 @@ class Customer extends Controller {
         $this->data['request'] = DB::table('whatsapp_integrations')->where('id', $id)->first();
         return view('customer.message.approve_integration', $this->data);
     }
+
+
+    public function allusers()
+    {
+        $notIn = ['Student','Teacher','Parent','Descipline Master','Head Teacher','Academic Master'];
+        $this->data['allusers'] = DB::table('admin.all_users')->where('status',1)->get();
+    
+        return view('customer.usage.alluser', $this->data);
+ 
+    }
+
+
+  
 
 }

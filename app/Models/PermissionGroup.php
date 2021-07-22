@@ -18,3 +18,4 @@ class PermissionGroup extends Model
         return $this->hasMany(\App\Models\Permission::class,'permission_group_id','id');
     }
 }
+

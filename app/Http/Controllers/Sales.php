@@ -234,6 +234,7 @@ class Sales extends Controller {
     public function show() {
         $page = request('page');
       //   dd(request('type'));
+
         switch ($page) {
             case 'leads':
                 $sql = 'select a.* from admin.leads a join admin.schools b on a.school_id=b.id join admin.users c on c.id=a.user_id join admin.prospects d on d.id=a.prospect_id join admin.tasks e on e.id=a.task_id';
@@ -242,11 +243,11 @@ class Sales extends Controller {
             case 'schools':
                 if ((int) request('type') == 3) {
                  
-               //$sql = "select * from (select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a where lower(a.ownership) <>'government') a where activities >0";
-                $sql = "select C.*,D.username from (select A.*,B.* from (select x.* from(select s.*, w.name as ward, d.name as district,r.name as region, count(t.*) as activities 
-                from admin.schools as s join admin.tasks as t on s.id=t.school_id join admin.wards as w on s.ward_id=w.id join admin.districts as d on d.id=w.district_id
-                join admin.regions as r on r.id=d.region_id group by s.id, w.id, d.id,r.id) x ) A LEFT JOIN (select school_id,client_id from admin.client_schools) B on A.id = B.school_id
-                ) C  left  join (select id,username from admin.clients) D on C.client_id = D.id"; 
+                $sql = "select * from (select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a where lower(a.ownership) <>'government') a where activities >0";
+                // $sql = "select C.*,D.username from (select A.*,B.* from (select x.* from(select s.*, w.name as ward, d.name as district,r.name as region, count(t.*) as activities 
+                // from admin.schools as s join admin.tasks as t on s.id=t.school_id join admin.wards as w on s.ward_id=w.id join admin.districts as d on d.id=w.district_id
+                // join admin.regions as r on r.id=d.region_id group by s.id, w.id, d.id,r.id) x ) A LEFT JOIN (select school_id,client_id from admin.client_schools) B on A.id = B.school_id
+                // ) C  left  join (select id,username from admin.clients) D on C.client_id = D.id"; 
                 } else if ((int) request('type') == 2) {
                     $sql = "select B.id,B.name,B.ownership,B.type,B.registration_number,B.status,B.status,B.students,
                     B.created_at,B.updated_at,B.nmb_branch,B.account_number,B.branch_name,B.branch_code,
@@ -257,9 +258,8 @@ class Sales extends Controller {
                     (select school_id from admin.all_setting)) B join 
                     (select D.name as district,W.id,W.name as ward,R.name as region from admin.districts as D join
                     admin.wards as W on D.id = W.district_id join admin.regions R on R.id = D.region_id ) T on B.ward_id = T.id";
-                } else {   
-                
-                $sql = "select a.* from (select s.*,b.name as ward,d.name as district,r.name as region,c.client_id,e.username, 
+                } else {     
+                 $sql = "select a.* from (select s.*,b.name as ward,d.name as district,r.name as region,c.client_id,e.username, 
                         (select count(*) from admin.tasks where school_id=s.id) 
                         as activities from admin.schools s join admin.wards b on s.ward_id = b.id join admin.districts as d on d.id=b.district_id
                         join admin.regions r on r.id=d.region_id left join admin.client_schools c on c.school_id = s.id 
@@ -479,9 +479,6 @@ class Sales extends Controller {
                   //  'end_date' => 'required',
                    // 'description' => 'required'
                 ]);
-
-           
-            
             $code = rand(343, 32323) . time();
 
             $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
@@ -499,7 +496,6 @@ class Sales extends Controller {
              
             if (!empty($check_client)) {
                 $client_id = $check_client->id;
-              
             } else {
                 $client_id = DB::table('admin.clients')->insertGetId([
                     'name' => $school->name,
@@ -617,7 +613,7 @@ class Sales extends Controller {
         }
         return view('sales.onboarding_school', $this->data);
     }
-
+ 
     /**
      * Make this very easy for users to get a specific schedule
      * @param type $client_id
@@ -692,29 +688,50 @@ class Sales extends Controller {
                 'school_person_allocated' => request("train_item{$section->id}"),
                 'max_time' => $section->time
             ]);
-                
-                //notification
-                /**
-                
-                1. to support person
-                 * 2. to client
-                 * 3. to school person allocated
-                */
-                
+             
+            $user = \App\Models\User::where('id',$support_user_id)->first();
+            // email to shulesoft personel
+            $message =    'Hello ' . $user->firstname . ' ' . $user->lastname . '<br/>'
+                        . 'A task ' . $section->content .' has been allocated to you'
+                        . '<ul>'
+                        . '<li>From : ' . \App\Models\Client::where('id',$client_id)->first()->name . '</li>'
+                        . '<li>Start date: ' . date('Y-m-d H:i:s', strtotime($start_date)) . '</li>'
+                        . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
+                        . '</ul>';
+            $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+
+            //email to manager
+             $sales = new \App\Http\Controllers\Customer();
+             $user_id = $sales->zonemanager($client_id);
+
+             if(isset($user_id) && !empty((int)$user_id->user_id)){
+                        $manager = \App\Models\User::where('id',$user_id->user_id)->first();
+                        $manager_message = 'Hello ' . $manager->firstname . '<br/>'
+                        . 'A task ' . $section->content .' been scheduled to'
+                        . '<li>' . \App\Models\Client::where('id',$client_id)->first()->name  . '</li>'
+                        . '<li>Start date: ' . date('Y-m-d H:i:s', strtotime($start_date)) . '</li>'
+                        . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
+                        . '</ul>';
+                       $this->send_email($manager->email, 'ShuleSoft Task Allocation', $manager_message);
+               }
+
+            //sms to school personel
+             
         }  
     }
 
     public function getSupportUser($section_id) {
-        
        // $implementation=DB::table('admin.train_items_allocations')->where('train_item_id',$section_id);
         $user=DB::table('admin.user_train_items')->where('train_item_id',$section_id)->where('status',1)->first();
         //we will check if user exists in db or not, and if not we will allocate any user within the company to take that role
+
+      //  $collection = DB::table('admin.train_items_allocations')->select('user_id', DB::raw('count(client_id) as total'))->groupBy('user_id')->get();
+       // dd($collection);
         
         //we will check if this user is already allocated specific school and try to skip the implementation if maximum schools already being alllocated
         
         //but now, we shall return default
         return $user->user_id;
-        
     }
     //algorithm is very very simple
     /**
@@ -1257,6 +1274,12 @@ class Sales extends Controller {
         return view('sales.performance_report',$this->data);
     }
 
+
+     
+        public function ifnotImplemented()
+        {
+        
+        }
 
  
 
