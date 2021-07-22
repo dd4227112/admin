@@ -331,8 +331,8 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
                         \App\Models\Task::where('id', $client->task_id)->update(['status' => 'complete', 'updated_at' => date('Y-m-d H:i:s')]);
                     }
                 } elseif ((int) $item == 8) {
-                    $check = DB::table($schema . '.expense')->count();
-                    $check_revenue = DB::table($schema . '.expense')->count();
+                    $check = DB::table($schema . '.expenses')->count();
+                    $check_revenue = DB::table($schema . '.expenses')->count();
                     if ($check > 0 || $check_revenue > 0) {
                         \App\Models\Task::where('id', $client->task_id)->update(['status' => 'complete', 'updated_at' => date('Y-m-d H:i:s')]);
                     }
