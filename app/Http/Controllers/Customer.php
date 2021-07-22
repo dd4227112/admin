@@ -197,7 +197,7 @@ class Customer extends Controller {
         $attr = request('attr');
         $school_person = request('school_person');
 
-       dd(request()->all());
+       //dd(request()->all());
 
         if ((int) $task_user == 0) {
             $sales = new \App\Http\Controllers\Sales();
@@ -234,7 +234,7 @@ class Customer extends Controller {
             $message = 'Hello ' . $user->firstname . '<br/>'
                         . 'A task ' . $train->trainItem->content .' been allocated to you'
                         . '<ul>'
-                        . '<li>From : ' . $train->client->name . '</li>'
+                        . '<li>At : ' . $train->client->name . '</li>'
                         . '<li>Start date: ' . date('Y-m-d H:i:s', strtotime($start_date)) . '</li>'
                         . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                         . '</ul>';
@@ -242,14 +242,18 @@ class Customer extends Controller {
 
             //email to zone manager
             // find zone manager based on school location
-             $manager = '';
-             $managermessage = 'Hello ' . $manager->firstname . '<br/>'
+             $user_id = $this->zonemanager($train->client->id);
+             if(isset($user_id) && !empty((int)$user_id->user_id)){
+              $manager = \App\Models\User::where('id',$user_id->user_id)->first();
+              $manager_message = 'Hello ' . $manager->firstname . '<br/>'
                         . 'A task ' . $train->trainItem->content .' been scheduled to'
                         . '<li>' . $train->client->name . '</li>'
                         . '<li>Start date: ' . date('Y-m-d H:i:s', strtotime($start_date)) . '</li>'
                         . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                         . '</ul>';
-            $this->send_email($manager->email, 'ShuleSoft Task Allocation', $managermessage);
+              $this->send_email($manager->email, 'ShuleSoft Task Allocation', $manager_message);
+             }
+
 
             //sms to school person
             $school_personel = '';
@@ -262,8 +266,10 @@ class Customer extends Controller {
         }
         //insert into training allocation
         echo 'success';
+    }
 
-         
+    public function zonemanager($id){
+         return  \collect(DB::select("select user_id from admin.zone_managers where zone_id in ( select refer_zone_id from admin.regions where id in(select region_id from admin.districts where id in (select district_id from admin.wards where id in (select ward_id from admin.schools where id in (select school_id from admin.client_schools where client_id =  $id )))) )"))->first();
     }
 
     public function getData() {

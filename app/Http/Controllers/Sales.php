@@ -698,6 +698,23 @@ class Sales extends Controller {
                         . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                         . '</ul>';
             $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+
+            //email to manager
+             $sales = new \App\Http\Controllers\Customer();
+             $user_id = $sales->zonemanager($client_id);
+
+             if(isset($user_id) && !empty((int)$user_id->user_id)){
+                        $manager = \App\Models\User::where('id',$user_id->user_id)->first();
+                        $manager_message = 'Hello ' . $manager->firstname . '<br/>'
+                        . 'A task ' . $section->content .' been scheduled to'
+                        . '<li>' . \App\Models\Client::where('id',$client_id)->first()->name  . '</li>'
+                        . '<li>Start date: ' . date('Y-m-d H:i:s', strtotime($start_date)) . '</li>'
+                        . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
+                        . '</ul>';
+                       $this->send_email($manager->email, 'ShuleSoft Task Allocation', $manager_message);
+               }
+
+            //sms to school personel
              
         }  
     }
@@ -707,14 +724,13 @@ class Sales extends Controller {
         $user=DB::table('admin.user_train_items')->where('train_item_id',$section_id)->where('status',1)->first();
         //we will check if user exists in db or not, and if not we will allocate any user within the company to take that role
 
-        $collection = DB::table('admin.train_items_allocations')->select('user_id', DB::raw('count(client_id) as total'))->groupBy('user_id')->get();
-        dd($collection);
+      //  $collection = DB::table('admin.train_items_allocations')->select('user_id', DB::raw('count(client_id) as total'))->groupBy('user_id')->get();
+       // dd($collection);
         
         //we will check if this user is already allocated specific school and try to skip the implementation if maximum schools already being alllocated
         
         //but now, we shall return default
         return $user->user_id;
-        
     }
     //algorithm is very very simple
     /**
