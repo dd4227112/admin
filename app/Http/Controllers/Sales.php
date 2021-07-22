@@ -479,9 +479,6 @@ class Sales extends Controller {
                   //  'end_date' => 'required',
                    // 'description' => 'required'
                 ]);
-
-           
-            
             $code = rand(343, 32323) . time();
 
             $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
@@ -499,7 +496,6 @@ class Sales extends Controller {
              
             if (!empty($check_client)) {
                 $client_id = $check_client->id;
-              
             } else {
                 $client_id = DB::table('admin.clients')->insertGetId([
                     'name' => $school->name,
@@ -691,14 +687,28 @@ class Sales extends Controller {
                 'school_person_allocated' => request("train_item{$section->id}"),
                 'max_time' => $section->time
             ]);
+             
+            $user = \App\Models\User::where('id',$support_user_id)->first();
+            // email to shulesoft personel
+            $message =    'Hello ' . $user->firstname . ' ' . $user->lastname . '<br/>'
+                        . 'A task ' . $section->content .' has been allocated to you'
+                        . '<ul>'
+                        . '<li>From : ' . \App\Models\Client::where('id',$client_id)->first()->name . '</li>'
+                        . '<li>Start date: ' . date('Y-m-d H:i:s', strtotime($start_date)) . '</li>'
+                        . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
+                        . '</ul>';
+            $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+             
         }  
     }
 
     public function getSupportUser($section_id) {
-        
        // $implementation=DB::table('admin.train_items_allocations')->where('train_item_id',$section_id);
         $user=DB::table('admin.user_train_items')->where('train_item_id',$section_id)->where('status',1)->first();
         //we will check if user exists in db or not, and if not we will allocate any user within the company to take that role
+
+        $collection = DB::table('admin.train_items_allocations')->select('user_id', DB::raw('count(client_id) as total'))->groupBy('user_id')->get();
+        dd($collection);
         
         //we will check if this user is already allocated specific school and try to skip the implementation if maximum schools already being alllocated
         

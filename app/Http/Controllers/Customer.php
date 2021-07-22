@@ -197,12 +197,15 @@ class Customer extends Controller {
         $attr = request('attr');
         $school_person = request('school_person');
 
+       dd(request()->all());
+
         if ((int) $task_user == 0) {
             $sales = new \App\Http\Controllers\Sales();
             $user_id = $sales->getSupportUser($section_id);
         } else {
             $user_id = (int) $task_user;
         }
+
 
         $train = \App\Models\TrainItemAllocation::find($ttask_id);
 
@@ -217,19 +220,50 @@ class Customer extends Controller {
                 'user_id' => $user_id,
                 'is_allocated' => 1,
                 'school_person_allocated' => trim($school_person),
-            ];
+            ]; 
 
-            DB::table('train_items_allocations')->where('id', $ttask_id)->update($obj);
+            DB::table('admin.train_items_allocations')->where('id', $ttask_id)->update($obj);
 
             DB::table('tasks_users')->where('task_id', $task_id)->update([
                 'user_id' => $user_id,
                 'updated_at' => date('Y-m-d H:i:s')
             ]);
 
+            $user = \App\Models\User::where('id',$user_id)->first();
+            // email to shulesoft personel
+            $message = 'Hello ' . $user->firstname . '<br/>'
+                        . 'A task ' . $train->trainItem->content .' been allocated to you'
+                        . '<ul>'
+                        . '<li>From : ' . $train->client->name . '</li>'
+                        . '<li>Start date: ' . date('Y-m-d H:i:s', strtotime($start_date)) . '</li>'
+                        . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
+                        . '</ul>';
+            $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+
+            //email to zone manager
+            // find zone manager based on school location
+             $manager = '';
+             $managermessage = 'Hello ' . $manager->firstname . '<br/>'
+                        . 'A task ' . $train->trainItem->content .' been scheduled to'
+                        . '<li>' . $train->client->name . '</li>'
+                        . '<li>Start date: ' . date('Y-m-d H:i:s', strtotime($start_date)) . '</li>'
+                        . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
+                        . '</ul>';
+            $this->send_email($manager->email, 'ShuleSoft Task Allocation', $managermessage);
+
+            //sms to school person
+            $school_personel = '';
+            if($school_personel){
+               $message = 'Hello #someone task #something will start at ' . date('Y-m-d H:i:s', strtotime($start_date)) . '';
+               $this->send_sms($school_personel->phone, 'ShuleSoft Task Allocation', $message);
+            }
+
             die(json_encode(array_merge(array('task_id' => $task_id), $obj)));
         }
         //insert into training allocation
         echo 'success';
+
+         
     }
 
     public function getData() {
@@ -1003,7 +1037,7 @@ class Customer extends Controller {
 
         //check allocation of trainings
         if (strlen($this->data['schema']) > 3) {
-            $checks = DB::select('select * from admin.train_items where status=1');
+            $checks = DB::select("select * from admin.train_items where status= '1' ");
        
             foreach ($checks as $check) {
                 $check_train = \App\Models\TrainItemAllocation::where('client_id', $this->data['client']->id)->where('train_item_id', $check->id)->first();
