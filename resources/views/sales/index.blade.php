@@ -126,7 +126,7 @@
                                                     <p>
                                                Customers who needs a formal introduction letter, download this letter and change school name with a school name you submit. This letter is already signed and sealed.
                                                     </p>
-                                                    <a href="https://drive.google.com/file/d/1z0E2Jd85cRybWSDbHYbUCX0Nmn7ukMrY/view?usp=sharing" target="_blank" class="badge badge-warning">Download (V 1.0)</a>
+                                                    <a href="https://drive.google.com/file/d/16FrZl_mkC5t92n66ZieI0I1L2Ol0zmV1/view?usp=sharing" target="_blank" class="badge badge-warning">Download (V 1.0)</a>
                                                 </div>
                                             </div>
 
