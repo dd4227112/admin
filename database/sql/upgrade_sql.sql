@@ -67,3 +67,16 @@ group by a.invoice_fee_id,c.client_id,b.amount,b.created_at
 -- from admin.schools s  join admin.client_schools c on c.school_id = s.id join admin.clients n on n.id = c.client_id join admin.tasks t on t.school_id = s.id join admin.wards w on w.id = s.ward_id join admin.districts as d on d.id= w.district_id join admin.regions r on  r.id=d.region_id 
 -- where s.ownership <> 'Government'  group by s.id,c.client_id,n.estimated_students,n.username,w.name,d.name,
 -- r.name) A on B.id = A.id
+
+
+
+
+delete from admin.invoices where id in (
+select invoice_id from admin.invoice_fees where amount = 0 )
+
+
+select A.client_id,C.username,sum(B.amount) from
+(select * from admin.invoices where  account_year_id = '4' and id in ( select invoice_id from admin.invoice_fees where project_id = '1') ) A join admin.invoice_fees  B 
+on A.id = B.invoice_id join admin.clients C on A.client_id = C.id group by A.client_id,C.username
+
+
