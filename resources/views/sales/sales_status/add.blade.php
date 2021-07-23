@@ -114,7 +114,7 @@
                     <div class="form-group">
                       <div class="row">
 
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                           <strong> Task Type</strong>
 
                           <select type="text" name="task_type_id"  style="text-transform:uppercase" required class="form-control select2">
@@ -126,13 +126,17 @@
                             <?php } ?>
                           </select>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                           <strong> Select Pipeline stage</strong>
                           <select name="next_action" class="form-control">
                             <option value="new">New</option>
                             <option value="pipeline">Pipeline</option>
                             <option value="closed">Closed</option>
                           </select>
+                        </div>
+                           <div class="col-md-4">
+                          <strong> Budget(any) -Tsh</strong>
+                          <input type="number" name="budget" class="form-control" />
                         </div>
                       </div>
                     </div>
