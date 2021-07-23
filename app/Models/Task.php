@@ -13,7 +13,7 @@ class Task extends Model {
 
     //put your code here
     protected $table = 'tasks';
-    protected $fillable = ['id','activity', 'client_id', 'action', 'date', 'time', 'user_id','next_action', 'priority', 'created_at', 'updated_at', 'task_type_id', 'to_user_id','start_date','end_date','status','slot_id','ticket_no'];
+    protected $fillable = ['id','activity', 'client_id', 'action', 'date', 'time', 'user_id','next_action', 'priority', 'created_at', 'updated_at', 'task_type_id', 'to_user_id','start_date','end_date','status','slot_id','ticket_no','budget'];
 
     public function user() {
         return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'Not allocated']);
