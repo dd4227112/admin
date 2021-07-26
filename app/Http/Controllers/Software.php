@@ -597,7 +597,7 @@ ORDER BY c.oid, a.attnum";
 //        }
         
         $and = (int) $user_id > 0 ? " AND assign_to in (select id from users where email='" . $user->email. "')": "";
-        $projects = DB::connection('project')->select("SELECT a.dt_created,a.due_date,a.title,a.message, b.name as project_name, c.name as task_type, a.type_id, d.name as created_by, e.name as assigned_to, a.user_id,a.project_id,a.assign_to, case when a.legend=1 THEN 'New' when a.legend=2 THEN 'Opened' when a.legend=3 THEN 'Closed' when a.legend=4 THEN 'Start' when a.legend=5 THEN 'Resolve' WHEN a.legend=6 THEN 'Modified' END as final_status, 
+        $projects = DB::connection('project')->select("SELECT a.actual_dt_created as created_at, a.dt_created as last_updated_at,a.due_date,a.title,a.message, b.name as project_name, c.name as task_type, a.type_id, d.name as created_by, e.name as assigned_to, a.user_id,a.project_id,a.assign_to, case when a.legend=1 THEN 'New' when a.legend=2 THEN 'Opened' when a.legend=3 THEN 'Closed' when a.legend=4 THEN 'Start' when a.legend=5 THEN 'Resolve' WHEN a.legend=6 THEN 'Modified' END as final_status, 
 CASE 
 WHEN reply_type=4 THEN 'High Priority' ELSE 'Default Priority'
 END as priority, CASE WHEN status=0 then 'Pending' ELSE 'Closed' END as status FROM `easycases` a JOIN projects b on b.id=a.project_id JOIN types c on c.id=a.type_id JOIN users d on d.id=a.user_id JOIN users
