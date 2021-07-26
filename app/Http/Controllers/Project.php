@@ -49,11 +49,11 @@ class Project extends Controller {
 
     public function setUserId($email) {
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $user = DB::connection($this->connection)->table('users')->where('email', strtolower($email));
-            if (count($user->first()) == 1) {
+            $user = DB::connection($this->connection)->table('users')->where('email', strtolower($email))->first();
+            if (!empty($user)) {
                 $user_info = DB::table('users')->where('email', strtolower($email))->first();
-                count($user_info) == 1 ?
-                                DB::connection($this->connection)->table('users')->where('email', strtolower($email))->update(['id' => $user_id]) :
+                !empty($user_info)?
+                                DB::connection($this->connection)->table('users')->where('email', strtolower($email))->update(['id' => $user_info->id]) :
                                 die('Email ' . $email . ' does not exists in admin.shulesoft.com');
             } else {
                 die('Email ' . $email . ' does not exists in projects.shulesoft.com');
@@ -74,10 +74,10 @@ class Project extends Controller {
     public function saveTask() {
         $vars = get_class_vars(get_called_class());
         foreach ($vars as $key => $val) {
-            if ($this->$key == NULL && !in_array($key,['project_id'])) {
+            if ($this->$key == NULL && !in_array($key, ['project_id'])) {
                 die($key . ' cannot be empty');
             }
-        }      
+        }
         return DB::connection($this->connection)->table('easycases')->insert([
                     'project_id' => $this->getProjectId(),
                     'user_id' => $this->getUserId(),
