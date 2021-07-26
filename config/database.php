@@ -1,6 +1,7 @@
- <?php
+<?php
 
 use Illuminate\Support\Str;
+
 return [
     'default' => 'pgsql',
     'connections' => [
@@ -11,7 +12,6 @@ return [
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
-
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
@@ -85,6 +85,15 @@ return [
             'options' => [
                 \PDO::ATTR_EMULATE_PREPARES => true
             ]
+        'project' => [
+            'driver' => 'mysql',
+            'persistent' => false,
+            'host' => 'localhost',
+            'username' => 'root',
+            'password' => '',
+            'database' => 'project_',
+            'prefix' => '',
+            'encoding' => 'utf8',
         ],
         'sqlsrv' => [
             'driver' => 'sqlsrv',
@@ -100,16 +109,14 @@ return [
         ],
 
     ],
-
     'migrations' => 'migrations',
 
     'redis' => [
         'client' => env('REDIS_CLIENT', 'phpredis'),
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
         ],
-
         'default' => [
             'url' => env('REDIS_URL'),
             'host' => env('REDIS_HOST', '127.0.0.1'),
