@@ -478,11 +478,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                             <li><a href="<?= url('users/kpi_list') ?>"
                                                 data-i18n="nav.extra-components.session-timeout">KPI</a></li>
                                                 
-                                         <?php if (can_access('meeting_minutes')) { ?>
-                                            <li><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">
-                                                Meetings</a>
-                                            </li>
-                                         <?php } ?>
+                                        
                                             <li><a href="<?= url('attendance/index') ?>"
                                                     data-i18n="nav.extra-components.session-timeout">Attendance</a></li>
                                             <li><a href="<?= url('Partner/partners') ?>"
@@ -507,6 +503,12 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                         </ul>
                                    </li>
                                    <?php } ?>
+
+                                    <?php if (can_access('meeting_minutes')) { ?>
+                                            <li><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">
+                                                Meetings</a>
+                                            </li>
+                                     <?php } ?>
 
                                    <?php if ((int) Auth::user()->role_id == 7) { ?>
                                      {{-- <li class="nav-sub-item">

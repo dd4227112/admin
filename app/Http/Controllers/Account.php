@@ -115,15 +115,21 @@ class Account extends Controller {
         //    }
             $this->getInvoices($project_id, $account_year_id);
         }
-      /*    if ($project_id == 'delete') {
-            $invoice_id = request()->segment(4);
-            $payments = \App\Models\Payment::where('invoice_id', $invoice_id)->first();
-            if (!empty($payments)) {
-                \App\Models\Revenue::where('transaction_id', $payments->transaction_id)->delete();
-            }
-            \App\Models\Invoice::find($invoice_id)->delete();
-            return redirect()->back()->with('success', 'success');
-        } */
+
+        //  if ($project_id == 'delete') {
+        //     $invoice_id = request()->segment(4);
+        //     \App\Models\Invoice::find($invoice_id)->delete();
+        //     $invoice_fee = \App\Models\InvoiceFee::where('invoice_id',$invoice_id)->first();
+        //     $payments = \App\Models\Payment::where('invoice_id', $invoice_id)->first();
+        //      dd($payments);
+        //     if (!empty($payments)) {
+        //         \App\Models\Payment::where('invoice_id', $invoice_id)->delete();
+        //         \App\Models\InvoiceFeesPayment::where('invoice_fee_id', $invoice_fee->id)->delete();
+        //          $invoice_fee->delete();
+        //     }
+        //     return redirect()->back()->with('success', 'deleted successfully');
+        //   }
+
         if ($project_id == 'edit') {
             $id = request()->segment(4);
             $this->data['invoice'] = Invoice::find($id);
@@ -241,15 +247,13 @@ class Account extends Controller {
         $nonclients = \DB::select('select  a."schema_name",a.name,a.sname,a.phone,a.email,a.address,(select count(*) from admin.all_student where "schema_name"::text=a."schema_name"::text and status=1 and created_at::date <=\'' . date('Y-m-d', strtotime($year->end_date)) . '\') as total_students,a.price_per_student,b.id as client_id from admin.all_setting a left join admin.clients b on b."username"=a."schema_name"');
         foreach ($nonclients as $client) {
             if ((int) $client->client_id > 0) {
-
                 $invoice_status = Invoice::where('client_id', $client->client_id)->where('account_year_id', $account_year_id)->first();
                 $reference = 'SASA11' . $year->name . $client->client_id;
                 $invoice = !empty($invoice_status) ? $invoice_status : Invoice::create(['reference' => $reference, 'client_id' => $client->client_id, 'date' => 'now()', 'year' => date('Y'), 'user_id' => Auth::user()->id, 'account_year_id' => $account_year_id, 'due_date' => date('Y-m-d', strtotime('+ 30 days'))]);
-
                 $amount = $client->total_students * $client->price_per_student;
                 (int) \App\Models\InvoiceFee::where('invoice_id', $invoice->id)->count() > 0 ?
-                                \App\Models\InvoiceFee::where('invoice_id', $invoice->id)->update(['amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee For ' . $client->total_students . ' Students ', 'quantity' => $client->total_students, 'unit_price' => $client->price_per_student]) :
-                                \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee For ' . $client->total_students . ' Students ', 'quantity' => $client->total_students, 'unit_price' => $client->price_per_student]);
+                \App\Models\InvoiceFee::where('invoice_id', $invoice->id)->update(['amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee For ' . $client->total_students . ' Students ', 'quantity' => $client->total_students, 'unit_price' => $client->price_per_student]) :
+                \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee For ' . $client->total_students . ' Students ', 'quantity' => $client->total_students, 'unit_price' => $client->price_per_student]);
             } else {
                 $client_record = \App\Models\Client::create(['name' => $client->sname, 'email' => $client->email, 'phone' => $client->phone, 'address' => $client->address, 'username' => $client->schema_name, 'created_at' => date('Y-m-d H:i:s')]);
                 $reference = 'SASA11' . $year->name . $client_record->id;
@@ -544,7 +548,7 @@ class Account extends Controller {
                       return $this->addPayment($invoice->invoice_id);
                  }
              } else{
-                 // dd('Everything');
+                 // 
                   return $this->addPayment($id);
              }
         }

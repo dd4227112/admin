@@ -484,6 +484,8 @@ class Sales extends Controller {
                 ]);
             $code = rand(343, 32323) . time();
 
+          //  dd(request()->all());
+
             $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
             if (empty($school_contact)) {
                 DB::table('admin.school_contacts')->insert([
@@ -683,17 +685,21 @@ class Sales extends Controller {
                 'task_id' => $task->id,
                 'client_id' => (int) $client_id
             ]);
-            \App\Models\TrainItemAllocation::create([
+
+            if(request("train_item{$section->id}") != ''){
+                  \App\Models\TrainItemAllocation::create([
                 'task_id' => $task->id,
                 'client_id' => $client_id,
                 'user_id' => $support_user_id,
                 'train_item_id' => $section->id,
                 'school_person_allocated' => request("train_item{$section->id}"),
                 'max_time' => $section->time
-            ]);
+              ]);
+            }
+         
              
-            $user = \App\Models\User::where('id',$support_user_id)->first();
             // email to shulesoft personel
+            $user = \App\Models\User::where('id',$support_user_id)->first();
             $message =    'Hello ' . $user->firstname . ' ' . $user->lastname . '<br/>'
                         . 'A task ' . $section->content .' has been allocated to you'
                         . '<ul>'
@@ -703,7 +709,7 @@ class Sales extends Controller {
                         . '</ul>';
             $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
 
-            //email to manager
+            //email to zonal manager
              $sales = new \App\Http\Controllers\Customer();
              $user_id = $sales->zonemanager($client_id);
 
@@ -717,24 +723,44 @@ class Sales extends Controller {
                         . '</ul>';
                        $this->send_email($manager->email, 'ShuleSoft Task Allocation', $manager_message);
                }
-
             //sms to school personel
-             
+              if(request("train_item{$section->id}") != ''){
+                    $phonenumber = $this->extractPhoneNumber(request("train_item{$section->id}"));
+                    $phonenumber = validate_phone_number($phonenumber[0]);
+                    $sms = 'Hello '. request("train_item{$section->id}") . ' a task of '  . $section->content . ' been allocated to your school, It is espected to start at ' . date('F,d Y', strtotime($start_date)) . ' and end at  '. date('F,d Y', strtotime($start_date . " + {$section->time} days")) .'';
+                    $this->send_sms($phonenumber[1], $sms);
+              }
         }  
     }
 
+    public function extractPhoneNumber($text){
+         $matches = array();
+         preg_match_all('/[0-9]{3}[\-][0-9]{6}|[0-9]{3}[\s][0-9]{6}|[0-9]{3}[\s][0-9]{3}[\s][0-9]{4}|[0-9]{9}|[0-9]{3}[\-][0-9]{3}[\-][0-9]{4}/', $text, $matches);
+         $matches = $matches[0];
+         return $matches;
+    }
+
     public function getSupportUser($section_id) {
-       // $implementation=DB::table('admin.train_items_allocations')->where('train_item_id',$section_id);
+       // $implementation = DB::table('admin.train_items_allocations')->where('train_item_id',$section_id);
         $user=DB::table('admin.user_train_items')->where('train_item_id',$section_id)->where('status',1)->first();
         //we will check if user exists in db or not, and if not we will allocate any user within the company to take that role
+        
+        $data = [];
+        $collection = DB::table('admin.train_items_allocations')->select('user_id', DB::raw('count(client_id) as total'))->groupBy('user_id')->get();
+        
+        foreach($collection as $value){
+             $data[$value->user_id] = $value->total;
+        }
+        
+        $user_id = array_search(min($data), $data);
 
-      //  $collection = DB::table('admin.train_items_allocations')->select('user_id', DB::raw('count(client_id) as total'))->groupBy('user_id')->get();
-       // dd($collection);
+        return $user_id;
         
         //we will check if this user is already allocated specific school and try to skip the implementation if maximum schools already being alllocated
         
         //but now, we shall return default
-        return $user->user_id;
+      //  return $user->user_id;
+
     }
     //algorithm is very very simple
     /**

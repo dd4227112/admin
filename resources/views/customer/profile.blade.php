@@ -151,9 +151,32 @@ function check_status($table, $where = null) {
                                                                 </div>
                                                                 <div>Teacher</div>
                                                             </div>
-                                                            <div class="col-md-12 col-lg-12">
+                                                            <div class="col-md-12 col-lg-6">
                                                                 <hr>
-                                                                <div class="txt-primary">School Status</div>
+                                                                <h5 class="txt-primary5">Est Students</h5>
+                                                                <?php
+                                                                $st = DB::table($schema . '.setting')->first();
+                                                                if (!empty($st)) {
+                                                                    echo '<a data-toggle="modal" data-target="#status-Modal">';
+                                                                    if ($st->school_status == 1) {
+                                                                        echo '<div class="btn btn-primary">Active Paid</div>';
+                                                                    } elseif ($st->school_status == 2) {
+                                                                        echo '<div class="btn btn-success">Active</div>';
+                                                                    } elseif ($st->school_status == 3) {
+                                                                        echo '<div class="btn btn-warning">Resale</div>';
+                                                                    } elseif ($st->school_status == 4) {
+                                                                        echo '<div class="btn btn-warning"> Inactive </div>';
+                                                                    } else {
+                                                                        echo '<div>Not defined</div>';
+                                                                    }
+                                                                    echo '</a>';
+                                                                }
+                                                                ?>
+                                                             </div>
+
+                                                                <div class="col-md-12 col-lg-6">
+                                                                <hr>
+                                                                <h5 class="txt-primary5">School Status</h5>
                                                                 <?php
                                                                 $st = DB::table($schema . '.setting')->first();
                                                                 if (!empty($st)) {
