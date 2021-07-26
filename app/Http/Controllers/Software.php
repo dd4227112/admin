@@ -587,7 +587,7 @@ ORDER BY c.oid, a.attnum";
         $user_id = request()->segment(3);
 
         //check user
-        $user = \App\Models\User::findOrFails($user_id);
+        $user = \App\Models\User::findOrFail($user_id);
 
         $project_user = DB::connection('project')->table('users')->where('id', $user_id)->where('email', $user->email)->first();
 
