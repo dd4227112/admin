@@ -1,10 +1,9 @@
 <?php
+
 use Illuminate\Support\Str;
 
 return [
-
     'default' => env('DB_CONNECTION', 'pgsql'),
-
     'connections' => [
         'sqlite' => [
             'driver' => 'sqlite',
@@ -13,7 +12,6 @@ return [
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
-
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
@@ -33,22 +31,30 @@ return [
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
-
         'pgsql' => [
             'driver' => 'pgsql',
-            'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE', 'shulesoft_db'),
-            'username' => env('DB_USERNAME', 'postgres'),
-            'password' => env('DB_PASSWORD','password'),
+            // 'url' => env('DATABASE_URL'),
+            'host' => '127.0.0.1',
+            'port' => '5432',
+            'database' => 'vps',
+            'username' => 'postgres',
+            'password' => 'tabita',
             'charset' => 'utf8',
             'prefix' => '',
-            'prefix_indexes' => true,
+           // 'prefix_indexes' => true,
             'schema' => 'admin',
             'sslmode' => 'prefer',
         ],
-
+        'project' => [
+            'driver' => 'mysql',
+            'persistent' => false,
+            'host' => 'localhost',
+            'username' => 'root',
+            'password' => '',
+            'database' => 'project_',
+            'prefix' => '',
+            'encoding' => 'utf8',
+        ],
         'sqlsrv' => [
             'driver' => 'sqlsrv',
             'url' => env('DATABASE_URL'),
@@ -62,15 +68,13 @@ return [
             'prefix_indexes' => true,
         ],
     ],
-
     'migrations' => 'migrations',
     'redis' => [
         'client' => env('REDIS_CLIENT', 'phpredis'),
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
         ],
-
         'default' => [
             'url' => env('REDIS_URL'),
             'host' => env('REDIS_HOST', '127.0.0.1'),

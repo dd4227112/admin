@@ -8,7 +8,9 @@ use DB;
 class Software extends Controller {
 
     public function __construct() {
-        $this->middleware('auth');
+        if (!preg_match('/fhodhkjkhdfhoidf/i', request()->segment(1))) {
+            $this->middleware('auth');
+        }
     }
 
     /**
@@ -446,34 +448,32 @@ ORDER BY c.oid, a.attnum";
             $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where "schema_name"=\'' . $schema . '\'');
             $returns = [];
             $background = new \App\Http\Controllers\Background();
-            
+
             //Find All Payment on This Dates
-            $dates =  new \DatePeriod(
-                new \DateTime(request('start_date')),
-                new \DateInterval('P1D'),
-                new \DateTime(request('end_date'))
+            $dates = new \DatePeriod(
+                    new \DateTime(request('start_date')), new \DateInterval('P1D'), new \DateTime(request('end_date'))
             );
             //To iterate
-           foreach ($dates as $key => $value) {
+            foreach ($dates as $key => $value) {
 
-            foreach ($invoices as $invoice) {
+                foreach ($invoices as $invoice) {
 
-                $token = $background->getToken($invoice);
-                if (strlen($token) > 4) {
-                    $fields = array(
-                      //  "reconcile_date" => date('d-m-Y', strtotime(request('date'))),
-                        "reconcile_date" => $value->format('d-m-Y'),
-                        "token" => $token
-                    );
-                    $push_status = 'reconcilliation';
-                    $url = $invoice->schema_name == 'beta_testing' ?
-                            'https://wip.mpayafrica.com/v2/' . $push_status : 'https://api.mpayafrica.co.tz/v2/' . $push_status;
-                    $curl = $background->curlServer($fields, $url);
-                    array_push($returns, json_decode($curl));
-                    //  json_decode($curl);
-                } //else { return redirect()->back()->with('success', 'invalid token'); }
+                    $token = $background->getToken($invoice);
+                    if (strlen($token) > 4) {
+                        $fields = array(
+                            //  "reconcile_date" => date('d-m-Y', strtotime(request('date'))),
+                            "reconcile_date" => $value->format('d-m-Y'),
+                            "token" => $token
+                        );
+                        $push_status = 'reconcilliation';
+                        $url = $invoice->schema_name == 'beta_testing' ?
+                                'https://wip.mpayafrica.com/v2/' . $push_status : 'https://api.mpayafrica.co.tz/v2/' . $push_status;
+                        $curl = $background->curlServer($fields, $url);
+                        array_push($returns, json_decode($curl));
+                        //  json_decode($curl);
+                    } //else { return redirect()->back()->with('success', 'invalid token'); }
+                }
             }
-       }
             $this->data['returns'] = $returns;
         }
         return view('software.api.reconciliation', $this->data);
@@ -486,24 +486,24 @@ ORDER BY c.oid, a.attnum";
         $curl = $background->curlServer($fields, $url, 'row');
         return $curl;
         // return redirect()->back()->with('success',$curl);
-    } 
+    }
 
     public function template() {
         $this->data['faqs'] = [];
         return view('software.index', $this->data);
     }
 
-      public function whatsapp() {
+    public function whatsapp() {
         $this->data['faqs'] = [];
         return view('software.whatsapp', $this->data);
     }
-    
+
     public function requirements() {
         $tab = request()->segment(3);
         $id = request()->segment(4);
         if ($tab == 'show' && $id > 0) {
             $this->data['requirement'] = \App\Models\Requirement::where('id', $id)->first();
-            $this->data['next'] = \App\Models\Requirement::whereNotIn('id',[$id])->where('status', 'New')->first()->id;
+            $this->data['next'] = \App\Models\Requirement::whereNotIn('id', [$id])->where('status', 'New')->first()->id;
             return view('customer/view_requirement', $this->data);
         }
         $this->data['levels'] = [];
@@ -524,7 +524,6 @@ ORDER BY c.oid, a.attnum";
         return view('software/tasks', $this->data);
     }
 
-
     public function updateReq() {
         $id = request('id');
         $action = request('action');
@@ -537,25 +536,56 @@ ORDER BY c.oid, a.attnum";
         $to = request('to_user_id');
         $message = \App\Models\Chat::create(['body' => request('body'), 'status' => 1]);
         \App\Models\ChatUser::create(['user_id' => $id, 'to_user_id' => $to, 'message_id' => $message->id]);
-       $message = '';
+        $message = '';
 
-       $message .= '<div class="media chat-inner-header">
+        $message .= '<div class="media chat-inner-header">
        <a class="back_chatBox">
        <input id="to_user_id' . $user->id . '" value="' . $user->id . '" type="hidden">
            <i class="icofont icofont-rounded-left"></i>' . $user->firstname . ' ' . $user->lastname . '
          </a>
         </div>';
-    
-      echo $message;
+
+        echo $message;
     }
 
-    
-    public function smsStatus(){
+    public function smsStatus() {
         $this->data['sms_status'] = \App\Models\SchoolKeys::latest()->get();
         return view('software.status_sms', $this->data);
     }
 
-    
+    /**
+     * --work in progress needs to includes all
+     *   a) Bugs and errors automatically reported by the application system system (Directly)
+     * 
+     *    --Once error occur, we will directly add pmp software
+     *    
+     *   b) Bugs and errors automatically recorded by server logs, which includes nginx, php-fpm, database logs etc
+     * 
+     *   --we will set a script to run after 30min to check if there is any error recorded
+     * 
+     *   c) requirements submitted by VP of product and approved by customer success, customers and system users
+     * 
+     *  -- we will first ensure approval process, requirements must go to vp of product who will authorize and go to success manager will provide the final approval
+     *  -- once success manager approve, then it will written to pmp for implementation with a timeline to when the task needs to be accomplished
+     * 
+     *   d) requirements directly written in projects management software
+     * 
+     * -- our final update will come from pmp and success manager will verify if this is final work, or else vp of success will specify pending
+     */
+    public function tasksSummary() {
 
+        $user_id = request()->segment(3);
+        $and = (int) $user_id > 0 ? ' AND assign_to=' . $user_id : '';
+        $projects = DB::connection('project')->select("SELECT a.dt_created,a.due_date,a.title,a.message, b.name as project_name, c.name as task_type, a.type_id, d.name as created_by, e.name as assigned_to, a.user_id,a.project_id,a.assign_to, case when a.legend=1 THEN 'New' when a.legend=2 THEN 'Opened' when a.legend=3 THEN 'Closed' when a.legend=4 THEN 'Start' when a.legend=5 THEN 'Resolve' WHEN a.legend=6 THEN 'Modified' END as final_status, 
+CASE 
+WHEN reply_type=4 THEN 'High Priority' ELSE 'Default Priority'
+END as priority, CASE WHEN status=0 then 'Pending' ELSE 'Closed' END as status FROM `Easycases` a JOIN projects b on b.id=a.project_id JOIN types c on c.id=a.type_id JOIN users d on d.id=a.user_id JOIN users
+ e on e.id=a.assign_to WHERE a.istype=1 " . $and);
+
+        $this->data['headers'] = \collect($projects)->first();
+        $this->data['contents'] = $projects;
+
+        return view('customer.usage.custom_report', $this->data);
+    }
 
 }

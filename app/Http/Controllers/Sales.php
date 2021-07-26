@@ -31,6 +31,9 @@ class Sales extends Controller {
 
     public function __construct() {
         $this->middleware('auth');
+        $project=new \App\Http\Controllers\Project();
+        $project->saveTask();
+        exit;
         $this->data['insight'] = $this;
     }
 
