@@ -575,6 +575,17 @@ ORDER BY c.oid, a.attnum";
     public function tasksSummary() {
 
         $user_id = request()->segment(3);
+
+        //check user
+        $user = \App\Models\User::findOrFails($user_id);
+
+        $project_user = DB::connection('project')->table('users')->where('id', $user_id)->where('email', $user->email)->first();
+
+        if (empty($project_user)) {
+            $project = new \App\Http\Controllers\Project();
+            $project->setUserId($user->email);
+        }
+        
         $and = (int) $user_id > 0 ? ' AND assign_to=' . $user_id : '';
         $projects = DB::connection('project')->select("SELECT a.dt_created,a.due_date,a.title,a.message, b.name as project_name, c.name as task_type, a.type_id, d.name as created_by, e.name as assigned_to, a.user_id,a.project_id,a.assign_to, case when a.legend=1 THEN 'New' when a.legend=2 THEN 'Opened' when a.legend=3 THEN 'Closed' when a.legend=4 THEN 'Start' when a.legend=5 THEN 'Resolve' WHEN a.legend=6 THEN 'Modified' END as final_status, 
 CASE 
@@ -584,7 +595,6 @@ END as priority, CASE WHEN status=0 then 'Pending' ELSE 'Closed' END as status F
 
         $this->data['headers'] = \collect($projects)->first();
         $this->data['contents'] = $projects;
-
         return view('customer.usage.custom_report', $this->data);
     }
 
