@@ -197,7 +197,7 @@ class Customer extends Controller {
         $attr = request('attr');
         $school_person = request('school_person');
 
-       //dd(request()->all());
+        //dd(request()->all());
 
         if ((int) $task_user == 0) {
             $sales = new \App\Http\Controllers\Sales();
@@ -220,7 +220,7 @@ class Customer extends Controller {
                 'user_id' => $user_id,
                 'is_allocated' => 1,
                 'school_person_allocated' => trim($school_person),
-            ]; 
+            ];
 
             DB::table('admin.train_items_allocations')->where('id', $ttask_id)->update($obj);
 
@@ -229,37 +229,37 @@ class Customer extends Controller {
                 'updated_at' => date('Y-m-d H:i:s')
             ]);
 
-            $user = \App\Models\User::where('id',$user_id)->first();
+            $user = \App\Models\User::where('id', $user_id)->first();
             // email to shulesoft personel
             $message = 'Hello ' . $user->firstname . '<br/>'
-                        . 'A task ' . $train->trainItem->content .' been allocated to you'
-                        . '<ul>'
-                        . '<li>At : ' . $train->client->name . '</li>'
-                        . '<li>Start date: ' . date('Y-m-d H:i:s', strtotime($start_date)) . '</li>'
-                        . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
-                        . '</ul>';
+                    . 'A task ' . $train->trainItem->content . ' been allocated to you'
+                    . '<ul>'
+                    . '<li>At : ' . $train->client->name . '</li>'
+                    . '<li>Start date: ' . date('Y-m-d H:i:s', strtotime($start_date)) . '</li>'
+                    . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
+                    . '</ul>';
             $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
 
             //email to zone manager
             // find zone manager based on school location
-             $user_id = $this->zonemanager($train->client->id);
-             if(isset($user_id) && !empty((int)$user_id->user_id)){
-              $manager = \App\Models\User::where('id',$user_id->user_id)->first();
-              $manager_message = 'Hello ' . $manager->firstname . '<br/>'
-                        . 'A task ' . $train->trainItem->content .' been scheduled to'
+            $user_id = $this->zonemanager($train->client->id);
+            if (isset($user_id) && !empty((int) $user_id->user_id)) {
+                $manager = \App\Models\User::where('id', $user_id->user_id)->first();
+                $manager_message = 'Hello ' . $manager->firstname . '<br/>'
+                        . 'A task ' . $train->trainItem->content . ' been scheduled to'
                         . '<li>' . $train->client->name . '</li>'
                         . '<li>Start date: ' . date('Y-m-d H:i:s', strtotime($start_date)) . '</li>'
                         . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                         . '</ul>';
-              $this->send_email($manager->email, 'ShuleSoft Task Allocation', $manager_message);
-             }
+                $this->send_email($manager->email, 'ShuleSoft Task Allocation', $manager_message);
+            }
 
 
             //sms to school person
             $school_personel = '';
-            if($school_personel){
-               $message = 'Hello #someone task #something will start at ' . date('Y-m-d H:i:s', strtotime($start_date)) . '';
-               $this->send_sms($school_personel->phone, 'ShuleSoft Task Allocation', $message);
+            if ($school_personel) {
+                $message = 'Hello #someone task #something will start at ' . date('Y-m-d H:i:s', strtotime($start_date)) . '';
+                $this->send_sms($school_personel->phone, 'ShuleSoft Task Allocation', $message);
             }
 
             die(json_encode(array_merge(array('task_id' => $task_id), $obj)));
@@ -268,8 +268,8 @@ class Customer extends Controller {
         echo 'success';
     }
 
-    public function zonemanager($id){
-         return  \collect(DB::select("select user_id from admin.zone_managers where zone_id in ( select refer_zone_id from admin.regions where id in(select region_id from admin.districts where id in (select district_id from admin.wards where id in (select ward_id from admin.schools where id in (select school_id from admin.client_schools where client_id =  $id )))) )"))->first();
+    public function zonemanager($id) {
+        return \collect(DB::select("select user_id from admin.zone_managers where zone_id in ( select refer_zone_id from admin.regions where id in(select region_id from admin.districts where id in (select district_id from admin.wards where id in (select ward_id from admin.schools where id in (select school_id from admin.client_schools where client_id =  $id )))) )"))->first();
     }
 
     public function getData() {
@@ -938,13 +938,11 @@ class Customer extends Controller {
 
     public function customSqlReport() {
         $sql = strlen(request('q')) > 3 ? request('q') : exit;
-        $view = strlen(request('v')) > 3 ? request('v') : exit;
+       // $view = strlen(request('v')) > 3 ? request('v') : exit;
         //DB::statement('select admin.sales_report()');
-        DB::select('Create or replace view ' . $view . ' AS ' . $sql);
-
-        $this->data['headers'] = DB::table($view)->first();
-        $this->data['contents'] = DB::table($view)->get();
-
+       // DB::select('Create or replace view ' . $view . ' AS ' . $sql);
+        $this->data['contents'] = DB::select($sql);
+        $this->data['headers'] = \collect($this->data['contents'])->first();
         return view('customer.usage.custom_report', $this->data);
     }
 
@@ -960,12 +958,12 @@ class Customer extends Controller {
         $where_user = (int) $user_id == 0 ? ' ' : ' user_id=' . $user_id . ' and ';
         $sql = 'select b.username as school_name, f.content as activity, a.created_at, a.created_at + make_interval(days => a.max_time) as deadline, a.completed_at, 1 as status from admin.train_items_allocations a join admin.clients b on b.id=a.client_id join admin.tasks c on c.id=a.task_id JOIN admin.all_setting d on d."schema_name"=b.username join admin.train_items f on f.id=a.train_item_id where a.is_allocated=1 and f.status=1 and (a.client_id in (select client_id from admin.payments where extract(year from date)=2021) OR a.client_id in (select client_id from admin.standing_orders) ) and  a.train_item_id in (select train_item_id from admin.user_train_items where ' . $where_user . '  user_id=a.user_id)';
         // $sql = 'select b.username as school_name, f.content as activity, a.created_at, a.created_at + make_interval(days => a.max_time) as deadline, a.completed_at, 1 as status from admin.train_items_allocations a join admin.clients b on b.id=a.client_id join admin.tasks c on c.id=a.task_id JOIN admin.all_setting d on d."schema_name"=b.username join admin.train_items f on f.id=a.train_item_id where f.status=1 and (a.client_id in (select client_id from admin.payments where extract(year from date)=2021) OR a.client_id in (select client_id from admin.standing_orders) )';
-        $view = 'implementation_report_' . $user_id;
-        DB::select('Create or replace view ' . $view . ' AS ' . $sql);
+//        $view = 'implementation_report_' . $user_id;
+//        DB::select('Create or replace view ' . $view . ' AS ' . $sql);
 
-        $this->data['headers'] = DB::table($view)->first();
-        $this->data['contents'] = DB::table($view)->get();
 
+        $this->data['contents'] = DB::select($sql);
+        $this->data['headers'] = \collect($this->data['contents'])->first();
         return view('customer.usage.implementation', $this->data);
     }
 
@@ -1045,11 +1043,11 @@ class Customer extends Controller {
         //check allocation of trainings
         if (strlen($this->data['schema']) > 2) {
             $checks = DB::select('select * from admin.train_items where status=1');
-       
+
             foreach ($checks as $check) {
                 $check_train = \App\Models\TrainItemAllocation::where('client_id', $this->data['client']->id)->where('train_item_id', $check->id)->first();
                 if (empty($check_train)) {
-                
+
                     \App\Models\TrainItemAllocation::create([
                         'task_id' => 1,
                         'client_id' => $this->data['client']->id,
@@ -1514,7 +1512,7 @@ class Customer extends Controller {
             empty($school) ? DB::table($schema_name . '.sms_keys')->insert([
                                 'api_secret' => request('token'),
                                 'api_key' => request('url'),
-                                 'name' => 'whatsapp',
+                                'name' => 'whatsapp',
                                 'phone_number' => request('phone')
                             ]) : '';
             DB::table('whatsapp_integrations')->where('id', $id)->update(['approved' => 1]);
@@ -1524,17 +1522,11 @@ class Customer extends Controller {
         return view('customer.message.approve_integration', $this->data);
     }
 
+    public function allusers() {
+        $notIn = ['Student', 'Teacher', 'Parent', 'Descipline Master', 'Head Teacher', 'Academic Master'];
+        $this->data['allusers'] = DB::table('admin.all_users')->where('status', 1)->get();
 
-    public function allusers()
-    {
-        $notIn = ['Student','Teacher','Parent','Descipline Master','Head Teacher','Academic Master'];
-        $this->data['allusers'] = DB::table('admin.all_users')->where('status',1)->get();
-    
         return view('customer.usage.alluser', $this->data);
- 
     }
-
-
-  
 
 }
