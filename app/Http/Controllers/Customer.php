@@ -473,7 +473,7 @@ class Customer extends Controller {
         if ($school == 'school') {
             $id = request()->segment(4);
             $this->data['client_id'] = $id;
-            $this->data['school'] = \collect(DB::select('select name as sname, name,schema_name, region , ward, district as address  from admin.schools where id=' . $id))->first();
+            $this->data['school'] = \collect(DB::select('select id,name as sname, name,schema_name, region, ward, district as address,students  from admin.schools where id=' . $id))->first();
         } else {
             $is_client = 1;
             $this->data['school'] = DB::table($school . '.setting')->first();
