@@ -85,6 +85,7 @@ return [
             'options' => [
                 \PDO::ATTR_EMULATE_PREPARES => true
             ]
+],
         'project' => [
             'driver' => 'mysql',
             'persistent' => false,
