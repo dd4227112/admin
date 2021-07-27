@@ -564,8 +564,9 @@ class Account extends Controller {
                 // This is when a bank return payment status to us
                 //save it in the database
             $this->validate(request(), ['amount' => 'required|numeric', 'payment_type' => 'required', 'date' => 'required']);
-            $transaction_id = (int) request('transaction_id') == 0 ? time() : request('transaction_id');
+            $transaction_id = (int) request('transaction_id') == 0 ? time() : (int) request('transaction_id');
             $payments = \App\Models\Payment::where('transaction_id', $transaction_id)->first();
+          //  $payments =  DB::select("select * from admin.payments where transaction_id = $transaction_id");
             if (!empty($payments)) {
                 $data = array(
                     'status' => 1,

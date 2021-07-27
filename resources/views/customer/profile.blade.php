@@ -28,7 +28,7 @@ function check_status($table, $where = null) {
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4><?= isset($school->sname) ? $school->sname : '' ?></h4>
+                <h4><?= isset($school->sname) ? $school->sname : '' ?>  <?= isset($school->students) ? 'Estimated students '. $school->students : '' ?></h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -151,30 +151,10 @@ function check_status($table, $where = null) {
                                                                 </div>
                                                                 <div>Teacher</div>
                                                             </div>
-                                                            <div class="col-md-12 col-lg-6">
-                                                                <hr>
-                                                                <h5 class="txt-primary5">Est Students</h5>
-                                                                <?php
-                                                                $st = DB::table($schema . '.setting')->first();
-                                                                if (!empty($st)) {
-                                                                    echo '<a data-toggle="modal" data-target="#status-Modal">';
-                                                                    if ($st->school_status == 1) {
-                                                                        echo '<div class="btn btn-primary">Active Paid</div>';
-                                                                    } elseif ($st->school_status == 2) {
-                                                                        echo '<div class="btn btn-success">Active</div>';
-                                                                    } elseif ($st->school_status == 3) {
-                                                                        echo '<div class="btn btn-warning">Resale</div>';
-                                                                    } elseif ($st->school_status == 4) {
-                                                                        echo '<div class="btn btn-warning"> Inactive </div>';
-                                                                    } else {
-                                                                        echo '<div>Not defined</div>';
-                                                                    }
-                                                                    echo '</a>';
-                                                                }
-                                                                ?>
-                                                             </div>
 
-                                                                <div class="col-md-12 col-lg-6">
+                                                           
+
+                                                             <div class="col-md-12 col-lg-12">
                                                                 <hr>
                                                                 <h5 class="txt-primary5">School Status</h5>
                                                                 <?php

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-
+<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
 <div class="main-body">
     <div class="page-wrapper">
         <!-- Page-header start -->
@@ -146,6 +146,14 @@
             }
         });
     }
+
+
+       $(".select2").select2({
+        theme: "bootstrap",
+        dropdownAutoWidth: false,
+        allowClear: false,
+        debug: true
+    });
     //    $(document).ready(function () {
     //        var table = $('#api_requests').DataTable({
     //            "processing": true,

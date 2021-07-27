@@ -93,11 +93,11 @@
                                                 </thead>
                                                 <tbody>
                                                 <?php
-                                                $i = 1;
-                                                if (sizeof($schools) > 0) {
+                                                $i = 1; 
+                                                if (sizeof($schools) > 0) { 
                                                     foreach ($schools as $school){
                                                         $check = \App\Models\TaskSchool::where('task_id', $school->id)->first();
-
+                                                          // dd($check);
                                                         if(!empty($check)){
                                                             ?>
                                                   <tr>
@@ -105,7 +105,7 @@
                                                   <td><?=$check->school->name?></td>
                                                   <td><?=$check->school->region?></td>
                                                   <td><?=$school->end_date?></td>
-                                                  <td><?=$school->type?></td>
+                                                  <td><?= isset($school->type) ? $school->type : '' ?></td>
                                                   <td><?=$school->next_action?></td>
                                                   <td> 
                                                   <?php
@@ -127,7 +127,7 @@
                                                   <td><?=$check_task->client->name?></td>
                                                   <td><?=$check_task->client->phone?></td>
                                                   <td><?=$school->end_date?></td>
-                                                  <td><?=$school->type?></td>
+                                                  <td><?=isset($school->type) ? $school->type : ''?></td>
                                                   <td><?=$school->next_action?></td>
                                                   <td> 
                                                   <?php
