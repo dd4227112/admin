@@ -565,9 +565,9 @@ class Account extends Controller {
             $this->validate(request(), ['amount' => 'required|numeric', 'payment_type' => 'required', 'date' => 'required']);
             $transaction_id =  request('transaction_id') == 0 ?  time() : request('transaction_id');
           
-             $payments = \App\Models\Payment::where('transaction_id', $transaction_id)->first();
+            // $payments = \App\Models\Payment::where('transaction_id', (string) $transaction_id)->first();
             
-          //  $payments =  DB::select("select * from admin.payments where transaction_id = $transaction_id");
+            $payments = collect(\DB::select("select * from admin.payments where transaction_id = '.$transaction_id.' "))->first();
             if (!empty($payments)) {
                 $data = array(
                     'status' => 1,
