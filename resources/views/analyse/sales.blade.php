@@ -246,42 +246,41 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
                         <div class="card-header">
                         <h5>Monthly On Boarded Schools</h5>
                         </div>
-                        <div class="card-block">
-                        <div class="table-responsive dt-responsive">
-                                            <table id="dt-ajax-array" class="table table-striped table-bordered nowrap">
-                                                <thead>
-                                                    <tr>
-                                                        <th>No.</th>
-                                                        <th>Client</th>
-                                                        <th>Address</th>
-                                                        <th>Added Date</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                <?php
-                                                $i = 1;
-                                            $schoolz = DB::select('select * from admin.all_setting a WHERE  ' . $where);
-                                        if(count($schoolz)){
-                                            foreach($schoolz as $school){ 
+                          <div class="card-block">
+                            <div class="table-responsive analytic-table">
+                                <table id="res-config" class="table table-bordered w-100 dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Client</th>
+                                            <th>Address</th>
+                                            <th>Added Date</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                      <tbody>
+                                        <?php
+                                             $i = 1;
+                                            $allschools = DB::select('select * from admin.all_setting a WHERE  ' . $where);
+                                             if(count($allschools)){
+                                              foreach($allschools as $school){ 
                                                 ?>
                                                 <tr>
                                                 <td><?=$i++?></td>
                                                 <td><?=ucfirst($school->sname)?></td>
                                                 <td><?=ucfirst($school->address)?></td>
-                                                <td><?=$school->created_at?></td>
+                                                <td><?= date('F,d Y', strtotime($school->created_at))?></td>
                                                 <td>
                                                 <?php
-                                                echo '<a href="'. url('customer/profile/'.$school->schema_name) .'">View</a>';
+                                                echo '<a class="btn btn-info" href="'. url('customer/profile/'.$school->schema_name) .'">View</a>';
                                                 ?>
                                                 </td>
                                                 </tr>
-
-                                      <?php
+                                            <?php
                                             }
                                         }
                                         ?>
-                            </tbody>
+                                    </tbody>
                                 </table>
                         </div>
                     </div>
@@ -296,8 +295,7 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
                         </div>
                         <div class="card-block">
                             <?php
-                            $new_schools = 'select count(*),extract(month from created_at) as month from admin.all_setting a
-where extract(year from a.created_at)=' . $year . '  group by month order by month';
+                            $new_schools = 'select count(*),extract(month from created_at) as month from admin.all_setting a where extract(year from a.created_at)=' . $year . '  group by month order by month';
                             echo $insight->createChartBySql($new_schools, 'month', 'Onboarded Schools', 'line', false);
                             ?>
                         </div>
@@ -307,17 +305,17 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                 <!-- Google Chart start-->
                 <div class="col-xl-6">
                 <div class="card">
-                                        <div class="card-header">
-                                            <h5>Website Join Requests</h5>
-                                        </div>
-                                        <div class="card-block">
-                                            <?php
-                                            $new_schools = 'select count(*),extract(month from created_at) as month from admin.website_join_shulesoft a
-                                                where extract(year from a.created_at)=' . $year . '  group by month order by month';
-                                            echo $insight->createChartBySql($new_schools, 'month', 'Website Requests', 'line', false);
-                                            ?>
-                                        </div>
-                                    </div>
+                    <div class="card-header">
+                        <h5>Website Join Requests</h5>
+                    </div>
+                    <div class="card-block">
+                        <?php
+                        $new_schools = 'select count(*),extract(month from created_at) as month from admin.website_join_shulesoft a
+                            where extract(year from a.created_at)=' . $year . '  group by month order by month';
+                        echo $insight->createChartBySql($new_schools, 'month', 'Website Requests', 'line', false);
+                        ?>
+                    </div>
+                </div>
                 </div>
             </div>
             <!-- Recent Order table start -->
@@ -350,29 +348,18 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                             ?>
                         </div>
                     </div>
+                  </div>                       
                 </div>
-                        
-                                           
-                            </div>
-                        </div>
-                      </div>
-                    </div>
-                </div>
-             
-                    <!-- .events-content -->
-                    <!-- Todo card start -->
-                    <div class="row">
 
-                    <!-- Horizontal Timeline end -->
-                    <div class="col-lg-8 col-sm-12">
-                        <div class="card widget-chat-box">
-                            <div class="card-header">
-                                        <h5>
-                                            Tasks Activities
-                                        </h5>
-                                </div>
-                                <div class="card-block">
-                                 <table id="res-config" class="table table-bordered w-100 dataTable">
+
+
+
+                 <div class="row">
+                    <div class="col-lg-6 col-sm-12">
+                        <div class="card">
+                            <div class="card-block">
+                              <div class="table-responsive analytic-table">
+                                <table id="res-config" class="table table-bordered w-100 dataTable">
                                     <thead>
                                         <tr>
                                             <th>Name</th>
@@ -381,35 +368,26 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                                         </tr>
                                     </thead>
                                     <tbody>
-
-                                        <?php
-                                        $activities = DB::select("select a.id, a.activity,a.created_at,b.name as task_name,a.user_id, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id WHERE   a.user_id in (select id from admin.users where department=2) and " . $where);
+                                        <?php $activities = DB::select("select a.id, a.activity,a.created_at,b.name as task_name,a.user_id, c.firstname||' '||c.lastname as user_name from admin.tasks a join admin.task_types b on b.id=a.task_type_id join admin.users c on c.id=a.user_id WHERE   a.user_id in (select id from admin.users where department=2) and " . $where);
                                         foreach ($activities as $activity) {
                                             ?>
                                             <tr>
-                                                <td class="img-pro">
-                                                <a href="<?=url('customer/taskGroup/user/'.$activity->user_id)?>"><?= $activity->user_name ?></a>
-                                                </td>
-                                            <!--    <td class="pro-name"><?= $activity->activity ?>
-                                                </td>-->
+                                                <td> <a href="<?=url('customer/taskGroup/user/'.$activity->user_id)?>"><?= $activity->user_name ?></a></td>
                                                 <td> <a href="<?= url('customer/activity/show/'.$activity->id) ?>"> <?= $activity->task_name ?></a> </td>
-                                                <td>
-                                                    <label class="text-danger">  <?= $activity->created_at ?></label>
-                                                </td>
-
+                                                <td><label class="text-info">  <?= date('d/m/Y',strtotime($activity->created_at)) ?></label> </td>
                                             </tr>
                                         <?php } ?>
-
-
                                     </tbody>
                                 </table>
-
-                            </div>
+                               </div>
+                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-sm-12">
-                        <!-- User activities chart start -->
-                        <div class="card analytic-user">
+
+
+                    <div class="col-xl-6">
+                       <div class="card">
+                          <div class="card analytic-user">
                             <div class="card-block-big text-center">
                                 <i class="icofont icofont-wallet"></i>
                                 <?php
@@ -423,8 +401,23 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                             </div>
                         </div>
                     </div>
-                    <!-- User activities chart end -->
+                  </div>
+                                             
                 </div>
+
+
+
+            </div>
+        </div>
+        </div>
+    </div>
+             
+                    <!-- .events-content -->
+                    <!-- Todo card start -->
+
+
+
+                   
 
           
         </div>
