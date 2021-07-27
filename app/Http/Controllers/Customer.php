@@ -539,6 +539,15 @@ class Customer extends Controller {
         }
     }
 
+
+    public function editdetails(){
+        $id = request()->segment(3);
+        $data = request()->except('_token');
+        $update = \App\Models\Client::where('id',$id)->first();
+        \App\Models\Client::where('id',$id)->update($data);
+        return redirect('customer/profile/' . $update->username)->with('success', 'successful updated!');
+    }
+
     public function addstandingorder() {
         if ($_POST) {
             $file = request('standing_order_file');
