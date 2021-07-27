@@ -28,7 +28,7 @@ function check_status($table, $where = null) {
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4><?= isset($school->sname) ? $school->sname : '' ?>  <?= isset($school->students) ? 'Estimated students '. $school->students : '' ?></h4>
+                <h4><?= isset($school->sname) ? $school->sname : '' ?> &nbsp;&nbsp; <?= isset($profile->estimated_students) ? 'Estimated students '. $profile->estimated_students : '' ?></h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -2138,7 +2138,7 @@ function check_status($table, $where = null) {
 
                                                                                                                                     <?php $root = url('/') . '/public/' ?>
                                                                                                                                     <?php
-                                                                                                                                    if (!empty($profile)) {
+                                                                                                                                    if (!empty($profile)) {  
                                                                                                                                         ?>
                                                                                                                                         <div class="modal fade" id="school_details" tabindex="-1" role="dialog" style="z-index: 1050; display: none;"
                                                                                                                                              aria-hidden="true">

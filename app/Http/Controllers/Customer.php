@@ -486,7 +486,8 @@ class Customer extends Controller {
 
             $this->data['top_users'] = DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
         }
-        $this->data['profile'] = \App\Models\ClientSchool::where('client_id', $client->id)->first();
+       // $this->data['profile'] = \App\Models\ClientSchool::where('client_id', $client->id)->first();
+        $this->data['profile'] = \App\Models\Client::where('id', $client->id)->first();
 
         $this->data['is_client'] = $is_client;
 
