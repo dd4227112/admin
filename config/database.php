@@ -72,7 +72,7 @@ return [
     'biotime' => [
             'driver' => 'pgsql',
             // 'url' => env('DATABASE_URL'),
-            'host' => '51.91.251.252',
+            'host' => '',
             'port' => '5432',
             'database' => 'biotime',
             'username' => 'postgres',
