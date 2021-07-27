@@ -227,8 +227,8 @@
                                                     <p>
                                                         <b>Account Details :</b><br/>
                                                         <b>Account Name:</b> INETS COMPANY LIMITED <br/> 
-                                                        <b>Bank Name:</b> CRDB BANK PLC <br/> 
-                                                         <b>Account Number:</b> 120922510028669
+                                                        <b>Bank Name:</b> NMB BANK PLC <br/> 
+                                                         <b>Account Number:</b> 22510028669
                                                         <br/>
                                                         <small>Please notify us after a deposit</small>
                                                     </p>
