@@ -196,9 +196,9 @@ get_schools = function () {
         minimumInputLength: 2,
        // tags: [],
         ajax: {
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
+           headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+           },
             url: '<?= url('student/getschools/null') ?>',
             dataType: 'json',
             type: "GET",

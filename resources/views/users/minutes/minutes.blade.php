@@ -39,7 +39,6 @@
         </span>
               <div class="steamline">
                 <div class="card-block">
-
                   <div class="table-responsive dt-responsive">
                     <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                       <thead>

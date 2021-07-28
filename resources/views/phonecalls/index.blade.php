@@ -37,7 +37,7 @@
                     </li>
 
                      <li class="nav-item">
-                        <a  href="<?= url('Phone_call/create') ?>" class="text-center" > <h6 class="text-center"> Add calls </h6></a>
+                        <a href="<?= url('Phone_call/create') ?>" style="margin: 16px 8px" > Add calls </a>
                     </li>
                 </ul> 
                         
@@ -66,8 +66,8 @@
                             </div> 
                                
                              <div class="card-block">
-                                <div class="table-responsive dt-responsive ">
-                                    <table class="table table-bordered dataTable">
+                                <div class="table-responsive ">
+                                    <table id="list_of_calls" class="display nowrap table">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -76,41 +76,20 @@
                                                 <th>Time</th>
                                                 <th>Next Follow up</th>
                                                 <th>Call Duration</th>
-                                                {{-- <th>Call Details</th> --}}
                                                 <th colspan="1">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php $i = 1; ?>
-                                            @foreach ($phone_calls as $key => $call)
-                                            <tr>
-                                                <td><?= $i ?></td>
-                                                <td>{{ $call->phone_number }} </td>
-                                                {{-- <td>{{ $call->email }}</td> --}}
-                                                <td><?php if($call->call_type==0){
-                                                    echo 'Outgoing';    
-                                                } else{
-                                                    echo 'Incoming';  
-                                                }?></td>
-                                                
-                                                <td>{{ $call->created_at}}<br> {{ $call->call_time}}</td>
-                                                <td>{{ $call->followup_date }}<br> {{ $call->next_followup }}</td>
-                                                <td>{{ $call->call_duration }}</td> 
-                                                {{-- <td>{{ $call->call_detail }}</td>  --}}
-                                                <td>
-                                                  <a class="btn btn-primary btn-sm" href="{{ url('Phone_call/edit/'.$call->id) }}">Edit</a> 
-                                                  <a class="btn btn-danger btn-sm" href="{{ url('Phone_call/destroy/'.$call->id) }}">Delete</a>
-                                                </td>
-                                            </tr>
-                                            <?php $i++; ?>
-                                            @endforeach
+
+
+
                                         </tbody>
                                     </table>
+                                    
                                 </div>
                               </div>
                              </div>
                         
-                         
                             <div class="tab-pane" id="home7" role="tabpanel">               
                                <div class="col-sm-12">
                                 <div class="row"> 
@@ -381,5 +360,46 @@
   </div>
 </div>
 </div>
+
+
+
+
+<script type="text/javascript">
+
+   $(document).ready(function () {
+        var table = $('#list_of_calls').DataTable({
+            "processing": true,
+            "serverSide": true,
+            'serverMethod': 'post',
+            'ajax': {
+                'url': "<?= url('phone_call/calls/null') ?>"
+            },
+            "columns": [
+                {"data": "id"},
+                {"data": "phone_number"},
+                {"data": "call_type"},
+                {"data": "call_time"},
+                {"data": "next_followup"},
+                {"data": "call_duration"},
+                {"data": ""}
+            ],
+            "columnDefs": [
+                {
+                    "targets": 6,
+                    "data": null,
+                    "render": function (data, type, row, meta) 
+                        {
+                        
+                              return '<a href="<?= url('Phone_call/edit') ?>/' + row.id + '" class="label label-warning">Edit</a>';
+                        }
+
+                    }
+
+                
+            ]
+        });
+    }
+
+</script>
 
 @endsection

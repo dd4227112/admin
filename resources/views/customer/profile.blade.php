@@ -28,7 +28,7 @@ function check_status($table, $where = null) {
         <!-- Page-header start -->
         <div class="page-header">
             <div class="page-header-title">
-                <h4><?= isset($school->sname) ? $school->sname : '' ?></h4>
+                <h4><?= isset($school->sname) ? $school->sname : '' ?> &nbsp;&nbsp; <?= isset($profile->estimated_students) ? 'Estimated students '. $profile->estimated_students : '' ?></h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -151,30 +151,10 @@ function check_status($table, $where = null) {
                                                                 </div>
                                                                 <div>Teacher</div>
                                                             </div>
-                                                            <div class="col-md-12 col-lg-6">
-                                                                <hr>
-                                                                <h5 class="txt-primary5">Est Students</h5>
-                                                                <?php
-                                                                $st = DB::table($schema . '.setting')->first();
-                                                                if (!empty($st)) {
-                                                                    echo '<a data-toggle="modal" data-target="#status-Modal">';
-                                                                    if ($st->school_status == 1) {
-                                                                        echo '<div class="btn btn-primary">Active Paid</div>';
-                                                                    } elseif ($st->school_status == 2) {
-                                                                        echo '<div class="btn btn-success">Active</div>';
-                                                                    } elseif ($st->school_status == 3) {
-                                                                        echo '<div class="btn btn-warning">Resale</div>';
-                                                                    } elseif ($st->school_status == 4) {
-                                                                        echo '<div class="btn btn-warning"> Inactive </div>';
-                                                                    } else {
-                                                                        echo '<div>Not defined</div>';
-                                                                    }
-                                                                    echo '</a>';
-                                                                }
-                                                                ?>
-                                                             </div>
 
-                                                                <div class="col-md-12 col-lg-6">
+                                                           
+
+                                                             <div class="col-md-12 col-lg-12">
                                                                 <hr>
                                                                 <h5 class="txt-primary5">School Status</h5>
                                                                 <?php
@@ -635,13 +615,14 @@ function check_status($table, $where = null) {
                                                                                                                     <div class="card">
                                                                                                                         <div class="card-header">
                                                                                                                             <h5 class="card-header-text">Basic Information</h5>
-
+                                                                                                                           <?php if(can_access('update_school_data'))  { ?>                                                                                                                 
                                                                                                                             <button id="edit-btn" type="button"
                                                                                                                                     class="btn btn-primary waves-effect waves-light f-right"
                                                                                                                                     data-toggle="modal" data-target="#school_details">
                                                                                                                                 <i class="icofont icofont-edit"></i> Change school
                                                                                                                                 Details
                                                                                                                             </button>
+                                                                                                                          <?php }  ?>
                                                                                                                         </div>
                                                                                                                         <div class="card-block">
                                                                                                                             <div id="view-info" class="row">
@@ -2158,7 +2139,7 @@ function check_status($table, $where = null) {
 
                                                                                                                                     <?php $root = url('/') . '/public/' ?>
                                                                                                                                     <?php
-                                                                                                                                    if (!empty($profile)) {
+                                                                                                                                    if (!empty($profile)) {  
                                                                                                                                         ?>
                                                                                                                                         <div class="modal fade" id="school_details" tabindex="-1" role="dialog" style="z-index: 1050; display: none;"
                                                                                                                                              aria-hidden="true">
@@ -2169,42 +2150,45 @@ function check_status($table, $where = null) {
 
                                                                                                                                                             <div id="view-info" class="row">
                                                                                                                                                                 <div class="col-lg-12 col-md-12">
-                                                                                                                                                                    <form action="<?= url('customer/contract/' . $client_id) ?>" method="POST"
-                                                                                                                                                                          enctype="multipart/form-data">
-                                                                                                                                                                        <table class="table m-b-0">
-                                                                                                                                                                            <tbody>
-                                                                                                                                                                                <tr>
-                                                                                                                                                                                    <th class="social-label b-none p-t-0">School Name
-                                                                                                                                                                                    </th>
-                                                                                                                                                                                    <td class="social-user-name b-none p-t-0 text-muted">
-                                                                                                                                                                                        <?= isset($profile->school->name) ? $profile->school->name : '' ?></td>
-                                                                                                                                                                                </tr>
-                                                                                                                                                                                <tr>
-                                                                                                                                                                                    <th class="social-label b-none">Region</th>
-                                                                                                                                                                                    <td class="social-user-name b-none text-muted">
-                                                                                                                                                                                        <?= isset($profile->school->region) ? $profile->school->region : '' ?></td>
-                                                                                                                                                                                </tr>
-                                                                                                                                                                                <tr>
-                                                                                                                                                                                    <th class="social-label b-none">District</th>
-                                                                                                                                                                                    <td class="social-user-name b-none text-muted">
-                                                                                                                                                                                        <?= isset($profile->school->district) ? $profile->school->district : '' ?></td>
-                                                                                                                                                                                </tr>
-                                                                                                                                                                                <tr>
-                                                                                                                                                                                    <th class="social-label b-none">Ward</th>
-                                                                                                                                                                                    <td class="social-user-name b-none text-muted">
-                                                                                                                                                                                        <?= isset($profile->school->ward) ? $profile->school->ward : '' ?>
-                                                                                                                                                                                    </td>
-                                                                                                                                                                                </tr>
+                                                                                                                                                                    <form action="<?= url('customer/editdetails/' . $client_id) ?>" method="POST">
+                                                                                                                                                                    <div class="form-group row">
+                                                                                                                                                                        <label class="col-sm-2 col-form-label">School Name</label>
+                                                                                                                                                                        <div class="col-sm-10">
+                                                                                                                                                                            <input type="text" class="form-control" name="name" value="<?= $profile->name ?>">
+                                                                                                                                                                        </div>
+                                                                                                                                                                    </div>
 
-                                                                                                                                                                            </tbody>
-                                                                                                                                                                        </table>
+                                                                                                                                                                       <div class="form-group row">
+                                                                                                                                                                        <label class="col-sm-2 col-form-label">Estimated students</label>
+                                                                                                                                                                        <div class="col-sm-10">
+                                                                                                                                                                            <input type="text" class="form-control" name="estimated_students" value="<?= $profile->estimated_students ?>">
+                                                                                                                                                                        </div>
+                                                                                                                                                                    </div>
+
+
+                                                                                                                                                                       <div class="form-group row">
+                                                                                                                                                                        <label class="col-sm-2 col-form-label">Address</label>
+                                                                                                                                                                        <div class="col-sm-10">
+                                                                                                                                                                            <input type="text" class="form-control" name="address" value="<?= $profile->address ?>">
+                                                                                                                                                                        </div>
+                                                                                                                                                                    </div>
+
+                                                                                                                                                                       <div class="form-group row">
+                                                                                                                                                                        <label class="col-sm-2 col-form-label">Email</label>
+                                                                                                                                                                        <div class="col-sm-10">
+                                                                                                                                                                            <input type="text" class="form-control" name="email" value="<?= $profile->email ?>">
+                                                                                                                                                                        </div>
+                                                                                                                                                                    </div>
+                                                                                                                                                                    
+                                                                                                                                                                  </div>
+                                                                                                                                                               </div>
+
+                                                                                                                                                                <div class="modal-footer">
+                                                                                                                                                                    <button type="submit" class="btn btn-default btn-sm">Submit</button>
                                                                                                                                                                 </div>
-                                                                                                                                                            </div>
                                                                                                                                                             </form>
 
-                                                                                                                                                            <div class="modal-footer">
-                                                                                                                                                                <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Submit</button>
-                                                                                                                                                            </div>
+                                                                                                                                                            
                                                                                                                                                         </div>
                                                                                                                                                         <br />
                                                                                                                                                     </div>

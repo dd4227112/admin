@@ -473,7 +473,7 @@ class Customer extends Controller {
         if ($school == 'school') {
             $id = request()->segment(4);
             $this->data['client_id'] = $id;
-            $this->data['school'] = \collect(DB::select('select name as sname, name,schema_name, region , ward, district as address  from admin.schools where id=' . $id))->first();
+            $this->data['school'] = \collect(DB::select('select id,name as sname, name,schema_name, region, ward, district as address,students  from admin.schools where id=' . $id))->first();
         } else {
             $is_client = 1;
             $this->data['school'] = DB::table($school . '.setting')->first();
@@ -486,7 +486,8 @@ class Customer extends Controller {
 
             $this->data['top_users'] = DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
         }
-        $this->data['profile'] = \App\Models\ClientSchool::where('client_id', $client->id)->first();
+       // $this->data['profile'] = \App\Models\ClientSchool::where('client_id', $client->id)->first();
+        $this->data['profile'] = \App\Models\Client::where('id', $client->id)->first();
 
         $this->data['is_client'] = $is_client;
 
@@ -536,6 +537,15 @@ class Customer extends Controller {
         } else {
             return view('customer/profile', $this->data);
         }
+    }
+
+
+    public function editdetails(){
+        $id = request()->segment(3);
+        $data = request()->except('_token');
+        $update = \App\Models\Client::where('id',$id)->first();
+        \App\Models\Client::where('id',$id)->update($data);
+        return redirect('customer/profile/' . $update->username)->with('success', 'successful updated!');
     }
 
     public function addstandingorder() {

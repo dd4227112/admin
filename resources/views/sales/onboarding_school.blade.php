@@ -109,17 +109,18 @@ if (request()->ajax() == FALSE) {
                     <input type="datetime-local" class="form-control" value="" name="implementation_date" required="">
                 </div>
             </div>
-            <div class="form-group row">
-                <label class="col-sm-2 col-form-label"> Module Selected</label>
-                <div class="col-sm-10">
+            
+            <div class="form-group">
+                <label class="col-sm-2 col-form-label"> Module Selected by school</label>
+                <div class="col-sm-12">
                     <div class="table-responsive">
                         <table class="table table-bordered">
                        
                             <thead>
                                 <tr>
-                                    <th>#</th>
-                                    <th>Tasks</th>
-                                    <th>Person Responsible <br/>at School (Name & Phone)</th>
+                                    <th class="col-sm-2">#</th>
+                                    <th class="col-sm-5">Tasks</th>
+                                    <th class="col-sm-5">Person Responsible <br/>at School (Name & Phone)</th>
                                 </tr>
                             </thead> 
                             <tbody>

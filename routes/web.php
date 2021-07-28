@@ -62,15 +62,7 @@ Route::get('/898uuhihdsdskjdde/custrpt/{q}','Customer@customSqlReport');
 
 Route::get('/898uuhihdsdskjddeqe/{q}','Customer@implementationReport');
 
-Route::get('/testing',function() {
-    $matches = array();
-    $text = 'AMOS MAOMBI  0655007457';
-    preg_match_all('/[0-9]{3}[\-][0-9]{6}|[0-9]{3}[\s][0-9]{6}|[0-9]{3}[\s][0-9]{3}[\s][0-9]{4}|[0-9]{9}|[0-9]{3}[\-][0-9]{3}[\-][0-9]{4}/', $text, $matches);
-    $matches = $matches[0];
 
-    dd($matches);
-    //dd($name);
-});
 
 
 Auth::routes();

@@ -374,10 +374,10 @@ group by ownership');
         }
     }
 
+
     public function school() {
         $end_date = date('Y-m-01');
         $where = "a.created_at::date >='" . $end_date . "'";
-
         $this->data['use_shulesoft'] = DB::table('admin.all_setting')->count() - 5;
         $this->data['active_school'] = \collect(DB::select('SELECT count(distinct "schema_name") from admin.all_login_locations a  WHERE "table" in (\'setting\',\'users\',\'teacher\') and ' . $where))->first()->count;
         $this->data['zero_student'] = DB::select('SELECT distinct("schema_name") as tables from admin.all_setting a  WHERE a.school_status= 1 and "schema_name" not in (select distinct "schema_name" from admin.all_student group by "schema_name")');
@@ -387,7 +387,6 @@ group by ownership');
         $this->data['school_types'] = DB::select("select type, count(*) from admin.schools where ownership='Non-Government' group by type,ownership");
         $this->data['ownerships'] = DB::select('select ownership, COUNT(*) as count, SUM(COUNT(*)) over() as total_schools, 
         (COUNT(*) * 1.0) / SUM(COUNT(*)) over() as percent FROM admin.schools group by ownership');
-
         return view('market.schools', $this->data);
     }
 

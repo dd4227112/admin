@@ -25,7 +25,6 @@ class Phone_call extends Controller {
     public function index() {
         $this->data['phone_calls'] = PhoneCall::latest()->get();
 
-         
         if($_POST){
             if(request('start_date') !== '' && request('end_date') !== ''){
                $from = request('start_date');
@@ -43,14 +42,18 @@ class Phone_call extends Controller {
        $this->data['outgoing_calls'] =  \collect(DB::SELECT("select count(*),to_char(created_at::date,'Month') as month,extract(year from created_at::date) as year from admin.phone_calls where call_type = 'Outgoing' group by created_at::date"))->first();
        $this->data['Incoming_calls']  = \App\Models\PhoneCall::where(DB::raw('EXTRACT(MONTH FROM created_at) '), '7')->where('call_type', 'Incoming')->count();
       // dd($this->data['Incoming_calls']);
+      
         return view('phonecalls.index', $this->data);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+ 
+
+    public function calls()
+    {
+        $sql = "select * from admin.phone_calls";
+        return $this->ajaxTable('phone_calls', ['call_type', 'created_at','phone_number'], $sql);   
+    }
+
     public function create() {
         return view('phonecalls.create');
     }

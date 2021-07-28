@@ -180,7 +180,6 @@ class Account extends Controller {
             $this->data['invoice'] = Invoice::find($invoice_id);
             $this->data['usage_start_date'] = $this->data['invoice']->client->start_usage_date;
            
-        
             $start_usage_date = !empty($this->data['usage_start_date']) ? date('Y-m-d',strtotime($this->data['usage_start_date'])) : date('Y-m-d', strtotime('Jan 01'));
            
             $yearEnd = date('Y-m-d', strtotime('Dec 31'));
@@ -564,8 +563,12 @@ class Account extends Controller {
                 // This is when a bank return payment status to us
                 //save it in the database
             $this->validate(request(), ['amount' => 'required|numeric', 'payment_type' => 'required', 'date' => 'required']);
-            $transaction_id = (int) request('transaction_id') == 0 ? time() : request('transaction_id');
-            $payments = \App\Models\Payment::where('transaction_id', $transaction_id)->first();
+            $transaction_id =  request('transaction_id') == 0 ?  time() : request('transaction_id');
+          
+            // $payments = \App\Models\Payment::where('transaction_id', (string) $transaction_id)->first();
+            
+            $payments = collect(\DB::select("select * from admin.payments where transaction_id = '.$transaction_id.' "))->first();
+           // dd("select * from admin.payments where transaction_id = '$transaction_id' ");
             if (!empty($payments)) {
                 $data = array(
                     'status' => 1,

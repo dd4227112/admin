@@ -47,10 +47,9 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
 
             </div>
         </div>
-        <div class="row" style="display: none" id="show_date">
-
+         <div class="row" style="display: none" id="show_date">
             <div class="col-lg-4"></div>
-            <div class="col-lg-8 text-right">
+             <div class="col-lg-8 text-right">
                 <h4 class="sub-title">Date Time Picker</h4>
                 <div class="input-daterange input-group" id="datepicker">
                     <input type="date" class="input-sm form-control calendar" name="start" id="start_date">
@@ -59,8 +58,8 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                     <input type="submit" class="input-sm btn btn-sm btn-success" id="search_custom"/>
                 </div>
             </div>
+         </div>
 
-        </div>
         <br/>
         <div class="page-body">
             <div class="row">
@@ -69,9 +68,9 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                 <div class="col-md-6 col-xl-3">
                     <div class="card social-widget-card">
                         <div class="card-block-big bg-facebook">
-<?php
-$unique_visitors = \collect(DB::select('select count(*) from (select distinct platform,user_agent from admin.website_logs a where ' . $where . '  ) x '))->first()->count;
-?>
+                            <?php
+                            $unique_visitors = \collect(DB::select('select count(*) from (select distinct platform,user_agent from admin.website_logs a where ' . $where . '  ) x '))->first()->count;
+                            ?>
                             <h3><?= $unique_visitors ?></h3>
                             <span class="m-t-10">Website Visits</span>
                             <i class="icofont icofont-ui-user-group"></i>
@@ -83,9 +82,9 @@ $unique_visitors = \collect(DB::select('select count(*) from (select distinct pl
                 <div class="col-md-6 col-xl-3">
                     <div class="card social-widget-card">
                         <div class="card-block-big bg-twitter">
-<?php
-$total_sms_sent = \collect(DB::select('select count(*) from public.sms a where department_id=8 and ' . $where))->first()->count;
-?>
+                            <?php
+                            $total_sms_sent = \collect(DB::select('select count(*) from public.sms a where ' . $where))->first()->count;
+                            ?>
                             <h3><?= $total_sms_sent ?></h3>
                             <span class="m-t-10">SMS Sent</span>
                             <i class="icofont icofont-email"></i>
@@ -97,9 +96,9 @@ $total_sms_sent = \collect(DB::select('select count(*) from public.sms a where d
                 <div class="col-md-6 col-xl-3">
                     <div class="card social-widget-card">
                         <div class="card-block-big bg-linkein">
-<?php
-$email_total_reacherd = \collect(DB::select('select count(*) from public.email a where department_id=8 and ' . $where))->first()->count;
-?>
+                                <?php
+                                $email_total_reacherd = \collect(DB::select('select count(*) from public.email a where ' . $where))->first()->count;
+                                ?>
                             <h3><?= $email_total_reacherd ?></h3>
                             <span class="m-t-10">Email Sent</span>
                             <i class="icofont icofont-email"></i>
@@ -124,9 +123,9 @@ $email_total_reacherd = \collect(DB::select('select count(*) from public.email a
                     <div class="card counter-card-1">
                         <div class="card-block-big">
                             <div>
-<?php
-$total_reacherd = \collect(DB::select("select (count(distinct school_id) + count(distinct client_id)) as count from admin.tasks_schools a, admin.tasks_clients b where b.task_id in (select id from admin.tasks a where task_type_id in (select id from task_types where department=2) and " . $where . ") and a.task_id in (select id from admin.tasks a where task_type_id in (select id from task_types where department=2) and " . $where . ")"))->first()->count;
-?>
+                                <?php
+                                $total_reacherd = \collect(DB::select("select (count(distinct school_id) + count(distinct client_id)) as count from admin.tasks_schools a, admin.tasks_clients b where b.task_id in (select id from admin.tasks a where task_type_id in (select id from task_types where department=2) and " . $where . ") and a.task_id in (select id from admin.tasks a where task_type_id in (select id from task_types where department=2) and " . $where . ")"))->first()->count;
+                                ?>
                                 <h3><?= $total_reacherd ?></h3>
                                 <p>Total School Reached
 <!--                                    <span class="f-right text-primary">
@@ -148,9 +147,9 @@ $total_reacherd = \collect(DB::select("select (count(distinct school_id) + count
                     <div class="card counter-card-2">
                         <div class="card-block-big">
                             <div>
-<?php
-$total_schools = \collect(DB::select('select count(*) from admin.all_setting a WHERE  ' . $where))->first()->count;
-?>
+                            <?php
+                            $total_schools = \collect(DB::select('select count(*) from admin.all_setting a WHERE  ' . $where))->first()->count;
+                            ?>
                                 <h3><?= $total_schools ?></h3>
                                 <p>Total Contacts Reached
 <!--                                    <span class="f-right text-success">
@@ -172,9 +171,9 @@ $total_schools = \collect(DB::select('select count(*) from admin.all_setting a W
                     <div class="card counter-card-3">
                         <div class="card-block-big">
                             <div>
-<?php
-$total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.task_type_id in (select id from admin.task_types where department=2) and ' . $where))->first()->count;
-?>
+                            <?php
+                            $total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.task_type_id in (select id from admin.task_types where department=2) and ' . $where))->first()->count;
+                            ?>
                                 <h3><?= $total_activity ?></h3>
                                 <p>Total Marketing Activities
 <!--                                    <span class="f-right text-default">
@@ -466,4 +465,28 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
         </div>
     </div>
 </div>
+
+<script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
+
+<script type="text/javascript">
+    check = function () {
+        $('#check_custom_date').change(function () {
+            var val = $(this).val();
+            if (val == 'today') {
+                window.location.href = '<?= url('analyse/marketing/') ?>/1';
+            } else {
+                $('#show_date').show();
+            }
+        });
+    }
+    submit_search = function () {
+        $('#search_custom').mousedown(function () {
+            var start_date = $('#start_date').val();
+            var end_date = $('#end_date').val();
+            window.location.href = '<?= url('analyse/marketing/') ?>/5?start=' + start_date + '&end=' + end_date;
+        });
+    }
+    $(document).ready(check);
+    $(document).ready(submit_search);
+</script>
 @endsection

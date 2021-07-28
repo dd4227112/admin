@@ -80,3 +80,6 @@ select A.client_id,C.username,sum(B.amount) from
 on A.id = B.invoice_id join admin.clients C on A.client_id = C.id group by A.client_id,C.username
 
 
+select * from admin.payments ,,, id = 24
+
+
