@@ -47,7 +47,14 @@ class Project extends Controller {
         return count($project) == 1 ? $project->id : die('project with a name ' . $this->project_name . ' does not exists in projects.shulesoft.com');
     }
 
+    /**
+     * 
+     * @param type $email
+     * @return boolean
+     * disabled function
+     */
     public function setUserId($email) {
+        return false;
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $user = DB::connection($this->connection)->table('users')->where('email', strtolower($email))->first();
             if (!empty($user)) {

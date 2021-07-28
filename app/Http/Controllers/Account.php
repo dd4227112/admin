@@ -568,6 +568,7 @@ class Account extends Controller {
             // $payments = \App\Models\Payment::where('transaction_id', (string) $transaction_id)->first();
             
             $payments = collect(\DB::select("select * from admin.payments where transaction_id = '.$transaction_id.' "))->first();
+           // dd("select * from admin.payments where transaction_id = '$transaction_id' ");
             if (!empty($payments)) {
                 $data = array(
                     'status' => 1,
