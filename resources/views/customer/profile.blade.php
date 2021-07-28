@@ -1563,7 +1563,7 @@ function check_status($table, $where = null) {
                                                                                                                                         Student:
                                                                                                                                         <?= check_status('sattendances'); ?>
                                                                                                                                         <br />
-                                                                                                                                        Teacher: <?= check_status('tattendance'); ?>
+                                                                                                                                        Teacher: <?= check_status('uattendances'); ?>
                                                                                                                                         <br />
                                                                                                                                         Exam: <?= check_status('eattendance'); ?>
                                                                                                                                         <br />

@@ -946,6 +946,7 @@ class Customer extends Controller {
         return view('customer.usage.customer_list', $this->data);
     }
 
+    
     public function customSqlReport() {
         $sql = strlen(request('q')) > 3 ? request('q') : exit;
        // $view = strlen(request('v')) > 3 ? request('v') : exit;
@@ -978,14 +979,7 @@ class Customer extends Controller {
     }
 
     public function modules() {
-        //    $schemas = $this->data['schools'] = DB::select("SELECT distinct table_schema as schema_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public')");
-        //    Remove comment if you want support person to see only schools allocated to them
-        //  if (Auth::user()->department == 1) {
-        // $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public') and schema_name in (select schema_name from users_schools where user_id=" . Auth::user()->id . "  and status=1)");
-        //   } else {
         $schemas = $this->data['schools'] = DB::select("SELECT distinct schema_name FROM admin.all_setting WHERE schema_name NOT IN ('admin','accounts','pg_catalog','constant','api','information_schema','public','academy','forum') ");
-        //  }
-
         $sch = [];
         foreach ($schemas as $schema) {
             array_push($sch, $schema->schema_name);
@@ -1048,7 +1042,7 @@ class Customer extends Controller {
         $this->data['schema'] = request()->segment(3);
         $this->data['client'] = strlen($this->data['schema']) > 2 ? DB::table('clients')->where('username', $this->data['schema'])->first() : '';
         $this->data['schemas'] = DB::select('select username as "table_schema"  from admin.clients where id in (select client_id from admin.payments) or id in (select client_id from admin.standing_orders)');
-        $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->get();
+        $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->whereNotIn('role_id',array(7,15))->get();
 
         //check allocation of trainings
         if (strlen($this->data['schema']) > 2) {
