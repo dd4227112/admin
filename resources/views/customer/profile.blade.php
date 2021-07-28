@@ -1581,14 +1581,30 @@ function check_status($table, $where = null) {
                                                                                                                                 <tr>
                                                                                                                                     <th scope="row">4</th>
                                                                                                                                     <td>General Character assessment</td>
-                                                                                                                                    <td> <?= check_status('general_character_assessment'); ?> </td>
+                                                                                                                                    <td> <?php $value = check_status('general_character_assessment'); echo date('Y', strtotime($value)) == '1970' ? 'Not defined' : $value ; ?> </td>
                                                                                                                                     <td></td>
                                                                                                                                 </tr>
+                                                                                                                                 <tr>
+                                                                                                                                    <th scope="row">5</th>
+                                                                                                                                    <td>Hostel</td>
+                                                                                                                                    <td> <?= check_status('hmembers'); ?> </td>
+                                                                                                                                    <td></td>
+                                                                                                                                 </tr>
+
+                                                                                                                                   <tr>
+                                                                                                                                    <th scope="row">6</th>
+                                                                                                                                    <td>Transport</td>
+                                                                                                                                    <td> <?= check_status('tmembers'); ?> </td>
+                                                                                                                                    <td></td>
+                                                                                                                                 </tr>
                                                                                                                             </tbody>
                                                                                                                         </table>
                                                                                                                     </div>
                                                                                                                 </div>
                                                                                                             </div>
+
+
+
                                                                                                             <div class="card">
                                                                                                                 <!-- Row start -->
                                                                                                                 <br>
