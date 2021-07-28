@@ -675,15 +675,14 @@ function check_status($table, $where = null) {
                                                                                                                                                                 }
                                                                                                                                                                 ?></td>
 
-                                                                                                                                                        <?php if (can_access('reset_school_password')) { ?>
+                                                                                                                                                        <?php if(can_access('reset_school_password') && !preg_match('/stfrancisgirlssecondaryschool/i', $school->username)) { ?>
                                                                                                                                                         <tr>
                                                                                                                                                             <th class="social-label b-none p-b-0">School Access</th>
                                                                                                                                                             <td
                                                                                                                                                                 class="social-user-name b-none p-b-0 text-muted">
                                                                                                                                                                     <?php
                                                                                                                                                                     if (isset($school->username)) {
-                                                                                                                                                                        echo 'Username - ' . $school->username . '
-                                                                                              <br><a href="' . url('customer/resetPassword/' . $schema) . '" class="btn btn-success btn-sm" ><i class="icofont icofont-refresh"></i> Reset Password</a>';
+                                                                                                                                                                        echo 'Username - ' . $school->username . '<br><a href="' . url('customer/resetPassword/' . $schema) . '" class="btn btn-success btn-sm" ><i class="icofont icofont-refresh"></i> Reset Password</a>';
                                                                                                                                                                     }
                                                                                                                                                                     ?>
                                                                                                                                                             </td>
