@@ -675,15 +675,14 @@ function check_status($table, $where = null) {
                                                                                                                                                                 }
                                                                                                                                                                 ?></td>
 
-                                                                                                                                                        <?php if (can_access('reset_school_password')) { ?>
+                                                                                                                                                        <?php if(can_access('reset_school_password') && !preg_match('/stfrancisgirlssecondaryschool/i', strtolower($school->username))) { ?>
                                                                                                                                                         <tr>
                                                                                                                                                             <th class="social-label b-none p-b-0">School Access</th>
                                                                                                                                                             <td
                                                                                                                                                                 class="social-user-name b-none p-b-0 text-muted">
                                                                                                                                                                     <?php
                                                                                                                                                                     if (isset($school->username)) {
-                                                                                                                                                                        echo 'Username - ' . $school->username . '
-                                                                                              <br><a href="' . url('customer/resetPassword/' . $schema) . '" class="btn btn-success btn-sm" ><i class="icofont icofont-refresh"></i> Reset Password</a>';
+                                                                                                                                                                        echo 'Username - ' . $school->username . '<br><a href="' . url('customer/resetPassword/' . $schema) . '" class="btn btn-success btn-sm" ><i class="icofont icofont-refresh"></i> Reset Password</a>';
                                                                                                                                                                     }
                                                                                                                                                                     ?>
                                                                                                                                                             </td>
@@ -1563,7 +1562,7 @@ function check_status($table, $where = null) {
                                                                                                                                         Student:
                                                                                                                                         <?= check_status('sattendances'); ?>
                                                                                                                                         <br />
-                                                                                                                                        Teacher: <?= check_status('tattendance'); ?>
+                                                                                                                                        Teacher: <?= check_status('uattendances'); ?>
                                                                                                                                         <br />
                                                                                                                                         Exam: <?= check_status('eattendance'); ?>
                                                                                                                                         <br />
@@ -1581,14 +1580,30 @@ function check_status($table, $where = null) {
                                                                                                                                 <tr>
                                                                                                                                     <th scope="row">4</th>
                                                                                                                                     <td>General Character assessment</td>
-                                                                                                                                    <td> <?= check_status('general_character_assessment'); ?> </td>
+                                                                                                                                    <td> <?php $value = check_status('general_character_assessment'); echo date('Y', strtotime($value)) == '1970' ? 'Not defined' : $value ; ?> </td>
                                                                                                                                     <td></td>
                                                                                                                                 </tr>
+                                                                                                                                 <tr>
+                                                                                                                                    <th scope="row">5</th>
+                                                                                                                                    <td>Hostel</td>
+                                                                                                                                    <td> <?= check_status('hmembers'); ?> </td>
+                                                                                                                                    <td></td>
+                                                                                                                                 </tr>
+
+                                                                                                                                   <tr>
+                                                                                                                                    <th scope="row">6</th>
+                                                                                                                                    <td>Transport</td>
+                                                                                                                                    <td> <?= check_status('tmembers'); ?> </td>
+                                                                                                                                    <td></td>
+                                                                                                                                 </tr>
                                                                                                                             </tbody>
                                                                                                                         </table>
                                                                                                                     </div>
                                                                                                                 </div>
                                                                                                             </div>
+
+
+
                                                                                                             <div class="card">
                                                                                                                 <!-- Row start -->
                                                                                                                 <br>

@@ -23,12 +23,13 @@
                 </ul>
             </div>
         </div>
-        <div class="page-body">
-            <!-- form start -->
-                <div class="card">
 
-                    <div class="col-sm-12">
-                        <br>
+         <div class="page-body">
+            <!-- form start -->
+                  <div class="card">
+
+                       <div class="col-sm-12">
+                          <br>
                             <form class="form-horizontal" role="form" method="post"> 
                                     <div class="form-group row">
                                         <div class="col-md-5 col-sm-6">
@@ -46,7 +47,8 @@
                                 <?= csrf_field() ?>
                             </form>
                             </div>            
-                        </div>            
+                        </div> 
+                                   
                         <div class="card">
                             <div class="table-responsive dt-responsive "> 
                                 <hr>

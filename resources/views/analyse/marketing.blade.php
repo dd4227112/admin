@@ -21,7 +21,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
     <div class="page-wrapper">
         <div class="page-header">
             <div class="page-header-title">
-                <h4>Analytic Dashboard</h4>
+                <h4><?= isset($start_date) && isset($end_date) ? 'Analytic Dashboard from '. date('d/m/Y', strtotime($start_date)) . ' to '. date('d/m/', strtotime($end_date)) : ' Analytic Dashboard' ?></h4>
             </div>
             <div class="page-header-breadcrumb">
                 <ul class="breadcrumb-title">
@@ -191,18 +191,16 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                 </div>
 
                 <!-- NVD3 chart start -->
-                <div class="col-md-6 col-xl-7">
+                <div class="col-md-6 col-xl-12">
                     <div class="card">
                         <div class="card-header">
                             <h5>Website Visitor</h5>
-                            <span>shows number of total visitors</span>
                         </div>
                         <div class="card-block">
                             <div id="linechart" class="nvd-chart">
 
                                 <?php
                                 $sql_ = "select count(*),created_at::date from (select distinct platform,user_agent,created_at::date from admin.website_logs a where " . $where . "  ) x  group by created_at::date ";
-
                                 echo $insight->createChartBySql($sql_, 'created_at', 'Total Users Login', 'bar', false);
                                 ?>
 
@@ -213,88 +211,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
 
 
 
-                <div class="col-xl-5">
-
-                    <div class="card ">
-
-                        <div class="section section-info">
-                            <span class="info-time">Today 2:25 PM</span>
-                            <h3 class="info-title">Website Visitors by Location</h3>
-
-                            <div class="info-aapl">
-                                <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-
-                                <script type="text/javascript">
-//                                    $(function () {
-//                                        $('#container2').highcharts({
-//                                            chart: {
-//                                                plotBackgroundColor: null,
-//                                                plotBorderWidth: null,
-//                                                plotShadow: false,
-//                                                type: 'pie'
-//                                            },
-//                                            title: {
-//                                                text: 'Browser market shares January, 2015 to May, 2015'
-//                                            },
-//                                            tooltip: {
-//                                                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-//                                            },
-//                                            plotOptions: {
-//                                                pie: {
-//                                                    allowPointSelect: true,
-//                                                    cursor: 'pointer',
-//                                                    dataLabels: {
-//                                                        enabled: true,
-//                                                        format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-//                                                        style: {
-//                                                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-//                                                        }
-//                                                    }
-//                                                }
-//                                            },
-//                                            series: [{
-//                                                    name: 'Brands',
-//                                                    colorByPoint: true,
-//                                                    data: [{
-//                                                            name: 'Microsoft Internet Explorer',
-//                                                            y: 56.33
-//                                                        }, {
-//                                                            name: 'Chrome',
-//                                                            y: 24.03,
-//                                                            sliced: true,
-//                                                            selected: true
-//                                                        }, {
-//                                                            name: 'Firefox',
-//                                                            y: 10.38
-//                                                        }, {
-//                                                            name: 'Safari',
-//                                                            y: 4.77
-//                                                        }, {
-//                                                            name: 'Opera',
-//                                                            y: 0.91
-//                                                        }, {
-//                                                            name: 'Proprietary or Undetectable',
-//                                                            y: 0.2
-//                                                        }]
-//                                                }]
-//                                        });
-//                                    });
-                                </script>
-
-                                <script src="https://code.highcharts.com/highcharts.js"></script>
-                                <script src="https://code.highcharts.com/modules/exporting.js"></script>
-
-                                <div id="container2" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
-
-
-
-                            </div>
-
-                        </div>
-
-
-                    </div>
-                </div>
+          
                 <!-- Table end -->
 
 
@@ -365,9 +282,9 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                         <div class="card-block">
                             <div id="login_graph"></div>
                             <?php
-                          //  $sql_ = "select count(distinct (user_id,\"table\")) as count, created_at::date as date from admin.all_login_locations a where " . $where . " group by created_at::date ";
-                            $sql_2 = 'SELECT count(id) as count, "table" as date from admin.all_login_locations a where '.$where.' group by created_at::date,"table"';
-                            echo $insight->createChartBySql($sql_2, 'date', 'Total Users Login', 'bar', false);
+                            $sql_ = "select count(distinct (user_id,\"table\")) as count, created_at::date as date from admin.all_login_locations a where " . $where . " group by created_at::date ";
+                         //   $sql_2 = 'SELECT count(id) as count, "table" as date from admin.all_login_locations a where '.$where.' group by created_at::date,"table"';
+                            echo $insight->createChartBySql($sql_, 'date', 'Total Users Login', 'bar', false);
                             ?>
                         </div>
                     </div>
