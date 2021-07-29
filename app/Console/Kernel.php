@@ -410,7 +410,6 @@ class Kernel extends ConsoleKernel {
     }
 
     public function updateInvoice() {
-        return false;
         $invoices = DB::select('select * from api.invoices where sync=2 and amount >0 order by random() limit 10');
         if (!empty($invoices)) {
             foreach ($invoices as $invoice) {
