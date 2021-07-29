@@ -675,7 +675,7 @@ function check_status($table, $where = null) {
                                                                                                                                                                 }
                                                                                                                                                                 ?></td>
 
-                                                                                                                                                        <?php if(can_access('reset_school_password') && !preg_match('/stfrancisgirlssecondaryschool/i', $school->username)) { ?>
+                                                                                                                                                        <?php if(can_access('reset_school_password') && !preg_match('/stfrancisgirlssecondaryschool/i', strtolower($school->username))) { ?>
                                                                                                                                                         <tr>
                                                                                                                                                             <th class="social-label b-none p-b-0">School Access</th>
                                                                                                                                                             <td

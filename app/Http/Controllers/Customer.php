@@ -1065,8 +1065,6 @@ class Customer extends Controller {
                 }
             }
         }
-        // $this->data['users'] = DB::table('admin.all_users')->distinct('usertype')->get(['usertype']);
-        //$this->data['data'] = DB::select('select count(*) as total_logs,"schema_name"::text from admin.all_log group by "schema_name"::text order by count(*)');
         return view('customer.usage.implementation_allocation', $this->data);
     }
 

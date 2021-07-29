@@ -85,26 +85,23 @@
                                                                     <?php
                                                                     ?>
                                                                     <select class="task_allocated_id" name=""
-                                                                            task-id="<?= $training->task->id ?>"
-                                                                            id="task_user<?= $training->id ?>">
-                                                                                <?php
-                                                                                if (!empty($shulesoft_users)) {
-                                                                                    foreach ($shulesoft_users as $user) {
-                                                                                        ?>
-                                                                                <option value="<?= $user->id ?>" <?php
-                                                                                if ($user->id == $training->user->id) {
+                                                                        task-id="<?= $training->task->id ?>"
+                                                                        id="task_user<?= $training->id ?>">
+                                                                        <?php
+                                                                        if (!empty($shulesoft_users)) {
+                                                                            foreach ($shulesoft_users as $user) { ?>
+                                                                            <option value="<?= $user->id ?>" <?php
+                                                                            if ($user->id == $training->user->id) {
 
-                                                                                    echo 'selected="selected"';
-                                                                                } else {
-                                                                                    echo '';
-                                                                                }
-                                                                                ?>>
-                                                                                            <?= $user->firstname . ' ' . $user->lastname ?>
-                                                                                </option>
-                                                                                <?php
+                                                                                echo 'selected="selected"';
+                                                                            } else {
+                                                                                echo '';
                                                                             }
-                                                                        }
-                                                                        ?>
+                                                                            ?>>
+                                                                            <?= $user->firstname . ' ' . $user->lastname ?>
+                                                                            </option>
+                                                                            <?php
+                                                                        } } ?>
                                                                     </select>
                                                                 </td>
                                                                 <td> <b data-attr="school_person"
