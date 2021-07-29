@@ -126,7 +126,7 @@ class Background extends Controller {
                         "amount" => $invoice->amount,
                         "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
                         "code" => "10",
-                        "callback_url" => "http://51.91.251.252:8081/api/init",
+                        "callback_url" => "http://75.119.140.177:8081/api/init",
                         "token" => $token
                     );
                     // $push_status = $invoice->status == 2 ? 'invoice_update' : 'invoice_submission';

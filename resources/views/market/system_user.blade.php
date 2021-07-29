@@ -45,17 +45,17 @@
                                     <div class="col-sm-4 text-center">
                                         <h5 id="all_users"><?=$user->count?></h5>
                                             <span><?=ucfirst($user->table)?></span>
-                                            <small><a href="<?=url('Marketing/systemUser/all/'.$user->table)?>">Total</a></small>
+                                            <small>Total</small>
                                             </div>
                                         <div class="col-sm-4 text-center">
                                             <h5 id="all_users"><?=$active_users?></h5>
                                             <span><?=ucfirst($user->table)?></span>
-                                            <small> <a href="<?=url('Marketing/systemUser/active/'.$user->table)?>">Active </a></small>
+                                            <small> Active </small>
                                         </div>
                                         <div class="col-sm-4 text-center">
                                             <h5 id="all_users"><?=$user->count - $active_users?></h5>
                                             <span><?=ucfirst($user->table)?></span>
-                                            <small><a href="<?=url('Marketing/systemUser/notactive/'.$user->table)?>">Not Active</a></small>
+                                            <small>Not Active</small>
                                         </div>
                                     </div>
                                 </div>
@@ -73,7 +73,7 @@
     <div class="col-lg-12">
       <div class="card">
       <div class="card-header">
-      <a href="">List of <?=$status?> <?=$type?>s</a>
+      <a href=""><?= isset($status) ? 'List of' . $status. ' '. $type . 's' : ' '?></a>
       <a href="<?= url('Marketing/systemUser/'.$type .'/'.$status) ?>" style="float: right" data-i18n="nav.navigate.navbar" class="btn btn-success"> <i class="icofont icofont-comment"></i> Send Message</a>
 
       </div>

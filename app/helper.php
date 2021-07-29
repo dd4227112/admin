@@ -1,12 +1,14 @@
 <?php
 
+
+
 function check_implementation($activity,$schema_name) {
     $status = '';
     if (preg_match('/exam/i', strtolower($activity))) {
         //all classes have published an exam
 
         $classes = DB::table($schema_name . '.classes')->count();
-        $exams = DB::table($schema_name . '.exam_report')->whereYear('created_at', 2021)->count();
+        $exams = DB::table($schema_name . '.exam_report')->whereYear('created_at', date('Y'))->count();
         if ($exams >= $classes) {
             $status = ' Implemented';
         } else {
@@ -15,8 +17,7 @@ function check_implementation($activity,$schema_name) {
     } else if (preg_match('/invoice/i', strtolower($activity))) {
         //receive at least 10 payments
 
-
-        $payments = DB::table($schema_name . '.payments')->whereYear('created_at', 2021)->count();
+        $payments = DB::table($schema_name . '.payments')->whereYear('created_at', date('Y'))->count();
         if ($payments >= 10) {
             $status = 'Implemented';
         } else {
@@ -25,8 +26,7 @@ function check_implementation($activity,$schema_name) {
     } else if (preg_match('/nmb/i', strtolower($activity))) {
         //receive at least 10 payments
 
-
-        $nmb_payments = DB::table($schema_name . '.payments')->whereYear('created_at', 2021)->whereNotNull('token')->count();
+        $nmb_payments = DB::table($schema_name . '.payments')->whereYear('created_at', date('Y'))->whereNotNull('token')->count();
         $mappend = DB::table($schema_name . '.bank_accounts_integrations')->where('invoice_prefix', '<>', 'SAS')->count();
         $is_mappend = (int) $mappend == 0 ? 'Not Mapped: ' : 'Mapped: ';
         if ($nmb_payments >= 10) {
@@ -38,7 +38,7 @@ function check_implementation($activity,$schema_name) {
         //receive at least 10 payments
 
 
-        $crdb_payments = DB::table($schema_name . '.payments')->whereYear('created_at', 2021)->whereNotNull('token')->count();
+        $crdb_payments = DB::table($schema_name . '.payments')->whereYear('created_at', date('Y'))->whereNotNull('token')->count();
 
         $mappend = DB::table($schema_name . '.bank_accounts_integrations')->where('invoice_prefix', 'SAS')->count();
         $is_mappend = (int) $mappend == 0 ? 'Not Mapped: ' : 'Mapped: ';
@@ -51,7 +51,7 @@ function check_implementation($activity,$schema_name) {
         //receive at least 10 payments
 
 
-        $expense = DB::table($schema_name . '.expense')->whereYear('created_at', 2021)->count();
+        $expense = DB::table($schema_name . '.expense')->whereYear('created_at', date('Y'))->count();
         if ($expense >= 10) {
             $status = 'Implemented';
         } else {
@@ -61,7 +61,7 @@ function check_implementation($activity,$schema_name) {
         //receive at least 10 payments
 
 
-        $salary = DB::table($schema_name . '.salaries')->whereYear('created_at', 2021)->count();
+        $salary = DB::table($schema_name . '.salaries')->whereYear('created_at', date('Y'))->count();
         if ($salary > 0) {
             $status = 'Implemented';
         } else {
@@ -71,7 +71,7 @@ function check_implementation($activity,$schema_name) {
         //receive at least 10 payments
 
 
-        $inventory = DB::table($schema_name . '.product_alert_quantity')->whereYear('created_at', 2021)->count();
+        $inventory = DB::table($schema_name . '.product_alert_quantity')->whereYear('created_at', date('Y'))->count();
         if ($inventory >= 10) {
             $status = 'Implemented';
         } else {
@@ -86,10 +86,10 @@ function check_implementation($activity,$schema_name) {
         } else {
             $status = ' Not Implemented';
         }
-    } else if (preg_match('/operation/i', strtolower($activity))) {
+    } else if (preg_match('/operations/i', strtolower($activity))) {
         //check transport and hostel
-        $tmembers = DB::table($schema_name . '.tmembers')->whereYear('created_at', 2021)->count();
-        $hmembers = DB::table($schema_name . '.hmembers')->whereYear('created_at', 2021)->count();
+        $tmembers = DB::table($schema_name . '.tmembers')->whereYear('created_at', date('Y'))->count();
+        $hmembers = DB::table($schema_name . '.hmembers')->whereYear('created_at', date('Y'))->count();
         if ($tmembers >= 20 || $hmembers >= 20) {
             $status = 'Transport/Hostel Implemented';
         } else {
