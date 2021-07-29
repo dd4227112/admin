@@ -88,7 +88,7 @@ class PaymentController extends Controller {
 //Transaction reference number already paid – During post method
     const TRANSACTION_EXISTS = 207;
 
-    public $server_ip = 'http://51.91.251.252:8081';
+    public $server_ip = 'http://75.119.140.177:8081';
 
     public function __construct() {
       //  parent::__construct();
