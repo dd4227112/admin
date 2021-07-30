@@ -17,9 +17,9 @@ foreach ($school_locations as $school_location) {
 
 
 $invoice_issued = [];
-$invoices_current = DB::select('select * from admin.invoices_sent where extract(year from created_at)=' . $year);
+$invoices_current = DB::select('select distinct b.username as "schema_name" from admin.invoices a join admin.clients b on b.id=a.client_id where extract(year from a.created_at)=' . $year);
 foreach ($invoices_current as $invoice_info) {
-    $invoice_issued[$invoice_info->schema_name] = 'Due: ' . date('d M Y', strtotime('30 days', strtotime($invoice_info->date)));
+    $invoice_issued[$invoice_info->schema_name] = $invoice_info->schema_name;
 }
 
 
