@@ -260,14 +260,16 @@ class Kernel extends ConsoleKernel {
         $invoices = DB::select("select b.id, b.student_id, b.status, b.reference, b.prefix,b.date,b.sync,b.return_message,b.push_status,b.academic_year_id,b.created_at, b.updated_at, a.amount, c.name as student_name, '" . $schema . "' as schema_name, (select sub_invoice from  " . $schema . ".setting limit 1) as sub_invoice   from  " . $schema . ".invoices b join " . $schema . ".student c on c.student_id=b.student_id join ( select sum(balance) as amount, a.invoice_id from " . $schema . ".invoice_balances a group by a.invoice_id ) a on a.invoice_id=b.id where  a.amount >0  and b.sync <>1 order by random() limit 15");
 
         foreach ($invoices as $invoice) {
-
+            echo 'Loopt throught '.$invoice->schema_name.' invoices'. chr(10). chr(10);
             if ($invoice->sub_invoice == 1) {
+                echo 'push sub invoices for '.$invoice->schema_name.''. chr(10). chr(10);
                 $sub_invoices = DB::select("select b.id,b.status, b.student_id, b.reference||'EA'||a.fee_id as reference, b.prefix,b.date,b.sync,b.return_message,b.push_status,b.academic_year_id,b.created_at, b.updated_at, a.balance as amount, c.name as student_name, '" . $schema . "' as schema_name from  " . $schema . ".invoices b join " . $schema . ".student c on c.student_id=b.student_id join " . $schema . ".invoice_balances a on a.invoice_id=b.id  where b.id=" . $invoice->id);
 
                 foreach ($sub_invoices as $sub_invoice) {
                     $this->pushInvoice($sub_invoice);
                 }
             } else {
+                 echo 'push Normal  invoices for '.$invoice->schema_name.''. chr(10). chr(10);
                 $this->pushInvoice($invoice);
             }
         }
@@ -368,6 +370,7 @@ class Kernel extends ConsoleKernel {
                 "callback_url" => "http://75.119.140.177:8081/api/init",
                 "token" => $token
             );
+            echo 'Status no '.$invoice->status.' runs for schema '.$invoice->schema_name. chr(10). chr(10);
             switch ($invoice->status) {
                 case 2:
 
