@@ -324,6 +324,8 @@ class Kernel extends ConsoleKernel {
                         "callback_url" => "http://75.119.140.177:8081/api/init",
                         "token" => $token
                     );
+                    echo chr(10).' final invoice status '. chr(10);
+                    print_r($fields);
                     $this->updateInvoiceStatus($fields, $invoice, $token);
                 }
             } else {
