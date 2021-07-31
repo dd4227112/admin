@@ -314,6 +314,7 @@ class Kernel extends ConsoleKernel {
                             ->where('reference', $invoice->reference)->update(['sync' => 1, 'status' => 1, 'return_message' => $curl, 'push_status' => 'check_' . $push_status, 'updated_at' => 'now()']);
                 } else {
                     //update the whole invoice
+                    $new_token=$this->getToken($invoice);
                     $fields = array(
                         "reference" => trim($invoice->reference),
                         "student_name" => isset($invoice->student_name) ? $invoice->student_name : '',
@@ -322,11 +323,11 @@ class Kernel extends ConsoleKernel {
                         "type" => ucfirst($invoice->schema_name) . '  School fee',
                         "code" => "10",
                         "callback_url" => "http://75.119.140.177:8081/api/init",
-                        "token" => $token
+                        "token" => $new_token
                     );
                     echo chr(10).' final invoice status '. chr(10);
                     print_r($fields);
-                    $this->updateInvoiceStatus($fields, $invoice, $token);
+                    $this->updateInvoiceStatus($fields, $invoice, $new_token);
                 }
             } else {
                 //invoice is not found, so update for it to be sync
