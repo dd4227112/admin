@@ -258,12 +258,12 @@ class Kernel extends ConsoleKernel {
     public function syncInvoicePerSchool($schema = '') {
 
         $invoices = DB::select("select b.id, b.student_id, b.status, b.reference, b.prefix,b.date,b.sync,b.return_message,b.push_status,b.academic_year_id, "
-                . " b.created_at, b.updated_at, a.amount, c.name as student_name, '" . $schema . "' as schema_name, (select sub_invoice from "
-                . "  " . $schema . ".setting limit 1) as sub_invoice   from  " . $schema . ".invoices b join " . $schema . ".student c on "
-                . " c.student_id=b.student_id join ( select sum(balance) as amount, a.invoice_id from " . $schema . ".invoice_balances a "
-                . " group by a.invoice_id ) a on a.invoice_id=b.id where  a.amount >0  and b.sync <>1 and b.prefix in "
-                . " (select bn.invoice_prefix from " . $schema . ".bank_accounts_integrations bn join " . $schema . ".bank_accounts ba on "
-                . " ba.id=bn.bank_account_id where ba.refer_bank_id=22 ) order by random() limit 15");
+                        . " b.created_at, b.updated_at, a.amount, c.name as student_name, '" . $schema . "' as schema_name, (select sub_invoice from "
+                        . "  " . $schema . ".setting limit 1) as sub_invoice   from  " . $schema . ".invoices b join " . $schema . ".student c on "
+                        . " c.student_id=b.student_id join ( select sum(balance) as amount, a.invoice_id from " . $schema . ".invoice_balances a "
+                        . " group by a.invoice_id ) a on a.invoice_id=b.id where  a.amount >0  and b.sync <>1 and b.prefix in "
+                        . " (select bn.invoice_prefix from " . $schema . ".bank_accounts_integrations bn join " . $schema . ".bank_accounts ba on "
+                        . " ba.id=bn.bank_account_id where ba.refer_bank_id=22 ) order by random() limit 15");
 
         foreach ($invoices as $invoice) {
             if ($invoice->sub_invoice == 1) {
@@ -544,24 +544,20 @@ class Kernel extends ConsoleKernel {
             if (!empty($credentials)) {
                 $user = trim($credentials->api_username);
                 $pass = trim($credentials->api_password);
-                return $this->createToken($user, $pass,$url);
             } else {
 //                $credentials = DB::table($invoice->schema_name . '.bank_accounts_integrations')->first();
 //                $user = trim($credentials->api_username);
 //                $pass = trim($credentials->api_password);
-                return  DB::table('api.requests')->insert(['return' => '', 'content' => 'invalid credentials for '.$invoice->schema_name]);
+                return DB::table('api.requests')->insert(['return' => '', 'content' => 'invalid credentials for ' . $invoice->schema_name]);
             }
         }
-    }
-
-    private function createToken($user, $pass,$url) {
         $request = $this->curlServer([
             'username' => $user,
             'password' => $pass
                 ], $url);
         $obj = json_decode($request);
 
-        DB::table('api.requests')->insert(['return' => json_encode($obj), 'content' => json_encode($request)]);
+        DB::table('api.requests')->insert(['return' => json_encode($obj), 'content' => json_encode($request), 'header' => $invoice->schema_name]);
         if (isset($obj) && is_object($obj) && isset($obj->status) && $obj->status == 1) {
             return $obj->token;
         }
