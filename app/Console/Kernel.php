@@ -301,6 +301,7 @@ class Kernel extends ConsoleKernel {
         }
         $curl = $this->curlServer($fields, $url);
         $result = json_decode($curl);
+        print_r($result);
         if (isset($result) && !empty($result)) {
             //check invoice and compare with the action
             if ($result->status == 1) {
