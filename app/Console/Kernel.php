@@ -245,7 +245,9 @@ class Kernel extends ConsoleKernel {
     }
 
     public function syncInvoice() {
-        $invoices = DB::select('select distinct a.schema_name from admin.all_bank_accounts_integrations  a JOIN admin.all_bank_accounts b on (a.bank_account_id=b.id  AND a."schema_name"=b."schema_name") where b.refer_bank_id=22');
+        $invoices = DB::select("select distinct a.schema_name from admin.all_bank_accounts_integrations  a JOIN admin.all_bank_accounts b on 
+                 (a.bank_account_id=b.id  AND a.schema_name=b.schema_name) where b.refer_bank_id=22 
+                 and a.schema_name not in ('public') ");
 
         foreach ($invoices as $invoice) {
             $this->syncInvoicePerSchool($invoice->schema_name);
