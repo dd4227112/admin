@@ -44,7 +44,7 @@ class Kernel extends ConsoleKernel {
         $schedule->call(function () {
             //sync invoices 
             $this->syncInvoice();
-            $this->sendeMails();
+            //$this->sendeMails();
         })->everyMinute();
 
         $schedule->call(function () {
@@ -57,10 +57,10 @@ class Kernel extends ConsoleKernel {
         // $schedule->call(function () {
         //     (new Message())->checkPhoneStatus();
         // })->hourly();
-        // $schedule->call(function () {
-        //   $this->curlServer(['action' => 'payment'], 'http://75.119.140.177:8081/api/cron');
-        // (new Message())->sendEmail();
-        ///  })->everyMinute();
+        $schedule->call(function () {
+            //   $this->curlServer(['action' => 'payment'], 'http://75.119.140.177:8081/api/cron');
+            (new Message())->sendEmail();
+        })->everyMinute();
         //  $schedule->call(function () {
         //(new Message())->karibusmsEmails();
         // })->everyMinute();
@@ -260,16 +260,15 @@ class Kernel extends ConsoleKernel {
         $invoices = DB::select("select b.id, b.student_id, b.status, b.reference, b.prefix,b.date,b.sync,b.return_message,b.push_status,b.academic_year_id,b.created_at, b.updated_at, a.amount, c.name as student_name, '" . $schema . "' as schema_name, (select sub_invoice from  " . $schema . ".setting limit 1) as sub_invoice   from  " . $schema . ".invoices b join " . $schema . ".student c on c.student_id=b.student_id join ( select sum(balance) as amount, a.invoice_id from " . $schema . ".invoice_balances a group by a.invoice_id ) a on a.invoice_id=b.id where  a.amount >0  and b.sync <>1 order by random() limit 15");
 
         foreach ($invoices as $invoice) {
-            echo 'Loopt throught '.$invoice->schema_name.' invoices'. chr(10). chr(10);
-            if ($invoice->sub_invoice == 1) {
-                echo 'push sub invoices for '.$invoice->schema_name.''. chr(10). chr(10);
+           if ($invoice->sub_invoice == 1) {
+                echo 'push sub invoices for ' . $invoice->schema_name . '' . chr(10) . chr(10);
                 $sub_invoices = DB::select("select b.id,b.status, b.student_id, b.reference||'EA'||a.fee_id as reference, b.prefix,b.date,b.sync,b.return_message,b.push_status,b.academic_year_id,b.created_at, b.updated_at, a.balance as amount, c.name as student_name, '" . $schema . "' as schema_name from  " . $schema . ".invoices b join " . $schema . ".student c on c.student_id=b.student_id join " . $schema . ".invoice_balances a on a.invoice_id=b.id  where b.id=" . $invoice->id);
 
                 foreach ($sub_invoices as $sub_invoice) {
                     $this->pushInvoice($sub_invoice);
                 }
             } else {
-                 echo 'push Normal  invoices for '.$invoice->schema_name.''. chr(10). chr(10);
+                echo 'push Normal  invoices for ' . $invoice->schema_name . '' . chr(10) . chr(10);
                 $this->pushInvoice($invoice);
             }
         }
@@ -370,7 +369,7 @@ class Kernel extends ConsoleKernel {
                 "callback_url" => "http://75.119.140.177:8081/api/init",
                 "token" => $token
             );
-            echo 'Status no '.$invoice->status.' runs for schema '.$invoice->schema_name. chr(10). chr(10);
+            echo 'Status no ' . $invoice->status . ' runs for schema ' . $invoice->schema_name . chr(10) . chr(10);
             switch ($invoice->status) {
                 case 2:
 
@@ -388,6 +387,8 @@ class Kernel extends ConsoleKernel {
                     $this->pushStudentInvoice($fields, $invoice, $token);
                     break;
             }
+        }else{
+            echo 'No token generated for '.$invoice->schema_name. chr(10). chr(10);
         }
     }
 
@@ -458,7 +459,7 @@ class Kernel extends ConsoleKernel {
                 if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
                     DB::statement("insert into " . $invoice->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Control Number Mpya Ya Malipo ya Ada ya Shule','" . $message . "')");
                 }
-               // DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
+                // DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
             }
         }
         DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
@@ -1100,7 +1101,8 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
             if (!empty($schema_emails)) {
 
                 foreach ($schema_emails as $schema_email) {
-                    if (!empty($schema_email->email) && !Str::contains($schema_email->email, 'shulesoft.com')) {
+                    // if (!empty($schema_email->email) && !Str::contains($schema_email->email, 'shulesoft.com')) {
+                    if (filter_var($schema_email->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $schema_email->email)) {
                         $email_to = $schema_email->email;
                         $email_subject = $schema_email->subject;
                         $content = $schema_email->body;
