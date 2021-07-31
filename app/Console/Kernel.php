@@ -301,6 +301,7 @@ class Kernel extends ConsoleKernel {
         }
         $curl = $this->curlServer($fields, $url);
         $result = json_decode($curl);
+        print_r($result);
         if (isset($result) && !empty($result)) {
             //check invoice and compare with the action
             if ($result->status == 1) {
@@ -431,9 +432,9 @@ class Kernel extends ConsoleKernel {
                         . 'Control Namba ya ' . $invoice->student_name . ', kwa malipo ya ' . $invoice->schema_name . ' ni ' . $invoice->reference . '.'
                         . 'Unaweza lipa sasa kupitia mitandao ya simu au njia nyingine za bank ulizo elekezwa na shule. Asante';
                 if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
-                    DB::statement("insert into " . $invoice->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Control Number Ya Malipo ya Ada ya Shule','" . $message . "')");
+                  //  DB::statement("insert into " . $invoice->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Control Number Ya Malipo ya Ada ya Shule','" . $message . "')");
                 }
-                DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
+               // DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
             }
         }
         DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
@@ -465,7 +466,7 @@ class Kernel extends ConsoleKernel {
                         . 'Control Namba ya ' . $invoice->student_name . ', kwa malipo ya ' . $invoice->schema_name . ' imebadilishwa hivyo tumia control number: ' . $invoice->reference . '.'
                         . 'Unaweza lipa sasa kupitia mitandao ya simu au njia nyingine za bank ulizo elekezwa na shule. Asante';
                 if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
-                    DB::statement("insert into " . $invoice->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Control Number Mpya Ya Malipo ya Ada ya Shule','" . $message . "')");
+                    //DB::statement("insert into " . $invoice->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Control Number Mpya Ya Malipo ya Ada ya Shule','" . $message . "')");
                 }
                 // DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
             }
