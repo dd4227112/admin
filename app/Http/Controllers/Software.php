@@ -443,6 +443,7 @@ ORDER BY c.oid, a.attnum";
 
     public function reconciliation() {
         $this->data['returns'] = [];
+        $this->data['prefix']='';
         if ($_POST) {
             $schema = request('schema_name');
             $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where "schema_name"=\'' . $schema . '\'');
@@ -459,6 +460,7 @@ ORDER BY c.oid, a.attnum";
                 foreach ($invoices as $invoice) {
 
                     $token = $background->getToken($invoice);
+                    $this->data['prefix']=$invoice->prefix;
                     if (strlen($token) > 4) {
                         $fields = array(
                             //  "reconcile_date" => date('d-m-Y', strtotime(request('date'))),
