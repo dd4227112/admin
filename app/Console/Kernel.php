@@ -265,7 +265,7 @@ class Kernel extends ConsoleKernel {
                         . " c.student_id=b.student_id join ( select sum(balance) as amount, a.invoice_id from " . $schema . ".invoice_balances a "
                         . " group by a.invoice_id ) a on a.invoice_id=b.id where  a.amount >0  and b.sync <>1 and b.prefix in "
                         . " (select bn.invoice_prefix from " . $schema . ".bank_accounts_integrations bn join " . $schema . ".bank_accounts ba on "
-                        . " ba.id=bn.bank_account_id where ba.refer_bank_id=22 AND bn.api_username is not null) order by random() limit 15");
+                        . " ba.id=bn.bank_account_id where ba.refer_bank_id=22 AND bn.api_username is not null) order by random() limit 60");
 
         foreach ($invoices as $invoice) {
             if ($invoice->sub_invoice == 1) {
@@ -478,7 +478,7 @@ class Kernel extends ConsoleKernel {
     }
 
     public function updateInvoice() {
-        $invoices = DB::select('select * from api.invoices where sync=2 and amount >0 order by random() limit 10');
+        $invoices = DB::select('select * from api.invoices where sync=2 and amount >0 order by random() limit 80');
         if (!empty($invoices)) {
             foreach ($invoices as $invoice) {
                 $token = $this->getToken($invoice);
