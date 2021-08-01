@@ -62,7 +62,7 @@
                                         <div class="col-sm-4">
                                             <input type="date" name="end_date" class="form-control"/>
                                         </div>
-                                </div>
+                                    </div>
                                     <div class="form-group row col-lg-offset-6">
                                         <label class="col-sm-4 col-form-label"></label>
                                         <div class="col-sm-4">
@@ -99,29 +99,30 @@
                                                     $trans = (object) $data;
                                                     $i = 1;
                                                     foreach ($trans as $tran) {
-
-                                                        $check = DB::table(request('schema_name') . '.payments')->where('transaction_id', $tran->receipt)->first();
-                                                        ?>
-                                                        <tr>
-                                                            <td><?= $i ?></td>
-                                                            <td><?= $tran->customer_name ?></td>
-                                                            <td><?= $tran->reference ?></td>
-                                                            <td><?= $tran->timestamp ?></td>
-                                                            <td><?= number_format($tran->amount) ?></td>
-                                                            <td><?= $tran->receipt ?></td>
-                                                            <td><?= $tran->channel ?></td>
-                                                            <td><?= $tran->account_number ?></td>
-                                                            <td><?= $tran->token ?></td>
-                                                            <td>
-                                                                <?php
-                                                                if (empty($check)) {
-                                                                    ?>
-                                                                    <a href="#" onclick="return false" onmousedown="reconcile('<?= url('software/syncMissingPayments/null?data=' . urlencode(json_encode($tran))) ?>')">Sync</a>
-                                                                <?php } ?>
-                                                            </td>
-                                                        </tr>
-                                                        <?php
-                                                        $i++;
+                                                        if (preg_match('/' . strtolower($prefix) . '/i', strtolower($tran->reference))) {
+                                                            $check = DB::table(request('schema_name') . '.payments')->where('transaction_id', $tran->receipt)->first();
+                                                            ?>
+                                                            <tr>
+                                                                <td><?= $i ?></td>
+                                                                <td><?= $tran->customer_name ?></td>
+                                                                <td><?= $tran->reference ?></td>
+                                                                <td><?= $tran->timestamp ?></td>
+                                                                <td><?= number_format($tran->amount) ?></td>
+                                                                <td><?= $tran->receipt ?></td>
+                                                                <td><?= $tran->channel ?></td>
+                                                                <td><?= $tran->account_number ?></td>
+                                                                <td><?= $tran->token ?></td>
+                                                                <td>
+                                                                    <?php
+                                                                    if (empty($check)) {
+                                                                        ?>
+                                                                        <a href="#" onclick="return false" onmousedown="reconcile('<?= url('software/syncMissingPayments/null?data=' . urlencode(json_encode($tran))) ?>')">Sync</a>
+                                                                    <?php } ?>
+                                                                </td>
+                                                            </tr>
+                                                            <?php
+                                                            $i++;
+                                                        }
                                                     }
                                                 }
                                             }
@@ -148,7 +149,7 @@
     }
 
 
-       $(".select2").select2({
+    $(".select2").select2({
         theme: "bootstrap",
         dropdownAutoWidth: false,
         allowClear: false,
