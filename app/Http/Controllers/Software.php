@@ -66,7 +66,7 @@ class Software extends Controller {
     }
 
     public function compareColumn($pg = null) {
-        $this->data['data'] = DB::select("SELECT * FROM crosstab('SELECT distinct table_schema,table_type,count(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''information_schema'',''constant'',''admin'') group by table_schema,table_type','select distinct table_type FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''information_schema'',''constant'',''admin'',''dodoso'')')
+        $this->data['data'] = DB::select("select * from crosstab('SELECT distinct table_schema,table_type,count(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''information_schema'',''constant'',''admin'',''academy'',''api'') group by table_schema,table_type','select distinct table_type FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''information_schema'',''constant'',''admin'',''dodoso'',''api'',''academy'')')
            AS ct (table_schema text, views text, tables text)");
         $view = 'software.database.' . strtolower('compareColumn');
         if (view()->exists($view)) {
@@ -330,8 +330,10 @@ ORDER BY c.oid, a.attnum";
     }
 
     public function logs() {
-        $schema = request()->segment(3);
-        $this->data['error_logs'] = strlen($schema) > 3 ? DB::table('error_logs')->whereNull('deleted_at')->where('schema_name', $schema)->count() : DB::table('error_logs')->whereNull('deleted_at')->count();
+        $this->data['schema_name'] = $schema = request()->segment(3);
+        $this->data['error_log_count'] = strlen($schema) > 3 ? DB::table('error_logs')->whereNull('deleted_at')->where('schema_name', $schema)->count() : DB::table('error_logs')->whereNull('deleted_at')->count();
+        $this->data['schema_errors']  =  strlen($schema) > 3 ? DB::table('error_logs')->whereNull('deleted_at')->where('schema_name', $schema)->get() : '';
+    
         $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1 '))->first();
         return view('software.logs', $this->data);
     }
@@ -347,7 +349,7 @@ ORDER BY c.oid, a.attnum";
 
     public function logsDelete() {
         $id = request('id');
-        $tag = \App\Models\ErrorLog::find($id);
+        $tag = \App\Models\ErrorLog::findOrFail($id);
         if (!empty($tag)) {
             $tag->deleted_by = \Auth::user()->id;
             $tag->save();
@@ -358,11 +360,12 @@ ORDER BY c.oid, a.attnum";
 
     public function Readlogs() {
         $id = request()->segment(3);
-        $tag = \App\Models\ErrorLog::find($id);
+        $tag = \App\Models\ErrorLog::findOrFail($id);
+        $this->data['schema'] = $schema = $tag->schema_name;
+        $this->data['school'] =  $schema != 'public' ? \collect(\DB::select("select * from admin.clients where username = '.$schema.' "))->first() : '';
         $this->data['error_message'] = $tag->error_message . '<br>' . $tag->url . '<br>';
         return view('customer.view', $this->data);
-
-        //echo 1;
+        //echo 1;   
     }
 
     public function logsView() {

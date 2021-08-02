@@ -85,6 +85,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () { 
             $this->sendSORemainder();
+            $this->updateCompleteItems();
         })->dailyAt('04:40'); // Eq to 07:40 AM
         
 
@@ -1061,5 +1062,117 @@ public function sendSORemainder() {
             }
          } 
       }
+
+
+
+
+
+      
+    public function updateCompleteItems(){
+        $checks = DB::select('select * from admin.train_items where status=1');
+        foreach($checks as $check){  
+              if (preg_match('/exam/i', strtolower($check->content))) {
+                    $schemas = DB::select('select * from admin.all_setting');
+                    foreach($schemas as $schema){
+                    $classes = DB::table($schema->schema_name.'.classes')->count();
+                    $exams = DB::table($schema->schema_name.'.exam_report')->whereYear('created_at', date('Y'))->count();
+                    $client = $this->client_school($schema->schema_name);
+                    if ($exams >= $classes) {
+                          $this->updateStatus($check->id,$client->id);
+                       }
+                    }
+
+              } else if (preg_match('/invoice/i', strtolower($check->content))) {
+                //receive at least 10 payments
+                    $schemas = DB::select('select * from admin.all_setting');
+                    foreach($schemas as $schema){
+                    $payments = DB::table($schema->schema_name.'.payments')->whereYear('created_at', date('Y'))->count();
+                    if ($payments >= 10) {
+                          $this->updateStatus($check->id,$this->client_school($schema->schema_name)->id);
+                        }
+                    }
+              } else if (preg_match('/transactions/i', strtolower($check->content))) {
+                    $schemas = DB::select('select * from admin.all_setting');
+                    foreach($schemas as $schema){
+                    $expense = DB::table($schema->schema_name.'.expense')->whereYear('created_at', date('Y'))->count();
+                    if ($expense >= 10) {
+                          $this->updateStatus($check->id,$this->client_school($schema->schema_name)->id);
+                        }
+                    }
+              } else if (preg_match('/payroll/i', strtolower($check->content))) {
+                    $schemas = DB::select('select * from admin.all_setting');
+                    foreach($schemas as $schema){
+                    $salary = DB::table($schema->schema_name.'.salaries')->whereYear('created_at', date('Y'))->count();
+                    if ($salary > 10) {
+                          $this->updateStatus($check->id,$this->client_school($schema->schema_name)->id);
+                        }
+                    }
+              } else if (preg_match('/inventory/i', strtolower($check->content))) {
+                    $schemas = DB::select('select * from admin.all_setting');
+                    foreach($schemas as $schema){
+                     $inventory = DB::table($schema->schema_name.'.product_alert_quantity')->whereYear('created_at', date('Y'))->count();
+                     if ($inventory >= 10) {
+                          $this->updateStatus($check->id,$this->client_school($schema->schema_name)->id);
+                        }
+                    }
+              } else if (preg_match('/onboarding/i', strtolower($check->content))) {
+                    $schemas = DB::select('select * from admin.all_setting');
+                    foreach($schemas as $schema){
+                       $students = DB::table($schema->schema_name . '.student')->count();
+                       if ($students >= (int) $this->client_school($schema->schema_name)->estimated_students) {
+                            $this->updateStatus($check->id,$this->client_school($schema->schema_name)->id);
+                        }
+                    }
+              } else if (preg_match('/operations/i', strtolower($check->content))) {
+                    $schemas = DB::select('select * from admin.all_setting');
+                    foreach($schemas as $schema){
+                   //check transport and hostel
+                        $tmembers = DB::table($schema->schema_name.'.tmembers')->whereYear('created_at', date('Y'))->count();
+                        $hmembers = DB::table($schema->schema_name.'.hmembers')->whereYear('created_at', date('Y'))->count();
+                       if((int) $tmembers >= 20 || (int) $hmembers >= 20) {
+                            $this->updateStatus($check->id,$this->client_school($schema->schema_name)->id);
+                        }
+                    }
+              } else if (preg_match('/sms/i', strtolower($check->content))) {
+                    $schemas = DB::select('select * from admin.all_setting');
+                    foreach($schemas as $schema){
+                       $sms_config = DB::table('admin.school_keys')->where('api_key', '<>', '1234567894')->where('schema_name', $schema->schema_name)->count();
+                       if((int) $sms_config > 0) {
+                            $this->updateStatus($check->id,$this->client_school($schema->schema_name)->id);
+                        }
+                    }
+              } else if (preg_match('/nmb/i', strtolower($check->content))) {
+                    $schemas = DB::select('select * from admin.all_setting');
+                    foreach($schemas as $schema){
+                         $nmb_payments = DB::table($schema->schema_name.'.payments')->whereYear('created_at', date('Y'))->whereNotNull('token')->count();
+                         $mappend = DB::table($schema->schema_name.'.bank_accounts_integrations')->join($schema->schema_name.'.bank_accounts',$schema->schema_name.'.bank_accounts.id','=',$schema->schema_name.'.bank_accounts_integrations.bank_account_id')->join('constant.refer_banks',$schema->schema_name.'.bank_accounts.refer_bank_id','=','constant.refer_banks.id')->where(['constant.refer_banks.id' => '22'])->count();
+                       if((int) $mappend > 0 && (int) $nmb_payments >= 10) {
+                            $this->updateStatus($check->id,$this->client_school($schema->schema_name)->id);
+                        }
+                    }
+              } else if (preg_match('/crdb/i', strtolower($check->content))) {
+                    $schemas = DB::select('select * from admin.all_setting');
+                    foreach($schemas as $schema){
+                         $crdb_payments = DB::table($schema->schema_name.'.payments')->whereYear('created_at', date('Y'))->whereNotNull('token')->count();
+                         $mappend = DB::table($schema->schema_name.'.bank_accounts_integrations')->join($schema->schema_name.'.bank_accounts',$schema->schema_name.'.bank_accounts.id','=',$schema->schema_name.'.bank_accounts_integrations.bank_account_id')->join('constant.refer_banks',$schema->schema_name.'.bank_accounts.refer_bank_id','=','constant.refer_banks.id')->where(['constant.refer_banks.id' => '22'])->count();
+                       if((int) $mappend > 0 && (int) $crdb_payments >= 10) {
+                            $this->updateStatus($check->id,$this->client_school($schema->schema_name)->id);
+                        }
+                    }
+              }
+            
+         }
+     }
+
+     private function client_school($schema_name){
+        return strlen($schema_name) > 2 ? DB::table('admin.clients')->where('username', $schema_name)->first() : '';
+     }
+
+     private function updateStatus($item_id,$client_id){
+           $training = \App\Models\TrainItemAllocation::where('train_item_id', $item_id)->where('client_id', $client_id)->first();
+            if(!empty($training)){
+              \App\Models\TrainItemAllocation::where('train_item_id',$item_id)->where('client_id', $client_id)->update(['status' => '1']);
+            }
+     }
 
 }
