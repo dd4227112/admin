@@ -59,7 +59,7 @@ class Payment extends Controller {
                         "amount" => $invoice->amount,
                         "type" => $this->getFeeNames($invoice->id, $invoice->schema_name),
                         "code" => "10",
-                        "callback_url" => "http://158.69.112.216:8081/api/init",
+                        "callback_url" => "http://75.119.140.177:8081/api/init",
                         "token" => $token
                     );
                     if ($invoice->schema_name == 'beta_testing') {
@@ -317,7 +317,7 @@ AND "b"."fee_installment_id" =  ' . $fee_installment_id->id . '');
             $token = $this->getToken($invoice);
             $fields = array(
                 "reconcile_date" => date('d-m-Y', strtotime(request('from'))),
-                "callback_url" => "http://158.69.112.216:8081/api/init",
+                "callback_url" => "http://75.119.140.177:8081/api/init",
                 "token" => $token
             );
             $url = 'https://api.mpayafrica.co.tz/v2/reconcilliation';

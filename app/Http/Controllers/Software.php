@@ -350,6 +350,7 @@ ORDER BY c.oid, a.attnum";
     public function logsDelete() {
         $id = request('id');
         $tag = \App\Models\ErrorLog::findOrFail($id);
+
         if (!empty($tag)) {
             $tag->deleted_by = \Auth::user()->id;
             $tag->save();
