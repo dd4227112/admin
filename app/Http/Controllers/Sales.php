@@ -702,8 +702,7 @@ class Sales extends Controller {
                 'max_time' => $section->time
               ]);
             }
-         
-             
+        
             // email to shulesoft personel
             $user = \App\Models\User::where('id',$support_user_id)->first();
             $message =    'Hello ' . $user->firstname . ' ' . $user->lastname . '<br/>'
@@ -747,19 +746,16 @@ class Sales extends Controller {
     }
 
     public function getSupportUser($section_id) {
-       // $implementation = DB::table('admin.train_items_allocations')->where('train_item_id',$section_id);
+        
         $user=DB::table('admin.user_train_items')->where('train_item_id',$section_id)->where('status',1)->first();
-        //we will check if user exists in db or not, and if not we will allocate any user within the company to take that role
+            //we will check if user exists in db or not, and if not we will allocate any user within the company to take that role
+            $data = [];
+            $collection = DB::table('admin.train_items_allocations')->select('user_id', DB::raw('count(client_id) as total'))->groupBy('user_id')->get();
+            foreach($collection as $value){
+                $data[$value->user_id] = $value->total;
+            }
+         $user_id = array_search(min($data), $data);
         
-        $data = [];
-        $collection = DB::table('admin.train_items_allocations')->select('user_id', DB::raw('count(client_id) as total'))->groupBy('user_id')->get();
-        
-        foreach($collection as $value){
-             $data[$value->user_id] = $value->total;
-        }
-        
-        $user_id = array_search(min($data), $data);
-
         return $user_id;
         
         //we will check if this user is already allocated specific school and try to skip the implementation if maximum schools already being alllocated

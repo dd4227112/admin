@@ -6,7 +6,6 @@ function check_implementation($activity,$schema_name) {
     $status = '';
     if (preg_match('/exam/i', strtolower($activity))) {
         //all classes have published an exam
-
         $classes = DB::table($schema_name . '.classes')->count();
         $exams = DB::table($schema_name . '.exam_report')->whereYear('created_at', date('Y'))->count();
         if ($exams >= $classes) {
@@ -25,9 +24,8 @@ function check_implementation($activity,$schema_name) {
         }
     } else if (preg_match('/nmb/i', strtolower($activity))) {
         //receive at least 10 payments
-
         $nmb_payments = DB::table($schema_name . '.payments')->whereYear('created_at', date('Y'))->whereNotNull('token')->count();
-        $mappend = DB::table($schema_name . '.bank_accounts_integrations')->where('invoice_prefix', '<>', 'SAS')->count();
+        $mappend = DB::table($schema_name.'.bank_accounts_integrations')->join($schema_name.'.bank_accounts',$schema_name.'.bank_accounts.id','=',$schema_name.'.bank_accounts_integrations.bank_account_id')->join('constant.refer_banks',$schema_name.'.bank_accounts.refer_bank_id','=','constant.refer_banks.id')->where(['constant.refer_banks.id' => '22'])->count();
         $is_mappend = (int) $mappend == 0 ? 'Not Mapped: ' : 'Mapped: ';
         if ($nmb_payments >= 10) {
             $status = $is_mappend . 'Implemented';
@@ -36,11 +34,8 @@ function check_implementation($activity,$schema_name) {
         }
     } else if (preg_match('/crdb/i', strtolower($activity))) {
         //receive at least 10 payments
-
-
         $crdb_payments = DB::table($schema_name . '.payments')->whereYear('created_at', date('Y'))->whereNotNull('token')->count();
-
-        $mappend = DB::table($schema_name . '.bank_accounts_integrations')->where('invoice_prefix', 'SAS')->count();
+        $mappend = DB::table($schema_name.'.bank_accounts_integrations')->join($schema_name.'.bank_accounts',$schema_name.'.bank_accounts.id','=',$schema_name.'.bank_accounts_integrations.bank_account_id')->join('constant.refer_banks',$schema_name.'.bank_accounts.refer_bank_id','=','constant.refer_banks.id')->where(['constant.refer_banks.id' => '8'])->count();
         $is_mappend = (int) $mappend == 0 ? 'Not Mapped: ' : 'Mapped: ';
         if ($crdb_payments >= 10) {
             $status = $is_mappend . 'Implemented';
@@ -49,8 +44,6 @@ function check_implementation($activity,$schema_name) {
         }
     } else if (preg_match('/transaction/i', strtolower($activity))) {
         //receive at least 10 payments
-
-
         $expense = DB::table($schema_name . '.expense')->whereYear('created_at', date('Y'))->count();
         if ($expense >= 10) {
             $status = 'Implemented';
@@ -60,7 +53,6 @@ function check_implementation($activity,$schema_name) {
     } else if (preg_match('/payroll/i', strtolower($activity))) {
         //receive at least 10 payments
 
-
         $salary = DB::table($schema_name . '.salaries')->whereYear('created_at', date('Y'))->count();
         if ($salary > 0) {
             $status = 'Implemented';
@@ -68,8 +60,6 @@ function check_implementation($activity,$schema_name) {
             $status = ' Not Implemented';
         }
     } else if (preg_match('/inventory/i', strtolower($activity))) {
-        //receive at least 10 payments
-
 
         $inventory = DB::table($schema_name . '.product_alert_quantity')->whereYear('created_at', date('Y'))->count();
         if ($inventory >= 10) {
@@ -445,6 +435,25 @@ if (!function_exists('img')) {
     function clean_htmlentities($id) {
         return htmlentities($id, ENT_QUOTES, "UTF-8");
     }
+
+
+    // Calculate working days depends on month and year
+      function workingDays($year, $month, $ignore = array(0, 6)) {
+            $count = 0;
+            $counter = mktime(0, 0, 0, $month, 1, $year);
+            while (date("n", $counter) == $month) {
+                if (in_array(date("w", $counter), $ignore) == false) {
+                    $count++;
+                }
+                $counter = strtotime("+1 day", $counter);
+            }
+            // days after weekends
+            $remaindays = $count;
+        //  Holiday days
+            $holidays = \collect(DB::select("select count(*) from admin.public_days where extract(year from date) = '$year' and extract(month from date) = '$month' and extract(ISODOW from date) not in (6, 7)"))->first();
+            // return working days
+            return $remaindays - $holidays->count;
+        }
     
 
 

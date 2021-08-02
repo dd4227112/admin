@@ -66,7 +66,7 @@ class Software extends Controller {
     }
 
     public function compareColumn($pg = null) {
-        $this->data['data'] = DB::select("SELECT * FROM public.crosstab('SELECT distinct table_schema,table_type,count(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''api'',''constant'',''admin'',''forum'',''academy'') group by table_schema,table_type','select distinct table_type FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''api'',''constant'',''admin'',''forum'',''academy'')')
+        $this->data['data'] = DB::select("select * from crosstab('SELECT distinct table_schema,table_type,count(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''information_schema'',''constant'',''admin'',''academy'',''api'') group by table_schema,table_type','select distinct table_type FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''information_schema'',''constant'',''admin'',''dodoso'',''api'',''academy'')')
            AS ct (table_schema text, views text, tables text)");
         $view = 'software.database.' . strtolower('compareColumn');
         if (view()->exists($view)) {
@@ -108,7 +108,7 @@ AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
     /**
      * @var Default Schema which is stable
      */
-    public static $master_schema = 'betatwo';
+    public static $master_schema = 'beta_testing';
 
     /**
      * @var $schema : Schema name which we want to know its tables
@@ -330,8 +330,10 @@ ORDER BY c.oid, a.attnum";
     }
 
     public function logs() {
-        $schema = request()->segment(3);
-        $this->data['error_logs'] = strlen($schema) > 3 ? DB::table('error_logs')->whereNull('deleted_at')->where('schema_name', $schema)->count() : DB::table('error_logs')->whereNull('deleted_at')->count();
+        $this->data['schema_name'] = $schema = request()->segment(3);
+        $this->data['error_log_count'] = strlen($schema) > 3 ? DB::table('error_logs')->whereNull('deleted_at')->where('schema_name', $schema)->count() : DB::table('error_logs')->whereNull('deleted_at')->count();
+        $this->data['schema_errors']  =  strlen($schema) > 3 ? DB::table('error_logs')->whereNull('deleted_at')->where('schema_name', $schema)->get() : '';
+    
         $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1 '))->first();
         return view('software.logs', $this->data);
     }
@@ -347,7 +349,8 @@ ORDER BY c.oid, a.attnum";
 
     public function logsDelete() {
         $id = request('id');
-        $tag = \App\Models\ErrorLog::find($id);
+        $tag = \App\Models\ErrorLog::findOrFail($id);
+
         if (!empty($tag)) {
             $tag->deleted_by = \Auth::user()->id;
             $tag->save();
@@ -358,11 +361,12 @@ ORDER BY c.oid, a.attnum";
 
     public function Readlogs() {
         $id = request()->segment(3);
-        $tag = \App\Models\ErrorLog::find($id);
+        $tag = \App\Models\ErrorLog::findOrFail($id);
+        $this->data['schema'] = $schema = $tag->schema_name;
+        $this->data['school'] =  $schema != 'public' ? \collect(\DB::select("select * from admin.clients where username = '.$schema.' "))->first() : '';
         $this->data['error_message'] = $tag->error_message . '<br>' . $tag->url . '<br>';
         return view('customer.view', $this->data);
-
-        //echo 1;
+        //echo 1;   
     }
 
     public function logsView() {
@@ -443,7 +447,6 @@ ORDER BY c.oid, a.attnum";
 
     public function reconciliation() {
         $this->data['returns'] = [];
-        $this->data['prefix']='';
         if ($_POST) {
             $schema = request('schema_name');
             $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where "schema_name"=\'' . $schema . '\'');
@@ -460,7 +463,6 @@ ORDER BY c.oid, a.attnum";
                 foreach ($invoices as $invoice) {
 
                     $token = $background->getToken($invoice);
-                    $this->data['prefix']=$invoice->prefix;
                     if (strlen($token) > 4) {
                         $fields = array(
                             //  "reconcile_date" => date('d-m-Y', strtotime(request('date'))),
@@ -485,7 +487,7 @@ ORDER BY c.oid, a.attnum";
 
     public function syncMissingPayments() {
         $background = new \App\Http\Controllers\Background();
-        $url = 'http://75.119.140.177:8081/api/init';
+        $url = 'http://51.91.251.252:8081/api/init';
         $fields = json_decode(urldecode(request('data')));
         $curl = $background->curlServer($fields, $url, 'row');
         return $curl;
@@ -587,10 +589,9 @@ ORDER BY c.oid, a.attnum";
     public function tasksSummary() {
 
         $user_id = request()->segment(3);
-        $and = '';
-        if ($user_id > 0) {
-            //check user
-            $user = \App\Models\User::findOrFail($user_id);
+
+        //check user
+        $user = \App\Models\User::findOrFail($user_id);
 
 //        $project_user = DB::connection('project')->table('users')->where('id', $user_id)->where('email', $user->email)->first();
 //
@@ -598,9 +599,8 @@ ORDER BY c.oid, a.attnum";
 //            $project = new \App\Http\Controllers\Project();
 //            $project->setUserId($user->email);
 //        }
-
-            $and = (int) $user_id > 0 ? " AND assign_to in (select id from users where email='" . $user->email . "')" : "";
-        }
+        
+        $and = (int) $user_id > 0 ? " AND assign_to in (select id from users where email='" . $user->email. "')": "";
         $projects = DB::connection('project')->select("SELECT a.actual_dt_created as created_at, a.dt_created as last_updated_at,a.due_date,a.title,a.message, b.name as project_name, c.name as task_type, a.type_id, d.name as created_by, e.name as assigned_to, a.user_id,a.project_id,a.assign_to, case when a.legend=1 THEN 'New' when a.legend=2 THEN 'Opened' when a.legend=3 THEN 'Closed' when a.legend=4 THEN 'Start' when a.legend=5 THEN 'Resolve' WHEN a.legend=6 THEN 'Modified' END as final_status, 
 CASE 
 WHEN reply_type=4 THEN 'High Priority' ELSE 'Default Priority'
@@ -610,10 +610,6 @@ END as priority, CASE WHEN status=0 then 'Pending' ELSE 'Closed' END as status F
         $this->data['headers'] = \collect($projects)->first();
         $this->data['contents'] = $projects;
         return view('customer.usage.custom_report', $this->data);
-    }
-
-    public function serverLog() {
-        
     }
 
 }

@@ -199,7 +199,7 @@ class Payroll extends Controller {
 
     
     public function index() {
-        $id = (request()->segment(3));
+        $id = request()->segment(3);
         $this->data['set'] = $id;
         $this->data['salaries'] = DB::select('select count(*) as total_users, sum(basic_pay) as basic_pay, sum(allowance) as allowance, sum(gross_pay)
                          as gross_pay, sum(pension_fund) as pension, sum(deduction) as deduction, sum(tax) as tax, sum(paye) as paye, sum(net_pay) as net_pay, 
@@ -211,9 +211,10 @@ class Payroll extends Controller {
 
 
     public function show() {
-            $id = request()->segment(3);
-            $this->data['set'] = $id;
-            $this->data['salaries'] = \App\Models\Salary::where('payment_date', $id)->get();
+            $date = request()->segment(3);
+            $this->data['set'] = $date;
+            $this->data['workingDays'] = workingDays(date('Y',strtotime($date)),date('m',strtotime($date)));
+            $this->data['salaries'] = \App\Models\Salary::where('payment_date', $date)->get();
             $this->data["subview"] = "account.payroll.view";
             return view($this->data["subview"],$this->data);
     }
