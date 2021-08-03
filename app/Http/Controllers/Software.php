@@ -392,6 +392,17 @@ ORDER BY c.oid, a.attnum";
         return view('software.api.banksetup', $this->data);
     }
 
+     public function banksetup2() {
+        $this->data['settings'] = DB::table('admin.all_setting')->get();
+        $seg = request()->segment(3);
+        $this->data['schema'] = $seg;
+       // dd($seg);
+        if (strlen($seg) > 2) {
+            $this->data['banks'] = DB::select('select b.*,a.api_username,a.api_password,a.invoice_prefix,a.sandbox_api_username,a.sandbox_api_password from ' . $seg . '.bank_accounts_integrations a right join ' . $seg . '.bank_accounts b on a.bank_account_id=b.id');
+        }
+        return view('software.api.bank_setup', $this->data);
+    }
+
     public function setBankParameters() {
         $check = DB::table(request('schema') . '.bank_accounts_integrations')->where('bank_account_id', request('bank_id'));
         if (!empty($check->first())) {

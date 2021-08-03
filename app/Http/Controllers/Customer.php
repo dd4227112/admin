@@ -197,8 +197,6 @@ class Customer extends Controller {
         $attr = request('attr');
         $school_person = request('school_person');
 
-        //dd(request()->all());
-
         if ((int) $task_user == 0) {
             $sales = new \App\Http\Controllers\Sales();
             $user_id = $sales->getSupportUser($section_id);
@@ -206,13 +204,12 @@ class Customer extends Controller {
             $user_id = (int) $task_user;
         }
 
+        $train = \App\Models\TrainItemAllocation::findOrFail($ttask_id);
 
-        $train = \App\Models\TrainItemAllocation::find($ttask_id);
-
-        $task_id = $train->task_id;
+         $task_id = $train->task_id;
 
         if ((int) $user_id > 0 && (int) $task_id > 0) {
-            $section = \App\Models\TrainItem::find($section_id);
+            $section = \App\Models\TrainItem::findOrFail($section_id);
             $obj = [
                 'start_date' => date('Y-m-d H:i:s', strtotime($start_date)),
                 'end_date' => date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")),
@@ -241,7 +238,7 @@ class Customer extends Controller {
             $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
 
             //email to zone manager
-            // find zone manager based on school location
+            // findOrFail zone manager based on school location
             $user_id = $this->zonemanager($train->client->id);
             if (isset($user_id) && !empty((int) $user_id->user_id)) {
                 $manager = \App\Models\User::where('id', $user_id->user_id)->first();
@@ -347,7 +344,7 @@ class Customer extends Controller {
 
     public function guide() {
         if (request()->segment(3) == 'delete') {
-            \App\Model\Guide::find(request()->segment(4))->delete();
+            \App\Model\Guide::findOrFail(request()->segment(4))->delete();
             return redirect()->back();
         } else if (request('pg') == 'add') {
             $this->data['guides'] = [];
@@ -570,7 +567,6 @@ class Customer extends Controller {
                 'note' => request('note'),
                 'contract_type_id' => 8
             ];
-            //  dd($data);
             DB::table('standing_orders')->insert($data);
             return redirect('account/standingOrders')->with('success', 'Standing order added successfully!');
         }

@@ -713,6 +713,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                     <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Payment Integration</a>
                                         <ul class="tree-2" style="display: none;">
                                             <li><a href="<?= url('software/banksetup') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Bank Setup</a></li>
+                                            {{-- <li><a href="<?= url('software/banksetup2') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Bank Setup 2</a></li> --}}
 
 
                                             <li><a href="<?= url('software/invoice/live') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Live Invoices</a></li>
