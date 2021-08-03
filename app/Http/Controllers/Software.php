@@ -579,16 +579,7 @@ ORDER BY c.oid, a.attnum";
         $user_id = request()->segment(3);
         $and = '';
         if ($user_id > 0) {
-            //check user
             $user = \App\Models\User::findOrFail($user_id);
-
-//        $project_user = DB::connection('project')->table('users')->where('id', $user_id)->where('email', $user->email)->first();
-//
-//        if (empty($project_user)) {
-//            $project = new \App\Http\Controllers\Project();
-//            $project->setUserId($user->email);
-//        }
-
             $and = (int) $user_id > 0 ? " AND assign_to in (select id from users where email='" . $user->email . "')" : "";
         }
         $projects = DB::connection('project')->select("SELECT a.actual_dt_created as created_at, a.dt_created as last_updated_at,a.due_date,a.title,a.message, b.name as project_name, c.name as task_type, a.type_id, d.name as created_by, e.name as assigned_to, a.user_id,a.project_id,a.assign_to, case when a.legend=1 THEN 'New' when a.legend=2 THEN 'Opened' when a.legend=3 THEN 'Closed' when a.legend=4 THEN 'Start' when a.legend=5 THEN 'Resolve' WHEN a.legend=6 THEN 'Modified' END as final_status, 
