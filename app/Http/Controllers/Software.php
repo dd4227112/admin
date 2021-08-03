@@ -66,7 +66,7 @@ class Software extends Controller {
     }
 
     public function compareColumn($pg = null) {
-        $this->data['data'] = DB::select("select * from crosstab('SELECT distinct table_schema,table_type,count(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''information_schema'',''constant'',''admin'',''academy'',''api'') group by table_schema,table_type','select distinct table_type FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''information_schema'',''constant'',''admin'',''dodoso'',''api'',''academy'')')
+        $this->data['data'] = DB::select("SELECT * FROM public.crosstab('SELECT distinct table_schema,table_type,count(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''api'',''constant'',''admin'',''forum'',''academy'') group by table_schema,table_type','select distinct table_type FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''api'',''constant'',''admin'',''forum'',''academy'')')
            AS ct (table_schema text, views text, tables text)");
         $view = 'software.database.' . strtolower('compareColumn');
         if (view()->exists($view)) {
@@ -458,6 +458,7 @@ ORDER BY c.oid, a.attnum";
 
     public function reconciliation() {
         $this->data['returns'] = [];
+        $this->data['prefix']='';
         if ($_POST) {
             $schema = request('schema_name');
 
@@ -476,6 +477,7 @@ ORDER BY c.oid, a.attnum";
                 foreach ($invoices as $invoice) {
 
                     $token = $background->getToken($invoice);
+                    $this->data['prefix']=$invoice->prefix;
                     if (strlen($token) > 4) {
                         $fields = array(
                             //  "reconcile_date" => date('d-m-Y', strtotime(request('date'))),
@@ -498,7 +500,7 @@ ORDER BY c.oid, a.attnum";
 
     public function syncMissingPayments() {
         $background = new \App\Http\Controllers\Background();
-        $url = 'http://51.91.251.252:8081/api/init';
+        $url = 'http://75.119.140.177:8081/api/init';
         $fields = json_decode(urldecode(request('data')));
         $curl = $background->curlServer($fields, $url, 'row');
         return $curl;
@@ -592,11 +594,11 @@ ORDER BY c.oid, a.attnum";
     public function tasksSummary() {
 
         $user_id = request()->segment(3);
-
-        //check user
-        $user = \App\Models\User::findOrFail($user_id);
-        
-        $and = (int) $user_id > 0 ? " AND assign_to in (select id from users where email='" . $user->email. "')": "";
+        $and = '';
+        if ($user_id > 0) {
+            $user = \App\Models\User::findOrFail($user_id);
+            $and = (int) $user_id > 0 ? " AND assign_to in (select id from users where email='" . $user->email . "')" : "";
+        }
         $projects = DB::connection('project')->select("SELECT a.actual_dt_created as created_at, a.dt_created as last_updated_at,a.due_date,a.title,a.message, b.name as project_name, c.name as task_type, a.type_id, d.name as created_by, e.name as assigned_to, a.user_id,a.project_id,a.assign_to, case when a.legend=1 THEN 'New' when a.legend=2 THEN 'Opened' when a.legend=3 THEN 'Closed' when a.legend=4 THEN 'Start' when a.legend=5 THEN 'Resolve' WHEN a.legend=6 THEN 'Modified' END as final_status, 
 CASE 
 WHEN reply_type=4 THEN 'High Priority' ELSE 'Default Priority'
