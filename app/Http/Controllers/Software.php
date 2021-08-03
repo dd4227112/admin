@@ -461,6 +461,8 @@ ORDER BY c.oid, a.attnum";
         $this->data['prefix']='';
         if ($_POST) {
             $schema = request('schema_name');
+
+            //echo 3535335;
             $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where "schema_name"=\'' . $schema . '\'');
             $returns = [];
             $background = new \App\Http\Controllers\Background();
@@ -571,9 +573,11 @@ ORDER BY c.oid, a.attnum";
            <i class="icofont icofont-rounded-left"></i>' . $user->firstname . ' ' . $user->lastname . '
          </a>
         </div>';
-
         echo $message;
     }
+
+
+    
 
     public function smsStatus() {
         $this->data['sms_status'] = \App\Models\SchoolKeys::latest()->get();
@@ -599,8 +603,8 @@ ORDER BY c.oid, a.attnum";
      * 
      * -- our final update will come from pmp and success manager will verify if this is final work, or else vp of success will specify pending
      */
-    public function tasksSummary() {
 
+    public function tasksSummary() {
         $user_id = request()->segment(3);
         $and = '';
         if ($user_id > 0) {
@@ -608,14 +612,15 @@ ORDER BY c.oid, a.attnum";
             $and = (int) $user_id > 0 ? " AND assign_to in (select id from users where email='" . $user->email . "')" : "";
         }
         $projects = DB::connection('project')->select("SELECT a.actual_dt_created as created_at, a.dt_created as last_updated_at,a.due_date,a.title,a.message, b.name as project_name, c.name as task_type, a.type_id, d.name as created_by, e.name as assigned_to, a.user_id,a.project_id,a.assign_to, case when a.legend=1 THEN 'New' when a.legend=2 THEN 'Opened' when a.legend=3 THEN 'Closed' when a.legend=4 THEN 'Start' when a.legend=5 THEN 'Resolve' WHEN a.legend=6 THEN 'Modified' END as final_status, 
-CASE 
-WHEN reply_type=4 THEN 'High Priority' ELSE 'Default Priority'
-END as priority, CASE WHEN status=0 then 'Pending' ELSE 'Closed' END as status FROM `easycases` a JOIN projects b on b.id=a.project_id JOIN types c on c.id=a.type_id JOIN users d on d.id=a.user_id JOIN users
- e on e.id=a.assign_to WHERE a.istype=1 " . $and);
+            CASE 
+            WHEN reply_type=4 THEN 'High Priority' ELSE 'Default Priority'
+            END as priority, CASE WHEN status=0 then 'Pending' ELSE 'Closed' END as status FROM `easycases` a JOIN projects b on b.id=a.project_id JOIN types c on c.id=a.type_id JOIN users d on d.id=a.user_id JOIN users
+            e on e.id=a.assign_to WHERE a.istype=1 " . $and);
 
         $this->data['headers'] = \collect($projects)->first();
         $this->data['contents'] = $projects;
         return view('customer.usage.custom_report', $this->data);
     }
+
 
 }
