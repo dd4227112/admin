@@ -41,8 +41,6 @@
                 <div class="col-lg-12">
                     <div class="card">
 
-
-
                         <div class="card-block">
                             <div class="col-lg-12">
                                 <div class="white-box">
@@ -85,7 +83,7 @@
                                                 <?php
                                                 $i = 1;
 
-                                                if (isset($banks) && sizeof($banks) > 0) {
+                                                if(isset($banks) && sizeof($banks) > 0) {
                                                     foreach ($banks as $bank) {
                                                          if (can_access('manage_users')) { 
                                                              $text = '';
