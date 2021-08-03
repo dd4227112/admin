@@ -563,9 +563,11 @@ ORDER BY c.oid, a.attnum";
            <i class="icofont icofont-rounded-left"></i>' . $user->firstname . ' ' . $user->lastname . '
          </a>
         </div>';
-
         echo $message;
     }
+
+
+    
 
     public function smsStatus() {
         $this->data['sms_status'] = \App\Models\SchoolKeys::latest()->get();
@@ -592,11 +594,6 @@ ORDER BY c.oid, a.attnum";
      * -- our final update will come from pmp and success manager will verify if this is final work, or else vp of success will specify pending
      */
 
-
-
-
-     
-
     public function tasksSummary() {
         $user_id = request()->segment(3);
         $and = '';
@@ -614,7 +611,6 @@ ORDER BY c.oid, a.attnum";
         $this->data['contents'] = $projects;
         return view('customer.usage.custom_report', $this->data);
     }
-
 
 
 }
