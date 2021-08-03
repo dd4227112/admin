@@ -509,17 +509,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                 Meetings</a>
                                             </li>
                                      <?php } ?>
-
-                                   <?php if ((int) Auth::user()->role_id == 7) { ?>
-                                     {{-- <li class="nav-sub-item">
-                                        <a href="#" data-i18n="nav.page_layout.vertical.main"><i
-                                        class="icon-arrow-right"></i>Partnership </a>
-
-                                        <ul class="tree-2">
-                                            <li><a href="<?= url('Partner/index') ?>" data-i18n="nav.extra-components.session-timeout">Onboard Requests</a></li>
-                                      </ul>
-                                    </li> --}}
-                                  <?php } ?>  
+  
 
                                   
                                     <li class="nav-sub-item">
@@ -593,15 +583,6 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                 <?php } ?>
 
 
-                                 <?php  { ?>
-                                    {{-- <li>
-                                        <a href="" data-i18n="nav.extra-components.main">
-                                            Record Expense
-                                        </a>
-                                    </li> --}}
-                                <?php } ?> 
-
-
                                 <?php if (Auth::user()->role_id == 1) { ?>
                                     <li>
                                        <a href="<?= url('role/userpermission') ?>"
@@ -638,14 +619,29 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                    <a href="#" data-i18n="nav.page_layout.vertical.main"><i
                                    class="icon-arrow-right"></i>General report </a>
                                    <ul class="tree-2">
-
-                                     {{-- <li><a href="<?= url('Sales/generalreport') ?>" data-i18n="nav.extra-components.session-timeout">Perfomance report</a></li> --}}
                                      <?php if (can_access('generalreport')) { ?>
                                      <li><a href="<?= url('Sales/generalreport') ?>" data-i18n="nav.extra-components.session-timeout"> general report</a></li>
                                      <?php } ?>
                                  </ul>
                                </li>
                              <?php } ?>
+
+                             <?php if(!can_access('settings')) { ?>
+                                  <li class="nav-sub-item">
+                                        <a>Settings<span class="fa fa-chevron-down"></span></a>
+                                        
+                                        <ul class="tree-2">
+                                            <li><a href="<?= url('account/client') ?>"><i class="fa icon-account"></i>  Clients</a></li>
+                                            <li><a href="<?= url('account/bank') ?>"><i class="fa icon-account"></i> Banking</a></li>
+                                            <li><a href="<?= url('account/groups') ?>"><i class="fa icon-account"></i> Account Groups</a></li>
+                                            <li><a href="<?= url('account/chart') ?>"><i class="fa icon-account"></i> Charts of Accounts</a></li>
+                                            <li><a href="<?= url('account/project') ?>"><i class="fa icon-account"></i> Company Projects</a></li>
+
+                                            <li><a href="<?= url('account/holidays') ?>"><i class="fa icon-account"></i> Holidays</a></li>
+
+                                        </ul>
+                                    </li>
+                             <?php }  ?>
                                  
                               <?php if (Auth::user()->department == 9 || Auth::user()->department == 10) { ?>
                                     <li><a href="<?= url('Partner/index') ?>" >  Onboarded Schools</a></li>
@@ -717,6 +713,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                     <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Payment Integration</a>
                                         <ul class="tree-2" style="display: none;">
                                             <li><a href="<?= url('software/banksetup') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Bank Setup</a></li>
+                                            {{-- <li><a href="<?= url('software/banksetup2') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Bank Setup 2</a></li> --}}
 
 
                                             <li><a href="<?= url('software/invoice/live') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Live Invoices</a></li>
@@ -776,24 +773,10 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
 
                                         </ul>
                                     </li>
-                                  <!--  <li class="nav-sub-item"><a href="<?= url('report/index') ?>"> System Reports</a></li> -->
+                                  
 
                                 </ul>
                             </li>
-                        <?php } ?>
-
-                         
-                        <?php if(Auth::user()->role_id == '1') { ?>
-                            {{-- <li class="nav-item">
-                                <a href="#!">
-                                    <i class="ti-gift "></i>
-                                    <span data-i18n="nav.extra-components.main">Applications</span>
-                                </a>
-                                <ul class="tree-1">
-                                    <li><a href="<?= url('Applicants/evaluations') ?>"
-                                     data-i18n="nav.extra-components.session-timeout">General Applicants</a></li>
-                                </ul>
-                            </li> --}}
                         <?php } ?>
 
 
@@ -804,7 +787,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                     <span data-i18n="nav.advance-components.main">Accounting </span>
                                 </a>
                                 <ul class="tree-1">
-                                    <!-- <li><a href="<?= url('account/projection') ?>" data-i18n="nav.advance-components.draggable">Projections</a></li> -->
+                                   
                                     <li><a href="<?= url('account/invoice') ?>" data-i18n="nav.advance-components.grid-stack">Invoice</a></li>
                                     <li><a href="<?= url('account/standingOrders') ?>" data-i18n="nav.advance-components.grid-stack">Standing orders</a></li>
                                     <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Transactions</a>
@@ -819,11 +802,6 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                         </ul>
                                     </li>
 
-                               {{-- <li><a href="<?= url('Account/budget') ?>"
-                                data-i18n="nav.advance-components.grid-stack">
-                                  Budget 
-                                 </a>
-                               </li> --}}
 
                         <?php if (can_access('manage_payroll')) { ?>
                         <li class="nav-sub-item">
@@ -849,21 +827,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                 style="color: white; line-height: 25px;"> Borrowers </span></a>
                                         </ul>
                                     </li>
-                                
-               
                                     <li><a href="<?= url('account/report') ?>" data-i18n="nav.advance-components.light-box">Reports</a></li>
-
-                                    <li class="nav-sub-item-3">
-                                        <a>Settings<span class="fa fa-chevron-down"></span></a>
-                                        
-                                        <ul class="tree-3">
-                                            <a href="<?= url('account/client') ?>"><i class="fa icon-account"></i>  Clients</a>
-                                            <a href="<?= url('account/bank') ?>"><i class="fa icon-account"></i> Banking</a>
-                                            <a href="<?= url('account/groups') ?>"><i class="fa icon-account"></i> Account Groups</a>
-                                            <a href="<?= url('account/chart') ?>"><i class="fa icon-account"></i> Charts of Accounts</a>
-                                            <a href="<?= url('account/project') ?>"><i class="fa icon-account"></i> Company Projects</a>
-                                        </ul>
-                                    </li>
                                 </ul>
                             </li>
                             <?php } ?>
@@ -930,15 +894,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                     </div>
                                 </div>
                             <?php } ?>
-                            <!--                                <div class="media userlist-box" data-id="2" data-status="online" data-username="Lary Doe" data-toggle="tooltip" data-placement="left" title="Lary Doe">
-                                                                <a class="media-left" href="#!">
-                                                                    <img class="media-object img-circle" src="<?= $root ?>assets/images/task/task-u1.jpg" alt="Image">
-                                                                    <div class="live-status bg-success"></div>
-                                                                </a>
-                                                                <div class="media-body">
-                                                                    <div class="f-13 chat-header">Lary Doe</div>
-                                                                </div>
-                                                            </div>-->
+                         
 
                         </div>
                     </div>

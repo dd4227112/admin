@@ -151,11 +151,10 @@ class Users extends Controller {
         //  if the outtime is less than 17, with ealry leave comment available , then ealry leave time - intime
         // date('Y', strtotime($attendance->timein)) > 1970 ? date('h:i', strtotime($attendance->timein)) : ''
 
-        $times = DB::table('attendances')->select(['timein','timeout'])->where('user_id', $user_id)
-        ->whereMonth('created_at', date('m'))->get();
+        $times = DB::table('admin.attendances')->select(['timein','timeout'])->where('user_id', $user_id)->whereMonth('created_at', date('m'))->get();
         foreach($times as $value){
            $startTime =  date('h:i', strtotime($value->timein));
-           $OutTime =  '17:00';
+           $OutTime =  '17:00'; // saa 11 jioni
            $endTime  =  date('h:i', strtotime($value->timeout)) > $OutTime  ?  $OutTime  : date('H:i', strtotime($value->timeout));
            $startTime = new DateTime($startTime);
            $endTime = new DateTime($endTime);
@@ -163,6 +162,7 @@ class Users extends Controller {
            $minutes = $time[0]*60 +$time[1];
            array_push($allMinutes, $minutes);
         }
+        // return all working minutes per person
         dd($allMinutes);
 
     }

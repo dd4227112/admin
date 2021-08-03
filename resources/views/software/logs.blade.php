@@ -51,7 +51,7 @@
                                     <i class="icofont icofont-document-folder"></i>
                                 </li>
                                 <li class="text-right">
-                                    <?= $error_logs ?>
+                                    <?= $error_log_count ?>
                                 </li>
                             </ul>
                         </div>
@@ -113,7 +113,7 @@
                 <!-- Open Project card end -->
                 <div class="col-md-12 col-xl-12">
                     <div class="form-group row col-lg-offset-6">
-                        <label class="col-sm-4 col-form-label">Select School</label>
+                        <label class="col-sm-4 col-form-label"><?= isset($schema_name) ? $schema_name. ' errors': 'Select School' ?></label>
                         <div class="col-sm-4">
                             <select name="select" class="form-control select2" id="schema_select">
                                 <option value="0">Select</option>
@@ -136,7 +136,7 @@
                         <ul class="nav nav-tabs md-tabs" role="tablist">
                             <li class="nav-item complete">
                                 <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true">
-                                    <strong>( <?= ($error_logs) ?>)</strong> Errors
+                                    <strong>( <?= isset($error_log_count ) ? ($error_log_count) : '' ?>)</strong> Errors
                                 </a>
                                 <div class="slide"></div>
                             </li>
@@ -153,7 +153,47 @@
                         <div class="tab-content">
                             <div class="tab-pane active" id="home3" role="tabpanel" aria-expanded="true">
 
-                                <div class="card-block">
+                              <?php if(isset($schema_errors) && !empty($schema_errors)) { ?>
+
+                                  <div class="card-block">
+                                    <div class="dt-responsive table-responsive">
+                                        <table  class="table table-striped table-bordered nowrap">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>                                                
+                                                    <th>Date</th>
+                                                    <th>Client Name</th>
+                                                    <th>Error Message</th>
+                                                    <th>File</th>
+                                                    <th>url</th>
+                                                    <th>Created By</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                              <?php $i = 1; foreach($schema_errors as $error) { ?>
+                                                <tr>
+                                                    <td><?= $error->id ?></td>                                                
+                                                    <td><?= $error->created_at ?></td>
+                                                    <td><?= $error->schema_name ?></td>
+                                                    <td><?= $error->error_message ?></td>
+                                                    <td><?= $error->file ?></td>
+                                                    <td><?= $error->url ?></td>
+                                                    <td><?= $error->created_by ?></td>
+                                                    <td>
+                                                        <a href="#" id="<?= $error->id ?>" class="label label-danger dlt_log" onmousedown="delete_log(<?= $error->id ?>)" >Delete</a>
+                                                        <a href="#" id="<?= $error->id ?>" class="label label-info dlt_log" onmousedown="View_log(<?= $error->id ?>)" onclick="return false">View</a>
+                                                    </td>
+                                                </tr>
+                                               <?php  } ?>
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+                                </div>
+                               
+                              <?php } else { ?>
+                                 <div class="card-block">
                                     <div class="dt-responsive table-responsive">
                                         <table id="error_log_table" class="table table-striped table-bordered nowrap">
                                             <thead>
@@ -172,6 +212,7 @@
                                         </table>
                                     </div>
                                 </div>
+                             <?php } ?>
 
 
                             </div>
@@ -287,12 +328,8 @@
                     "targets": 7,
                     "data": null,
                     "render": function (data, type, row, meta) {
-
                         return '<a href="#" id="' + row.id + '" class="label label-danger dlt_log" onmousedown="delete_log(' + row.id + ')" onclick="return false">Delete</a>' + '<a href="#" id="' + row.id + '" class="label label-info dlt_log" onmousedown="View_log(' + row.id + ')" onclick="return false">View</a>';
-
-
                     }
-
                 }
             ],
 
@@ -301,10 +338,11 @@
                 $(row).attr('id', 'log' + data.id);
             }
         });
-        View_log = function (a) {
 
+
+          View_log = function (a) {
             window.location.href = "<?= url('software/Readlogs') ?>/" + a;
-        },
+            },
                 delete_log = function (a) {
                     $.ajax({
                         url: '<?= url('software/logsDelete') ?>/null',

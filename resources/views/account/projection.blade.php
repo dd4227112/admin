@@ -42,7 +42,6 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                         <!-- Row start -->
                         <div class="row">
                             <div class="col-lg-12 col-xl-12">
-                                <!-- <h6 class="sub-title">Tab With Icon</h6> -->
                                 <div class="sub-title">Manage Invoices</div>                                        
                                 <ul class="nav nav-tabs md-tabs " role="tablist">
 
@@ -62,16 +61,6 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                 </ul>
                               
                                 <div class="tab-content card-block">
-                                    {{-- <div class="tab-pane " id="home7" role="tabpanel">
-                                        <div class="card-header">
-                                            <h5>Revenue Projections</h5>
-                                            <span>This part shows list of customers and expected amount to be collected per each customer. These information are loaded from Google Sheet </span>
-
-                                        </div>
-                                        <div class="card-block"  style="height: 35em">
-                                            <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTUgl5FL_1xQswE7AahA4eoZ3jlDD4_wzSZxo4xo4iDot83kAG17NsqmYF522vvQ6hPSC1hVs5Pum6Z/pubhtml?widget=true&amp;headers=false" height='100%' width="100%"></iframe>
-                                        </div>
-                                    </div> --}}
                                     <div class="tab-pane active" id="profile7" role="tabpanel">
                                         <div class="card-block">
                                             <input type="checkbox" <?=(int) request('skip')==1 ?'checked':''?> id="skip_field" onmousedown="skip_field()"/> Hide Inputs Fields
@@ -93,9 +82,7 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                         <?php
                                                         $total_students = 0;
                                                         $total_price = 0;
-                                                      //  $schemas=\DB::select("select * from admin.clients where id not in (select client_id from admin.invoices where account_year_id=(select id from admin.account_years where name='".date('Y')."'))" );
-                                                        $schemas=\DB::select("select * from admin.clients" );
-                                                        //dd($schemas);
+                                                        $schemas=\DB::select("select * from admin.clients");
                                                         foreach ($schemas as $schema) {
                                                             ?>
                                                             <tr>
@@ -116,14 +103,13 @@ function tagEdit($schema_name, $column, $value, $type = null) {
 
                                                                 <td>
                                                                  <?php
-                                                                    // $price = count($schema) == 1 ? $schema->price_per_student : 0;
+                                
                                                                     $price =$schema->price_per_student;
                                                                     $total_price += $price * $students;
                                                                     echo tagEdit($schema->username, 'price_per_student', $price);
                                                                     ?>
                                                                 </td>
 
-                                                           
                                                                 <td> 
                                                                     <?php
                                                                     $end_date =$schema->invoice_end_date;

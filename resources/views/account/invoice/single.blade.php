@@ -242,7 +242,7 @@
                                         <?php if(isset($diff_in_months)) { ?>
                                         <?php if($diff_in_months <= 12) { ?>
                                         <p class="text-muted well well-sm no-shadow">
-                                            This is the payment for shulesoft system for <?=$diff_in_months > 1 ? number_to_words($diff_in_months).' months' : number_to_words($diff_in_months).' month'?>. <br>
+                                            {{--  --}}
                                             Thank you for your business. we're glad to serve you
                                         </p>
                                         <?php } else { ?>
