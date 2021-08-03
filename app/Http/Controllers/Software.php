@@ -66,7 +66,7 @@ class Software extends Controller {
     }
 
     public function compareColumn($pg = null) {
-        $this->data['data'] = DB::select("select * from crosstab('SELECT distinct table_schema,table_type,count(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''information_schema'',''constant'',''admin'',''academy'',''api'') group by table_schema,table_type','select distinct table_type FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''information_schema'',''constant'',''admin'',''dodoso'',''api'',''academy'')')
+        $this->data['data'] = DB::select("SELECT * FROM public.crosstab('SELECT distinct table_schema,table_type,count(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''api'',''constant'',''admin'',''forum'',''academy'') group by table_schema,table_type','select distinct table_type FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN (''information_schema'',''pg_catalog'',''api'',''constant'',''admin'',''forum'',''academy'')')
            AS ct (table_schema text, views text, tables text)");
         $view = 'software.database.' . strtolower('compareColumn');
         if (view()->exists($view)) {
@@ -458,6 +458,7 @@ ORDER BY c.oid, a.attnum";
 
     public function reconciliation() {
         $this->data['returns'] = [];
+        $this->data['prefix']='';
         if ($_POST) {
             $schema = request('schema_name');
             $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where "schema_name"=\'' . $schema . '\'');
@@ -474,6 +475,7 @@ ORDER BY c.oid, a.attnum";
                 foreach ($invoices as $invoice) {
 
                     $token = $background->getToken($invoice);
+                    $this->data['prefix']=$invoice->prefix;
                     if (strlen($token) > 4) {
                         $fields = array(
                             //  "reconcile_date" => date('d-m-Y', strtotime(request('date'))),
@@ -496,7 +498,7 @@ ORDER BY c.oid, a.attnum";
 
     public function syncMissingPayments() {
         $background = new \App\Http\Controllers\Background();
-        $url = 'http://51.91.251.252:8081/api/init';
+        $url = 'http://75.119.140.177:8081/api/init';
         $fields = json_decode(urldecode(request('data')));
         $curl = $background->curlServer($fields, $url, 'row');
         return $curl;
