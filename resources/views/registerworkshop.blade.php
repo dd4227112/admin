@@ -87,14 +87,11 @@
                           <div class="form-group">
                             <div class="col-sm-12 col-xs-12">
                               <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                   Phone number
                                   <input type="text" class="form-control" name="phone" required>
                                 </div>
-                                <div class="col-md-6">
-                                  Email Address
-                                  <input type="email" class="form-control" placeholder="" name="email" >
-                                </div>
+                               
                               </div>
                             </div>
                           </div>
@@ -116,7 +113,7 @@
                                 $schools = DB::table('schools')->where('ownership', 'Non-Government')->get();
                                 foreach ($schools as $school) { 
                                   ?>
-                                  <option value="<?= $school->id ?>"><?= $school->name. ' (<b> '.$school->type. ' </b>) - '. //$school->wards->district->region->name ?></option>
+                                  <option value="<?= $school->id ?>"><?php // $school->name. ' (<b> '.$school->type. ' </b>) - '. $school->wards->district->region->name ?></option>
                                 <?php } ?>
 
                               </select> -->
