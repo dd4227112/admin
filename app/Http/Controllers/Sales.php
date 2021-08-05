@@ -530,7 +530,7 @@ class Sales extends Controller {
             }
   
         
-                $filename = '';
+            $filename = '';
             if (!empty(request('file'))) {
                 $file = request()->file('file');
                 $filename = time() . rand(11, 8894) . '.' . $file->guessExtension();

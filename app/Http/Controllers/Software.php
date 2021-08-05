@@ -331,9 +331,9 @@ ORDER BY c.oid, a.attnum";
 
     public function logs() {
         $this->data['schema_name'] = $schema = request()->segment(3);
-        $this->data['error_log_count'] = strlen($schema) > 3 ? DB::table('error_logs')->whereNull('deleted_at')->where('schema_name', $schema)->count() : DB::table('error_logs')->whereNull('deleted_at')->count();
-        $this->data['schema_errors']  =  strlen($schema) > 3 ? DB::table('error_logs')->whereNull('deleted_at')->where('schema_name', $schema)->get() : '';
-    
+        $this->data['error_log_count'] = strlen($schema) > 3 ? \collect(DB::select("select distinct error_message,created_at::date,schema_name,file from admin.error_logs where schema_name = '$schema' and deleted_at is null group by error_message,created_at::date,schema_name,file order by created_at::date"))->count() : \collect(DB::select("select distinct error_message,created_at::date,schema_name,file from admin.error_logs where deleted_at is null group by error_message,created_at::date,schema_name,file order by created_at::date"))->count();
+      //  $this->data['schema_errors']  =  strlen($schema) > 3 ? DB::table('error_logs')->whereNull('deleted_at')->where('schema_name', $schema)->get() : '';
+        $this->data['schema_errors']  =   DB::select("select distinct error_message,created_at::date,schema_name,file from admin.error_logs where schema_name = '$schema' and deleted_at is null group by error_message,created_at::date,schema_name,file order by created_at::date");
         $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1 '))->first();
         return view('software.logs', $this->data);
     }
@@ -434,7 +434,8 @@ ORDER BY c.oid, a.attnum";
 
       public function banksetup() {  
         $this->data['settings'] = DB::table('admin.all_setting')->get();
-        $this->data['integrations'] = DB::table('admin.all_bank_accounts_integrations')->get();
+        $skip = ['beta_testing','beta','betatwo','public','constant','api'];
+        $this->data['integrations'] = DB::table('admin.all_bank_accounts_integrations')->whereNotIn('schema_name',$skip)->get();
           
         return view('software.api.bank_setup', $this->data);
     }
@@ -476,7 +477,7 @@ ORDER BY c.oid, a.attnum";
                      $this->assignTask($user,$client,$bank_name);
                 } else if($bank->refer_bank_id == '22'){ // NMB Mr Endobile, 764
                      $bank_name = 'NMB';
-                     $user = \App\Models\User::find(770); 
+                     $user = \App\Models\User::find(764); 
                      $this->assignTask($user,$client,$bank_name);
                 }  
 

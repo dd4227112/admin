@@ -64,7 +64,7 @@
                  <div class="page-wrapper">
         <div class="page-body">
           <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-6">
                   <div class="card">
                     <div class="card-header ">
                     <h1 class="text-center" style="color: black; font-weight: bold;">

@@ -116,9 +116,11 @@ class Controller extends BaseController {
     }
 
     public function saveFile($file, $subfolder = null, $local = null) {
+        // $path = \Storage::disk('s3')->put($subfolder, $file);
+        // $url = \Storage::disk('s3')->url($path);
 
-        $path = \Storage::disk('s3')->put($subfolder, $file);
-        $url = \Storage::disk('s3')->url($path);
+         $path = \Storage::disk('local')->put($subfolder, $file);
+         $url = \Storage::disk('local')->url($path);
 
         if (strlen($url) > 10) {
             return DB::table('company_files')->insertGetId([
@@ -127,7 +129,7 @@ class Controller extends BaseController {
                         'user_id' => Auth::user()->id,
                         'size' => $file->getSize(),
                         'caption' => $file->getRealPath(),
-                        'path' => $url
+                        'path' => base_url() . $url
             ]);
         } else {
             return false;
