@@ -481,6 +481,11 @@ class Customer extends Controller {
             }
             $this->data['client_id'] = $client->id;
 
+             $sales = new \App\Http\Controllers\Customer();
+             $user = $sales->zonemanager($client->id);
+    
+             $this->data['manager'] = \App\Models\User::findOrFail($user->user_id);
+           
             $this->data['top_users'] = DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
         }
         // $this->data['profile'] = \App\Models\ClientSchool::where('client_id', $client->id)->first();
@@ -1464,7 +1469,7 @@ class Customer extends Controller {
     public function uploadJobCard() {
         if ($_POST) {
             $file = request()->file('job_card_file');
-            $company_file_id = $file ? $this->saveFile($file, 'company/employees') : 1;
+            $company_file_id = $file ? $this->saveFile($file, 'uploads/images') : 1;
 
             $data = [
                 'company_file_id' => $company_file_id,

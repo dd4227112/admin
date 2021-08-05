@@ -273,8 +273,8 @@ class Sales extends Controller {
                 return $this->ajaxTable('all_setting', ['sname', 'phone', 'address', 'email', 'payment_integrated', 'created_at']);
                 break;
             case 'errors':
-                $sql = "select * from (select * from admin.error_logs where deleted_at is null order by id desc limit 5000) y where deleted_at is null";
-                return $this->ajaxTable('error_logs', ['file', 'error_message', 'route', 'url', 'error_instance', 'created_at', 'schema_name'], $sql);
+                $sql = "select distinct error_message,error_instance,created_at::date,schema_name,file  from (select * from admin.error_logs where deleted_at is null order by id desc) y where deleted_at is null";
+                return $this->ajaxTable('error_logs', ['file', 'error_message', 'route', 'url', 'error_instance', 'created_at::date', 'schema_name'], $sql);
                 break;
             case 'errors_resolved':
                 $sql = "select a.*,b.name as resolved_by from admin.error_logs a left join admin.users b on b.id=a.deleted_by where deleted_at is not null";

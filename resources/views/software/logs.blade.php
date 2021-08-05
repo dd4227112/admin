@@ -194,20 +194,22 @@
                                
                               <?php } else { ?>
                                  <div class="card-block">
-                                    <div class="dt-responsive table-responsive">
-                                        <table id="error_log_table" class="table table-striped table-bordered nowrap">
+                                    <div class="table-responsive dt-responsive">
+                                       <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                                             <thead>
                                                 <tr>
-                                                    <th>#</th>                                                
+                                                                                                 
                                                     <th>Date</th>
                                                     <th>Client Name</th>
                                                     <th>Error Message</th>
-                                                    <th>File</th>
+                                                    {{-- <th>File</th>
                                                     <th>url</th>
-                                                    <th>Created By</th>
-                                                    <th>Action</th>
+                                                    <th>Created By</th> --}}
+                                                    <th>Action</th> 
                                                 </tr>
                                             </thead>
+
+                                         
 
                                         </table>
                                     </div>
@@ -315,21 +317,21 @@
             },
             "columns": [
 
-                {"data": "id"},
+                // {"data": "id"},
                 {"data": "created_at"},
                 {"data": "schema_name"},
-                    {"data": "error_message"},
-                {"data": "file"},
-                {"data": "url"},
-                {"data": "created_by"},
+                {"data": "error_message"},
+                // {"data": "file"},
+                // {"data": "url"},
+                // {"data": "created_by"},
                 {"data": ""}
             ],
             "columnDefs": [
                 {
-                    "targets": 7,
+                    "targets": 4,
                     "data": null,
                     "render": function (data, type, row, meta) {
-                        return '<a href="#" id="' + row.id + '" class="label label-danger dlt_log" onmousedown="delete_log(' + row.id + ')" onclick="return false">Delete</a>' + '<a href="#" id="' + row.id + '" class="label label-info dlt_log" onmousedown="View_log(' + row.id + ')" onclick="return false">View</a>';
+                        return '<h2>View </h2>';
                     }
                 }
             ],
