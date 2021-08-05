@@ -122,7 +122,8 @@ class Kernel extends ConsoleKernel {
         foreach ($users as $user) {
             // $phonenumber = validate_phone_number($user->phone, '255');
             // $chatId = $phonenumber . '@c.us';
-            $this->sendMessage($user->phone, $user->message);
+            $controller=new \App\Http\Controllers\Controller();
+            $controller->sendMessage($user->phone, $user->message);
             DB::table('admin.whatsapp_messages')->where('id', $user->id)->update(['status' => 1]);
             echo 'insert to ' . $user->name . ''. chr(10);
             sleep(4);
