@@ -1557,6 +1557,7 @@ Thank you!";
             $phonenumber = validate_phone_number($user->phone, '255');
             $chatId = $phonenumber . '@c.us';
             $this->sendMessage($chatId, $message1);
+            echo 'message sent to '.$user->name.'<br/>';
             sleep(5); //sleep for 5 seconds
         }
     }
