@@ -204,12 +204,12 @@ class Customer extends Controller {
             $user_id = (int) $task_user;
         }
 
-        $train = \App\Models\TrainItemAllocation::findOrFail($ttask_id);
+        $train = \App\Models\TrainItemAllocation::find($ttask_id);
 
         $task_id = $train->task_id;
 
         if ((int) $user_id > 0 && (int) $task_id > 0) {
-            $section = \App\Models\TrainItem::findOrFail($section_id);
+            $section = \App\Models\TrainItem::find($section_id);
             $obj = [
                 'start_date' => date('Y-m-d H:i:s', strtotime($start_date)),
                 'end_date' => date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")),
@@ -1539,25 +1539,25 @@ class Customer extends Controller {
     public function allusers() {
         $notIn = ['Student', 'Teacher', 'Parent', 'Descipline Master', 'Head Teacher', 'Academic Master'];
         $this->data['allusers'] = DB::table('admin.all_users')->where('status', 1)->get();
-
         return view('customer.usage.alluser', $this->data);
     }
+
 
     public function event() {
         set_time_limit(0);
         $users = DB::select('select * from admin.school_main_contacts where phone is not null');
         $message1 = "Dear".chr(10)." 
-You are invited!
-".chr(10)." 
-Shulesoft will hold an online event on *18th August 2021* at 03:00 PM/15:00 HRS EAT. ".chr(10)." 
-The topic to be discussed is; *How to Sustain your School's Academic and Financial growth amidst COVID-19*. 
-".chr(10)." 
-Please register on www.shulesoft.com/events
-".chr(10)." 
-Kindly invite others.".chr(10)." 
-For more information call/whatsapp: 0655406004.
-".chr(10)." 
-Thank you!";
+                        You are invited!
+                        ".chr(10)." 
+                        Shulesoft will hold an online event on *18th August 2021* at 03:00 PM/15:00 HRS EAT. ".chr(10)." 
+                        The topic to be discussed is; *How to Sustain your School's Academic and Financial growth amidst COVID-19*. 
+                        ".chr(10)." 
+                        Please register on www.shulesoft.com/events
+                        ".chr(10)." 
+                        Kindly invite others.".chr(10)." 
+                        For more information call/whatsapp: 0655406004.
+                        ".chr(10)." 
+                        Thank you!";
         foreach ($users as $user) {
             $phonenumber = validate_phone_number($user->phone, '255');
             $chatId = $phonenumber . '@c.us';

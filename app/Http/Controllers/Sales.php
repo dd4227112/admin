@@ -739,13 +739,13 @@ class Sales extends Controller {
         $user=DB::table('admin.user_train_items')->where('train_item_id',$section_id)->where('status',1)->first();
             //we will check if user exists in db or not, and if not we will allocate any user within the company to take that role
             $data = [];
-
             $collection = DB::table('admin.train_items_allocations')->join('admin.users','admin.users.id','=','admin.train_items_allocations.user_id')->select('user_id', DB::raw('count(client_id) as total'))
             ->where('admin.users.status','=','1')->where('admin.train_items_allocations.train_item_id', $section_id)->groupBy('user_id')->get();
             foreach($collection as $value){
                 $data[$value->user_id] = $value->total;
             }
-         $user_id = array_search(min($data), $data);
+            
+           $user_id = array_search(min($data), $data);
         
         return $user_id;
         
