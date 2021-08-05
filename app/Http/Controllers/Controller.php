@@ -35,8 +35,8 @@ class Controller extends BaseController {
      * @var y axis 
      */
     public $y_axis = '';
-    var $APIurl = '';
-    var $token = '';
+    var $APIurl = 'https://eu4.chat-api.com/instance210904/';
+    var $token = 'h67ddfj89j8pm4o8';
     public $bot;
     public $main_menu = '';
 
@@ -85,7 +85,7 @@ class Controller extends BaseController {
                 $total_records = $count == null ? count(DB::select($custom_sql)) : $count;
             }
             $empRecords = DB::select($empQuery);
-            
+
 ## Response
             $response = array(
                 "draw" => intval($draw),
@@ -293,7 +293,7 @@ class Controller extends BaseController {
     //@param $chatId [string] [required] - the ID of chat where we send a message
     public function ptt($chatId) {
         $data = array(
-            'audio' => 'https://domain.com/PHP/ptt.ogg',
+            'audio' => 'https://shulesoft.com/PHP/ptt.ogg',
             'chatId' => $chatId
         );
         $this->sendRequest('sendAudio', $data);
@@ -322,7 +322,7 @@ class Controller extends BaseController {
 
             $url = $this->APIurl . $method . '?token=' . $this->token;
             if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {
-              $url = $this->token . $method . '?token=' . $this->APIurl;
+                $url = $this->token . $method . '?token=' . $this->APIurl;
             }
 
             if (is_array($data)) {
@@ -334,7 +334,6 @@ class Controller extends BaseController {
                     'content' => $data]]);
             $response = file_get_contents($url, false, $options);
             // $response = $this->curlServer($body, $url);
-            print_r($response);
             $requests = array('chat_id' => '43434', 'text' => $response, 'parse_mode' => '', 'source' => 'user');
             // file_put_contents('requests.log', $response . PHP_EOL, FILE_APPEND);
         } else {
