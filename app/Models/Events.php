@@ -28,6 +28,6 @@ class Events extends Model {
     }
     
     public function attach() {
-        return $this->belongsTo(\App\Models\CompanyFile::class, 'attach_id', 'id')->withDefault(['name' => 'Not Defined']);
+        return $this->belongsTo(\App\Models\CompanyFile::class, 'attach_id', 'id')->withDefault(['name' => 'Not Defined','path'=>'not defined']);
     }
 }
