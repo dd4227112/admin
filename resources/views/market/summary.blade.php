@@ -59,14 +59,14 @@
         <link href="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.css" rel="stylesheet">
 
 
-       <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script>
 
 
     <div class="row">
         <div class="col-md-12 col-xs-12 col-sm-12">
-            <div class="white-box m-b-0 bg-success">
-                <h3 class="text-white box-title" align="center" style="padding-top: 2em">Conglatulations for registering!!! We glad to have you.'); </h3>
+            <div class="white-box m-b-0" style="background: #12b89a">
+                <h3 class="text-white box-title" align="center" style="padding-top: 2em">Conglatulations,  you have succefully been registered for the Event </h3>
                 <div id="sparkline2dash" class="text-center">
                     <canvas width="215" height="70" style="display: inline-block; width: 215px; height: 70px; vertical-align: top;"></canvas>
                 </div>
@@ -76,21 +76,44 @@
                     <div class="col-lg-3"></div>
                     <div class="col-lg-6">
                         <div class="text-center">
-                            <!--<img src="{{url('public/files/sustain.jpeg')}}"/>-->
-<div class="text-muted m-t-20"><br/><br/></div>
+                            <div class="text-muted m-t-20"><br/><br/></div>
                             <h2>
-                                <a href="{{url('public/files/sustain.jpeg')}}" download target="_blank" class="btn btn-primary" ><i class="fa fa-download"></i>Download Presentation</a>
-                                 <a href="https://shulesoft.com" class="btn btn-success" ><i class="fa fa-link"></i>Close</a>
-    </h2>
-                    </div>
+                                <a href="{{url('public/files/brochure.jpeg')}}" download target="_blank" class="btn btn-primary" ><i class="fa fa-download"></i>Download Event Flyer</a>
+                                <a href="https://shulesoft.com" class="btn btn-warning" ><i class="fa fa-link"></i>Close</a>
+                            </h2>
+                            <div class="fb-share-button" 
+                                 data-href="https://shulesoft.com/events" 
+                                 data-layout="button_count">
+                            </div>
+                        </div>
                         <div data-label="60%" class="css-bar css-bar-60 css-bar-lg m-b-0  css-bar-info pull-right"></div>
                     </div>  
-                     <div class="col-lg-3"></div>
+                    <div class="col-lg-3"></div>
                 </div>
             </div>
         </div>
     </div>
 
+    <meta property="og:url"           content="https://shulesoft.com/events" />
+    <meta property="og:type"          content="website" />
+    <meta property="og:title"         content="ShuleSoft Event" />
+    <meta property="og:description"   content="Online Event" />
+    <meta property="og:image"         content="{{url('public/files/brochure.jpeg')}}" />
+
+
+    <!-- Load Facebook SDK for JavaScript -->
+    <div id="fb-root"></div>
+    <script>(function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id))
+        return;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.0";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+    <!-- Your share button code -->
 
     <!-- Warning Section Ends -->
 
