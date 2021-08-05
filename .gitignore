@@ -11,8 +11,4 @@ npm-debug.log
 /nbproject/private/
 .idea
 .composer.lock
-<<<<<<< HEAD
-/storage/logs/laravel.log
-=======
 /storage
->>>>>>> 7969201d9a4679cb62f6f643e9593c43a85c223f
