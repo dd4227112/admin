@@ -267,7 +267,6 @@ group by ownership');
             if (!empty(request('image'))) {
                 $attach_id = $this->saveFile(request('image'), 'company/contracts');
             }
-
             $array = [
                 'title' => request('title'),
                 'note' => request('note'),
@@ -276,6 +275,7 @@ group by ownership');
                 'end_time' => request('end_time'),
                 'category' => request('category'),
                 'department_id' => request('department_id'),
+                'meeting_link'=>request('meeting_link'),
                 'user_id' => Auth::user()->id,
                 'file_id' => $file_id,
                 'attach_id' => $attach_id

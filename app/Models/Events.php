@@ -13,7 +13,7 @@ class Events extends Model {
    
     //put your code here
     protected $table = 'events';
-    protected $fillable = ['id','title', 'note', 'attach_id', 'event_date', 'start_time', 'end_time', 'status', 'file_id', 'category', 'user_id', 'department_id', 'created_at', 'updated_at'];
+    protected $fillable = ['id','title', 'note', 'attach_id', 'event_date', 'start_time', 'end_time', 'status', 'file_id', 'category', 'user_id', 'department_id', 'created_at', 'updated_at','meeting_link'];
 
     public function user() {
         return $this->belongsTo(\App\Models\User::class, 'user_id', 'id')->withDefault(['name' => 'User Not allocated']);
@@ -28,6 +28,6 @@ class Events extends Model {
     }
     
     public function attach() {
-        return $this->belongsTo(\App\Models\CompanyFile::class, 'attach_id', 'id')->withDefault(['name' => 'Not Defined']);
+        return $this->belongsTo(\App\Models\CompanyFile::class, 'attach_id', 'id')->withDefault(['path'=>'not defined']);
     }
 }
