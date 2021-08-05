@@ -108,7 +108,7 @@ AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
     /**
      * @var Default Schema which is stable
      */
-    public static $master_schema = 'beta_testing';
+    public static $master_schema = 'betatwo';
 
     /**
      * @var $schema : Schema name which we want to know its tables
