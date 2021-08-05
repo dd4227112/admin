@@ -93,7 +93,7 @@
                                             <div class="col-sm-12 col-xs-12">
                                                 <div class="row">
                                                     <div class="col-md-12">
-                                                        Phone number
+                                                       Whatsapp Phone number
                                                            <input id="phone" class="form-control" type="tel" name = "phone"   id="login-email"  placeholder="" value="" required>
                                         <span id="valid-msg" class="hide">✓ Valid</span>
                                         <span id="error-msg" class="hide"></span>
