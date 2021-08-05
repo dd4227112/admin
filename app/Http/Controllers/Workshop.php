@@ -36,7 +36,7 @@ class Workshop extends Controller {
                     . chr(10) . 'Thanks for registering for the Shulesoft Webinar session to be held on ' . $workshop->event_date . '.'
                     . chr(10) . 'Topic: ' . $workshop->title . '.'
                     . chr(10) . 'Time: ' . $workshop->start_time . ' - ' . $workshop->end_time . ''
-                    . chr(10) .chr(10). 'Link: ' . $workshop->meeting_link . ' .'
+                    . chr(10) . chr(10) . 'Link: ' . $workshop->meeting_link . ' .'
                     . chr(10)
                     . 'Remember to join the session 5 minutes before the specified time in order to test your device.'
                     . chr(10) . 'Looking forward to hearing your contribution in the discussion.'
@@ -48,7 +48,10 @@ class Workshop extends Controller {
             $chatId = $phonenumber . '@c.us';
             $this->sendMessage($chatId, $message1);
             $this->sendEmail($phonenumber, $workshop);
-            echo "<script> alert('Conglatulations for registering!!! We glad to have you.'); window.location.href='https://www.shulesoft.com/';</script>";
+            return view('market.summary');
+//            $link = 'https://www.shulesoft.com';
+//            echo "<h3>Conglatulations for registering!!! We glad to have you.'); </h3>";
+//            echo '<a href="#" onclick="window.location.href=\'' . $link . '\'>Close</a>';
         }
     }
 
