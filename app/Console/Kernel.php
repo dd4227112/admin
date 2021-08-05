@@ -43,7 +43,7 @@ class Kernel extends ConsoleKernel {
         //         ->hourly();
         $schedule->call(function () {
             //sync invoices 
-            $this->event();
+            $this->whatsappMessage();
             $this->syncInvoice();
             //$this->sendeMails();
         })->everyMinute();
@@ -117,16 +117,25 @@ class Kernel extends ConsoleKernel {
         })->monthlyOn(29, '06:36');
     }
 
-    public function event() {
-        $users = DB::select('select * from admin.whatsapp_messages where status=0');
+    public function whatsappMessage() {
+        $users = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 12 ');
         foreach ($users as $user) {
-            // $phonenumber = validate_phone_number($user->phone, '255');
-            // $chatId = $phonenumber . '@c.us';
-            $controller=new \App\Http\Controllers\Controller();
-            $controller->sendMessage($user->phone, $user->message);
-            DB::table('admin.whatsapp_messages')->where('id', $user->id)->update(['status' => 1]);
-            echo 'insert to ' . $user->name . ''. chr(10);
-            sleep(4);
+
+            $phonenumber = validate_phone_number($user->phone, '255');
+            $chatId = $phonenumber . '@c.us';
+
+            if (preg_match('/@c.us/i', $user->phone) && strlen($user->phone) < 19) {
+
+                $controller = new \App\Http\Controllers\Controller();
+                $controller->sendMessage($user->phone, $user->message);
+                DB::table('admin.whatsapp_messages')->where('id', $user->id)->update(['status' => 1]);
+                echo 'message sent to ' . $user->name . '' . chr(10);
+                sleep(4);
+            } else {
+                //this is invalid number, so update in db to show wrong return
+                DB::table('admin.whatsapp_messages')->where('id', $user->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied']);
+                echo 'wrong phone number supplied  ' . $user->phone . '' . chr(10);
+            }
         }
     }
 
