@@ -1541,24 +1541,29 @@ class Customer extends Controller {
     public function event() {
         set_time_limit(0);
         $users = DB::select('select * from admin.school_main_contacts where phone is not null');
-        $message1 = "Dear".chr(10)." 
+        $message1 = "Dear" . chr(10) . " 
 You are invited!
-".chr(10)." 
-Shulesoft will hold an online event on *18th August 2021* at 03:00 PM/15:00 HRS EAT. ".chr(10)." 
+" . chr(10) . " 
+Shulesoft will hold an online event on *18th August 2021* at 03:00 PM/15:00 HRS EAT. " . chr(10) . " 
 The topic to be discussed is; *How to Sustain your School's Academic and Financial growth amidst COVID-19*. 
-".chr(10)." 
+" . chr(10) . " 
 Please register on www.shulesoft.com/events
-".chr(10)." 
-Kindly invite others.".chr(10)." 
+" . chr(10) . " 
+Kindly invite others." . chr(10) . " 
 For more information call/whatsapp: 0655406004.
-".chr(10)." 
+" . chr(10) . " 
 Thank you!";
         foreach ($users as $user) {
             $phonenumber = validate_phone_number($user->phone, '255');
             $chatId = $phonenumber . '@c.us';
-            $this->sendMessage($chatId, $message1);
-            echo 'message sent to '.$user->name.'<br/>';
-            sleep(5); //sleep for 5 seconds
+            //$this->sendMessage($chatId, $message1);
+            DB::table('admin.whatsapp_messages')->insert([
+                'message' => $message1,
+                'phone' => $chatId,
+                'name' => $user->name,
+                'status' => 0
+            ]);
+            echo 'insert to ' . $user->name . '<br/>';
         }
     }
 
