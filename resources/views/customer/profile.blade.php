@@ -694,6 +694,54 @@ function check_status($table, $where = null) {
                                                                                                                                         </table>
                                                                                                                                     </form>
                                                                                                                                 </div>
+
+
+
+                                                                                                                                   <div class="col-lg-6 col-md-12">
+                                                                                                                                    <form>
+                                                                                                                                        <table class="table m-b-0">
+                                                                                                                                            <tbody>
+                                                                                                                                                <tr>
+                                                                                                                                                    <th
+                                                                                                                                                        class="social-label b-none p-t-0">
+                                                                                                                                                        Zone Manager
+                                                                                                                                                    </th>
+                                                                                                                                                    <td
+                                                                                                                                                        class="social-user-name b-none p-t-0 text-muted">
+                                                                                                                                                        <?= $manager->firstname . ' ' .$manager->lastname ?? '' ?></td>
+                                                                                                                                                </tr>
+                                                                                                                                                <tr>
+                                                                                                                                                    <th class="social-label b-none">
+                                                                                                                                                        Zone Manager phone</th>
+                                                                                                                                                    <td
+                                                                                                                                                        class="social-user-name b-none text-muted">
+                                                                                                                                                        <?= $manager->phone ?? '' ?></td>
+                                                                                                                                                </tr>
+
+                                                                                                                                                  <tr>
+                                                                                                                                                    <th class="social-label b-none">
+                                                                                                                                                        Email</th>
+                                                                                                                                                    <td
+                                                                                                                                                        class="social-user-name b-none text-muted">
+                                                                                                                                                        <?= $manager->email ?? '' ?></td>
+                                                                                                                                                  </tr>
+
+                                                                                                                                                   <tr>
+                                                                                                                                                    <th class="social-label b-none">
+                                                                                                                                                        Address</th>
+                                                                                                                                                    <td
+                                                                                                                                                        class="social-user-name b-none text-muted">
+                                                                                                                                                        <?= $manager->address ?? '' ?></td>
+                                                                                                                                                  </tr>
+
+                                                                                                                                               
+
+                                                                                                                                            </tbody>
+                                                                                                                                        </table>
+                                                                                                                                    </form>
+                                                                                                                                </div>
+
+
                                                                                                                             </div>
                                                                                                                             <div id="edit-info" class="row" style="display: none;">
                                                                                                                                 <div class="col-lg-12 col-md-12">
