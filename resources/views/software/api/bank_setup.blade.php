@@ -57,8 +57,9 @@ function bank_data($schema){
                     <div class="tab-pane active" id="requirements" role="tabpanel">
                      
                       <div class="card-block">
-                        <div class="table-responsive dt-responsive">
-                          <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
+                       
+                          <div class="table-responsive dt-responsive">
+                              <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
                             <thead>
                               <tr>
                                 <th>#</th>
@@ -68,7 +69,7 @@ function bank_data($schema){
                                 <th>Invoice Prefix</th>
                                 <th>Live username</th>
                                 <th>Live password </th>
-                                {{-- <th>Action</th> --}}
+                               
                             </tr>
                             </thead>
                             <tbody>
@@ -82,10 +83,7 @@ function bank_data($schema){
                                     <td><?= $value->invoice_prefix ?></td>
                                     <td><?= $value->api_username ?></td>
                                     <td><?= $value->api_password ?></td>
-                                    <td style="display:none;"><?php $acc_id = bank_data($value->schema_name)->account_id?></td>
-                                    {{-- <?php if(isset($account_number) && can_access('edit_bank_integration')) { ?>
-                                   <td><a class="btn btn-sm btn-primary" href="<?= url('software/updateintegration/'.$value->schema_name .'/'.$acc_id) ?>">edit</a></td> 
-                                    <?php }  ?> --}}
+                                
                                 </tr>
                                  <?php $i++; } ?>
                                 <?php  } ?>
@@ -99,7 +97,7 @@ function bank_data($schema){
                                 <th>Invoice Prefix</th>
                                 <th>Live username</th>
                                 <th>Live password </th>
-                                {{-- <th>Action</th> --}}
+                              
                             </tr>
                           </tfoot>
                         </table>
@@ -183,6 +181,7 @@ function bank_data($schema){
 
 
 <script type="text/javascript">
+
   $(".select2").select2({
       theme: "bootstrap",
       dropdownAutoWidth: false,
@@ -207,6 +206,8 @@ $('#check_account').change(function (event) {
                 }
             });
       });
+
+
 
     //   $('#account_id').change(function(event) {
     //     var schema_name = $('#check_account').val();

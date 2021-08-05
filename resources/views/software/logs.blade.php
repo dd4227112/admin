@@ -157,35 +157,35 @@
 
                                   <div class="card-block">
                                     <div class="dt-responsive table-responsive">
-                                        <table  class="table table-striped table-bordered nowrap">
+                                        <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable"> 
                                             <thead>
                                                 <tr>
                                                     <th>#</th>                                                
                                                     <th>Date</th>
                                                     <th>Client Name</th>
                                                     <th>Error Message</th>
-                                                    <th>File</th>
-                                                    <th>url</th>
-                                                    <th>Created By</th>
+                                                    {{-- <th>File</th> --}}
+                                                    {{-- <th>url</th>
+                                                    <th>Created By</th> --}}
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                               <?php $i = 1; foreach($schema_errors as $error) { ?>
                                                 <tr>
-                                                    <td><?= $error->id ?></td>                                                
-                                                    <td><?= $error->created_at ?></td>
+                                                    <td><?= $i ?></td>                                                
+                                                    <td><?= date('d-m-Y', strtotime($error->created_at)) ?></td>
                                                     <td><?= $error->schema_name ?></td>
-                                                    <td><?= $error->error_message ?></td>
-                                                    <td><?= $error->file ?></td>
-                                                    <td><?= $error->url ?></td>
-                                                    <td><?= $error->created_by ?></td>
+                                                    <td><?= ($error->error_message) ?></td>
+                                                    {{-- <td><?= warp($error->file) ?></td> --}}
+                                                    {{-- <td><?= warp($error->url) ?></td>
+                                                    <td><?= $error->created_by ?></td> --}}
                                                     <td>
-                                                        <a href="#" id="<?= $error->id ?>" class="label label-danger dlt_log" onmousedown="delete_log(<?= $error->id ?>)" >Delete</a>
-                                                        <a href="#" id="<?= $error->id ?>" class="label label-info dlt_log" onmousedown="View_log(<?= $error->id ?>)" onclick="return false">View</a>
+                                                        {{-- <a href="#" id="<?= $error->id ?>" class="label label-danger dlt_log" onmousedown="delete_log(<?= $error->id ?>)" >Delete</a> --}}
+                                                        {{-- <a href="#" id="<?= $error->id ?>" class="label label-info dlt_log" onmousedown="View_log(<?= $error->id ?>)" onclick="return false">View</a> --}}
                                                     </td>
                                                 </tr>
-                                               <?php  } ?>
+                                               <?php $i++; } ?>
                                             </tbody>
 
                                         </table>
@@ -302,6 +302,7 @@
         </div>
     </div>
 </div>
+
 
 <script type="text/javascript">
     $(document).ready(function () {
