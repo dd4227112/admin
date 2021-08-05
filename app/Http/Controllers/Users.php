@@ -339,7 +339,7 @@ class Users extends Controller {
      */
     public function destroy() {
          $id = request()->segment(3);
-         DB::table("users")->where('id', $id)->update(['status' => 0]);
+         DB::table("users")->where('id', $id)->update(['status' => 0,'deleted_at'=>'now()']);
          $email = \App\Models\User::where('id',$id)->first()->email;
   
         if($email){

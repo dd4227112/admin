@@ -418,9 +418,9 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                   <?php  } ?>
 
 
-                                    <?php if (can_access('digital_marketing')) { ?>
+                                    <?php //if (can_access('digital_marketing')) { ?>
                                     <li><a href="<?= url('Marketing/socialMedia') ?>" data-i18n="nav.extra-components.session-timeout">Digital Marketing</a></li>
-                                     <?php }  ?>
+                                     <?php // }  ?>
                                     <li><a href="<?= url('Marketing/school') ?>" data-i18n="nav.navigate.navbar">Schools Status</a></li>
                                    
                                     <li><a href="<?= url('Marketing/Events') ?>" data-i18n="nav.extra-components.session-idle-timeout">Events and seminars</a></li>

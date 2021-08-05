@@ -87,14 +87,11 @@
                           <div class="form-group">
                             <div class="col-sm-12 col-xs-12">
                               <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                   Phone number
                                   <input type="text" class="form-control" name="phone" required>
                                 </div>
-                                <div class="col-md-6">
-                                  Email Address
-                                  <input type="email" class="form-control" placeholder="" name="email" >
-                                </div>
+                               
                               </div>
                             </div>
                           </div>
@@ -109,21 +106,7 @@
                             <div class="col-sm-12 col-xs-12">
                              Your School / Organization
                              <input type="text" name="school_id" class="form-control" placeholder="Enter your School name here.." value="{{ old('school_id') }}" required>
-    
                             </div>
-                          </div>
-
-
-
-                          <div class="form-group ">
-                            <div class="col-sm-12 col-xs-12">
-                              How did you hear about this event?
-                              <select name="source" id="source" class="form-control" required>
-                                <option>Social media</option>
-                                <option>Phone Call</option>
-                                <option>Message(sms)</option>
-                                <option>Word of mouth</option>
-                                <option>Advertisement</option>
                                 <option>Internet Search</option>
                               </select>
                               <input type="hidden" name="event_id" value="<?=$event->id?>">
