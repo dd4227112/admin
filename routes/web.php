@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
+
 $bad_url = ['acme-challenge', 'rss', 'index.php', 'errors', 'phpR', 'apple-touch', 'assetlinks', '.php', 'public', '.tff', '.jpg'];
 foreach ($bad_url as $value) {
     if (preg_match('/' . $value . '/', url()->current())) {
@@ -58,6 +59,7 @@ Route::get('/898uuhihdsdskjdde/custrpt/{q}','Customer@customSqlReport');
 
 Route::get('/898uuhihdsdskjddeqe/{q}','Customer@implementationReport');
 
+Route::get('/898uuhihdsdskjdderer/send','Customer@event');
 
 
 

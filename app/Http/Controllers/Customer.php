@@ -206,7 +206,7 @@ class Customer extends Controller {
 
         $train = \App\Models\TrainItemAllocation::findOrFail($ttask_id);
 
-         $task_id = $train->task_id;
+        $task_id = $train->task_id;
 
         if ((int) $user_id > 0 && (int) $task_id > 0) {
             $section = \App\Models\TrainItem::findOrFail($section_id);
@@ -483,7 +483,7 @@ class Customer extends Controller {
 
             $this->data['top_users'] = DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
         }
-       // $this->data['profile'] = \App\Models\ClientSchool::where('client_id', $client->id)->first();
+        // $this->data['profile'] = \App\Models\ClientSchool::where('client_id', $client->id)->first();
         $this->data['profile'] = \App\Models\Client::where('id', $client->id)->first();
 
         $this->data['is_client'] = $is_client;
@@ -536,33 +536,32 @@ class Customer extends Controller {
         }
     }
 
-
-    public function editdetails(){
+    public function editdetails() {
         $id = request()->segment(3);
         $data = request()->except('_token');
-        $update = \App\Models\Client::where('id',$id)->first();
-        \App\Models\Client::where('id',$id)->update($data);
+        $update = \App\Models\Client::where('id', $id)->first();
+        \App\Models\Client::where('id', $id)->update($data);
         return redirect('customer/profile/' . $update->username)->with('success', 'successful updated!');
     }
 
     public function addstandingorder() {
         if ($_POST) {
-          //  $file = request('standing_order_file');
-           // $company_file_id = $file ? $this->saveFile($file, 'company/contracts') : 1;
+            //  $file = request('standing_order_file');
+            // $company_file_id = $file ? $this->saveFile($file, 'company/contracts') : 1;
             $total_amount = empty(request('total_amount')) ? request('occurance_amount') * request('number_of_occurrence') : request('total_amount');
 
-              $filename1 = '';
-             if (!empty(request('standing_order_file'))) {
+            $filename1 = '';
+            if (!empty(request('standing_order_file'))) {
                 $file = request()->file('standing_order_file');
                 $filename1 = time() . rand(11, 8894) . '.' . $file->guessExtension();
                 $filePath = base_path() . '/storage/uploads/file/';
                 $file->move($filePath, $filename1);
-             }
-           
+            }
+
             $data = [
                 'client_id' => request('client_id'),
                 'branch_id' => request('branch_id'),
-              //  'company_file_id' => $company_file_id,
+                //  'company_file_id' => $company_file_id,
                 'school_contact_id' => request('school_contact_id'),
                 'created_by' => Auth::user()->id,
                 'occurrence' => request('number_of_occurrence'),
@@ -570,7 +569,7 @@ class Customer extends Controller {
                 'occurance_amount' => remove_comma(request('occurance_amount')),
                 'total_amount' => remove_comma($total_amount),
                 'payment_date' => request('maturity_date'),
-               // 'refer_bank_id' => request('refer_bank_id'),
+                // 'refer_bank_id' => request('refer_bank_id'),
                 'note' => request('note'),
                 'contract_type_id' => 8,
                 'file' => $filename1
@@ -954,7 +953,6 @@ class Customer extends Controller {
         return view('customer.usage.customer_list', $this->data);
     }
 
-    
     public function customSqlReport() {
         $sql = strlen(request('q')) > 3 ? request('q') : exit;
         // $view = strlen(request('v')) > 3 ? request('v') : exit;
@@ -1052,7 +1050,7 @@ class Customer extends Controller {
         $this->data['schema'] = request()->segment(3);
         $this->data['client'] = strlen($this->data['schema']) > 2 ? DB::table('clients')->where('username', $this->data['schema'])->first() : '';
         $this->data['schemas'] = DB::select('select username as "table_schema"  from admin.clients where id in (select client_id from admin.payments) or id in (select client_id from admin.standing_orders)');
-        $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->whereNotIn('role_id',array(7,15))->get();
+        $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->whereNotIn('role_id', array(7, 15))->get();
         //check allocation of trainings
         if (strlen($this->data['schema']) > 2) {
             $checks = DB::select('select * from admin.train_items where status=1');
@@ -1473,7 +1471,7 @@ class Customer extends Controller {
                 'client_id' => request('client_id'),
                 'created_by' => \Auth::user()->id,
                 'date' => request('job_date')
-               ]; 
+            ];
             \App\Models\ClientJobCard::create($data);
         }
         return redirect()->back()->with('success', 'uploaded succesfully!');
@@ -1540,10 +1538,27 @@ class Customer extends Controller {
         return view('customer.usage.alluser', $this->data);
     }
 
-
-  
-
+    public function event() {
+        set_time_limit(0);
+        $users = DB::select('select * from admin.school_main_contacts where phone is not null');
+        $message1 = "Dear".chr(10)." 
+You are invited!
+".chr(10)." 
+Shulesoft will hold an online event on *18th August 2021* at 03:00 PM/15:00 HRS EAT. ".chr(10)." 
+The topic to be discussed is; *How to Sustain your School's Academic and Financial growth amidst COVID-19*. 
+".chr(10)." 
+Please register on www.shulesoft.com/events
+".chr(10)." 
+Kindly invite others.".chr(10)." 
+For more information call/whatsapp: 0655406004.
+".chr(10)." 
+Thank you!";
+        foreach ($users as $user) {
+            $phonenumber = validate_phone_number($user->phone, '255');
+            $chatId = $phonenumber . '@c.us';
+            $this->sendMessage($chatId, $message1);
+            sleep(5); //sleep for 5 seconds
+        }
+    }
 
 }
-
- 
