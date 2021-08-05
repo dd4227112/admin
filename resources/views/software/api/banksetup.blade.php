@@ -104,7 +104,7 @@
                                                             <td><input class="text-muted" type="text" <?=$text?> schema='<?= $bank->sandbox_api_password ?>' id="sandbox_api_password" value="<?= $bank->sandbox_api_password ?>" onblur="edit_bank_accounts('sandbox_api_password', this.value, '<?= $schema ?>',<?= $bank->id ?>)"/> -->
                                                              
                                                             </td>
-                                                            <td>   <input type='button' value="Save"/></td>
+                                                            <td><input type='button' value="Save"/></td>
 
                                                         </tr>
                                                         <?php

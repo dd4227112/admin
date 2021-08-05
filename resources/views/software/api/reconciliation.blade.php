@@ -161,7 +161,7 @@
     //            "serverSide": true,
     //            'serverMethod': 'post',
     //            'ajax': {
-    //                'url': "<?= url('software/api/null?tag=get') ?>"
+    //               'url': "<?= url('software/api/null?tag=get') ?>"
     //            },
     //            "columns": [
     //                {"data": "id"},

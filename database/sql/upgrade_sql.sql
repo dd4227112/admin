@@ -83,3 +83,15 @@ on A.id = B.invoice_id join admin.clients C on A.client_id = C.id group by A.cli
 select * from admin.payments ,,, id = 24
 
 
+
+
+///////////////////////////////////
+
+
+
+ALTER TABLE admin.standing_orders
+    ADD COLUMN file character varying;
+
+
+    ALTER TABLE admin.standing_orders
+    ADD COLUMN branch_id integer;
