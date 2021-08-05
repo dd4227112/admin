@@ -79,7 +79,6 @@
                                     <h4 class="text-center"><b>{{ $event->title }}</b></h4>
 
                                 </div>
-
                                 <form class="form-group" id="loginform" method="POST" action="<?= url('/addregister') ?>" >
                                     <div class="modal-body">
                                         {{ csrf_field() }}

@@ -529,52 +529,42 @@ class Sales extends Controller {
                 ]);
             }
   
-            
+        
+                $filename = '';
+            if (!empty(request('file'))) {
+                $file = request()->file('file');
+                $filename = time() . rand(11, 8894) . '.' . $file->guessExtension();
+                $filePath = base_path() . '/storage/uploads/files/';
+                $file->move($filePath, $filename);
 
-            // $filename1 = '';
-            // if (!empty(request('file'))) {
-            //     $file = request()->file('file');
-            //     $filename1 = time() . rand(11, 8894) . '.' . $file->guessExtension();
-            //     $filePath = base_path() . '/storage/uploads/files/';
-            //     $file->move($filePath, $filename1);
-            // }
+               $contract_id = DB::table('admin.contracts')->insertGetId([
+                'name' => 'Shulesoft', 'file' => $filename, 'company_file_id' => '2', 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'contract_type_id' => request('contract_type_id'), 'user_id' => Auth::user()->id
+                ]);
+                //client contracts
+                DB::table('admin.client_contracts')->insert([
+                    'contract_id' => $contract_id, 'client_id' => $client_id
+                ]);
+            }
 
-            // $filename2 = '';
-            // if (!empty(request('standing_order'))) {
-            //     $file = request()->file('standing_order');
-            //     $filename2 = time() . rand(11, 8894) . '.' . $file->guessExtension();
-            //     $filePath = base_path() . '/storage/uploads/files/';
-            //     $file->move($filePath, $filename2);
-            // }
+             $filename1 = '';
+             if (!empty(request('standing_order'))) {
+                $file = request()->file('standing_order');
+                $filename1 = time() . rand(11, 8894) . '.' . $file->guessExtension();
+                $filePath = base_path() . '/storage/uploads/file/';
+                $file->move($filePath, $filename1);
 
+               $contract_id = DB::table('admin.standing_orders')->insertGetId([
+                    'type' => 'Yearly','created_by' => \Auth::user()->id, 
+                    'client_id' => $client_id,'contract_type_id' => 8,
+                    'is_approved' => '0','file' => $filename1
+                ]);
+                //client contracts
+                DB::table('admin.client_contracts')->insert([
+                    'contract_id' => $contract_id, 'client_id' => $client_id
+                ]);
+            }
 
-            //add company file
-            // $check_contract = DB::table('admin.client_contracts')->where('client_id', $client_id)->first();
-            // if (empty($check_contract)) {
-            //     $file = request()->file('file');
-            //     $file_id = $this->saveFile($file, 'company/contracts');
-            //     //save contract
-            //     $contract_id = DB::table('admin.contracts')->insertGetId([
-            //         'name' => 'ShuleSoft', 'company_file_id' => $file_id, 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'contract_type_id' => request('contract_type_id'), 'user_id' => Auth::user()->id
-            //     ]);
-            //     //client contracts
-            //     DB::table('admin.client_contracts')->insert([
-            //         'contract_id' => $contract_id, 'client_id' => $client_id
-            //     ]);
-            // }
-            
-            // if (request('standing_order')) {
-            //     $file = request()->file('standing_order');
-            //     $file_id = $this->saveFile($file, 'company/contracts');
-            //     //save contract
-            //     $contract_id = DB::table('admin.contracts')->insertGetId([
-            //         'name' => 'ShuleSoft', 'company_file_id' => $file_id, 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'contract_type_id' => 8, 'user_id' => Auth::user()->id
-            //     ]);
-            //     //client contracts
-            //     DB::table('admin.client_contracts')->insert([
-            //         'contract_id' => $contract_id, 'client_id' => $client_id
-            //     ]);
-            // }
+        
 
             //once a school has been installed, now create an invoice for this school or create a promo code
             if (request('payment_status') == 1) {
@@ -746,11 +736,12 @@ class Sales extends Controller {
     }
 
     public function getSupportUser($section_id) {
-        
         $user=DB::table('admin.user_train_items')->where('train_item_id',$section_id)->where('status',1)->first();
             //we will check if user exists in db or not, and if not we will allocate any user within the company to take that role
             $data = [];
-            $collection = DB::table('admin.train_items_allocations')->select('user_id', DB::raw('count(client_id) as total'))->groupBy('user_id')->get();
+
+            $collection = DB::table('admin.train_items_allocations')->join('admin.users','admin.users.id','=','admin.train_items_allocations.user_id')->select('user_id', DB::raw('count(client_id) as total'))
+            ->where('admin.users.status','=','1')->where('admin.train_items_allocations.train_item_id', $section_id)->groupBy('user_id')->get();
             foreach($collection as $value){
                 $data[$value->user_id] = $value->total;
             }

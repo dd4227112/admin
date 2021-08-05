@@ -547,15 +547,22 @@ class Customer extends Controller {
 
     public function addstandingorder() {
         if ($_POST) {
-            $file = request('standing_order_file');
-            $company_file_id = $file ? $this->saveFile($file, 'company/contracts') : 1;
-            //  $company_file_id = 1;
+          //  $file = request('standing_order_file');
+           // $company_file_id = $file ? $this->saveFile($file, 'company/contracts') : 1;
             $total_amount = empty(request('total_amount')) ? request('occurance_amount') * request('number_of_occurrence') : request('total_amount');
 
+              $filename1 = '';
+             if (!empty(request('standing_order_file'))) {
+                $file = request()->file('standing_order_file');
+                $filename1 = time() . rand(11, 8894) . '.' . $file->guessExtension();
+                $filePath = base_path() . '/storage/uploads/file/';
+                $file->move($filePath, $filename1);
+             }
+           
             $data = [
                 'client_id' => request('client_id'),
                 'branch_id' => request('branch_id'),
-                'company_file_id' => $company_file_id,
+              //  'company_file_id' => $company_file_id,
                 'school_contact_id' => request('school_contact_id'),
                 'created_by' => Auth::user()->id,
                 'occurrence' => request('number_of_occurrence'),
@@ -563,11 +570,16 @@ class Customer extends Controller {
                 'occurance_amount' => remove_comma(request('occurance_amount')),
                 'total_amount' => remove_comma($total_amount),
                 'payment_date' => request('maturity_date'),
-                'refer_bank_id' => request('refer_bank_id'),
+               // 'refer_bank_id' => request('refer_bank_id'),
                 'note' => request('note'),
-                'contract_type_id' => 8
+                'contract_type_id' => 8,
+                'file' => $filename1
             ];
-            DB::table('standing_orders')->insert($data);
+            $contract_id = DB::table('admin.standing_orders')->insertGetId($data);
+
+            //client contracts
+            DB::table('admin.client_contracts')->insert(['contract_id' => $contract_id, 'client_id' => request('client_id')]);
+
             return redirect('account/standingOrders')->with('success', 'Standing order added successfully!');
         }
     }
@@ -1041,7 +1053,6 @@ class Customer extends Controller {
         $this->data['client'] = strlen($this->data['schema']) > 2 ? DB::table('clients')->where('username', $this->data['schema'])->first() : '';
         $this->data['schemas'] = DB::select('select username as "table_schema"  from admin.clients where id in (select client_id from admin.payments) or id in (select client_id from admin.standing_orders)');
         $this->data['shulesoft_users'] = \App\Models\User::where('status', 1)->whereNotIn('role_id',array(7,15))->get();
-
         //check allocation of trainings
         if (strlen($this->data['schema']) > 2) {
             $checks = DB::select('select * from admin.train_items where status=1');
@@ -1049,7 +1060,6 @@ class Customer extends Controller {
             foreach ($checks as $check) {
                 $check_train = \App\Models\TrainItemAllocation::where('client_id', $this->data['client']->id)->where('train_item_id', $check->id)->first();
                 if (empty($check_train)) {
-
                     \App\Models\TrainItemAllocation::create([
                         'task_id' => 1,
                         'client_id' => $this->data['client']->id,
@@ -1529,4 +1539,10 @@ class Customer extends Controller {
         return view('customer.usage.alluser', $this->data);
     }
 
+
+  
+
+
 }
+
+ 
