@@ -36,13 +36,13 @@
         <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/icon/icofont/css/icofont.css">
         <!-- Style.css -->
         <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css?v=2">
-<link rel="stylesheet" href="https://intl-tel-input.com/node_modules/intl-tel-input/examples/css/prism.css">
-<link rel="stylesheet" href="https://intl-tel-input.com/node_modules/intl-tel-input/build/css/intlTelInput.css?1613236686837">
-<link rel="stylesheet" href="https://intl-tel-input.com/node_modules/intl-tel-input/examples/css/prism.css">
-<link rel="stylesheet" href="https://intl-tel-input.com/node_modules/intl-tel-input/examples/css/isValidNumber.css?1613236686837">
+        <link rel="stylesheet" href="https://intl-tel-input.com/node_modules/intl-tel-input/examples/css/prism.css">
+        <link rel="stylesheet" href="https://intl-tel-input.com/node_modules/intl-tel-input/build/css/intlTelInput.css?1613236686837">
+        <link rel="stylesheet" href="https://intl-tel-input.com/node_modules/intl-tel-input/examples/css/prism.css">
+        <link rel="stylesheet" href="https://intl-tel-input.com/node_modules/intl-tel-input/examples/css/isValidNumber.css?1613236686837">
 
-<script src="https://intl-tel-input.com/node_modules/intl-tel-input/examples/js/prism.js"></script>
-<script src="https://intl-tel-input.com/node_modules/intl-tel-input/build/js/intlTelInput.js?1613236686837"></script>
+        <script src="https://intl-tel-input.com/node_modules/intl-tel-input/examples/js/prism.js"></script>
+        <script src="https://intl-tel-input.com/node_modules/intl-tel-input/build/js/intlTelInput.js?1613236686837"></script>
         <style>
             .select2-container--default .select2-selection--single {
                 height: 46px !important;
@@ -93,13 +93,13 @@
                                             <div class="col-sm-12 col-xs-12">
                                                 <div class="row">
                                                     <div class="col-md-12">
-                                                       Whatsapp Phone number
-                                                           <input id="phone" class="form-control" type="tel" name = "phone"   id="login-email"  placeholder="" value="" required>
-                                        <span id="valid-msg" class="hide">✓ Valid</span>
-                                        <span id="error-msg" class="hide"></span>
-                                        <input type="hidden" value="" name="country_code" id="country_code"/>
-                                        <input type="hidden" value="" name="country_name" id="country_name"/>
-                                        <input type="hidden" value="" name="country_abbr" id="country_abbr"/>
+                                                        Whatsapp Phone number
+                                                        <input id="phone" class="form-control" type="tel" name = "phone"   id="login-email"  placeholder="" value="" required>
+                                                        <span id="valid-msg" class="hide">✓ Valid</span>
+                                                        <span id="error-msg" class="hide"></span>
+                                                        <input type="hidden" value="" name="country_code" id="country_code"/>
+                                                        <input type="hidden" value="" name="country_name" id="country_name"/>
+                                                        <input type="hidden" value="" name="country_abbr" id="country_abbr"/>
                                                     </div>
 
                                                 </div>
@@ -123,7 +123,7 @@
                                                 $schools = DB::table('schools')->where('ownership', 'Non-Government')->get();
                                                 foreach ($schools as $school) {
                                                     ?>
-                                                                                <option value="<?= $school->id ?>"><?php // $school->name. ' (<b> '.$school->type. ' </b>) - '. $school->wards->district->region->name  ?></option>
+                                                                                                <option value="<?= $school->id ?>"><?php // $school->name. ' (<b> '.$school->type. ' </b>) - '. $school->wards->district->region->name      ?></option>
                                                 <?php } ?>
                                           
                                                                         </select> -->
@@ -136,12 +136,17 @@
                                             <div class="col-sm-12 col-xs-12">
                                                 How did you hear about this event?
                                                 <select name="source" id="source" class="form-control" required>
-                                                    <option>Social media</option>
-                                                    <option>Phone Call</option>
-                                                    <option>Message(sms)</option>
-                                                    <option>Word of mouth</option>
-                                                    <option>Advertisement</option>
-                                                    <option>Internet Search</option>
+                                                    <option value="whatsapp">Whatsapp</option>
+                                                    <option value="Phone Call">Phone Call</option>
+                                                    <option value="NMB Bank">NMB Bank</option>
+                                                    <option value="message">Message(sms)</option>
+                                                    <option value="friend">Friend (Referral from other schools)</option>
+                                                    <option value="radio">Radio</option>
+                                                    <option value="internet search">Internet Search</option>
+                                                    <option value="linkedin">LinkedIn</option>
+                                                    <option value="facebook">Facebook</option>
+                                                    <option value="instagram">Instagram</option>
+                                                    <option value="others">Others</option>
                                                 </select>
                                                 <input type="hidden" name="event_id" value="<?= $event->id ?>">
 
@@ -187,7 +192,7 @@ validate_phone = function () {
 // initialise plugin
     var iti = window.intlTelInput(input, {
         utilsScript: "https://intl-tel-input.com/node_modules/intl-tel-input/build/js/utils.js?1613236686837",
-         preferredCountries: ['tz'],
+        preferredCountries: ['tz'],
     });
 
     var reset = function () {
