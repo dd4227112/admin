@@ -1159,7 +1159,7 @@ function check_status($table, $where = null) {
                                                                                                                                             <strong>Job card date</strong>
                                                                                                                                             <input type="date"
                                                                                                                                                    class="form-control" id="job_date" 
-                                                                                                                                                   name="date" disabled required>
+                                                                                                                                                   name="job_date" value="job_card"  required>
                                                                                                                                         </div>
                                                                                                                                     </div>
                                                                                                                                 </div>

@@ -341,6 +341,11 @@ function warp($word, $size = 20) {
     return wordwrap($word, $size, "<br />\n");
 }
 
+
+    function base_url($url = '/') {
+    return ($_POST && request('b_url') != '') ? url(request('b_url')) : url($url);
+}
+
 if (!function_exists('img')) {
 
     function img($src = '', $index_page = FALSE) {
