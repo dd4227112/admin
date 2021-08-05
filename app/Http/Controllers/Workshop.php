@@ -43,8 +43,12 @@ class Workshop extends Controller {
                     . chr(10) . 'Thanks and regards,'
                     . chr(10) . 'Shulesoft Team'
                     . chr(10) . ' Call: +255 655 406 004 ';
-            $sql = "insert into public.sms (body,user_id, type,phone_number) values ('$message1', 1, '0', '$phonenumber')";
-            DB::statement($sql);
+            DB::table('public.sms')->insert([
+                'body'=>$message1,
+                'user_id'=>1,
+                'type'=>0,
+                'phone_number'=>$phonenumber
+            ]);
             $chatId = $phonenumber . '@c.us';
             $this->sendMessage($chatId, $message1);
             $this->sendEmail($phonenumber, $workshop);
