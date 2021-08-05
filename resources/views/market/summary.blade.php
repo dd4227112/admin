@@ -66,7 +66,7 @@
     <div class="row">
         <div class="col-md-12 col-xs-12 col-sm-12">
             <div class="white-box m-b-0" style="background: #12b89a">
-                <h3 class="text-white box-title" align="center" style="padding-top: 2em">Conglatulations,  you have succefully being registered for the Event </h3>
+                <h3 class="text-white box-title" align="center" style="padding-top: 2em">Conglatulations,  you have succefully been registered for the Event </h3>
                 <div id="sparkline2dash" class="text-center">
                     <canvas width="215" height="70" style="display: inline-block; width: 215px; height: 70px; vertical-align: top;"></canvas>
                 </div>
