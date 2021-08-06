@@ -1153,6 +1153,10 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     }
 
     public function updateCompleteItems() {
+        $materialized_views=DB::select("SELECT relname FROM pg_catalog.pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace WHERE c.relkind = 'm' and nspname='admin'");
+        foreach ($materialized_views as $view) {
+            DB::statement('REFRESH MATERIALIZED VIEW admin.'.$view->relname);
+        }
         $checks = DB::select('select * from admin.train_items where status=1');
         foreach ($checks as $check) {
             if (preg_match('/exam/i', strtolower($check->content))) {
