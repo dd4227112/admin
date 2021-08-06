@@ -481,10 +481,10 @@ class Customer extends Controller {
             }
             $this->data['client_id'] = $client->id;
 
-            $sales = new \App\Http\Controllers\Customer();
-            $user = $sales->zonemanager($client->id);
-
-            $this->data['manager'] = \App\Models\User::findOrFail($user->user_id);
+            $user = $this->zonemanager($this->data['client_id']);
+            if(!empty($user)) {
+                $this->data['manager'] = \App\Models\User::findOrFail($user->user_id);
+            }
 
             $this->data['top_users'] = DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
         }
@@ -1469,8 +1469,10 @@ class Customer extends Controller {
     public function uploadJobCard() {
         if ($_POST) {
             $file = request()->file('job_card_file');
-            $company_file_id = $file ? $this->saveFile($file, 'uploads/images') : 1;
 
+             $company_file_id = $file ? $this->saveFile($file, 'uploads/images') : 1;
+           // $company_file_id = $file ? $this->thefile($file) : 1;
+            
             $data = [
                 'company_file_id' => $company_file_id,
                 'client_id' => request('client_id'),
@@ -1481,6 +1483,10 @@ class Customer extends Controller {
         }
         return redirect()->back()->with('success', 'uploaded succesfully!');
     }
+
+
+
+ 
 
     public function viewFile() {
         $value = request()->segment(3);
@@ -1566,5 +1572,14 @@ class Customer extends Controller {
             sleep(5); //sleep for 5 seconds
         }
     }
+
+
+     
+
+
+  
+
+
+
 
 }

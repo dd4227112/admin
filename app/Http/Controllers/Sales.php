@@ -707,16 +707,24 @@ class Sales extends Controller {
             //email to zonal manager
              $sales = new \App\Http\Controllers\Customer();
              $user_id = $sales->zonemanager($client_id);
-
              if(isset($user_id) && !empty((int)$user_id->user_id)){
-                        $manager = \App\Models\User::where('id',$user_id->user_id)->first();
-                        $manager_message = 'Hello ' . $manager->firstname . '<br/>'
-                        . 'A task ' . $section->content .' been scheduled to'
-                        . '<li>' . \App\Models\Client::where('id',$client_id)->first()->name  . '</li>'
-                        . '<li>Start date: ' . date('Y-m-d H:i:s', strtotime($start_date)) . '</li>'
-                        . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
-                        . '</ul>';
-                       $this->send_email($manager->email, 'ShuleSoft Task Allocation', $manager_message);
+                         $manager = \App\Models\User::where('id',$user_id->user_id)->first();
+                        // $manager_message = 'Hello ' . $manager->firstname . '<br/>'
+                        // . 'A task ' . $section->content .' been scheduled to'
+                        // . '<li>' . \App\Models\Client::where('id',$client_id)->first()->name  . '</li>'
+                        // . '<li>Start date: ' . date('Y-m-d H:i:s', strtotime($start_date)) . '</li>'
+                        // . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
+                        // . '</ul>';
+
+                        $message = "Dear" .$manager->firstname . " " .$manager->lastname .chr(10)." 
+                        A task of . $section->content .' been scheduled to " .\App\Models\Client::where('id',$client_id)->first()->name."
+                        ".chr(10)." 
+                        Start date: " . date('Y-m-d H:i:s', strtotime($start_date)) . "
+                        ".chr(10)." 
+                        Up to: " . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days"))."
+                        ".chr(10)." 
+                        Thank you!";
+                    $this->send_whatsapp_sms($manager->phone, $message);
                }
             //sms to school personel
               if(request("train_item{$section->id}") != ''){
@@ -724,6 +732,7 @@ class Sales extends Controller {
                     $phonenumber = validate_phone_number($phonenumber[0]);
                     $sms = 'Hello '. request("train_item{$section->id}") . ' a task of '  . $section->content . ' been allocated to your school, It is espected to start at ' . date('F,d Y', strtotime($start_date)) . ' and end at  '. date('F,d Y', strtotime($start_date . " + {$section->time} days")) .'';
                     $this->send_sms($phonenumber[1], $sms);
+                    $this->send_whatsapp_sms($phonenumber[1], $sms);
               }
         }  
     }
@@ -862,8 +871,13 @@ class Sales extends Controller {
     public function addLead() {
         //$this->data['schools']  = \App\Models\School::where('ownership', '<>', 'Government')->orderBy('schema_name', 'ASC')->get();
         if ($_POST) {
+    
+             $task_data = ['school_id'=>request('school_id'),'school_name'=>request('school_name'),'school_phone'=>request('school_phone'),'school_title'=>request('school_title'),
+                      'students'=>request('students'),'start_date'=>date('Y-m-d', strtotime(request('start_date'))),'end_date'=>date('Y-m-d', strtotime(request('end_date'))),
+                      'task_type_id'=>request('task_type_id'),'next_action'=>request('next_action'),'budget'=>request('budget'),
+                      'activity'=>request('activity')];
+            $data = array_merge($task_data, ['user_id' => Auth::user()->id, 'status' => 'new', 'date' => date('Y-m-d')]);
 
-            $data = array_merge(request()->except('to_user_id'), ['user_id' => Auth::user()->id, 'status' => 'new', 'date' => date('Y-m-d')]);
             $task = \App\Models\Task::create($data);
 
             DB::table('tasks_users')->insert([

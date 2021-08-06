@@ -499,7 +499,16 @@ ORDER BY c.oid, a.attnum";
                                    . ' zimekamilika tafadhali wasiliana na bank product associate kutoka'
                                    . ' shulesoft aweze kuwapa taarifa shule husika na kuendelea'
                                    . ' nao katika hatua zinazofata,ASANTE.';
-                  $this->send_email($manager->email, 'ShuleSoft Task Allocation', $manager_message);
+                     $this->send_email($manager->email, 'ShuleSoft Task Allocation', $manager_message);
+                  
+                      $fullname = $manager->firstname . " " . $manager->lastname;
+                      $message = "habari " . $fullname ."
+                                  ".chr(10)."
+                                  Hatua za integration katika shule ya " .\App\Models\Client::where('id',$client->id)->first()->name." zimekamilika 
+                                  Tafadhali wasiliana na bank product associate kutoka shulesoft aweze kuwapa taarifa shule husika na kuendelea nao katika hatua zinazofata,
+                                  ".chr(10)."
+                                  ASANTE";
+                      $this->send_whatsapp_sms($manager->phone, $message,$fullname);
              }
 
          //send sms to school Admins/Directors of schools
@@ -508,6 +517,7 @@ ORDER BY c.oid, a.attnum";
               foreach($users as $user){
                    $message = 'habari, ningependa kukujulisha kuwa sasa shule yako ' . \App\Models\Client::where('id',$client->id)->first()->name  . ' hatua za integration na bank ya ' . $bank_name . ' zimekamilika na  unaweza kupata control number kutoka kwenye invoice ya mwanafunzi husika kupitia system ya shulesoft.kwa maelezo zaidi namna ya kulipia na kutuma sms kwenda kwa wazazi mtaalmu toka shulesoft atakupigia akuelekeze katika hatua hizo. Asante.';
                   $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+                  $this->send_whatsapp_sms($user->phone, $message);
               }
 
           }

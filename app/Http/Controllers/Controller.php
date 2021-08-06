@@ -343,4 +343,14 @@ class Controller extends BaseController {
         }
     }
 
+
+      public function send_whatsapp_sms($phone, $message, $name = null,$status = 0) {
+        if ((strlen($phone) > 6 && strlen($phone) < 20) && $message != '') {
+            $phonenumber = validate_phone_number($phone, '255');
+            $chatId = $phonenumber . '@c.us';
+            DB::table('admin.whatsapp_messages')->insert(array('message' => $message, 'phone' => $chatId, 'name' => $name, 'status' => $status));
+        }
+        return $this;
+    }
+
 }
