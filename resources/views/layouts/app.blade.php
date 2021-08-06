@@ -510,7 +510,11 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                             </li>
                                      <?php } ?>
   
-
+                                    <?php if (can_access('meeting_minutes')) { ?>
+                                            <li><a href="<?= url('users/hrrequest') ?>" data-i18n="nav.extra-components.offline">
+                                                HR Requests</a>
+                                            </li>
+                                     <?php } ?>
                                   
                                     <li class="nav-sub-item">
                                        <a href="#" data-i18n="nav.page_layout.vertical.main"><i
