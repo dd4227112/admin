@@ -50,7 +50,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
             // End Deadlock Processes 
-            $this->endDeadlock();
+            //$this->endDeadlock();
         })->everyThreeMinutes();
 //        $schedule->call(function () {
 //            (new Message())->sendSms();
@@ -1097,12 +1097,12 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         }
     }
 
-    public function endDeadlock() {
-        DB::SELECT("WITH inactive_connections AS (SELECT pid, rank() over (partition by client_addr order by backend_start ASC) as rank
-        FROM pg_stat_activity WHERE pid <> pg_backend_pid( ) AND application_name !~ '(?:psql)|(?:pgAdmin.+)' AND datname = current_database() AND usename = current_user 
-        AND state in ('idle', 'idle in transaction', 'idle in transaction (aborted)', 'disabled') AND current_timestamp - state_change > interval '3 minutes') SELECT pg_terminate_backend(pid) FROM inactive_connections WHERE rank > 1");
-        return DB::select("SELECT pg_terminate_backend(pid) from pg_stat_activity where state='idle' and query like '%DEALLOCATE%'");
-    }
+    // public function endDeadlock() {
+    //     DB::SELECT("WITH inactive_connections AS (SELECT pid, rank() over (partition by client_addr order by backend_start ASC) as rank
+    //     FROM pg_stat_activity WHERE pid <> pg_backend_pid( ) AND application_name !~ '(?:psql)|(?:pgAdmin.+)' AND datname = current_database() AND usename = current_user 
+    //     AND state in ('idle', 'idle in transaction', 'idle in transaction (aborted)', 'disabled') AND current_timestamp - state_change > interval '3 minutes') SELECT pg_terminate_backend(pid) FROM inactive_connections WHERE rank > 1");
+    //     return DB::select("SELECT pg_terminate_backend(pid) from pg_stat_activity where state='idle' and query like '%DEALLOCATE%'");
+    // }
 
     // F(x) to send text remainder to keep phone active to school admins
     public function SMSStatusToSchoolsAdmin() {
