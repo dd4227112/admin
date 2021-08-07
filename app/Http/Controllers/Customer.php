@@ -205,7 +205,6 @@ class Customer extends Controller {
         }
 
         $train = \App\Models\TrainItemAllocation::find($ttask_id);
-
         $task_id = $train->task_id;
 
         if ((int) $user_id > 0 && (int) $task_id > 0) {
@@ -236,6 +235,8 @@ class Customer extends Controller {
                     . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                     . '</ul>';
             $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+            $message = "Hello " . $user->firstname ." a task of " . $train->trainItem->content . " at " . $train->client->name." has been allocated to you.The project is expected to start at " . date('d-m-Y H:i:s', strtotime($start_date)) ." to  " . date('d-m-Y H:i:s', strtotime($start_date . " + {$section->time} days"))." .Thank You";
+            $this->send_whatsapp_sms($user->phone, $message);
 
             //email to zone manager
             // findOrFail zone manager based on school location
@@ -249,15 +250,17 @@ class Customer extends Controller {
                         . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                         . '</ul>';
                 $this->send_email($manager->email, 'ShuleSoft Task Allocation', $manager_message);
+                 $message = "Hello " . $manager->firstname ." a task of " . $train->trainItem->content . " at " . $train->client->name." has been allocated to " .$user->firstname ." ". $user->lastname ." The project is expected to start at " . date('d-m-Y', strtotime($start_date)) ." to  " . date('d-m-Y', strtotime($start_date . " + {$section->time} days"))." .Thank You";
+                $this->send_whatsapp_sms($user->phone, $message);
             }
 
 
             //sms to school person
-            $school_personel = '';
-            if ($school_personel) {
-                $message = 'Hello #someone task #something will start at ' . date('Y-m-d H:i:s', strtotime($start_date)) . '';
-                $this->send_sms($school_personel->phone, 'ShuleSoft Task Allocation', $message);
-            }
+            // $school_personel = '';
+            // if ($school_personel) {
+            //     $message = 'Hello #someone task #something will start at ' . date('Y-m-d H:i:s', strtotime($start_date)) . '';
+            //     $this->send_sms($school_personel->phone, 'ShuleSoft Task Allocation', $message);
+            // }
 
             die(json_encode(array_merge(array('task_id' => $task_id), $obj)));
         }
@@ -1572,6 +1575,8 @@ class Customer extends Controller {
             sleep(5); //sleep for 5 seconds
         }
     }
+
+
 
 
      

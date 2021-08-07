@@ -348,9 +348,51 @@ class Controller extends BaseController {
         if ((strlen($phone) > 6 && strlen($phone) < 20) && $message != '') {
             $phonenumber = validate_phone_number($phone, '255');
             $chatId = $phonenumber . '@c.us';
-            DB::table('admin.whatsapp_messages')->insert(array('message' => $message, 'phone' => $chatId, 'name' => $name, 'status' => $status));
+            DB::table('admin.whatsapp_messages')->insert(array('message' => $message, 'phone' => $chatId, 'name' => $name, 'status' => $status, 'created_at'=> now()));
         }
         return $this;
     }
 
+
+    // public function test(){
+    //     $section_id = '3';
+    //     $collection = DB::table('admin.user_train_items')->join('admin.users','admin.users.id','=','admin.user_train_items.user_id')->join('admin.train_items','admin.train_items.id','=','admin.user_train_items.train_item_id')
+    //                      ->select('admin.users.id','admin.users.name','admin.train_items.content','admin.user_train_items.train_item_id')
+    //                      ->where('admin.users.status','=','1')->where('admin.user_train_items.train_item_id','=',$section_id)->distinct()->get();
+    //                 $ids = array();
+    //                     foreach($collection as $value) {
+    //                     $ids[] = $value->id;
+    //                  }
+    //        // dd($ids);
+    //         $users = DB::table('admin.train_items_allocations')->select('user_id', DB::raw('count(status) as complete'))->whereIn('user_id',$ids)->where('status',1)->groupBy('user_id')->get();
+    //         if(!empty($users)){
+    //               $data = [];
+    //               foreach($users as $value){
+    //                $data[$value->user_id] = $value->complete;
+    //            }
+    //           $user_id =  !empty($data) ? array_search(max($data), $data) : DB::table('admin.user_train_items')->where('train_item_id',$section_id)->where('status',1)->first()->user_id;
+    //         } 
+    //         return $user_id;
+    //   }
+
+
+    public function whatsappMessage() {
+        $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 12 ');
+        foreach ($messages as $message) {
+            if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
+                $controller = new \App\Http\Controllers\Controller();
+                $controller->sendMessage($message->phone, $message->message);
+                DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1,'updated_at'=>now()]);
+                echo 'message sent to ' . $message->name . '' . chr(10);
+                sleep(4);
+            } else {
+                //this is invalid number, so update in db to show wrong return
+                DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1,'updated_at'=>now(),'return_message' => 'Wrong phone number supplied']);
+                echo 'wrong phone number supplied  ' . $user->phone . '' . chr(10);
+            }
+        }
+    }
+
 }
+
+
