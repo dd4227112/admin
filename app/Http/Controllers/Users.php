@@ -16,6 +16,7 @@ class Users extends Controller {
 
     public function __construct() {
         $this->middleware('auth');
+          $this->data['insight'] = $this;
     }
     /**
      * Display a listing of the resource.
@@ -810,6 +811,75 @@ class Users extends Controller {
     }
 
   
+    public function hrrequest() {
+         $page = request()->segment(3);
+        if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
+            //current day
+            $this->data['today'] = 1;
+            $start_date = date('Y-m-d');
+            $end_date = date('Y-m-d');
+            $where = '  a.created_at::date=CURRENT_DATE';
+        } else {
+            $this->data['today'] = 2;
+            $start_date = date('Y-m-d', strtotime(request('start')));
+            $end_date = date('Y-m-d', strtotime(request('end')));
+            $where = "  a.created_at::date >='" . $start_date . "' AND a.created_at::date <='" . $end_date . "'";
+        }
+         $user_id = \Auth::User()->id;
+      //   $this->data['schools'] = DB::select("select * from admin.tasks where user_id = $user_id  and  (start_date, end_date) OVERLAPS ('$start_date'::date, '$end_date'::date)");
+        $this->data['schools'] = \App\Models\Task::where('user_id', Auth::user()->id)->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
+        $this->data['new_schools'] = \App\Models\Task::where('user_id', Auth::user()->id)->where('next_action', 'new')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
+        $this->data['pipelines'] = \App\Models\Task::where('user_id', Auth::user()->id)->where('next_action', 'pipeline')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
+        $this->data['closeds'] = \App\Models\Task::where('user_id', Auth::user()->id)->where('next_action', 'closed')->whereRaw("(created_at >= ? AND created_at <= ?)", [$start_date . " 00:00:00", $end_date . " 23:59:59"])->orderBy('created_at', 'desc')->get();
+        $this->data['query'] = 'SELECT count(next_action), next_action from admin.tasks a where  a.user_id='.Auth::User()->id.' and ' . $where . ' group by next_action order by count(next_action) desc';
+        $this->data['types'] = 'SELECT count(b.name), b.name as type from admin.tasks a, admin.task_types b  where a.task_type_id=b.id AND a.user_id ='.Auth::User()->id.' and ' . $where . ' group by b.name order by count(b.name) desc';
+        return view('users.hr.index', $this->data);
+    }
 
+    
+     public function addLead() {
+        //$this->data['schools']  = \App\Models\School::where('ownership', '<>', 'Government')->orderBy('schema_name', 'ASC')->get();
+        if ($_POST) {
+
+            $data = array_merge(request()->except('to_user_id'), ['user_id' => Auth::user()->id, 'status' => 'new', 'date' => date('Y-m-d')]);
+            $task = \App\Models\Task::create($data);
+
+            DB::table('tasks_users')->insert([
+                'task_id' => $task->id,
+                'user_id' => Auth::user()->id
+            ]);
+
+            $school_id = request('school_id');
+
+            if (preg_match('/c/i', $school_id)) {
+
+                DB::table('tasks_clients')->insert([
+                    'task_id' => $task->id,
+                    'client_id' => (int) $school_id
+                ]);
+            }
+            if ((int) $school_id > 0 && !preg_match('/c/i', $school_id)) {
+
+                DB::table('tasks_schools')->insert([
+                    'task_id' => $task->id,
+                    'school_id' => (int) $school_id
+                ]);
+            }
+
+            if (request('school_name') != '' && request('school_phone') != '') {
+                \App\Models\SchoolContact::create([
+                    'name' => request('school_name'),
+                    'phone' => request('school_phone'),
+                    'school_id' => (int) $school_id,
+                    'user_id' => Auth::user()->id,
+                    'title' => request('school_title')
+                ]);
+                DB::table('admin.schools')->where('id', (int) $school_id)->update(['students' => request('students')]);
+            }
+
+            return redirect('users/hrrequest/1')->with('success', 'success');
+        }
+        return view('users.hr.add', $this->data);
+    }
 
 }

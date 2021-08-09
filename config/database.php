@@ -36,29 +36,32 @@ return [
           'pgsql' => [
             'driver' => 'pgsql',
             'host'=>'localhost',
-            'port' =>'6432',
+            'port' =>'5432',
+
+        'driver' => 'pgsql',
+            'host'=>'localhost',
+            'port' =>'5432',
+
             'database' =>'shulesoft_2021',
             'username' => 'postgres',
             'password' =>'20_sHULEsoft_21',
             'charset' => 'utf8',
-            'sslmode' => 'prefer', 
-            'prefix_indexes' => true,
 	    'prefix' => '',
             'schema' => 'admin',
-	    'options' => [
-                \PDO::ATTR_EMULATE_PREPARES => true
-            ]
+//	    'options' => [
+  //              \PDO::ATTR_EMULATE_PREPARES => true
+    //        ]
 	],
 
 
         'karibusms' => [
             'driver' => 'pgsql',
-            'host' => 'shulesoftdb.postgres.database.azure.com',
-            // 'host'=>'localhost',
+            //'host' => 'shulesoftdb.postgres.database.azure.com',
+            'host'=>'localhost',
             'port' =>'6432',
             'database' =>'other_app',
             'username' => 'pgeshuleadmin',
-            'password' =>'Shul3@s0ft@202!',
+            'password' =>'20_sHULEsoft_21',
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
