@@ -2,10 +2,10 @@
 @section('content')
 <?php $root = url('/') . '/public/';
 function bank_data($schema){
-     return \collect(\DB::select('select b.id as account_id,b.name,b.number,a.api_username,a.api_password,a.invoice_prefix,a.sandbox_api_username,a.sandbox_api_password from ' . $schema . '.bank_accounts_integrations a right join ' . $schema . '.bank_accounts b on a.bank_account_id=b.id'))->first();
+     return \collect(\DB::select("select a.name,a.number,b.* from ".$schema.".bank_accounts a join admin.all_bank_accounts_integrations b on a.id = b.bank_account_id where b.schema_name ='{$schema}' "))->first();   
 }
 ?>
-<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
+<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>                             
 
 <div class="main-body">
   <div class="page-wrapper">
@@ -112,7 +112,7 @@ function bank_data($schema){
                         <span>This Part Allow you to update bank Integration</span>
                       </div>
                       <div class="modal-body">
-                      <form action="<?= url('software/UpdateInt') ?>" method="post">
+                      <form autocomplete="off" action="<?= url('software/UpdateInt') ?>" method="post">
 
                           <div class="form-group">
                             <div class="row">

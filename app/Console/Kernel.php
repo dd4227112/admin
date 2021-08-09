@@ -50,7 +50,7 @@ class Kernel extends ConsoleKernel {
 
         $schedule->call(function () {
             // End Deadlock Processes 
-            $this->endDeadlock();
+            //$this->endDeadlock();
         })->everyThreeMinutes();
 //        $schedule->call(function () {
 //            (new Message())->sendSms();
@@ -116,24 +116,20 @@ class Kernel extends ConsoleKernel {
             (new Background())->schoolMonthlyReport();
         })->monthlyOn(29, '06:36');
     }
+    
 
     public function whatsappMessage() {
-        $users = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 12 ');
-        foreach ($users as $user) {
-
-            $phonenumber = validate_phone_number($user->phone, '255');
-            $chatId = $phonenumber . '@c.us';
-
-            if (preg_match('/@c.us/i', $user->phone) && strlen($user->phone) < 19) {
-
+        $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 12 ');
+        foreach ($messages as $message) {
+            if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
                 $controller = new \App\Http\Controllers\Controller();
-                $controller->sendMessage($user->phone, $user->message);
-                DB::table('admin.whatsapp_messages')->where('id', $user->id)->update(['status' => 1]);
-                echo 'message sent to ' . $user->name . '' . chr(10);
+                $controller->sendMessage($message->phone, $message->message);
+                DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1]);
+                echo 'message sent to ' . $message->name . '' . chr(10);
                 sleep(4);
             } else {
                 //this is invalid number, so update in db to show wrong return
-                DB::table('admin.whatsapp_messages')->where('id', $user->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied']);
+                DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied']);
                 echo 'wrong phone number supplied  ' . $user->phone . '' . chr(10);
             }
         }
@@ -359,7 +355,7 @@ class Kernel extends ConsoleKernel {
                         ->where('reference', $invoice->reference)->update(['sync' => 0, 'status' => 0, 'return_message' => $curl, 'push_status' => 'check_' . $push_status, 'updated_at' => 'now()']);
             }
         }
-        DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
+       // DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
     }
 
     public function deleteInvoice($invoice, $token) {
@@ -388,7 +384,7 @@ class Kernel extends ConsoleKernel {
                 DB::table($invoice->schema_name . '.invoices')
                         ->where('reference', $invoice->reference)->update(['sync' => 0, 'status' => 0, 'return_message' => $curl, 'push_status' => 'delete_' . $push_status, 'updated_at' => 'now()']);
             }
-            DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
+          //  DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
         }
     }
 
@@ -464,7 +460,7 @@ class Kernel extends ConsoleKernel {
                 // DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
             }
         }
-        DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
+        //DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
     }
 
     public function updateInvoiceStatus($fields, $invoice, $token) {
@@ -498,7 +494,7 @@ class Kernel extends ConsoleKernel {
                 // DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
             }
         }
-        DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
+        //DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
     }
 
     public function updateInvoice() {
@@ -537,7 +533,7 @@ class Kernel extends ConsoleKernel {
                         DB::table($invoice->schema_name . '.invoices')
                                 ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
                     }
-                    DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
+                   // DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
                 }
             }
         }
@@ -1101,12 +1097,12 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         }
     }
 
-    public function endDeadlock() {
-        DB::SELECT("WITH inactive_connections AS (SELECT pid, rank() over (partition by client_addr order by backend_start ASC) as rank
-        FROM pg_stat_activity WHERE pid <> pg_backend_pid( ) AND application_name !~ '(?:psql)|(?:pgAdmin.+)' AND datname = current_database() AND usename = current_user 
-        AND state in ('idle', 'idle in transaction', 'idle in transaction (aborted)', 'disabled') AND current_timestamp - state_change > interval '3 minutes') SELECT pg_terminate_backend(pid) FROM inactive_connections WHERE rank > 1");
-        return DB::select("SELECT pg_terminate_backend(pid) from pg_stat_activity where state='idle' and query like '%DEALLOCATE%'");
-    }
+    // public function endDeadlock() {
+    //     DB::SELECT("WITH inactive_connections AS (SELECT pid, rank() over (partition by client_addr order by backend_start ASC) as rank
+    //     FROM pg_stat_activity WHERE pid <> pg_backend_pid( ) AND application_name !~ '(?:psql)|(?:pgAdmin.+)' AND datname = current_database() AND usename = current_user 
+    //     AND state in ('idle', 'idle in transaction', 'idle in transaction (aborted)', 'disabled') AND current_timestamp - state_change > interval '3 minutes') SELECT pg_terminate_backend(pid) FROM inactive_connections WHERE rank > 1");
+    //     return DB::select("SELECT pg_terminate_backend(pid) from pg_stat_activity where state='idle' and query like '%DEALLOCATE%'");
+    // }
 
     // F(x) to send text remainder to keep phone active to school admins
     public function SMSStatusToSchoolsAdmin() {
@@ -1130,27 +1126,27 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         }
     }
 
-    public function sendeMails() {
-        $schemas = DB::select("select * from admin.all_setting");
-        foreach ($schemas as $schema) {
-            $schema_emails = DB::select("select * from $schema->schema_name.email where status = '0'");
-            if (!empty($schema_emails)) {
+    // public function sendeMails() {
+    //     $schemas = DB::select("select * from admin.all_setting");
+    //     foreach ($schemas as $schema) {
+    //         $schema_emails = DB::select("select * from $schema->schema_name.email where status = '0'");
+    //         if (!empty($schema_emails)) {
 
-                foreach ($schema_emails as $schema_email) {
-                    // if (!empty($schema_email->email) && !Str::contains($schema_email->email, 'shulesoft.com')) {
-                    if (filter_var($schema_email->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $schema_email->email)) {
-                        $email_to = $schema_email->email;
-                        $email_subject = $schema_email->subject;
-                        $content = $schema_email->body;
-                        $contact = $schema->phone;
-                        $data = ['subject' => $email_subject, 'email_to' => $email_to, 'content' => $content, 'contact' => $contact, 'school' => $schema->schema_name];
-                        Mail::send(new EmailTemplate($data));
-                    }
-                    $affected = DB::table($schema->schema_name . '.email')->where('email_id', $schema_email->email_id)->update(['status' => 1]);
-                }
-            }
-        }
-    }
+    //             foreach ($schema_emails as $schema_email) {
+    //                 // if (!empty($schema_email->email) && !Str::contains($schema_email->email, 'shulesoft.com')) {
+    //                 if (filter_var($schema_email->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $schema_email->email)) {
+    //                     $email_to = $schema_email->email;
+    //                     $email_subject = $schema_email->subject;
+    //                     $content = $schema_email->body;
+    //                     $contact = $schema->phone;
+    //                     $data = ['subject' => $email_subject, 'email_to' => $email_to, 'content' => $content, 'contact' => $contact, 'school' => $schema->schema_name];
+    //                     Mail::send(new EmailTemplate($data));
+    //                 }
+    //                 $affected = DB::table($schema->schema_name . '.email')->where('email_id', $schema_email->email_id)->update(['status' => 1]);
+    //             }
+    //         }
+    //     }
+    // }
 
     public function updateCompleteItems() {
         $materialized_views=DB::select("SELECT relname FROM pg_catalog.pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace WHERE c.relkind = 'm' and nspname='admin'");

@@ -204,12 +204,11 @@ class Customer extends Controller {
             $user_id = (int) $task_user;
         }
 
-        $train = \App\Models\TrainItemAllocation::findOrFail($ttask_id);
-
+        $train = \App\Models\TrainItemAllocation::find($ttask_id);
         $task_id = $train->task_id;
 
         if ((int) $user_id > 0 && (int) $task_id > 0) {
-            $section = \App\Models\TrainItem::findOrFail($section_id);
+            $section = \App\Models\TrainItem::find($section_id);
             $obj = [
                 'start_date' => date('Y-m-d H:i:s', strtotime($start_date)),
                 'end_date' => date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")),
@@ -236,6 +235,8 @@ class Customer extends Controller {
                     . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                     . '</ul>';
             $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+            $message = "Hello " . $user->firstname . " a task of " . $train->trainItem->content . " at " . $train->client->name . " has been allocated to you.The project is expected to start at " . date('d-m-Y H:i:s', strtotime($start_date)) . " to  " . date('d-m-Y H:i:s', strtotime($start_date . " + {$section->time} days")) . " .Thank You";
+            $this->send_whatsapp_sms($user->phone, $message);
 
             //email to zone manager
             // findOrFail zone manager based on school location
@@ -249,15 +250,17 @@ class Customer extends Controller {
                         . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                         . '</ul>';
                 $this->send_email($manager->email, 'ShuleSoft Task Allocation', $manager_message);
+                $message = "Hello " . $manager->firstname . " a task of " . $train->trainItem->content . " at " . $train->client->name . " has been allocated to " . $user->firstname . " " . $user->lastname . " The project is expected to start at " . date('d-m-Y', strtotime($start_date)) . " to  " . date('d-m-Y', strtotime($start_date . " + {$section->time} days")) . " .Thank You";
+                $this->send_whatsapp_sms($user->phone, $message);
             }
 
 
             //sms to school person
-            $school_personel = '';
-            if ($school_personel) {
-                $message = 'Hello #someone task #something will start at ' . date('Y-m-d H:i:s', strtotime($start_date)) . '';
-                $this->send_sms($school_personel->phone, 'ShuleSoft Task Allocation', $message);
-            }
+            // $school_personel = '';
+            // if ($school_personel) {
+            //     $message = 'Hello #someone task #something will start at ' . date('Y-m-d H:i:s', strtotime($start_date)) . '';
+            //     $this->send_sms($school_personel->phone, 'ShuleSoft Task Allocation', $message);
+            // }
 
             die(json_encode(array_merge(array('task_id' => $task_id), $obj)));
         }
@@ -481,10 +484,10 @@ class Customer extends Controller {
             }
             $this->data['client_id'] = $client->id;
 
-            $sales = new \App\Http\Controllers\Customer();
-            $user = $sales->zonemanager($client->id);
-
-            $this->data['manager'] = \App\Models\User::findOrFail($user->user_id);
+            $user = $this->zonemanager($this->data['client_id']);
+            if (!empty($user)) {
+                $this->data['manager'] = \App\Models\User::findOrFail($user->user_id);
+            }
 
             $this->data['top_users'] = DB::select('select count(*), user_id,a."table",b.name,b.usertype from ' . $school . '.log a join ' . $school . '.users b on (a.user_id=b.id and a."table"=b."table") where user_id is not null group by user_id,a."table",b.name,b.usertype order by count desc limit 5');
         }
@@ -1469,7 +1472,9 @@ class Customer extends Controller {
     public function uploadJobCard() {
         if ($_POST) {
             $file = request()->file('job_card_file');
+
             $company_file_id = $file ? $this->saveFile($file, 'uploads/images') : 1;
+            // $company_file_id = $file ? $this->thefile($file) : 1;
 
             $data = [
                 'company_file_id' => $company_file_id,
@@ -1539,14 +1544,14 @@ class Customer extends Controller {
     public function allusers() {
         $notIn = ['Student', 'Teacher', 'Parent', 'Descipline Master', 'Head Teacher', 'Academic Master'];
         $this->data['allusers'] = DB::table('admin.all_users')->where('status', 1)->get();
-
         return view('customer.usage.alluser', $this->data);
     }
 
-
     public function expenseRecords() {
-         $this->data['expenses'] = DB::table('admin.expense_report_by_month')->get();
-         return view('customer.usage.expense_report', $this->data); 
+        $this->data['expenses'] = DB::table('admin.expense_report_by_month')->get();
+        return view('customer.usage.expense_report', $this->data);
     }
+
+
 
 }

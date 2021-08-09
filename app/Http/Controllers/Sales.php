@@ -453,7 +453,7 @@ class Sales extends Controller {
         if(Auth::user()->department == 9 || Auth::user()->department == 10){
             return redirect('Partner/add/'.$school_id);
         }
-         
+       //   dd(request()->all());
        // $this->data['school'] = $school = DB::table('admin.schools')->where('id', $school_id)->first();
         $this->data['school'] = $school  =  \App\Models\School::findOrFail($school_id);
 
@@ -529,6 +529,11 @@ class Sales extends Controller {
                 ]);
             }
   
+            $user = \App\Models\User::find(request('sales_user_id'));
+            $message = "Hello " . $user->firstname . " " . $user->lastname ." The process of onboarding " . $school->name ." has been succesfully.Thank you";
+            $phonenumber = validate_phone_number($user->phone,255);
+           // dd($phonenumber);
+            $this->send_whatsapp_sms($phonenumber, $message); 
         
             $filename = '';
             if (!empty(request('file'))) {
@@ -703,27 +708,33 @@ class Sales extends Controller {
                         . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                         . '</ul>';
             $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+            $message = "Hello " . $user->firstname . " " . $user->lastname ." A task of " . $section->content ." at " . \App\Models\Client::where('id',$client_id)->first()->name ." has been allocated to you.A task is expected to start at " .date('d-m-Y', strtotime($start_date))." and end ". date('d-m-Y', strtotime($start_date . " + {$section->time} days")) ." .Thank you";
+            $this->send_whatsapp_sms($user->phone, $message);
+
 
             //email to zonal manager
              $sales = new \App\Http\Controllers\Customer();
              $user_id = $sales->zonemanager($client_id);
-
              if(isset($user_id) && !empty((int)$user_id->user_id)){
-                        $manager = \App\Models\User::where('id',$user_id->user_id)->first();
+                      $manager = \App\Models\User::where('id',$user_id->user_id)->first();
                         $manager_message = 'Hello ' . $manager->firstname . '<br/>'
                         . 'A task ' . $section->content .' been scheduled to'
                         . '<li>' . \App\Models\Client::where('id',$client_id)->first()->name  . '</li>'
                         . '<li>Start date: ' . date('Y-m-d H:i:s', strtotime($start_date)) . '</li>'
                         . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                         . '</ul>';
-                       $this->send_email($manager->email, 'ShuleSoft Task Allocation', $manager_message);
+                    $this->send_email($manager->email, $manager_message);
+                    $message = "Hello" .$manager->firstname . " " .$manager->lastname .", A task of . $section->content .' been scheduled to " .\App\Models\Client::where('id',$client_id)->first()->name." Start date: " . date('d-m-Y', strtotime($start_date)) . " Up to: " . date('d-m-Y', strtotime($start_date . " + {$section->time} days"))." .Thank you!";
+                    $this->send_whatsapp_sms($manager->phone, $message);
                }
             //sms to school personel
               if(request("train_item{$section->id}") != ''){
                     $phonenumber = $this->extractPhoneNumber(request("train_item{$section->id}"));
-                    $phonenumber = validate_phone_number($phonenumber[0]);
-                    $sms = 'Hello '. request("train_item{$section->id}") . ' a task of '  . $section->content . ' been allocated to your school, It is espected to start at ' . date('F,d Y', strtotime($start_date)) . ' and end at  '. date('F,d Y', strtotime($start_date . " + {$section->time} days")) .'';
-                    $this->send_sms($phonenumber[1], $sms);
+                    $phonenumber = validate_phone_number($phonenumber[0],255);
+                    dd($phonenumber);
+                    $sms = 'Hello '. request("train_item{$section->id}") . ' a task of '  . $section->content . ' been allocated to your school, It is expected to start at ' . date('F,d Y', strtotime($start_date)) . ' and end at  '. date('F,d Y', strtotime($start_date . " + {$section->time} days")) .'';
+                    $this->send_sms($phonenumber, $sms);
+                    $this->send_whatsapp_sms($phonenumber, $sms);
               }
         }  
     }
@@ -736,25 +747,24 @@ class Sales extends Controller {
     }
 
     public function getSupportUser($section_id) {
-        $user=DB::table('admin.user_train_items')->where('train_item_id',$section_id)->where('status',1)->first();
-            //we will check if user exists in db or not, and if not we will allocate any user within the company to take that role
-            $data = [];
-
-            $collection = DB::table('admin.train_items_allocations')->join('admin.users','admin.users.id','=','admin.train_items_allocations.user_id')->select('user_id', DB::raw('count(client_id) as total'))
-            ->where('admin.users.status','=','1')->where('admin.train_items_allocations.train_item_id', $section_id)->groupBy('user_id')->get();
-            foreach($collection as $value){
-                $data[$value->user_id] = $value->total;
-            }
-         $user_id = array_search(min($data), $data);
-        
-        return $user_id;
-        
-        //we will check if this user is already allocated specific school and try to skip the implementation if maximum schools already being alllocated
-        
-        //but now, we shall return default
-      //  return $user->user_id;
-
-    }
+        //  $user=DB::table('admin.user_train_items')->where('train_item_id',$section_id)->where('status',1)->first();
+           $collection = DB::table('admin.user_train_items')->join('admin.users','admin.users.id','=','admin.user_train_items.user_id')->join('admin.train_items','admin.train_items.id','=','admin.user_train_items.train_item_id')
+                         ->select('admin.users.id','admin.users.name','admin.train_items.content','admin.user_train_items.train_item_id')
+                         ->where('admin.users.status','=','1')->where('admin.user_train_items.train_item_id','=',$section_id)->distinct()->get();
+                    $ids = array();
+                        foreach($collection as $value) {
+                        $ids[] = $value->id;
+                     }
+            $users = DB::table('admin.train_items_allocations')->select('user_id', DB::raw('count(status) as complete'))->whereIn('user_id',$ids)->where('status',1)->groupBy('user_id')->get();
+            if(!empty($users)){
+                  $data = [];
+                  foreach($users as $value){
+                   $data[$value->user_id] = $value->complete;
+               }
+              $user_id =  !empty($data) ? array_search(max($data), $data) : DB::table('admin.user_train_items')->where('train_item_id',$section_id)->where('status',1)->first()->user_id;
+            } 
+            return $user_id;
+       }
     //algorithm is very very simple
     /**
      * 1. check that user if he has a task at that particular time
@@ -862,8 +872,13 @@ class Sales extends Controller {
     public function addLead() {
         //$this->data['schools']  = \App\Models\School::where('ownership', '<>', 'Government')->orderBy('schema_name', 'ASC')->get();
         if ($_POST) {
+    
+             $task_data = ['school_id'=>request('school_id'),'school_name'=>request('school_name'),'school_phone'=>request('school_phone'),'school_title'=>request('school_title'),
+                      'students'=>request('students'),'start_date'=>date('Y-m-d', strtotime(request('start_date'))),'end_date'=>date('Y-m-d', strtotime(request('end_date'))),
+                      'task_type_id'=>request('task_type_id'),'next_action'=>request('next_action'),'budget'=>request('budget'),
+                      'activity'=>request('activity')];
+            $data = array_merge($task_data, ['user_id' => Auth::user()->id, 'status' => 'new', 'date' => date('Y-m-d')]);
 
-            $data = array_merge(request()->except('to_user_id'), ['user_id' => Auth::user()->id, 'status' => 'new', 'date' => date('Y-m-d')]);
             $task = \App\Models\Task::create($data);
 
             DB::table('tasks_users')->insert([
