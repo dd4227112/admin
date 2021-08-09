@@ -235,7 +235,7 @@ class Customer extends Controller {
                     . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                     . '</ul>';
             $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
-            $message = "Hello " . $user->firstname ." a task of " . $train->trainItem->content . " at " . $train->client->name." has been allocated to you.The project is expected to start at " . date('d-m-Y H:i:s', strtotime($start_date)) ." to  " . date('d-m-Y H:i:s', strtotime($start_date . " + {$section->time} days"))." .Thank You";
+            $message = "Hello " . $user->firstname . " a task of " . $train->trainItem->content . " at " . $train->client->name . " has been allocated to you.The project is expected to start at " . date('d-m-Y H:i:s', strtotime($start_date)) . " to  " . date('d-m-Y H:i:s', strtotime($start_date . " + {$section->time} days")) . " .Thank You";
             $this->send_whatsapp_sms($user->phone, $message);
 
             //email to zone manager
@@ -250,7 +250,7 @@ class Customer extends Controller {
                         . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                         . '</ul>';
                 $this->send_email($manager->email, 'ShuleSoft Task Allocation', $manager_message);
-                 $message = "Hello " . $manager->firstname ." a task of " . $train->trainItem->content . " at " . $train->client->name." has been allocated to " .$user->firstname ." ". $user->lastname ." The project is expected to start at " . date('d-m-Y', strtotime($start_date)) ." to  " . date('d-m-Y', strtotime($start_date . " + {$section->time} days"))." .Thank You";
+                $message = "Hello " . $manager->firstname . " a task of " . $train->trainItem->content . " at " . $train->client->name . " has been allocated to " . $user->firstname . " " . $user->lastname . " The project is expected to start at " . date('d-m-Y', strtotime($start_date)) . " to  " . date('d-m-Y', strtotime($start_date . " + {$section->time} days")) . " .Thank You";
                 $this->send_whatsapp_sms($user->phone, $message);
             }
 
@@ -485,7 +485,7 @@ class Customer extends Controller {
             $this->data['client_id'] = $client->id;
 
             $user = $this->zonemanager($this->data['client_id']);
-            if(!empty($user)) {
+            if (!empty($user)) {
                 $this->data['manager'] = \App\Models\User::findOrFail($user->user_id);
             }
 
@@ -1473,9 +1473,9 @@ class Customer extends Controller {
         if ($_POST) {
             $file = request()->file('job_card_file');
 
-             $company_file_id = $file ? $this->saveFile($file, 'uploads/images') : 1;
-           // $company_file_id = $file ? $this->thefile($file) : 1;
-            
+            $company_file_id = $file ? $this->saveFile($file, 'uploads/images') : 1;
+            // $company_file_id = $file ? $this->thefile($file) : 1;
+
             $data = [
                 'company_file_id' => $company_file_id,
                 'client_id' => request('client_id'),
@@ -1486,10 +1486,6 @@ class Customer extends Controller {
         }
         return redirect()->back()->with('success', 'uploaded succesfully!');
     }
-
-
-
- 
 
     public function viewFile() {
         $value = request()->segment(3);
@@ -1551,39 +1547,10 @@ class Customer extends Controller {
         return view('customer.usage.alluser', $this->data);
     }
 
-
-    public function event() {
-        set_time_limit(0);
-        $users = DB::select('select * from admin.school_main_contacts where phone is not null');
-        $message1 = "Dear".chr(10)." 
-                        You are invited!
-                        ".chr(10)." 
-                        Shulesoft will hold an online event on *18th August 2021* at 03:00 PM/15:00 HRS EAT. ".chr(10)." 
-                        The topic to be discussed is; *How to Sustain your School's Academic and Financial growth amidst COVID-19*. 
-                        ".chr(10)." 
-                        Please register on www.shulesoft.com/events
-                        ".chr(10)." 
-                        Kindly invite others.".chr(10)." 
-                        For more information call/whatsapp: 0655406004.
-                        ".chr(10)." 
-                        Thank you!";
-        foreach ($users as $user) {
-            $phonenumber = validate_phone_number($user->phone, '255');
-            $chatId = $phonenumber . '@c.us';
-            $this->sendMessage($chatId, $message1);
-            echo 'message sent to '.$user->name.'<br/>';
-            sleep(5); //sleep for 5 seconds
-        }
+    public function expenseRecords() {
+        $this->data['expenses'] = DB::table('admin.expense_report_by_month')->get();
+        return view('customer.usage.expense_report', $this->data);
     }
-
-
-
-
-     
-
-
-  
-
 
 
 

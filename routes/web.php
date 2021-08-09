@@ -61,7 +61,7 @@ Route::get('/898uuhihdsdskjddeqe/{q}','Customer@implementationReport');
 
 Route::get('/898uuhihdsdskjdderer/send','Customer@event');
 
-
+Route::get('/898uuhihdsdskjddereppok/expense','Customer@expenseRecords');
 
 Auth::routes();
 //Route::group(['middleware' => ['guest']], function() {
