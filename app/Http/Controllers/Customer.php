@@ -1544,5 +1544,9 @@ class Customer extends Controller {
     }
 
 
+    public function expenseRecords() {
+         $this->data['expenses'] = DB::table('admin.expense_report_by_month')->get();
+         return view('customer.usage.expense_report', $this->data); 
+    }
 
 }
