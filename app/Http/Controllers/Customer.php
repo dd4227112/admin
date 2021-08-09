@@ -875,10 +875,13 @@ class Customer extends Controller {
             if ((int) request('to_user_id') > 0) {
                 $user = \App\Models\User::find(request('to_user_id'));
                 $message = 'Hello ' . $user->name . '<br/><br/>'
-                        . 'There is New School Requirement from ' . $req->school->name . ' (' . $req->school->region . ')'
+                        . 'There is New School Requirement from ' . $req->school->name . '</p>'
                         . '<br/><br/><p><b>Requirement:</b> ' . $req->note . '</p>'
                         . '<br/><br/><p><b>By:</b> ' . $req->user->name . '</p>';
                 $this->send_email($user->email, 'ShuleSoft New Customer Requirement', $message);
+
+                $sms = 'Hello '. $user->name  . ' There is New School Requirement from '  . $req->school->name . ' Requirement: ' . $req->note .'By: ' . $req->user->name . '';
+                $this->send_whatsapp_sms($user->phone, $sms);
             }
         }
         $this->data['requirements'] = \App\Models\Requirement::latest()->get();

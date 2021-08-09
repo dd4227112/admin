@@ -731,9 +731,8 @@ class Sales extends Controller {
               if(request("train_item{$section->id}") != ''){
                     $phonenumber = $this->extractPhoneNumber(request("train_item{$section->id}"));
                     $phonenumber = validate_phone_number($phonenumber[0],255);
-                    dd($phonenumber);
                     $sms = 'Hello '. request("train_item{$section->id}") . ' a task of '  . $section->content . ' been allocated to your school, It is expected to start at ' . date('F,d Y', strtotime($start_date)) . ' and end at  '. date('F,d Y', strtotime($start_date . " + {$section->time} days")) .'';
-                    $this->send_sms($phonenumber, $sms);
+                 //   $this->send_sms($phonenumber, $sms);
                     $this->send_whatsapp_sms($phonenumber, $sms);
               }
         }  
