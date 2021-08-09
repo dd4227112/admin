@@ -35,8 +35,6 @@ return [
        
           'pgsql' => [
             'driver' => 'pgsql',
-            'host'=>'localhost',
-            'port' =>'5432',
 
         'driver' => 'pgsql',
             'host'=>'localhost',

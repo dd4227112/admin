@@ -78,8 +78,8 @@ function bank_data($schema){
                                 <tr>
                                     <td><?= $i ?></td>
                                     <td><?= $value->schema_name ?></td>
-                                    <td><?= bank_data($value->schema_name)->name ?? '' ?></td>
-                                    <td><?php $account_number = bank_data($value->schema_name)->number; echo $account_number ?? '' ?></td>
+                                    <td><?= isset(bank_data($value->schema_name)->name) ? bank_data($value->schema_name)->name : ''?></td>
+                                    <td><?= isset(bank_data($value->schema_name)->number) ? bank_data($value->schema_name)->number : '' ?></td>
                                     <td><?= $value->invoice_prefix ?></td>
                                     <td><?= $value->api_username ?></td>
                                     <td><?= $value->api_password ?></td>
