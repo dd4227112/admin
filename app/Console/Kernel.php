@@ -1003,8 +1003,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     }
 
     private function addAttendance() {
-        $date = date("Y-m-d", strtotime("-14 days"));
-        $datas = DB::connection('biotime')->table('public.iclock_transaction')->whereDate('punch_time', $date)->where('punch_state', '0')->get();
+        $datas = DB::connection('biotime')->table('public.iclock_transaction')->where('punch_state', '0')->get();
         if (count($datas) > 0) {
             foreach ($datas as $data) {
                 $device = DB::table('api.attendance_devices')->where('serial_number', $data->terminal_sn)->first();
@@ -1014,7 +1013,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                     $device = DB::table('api.attendance_devices')->where('id', $device_id)->first();
                 }
                 if (!empty($employee)) {
-                    $uattendance = DB::table('admin.uattendances')->where('user_id', $employee->id)->whereDate('date', date('Y-m-d'))->first();
+                    $uattendance = DB::table('admin.uattendances')->where('user_id', $employee->id)->whereDate('date', date("Y-m-d", strtotime($data->punch_time)))->first();
                     if (empty($uattendance)) {
                         DB::table('admin.uattendances')->insert([
                             'user_id' => $employee->id,
@@ -1031,7 +1030,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                     if (!empty($user)) {
 
                         if ($user->table == 'student') {
-                            $attendance = DB::table($user->schema_name . '.sattendances')->where('student_id', $user->id)->whereDate('date', date('Y-m-d'))->first();
+                            $attendance = DB::table($user->schema_name . '.sattendances')->where('student_id', $user->id)->whereDate('date', date("Y-m-d", strtotime($data->punch_time)))->first();
                             if (empty($attendance)) {
                                 DB::table($user->schema_name . '.sattendances')->insert([
                                     'student_id' => $user->id,
@@ -1042,7 +1041,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                                 ]);
                             }
                         } else {
-                            $uattendance = DB::table($user->schema_name . '.uattendances')->where('user_id', $user->id)->where('user_table', $user->table)->whereDate('date', date('Y-m-d'))->first();
+                            $uattendance = DB::table($user->schema_name . '.uattendances')->where('user_id', $user->id)->where('user_table', $user->table)->whereDate('date', date("Y-m-d", strtotime($data->punch_time)))->first();
                             if (empty($uattendance)) {
                                 DB::table($user->schema_name . '.uattendances')->insert([
                                     'user_id' => $user->id,
@@ -1056,8 +1055,8 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                             }
                         }
                     }
-                    DB::connection('biotime')->table('public.iclock_transaction')->where('id', $data->id)->update(['punch_state' => '1']);
                 }
+                DB::connection('biotime')->table('public.iclock_transaction')->where('id', $data->id)->update(['punch_state' => '1']);
             }
         }
     }

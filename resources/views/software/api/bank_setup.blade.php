@@ -69,8 +69,8 @@ function bank_data($schema){
                                 <th>Invoice Prefix</th>
                                 <th>Live username</th>
                                 <th>Live password </th>
-                               
                             </tr>
+                            
                             </thead>
                             <tbody>
                                 <?php  if(isset($integrations) && count($integrations) > 0) { ?>
