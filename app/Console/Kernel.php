@@ -355,7 +355,7 @@ class Kernel extends ConsoleKernel {
                         ->where('reference', $invoice->reference)->update(['sync' => 0, 'status' => 0, 'return_message' => $curl, 'push_status' => 'check_' . $push_status, 'updated_at' => 'now()']);
             }
         }
-        DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
+       // DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
     }
 
     public function deleteInvoice($invoice, $token) {
@@ -384,7 +384,7 @@ class Kernel extends ConsoleKernel {
                 DB::table($invoice->schema_name . '.invoices')
                         ->where('reference', $invoice->reference)->update(['sync' => 0, 'status' => 0, 'return_message' => $curl, 'push_status' => 'delete_' . $push_status, 'updated_at' => 'now()']);
             }
-            DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
+          //  DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
         }
     }
 
@@ -460,7 +460,7 @@ class Kernel extends ConsoleKernel {
                 // DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
             }
         }
-        DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
+        //DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
     }
 
     public function updateInvoiceStatus($fields, $invoice, $token) {
@@ -494,7 +494,7 @@ class Kernel extends ConsoleKernel {
                 // DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
             }
         }
-        DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
+        //DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
     }
 
     public function updateInvoice() {
@@ -533,7 +533,7 @@ class Kernel extends ConsoleKernel {
                         DB::table($invoice->schema_name . '.invoices')
                                 ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
                     }
-                    DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
+                   // DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
                 }
             }
         }
@@ -1126,27 +1126,27 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         }
     }
 
-    public function sendeMails() {
-        $schemas = DB::select("select * from admin.all_setting");
-        foreach ($schemas as $schema) {
-            $schema_emails = DB::select("select * from $schema->schema_name.email where status = '0'");
-            if (!empty($schema_emails)) {
+    // public function sendeMails() {
+    //     $schemas = DB::select("select * from admin.all_setting");
+    //     foreach ($schemas as $schema) {
+    //         $schema_emails = DB::select("select * from $schema->schema_name.email where status = '0'");
+    //         if (!empty($schema_emails)) {
 
-                foreach ($schema_emails as $schema_email) {
-                    // if (!empty($schema_email->email) && !Str::contains($schema_email->email, 'shulesoft.com')) {
-                    if (filter_var($schema_email->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $schema_email->email)) {
-                        $email_to = $schema_email->email;
-                        $email_subject = $schema_email->subject;
-                        $content = $schema_email->body;
-                        $contact = $schema->phone;
-                        $data = ['subject' => $email_subject, 'email_to' => $email_to, 'content' => $content, 'contact' => $contact, 'school' => $schema->schema_name];
-                        Mail::send(new EmailTemplate($data));
-                    }
-                    $affected = DB::table($schema->schema_name . '.email')->where('email_id', $schema_email->email_id)->update(['status' => 1]);
-                }
-            }
-        }
-    }
+    //             foreach ($schema_emails as $schema_email) {
+    //                 // if (!empty($schema_email->email) && !Str::contains($schema_email->email, 'shulesoft.com')) {
+    //                 if (filter_var($schema_email->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $schema_email->email)) {
+    //                     $email_to = $schema_email->email;
+    //                     $email_subject = $schema_email->subject;
+    //                     $content = $schema_email->body;
+    //                     $contact = $schema->phone;
+    //                     $data = ['subject' => $email_subject, 'email_to' => $email_to, 'content' => $content, 'contact' => $contact, 'school' => $schema->schema_name];
+    //                     Mail::send(new EmailTemplate($data));
+    //                 }
+    //                 $affected = DB::table($schema->schema_name . '.email')->where('email_id', $schema_email->email_id)->update(['status' => 1]);
+    //             }
+    //         }
+    //     }
+    // }
 
     public function updateCompleteItems() {
         $materialized_views=DB::select("SELECT relname FROM pg_catalog.pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace WHERE c.relkind = 'm' and nspname='admin'");
