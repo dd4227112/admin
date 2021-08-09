@@ -16,6 +16,7 @@ class Workshop extends Controller {
         $this->data['event'] = \App\Models\Events::first();
         return view('workshop', $this->data);
     }
+    
 
     public function register() {
         $this->data['event'] = \App\Models\Events::latest()->first();

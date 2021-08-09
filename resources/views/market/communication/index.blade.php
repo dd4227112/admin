@@ -515,18 +515,18 @@
 //  tagClass: 'big',confirmKeys: [13, 32, 44]
 //});
 get_estimated_delivery_time = function() {
-    var type = $('#sms_keys_id').val();
-    $.ajax({
-        type: 'GET',
-        url: "<?= url('background/getEstimatedDeliveryTime/null') ?>?type=" + type,
-        data: {
-            sms_type: type
-        },
-        dataType: "html",
-        success: function(data) {
-            $('#get_estimated_delivery_time').html(data);
-        }
-    });
+    // var type = $('#sms_keys_id').val();
+    // $.ajax({
+    //     type: 'GET',
+    //     url: "<?= url('background/getEstimatedDeliveryTime/null') ?>?type=" + type,
+    //     data: {
+    //         sms_type: type
+    //     },
+    //     dataType: "html",
+    //     success: function(data) {
+    //         $('#get_estimated_delivery_time').html(data);
+    //     }
+    // });
 }
 message_left_count = function() {
     $.ajax({

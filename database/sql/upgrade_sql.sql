@@ -87,11 +87,25 @@ select * from admin.payments ,,, id = 24
 
 ///////////////////////////////////
 
-
-
 ALTER TABLE admin.standing_orders
     ADD COLUMN file character varying;
 
-
     ALTER TABLE admin.standing_orders
     ADD COLUMN branch_id integer;
+
+
+
+-- alter table admin.tasks_users
+-- drop constraint tasks_users_task_id_foreign,
+-- add constraint tasks_users_task_id_foreign
+--    foreign key (task_id)
+--    references admin.tasks(id)
+--    on update cascade
+--    on delete cascade;
+
+
+ALTER TABLE admin.whatsapp_messages
+    ADD COLUMN created_at timestamp without time zone;
+
+    ALTER TABLE admin.whatsapp_messages
+    ADD COLUMN updated_at timestamp without time zone;
