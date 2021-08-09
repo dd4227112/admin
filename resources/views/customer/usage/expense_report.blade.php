@@ -21,7 +21,7 @@
                 ?> 
 
 
-                <td><?=$expense->total_amount ?></td>
+                <td><?=abs($expense->total_amount) ?></td>
 
             <?php } ?>
         </tr>
