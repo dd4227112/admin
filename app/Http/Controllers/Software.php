@@ -350,29 +350,31 @@ ORDER BY c.oid, a.attnum";
     public function logsDelete() {
         $id = request('id');
         $tag = \App\Models\ErrorLog::findOrFail($id);
-        // dd($tag->error_message);
-      //  \App\Models\ErrorLog::where('error_message',)
-        $errors =DB::table('admin.error_logs')->where('error_message','LIKE','%'.$tag->error_message.'%')->get();
-     //   dd($errors);
+       // dd($tag);
+    //    $errors = DB::table('admin.error_logs')->where('error_message','LIKE','%'.$tag->error_message.'%')->get();
     
-       if(!empty($errors)) {
-            foreach($errors as $error){
-                if (!empty($error)) {
-                    $error->deleted_by = \Auth::user()->id;
-                    $error->save();
-                    $error->delete();
-                }
-            echo 1;
-            }
-        }
+    //    if(!empty($errors)) {
+    //         foreach($errors as $error){
+    //             // dd($error->id);
+    //             $tag = \App\Models\ErrorLog::find($error->id);
+    //              dd($tag);
+
+    //                 if (!empty($tag)) {
+    //                     $tag->deleted_by = \Auth::user()->id;
+    //                     $tag->save(); 
+    //                     $tag->delete();
+    //                 }
+    //               //  echo 1;
+    //         }
+    //     }
     
 
-        // if (!empty($tag)) {
-        //     $tag->deleted_by = \Auth::user()->id;
-        //     $tag->save();
-        //     $tag->delete();
-        // }
-        //echo 1;
+        if (!empty($tag)) {
+            $tag->deleted_by = \Auth::user()->id;
+            $tag->save(); 
+            $tag->delete();
+        }
+        echo 1;
     }
 
     public function Readlogs() {

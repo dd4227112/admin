@@ -1129,6 +1129,7 @@ function check_status($table, $where = null) {
                                                                                                                     </div>
 
                                                                                                                 </div>
+                                                                                                                
                                                                                                                 <div class="card-block">
                                                                                                                     <div class="table-responsive">
                                                                                                                         <table class="table table-bordered dataTable">
