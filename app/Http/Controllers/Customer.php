@@ -235,14 +235,14 @@ class Customer extends Controller {
                     . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                     . '</ul>';
             $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
-            $message = "Hello " . $user->firstname . " a task of " . $train->trainItem->content . " at " . $train->client->name . " has been allocated to you.The project is expected to start at " . date('d-m-Y H:i:s', strtotime($start_date)) . " to  " . date('d-m-Y H:i:s', strtotime($start_date . " + {$section->time} days")) . " .Thank You";
+            $message = "Hello " . $user->firstname . " a task of " . $train->trainItem->content . " at " . $train->client->name . " has been allocated to you.The project is expected to start at " . date('d-m-Y', strtotime($start_date)) . " to  " . date('d-m-Y', strtotime($start_date . " + {$section->time} days")) . " .Thank You";
             $this->send_whatsapp_sms($user->phone, $message);
 
             //email to zone manager
             // findOrFail zone manager based on school location
-            $user_id = $this->zonemanager($train->client->id);
-            if (isset($user_id) && !empty((int) $user_id->user_id)) {
-                $manager = \App\Models\User::where('id', $user_id->user_id)->first();
+            $user_manager = $this->zonemanager($train->client->id);
+            if (isset($user_manager) && !empty((int) $user_manager->user_id)) {
+                $manager = \App\Models\User::where('id', $user_manager->user_id)->first();
                 $manager_message = 'Hello ' . $manager->firstname . '<br/>'
                         . 'A task ' . $train->trainItem->content . ' been scheduled to'
                         . '<li>' . $train->client->name . '</li>'
@@ -250,8 +250,8 @@ class Customer extends Controller {
                         . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                         . '</ul>';
                 $this->send_email($manager->email, 'ShuleSoft Task Allocation', $manager_message);
-                $message = "Hello " . $manager->firstname . " a task of " . $train->trainItem->content . " at " . $train->client->name . " has been allocated to " . $user->firstname . " " . $user->lastname . " The project is expected to start at " . date('d-m-Y', strtotime($start_date)) . " to  " . date('d-m-Y', strtotime($start_date . " + {$section->time} days")) . " .Thank You";
-                $this->send_whatsapp_sms($user->phone, $message);
+                $wmessage = "Hello " . $manager->firstname . " a task of " . $train->trainItem->content . " at " . $train->client->name . " has been allocated to " . $user->firstname . " " . $user->lastname . " The project is expected to start at " . date('d-m-Y', strtotime($start_date)) . " to  " . date('d-m-Y', strtotime($start_date . " + {$section->time} days")) . " .Thank You";
+                $this->send_whatsapp_sms($manager->phone, $wmessage);
             }
 
 
@@ -562,9 +562,10 @@ class Customer extends Controller {
             if (!empty(request('standing_order_file'))) {
                 $file = request()->file('standing_order_file');
                 $filename1 = time() . rand(11, 8894) . '.' . $file->guessExtension();
-                $filePath = base_path() . '/storage/uploads/file/';
+                $filePath = base_path() . '/storage/uploads/files/';
                 $file->move($filePath, $filename1);
             }
+
 
             $data = [
                 'client_id' => request('client_id'),
@@ -580,7 +581,8 @@ class Customer extends Controller {
                 // 'refer_bank_id' => request('refer_bank_id'),
                 'note' => request('note'),
                 'contract_type_id' => 8,
-                'file' => $filename1
+                'file' => $filename1,
+                'created_at' => now()
             ];
             $contract_id = DB::table('admin.standing_orders')->insertGetId($data);
 
@@ -1474,18 +1476,32 @@ class Customer extends Controller {
 
     public function uploadJobCard() {
         if ($_POST) {
-            $file = request()->file('job_card_file');
+           // $file = request()->file('job_card_file');
+            
+              $filename1 = '';
+            if (!empty(request('job_card_file'))) {
+                $file = request()->file('job_card_file');
+                $filename1 = time() . rand(11, 8894) . '.' . $file->guessExtension();
+                $filePath = base_path() . '/storage/uploads/files/';
+                $file->move($filePath, $filename1);
+            }
+            $where = ['date' => request('job_date'), 'client_id' => request('client_id')];
 
-            $company_file_id = $file ? $this->saveFile($file, 'uploads/images') : 1;
-            // $company_file_id = $file ? $this->thefile($file) : 1;
+            $card = DB::table('client_job_cards')->where($where)->first();
 
             $data = [
-                'company_file_id' => $company_file_id,
-                'client_id' => request('client_id'),
-                'created_by' => \Auth::user()->id,
-                'date' => request('job_date')
+            'file' => $filename1,
+            'client_id' => request('client_id'),
+            'created_by' => \Auth::user()->id,
+            'date' => request('job_date')
             ];
-            \App\Models\ClientJobCard::create($data);
+
+            if(empty($card)){
+                \App\Models\ClientJobCard::create($data);  
+            } else { 
+                \App\Models\ClientJobCard::where($where)->update($data);
+            }
+        
         }
         return redirect()->back()->with('success', 'uploaded succesfully!');
     }

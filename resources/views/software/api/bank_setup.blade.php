@@ -64,13 +64,13 @@ function bank_data($schema){
                               <tr>
                                 <th>#</th>
                                 <th>School Name</th>
-                                <th>Bank Name</th>
+                                <th>Account Name</th>
                                 <th>Account Number</th>
                                 <th>Invoice Prefix</th>
                                 <th>Live username</th>
                                 <th>Live password </th>
                             </tr>
-                            
+
                             </thead>
                             <tbody>
                                 <?php  if(isset($integrations) && count($integrations) > 0) { ?>
