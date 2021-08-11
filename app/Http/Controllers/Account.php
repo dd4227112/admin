@@ -1349,7 +1349,7 @@ select * from tempb");
 
     // List of standing orders
     public function standingOrders() {              
-         $this->data['standingorders'] = \App\Models\StandingOrder::get();
+         $this->data['standingorders'] = \App\Models\StandingOrder::latest()->get();
          $this->data['schools'] = \App\Models\Client::get();
         return view('account.standing_order', $this->data);
     }

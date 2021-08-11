@@ -333,7 +333,7 @@ ORDER BY c.oid, a.attnum";
         $this->data['schema_name'] = $schema = request()->segment(3);
         $this->data['error_log_count'] = strlen($schema) > 3 ? \collect(DB::select("select distinct error_message,created_at::date,schema_name,file from admin.error_logs where schema_name = '$schema' and deleted_at is null group by error_message,created_at::date,schema_name,file order by created_at::date"))->count() : \collect(DB::select("select distinct error_message,error_instance,created_at::date,schema_name,file  from (select * from admin.error_logs where deleted_at is null order by id desc) y where deleted_at is null"))->count();
       //  $this->data['schema_errors']  =  strlen($schema) > 3 ? DB::table('error_logs')->whereNull('deleted_at')->where('schema_name', $schema)->get() : '';
-        $this->data['schema_errors']  =  strlen($schema) > 3 ? DB::select("select distinct error_message,created_at::date,schema_name,file from admin.error_logs where schema_name = '$schema' and deleted_at is null group by error_message,created_at::date,schema_name,file order by created_at::date") : DB::select("select distinct error_message,error_instance,created_at::date,schema_name,file  from (select * from admin.error_logs where deleted_at is null order by id desc) y where deleted_at is null") ;
+        $this->data['schema_errors']  =   DB::select("select id, error_message,created_at::date,schema_name,file,url from admin.error_logs where schema_name = '$schema' and deleted_at is null group by id,error_message,created_at::date,schema_name,file,created_by  order by created_at::date"); 
         $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1 '))->first();
         return view('software.logs', $this->data);
     }
@@ -350,10 +350,28 @@ ORDER BY c.oid, a.attnum";
     public function logsDelete() {
         $id = request('id');
         $tag = \App\Models\ErrorLog::findOrFail($id);
+       // dd($tag);
+    //    $errors = DB::table('admin.error_logs')->where('error_message','LIKE','%'.$tag->error_message.'%')->get();
+    
+    //    if(!empty($errors)) {
+    //         foreach($errors as $error){
+    //             // dd($error->id);
+    //             $tag = \App\Models\ErrorLog::find($error->id);
+    //              dd($tag);
+
+    //                 if (!empty($tag)) {
+    //                     $tag->deleted_by = \Auth::user()->id;
+    //                     $tag->save(); 
+    //                     $tag->delete();
+    //                 }
+    //               //  echo 1;
+    //         }
+    //     }
+    
 
         if (!empty($tag)) {
             $tag->deleted_by = \Auth::user()->id;
-            $tag->save();
+            $tag->save(); 
             $tag->delete();
         }
         echo 1;
