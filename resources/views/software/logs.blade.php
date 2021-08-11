@@ -179,7 +179,7 @@
                                                     <td><?= ($error->error_message) ?></td>
                                                     <td><?= warp($error->file) ?></td> 
                                                    <td><?= warp($error->url) ?></td>
-                                                    <td><?= $error->created_by ?></td> 
+                                                    <td><?= isset($error->created_by) ? $error->created_by : '' ?></td> 
                                                     <td>
                                                          <a href="#" id="<?= $error->id ?>" class="label label-danger dlt_log" onmousedown="delete_log(<?= $error->id ?>)" >Delete</a> 
                                                          <a href="#" id="<?= $error->id ?>" class="label label-info dlt_log" onmousedown="View_log(<?= $error->id ?>)" onclick="return false">View</a> 
@@ -346,18 +346,21 @@
           View_log = function (a) {
             window.location.href = "<?= url('software/Readlogs') ?>/" + a;
             },
-                delete_log = function (a) {
-                    $.ajax({
-                        url: '<?= url('software/logsDelete') ?>/null',
-                        method: 'get',
-                        data: {id: a},
-                        success: function (data) {
-                            if (data == '1') {
-                                $('#log' + a).fadeOut();
-                            }
-                        }
-                    });
+
+        delete_log = function (a) {
+            $.ajax({
+                url: '<?= url('software/logsDelete') ?>/null',
+                method: 'get',
+                data: {id: a},
+                success: function (data) {
+                    if (data == '1') {
+                        //$('#log' + a).fadeOut();
+                        window.location.reload();
+                    }
                 }
+            });
+        }
+
 
     }
     );
