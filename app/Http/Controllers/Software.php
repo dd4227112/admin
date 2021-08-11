@@ -352,7 +352,7 @@ ORDER BY c.oid, a.attnum";
         $tag = \App\Models\ErrorLog::find($id);
        // dd($tag);
          $ids = [];
-        $errors = DB::table('admin.error_logs')->where('error_message','LIKE','%'.$tag->error_message.'%')->get();
+        $errors = DB::table('admin.error_logs')->where('error_message','LIKE','%'.$tag->error_message.'%')->limit(100)->get();
         foreach($errors as $value){
              array_push($ids, $value->id);
         }
