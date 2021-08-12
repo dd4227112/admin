@@ -1019,7 +1019,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                             'user_id' => $employee->id,
                             'created_by' => $device->id,
                             'source' => 'api',
-                            'timein' => 'now()',
+                            'timein' => date("Y-m-d H:i:s", strtotime($data->punch_time)),
                             'date' => date("Y-m-d", strtotime($data->punch_time)),
                             'present' => 1
                         ]);
