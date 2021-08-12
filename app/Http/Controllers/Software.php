@@ -353,7 +353,7 @@ ORDER BY c.oid, a.attnum";
        // dd($tag);
         $ids = [];
         $errors = DB::table('admin.error_logs')->where('error_message','LIKE','%'.$tag->error_message.'%')
-        ->orWhere('url','LIKE','%'.$tag->url.'%')->orWhere('route','LIKE','%'.$tag->route.'%')->limit(100)->get();
+        ->orWhere('file','LIKE','%'.$tag->file.'%')->orWhere('route','LIKE','%'.$tag->route.'%')->limit(100)->get();
         foreach($errors as $value){
              array_push($ids, $value->id);
         }
