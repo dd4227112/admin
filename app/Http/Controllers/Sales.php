@@ -273,7 +273,7 @@ class Sales extends Controller {
                 return $this->ajaxTable('all_setting', ['sname', 'phone', 'address', 'email', 'payment_integrated', 'created_at']);
                 break;
             case 'errors':
-                $sql = "select distinct error_message,error_instance,created_at::date,schema_name,file  from (select * from admin.error_logs where deleted_at is null order by id desc) y where deleted_at is null";
+                $sql = "select id,error_message,error_instance,created_at::date,schema_name,file  from (select * from admin.error_logs where deleted_at is null order by id desc) y where deleted_at is null";
                 return $this->ajaxTable('error_logs', ['file', 'error_message', 'route', 'url', 'error_instance', 'created_at::date', 'schema_name'], $sql);
                 break;
             case 'errors_resolved':
@@ -529,11 +529,7 @@ class Sales extends Controller {
                 ]);
             }
   
-            $user = \App\Models\User::find(request('sales_user_id'));
-            $message = "Hello " . $user->firstname . " " . $user->lastname ." The process of onboarding " . $school->name ." has been succesfully.Thank you";
-            $phonenumber = validate_phone_number($user->phone,255);
-           // dd($phonenumber);
-            $this->send_whatsapp_sms($phonenumber, $message); 
+           
         
             $filename = '';
             if (!empty(request('file'))) {
@@ -609,6 +605,11 @@ class Sales extends Controller {
                 $message = 'Hello ' . $user->name . '. Your Trial Code is ' . $trial_code;
                 //$this->send_sms($user->phone, $message, 1);
                 //$this->send_email($user->email, 'Success: School Onboarded Successfully', $message);
+
+                $user = \App\Models\User::find(request('sales_user_id'));
+                $message = "Hello " . $user->firstname . " " . $user->lastname ." The process of onboarding " . $school->name ." has been succesfully.Thank you";
+                $phonenumber = validate_phone_number($user->phone,255);
+                $this->send_whatsapp_sms($phonenumber, $message); 
               
                 $this->scheduleActivities($client_id);  
                 return redirect('sales/customerSuccess/2/' . $client_id);
@@ -731,9 +732,8 @@ class Sales extends Controller {
               if(request("train_item{$section->id}") != ''){
                     $phonenumber = $this->extractPhoneNumber(request("train_item{$section->id}"));
                     $phonenumber = validate_phone_number($phonenumber[0],255);
-                    dd($phonenumber);
                     $sms = 'Hello '. request("train_item{$section->id}") . ' a task of '  . $section->content . ' been allocated to your school, It is expected to start at ' . date('F,d Y', strtotime($start_date)) . ' and end at  '. date('F,d Y', strtotime($start_date . " + {$section->time} days")) .'';
-                    $this->send_sms($phonenumber, $sms);
+                 //   $this->send_sms($phonenumber, $sms);
                     $this->send_whatsapp_sms($phonenumber, $sms);
               }
         }  

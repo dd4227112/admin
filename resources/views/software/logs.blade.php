@@ -164,9 +164,9 @@
                                                     <th>Date</th>
                                                     <th>Client Name</th>
                                                     <th>Error Message</th>
-                                                    {{-- <th>File</th> --}}
-                                                    {{-- <th>url</th>
-                                                    <th>Created By</th> --}}
+                                                    <th>File</th>
+                                                    <th>url</th>
+                                                    <th>Created By</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -177,12 +177,12 @@
                                                     <td><?= date('d-m-Y', strtotime($error->created_at)) ?></td>
                                                     <td><?= $error->schema_name ?></td>
                                                     <td><?= ($error->error_message) ?></td>
-                                                    {{-- <td><?= warp($error->file) ?></td> --}}
-                                                    {{-- <td><?= warp($error->url) ?></td>
-                                                    <td><?= $error->created_by ?></td> --}}
+                                                    <td><?= warp($error->file) ?></td> 
+                                                   <td><?= warp($error->url) ?></td>
+                                                    <td><?= isset($error->created_by) ? $error->created_by : '' ?></td> 
                                                     <td>
-                                                        {{-- <a href="#" id="<?= $error->id ?>" class="label label-danger dlt_log" onmousedown="delete_log(<?= $error->id ?>)" >Delete</a> --}}
-                                                        {{-- <a href="#" id="<?= $error->id ?>" class="label label-info dlt_log" onmousedown="View_log(<?= $error->id ?>)" onclick="return false">View</a> --}}
+                                                         <a href="#" id="<?= $error->id ?>" class="label label-danger dlt_log" onmousedown="delete_log(<?= $error->id ?>)" >Delete</a> 
+                                                         <a href="#" id="<?= $error->id ?>" class="label label-info dlt_log" onmousedown="View_log(<?= $error->id ?>)" onclick="return false">View</a> 
                                                     </td>
                                                 </tr>
                                                <?php $i++; } ?>
@@ -195,16 +195,17 @@
                               <?php } else { ?>
                                  <div class="card-block">
                                     <div class="table-responsive dt-responsive">
-                                       <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
+                                       <table id="error_log_table" class="table table-striped table-bordered nowrap dataTable">
                                             <thead>
                                                 <tr>
                                                                                                  
+                                                    <th></th>
                                                     <th>Date</th>
                                                     <th>Client Name</th>
                                                     <th>Error Message</th>
-                                                    {{-- <th>File</th>
+                                                    <th>File</th>
                                                     <th>url</th>
-                                                    <th>Created By</th> --}}
+                                                    <th>Created By</th>
                                                     <th>Action</th> 
                                                 </tr>
                                             </thead>
@@ -316,22 +317,21 @@
                 'url': "<?= url('sales/show/null?page=errors') ?>"
             },
             "columns": [
-
-                // {"data": "id"},
+                {"data": "id"},
                 {"data": "created_at"},
                 {"data": "schema_name"},
                 {"data": "error_message"},
-                // {"data": "file"},
-                // {"data": "url"},
-                // {"data": "created_by"},
+                {"data": "file"},
+                {"data": "url"},
+                {"data": "created_by"},
                 {"data": ""}
             ],
             "columnDefs": [
                 {
-                    "targets": 4,
+                    "targets": 7,
                     "data": null,
                     "render": function (data, type, row, meta) {
-                        return '<h2>View </h2>';
+                         return '<a href="#" id="' + row.id + '" class="label label-danger dlt_log" onmousedown="delete_log(' + row.id + ')" onclick="return false">Delete</a>' + '<a href="#" id="' + row.id + '" class="label label-info dlt_log" onmousedown="View_log(' + row.id + ')" onclick="return false">View</a>';
                     }
                 }
             ],
@@ -346,18 +346,21 @@
           View_log = function (a) {
             window.location.href = "<?= url('software/Readlogs') ?>/" + a;
             },
-                delete_log = function (a) {
-                    $.ajax({
-                        url: '<?= url('software/logsDelete') ?>/null',
-                        method: 'get',
-                        data: {id: a},
-                        success: function (data) {
-                            if (data == '1') {
-                                $('#log' + a).fadeOut();
-                            }
-                        }
-                    });
+
+        delete_log = function (a) {
+            $.ajax({
+                url: '<?= url('software/logsDelete') ?>/null',
+                method: 'get',
+                data: {id: a},
+                success: function (data) {
+                    if (data == '1') {
+                        //$('#log' + a).fadeOut();
+                        window.location.reload();
+                    }
                 }
+            });
+        }
+
 
     }
     );

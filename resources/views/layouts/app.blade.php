@@ -475,8 +475,8 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                         <ul class="tree-2">
                                             <li><a href="<?= url('users/index') ?>"
                                                     data-i18n="nav.extra-components.session-timeout">Users</a></li>
-                                            <li><a href="<?= url('users/kpi_list') ?>"
-                                                data-i18n="nav.extra-components.session-timeout">KPI</a></li>
+                                            {{-- <li><a href="<?= url('users/kpi_list') ?>"
+                                                data-i18n="nav.extra-components.session-timeout">KPI</a></li> --}}
                                                 
                                         
                                             <li><a href="<?= url('attendance/index') ?>"
