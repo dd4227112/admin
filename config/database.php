@@ -34,32 +34,29 @@ return [
 
        
           'pgsql' => [
+            
             'driver' => 'pgsql',
-
-        'driver' => 'pgsql',
-            'host'=>'localhost',
-            'port' =>'5432',
-
-            'database' =>'shulesoft_2021',
-            'username' => 'postgres',
-            'password' =>'20_sHULEsoft_21',
+            'host' => env('DB_HOST', 'localhost'),
+            'port' => env('DB_PORT', ''),
+            'database' =>env('DB_DATABASE', ''),
+            'username' => env('DB_USERNAME', ''),
+            'password' =>env('DB_PASSWORD', ''),
             'charset' => 'utf8',
 	    'prefix' => '',
             'schema' => 'admin',
-//	    'options' => [
-  //              \PDO::ATTR_EMULATE_PREPARES => true
-    //        ]
+	    'options' => [
+                \PDO::ATTR_EMULATE_PREPARES => true
+            ]
 	],
 
 
         'karibusms' => [
             'driver' => 'pgsql',
-            //'host' => 'shulesoftdb.postgres.database.azure.com',
             'host'=>'localhost',
-            'port' =>'6432',
+            'port' => env('DB_PORT', ''),
             'database' =>'other_app',
-            'username' => 'pgeshuleadmin',
-            'password' =>'20_sHULEsoft_21',
+            'username' => env('DB_USERNAME', ''),
+            'password' =>env('DB_PASSWORD', ''),
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
@@ -74,10 +71,11 @@ return [
             'driver' => 'pgsql',
             // 'url' => env('DATABASE_URL'),
             'host' => 'localhost',
-            'port' => '6432',
             'database' => 'biotime',
-            'username' => 'pgeshuleadmin',
-            'password' =>'20_sHULEsoft_21',
+            'port' => env('DB_PORT', ''),
+            'database' =>'other_app',
+            'username' => env('DB_USERNAME', ''),
+            'password' =>env('DB_PASSWORD', ''),
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
