@@ -167,7 +167,7 @@
                                                     <th>File</th>
                                                     <th>url</th>
                                                     <th>Created By</th>
-                                                    <th>Action</th>
+                                                    <!-- <th>Action</th> -->
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -180,10 +180,7 @@
                                                     <td><?= warp($error->file) ?></td> 
                                                    <td><?= warp($error->url) ?></td>
                                                     <td><?= isset($error->created_by) ? $error->created_by : '' ?></td> 
-                                                    <td>
-                                                         <a href="#" id="<?= $error->id ?>" class="label label-danger dlt_log" onmousedown="delete_log(<?= $error->id ?>)" >Delete</a> 
-                                                         <a href="#" id="<?= $error->id ?>" class="label label-info dlt_log" onmousedown="View_log(<?= $error->id ?>)" onclick="return false">View</a> 
-                                                    </td>
+                                                    
                                                 </tr>
                                                <?php $i++; } ?>
                                             </tbody>
