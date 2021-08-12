@@ -319,8 +319,10 @@ class Users extends Controller {
             //     $filePath = base_path() . '/storage/uploads/images/';
             //     $file->move($filePath, $filename2);
             // }
-            
-             
+           
+            //  $data =  (array)  request()->except('salary');
+            //  $usedata = array_merge(remove_comma(request('salary')), $data);
+            //  dd($userdata);
              $user = User::find($id)->update(request()->all());
          //  $user = User::find($id)->update(request()->except('medical_report', 'academic_certificates','employment_contract'));
          //  User::find($id)->update(['medical_report' => $filename, 'academic_certificates' => $filename1,'employment_contract' => $filename2]);

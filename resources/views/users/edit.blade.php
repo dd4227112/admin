@@ -272,9 +272,7 @@
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong>Next Kin Information:</strong>
-
-                                            <textarea name="next_kin" class="form-control" placeholder="Name , Relation, Phone, Email "></textarea>
-
+                                             <input name="next_kin" class="form-control" value="<?=$user->next_kin ?>">
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12 text-center">
