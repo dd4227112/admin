@@ -350,26 +350,26 @@ ORDER BY c.oid, a.attnum";
     public function logsDelete() {
         $id = request('id');
         $tag = \App\Models\ErrorLog::find($id);
-       // dd($tag);
+
         $ids = [];
         $errors = DB::table('admin.error_logs')->where('error_message','LIKE','%'.$tag->error_message.'%')
         ->orWhere('file','LIKE','%'.$tag->file.'%')->orWhere('route','LIKE','%'.$tag->route.'%')->limit(100)->get();
-        foreach($errors as $value){
+        if(!empty($errors)) {
+              foreach($errors as $value){
              array_push($ids, $value->id);
+            }
+            $update = ['deleted_at'=>now(),'deleted_by'=>\Auth::user()->id];
+            $tag = \App\Models\ErrorLog::whereIn('id',$ids)->update($update);
+            echo 1;
+        } else {
+            if (!empty($tag)) {
+                $tag->deleted_by = \Auth::user()->id;
+                $tag->save(); 
+                $tag->delete();
+            }
+            echo 1;
         }
-        $update = ['deleted_at'=>now(),'deleted_by'=>\Auth::user()->id];
-        $tag = \App\Models\ErrorLog::whereIn('id',$ids)->update($update);
-        
-        echo 1;
-   
-    
-
-        // if (!empty($tag)) {
-        //     $tag->deleted_by = \Auth::user()->id;
-        //     $tag->save(); 
-        //     $tag->delete();
-        // }
-      //  echo 1;
+      
     }
 
     public function Readlogs() {
