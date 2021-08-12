@@ -351,30 +351,17 @@ ORDER BY c.oid, a.attnum";
         $id = request('id');
         $tag = \App\Models\ErrorLog::find($id);
        // dd($tag);
-         $ids = [];
-        $errors = DB::table('admin.error_logs')->where('error_message','LIKE','%'.$tag->error_message.'%')->limit(100)->get();
+        $ids = [];
+        $errors = DB::table('admin.error_logs')->where('error_message','LIKE','%'.$tag->error_message.'%')
+        ->orWhere('url','LIKE','%'.$tag->url.'%')->orWhere('route','LIKE','%'.$tag->route.'%')->limit(100)->get();
         foreach($errors as $value){
              array_push($ids, $value->id);
         }
         $update = ['deleted_at'=>now(),'deleted_by'=>\Auth::user()->id];
         $tag = \App\Models\ErrorLog::whereIn('id',$ids)->update($update);
-         // dd($tag);
-        echo 1;
         
-    //    if(!empty($errors)) {
-    //         foreach($errors as $error){
-    //             // dd($error->id);
-    //             $tag = \App\Models\ErrorLog::find($error->id);
-    //              dd($tag);
-
-    //                 if (!empty($tag)) {
-    //                     $tag->deleted_by = \Auth::user()->id;
-    //                     $tag->save(); 
-    //                     $tag->delete();
-    //                 }
-    //               //  echo 1;
-    //         }
-    //     }
+        echo 1;
+   
     
 
         // if (!empty($tag)) {
