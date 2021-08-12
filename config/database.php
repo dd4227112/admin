@@ -44,7 +44,8 @@ return [
             'charset' => 'utf8',
 	    'prefix' => '',
             'schema' => 'admin',
-	    'options' => [
+	    'sslmode' => 'prefer',
+            'options' => [
                 \PDO::ATTR_EMULATE_PREPARES => true
             ]
 	],
