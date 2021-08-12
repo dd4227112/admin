@@ -48,7 +48,9 @@ class Workshop extends Controller {
                 'body'=>$message1,
                 'user_id'=>1,
                 'type'=>0,
-                'phone_number'=>$phonenumber
+                'priority' => 1,
+                'sent_from' => 'whatsapp',
+                'phone_number'=> str_replace('2550', '+255', $phonenumber)
             ]);
             $chatId = $phonenumber . '@c.us';
             $this->sendMessage($chatId, $message1);
