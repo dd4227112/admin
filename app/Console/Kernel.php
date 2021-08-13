@@ -1027,6 +1027,9 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                             'date' => date("Y-m-d", strtotime($data->punch_time)),
                             'present' => 1
                         ]);
+                    }else{
+                        $timeout = DB::connection('biotime')->table('public.iclock_transaction')->where('emp_code', $employee->id)->whereDate('punch_time', date("Y-m-d", strtotime($data->punch_time)))->orderBy('id', 'DESC')->first();
+                        !empty($timeout) ? $uattendance = DB::table('admin.uattendances')->where('user_id', $employee->id)->whereDate('date', date("Y-m-d", strtotime($data->punch_time)))->update(['timeout' => date("Y-m-d H:i:s", strtotime($timeout->punch_time)), 'updated_at' => date("Y-m-d H:i:s")]) : '';
                     }
                 } else {
                     $user = DB::table('admin.all_users')->where('sid', $data->emp_code)->first();
