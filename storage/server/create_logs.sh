@@ -26,4 +26,9 @@ printf $php_fpm_val >/usr/share/nginx/html/admin/storage/server/php_fpm_log.html
 
 #du -k /var/log/php-fpm >php_fpm_log.html
 
+#check db backup
+cd /home/schema_backups/
+db_backup=$(ls | wc -l)
+db_backup_val=${db_backup/./}
+printf $db_backup_val >/usr/share/nginx/html/admin/storage/server/db_backup.html
 

@@ -18,9 +18,5 @@
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    #prevent user to access .env file in url
-     <Files ".env">
-        Order Allow,Deny
-        Deny from all
-    </Files>
+  
 </IfModule>
