@@ -275,7 +275,7 @@ group by ownership');
                 'end_time' => request('end_time'),
                 'category' => request('category'),
                 'department_id' => request('department_id'),
-                'meeting_link'=>request('meeting_link'),
+                'meeting_link' => request('meeting_link'),
                 'user_id' => Auth::user()->id,
                 'file_id' => $file_id,
                 'attach_id' => $attach_id
@@ -320,6 +320,8 @@ group by ownership');
                                 . chr(10) . 'Shulesoft Team'
                                 . chr(10) . 'Call: +255 655 406 004 ';
                         $sql = "insert into public.sms (body,user_id, type,phone_number) values ('$message1', 1, '0', '$event->phone')";
+                        $chatId = $event->phone . '@c.us';
+                        $this->sendMessage($chatId, $message1);
                         DB::statement($sql);
                     }
                 }
@@ -374,7 +376,6 @@ group by ownership');
         }
     }
 
-
     public function school() {
         $end_date = date('Y-m-01');
         $where = "a.created_at::date >='" . $end_date . "'";
@@ -410,7 +411,7 @@ group by ownership');
         $this->data['type'] = $type = request()->segment(4);
         $this->data['status'] = $status = request()->segment(3);
         $end_date = date('Y-m-01');
-       // dd($end_date);
+        // dd($end_date);
         $this->data['where'] = $where = "a.created_at::date >='" . $end_date . "'";
         // $this->data['active_users'] = DB::SELECT('SELECT "table", count(*) as count from admin.all_users where status=1 and ("table",id) in (select "table", user_id from admin.all_log a where ' . $where .' group by "table",user_id) group by "table"  order by "table"');
         //$this->data['notactive_users'] = DB::SELECT('SELECT "table", count(*) as count from admin.all_users where status=1 and ("table",id) in (select "table", user_id from admin.all_log a where ' . $where .'group by "table",user_id) group by "table"  order by "table"');
@@ -418,9 +419,9 @@ group by ownership');
         if ($type != '' && $status != '') {
             $table = "'" . $type . "'";
             if ($status == 'active') {
-             //   $this->data['list_of_users'] = DB::SELECT('SELECT schema_name, count(*) as count from admin.all_users where status=1 and ("table",id) in (select a."table", a.user_id from admin.all_log a where ' . $where . '  and "table" = ' . $table . ' group by a."table", a.user_id) group by schema_name order by count(schema_name) desc');
+                //   $this->data['list_of_users'] = DB::SELECT('SELECT schema_name, count(*) as count from admin.all_users where status=1 and ("table",id) in (select a."table", a.user_id from admin.all_log a where ' . $where . '  and "table" = ' . $table . ' group by a."table", a.user_id) group by schema_name order by count(schema_name) desc');
             }if ($status == 'notactive') {
-              //  $this->data['list_of_users'] = DB::SELECT('SELECT schema_name, count(*) as count from admin.all_users where status=1 and  ("table",id) not in (select a."table", a.user_id from admin.all_log a where ' . $where . '  and "table" = ' . $table . '  group by a."table", a.user_id) group by schema_name order by count(schema_name) desc');
+                //  $this->data['list_of_users'] = DB::SELECT('SELECT schema_name, count(*) as count from admin.all_users where status=1 and  ("table",id) not in (select a."table", a.user_id from admin.all_log a where ' . $where . '  and "table" = ' . $table . '  group by a."table", a.user_id) group by schema_name order by count(schema_name) desc');
             }if ($status == 'all') {
                 $this->data['list_of_users'] = DB::SELECT('SELECT schema_name, count(*) as count from admin.all_users where status=1 and "table" = ' . $table . ' group by schema_name order by count(schema_name) desc');
             }
@@ -527,14 +528,13 @@ group by ownership');
                 //Not active modules
                 $module_id = $class_id;
                 $module = \DB::table('admin.modules')->where('id', $module_id)->first();
-                if (!empty($module) && strlen($module->table)>3) {
+                if (!empty($module) && strlen($module->table) > 3) {
                     $check = \collect(DB::select("select * from information_schema.tables where table_name='all_student' and table_schema='admin'  limit 1"))->first();
                     if (empty($check)) {
                         DB::statement("select * from admin.join_all({$module->table},'created_at')");
                     }
                     $sql = "select name,phone,email,schema_name,username from admin.all_users where status=1 and lower(usertype)='admin' and schema_name NOT in (select distinct schema_name from admin.all_{$module->table} where created_at >= date_trunc('month', now()) - interval '3 month' and created_at < date_trunc('month', now()))";
                     $parents = DB::select($sql);
-                   
                 }
 
 
@@ -680,6 +680,5 @@ group by ownership');
             return redirect()->back()->with('error', $this->lang->line('no_teachers_error'));
         }
     }
-
 
 }

@@ -16,7 +16,6 @@ class Workshop extends Controller {
         $this->data['event'] = \App\Models\Events::first();
         return view('workshop', $this->data);
     }
-    
 
     public function register() {
         $this->data['event'] = \App\Models\Events::latest()->first();
@@ -31,7 +30,13 @@ class Workshop extends Controller {
             'position' => request('position'), 'school_id' => request('school_id'),
             'event_id' => request('event_id'),
             'source' => request('source')];
-        $event = \App\Models\EventAttendee::create($obj);
+        $check_attendee = \App\Models\EventAttendee::where('phone', $phonenumber)->where('event_id', request('event_id'))->first();
+
+        if (empty($check_attendee)) {
+            $event = \App\Models\EventAttendee::create($obj);
+        } else {
+            $event = $check_attendee;
+        }
         if (!empty($event->id)) {
             $message1 = 'Dear ' . request('name') . '.'
                     . chr(10) . 'Thanks for registering for the Shulesoft Webinar session to be held on ' . $workshop->event_date . '.'
@@ -45,10 +50,10 @@ class Workshop extends Controller {
                     . chr(10) . 'Shulesoft Team'
                     . chr(10) . ' Call: +255 655 406 004 ';
             DB::table('public.sms')->insert([
-                'body'=>$message1,
-                'user_id'=>1,
-                'type'=>0,
-                'phone_number'=>$phonenumber
+                'body' => $message1,
+                'user_id' => 1,
+                'type' => 0,
+                'phone_number' => $phonenumber
             ]);
             $chatId = $phonenumber . '@c.us';
             $this->sendMessage($chatId, $message1);
@@ -84,6 +89,12 @@ class Workshop extends Controller {
         $this->data['id'] = $id;
         $this->data['profile'] = \App\Models\User::where(DB::raw("md5(email)"), $this->data['id'])->first();
         return view('user_profile', $this->data);
+    }
+
+    public function deleteUser() {
+        $id = request()->segment(3);
+        \App\Models\EventAttendee::findOrFail($id)->delete();
+        return redirect()->back()->with('success', 'success');
     }
 
 }
