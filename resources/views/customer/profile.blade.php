@@ -708,14 +708,14 @@ function check_status($table, $where = null) {
                                                                                                                                                     </th>
                                                                                                                                                     <td
                                                                                                                                                         class="social-user-name b-none p-t-0 text-muted">
-                                                                                                                                                        <?= isset($manager) ? $manager->firstname . ' ' .$manager->lastname : ''  ?></td>
-                                                                                                                                                </tr>
+                                                                                                                                                        <?= isset($manager->name) ? $manager->name  : ''  ?></td>
+                                                                                                                                                    </tr>
                                                                                                                                                 <tr>
                                                                                                                                                     <th class="social-label b-none">
                                                                                                                                                         Zone Manager phone</th>
                                                                                                                                                     <td
                                                                                                                                                         class="social-user-name b-none text-muted">
-                                                                                                                                                        <?= isset($manager) ? $manager->phone :'' ?></td>
+                                                                                                                                                        <?= isset($manager->phone) ? $manager->phone :'' ?></td>
                                                                                                                                                 </tr>
 
                                                                                                                                                   <tr>
@@ -723,7 +723,7 @@ function check_status($table, $where = null) {
                                                                                                                                                         Email</th>
                                                                                                                                                     <td
                                                                                                                                                         class="social-user-name b-none text-muted">
-                                                                                                                                                        <?= isset($manager) ? $manager->email : '' ?></td>
+                                                                                                                                                        <?= isset($manager->email) ? $manager->email : '' ?></td>
                                                                                                                                                   </tr>
 
                                                                                                                                                    <tr>
@@ -731,7 +731,7 @@ function check_status($table, $where = null) {
                                                                                                                                                         Address</th>
                                                                                                                                                     <td
                                                                                                                                                         class="social-user-name b-none text-muted">
-                                                                                                                                                        <?= isset($manager) ? $manager->address : '' ?></td>
+                                                                                                                                                        <?= isset($manager->address) ? $manager->address : '' ?></td>
                                                                                                                                                   </tr>
 
                                                                                                                                                

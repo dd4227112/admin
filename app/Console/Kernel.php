@@ -1065,7 +1065,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         }
     }
 
-    private function client($client_id = null) {
+    private function client($client_id) {
         return \App\Models\Client::where('id', $client_id)->first()->name;
     }
 
