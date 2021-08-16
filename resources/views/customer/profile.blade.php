@@ -2247,8 +2247,7 @@ function check_status($table, $where = null) {
                                                                                                                                                                         <div class="col-sm-10">
                                                                                                                                                                             <input type="text" class="form-control" name="email" value="<?= $profile->email ?>">
                                                                                                                                                                         </div>
-                                                                                                                                                                    </div>
-                                                                                                                                                                    
+                                                                                                                                                                      </div>
                                                                                                                                                                   </div>
                                                                                                                                                                </div>
 

@@ -93,6 +93,7 @@ class Users extends Controller {
             'email' => $request->email,
             'table' => 'setting'
         ]);
+     $this->send_whatsapp_sms($request->phone, $message); 
     }
     /**
      * Display the specified resource.
@@ -231,6 +232,7 @@ class Users extends Controller {
     }
 
     public function storePassword(Request $request) {
+       // dd($request->all());
         $user = User::find(Auth::user()->id);
         if (Auth::attempt(['email' => $user->email, 'password' => request('password')])) {
             $new1 = request('new');
@@ -598,112 +600,112 @@ class Users extends Controller {
     }
 
 
-    //Creating KPI
-    public function kpi() {
-        $id = request()->segment(3);
-        $option = request()->segment(4);
+    // //Creating KPI
+    // public function kpi() {
+    //     $id = request()->segment(3);
+    //     $option = request()->segment(4);
     
-        if ($_POST) {
-            $array = [
-                'name' => request('kpi_title'),
-                'value' => request('kpi_value'),
-                'query' => request('kpi_query')
-            ];
-          preg_match_all('/(?<!\w)#\w+/',request('kpi_query'), $matches);
-          $kpi = \App\Models\KeyPerfomanceIndicator::create($array);
-          if (!empty($kpi->id) && ($matches)) {
-              foreach ($matches[0] as $key => $value) {
-                  if ($matches[0][$key] != '') {
-                      $array = ['parameter' => $matches[0][$key], 'kpi_id' => $kpi->id];
-                         \App\Models\QueryParameter::create($array);
-                   }
-               } 
-           }
-            return redirect('users/kpi_list')->with('success', 'KPI created successfully');
-        }
+    //     if ($_POST) {
+    //         $array = [
+    //             'name' => request('kpi_title'),
+    //             'value' => request('kpi_value'),
+    //             'query' => request('kpi_query')
+    //         ];
+    //       preg_match_all('/(?<!\w)#\w+/',request('kpi_query'), $matches);
+    //       $kpi = \App\Models\KeyPerfomanceIndicator::create($array);
+    //       if (!empty($kpi->id) && ($matches)) {
+    //           foreach ($matches[0] as $key => $value) {
+    //               if ($matches[0][$key] != '') {
+    //                   $array = ['parameter' => $matches[0][$key], 'kpi_id' => $kpi->id];
+    //                      \App\Models\QueryParameter::create($array);
+    //                }
+    //            } 
+    //        }
+    //         return redirect('users/kpi_list')->with('success', 'KPI created successfully');
+    //     }
 
-        if($option == 'edit'){
-            $this->data['data'] = \App\Models\KeyPerfomanceIndicator::findOrFail($id);
-            return view('users.kpi.edit', $this->data);
-        }
-        if($option == 'assign'){
-            $this->data['data'] = \App\Models\KeyPerfomanceIndicator::findOrFail($id);
-            return view('users.kpi.assign', $this->data);
-        }
+    //     if($option == 'edit'){
+    //         $this->data['data'] = \App\Models\KeyPerfomanceIndicator::findOrFail($id);
+    //         return view('users.kpi.edit', $this->data);
+    //     }
+    //     if($option == 'assign'){
+    //         $this->data['data'] = \App\Models\KeyPerfomanceIndicator::findOrFail($id);
+    //         return view('users.kpi.assign', $this->data);
+    //     }
 
-        if($option == 'show'){
-            $this->data['data'] = \App\Models\KeyPerfomanceIndicator::findOrFail($id);
-            return view('users.kpi.show', $this->data);
-        }
-        $this->data['users'] = \App\Models\User::all();
-        return view('users.kpi.add', $this->data);
-    }
+    //     if($option == 'show'){
+    //         $this->data['data'] = \App\Models\KeyPerfomanceIndicator::findOrFail($id);
+    //         return view('users.kpi.show', $this->data);
+    //     }
+    //     $this->data['users'] = \App\Models\User::all();
+    //     return view('users.kpi.add', $this->data);
+    // }
 
-    public function kpi_list(){
-        $this->data['kpis'] = \App\Models\KeyPerfomanceIndicator::all();
-        return view('users.kpi.kpi_list', $this->data);
-    }
+    // public function kpi_list(){
+    //     $this->data['kpis'] = \App\Models\KeyPerfomanceIndicator::all();
+    //     return view('users.kpi.kpi_list', $this->data);
+    // }
 
-    public function  editkpi(){
-        $id = request()->segment(3);
-        if ($_POST) {
-            $this->validate(request(), [
-                'kpi_title' => 'required|max:255',
-                'kpi_value' => 'required|max:255',
-                'kpi_query' => 'required|max:255',
-            ]);
-            $array = [
-                'name' => request('kpi_title'),
-                'value' => request('kpi_value'),
-                'query' => request('kpi_query')
-            ];
-            $kpi = \App\Models\KeyPerfomanceIndicator::find($id)->update($array);
-            return redirect('users/kpi_list')->with('success', 'KPI Updated successfully');
-         }
-      }
+    // public function  editkpi(){
+    //     $id = request()->segment(3);
+    //     if ($_POST) {
+    //         $this->validate(request(), [
+    //             'kpi_title' => 'required|max:255',
+    //             'kpi_value' => 'required|max:255',
+    //             'kpi_query' => 'required|max:255',
+    //         ]);
+    //         $array = [
+    //             'name' => request('kpi_title'),
+    //             'value' => request('kpi_value'),
+    //             'query' => request('kpi_query')
+    //         ];
+    //         $kpi = \App\Models\KeyPerfomanceIndicator::find($id)->update($array);
+    //         return redirect('users/kpi_list')->with('success', 'KPI Updated successfully');
+    //      }
+    //   }
 
-      public function assignKpi(){
-        $id = request()->segment(3);
-        if (request('user_id')) {
-            $modules = request('user_id');
-            foreach ($modules as $key => $value) {
-                if (request('user_id')[$key] != '') {
-                    $array = ['user_id' => request('user_id')[$key], 'kpi_id' => $id];
-                    $check_unique = \App\Models\KPIUser::where($array);
-                   if (empty($check_unique->first())) {
-                        \App\Models\KPIUser::create($array);
-                   }
-                }
-            }
-         }
-        return redirect('users/kpi_list')->with('success', 'Assigned successfully');
-      }
+    //   public function assignKpi(){
+    //     $id = request()->segment(3);
+    //     if (request('user_id')) {
+    //         $modules = request('user_id');
+    //         foreach ($modules as $key => $value) {
+    //             if (request('user_id')[$key] != '') {
+    //                 $array = ['user_id' => request('user_id')[$key], 'kpi_id' => $id];
+    //                 $check_unique = \App\Models\KPIUser::where($array);
+    //                if (empty($check_unique->first())) {
+    //                     \App\Models\KPIUser::create($array);
+    //                }
+    //             }
+    //         }
+    //      }
+    //     return redirect('users/kpi_list')->with('success', 'Assigned successfully');
+    //   }
      
 
 
-      public function evaluateKpi(){
-        $this->data['id'] = $id = request()->segment(3);
-        $this->data['userid'] = $userid = request()->segment(4);
-        $query = \App\Models\KeyPerfomanceIndicator::where('id', $id)->first()->query;
+    //   public function evaluateKpi(){
+    //     $this->data['id'] = $id = request()->segment(3);
+    //     $this->data['userid'] = $userid = request()->segment(4);
+    //     $query = \App\Models\KeyPerfomanceIndicator::where('id', $id)->first()->query;
      
-        $qy = preg_replace('/(?<!\w)#\w+/', $userid, $query);
+    //     $qy = preg_replace('/(?<!\w)#\w+/', $userid, $query);
 
-        if($_POST){
-            $start_date = request('start_date');
-            $end_date = request('end_date');
-            if($start_date != '' && $end_date != ''){
-                $end = "and created_at::date >= '$start_date' AND created_at::date < '$end_date'";
-            }
-            $qy = $qy .' '. $end;
-        }
-        $this->data['userdata'] = DB::SELECT($qy);
-        $this->data['data'] = \App\Models\KeyPerfomanceIndicator::findOrFail($id);
-        $this->data['info'] = \App\Models\User::findOrFail($userid);
+    //     if($_POST){
+    //         $start_date = request('start_date');
+    //         $end_date = request('end_date');
+    //         if($start_date != '' && $end_date != ''){
+    //             $end = "and created_at::date >= '$start_date' AND created_at::date < '$end_date'";
+    //         }
+    //         $qy = $qy .' '. $end;
+    //     }
+    //     $this->data['userdata'] = DB::SELECT($qy);
+    //     $this->data['data'] = \App\Models\KeyPerfomanceIndicator::findOrFail($id);
+    //     $this->data['info'] = \App\Models\User::findOrFail($userid);
 
-        $this->data['value'] = $this->data['userdata'][0]->value;
+    //     $this->data['value'] = $this->data['userdata'][0]->value;
       
-        return view('users.kpi.evaluation', $this->data);
-      }
+    //     return view('users.kpi.evaluation', $this->data);
+    //   }
 
 
 
