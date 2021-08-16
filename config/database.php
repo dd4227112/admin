@@ -36,8 +36,8 @@ return [
           'pgsql' => [
             
             'driver' => 'pgsql',
-            'host' => env('DB_HOST', 'localhost'),
-            'port' => 10064,
+            'host' => 'localhost',
+            'port' => 10054,
             'database' =>'shulesoft_2021',
             'username' => 'pgeshuleadmin',
             'password' =>'20_pgeshuleadmin_12!',
