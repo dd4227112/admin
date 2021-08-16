@@ -57,7 +57,8 @@ class Software extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function compareTable($schema = null) {
+    public function compareTable($schema = 'betatwo') {
+      //  dd($schema);
         $this->data['data'] = $this->compareSchemaTables($schema);
         $view = 'software.database.' . strtolower('compareTable');
         if (view()->exists($view)) {
@@ -151,6 +152,7 @@ AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
     }
 
     public function compareSchemaTables($slave_schema = null) {
+        $slave_schema = null;
         $master_tables = $this->loadTables(self::$master_schema);
         $db_file = $this->loadSchema();
         ///$db_file = file_get_contents('app/config/development/db.txt');
@@ -208,8 +210,9 @@ AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
     public function syncTable() {
         $master_table_name = request('table');
         $slave_schema = request('slave');
-        $sql = \collect(DB::select("select show_create_table('" . $master_table_name . "','" . $slave_schema . "') as result"))->first();
-        return DB::statement(str_replace('ARRAY', 'character varying[]', $sql->result));
+        $sql = "SELECT FROM admin.show_create_table('" . $master_table_name . "','" . $slave_schema . "')";
+        return DB::statement($sql);
+        // return DB::statement(str_replace('ARRAY', 'character varying[]', $sql->result));
     }
 
     public function syncColumn($master_table = null, $schema = null, $column_missing = null) {
