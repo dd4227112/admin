@@ -42,8 +42,8 @@
             var table = $(this).attr('data-table');
             $(this).hide();
             $.ajax({
-                type: 'GET',
-                url: "<?= url('database/syncTable') ?>",
+                type: 'post',
+                url: "<?= url('Software/syncTable') ?>",
                 data: {
                     "table": table,
                     "slave": slave

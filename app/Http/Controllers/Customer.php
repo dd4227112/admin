@@ -226,6 +226,7 @@ class Customer extends Controller {
             ]);
 
             $user = \App\Models\User::where('id', $user_id)->first();
+            $start_date = date('d-m-Y', strtotime($start_date)) == '01-01-1970' ? date('Y-m-d') : date('d-m-Y', strtotime($start_date));
             // email to shulesoft personel
             $message = 'Hello ' . $user->firstname . '<br/>'
                     . 'A task ' . $train->trainItem->content . ' been allocated to you'
@@ -235,8 +236,9 @@ class Customer extends Controller {
                     . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                     . '</ul>';
             $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
-            $message = "Hello " . $user->firstname . " a task of " . $train->trainItem->content . " at " . $train->client->name . " has been allocated to you.The project is expected to start at " . date('d-m-Y', strtotime($start_date)) . " to  " . date('d-m-Y', strtotime($start_date . " + {$section->time} days")) . " .Thank You";
+            $message = "Hello " . $user->firstname . " a task of " . $train->trainItem->content . " at " . $train->client->name . " has been allocated to you.The project is expected to start at " . date('d-m-Y', strtotime($start_date))  . " to  " . date('d-m-Y', strtotime($start_date . " + {$section->time} days")) . " .Thank You";
             $this->send_whatsapp_sms($user->phone, $message);
+           
 
             //email to zone manager
             // findOrFail zone manager based on school location
@@ -1475,7 +1477,8 @@ class Customer extends Controller {
     }
 
     public function uploadJobCard() {
-        if ($_POST) {
+        
+        if ($_POST) { // dd(request()->all());
            // $file = request()->file('job_card_file');
             
               $filename1 = '';
