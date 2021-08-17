@@ -319,7 +319,7 @@ group by ownership');
                                 . chr(10)
                                 . chr(10) . 'Shulesoft Team'
                                 . chr(10) . 'Call: +255 655 406 004 ';
-                        $sql = "insert into public.sms (body,user_id, type,phone_number) values ('$message1', 1, '0', '$event->phone')";
+                        $sql = "insert into public.sms (body,user_id, type,phone_number, sent_from) values ('$message1', 1, '0', '$event->phone', 'whatsapp')";
                         DB::statement($sql);
                     }
                 }
