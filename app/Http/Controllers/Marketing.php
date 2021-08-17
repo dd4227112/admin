@@ -295,12 +295,12 @@ group by ownership');
         if ((int) $id > 0) {
 
             if ($_POST) {
+
                 $body = request('message');
                 $sms = request('sms');
                 $email = request('email');
                 $events = \App\Models\EventAttendee::where('event_id', $id)->get();
                 $workshop = \App\Models\Events::where('id', $id)->first();
-
                 foreach ($events as $event) {
                     if ($event->email != '' && (int) $email > 0) {
                         $message = '<h4>Dear ' . $event->name . '</h4>'
@@ -318,8 +318,8 @@ group by ownership');
                                 . chr(10) . $body
                                 . chr(10)
                                 . chr(10) . 'Shulesoft Team'
-                                . chr(10) . 'Call: +255 655 406 004 ';
-                        $sql = "insert into public.sms (body,user_id, type,phone_number, sent_from) values ('$message1', 1, '0', '$event->phone', 'whatsapp')";
+                                . chr(10) . '+255655406004 ';
+                        $sql = "insert into public.sms (body,user_id, type,status, phone_number, sent_from) values ('$message1', 1, '0',0, '$event->phone', 'whatsapp')";
                         DB::statement($sql);
                     }
                 }
