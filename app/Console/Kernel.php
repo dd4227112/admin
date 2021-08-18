@@ -1007,7 +1007,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     }
 
     private function addAttendance() {
-        $datas = DB::connection('biotime')->table('public.iclock_transaction')->where('punch_state', '0')->get();
+        $datas = DB::connection('biotime')->table('public.iclock_transaction')->where('punch_state', '0')->limit(50)->get();
         if (count($datas) > 0) {
             foreach ($datas as $data) {
                 $device = DB::table('api.attendance_devices')->where('serial_number', $data->terminal_sn)->first();
@@ -1069,7 +1069,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         }
     }
 
-    private function client($client_id = null) {
+    private function client($client_id) {
         return \App\Models\Client::where('id', $client_id)->first()->name;
     }
 

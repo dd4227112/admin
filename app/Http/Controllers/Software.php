@@ -288,7 +288,7 @@ ORDER BY c.oid, a.attnum";
         $type = $this->data['sub'] = request()->segment(3);
         if ($type == 'CHECK') {
             $relations = DB::select('SELECT nspname as "table_schema",conname as constraint_name, replace( conrelid::regclass::text , nspname||\'.\', \'\') AS TABLE_NAME FROM   pg_constraint c JOIN   pg_namespace n ON n.oid = c.connamespace WHERE  contype IN (\'c\') ORDER  BY "nspname"');
-        } else {
+        } else { 
             $relations = DB::select('SELECT "table_schema", constraint_name,TABLE_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE CONSTRAINT_TYPE = \'' . $type . '\'  order by "table_schema"');
         }
         $this->data['constrains'] = array();
@@ -429,7 +429,7 @@ ORDER BY c.oid, a.attnum";
                 $this->setBankParameters();
                 $this->assignAndNotifications();
                 DB::statement('REFRESH MATERIALIZED VIEW admin.all_bank_accounts_integrations');
-                return redirect()->back()->with('success','Successfully!');
+                return redirect()->back()->with('success','Successfully integrated!');
           }
      }
 
@@ -446,18 +446,18 @@ ORDER BY c.oid, a.attnum";
         if (!empty($check->first())) {
             $check->update(['api_username' => request('api_username'),'invoice_prefix' => request('invoice_prefix'),'api_password' => request('api_password'),'updated_at' => now()]);
 
-           // $check->update([request('tag') => request('val')]);
             DB::statement('UPDATE ' . request('schema') . '.invoices SET "reference"=\'' . request('invoice_prefix') . '\'||"id", prefix=\'' . request('invoice_prefix') . '\'');
             DB::statement('UPDATE ' . request('schema') . '.setting SET "payment_integrated"=1');
            // echo 'Records updated successfully';
         } else {
             DB::table(request('schema') . '.bank_accounts_integrations')->insert([
                 'bank_account_id' => request('bank_id'),
-               // request('tag') => request('val')
                 'api_username' => request('api_username'),
                 'invoice_prefix' => request('invoice_prefix'),
                 'api_password' => request('api_password')
             ]);
+            DB::statement('UPDATE ' . request('schema') . '.invoices SET "reference"=\'' . request('invoice_prefix') . '\'||"id", prefix=\'' . request('invoice_prefix') . '\'');
+            DB::statement('UPDATE ' . request('schema') . '.setting SET "payment_integrated"=1');
           //  echo 'Records added successfully';
         }
 
@@ -506,7 +506,7 @@ ORDER BY c.oid, a.attnum";
                 $this->send_whatsapp_sms($manager->phone, $message,$fullname);
              }
 
-         //send sms to school Admins/Directors of schools
+         //send sms to Admins/Directors of schools
           $users = DB::table($schema .'.users')->where('usertype', 'ILIKE', "%Admin%")->get();
           if(isset($users) && count($users) > 0){
               foreach($users as $user){
