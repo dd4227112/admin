@@ -1222,7 +1222,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
             } else if (preg_match('/sms/i', strtolower($check->content))) {
                 $schemas = DB::select('select * from admin.all_setting');
                 foreach ($schemas as $schema) {
-                    $sms_config = DB::table('admin.school_keys')->where('api_key', '<>', '1234567894')->where('schema_name', $schema->schema_name)->count();
+                    $sms_config = DB::table('admin.school_keys')->where('api_key', '<>', '6664567894')->where('schema_name', $schema->schema_name)->count();
                     if ((int) $sms_config > 0) {
                         $this->updateStatus($check->id, $this->client_school($schema->schema_name)->id);
                     }

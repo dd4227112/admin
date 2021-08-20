@@ -255,9 +255,7 @@ group by ownership');
     }
 
     public function addEvent() {
-
         if ($_POST) {
-
             $file_id = null;
             $attach_id = null;
             if (!empty(request('attached'))) {
