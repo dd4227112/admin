@@ -1,0 +1,36 @@
+-- View: public.all_sms
+
+-- DROP VIEW public.all_sms;
+
+CREATE OR REPLACE VIEW public.all_sms
+ AS
+ SELECT a.sms_id,
+    a.body,
+    a.user_id,
+    a.created_at,
+    a.status,
+    a.return_code,
+    a.phone_number,
+    a.type,
+    a."table",
+    a.users_id,
+    a.priority,
+    a.updated_at,
+    a.opened,
+    a.sms_keys_id,
+    a.sms_count,
+    a.department_id,
+    a.sms_content_id,
+    a.subject,
+    a.sent_from,
+    b.api_key
+   FROM public.sms a,
+    public.sms_keys b
+  WHERE a.status = 0 AND b.id = a.sms_keys_id;
+
+ALTER TABLE public.all_sms
+    OWNER TO postgres;
+
+GRANT ALL ON TABLE public.all_sms TO postgres;
+GRANT ALL ON TABLE public.all_sms TO azure_admin;
+
