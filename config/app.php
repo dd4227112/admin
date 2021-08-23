@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'env' => 'local', //env('APP_ENV', 'production'),
+    'env' =>'production',// 'local', //env('APP_ENV', 'production'),
 
     /*
     |--------------------------------------------------------------------------
