@@ -81,7 +81,10 @@ class Account extends Controller {
             $this->data['to'] = $to;
             $from_date = date('Y-m-d H:i:s', strtotime($from . ' -1 day'));
             $to_date = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
-            $this->data['invoices'] = ($from != '' && $to != '') ? Invoice::whereIn('id', \App\Models\Payment::whereBetween('date', [$from_date, $to_date])->get(['invoice_id']))->get() : Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->get();
+            
+           // $this->data['invoices'] = ($from != '' && $to != '') ? Invoice::whereIn('id', \App\Models\Payment::whereBetween('date', [$from_date, $to_date])->get(['invoice_id']))->get() : Invoice::whereIn('id', InvoiceFee::where('project_id', $project_id)->get(['invoice_id']))->where('account_year_id', $account_year_id)->get();
+             $this->data['invoices']  = DB::select("select i.id,i.reference,c.name,p.id as p_id,p.created_at,p.amount,i.due_date from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where f.project_id = '{$project_id}' and p.date::date between '{$from_date}' and '{$to_date}'");
+           // dd($this->data['invoices']);
             return view('account.invoice.report', $this->data);
         }  
 
@@ -109,6 +112,27 @@ class Account extends Controller {
             $from = \Carbon\Carbon::createFromFormat('Y-m-d', $start_usage_date);
             $this->data['diff_in_months'] = $diff_in_months = $to->diffInMonths($from);
             return view('account.invoice.single', $this->data);
+        }
+    }
+
+
+       public function receiptView() {
+        $invoice_id = request()->segment(3);
+        $set = $this->data['set'] = 1;
+        if ((int) $invoice_id > 0) {
+            $payment_id = request()->segment(4);
+            $this->data['invoice'] = \collect(DB::select("select i.id,f.amount,i.reference,i.date,i.token,c.username,c.name,c.phone,c.email,c.start_usage_date,p.amount as paid,i.due_date from admin.payments p join admin.invoices i on i.id = p.invoice_id join admin.clients c on c.id = i.client_id join admin.invoice_fees f on f.invoice_id = i.id where p.id = '{$payment_id}' and i.id ='{$invoice_id}' "))->first();
+           // dd($this->data['invoice']);
+            $this->data['usage_start_date'] = $this->data['invoice']->start_usage_date;
+           
+            $start_usage_date = !empty($this->data['usage_start_date']) ? date('Y-m-d',strtotime($this->data['usage_start_date'])) : date('Y-m-d', strtotime('Jan 01'));
+           
+            $yearEnd = date('Y-m-d', strtotime('Dec 31'));
+
+            $to = \Carbon\Carbon::createFromFormat('Y-m-d',  $yearEnd);
+            $from = \Carbon\Carbon::createFromFormat('Y-m-d', $start_usage_date);
+            $this->data['diff_in_months'] = $diff_in_months = $to->diffInMonths($from);
+            return view('account.invoice.single_receipt', $this->data);
         }
     }
 
