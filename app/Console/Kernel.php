@@ -43,23 +43,15 @@ class Kernel extends ConsoleKernel {
         //         ->hourly();
         $schedule->call(function () {
             //sync invoices 
-            $this->whatsappMessage();
             $this->syncInvoice();
-            //$this->sendeMails();
         })->everyMinute();
 
         $schedule->call(function () {
-            // End Deadlock Processes 
-            //$this->endDeadlock();
-        })->everyThreeMinutes();
-//        $schedule->call(function () {
-//            (new Message())->sendSms();
-//        })->everyMinute();
-        // $schedule->call(function () {
-        //     (new Message())->checkPhoneStatus();
-        // })->hourly();
+            //sync new messages 
+            $this->whatsappMessage();
+        })->everyMinute();
+
         $schedule->call(function () {
-            //   $this->curlServer(['action' => 'payment'], 'http://75.119.140.177:8081/api/cron');
             (new Message())->sendEmail();
         })->everyMinute();
         //  $schedule->call(function () {
@@ -283,7 +275,7 @@ class Kernel extends ConsoleKernel {
                         . " b.created_at, b.updated_at, a.amount, c.name as student_name, '" . $schema . "' as schema_name, (select sub_invoice from "
                         . "  " . $schema . ".setting limit 1) as sub_invoice   from  " . $schema . ".invoices b join " . $schema . ".student c on "
                         . " c.student_id=b.student_id join ( select sum(balance) as amount, a.invoice_id from " . $schema . ".invoice_balances a "
-                        . " group by a.invoice_id ) a on a.invoice_id=b.id where  a.amount >0  and b.sync <>1 and b.prefix in "
+                        . " group by a.invoice_id ) a on a.invoice_id=b.id where b.sync <>1 and b.prefix in "
                         . " (select bn.invoice_prefix from " . $schema . ".bank_accounts_integrations bn join " . $schema . ".bank_accounts ba on "
                         . " ba.id=bn.bank_account_id where ba.refer_bank_id=22 AND bn.api_username is not null) order by random() limit 120");
 
@@ -491,7 +483,7 @@ class Kernel extends ConsoleKernel {
                 if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
                     //DB::statement("insert into " . $invoice->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Control Number Mpya Ya Malipo ya Ada ya Shule','" . $message . "')");
                 }
-                // DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
+                DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
             }
         }
         DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
