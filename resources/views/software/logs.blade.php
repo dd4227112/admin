@@ -166,7 +166,6 @@
                                                     <th>Error Message</th>
                                                     <th>File</th>
                                                     <th>url</th>
-                                                    <th>Created By</th>
                                                     <!-- <th>Action</th> -->
                                                 </tr>
                                             </thead>
@@ -179,7 +178,6 @@
                                                     <td><?= ($error->error_message) ?></td>
                                                     <td><?= warp($error->file) ?></td> 
                                                    <td><?= warp($error->url) ?></td>
-                                                    <td><?= isset($error->created_by) ? $error->created_by : '' ?></td> 
                                                     
                                                 </tr>
                                                <?php $i++; } ?>
