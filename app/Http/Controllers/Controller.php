@@ -368,7 +368,13 @@ class Controller extends BaseController {
     //         }
     //     }
     // }
+    
+    public function test(){
+        $curl = '0';
+        $fields = '{"reference":"SAS332175EA10","token":"8374M20210824064018E32191847U3950"}';
+        DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
 
+    }
 
 }
 

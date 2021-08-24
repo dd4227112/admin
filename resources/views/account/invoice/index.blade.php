@@ -180,6 +180,7 @@
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
+                                        
                                         <tbody>
                                             <?php  
                                             $total_amount = 0;

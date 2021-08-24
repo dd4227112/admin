@@ -355,7 +355,7 @@ class Kernel extends ConsoleKernel {
                         ->where('reference', $invoice->reference)->update(['sync' => 0, 'status' => 0, 'return_message' => $curl, 'push_status' => 'check_' . $push_status, 'updated_at' => 'now()']);
             }
         }
-        DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
+        DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
     }
 
     public function deleteInvoice($invoice, $token) {
@@ -384,7 +384,7 @@ class Kernel extends ConsoleKernel {
                 DB::table($invoice->schema_name . '.invoices')
                         ->where('reference', $invoice->reference)->update(['sync' => 0, 'status' => 0, 'return_message' => $curl, 'push_status' => 'delete_' . $push_status, 'updated_at' => 'now()']);
             }
-            DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
+            DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
         }
     }
 
@@ -460,7 +460,7 @@ class Kernel extends ConsoleKernel {
                 // DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
             }
         }
-        DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
+        DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
     }
 
     public function updateInvoiceStatus($fields, $invoice, $token) {
@@ -494,7 +494,7 @@ class Kernel extends ConsoleKernel {
                 // DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
             }
         }
-        DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
+        DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
     }
 
     public function updateInvoice() {
@@ -533,7 +533,7 @@ class Kernel extends ConsoleKernel {
                         DB::table($invoice->schema_name . '.invoices')
                                 ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
                     }
-                   DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
+                   DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
                 }
             }
         }
