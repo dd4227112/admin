@@ -346,35 +346,15 @@ class Controller extends BaseController {
 
       public function send_whatsapp_sms($phone, $message) {
         if ((strlen($phone) > 6 && strlen($phone) < 20) && $message != '') {
+            $message = preg_replace('/[^a-zA-Z0-9_ %\[\]\.\(\)%&-]/s', '', $message);
             DB::statement("insert into admin.whatsapp_messages(message, status, phone) select '{$message}','0',admin.whatsapp_phone('{$phone}') from admin.users where status=1 and phone ='{$phone}'");
         }
         return $this;
     }
 
 
-    //     public function whatsappMessage() {
-    //     $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 12 ');
-    //     foreach ($messages as $message) {
-    //         if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
-    //             $controller = new \App\Http\Controllers\Controller();
-    //             $controller->sendMessage($message->phone, $message->message);
-    //             DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1]);
-    //             echo 'message sent to ' . $message->name . '' . chr(10);
-    //             sleep(4);
-    //         } else {
-    //             //this is invalid number, so update in db to show wrong return
-    //             DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied']);
-    //             echo 'wrong phone number supplied  ' . $user->phone . '' . chr(10);
-    //         }
-    //     }
-    // }
     
-    public function test(){
-        $curl = '0';
-        $fields = '{"reference":"SAS332175EA10","token":"8374M20210824064018E32191847U3950"}';
-        DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
-
-    }
+ 
 
 }
 
