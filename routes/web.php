@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//dd(bcrypt('12345'));
 
 //\URL::forceScheme('https');
 /*
