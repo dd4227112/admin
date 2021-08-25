@@ -85,9 +85,12 @@ function check_implementation($activity, $schema_name) {
         }
          
 
-        $student = DB::table($schema_name . '.student')->whereYear('created_at', date('Y'))->count();
+        $students = DB::table($schema_name . '.student')->whereYear('created_at', date('Y'))->count();
         $sattendances = DB::table($schema_name . '.sattendances')->whereYear('created_at', date('Y'))->count();
-        if ($student >= $sattendances) {
+
+        $teachers = DB::table($schema_name . '.teacher')->whereYear('created_at', date('Y'))->count();
+        $tattendance = DB::table($schema_name . '.tattendance')->whereYear('created_at', date('Y'))->count();
+        if ($students >= $sattendances || $teachers >= $tattendance ) {
             $status = 'Attendance Implemented';
         } else {
             $status = 'Attendance  Not Implemented';
