@@ -378,7 +378,7 @@ class Users extends Controller {
     //Changing user profile image
     public function changePhoto() {
           $file = request()->file('photo');
-          $user_file_id = $this->saveFile($file, 'company/contracts');
+          $user_file_id = $this->saveFile($file, 'company/contracts',true);
           $data = [
             'company_file_id' => $user_file_id
           ];
