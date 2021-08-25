@@ -353,7 +353,6 @@ ORDER BY c.oid, a.attnum";
     public function logsDelete() {
         $id = request('id');
         $tag = \App\Models\ErrorLog::find($id);
-
         $errors = DB::table('admin.error_logs')->where('error_message','LIKE','%'.$tag->error_message.'%')
         ->orWhere('file','LIKE','%'.$tag->file.'%')->orWhere('route','LIKE','%'.$tag->route.'%')->update(['deleted_at'=>now(),'deleted_by'=>\Auth::user()->id]);
         echo 1;
