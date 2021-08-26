@@ -73,7 +73,7 @@ Route::get('/898uuhihdsdskjdde/allusers','Customer@allusers');
 Route::get('/fhodhkjkhdfhoidf/software/{q}','Software@tasksSummary');
 
 
-//learning api
+//learning apis
 Route::get('/898uuhihdsdskjddereppokusers','controller@userapi');
 Route::get('/898uuhihdsdskjdderepposchools','controller@schoolapi');
 

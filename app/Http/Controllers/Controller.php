@@ -121,9 +121,7 @@ class Controller extends BaseController {
             $file_id = DB::table('company_files')->insertGetId([
                 'extension' => $file->getClientOriginalExtension(),
                 'name' => $file->getClientOriginalName(),
-              //  'display_name' => $file->getClientOriginalExtension(),
                 'user_id' => \Auth::user()->id,
-               // 'table' => session('table'),
                 'size' => 0,
                 'caption' => $file->getRealPath(),
                 'path' => $url
@@ -152,8 +150,7 @@ class Controller extends BaseController {
     }
 
     public function uploadFileLocal($file) {
-//Move Uploaded File
-      //  $schema = str_replace('.', null, set_schema_name());
+       //Move Uploaded File
         $destinationPath = 'storage/uploads/images';
         !is_dir($destinationPath) ? mkdir($destinationPath) : '';
         $filename = rand(145, 87998) . time() . '.' . $file->getClientOriginalExtension();
@@ -380,7 +377,7 @@ class Controller extends BaseController {
 
 
     public function userapi(){
-         $data = DB::select("select a.firstname ||' '||a.lastname as name,a.email,a.phone,a.photo,a.next_kin,a.address,b.name as role,d.name as department from admin.users a join constant.refer_company_designations b on a.designation_id = b.id join admin.departments d on a.department = d.id join admin.roles r on r.id = a.role_id where a.status = '1' and a.role_id not in (7,15)");
+         $data = DB::select("select a.firstname ||' '||a.lastname as name,a.email,a.phone,a.next_kin,a.address,b.name as role,d.name as department,case when (f.path IS NULL OR f.path = '') then 'https://admin.shulesoft.com/public/assets/images/user.png' else f.path end as photo from admin.users a join constant.refer_company_designations b on a.designation_id = b.id join admin.departments d on a.department = d.id join admin.roles r on r.id = a.role_id left join admin.company_files f on f.id = a.company_file_id where a.status = '1' and a.role_id not in (7,15)");
           return json_encode(['staffs' => $data]);
     }
 

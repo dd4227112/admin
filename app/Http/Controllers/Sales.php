@@ -279,7 +279,7 @@ class Sales extends Controller {
                 return $this->ajaxTable('error_logs', ['file', 'error_message', 'route', 'url', 'error_instance', 'created_at::date', 'schema_name'], $sql);
                 break;
             case 'errors_resolved':
-                $sql = "select a.*,b.name as resolved_by from admin.error_logs a left join admin.users b on b.id=a.deleted_by where deleted_at is not null";
+                $sql = "select a.*,b.name as resolved_by from admin.error_logs a left join admin.users b on b.id=a.deleted_by where a.deleted_at is not null";
                 return $this->ajaxTable('error_logs', ['file', 'error_message', 'route', 'url', 'error_instance', 'created_at', 'schema_name'], $sql);
                 break;
             case 'sms_reply_logs':
@@ -764,7 +764,7 @@ class Sales extends Controller {
                   foreach($users as $value){
                    $data[$value->user_id] = $value->complete;
                }
-              $user_id =  !empty($data) ? array_search(max($data), $data) : DB::table('admin.user_train_items')->where('train_item_id',$section_id)->where('status',1)->first()->user_id;
+              $user_id = array_search(max($data), $data);
             } 
             return $user_id;
        }
