@@ -378,7 +378,9 @@ class Users extends Controller {
     //Changing user profile image
     public function changePhoto() {
           $file = request()->file('photo');
-          $user_file_id = $this->saveFile($file, 'company/contracts');
+          $filesize = filesize($file);
+          if($filesize > 2000048 ){ return redirect()->back()->with('warning','your image file is too big'); }
+          $user_file_id = $this->saveFile($file, 'company/contracts',true);
           $data = [
             'company_file_id' => $user_file_id
           ];

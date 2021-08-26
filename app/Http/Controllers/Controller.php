@@ -116,24 +116,46 @@ class Controller extends BaseController {
     }
 
     public function saveFile($file, $subfolder = null, $local = null) {
-        // $path = \Storage::disk('s3')->put($subfolder, $file);
-        // $url = \Storage::disk('s3')->url($path);
-
-         $path = \Storage::disk('local')->put($subfolder, $file);
-         $url = \Storage::disk('local')->url($path);
-
-        if (strlen($url) > 10) {
-            return DB::table('company_files')->insertGetId([
-                        'name' => $file->getClientOriginalName(),
-                        'extension' => $file->getClientOriginalExtension(),
-                        'user_id' => Auth::user()->id,
-                        'size' => $file->getSize(),
-                        'caption' => $file->getRealPath(),
-                        'path' => base_url() . $url
+           if ($local == TRUE) { 
+            $url = $this->uploadFileLocal($file);
+            $file_id = DB::table('company_files')->insertGetId([
+                'extension' => $file->getClientOriginalExtension(),
+                'name' => $file->getClientOriginalName(),
+                'user_id' => \Auth::user()->id,
+                'size' => 0,
+                'caption' => $file->getRealPath(),
+                'path' => $url
             ]);
-        } else {
-            return false;
+            return $file_id;
+        } else {  
+            $path = \Storage::disk('s3')->put($subfolder, $file);
+            $url = \Storage::disk('s3')->url($path);
+
+            if (strlen($url) > 10) {
+               $file_id =  DB::table('company_files')->insertGetId([
+                    'name' => $file->getClientOriginalName(),
+                    'display_name' => $file->getClientOriginalExtension(),
+                    'user_id' => session('id'),
+                    'table' => session('table'),
+                    'size' => $file->getSize(),
+                    'caption' => $file->getRealPath(),
+                    'path' => $url
+                ]);
+               return $file_id;
+
+            } else {
+                return false;
+            }
         }
+    }
+
+    public function uploadFileLocal($file) {
+       //Move Uploaded File
+        $destinationPath = 'storage/uploads/images';
+        !is_dir($destinationPath) ? mkdir($destinationPath) : '';
+        $filename = rand(145, 87998) . time() . '.' . $file->getClientOriginalExtension();
+        $file->move($destinationPath, $filename);
+        return url($destinationPath . '/' . $filename);
     }
 
     public function curlPrivate($fields, $url = null) {
@@ -346,29 +368,25 @@ class Controller extends BaseController {
 
       public function send_whatsapp_sms($phone, $message) {
         if ((strlen($phone) > 6 && strlen($phone) < 20) && $message != '') {
+            $message = preg_replace('/[^a-zA-Z0-9_ %\[\]\.\(\)%&-]/s', '', $message);
             DB::statement("insert into admin.whatsapp_messages(message, status, phone) select '{$message}','0',admin.whatsapp_phone('{$phone}') from admin.users where status=1 and phone ='{$phone}'");
         }
         return $this;
     }
 
 
-        public function whatsappMessage() {
-        $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 12 ');
-        foreach ($messages as $message) {
-            if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
-                $controller = new \App\Http\Controllers\Controller();
-                $controller->sendMessage($message->phone, $message->message);
-                DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1]);
-                echo 'message sent to ' . $message->name . '' . chr(10);
-                sleep(4);
-            } else {
-                //this is invalid number, so update in db to show wrong return
-                DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied']);
-                echo 'wrong phone number supplied  ' . $user->phone . '' . chr(10);
-            }
-        }
+
+    public function userapi(){
+         $data = DB::select("select a.firstname ||' '||a.lastname as name,a.email,a.phone,a.next_kin,a.address,b.name as role,d.name as department,case when (f.path IS NULL OR f.path = '') then 'https://admin.shulesoft.com/public/assets/images/user.png' else f.path end as photo from admin.users a join constant.refer_company_designations b on a.designation_id = b.id join admin.departments d on a.department = d.id join admin.roles r on r.id = a.role_id left join admin.company_files f on f.id = a.company_file_id where a.status = '1' and a.role_id not in (7,15)");
+          return json_encode(['staffs' => $data]);
     }
 
+
+    public function schoolapi(){
+       $data = DB::select("select a.sname as school_name,a.phone,a.address,a.email,a.website,a.created_at as joined_at,a.photo, z.estimated_students as number_of_students from admin.all_setting a join admin.client_schools c on c.school_id = a.school_id join admin.clients z on z.id = c.client_id");
+         return json_encode(['schools' => $data]);
+    }
+ 
 
 }
 

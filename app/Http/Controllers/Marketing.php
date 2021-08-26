@@ -255,9 +255,7 @@ group by ownership');
     }
 
     public function addEvent() {
-
         if ($_POST) {
-
             $file_id = null;
             $attach_id = null;
             if (!empty(request('attached'))) {
@@ -295,12 +293,12 @@ group by ownership');
         if ((int) $id > 0) {
 
             if ($_POST) {
+
                 $body = request('message');
                 $sms = request('sms');
                 $email = request('email');
                 $events = \App\Models\EventAttendee::where('event_id', $id)->get();
                 $workshop = \App\Models\Events::where('id', $id)->first();
-
                 foreach ($events as $event) {
                     if ($event->email != '' && (int) $email > 0) {
                         $message = '<h4>Dear ' . $event->name . '</h4>'
@@ -322,6 +320,7 @@ group by ownership');
                         $sql = "insert into public.sms (body,user_id, type,phone_number) values ('$message1', 1, '0', '$event->phone')";
                         $chatId = $event->phone . '@c.us';
                         $this->sendMessage($chatId, $message1);
+
                         DB::statement($sql);
                     }
                 }

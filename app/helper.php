@@ -74,7 +74,7 @@ function check_implementation($activity, $schema_name) {
         } else {
             $status = ' Not Implemented';
         }
-    } else if (preg_match('/operations/i', strtolower($activity))) {
+    } else if (preg_match('/operations:transport/i', strtolower($activity))) {
         //check transport and hostel
         $tmembers = DB::table($schema_name . '.tmembers')->whereYear('created_at', date('Y'))->count();
         $hmembers = DB::table($schema_name . '.hmembers')->whereYear('created_at', date('Y'))->count();
@@ -83,9 +83,23 @@ function check_implementation($activity, $schema_name) {
         } else {
             $status = 'Transport/Hostel  Not Implemented';
         }
+         
+    } else if (preg_match('/operations:attendance/i', strtolower($activity))) {
+      
+        $students = DB::table($schema_name . '.student')->whereYear('created_at', date('Y'))->count();
+        $sattendances = DB::table($schema_name . '.sattendances')->whereYear('created_at', date('Y'))->count();
+        $teachers = DB::table($schema_name . '.teacher')->whereYear('created_at', date('Y'))->count();
+        $tattendance = DB::table($schema_name . '.tattendance')->whereYear('created_at', date('Y'))->count();
+
+        if ($students >= $sattendances || $teachers >= $tattendance ) {
+            $status = 'Attendance Implemented';
+        } else {
+            $status = 'Attendance  Not Implemented';
+        }
+
     } else if (preg_match('/sms/i', strtolower($activity))) {
         //check transport and hostel
-        $sms_config = DB::table('admin.school_keys')->where('api_key', '<>', '1234567894')->where('schema_name', $schema_name)->count();
+        $sms_config = DB::table('admin.school_keys')->where('api_key', '<>', '6664567894')->where('schema_name', $schema_name)->count();
 
         if ((int) $sms_config > 0) {
             $status = 'Implemented';

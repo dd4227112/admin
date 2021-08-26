@@ -43,23 +43,15 @@ class Kernel extends ConsoleKernel {
         //         ->hourly();
         $schedule->call(function () {
             //sync invoices 
-            $this->whatsappMessage();
             $this->syncInvoice();
-            //$this->sendeMails();
         })->everyMinute();
 
         $schedule->call(function () {
-            // End Deadlock Processes 
-            //$this->endDeadlock();
-        })->everyThreeMinutes();
-//        $schedule->call(function () {
-//            (new Message())->sendSms();
-//        })->everyMinute();
-        // $schedule->call(function () {
-        //     (new Message())->checkPhoneStatus();
-        // })->hourly();
+            //sync new messages 
+            $this->whatsappMessage();
+        })->everyMinute();
+
         $schedule->call(function () {
-            //   $this->curlServer(['action' => 'payment'], 'http://75.119.140.177:8081/api/cron');
             (new Message())->sendEmail();
         })->everyMinute();
         //  $schedule->call(function () {
@@ -282,7 +274,7 @@ class Kernel extends ConsoleKernel {
                         . " b.created_at, b.updated_at, a.amount, c.name as student_name, '" . $schema . "' as schema_name, (select sub_invoice from "
                         . "  " . $schema . ".setting limit 1) as sub_invoice   from  " . $schema . ".invoices b join " . $schema . ".student c on "
                         . " c.student_id=b.student_id join ( select sum(balance) as amount, a.invoice_id from " . $schema . ".invoice_balances a "
-                        . " group by a.invoice_id ) a on a.invoice_id=b.id where  a.amount >0  and b.sync <>1 and b.prefix in "
+                        . " group by a.invoice_id ) a on a.invoice_id=b.id where b.sync <>1 and b.prefix in "
                         . " (select bn.invoice_prefix from " . $schema . ".bank_accounts_integrations bn join " . $schema . ".bank_accounts ba on "
                         . " ba.id=bn.bank_account_id where ba.refer_bank_id=22 AND bn.api_username is not null) order by random() limit 120");
 
@@ -354,7 +346,8 @@ class Kernel extends ConsoleKernel {
                         ->where('reference', $invoice->reference)->update(['sync' => 0, 'status' => 0, 'return_message' => $curl, 'push_status' => 'check_' . $push_status, 'updated_at' => 'now()']);
             }
         }
-        // DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
+
+        DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
     }
 
     public function deleteInvoice($invoice, $token) {
@@ -383,7 +376,8 @@ class Kernel extends ConsoleKernel {
                 DB::table($invoice->schema_name . '.invoices')
                         ->where('reference', $invoice->reference)->update(['sync' => 0, 'status' => 0, 'return_message' => $curl, 'push_status' => 'delete_' . $push_status, 'updated_at' => 'now()']);
             }
-            //  DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
+
+            DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
         }
     }
 
@@ -459,7 +453,7 @@ class Kernel extends ConsoleKernel {
                 // DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
             }
         }
-        //DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
+        DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
     }
 
     public function updateInvoiceStatus($fields, $invoice, $token) {
@@ -490,10 +484,10 @@ class Kernel extends ConsoleKernel {
                 if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email)) {
                     //DB::statement("insert into " . $invoice->schema_name . ".email (email,subject,body) values ('" . $user->email . "', 'Control Number Mpya Ya Malipo ya Ada ya Shule','" . $message . "')");
                 }
-                // DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
+                DB::statement("insert into " . $invoice->schema_name . ".sms (phone_number,body,type) values ('" . $user->phone . "','" . $message . "',0)");
             }
         }
-        //DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
+        DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
     }
 
     public function updateInvoice() {
@@ -532,7 +526,9 @@ class Kernel extends ConsoleKernel {
                         DB::table($invoice->schema_name . '.invoices')
                                 ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
                     }
-                    // DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
+
+                   DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
+
                 }
             }
         }
@@ -1002,7 +998,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     }
 
     private function addAttendance() {
-        $datas = DB::connection('biotime')->table('public.iclock_transaction')->where('punch_state', '0')->get();
+        $datas = DB::connection('biotime')->table('public.iclock_transaction')->where('punch_state', '0')->limit(50)->get();
         if (count($datas) > 0) {
             foreach ($datas as $data) {
                 $device = DB::table('api.attendance_devices')->where('serial_number', $data->terminal_sn)->first();
@@ -1219,7 +1215,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
             } else if (preg_match('/sms/i', strtolower($check->content))) {
                 $schemas = DB::select('select * from admin.all_setting');
                 foreach ($schemas as $schema) {
-                    $sms_config = DB::table('admin.school_keys')->where('api_key', '<>', '1234567894')->where('schema_name', $schema->schema_name)->count();
+                    $sms_config = DB::table('admin.school_keys')->where('api_key', '<>', '6664567894')->where('schema_name', $schema->schema_name)->count();
                     if ((int) $sms_config > 0) {
                         $this->updateStatus($check->id, $this->client_school($schema->schema_name)->id);
                     }

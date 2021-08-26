@@ -73,7 +73,7 @@
                 <div class="col-lg-6"></div>
                 <div class="col-lg-6">
                     <p class="text-right" align="right">
-                       
+                        <a class="btn btn-secondary btn-sm" href="#" data-toggle="modal" data-target="#large-Modal"> Edit </a>
                         <a href="#" id="printInvoice" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Print </a>
 
                        
@@ -119,10 +119,10 @@
                                                     <td>
                                                         <ul style="border-left: 1px solid #cccc; padding-left: 3em;">
                                                             <li style="font-size: 1.5rem; font-weght: bold;">To</li>
-                                                            <li><strong><?= $invoice->client->name ?></strong></li>
+                                                            <li><strong><?= $invoice->name ?></strong></li>
 
-                                                            <li>Phone: <?= $invoice->client->phone ?></li>
-                                                            <li>Email: <?= $invoice->client->email ?></li>
+                                                            <li>Phone: <?= $invoice->phone ?></li>
+                                                            <li>Email: <?= $invoice->email ?></li>
                                                         </ul>
                                                     </td>
                                                     <td>
@@ -152,8 +152,8 @@
                                             <tr>
                                                 <td>TOTAL DUE</td>
                                                 <td>  <?php
-                                                    $am = $invoice->invoiceFees()->sum('amount');
-                                                    $paid = $invoice->payments()->sum('amount');
+                                                    $am = $invoice->amount;
+                                                    $paid = $invoice->paid;
                                                     $unpaid = $am - $paid;
                                                     ?><b class="amnt-value">Tsh <?= number_format($unpaid) ?></b>
                                                 </td>
@@ -163,7 +163,8 @@
                                     </div>
 
                                     <?php
-                                    $invoice_fee = $invoice->invoiceFees()->get();
+                                   // $invoice_fee = $invoice->invoiceFees()->get();
+                                    $invoice_fee = DB::select("select * from admin.invoice_fees where invoice_id = '{$invoice->id}'");
                                     ?>
                                     <br/>
                                     <div class="col-xs-12 col-sm-12 col-lg-12">
@@ -210,9 +211,9 @@
                                             <td>
                                                 <?php 
                                                 $a  = [];
-                                                        $setting = DB::table('admin.all_setting')->where('schema_name', $invoice->client->username)->first();
+                                                        $setting = DB::table('admin.all_setting')->where('schema_name', $invoice->username)->first();
                                                         if(!empty($setting)) {
-                                                           $a = DB::table($invoice->client->username. '.bank_accounts')->where('refer_bank_id', 22)->first();
+                                                           $a = DB::table($invoice->username. '.bank_accounts')->where('refer_bank_id', 22)->first();
                                                         } 
                                                  if(!empty($a)){ ?>
                                                    <p>
@@ -290,53 +291,7 @@
                 
 
 
-
-
-
-
-
-
-
-              {{-- <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Edit This Invoice</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <?php
-                     //   $invoice_fee = $invoice->invoiceFees()->first();
-                        ?>
-                        <div class="modal-body">
-                      
-                                <form action="" method="post">
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                Quantity
-                                                <input type="text" class="form-control"  name="quantity" value="<?= //$invoice_fee->quantity ?>">
-                                            </div>
-                                            <div class="col-md-6">
-                                                Price
-                                                <input type="text" class="form-control"  name="price" value="<?= //$invoice_fee->unit_price ?>">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="modal-footer">
-                                        <input type="hidden" name="invoice_id" id="invoice_id" value="<?= //$invoice_fee->invoice_id ?>">
-                                        <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary waves-effect waves-light ">Edit</button>
-                                    </div>
-                                    <?= csrf_field() ?>
-                                </form>
-           
-                            </div>
-                    </div>
-                </div>
-            </div> --}}
+            
 
 
         </div>

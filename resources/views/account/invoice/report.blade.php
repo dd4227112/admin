@@ -55,11 +55,11 @@
                                    <table id="invoice_table" class="table table-striped table-bordered nowrap dataTable">
                                         <thead>
                                             <tr>
+                                                <th>#</th>
                                                 <th>Client Name</th>
                                                 <th>Reference #</th>
+                                                <th>Paid date</th>
                                                 <th>Amount</th>
-                                                <th>Paid Amount</th>
-                                                <th>Remained Amount</th>
                                                 <th>Due Date</th>
                                                 <th>Action</th>
                                             </tr>
@@ -72,36 +72,36 @@
                                             $i = 1;
                                             foreach ($invoices as $invoice) {
 
-                                                $amount = $invoice->invoiceFees()->sum('amount');
-                                                $paid = $invoice->payments()->sum('amount');
-                                                $unpaid = $amount - $paid;
-                                                $total_paid += $paid;
-                                                $total_amount += $amount;
-                                                $total_unpaid += $unpaid;
+                                                // $amount = $invoice->invoiceFees()->sum('amount');
+                                                // $paid = $invoice->payments()->sum('amount');
+                                                // $unpaid = $amount - $paid;
+                                                // $total_paid += $paid;
+                                                // $total_amount += $amount;
+                                                // $total_unpaid += $unpaid;
                                                 ?>
 
 
                                                 <tr>
-                                                    <td><?= $invoice->client->username ?></td>
+                                                    <td><?= $i?></td>
+                                                    <td><?= $invoice->name ?></td>
                                                     <td><?= $invoice->reference ?></td>
-                                                    <td><?= money($amount) ?></td>
-                                                    <td><?= money($paid) ?></td>
-                                                    <td><?= money($unpaid) ?></td>
+                                                    <td><?= date('d M Y', strtotime($invoice->created_at)) ?></td>
+                                                    <td><?= money($invoice->amount) ?></td>
                                                     <td><?= date('d M Y', strtotime($invoice->due_date)) ?></td>
                                                     <td>
-                                                        <a class="btn btn-success btn-sm" href="<?= url('account/invoiceView/' . $invoice->id) ?>"  > <span class="point-marker bg-danger"></span>View</a>
-                                                    </td>
+                                                        <a class="btn btn-success btn-sm" href="<?= url('account/receiptView/' . $invoice->id . '/'. $invoice->p_id) ?>"  > <span class="point-marker bg-danger"></span>View</a>
+                                                   </td>
                                         </tr>
                                     <?php $i++; } ?>
                                         </tbody>
                                         <tfoot>
-                                            <tr>
+                                            {{-- <tr>
                                                 <td colspan="2">Total</td>
                                                 <td><?= money($total_amount) ?></td>
                                                 <td><?= money($total_paid) ?></td>
                                                 <td><?= money($total_unpaid) ?></td>
                                                 <td colspan="2"></td>
-                                            </tr>
+                                            </tr> --}}
                                         </tfoot>
                                     </table>
                         </div>
