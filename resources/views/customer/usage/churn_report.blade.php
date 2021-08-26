@@ -55,7 +55,7 @@
                                 $sql = "SELECT distinct schema_name from admin.$table where extract(year from created_at)=$year and extract(month from created_at)=$s  and  schema_name not in ('public','betatwo','jifunze','beta_testing')";
                             }
                             ?>
-                            <td><?= $fee->count ?></td>
+                            <td>=HYPERLINK("<?= $fetch_url . $sql ?>",<?= $fee->count ?>)</td>
                             <?php
                         }
                     }
