@@ -1499,6 +1499,8 @@ class Customer extends Controller {
             'date' => request('job_date')
             ];
 
+           //  \App\Models\ClientJobCard::updateOrCreate($data);
+
             if(empty($card)){
                 \App\Models\ClientJobCard::create($data);  
             } else { 

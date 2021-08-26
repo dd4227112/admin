@@ -218,8 +218,9 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                 <?php } ?>
 
                                 <li class="user-profile header-notification">
-                                    <a href="#!">
-                                        <img src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image">
+                                    <a href="#!"> <?php $id = Auth::user()->id;
+                                                $path = \collect(db::select("select f.path from admin.users a join admin.company_files f on a.company_file_id = f.id where a.id = '$id'"))->first(); ?>
+                                        <img class="user-img img-circle" src="<?= $path->path !='' ? $path->path : $root . 'assets/images/user.png' ?>" alt="User-Profile-Image">
                                         <span>{{ Auth::user()->name() }}</span>
                                         <i class="ti-angle-down"></i>
                                     </a>
@@ -475,8 +476,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                         <ul class="tree-2">
                                             <li><a href="<?= url('users/index') ?>"
                                                     data-i18n="nav.extra-components.session-timeout">Users</a></li>
-                                            {{-- <li><a href="<?= url('users/kpi_list') ?>"
-                                                data-i18n="nav.extra-components.session-timeout">KPI</a></li> --}}
+                                         
                                                 
                                         
                                             <li><a href="<?= url('attendance/index') ?>"
