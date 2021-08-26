@@ -109,3 +109,13 @@ ALTER TABLE admin.whatsapp_messages
 
     ALTER TABLE admin.whatsapp_messages
     ADD COLUMN updated_at timestamp without time zone;
+
+
+
+
+
+-- DATABASE OPERATIONS
+select a.specific_schema,function_name from (
+SELECT specific_schema, count(specific_name) as function_name
+FROM information_schema.routines
+WHERE (routines.specific_schema::name <> ALL (ARRAY['admin'::name, 'constant'::name, 'academy'::name, 'api'::name, 'forum'::name, 'public'::name,'pg_catalog'::name,'information_schema'::name])) AND routines.data_type::text <> 'trigger'::text group by specific_schema )a where a.function_name > 31 

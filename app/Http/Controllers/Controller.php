@@ -339,25 +339,36 @@ class Controller extends BaseController {
             $requests = array('chat_id' => '43434', 'text' => $response, 'parse_mode' => '', 'source' => 'user');
             // file_put_contents('requests.log', $response . PHP_EOL, FILE_APPEND);
         } else {
-            echo 'Wrong url supplied in whatapp api';
+            echo 'Wrong url supplied in whatsapp api';
         }
     }
 
 
-      public function send_whatsapp_sms($phone, $message, $name = null,$status = 0) {
+      public function send_whatsapp_sms($phone, $message) {
         if ((strlen($phone) > 6 && strlen($phone) < 20) && $message != '') {
-            $phonenumber = validate_phone_number($phone, '255');
-            $chatId = $phonenumber . '@c.us';
-            DB::table('admin.whatsapp_messages')->insert(array('message' => $message, 'phone' => $chatId, 'name' => $name, 'status' => $status, 'created_at'=> now()));
+            DB::statement("insert into admin.whatsapp_messages(message, status, phone) select '{$message}','0',admin.whatsapp_phone('{$phone}') from admin.users where status=1 and phone ='{$phone}'");
         }
         return $this;
     }
 
 
-   
+        public function whatsappMessage() {
+        $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 12 ');
+        foreach ($messages as $message) {
+            if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
+                $controller = new \App\Http\Controllers\Controller();
+                $controller->sendMessage($message->phone, $message->message);
+                DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1]);
+                echo 'message sent to ' . $message->name . '' . chr(10);
+                sleep(4);
+            } else {
+                //this is invalid number, so update in db to show wrong return
+                DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied']);
+                echo 'wrong phone number supplied  ' . $user->phone . '' . chr(10);
+            }
+        }
+    }
 
-
-  
 
 }
 

@@ -57,7 +57,8 @@ class Software extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function compareTable($schema = null) {
+    public function compareTable($schema = 'betatwo') {
+      //  dd($schema);
         $this->data['data'] = $this->compareSchemaTables($schema);
         $view = 'software.database.' . strtolower('compareTable');
         if (view()->exists($view)) {
@@ -151,6 +152,7 @@ AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
     }
 
     public function compareSchemaTables($slave_schema = null) {
+        $slave_schema = null;
         $master_tables = $this->loadTables(self::$master_schema);
         $db_file = $this->loadSchema();
         ///$db_file = file_get_contents('app/config/development/db.txt');
@@ -208,8 +210,9 @@ AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
     public function syncTable() {
         $master_table_name = request('table');
         $slave_schema = request('slave');
-        $sql = \collect(DB::select("select show_create_table('" . $master_table_name . "','" . $slave_schema . "') as result"))->first();
-        return DB::statement(str_replace('ARRAY', 'character varying[]', $sql->result));
+        $sql = "SELECT FROM admin.show_create_table('" . $master_table_name . "','" . $slave_schema . "')";
+        return DB::statement($sql);
+        // return DB::statement(str_replace('ARRAY', 'character varying[]', $sql->result));
     }
 
     public function syncColumn($master_table = null, $schema = null, $column_missing = null) {
@@ -329,11 +332,11 @@ ORDER BY c.oid, a.attnum";
         }
     }
 
-    public function logs() {
+    public function logs() { 
+
         $this->data['schema_name'] = $schema = request()->segment(3);
-        $this->data['error_log_count'] = strlen($schema) > 3 ? \collect(DB::select("select distinct error_message,created_at::date,schema_name,file from admin.error_logs where schema_name = '$schema' and deleted_at is null group by error_message,created_at::date,schema_name,file order by created_at::date"))->count() : \collect(DB::select("select distinct error_message,error_instance,created_at::date,schema_name,file  from (select * from admin.error_logs where deleted_at is null order by id desc) y where deleted_at is null"))->count();
-      //  $this->data['schema_errors']  =  strlen($schema) > 3 ? DB::table('error_logs')->whereNull('deleted_at')->where('schema_name', $schema)->get() : '';
-        $this->data['schema_errors']  =  strlen($schema) > 3 ? DB::select("select distinct error_message,created_at::date,schema_name,file from admin.error_logs where schema_name = '$schema' and deleted_at is null group by error_message,created_at::date,schema_name,file order by created_at::date") : DB::select("select distinct error_message,error_instance,created_at::date,schema_name,file  from (select * from admin.error_logs where deleted_at is null order by id desc) y where deleted_at is null") ;
+        $this->data['error_log_count'] = strlen($schema) > 3 ? \collect(DB::select("select distinct error_message,created_at::date,schema_name,file from admin.error_logs where schema_name = '$schema' and deleted_at is null group by error_message,created_at::date,schema_name,file order by created_at::date"))->count() :  \collect(DB::select("SELECT distinct error_message,error_instance,created_at::date,schema_name,file,url,id  from (select * from admin.error_logs where deleted_at is null AND error_instance  NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException') order by id desc) y where deleted_at is null"))->count();
+        $this->data['schema_errors']  =  strlen($schema) > 3 ? DB::select("select distinct error_message,created_at::date,schema_name,file,url from admin.error_logs where schema_name = '$schema' and deleted_at is null group by error_message,created_at::date,schema_name,file,url order by created_at::date") : []; // DB::select("SELECT distinct error_message,error_instance,created_at::date,schema_name,file,url,id  from (select * from admin.error_logs where deleted_at is null AND error_instance NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException') order by id desc) y where deleted_at is null") ;
         $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1 '))->first();
         return view('software.logs', $this->data);
     }
@@ -349,14 +352,12 @@ ORDER BY c.oid, a.attnum";
 
     public function logsDelete() {
         $id = request('id');
-        $tag = \App\Models\ErrorLog::findOrFail($id);
+        $tag = \App\Models\ErrorLog::find($id);
 
-        if (!empty($tag)) {
-            $tag->deleted_by = \Auth::user()->id;
-            $tag->save();
-            $tag->delete();
-        }
+        $errors = DB::table('admin.error_logs')->where('error_message','LIKE','%'.$tag->error_message.'%')
+        ->orWhere('file','LIKE','%'.$tag->file.'%')->orWhere('route','LIKE','%'.$tag->route.'%')->update(['deleted_at'=>now(),'deleted_by'=>\Auth::user()->id]);
         echo 1;
+     
     }
 
     public function Readlogs() {

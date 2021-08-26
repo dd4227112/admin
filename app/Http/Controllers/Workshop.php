@@ -50,10 +50,12 @@ class Workshop extends Controller {
                     . chr(10) . 'Shulesoft Team'
                     . chr(10) . ' Call: +255 655 406 004 ';
             DB::table('public.sms')->insert([
-                'body' => $message1,
-                'user_id' => 1,
-                'type' => 0,
-                'phone_number' => $phonenumber
+                'body'=>$message1,
+                'user_id'=>1,
+                'type'=>0,
+                'priority' => 1,
+                'sent_from' => 'whatsapp',
+                'phone_number'=> str_replace('2550', '+255', $phonenumber)
             ]);
             $chatId = $phonenumber . '@c.us';
             $this->sendMessage($chatId, $message1);

@@ -116,7 +116,6 @@ class Kernel extends ConsoleKernel {
             (new Background())->schoolMonthlyReport();
         })->monthlyOn(29, '06:36');
     }
-    
 
     public function whatsappMessage() {
         $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 12 ');
@@ -355,7 +354,7 @@ class Kernel extends ConsoleKernel {
                         ->where('reference', $invoice->reference)->update(['sync' => 0, 'status' => 0, 'return_message' => $curl, 'push_status' => 'check_' . $push_status, 'updated_at' => 'now()']);
             }
         }
-       // DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
+        // DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
     }
 
     public function deleteInvoice($invoice, $token) {
@@ -384,7 +383,7 @@ class Kernel extends ConsoleKernel {
                 DB::table($invoice->schema_name . '.invoices')
                         ->where('reference', $invoice->reference)->update(['sync' => 0, 'status' => 0, 'return_message' => $curl, 'push_status' => 'delete_' . $push_status, 'updated_at' => 'now()']);
             }
-          //  DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
+            //  DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
         }
     }
 
@@ -533,7 +532,7 @@ class Kernel extends ConsoleKernel {
                         DB::table($invoice->schema_name . '.invoices')
                                 ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
                     }
-                   // DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
+                    // DB::table('api.requests')->insert(['return' => $curl, 'content' => json_encode($fields)]);
                 }
             }
         }
@@ -794,12 +793,12 @@ class Kernel extends ConsoleKernel {
     public function sendTodReminder() {
         $users = DB::select('select * from admin.all_teacher_on_duty');
         $all_users = [];
-
+        $all_students = [];
         foreach ($users as $user) {
             unset($all_users[$user->name]);
             $students = DB::SELECT('SELECT name FROM ' . $user->schema_name . '.student where student_id in(select student_id from ' . $user->schema_name . '.student_duties where duty_id=' . $user->duty_id . ')');
             foreach ($students as $student) {
-                array_push($all_students, $student->name);
+                array_push($all_students, [$student->name]);
             }
             $message = 'Habari  ' . $user->name . ' ,'
                     . 'Leo ' . date("Y-m-d") . ' umewekwa kama walimu wa zamu Shuleni pamoja na ' . implode(',', $all_students) . ' (Viranja)  . Kumbuka kuandika repoti yako ya siku katika account yako ya ShuleSoft kwa ajili ya kumbukumbu. Asante';
@@ -1003,8 +1002,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     }
 
     private function addAttendance() {
-        $date = date("Y-m-d", strtotime("-14 days"));
-        $datas = DB::connection('biotime')->table('public.iclock_transaction')->whereDate('punch_time', $date)->where('punch_state', '0')->get();
+        $datas = DB::connection('biotime')->table('public.iclock_transaction')->where('punch_state', '0')->get();
         if (count($datas) > 0) {
             foreach ($datas as $data) {
                 $device = DB::table('api.attendance_devices')->where('serial_number', $data->terminal_sn)->first();
@@ -1014,16 +1012,20 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                     $device = DB::table('api.attendance_devices')->where('id', $device_id)->first();
                 }
                 if (!empty($employee)) {
-                    $uattendance = DB::table('admin.uattendances')->where('user_id', $employee->id)->whereDate('date', date('Y-m-d'))->first();
+                    $uattendance = DB::table('admin.uattendances')->where('user_id', $employee->id)->whereDate('date', date("Y-m-d", strtotime($data->punch_time)))->first();
                     if (empty($uattendance)) {
                         DB::table('admin.uattendances')->insert([
                             'user_id' => $employee->id,
                             'created_by' => $device->id,
                             'source' => 'api',
-                            'timein' => 'now()',
+                            'timein' => date("Y-m-d H:i:s", strtotime($data->punch_time)),
                             'date' => date("Y-m-d", strtotime($data->punch_time)),
                             'present' => 1
                         ]);
+                    } else {
+                        $emp_code = "'" . $employee->id . "'";
+                        $timeout = DB::connection('biotime')->table('public.iclock_transaction')->where('emp_code', $emp_code)->whereDate('punch_time', date("Y-m-d", strtotime($data->punch_time)))->orderBy('id', 'DESC')->first();
+                        !empty($timeout) ? DB::table('admin.uattendances')->where('user_id', $employee->id)->whereDate('date', date("Y-m-d", strtotime($data->punch_time)))->update(['timeout' => date("Y-m-d H:i:s", strtotime($timeout->punch_time)), 'updated_at' => date("Y-m-d H:i:s")]) : '';
                     }
                 } else {
                     $user = DB::table('admin.all_users')->where('sid', $data->emp_code)->first();
@@ -1031,7 +1033,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                     if (!empty($user)) {
 
                         if ($user->table == 'student') {
-                            $attendance = DB::table($user->schema_name . '.sattendances')->where('student_id', $user->id)->whereDate('date', date('Y-m-d'))->first();
+                            $attendance = DB::table($user->schema_name . '.sattendances')->where('student_id', $user->id)->whereDate('date', date("Y-m-d", strtotime($data->punch_time)))->first();
                             if (empty($attendance)) {
                                 DB::table($user->schema_name . '.sattendances')->insert([
                                     'student_id' => $user->id,
@@ -1042,7 +1044,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                                 ]);
                             }
                         } else {
-                            $uattendance = DB::table($user->schema_name . '.uattendances')->where('user_id', $user->id)->where('user_table', $user->table)->whereDate('date', date('Y-m-d'))->first();
+                            $uattendance = DB::table($user->schema_name . '.uattendances')->where('user_id', $user->id)->where('user_table', $user->table)->whereDate('date', date("Y-m-d", strtotime($data->punch_time)))->first();
                             if (empty($uattendance)) {
                                 DB::table($user->schema_name . '.uattendances')->insert([
                                     'user_id' => $user->id,
@@ -1056,13 +1058,13 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                             }
                         }
                     }
-                    DB::connection('biotime')->table('public.iclock_transaction')->where('id', $data->id)->update(['punch_state' => '1']);
                 }
+                DB::connection('biotime')->table('public.iclock_transaction')->where('id', $data->id)->update(['punch_state' => '1']);
             }
         }
     }
 
-    private function client($client_id = null) {
+    private function client($client_id) {
         return \App\Models\Client::where('id', $client_id)->first()->name;
     }
 
@@ -1103,7 +1105,6 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     //     AND state in ('idle', 'idle in transaction', 'idle in transaction (aborted)', 'disabled') AND current_timestamp - state_change > interval '3 minutes') SELECT pg_terminate_backend(pid) FROM inactive_connections WHERE rank > 1");
     //     return DB::select("SELECT pg_terminate_backend(pid) from pg_stat_activity where state='idle' and query like '%DEALLOCATE%'");
     // }
-
     // F(x) to send text remainder to keep phone active to school admins
     public function SMSStatusToSchoolsAdmin() {
         // select all schools not keep their app active for the past 24 hours
@@ -1131,7 +1132,6 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     //     foreach ($schemas as $schema) {
     //         $schema_emails = DB::select("select * from $schema->schema_name.email where status = '0'");
     //         if (!empty($schema_emails)) {
-
     //             foreach ($schema_emails as $schema_email) {
     //                 // if (!empty($schema_email->email) && !Str::contains($schema_email->email, 'shulesoft.com')) {
     //                 if (filter_var($schema_email->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $schema_email->email)) {
@@ -1149,9 +1149,9 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     // }
 
     public function updateCompleteItems() {
-        $materialized_views=DB::select("SELECT relname FROM pg_catalog.pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace WHERE c.relkind = 'm' and nspname='admin'");
+        $materialized_views = DB::select("SELECT relname FROM pg_catalog.pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace WHERE c.relkind = 'm' and nspname='admin'");
         foreach ($materialized_views as $view) {
-            DB::statement('REFRESH MATERIALIZED VIEW admin.'.$view->relname);
+            DB::statement('REFRESH MATERIALIZED VIEW admin.' . $view->relname);
         }
         $checks = DB::select('select * from admin.train_items where status=1');
         foreach ($checks as $check) {

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 //\URL::forceScheme('https');
 /*
   |--------------------------------------------------------------------------
@@ -25,8 +26,6 @@ use Illuminate\Support\Facades\Route;
   | contains the "web" middleware group. Now create something great!
   |
  */
-
-
 
 
 $bad_url = ['acme-challenge', 'rss', 'index.php', 'errors', 'phpR', 'apple-touch', 'assetlinks', '.php', 'public', '.tff', '.jpg'];
@@ -60,6 +59,8 @@ Route::get('/898uuhihdsdskjdde/custrpt/{q}','Customer@customSqlReport');
 Route::get('/898uuhihdsdskjddeqe/{q}','Customer@implementationReport');
 
 Route::get('/898uuhihdsdskjdderer/send','Customer@event');
+//churn calculations
+Route::get('/898uuhihdsdskjdderchurn/{year}','Customer@churnReport');
 
 Route::get('/898uuhihdsdskjddereppok/expense','Customer@expenseRecords');
 
@@ -100,15 +101,15 @@ if (createRoute() != NULL) {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/workshop', 'Workshop@index')->name('workshop');
-Route::post('/addregister', 'Workshop@addregister');
-Route::get('/register', 'Workshop@register')->name('register');
-Route::get('/user-details/{param1?}', 'Workshop@profile')->name('profile');
+// Route::get('/workshop', 'Workshop@index')->name('workshop');
+// Route::post('/addregister', 'Workshop@addregister');
+// Route::get('/register', 'Workshop@register')->name('register');
+// Route::get('/user-details/{param1?}', 'Workshop@profile')->name('profile');
 
 
-// 
-Route::get('/application', 'Recruitments@index');
-Route::post('/addrecruiment', 'Recruitments@register'); 
+// // 
+// Route::get('/application', 'Recruitments@index');
+// Route::post('/addrecruiment', 'Recruitments@register'); 
 
-Route::get('/nda_form/{id}', 'Recruitments@nda');
-Route::post('/sendndaform','Recruitments@uploadnda');
+// Route::get('/nda_form/{id}', 'Recruitments@nda');
+// Route::post('/sendndaform','Recruitments@uploadnda');

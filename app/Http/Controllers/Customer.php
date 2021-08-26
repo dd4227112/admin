@@ -226,6 +226,7 @@ class Customer extends Controller {
             ]);
 
             $user = \App\Models\User::where('id', $user_id)->first();
+            $start_date = date('d-m-Y', strtotime($start_date)) == '01-01-1970' ? date('Y-m-d') : date('d-m-Y', strtotime($start_date));
             // email to shulesoft personel
             $message = 'Hello ' . $user->firstname . '<br/>'
                     . 'A task ' . $train->trainItem->content . ' been allocated to you'
@@ -235,14 +236,15 @@ class Customer extends Controller {
                     . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                     . '</ul>';
             $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
-            $message = "Hello " . $user->firstname . " a task of " . $train->trainItem->content . " at " . $train->client->name . " has been allocated to you.The project is expected to start at " . date('d-m-Y H:i:s', strtotime($start_date)) . " to  " . date('d-m-Y H:i:s', strtotime($start_date . " + {$section->time} days")) . " .Thank You";
+            $message = "Hello " . $user->firstname . " a task of " . $train->trainItem->content . " at " . $train->client->name . " has been allocated to you.The project is expected to start at " . date('d-m-Y', strtotime($start_date)) . " to  " . date('d-m-Y', strtotime($start_date . " + {$section->time} days")) . " .Thank You";
             $this->send_whatsapp_sms($user->phone, $message);
+
 
             //email to zone manager
             // findOrFail zone manager based on school location
-            $user_id = $this->zonemanager($train->client->id);
-            if (isset($user_id) && !empty((int) $user_id->user_id)) {
-                $manager = \App\Models\User::where('id', $user_id->user_id)->first();
+            $user_manager = $this->zonemanager($train->client->id);
+            if (isset($user_manager) && !empty((int) $user_manager->user_id)) {
+                $manager = \App\Models\User::where('id', $user_manager->user_id)->first();
                 $manager_message = 'Hello ' . $manager->firstname . '<br/>'
                         . 'A task ' . $train->trainItem->content . ' been scheduled to'
                         . '<li>' . $train->client->name . '</li>'
@@ -250,8 +252,8 @@ class Customer extends Controller {
                         . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                         . '</ul>';
                 $this->send_email($manager->email, 'ShuleSoft Task Allocation', $manager_message);
-                $message = "Hello " . $manager->firstname . " a task of " . $train->trainItem->content . " at " . $train->client->name . " has been allocated to " . $user->firstname . " " . $user->lastname . " The project is expected to start at " . date('d-m-Y', strtotime($start_date)) . " to  " . date('d-m-Y', strtotime($start_date . " + {$section->time} days")) . " .Thank You";
-                $this->send_whatsapp_sms($user->phone, $message);
+                $wmessage = "Hello " . $manager->firstname . " a task of " . $train->trainItem->content . " at " . $train->client->name . " has been allocated to " . $user->firstname . " " . $user->lastname . " The project is expected to start at " . date('d-m-Y', strtotime($start_date)) . " to  " . date('d-m-Y', strtotime($start_date . " + {$section->time} days")) . " .Thank You";
+                $this->send_whatsapp_sms($manager->phone, $wmessage);
             }
 
 
@@ -562,9 +564,10 @@ class Customer extends Controller {
             if (!empty(request('standing_order_file'))) {
                 $file = request()->file('standing_order_file');
                 $filename1 = time() . rand(11, 8894) . '.' . $file->guessExtension();
-                $filePath = base_path() . '/storage/uploads/file/';
+                $filePath = base_path() . '/storage/uploads/files/';
                 $file->move($filePath, $filename1);
             }
+
 
             $data = [
                 'client_id' => request('client_id'),
@@ -580,7 +583,8 @@ class Customer extends Controller {
                 // 'refer_bank_id' => request('refer_bank_id'),
                 'note' => request('note'),
                 'contract_type_id' => 8,
-                'file' => $filename1
+                'file' => $filename1,
+                'created_at' => now()
             ];
             $contract_id = DB::table('admin.standing_orders')->insertGetId($data);
 
@@ -875,10 +879,13 @@ class Customer extends Controller {
             if ((int) request('to_user_id') > 0) {
                 $user = \App\Models\User::find(request('to_user_id'));
                 $message = 'Hello ' . $user->name . '<br/><br/>'
-                        . 'There is New School Requirement from ' . $req->school->name . ' (' . $req->school->region . ')'
+                        . 'There is New School Requirement from ' . $req->school->name . '</p>'
                         . '<br/><br/><p><b>Requirement:</b> ' . $req->note . '</p>'
                         . '<br/><br/><p><b>By:</b> ' . $req->user->name . '</p>';
                 $this->send_email($user->email, 'ShuleSoft New Customer Requirement', $message);
+
+                $sms = 'Hello ' . $user->name . ' There is New School Requirement from ' . $req->school->name . ' Requirement: ' . $req->note . 'By: ' . $req->user->name . '';
+                $this->send_whatsapp_sms($user->phone, $sms);
             }
         }
         $this->data['requirements'] = \App\Models\Requirement::latest()->get();
@@ -894,12 +901,13 @@ class Customer extends Controller {
     }
 
     public function usageAnalysis() {
-        $skip = ['admin', 'accounts', 'pg_catalog', 'constant', 'api', 'information_schema', 'public', 'academy', 'forum'];
+        $skip = ['admin', 'accounts', 'pg_catalog', 'constant', 'api', 'information_schema', 'public', 'academy', 'forum', 'betatwo', 'jifunze', 'beta_testing'];
         $sql = DB::table('admin.all_setting')
                 ->whereNotIn('schema_name', $skip);
 
         strlen(request('schools')) > 3 ? $sql->whereIn('schema_name', explode(',', request('schools'))) : '';
         strlen(request('regions')) > 3 ? $sql->whereIn('regions', explode(',', request('regions'))) : '';
+        (int) request('is_client') == 1 ? $sql->whereIn('schema_name', \App\Models\Client::whereIn('id', \App\Models\Payment::whereYear('date', 2021)->get(['client_id']))->get(['username'])) : '';
 
         $this->data['schools'] = $sql->get();
 
@@ -1470,19 +1478,32 @@ class Customer extends Controller {
     }
 
     public function uploadJobCard() {
-        if ($_POST) {
-            $file = request()->file('job_card_file');
 
-            $company_file_id = $file ? $this->saveFile($file, 'uploads/images') : 1;
-            // $company_file_id = $file ? $this->thefile($file) : 1;
+        if ($_POST) { // dd(request()->all());
+            // $file = request()->file('job_card_file');
+            $filename1 = '';
+            if (!empty(request('job_card_file'))) {
+                $file = request()->file('job_card_file');
+                $filename1 = time() . rand(11, 8894) . '.' . $file->guessExtension();
+                $filePath = base_path() . '/storage/uploads/files/';
+                $file->move($filePath, $filename1);
+            }
+            $where = ['date' => request('job_date'), 'client_id' => request('client_id')];
+
+            $card = DB::table('client_job_cards')->where($where)->first();
 
             $data = [
-                'company_file_id' => $company_file_id,
+                'file' => $filename1,
                 'client_id' => request('client_id'),
                 'created_by' => \Auth::user()->id,
                 'date' => request('job_date')
             ];
-            \App\Models\ClientJobCard::create($data);
+
+            if (empty($card)) {
+                \App\Models\ClientJobCard::create($data);
+            } else {
+                \App\Models\ClientJobCard::where($where)->update($data);
+            }
         }
         return redirect()->back()->with('success', 'uploaded succesfully!');
     }
@@ -1552,6 +1573,47 @@ class Customer extends Controller {
         return view('customer.usage.expense_report', $this->data);
     }
 
+    public function churnReport() {
+        $year = $this->data['year'] = (int) request()->segment(2) == 0 ? date('Y') : request()->segment(2);
+        $this->data['fetch_url'] = 'https://admin.shulesoft.com/898uuhihdsdskjdde/custrpt/12/?q=';
+        $object = [
+            'fees' => 'all_payments',
+            'expenses' => 'all_expense',
+            'salaries' => 'all_salaries',
+            'inventory' => 'all_product_alert_quantity',
+            'sattendance' => 'all_sattendances',
+            'characters' => 'all_general_character_assessment',
+            'digital' => 'all_assignments'
+        ];
+        $data = [];
+        foreach ($object as $key => $value) {
+               $this->data[$key . '_table'] = $value;
+            $data[$key] = $this->createChurnSql($value, $year);
+        }
 
+        $data['parents'] = DB::select('select count(distinct schema_name) as count,extract(month from created_at) as months from '
+                        . 'admin.all_login_locations a where extract(year from a.created_at)=' . $year . ' and "table"=\'parent\'   group by schema_name,extract(month from created_at)  having count(distinct user_id)>(select count(*)*0.2 from admin.all_parent where "schema_name"=a."schema_name" and status=1)');
+
+       
+        $data['login_staffs'] = DB::select('select count(distinct schema_name) as count,extract(month from created_at) as months  from '
+                        . 'admin.all_login_locations a where extract(year from a.created_at)=' . $year . ' and "table" in (\'user\',\'teacher\' )  group by schema_name ,extract(month from created_at)  having count(distinct user_id)>(select count(*)*0.2 from admin.all_users where "table" in (\'user\',\'teacher\') and "schema_name"=a."schema_name" and status=1)');
+
+        
+        $data['epayments_nmb'] = DB::select('select count(distinct schema_name) as count,extract(month from created_at) as months  from admin.all_payments '
+                        . "where extract(year from created_at)=$year  and token like '%E%'  and  schema_name not in ('public','betatwo','jifunze','beta_testing') group by months");
+
+        $data['epayments_crdb'] = DB::select('select count(distinct schema_name) as count,extract(month from created_at) as months  from admin.all_payments '
+                        . "where extract(year from created_at)=$year  and token like '%cbb%'  and  schema_name not in ('public','betatwo','jifunze','beta_testing') group by months");
+
+        $this->data['items'] = $data;
+        return view('customer.usage.churn_report', $this->data);
+    }
+
+    private function createChurnSql($table, $year) {
+     
+        return DB::select("SELECT count(distinct schema_name) as count,extract(month from created_at) as months from"
+                        . " admin." . $table . " where extract(year from created_at)=$year   "
+                        . " and  schema_name not in ('public','betatwo','jifunze','beta_testing') group by months");
+    }
 
 }

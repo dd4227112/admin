@@ -708,14 +708,14 @@ function check_status($table, $where = null) {
                                                                                                                                                     </th>
                                                                                                                                                     <td
                                                                                                                                                         class="social-user-name b-none p-t-0 text-muted">
-                                                                                                                                                        <?= $manager->firstname . ' ' .$manager->lastname ?? '' ?></td>
-                                                                                                                                                </tr>
+                                                                                                                                                        <?= isset($manager->name) ? $manager->name  : ''  ?></td>
+                                                                                                                                                    </tr>
                                                                                                                                                 <tr>
                                                                                                                                                     <th class="social-label b-none">
                                                                                                                                                         Zone Manager phone</th>
                                                                                                                                                     <td
                                                                                                                                                         class="social-user-name b-none text-muted">
-                                                                                                                                                        <?= $manager->phone ?? '' ?></td>
+                                                                                                                                                        <?= isset($manager->phone) ? $manager->phone :'' ?></td>
                                                                                                                                                 </tr>
 
                                                                                                                                                   <tr>
@@ -723,7 +723,7 @@ function check_status($table, $where = null) {
                                                                                                                                                         Email</th>
                                                                                                                                                     <td
                                                                                                                                                         class="social-user-name b-none text-muted">
-                                                                                                                                                        <?= $manager->email ?? '' ?></td>
+                                                                                                                                                        <?= isset($manager->email) ? $manager->email : '' ?></td>
                                                                                                                                                   </tr>
 
                                                                                                                                                    <tr>
@@ -731,7 +731,7 @@ function check_status($table, $where = null) {
                                                                                                                                                         Address</th>
                                                                                                                                                     <td
                                                                                                                                                         class="social-user-name b-none text-muted">
-                                                                                                                                                        <?= $manager->address ?? '' ?></td>
+                                                                                                                                                        <?= isset($manager->address) ? $manager->address : '' ?></td>
                                                                                                                                                   </tr>
 
                                                                                                                                                
@@ -1129,6 +1129,7 @@ function check_status($table, $where = null) {
                                                                                                                     </div>
 
                                                                                                                 </div>
+                                                                                                                
                                                                                                                 <div class="card-block">
                                                                                                                     <div class="table-responsive">
                                                                                                                         <table class="table table-bordered dataTable">
@@ -1153,14 +1154,17 @@ function check_status($table, $where = null) {
                                                                                                                                                 class="btn btn-warning btn-sx"> Download form </a></td>
                                                                                                                                         <td>
                                                                                                                                             <?php $card = DB::table('client_job_cards')->where(['date' => $jobcard->date, 'client_id' => $client_id])->first(); ?>
-                                                                                                                                            <?php if (empty($card)) { ?>
+                                                                                                                                            <?php if(empty($card->file)) { ?>
                                                                                                                                                 <button type="button" class="user_dialog btn btn-primary waves-effect"
                                                                                                                                                         data-toggle="modal" data-target="#uploadjobcard-Modal"
                                                                                                                                                         data-id="<?= $jobcard->date ?>">
                                                                                                                                                     Upload Job card
                                                                                                                                                 </button>
                                                                                                                                             <?php } else { ?>
-                                                                                                                                                <a  target="_break" href="<?= url('customer/viewFile/' . $jobcard->date . '/jobcard') ?>" class="btn btn-sm btn-success">View job card</a>
+                                                                                                                                                {{-- <a  target="_break" href="<?= url('customer/viewFile/' . $jobcard->date . '/jobcard') ?>" class="btn btn-sm btn-success">View job card</a> --}}
+
+                                                                                                                                                <a  target="_break" href="<?= url('storage/uploads/files/'.$card->file) ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a>
+
                                                                                                                                             <?php } ?>
                                                                                                                                         </td>
 
@@ -2243,8 +2247,7 @@ function check_status($table, $where = null) {
                                                                                                                                                                         <div class="col-sm-10">
                                                                                                                                                                             <input type="text" class="form-control" name="email" value="<?= $profile->email ?>">
                                                                                                                                                                         </div>
-                                                                                                                                                                    </div>
-                                                                                                                                                                    
+                                                                                                                                                                      </div>
                                                                                                                                                                   </div>
                                                                                                                                                                </div>
 
