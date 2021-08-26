@@ -21,7 +21,7 @@
                     foreach ($item as $fee) {
                         if ((int) $fee->months == $s) {
 
-                            if (in_array($key, ['parents', 'login_staffs', 'epayments_nmb', 'epayments_crdb'])) {
+                            if (in_array($key, ['parents', 'login_staffs', 'epayments_nmb', 'epayments_crdb','students'])) {
 
                                 switch ($key) {
                                     case 'parents':
