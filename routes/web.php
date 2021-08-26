@@ -60,6 +60,8 @@ Route::get('/898uuhihdsdskjdde/custrpt/{q}','Customer@customSqlReport');
 Route::get('/898uuhihdsdskjddeqe/{q}','Customer@implementationReport');
 
 Route::get('/898uuhihdsdskjdderer/send','Customer@event');
+//churn calculations
+Route::get('/898uuhihdsdskjdderchurn/{year}','Customer@churnReport');
 
 Route::get('/898uuhihdsdskjddereppok/expense','Customer@expenseRecords');
 
