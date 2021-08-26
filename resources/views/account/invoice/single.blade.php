@@ -73,7 +73,7 @@
                 <div class="col-lg-6"></div>
                 <div class="col-lg-6">
                     <p class="text-right" align="right">
-                        <a class="btn btn-secondary btn-sm" href="#" data-toggle="modal" data-target="#large-Modal"> Edit </a>
+                       
                         <a href="#" id="printInvoice" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Print </a>
 
                        
@@ -291,7 +291,14 @@
                 
 
 
-              <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
+
+
+
+
+
+
+
+              {{-- <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -301,26 +308,26 @@
                             </button>
                         </div>
                         <?php
-                        $invoice_fee = $invoice->invoiceFees()->first();
+                     //   $invoice_fee = $invoice->invoiceFees()->first();
                         ?>
                         <div class="modal-body">
                       
-                                <form action="<?=url('Account/editInvoice/'.$invoice_fee->invoice_id)?>" method="post">
+                                <form action="" method="post">
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 Quantity
-                                                <input type="text" class="form-control"  name="quantity" value="<?= $invoice_fee->quantity ?>">
+                                                <input type="text" class="form-control"  name="quantity" value="<?= //$invoice_fee->quantity ?>">
                                             </div>
                                             <div class="col-md-6">
                                                 Price
-                                                <input type="text" class="form-control"  name="price" value="<?= $invoice_fee->unit_price ?>">
+                                                <input type="text" class="form-control"  name="price" value="<?= //$invoice_fee->unit_price ?>">
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="modal-footer">
-                                        <input type="hidden" name="invoice_id" id="invoice_id" value="<?= $invoice_fee->invoice_id ?>">
+                                        <input type="hidden" name="invoice_id" id="invoice_id" value="<?= //$invoice_fee->invoice_id ?>">
                                         <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
                                         <button type="submit" class="btn btn-primary waves-effect waves-light ">Edit</button>
                                     </div>
@@ -330,7 +337,7 @@
                             </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
 
         </div>

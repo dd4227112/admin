@@ -84,12 +84,13 @@ function check_implementation($activity, $schema_name) {
             $status = 'Transport/Hostel  Not Implemented';
         }
          
-
+    } else if (preg_match('/operations:attendance/i', strtolower($activity))) {
+      
         $students = DB::table($schema_name . '.student')->whereYear('created_at', date('Y'))->count();
         $sattendances = DB::table($schema_name . '.sattendances')->whereYear('created_at', date('Y'))->count();
-
         $teachers = DB::table($schema_name . '.teacher')->whereYear('created_at', date('Y'))->count();
         $tattendance = DB::table($schema_name . '.tattendance')->whereYear('created_at', date('Y'))->count();
+        
         if ($students >= $sattendances || $teachers >= $tattendance ) {
             $status = 'Attendance Implemented';
         } else {
