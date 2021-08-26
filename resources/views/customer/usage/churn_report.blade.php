@@ -26,11 +26,11 @@
                                 switch ($key) {
                                     case 'parents':
                                         $sql = 'select distinct schema_name from '
-                                                . 'admin.all_login_locations a where extract(year from a.created_at)=' . $year . ' and extract(month from a.created_at)=' . $s . ' and "table"=\'parent\'    having count(distinct user_id)>(select count(*)*0.2 from admin.all_parent where "schema_name"=a."schema_name" and status=1)';
+                                                . 'admin.all_login_locations a where extract(year from a.created_at)=' . $year . ' and extract(month from a.created_at)=' . $s . ' and "table"=\'parent\' and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\') ';
                                         break;
                                     case 'login_staffs':
                                        $sql= 'select distinct schema_name  from '
-                                                . 'admin.all_login_locations a where extract(year from a.created_at)=' . $year . ' and extract(month from a.created_at)=' . $s . '  and "table" in (\'user\',\'teacher\' )   having count(distinct user_id)>(select count(*)*0.2 from admin.all_users where "table" in (\'user\',\'teacher\') and "schema_name"=a."schema_name" and status=1)';
+                                                . 'admin.all_login_locations a where extract(year from a.created_at)=' . $year . ' and extract(month from a.created_at)=' . $s . '  and "table" in (\'user\',\'teacher\' )  and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\') ';
                                         break;
                                     case 'epayments_nmb':
                                         $sql = 'select distinct schema_name from admin.all_payments '
@@ -40,6 +40,12 @@
                                         $sql = 'select distinct schema_name from admin.all_payments '
                                                 . " where extract(year from created_at)=$year and extract(month from created_at)=" . $s . "   and token like '%cbb%'  and  schema_name not in ('public','betatwo','jifunze','beta_testing')";
                                         break;
+                                    
+                                        case 'students':
+                                           $sql ='select distinct schema_name from '
+                        . 'admin.all_login_locations a where extract(year from a.created_at)=' . $year . ' and extract(month from created_at)=' . $s . ' and "table"=\'student\'    and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\') ';
+
+                                            break;
 
                                     default:
                                         break;

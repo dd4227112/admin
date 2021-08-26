@@ -1500,11 +1500,11 @@ class Customer extends Controller {
             ];
 
 
-           //  \App\Models\ClientJobCard::updateOrCreate($data);
+            //  \App\Models\ClientJobCard::updateOrCreate($data);
 
-            if(empty($card)){
-                \App\Models\ClientJobCard::create($data);  
-            } else { 
+            if (empty($card)) {
+                \App\Models\ClientJobCard::create($data);
+            } else {
                 \App\Models\ClientJobCard::where($where)->update($data);
             }
         }
@@ -1590,18 +1590,22 @@ class Customer extends Controller {
         ];
         $data = [];
         foreach ($object as $key => $value) {
-               $this->data[$key . '_table'] = $value;
+            $this->data[$key . '_table'] = $value;
             $data[$key] = $this->createChurnSql($value, $year);
         }
 
         $data['parents'] = DB::select('select count(distinct schema_name) as count,extract(month from created_at) as months from '
-                        . 'admin.all_login_locations a where extract(year from a.created_at)=' . $year . ' and "table"=\'parent\'   group by schema_name,extract(month from created_at)  having count(distinct user_id)>(select count(*)*0.2 from admin.all_parent where "schema_name"=a."schema_name" and status=1)');
+                        . 'admin.all_login_locations a where extract(year from a.created_at)=' . $year . ' and "table"=\'parent\'  and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\')    group by extract(month from created_at)');
 
-       
+        $data['students'] = DB::select('select count(distinct schema_name) as count,extract(month from created_at) as months from '
+                        . 'admin.all_login_locations a where extract(year from a.created_at)=' . $year . ' and "table"=\'student\'  and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\')   group by extract(month from created_at)');
+
+
+
         $data['login_staffs'] = DB::select('select count(distinct schema_name) as count,extract(month from created_at) as months  from '
-                        . 'admin.all_login_locations a where extract(year from a.created_at)=' . $year . ' and "table" in (\'user\',\'teacher\' )  group by schema_name ,extract(month from created_at)  having count(distinct user_id)>(select count(*)*0.2 from admin.all_users where "table" in (\'user\',\'teacher\') and "schema_name"=a."schema_name" and status=1)');
+                        . 'admin.all_login_locations a where extract(year from a.created_at)=' . $year . ' and "table" in (\'user\',\'teacher\' )  and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\')  group by extract(month from created_at)');
 
-        
+
         $data['epayments_nmb'] = DB::select('select count(distinct schema_name) as count,extract(month from created_at) as months  from admin.all_payments '
                         . "where extract(year from created_at)=$year  and token like '%E%'  and  schema_name not in ('public','betatwo','jifunze','beta_testing') group by months");
 
@@ -1613,7 +1617,7 @@ class Customer extends Controller {
     }
 
     private function createChurnSql($table, $year) {
-     
+
         return DB::select("SELECT count(distinct schema_name) as count,extract(month from created_at) as months from"
                         . " admin." . $table . " where extract(year from created_at)=$year   "
                         . " and  schema_name not in ('public','betatwo','jifunze','beta_testing') group by months");
