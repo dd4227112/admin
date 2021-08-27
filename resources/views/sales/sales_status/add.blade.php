@@ -3,7 +3,6 @@
 <?php $root = url('/') . '/public/' ?>
 
 <script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
-
 <div class="main-body">
   <div class="page-wrapper">
     <!-- Page-header start -->
@@ -199,7 +198,7 @@ get_schools = function () {
            headers: {
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
            },
-            url: '<?= url('student/getschools/null') ?>',
+            url: '<?= url('customer/getschools/null') ?>',
             dataType: 'json',
             type: "GET",
             quietMillis: 50,
