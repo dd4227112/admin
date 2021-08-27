@@ -6,7 +6,7 @@
             $month = 0;
             for ($i = 1; $i <= 12; $i++) {
                 ?>
-                <th><?=  date('F', mktime(0, 0, 0, $i, 10)) ?></th>
+                <th><?= date('F', mktime(0, 0, 0, $i, 10)) ?></th>
             <?php } ?>
         </tr>
     </thead>
@@ -15,13 +15,13 @@
         foreach ($items as $key => $item) {
             ?>
             <tr>
-                <td><?= $key ?></td>
+                <td><?= strtoupper($key) ?></td>
                 <?php
                 for ($s = 1; $s <= 12; $s++) {
                     foreach ($item as $fee) {
                         if ((int) $fee->months == $s) {
 
-                            if (in_array($key, ['parents', 'login_staffs', 'epayments_nmb', 'epayments_crdb','students'])) {
+                            if (in_array($key, ['parents', 'login_staffs', 'epayments_nmb', 'epayments_crdb', 'students'])) {
 
                                 switch ($key) {
                                     case 'parents':
@@ -29,7 +29,7 @@
                                                 . 'admin.all_login_locations a where extract(year from a.created_at)=' . $year . ' and extract(month from a.created_at)=' . $s . ' and "table"=\'parent\' and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\') ';
                                         break;
                                     case 'login_staffs':
-                                       $sql= 'select distinct schema_name  from '
+                                        $sql = 'select distinct schema_name  from '
                                                 . 'admin.all_login_locations a where extract(year from a.created_at)=' . $year . ' and extract(month from a.created_at)=' . $s . '  and "table" in (\'user\',\'teacher\' )  and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\') ';
                                         break;
                                     case 'epayments_nmb':
@@ -40,12 +40,12 @@
                                         $sql = 'select distinct schema_name from admin.all_payments '
                                                 . " where extract(year from created_at)=$year and extract(month from created_at)=" . $s . "   and token like '%cbb%'  and  schema_name not in ('public','betatwo','jifunze','beta_testing')";
                                         break;
-                                    
-                                        case 'students':
-                                           $sql ='select distinct schema_name from '
-                        . 'admin.all_login_locations a where extract(year from a.created_at)=' . $year . ' and extract(month from created_at)=' . $s . ' and "table"=\'student\'    and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\') ';
 
-                                            break;
+                                    case 'students':
+                                        $sql = 'select distinct schema_name from '
+                                                . 'admin.all_login_locations a where extract(year from a.created_at)=' . $year . ' and extract(month from created_at)=' . $s . ' and "table"=\'student\'    and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\') ';
+
+                                        break;
 
                                     default:
                                         break;
@@ -55,12 +55,40 @@
                                 $sql = "SELECT distinct schema_name from admin.$table where extract(year from created_at)=$year and extract(month from created_at)=$s  and  schema_name not in ('public','betatwo','jifunze','beta_testing')";
                             }
                             ?>
-                <td><a href="<?= $fetch_url . $sql ?>"><?= $fee->count ?></a></td>
+                            <td><a href="<?= $fetch_url . $sql ?>"><?= $fee->count ?></a></td>
                             <?php
                         }
                     }
                 }
                 ?>
+            </tr>
+            <tr>
+                <td><p align="right"><?= $key ?> New Customers</p></td>
+                <?php for ($s = 1; $s <= 12; $s++) { ?>
+
+                    <td></td>
+                <?php } ?>
+            </tr>
+             <tr>
+                 <td><p align="right"><?= $key ?> Churn</p></td>
+                <?php for ($s = 1; $s <= 12; $s++) { ?>
+
+                    <td></td>
+                <?php } ?>
+            </tr>
+             <tr>
+                 <td><p align="right"><?= $key ?> Churn Rate</p></td>
+                <?php for ($s = 1; $s <= 12; $s++) { ?>
+
+                    <td></td>
+                <?php } ?>
+            </tr>
+             <tr>
+                 <td><p align="right"><?= $key ?> MRR churn</p></td>
+                <?php for ($s = 1; $s <= 12; $s++) { ?>
+
+                    <td></td>
+                <?php } ?>
             </tr>
         <?php } ?>
     </tbody>

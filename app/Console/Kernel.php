@@ -106,6 +106,7 @@ class Kernel extends ConsoleKernel {
         // })->dailyAt('14:50'); // Eq to 17:50 h 
         $schedule->call(function () {
             (new Background())->schoolMonthlyReport();
+            DB::statement("DELETE FROM  api.requests  WHERE created_at < now()-'2 week'::interval;");
         })->monthlyOn(29, '06:36');
     }
 
