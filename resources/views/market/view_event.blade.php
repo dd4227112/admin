@@ -80,7 +80,8 @@
                                     <th>phone</th>
                                     <th>Email</th>
                                     <th>Source</th>
-                                    <!-- <th>Joined At</th> -->
+                                   <th>Joined At</th> 
+                                   <th>Action</th>
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -97,7 +98,8 @@
                                         <td><?=$media->phone?></td>
                                         <td><?=$media->email?></td>
                                         <td><?=$media->source?></td>
-                                        <!-- <td>created_at</td> -->
+                                        <td><?=$media->created_at?></td> 
+                                        <td> <a class="btn btn-danger btn-sm" href="{{ url('workshop/deleteUser/'.$media->id) }}">Delete</a></td>
                                       </tr>
                                     <?php } } ?>
                                   </tbody>
