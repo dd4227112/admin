@@ -83,13 +83,11 @@ Route::get('/898uuhihdsdskjdderepposchools','controller@schoolapi');
 Route::get('/epayment/i/{id}/{amount?}','Background@epayment');
 Route::any('/create/epayment/{id}/{amount?}','Background@createEpayment');
 
-Route::get('/student/getschools/null', function() {
+Route::get('/customer/getschools/null', function() {
     if (strlen(request('term')) > 1) {
-        $sql = "SELECT id::text,upper(name)|| ' '||upper(type)||' - '||upper(region) as name FROM admin.schools 
+        $sql = "SELECT id::text,upper(name)|| ' '||upper(type) as name FROM admin.schools 
 			WHERE lower(name) LIKE '%" . str_replace("'", null, strtolower(request('term'))) . "%'
-			UNION ALL
-                        SELECT id||'c' as id, name||' -(Already Client)' from admin.clients WHERE lower(name) LIKE '%" . str_replace("'", null, strtolower(request('term'))) . "%'
-                        LIMIT 10";
+			UNION ALL SELECT id||'c' as id, name||' -(Already Client)' from admin.clients WHERE lower(name) LIKE '%" . str_replace("'", null, strtolower(request('term'))) . "%' LIMIT 10";
         die(json_encode(DB::select($sql)));
     }
 });
