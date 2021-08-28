@@ -318,8 +318,8 @@
                 {"data": "error_message"},
                 {"data": "file"},
                 {"data": "url"},
-                {"data": "created_by"},
-                {"data": ""}
+              //  {"data": "created_by"},
+             //   {"data": ""}
             ],
             "columnDefs": [
                 {
@@ -400,7 +400,7 @@
                 {"data": "error_message"},
                 {"data": "file"},
                 {"data": "url"},
-                {"data": "created_by"},
+               // {"data": "created_by"},
                 {"data": "deleted_at"},
                 {"data": "resolved_by"}
             ],

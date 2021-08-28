@@ -34,12 +34,12 @@
                   <!-- <h6 class="sub-title">Tab With Icon</h6> -->
                   <!-- Nav tabs -->
                   <ul class="nav nav-tabs md-tabs " role="tablist">
-                    <li class="nav-item">
+                    {{-- <li class="nav-item">
                       <a class="nav-link active" data-toggle="tab" href="#home7" role="tab"><i class="icofont icofont-home"></i>Google Sheet</a>
                       <div class="slide"></div>
-                    </li>
+                    </li> --}}
                     <li class="nav-item">
-                      <a class="nav-link" data-toggle="tab" href="#requirements" role="tab"><i class="icofont icofont-ui-user "></i>Customer Requirements</a>
+                      <a class="nav-link active" data-toggle="tab" href="#requirements" role="tab"><i class="icofont icofont-ui-user "></i>Customer Requirements</a>
                       <div class="slide"></div>
                     </li>
                     <li class="nav-item">
@@ -50,7 +50,7 @@
                   </ul>
                   <!-- Tab panes -->
                   <div class="tab-content card-block">
-                    <div class="tab-pane active" id="home7" role="tabpanel">
+                    {{-- <div class="tab-pane active" id="home7" role="tabpanel">
                       <div class="card-header">
                         <h5>Revenue Projections</h5>
                         <span>This part shows list of customers and expected amount to be collected per each customer. These information are loaded from Google Sheet </span>
@@ -59,9 +59,9 @@
                         <div class="card-block"  style="height: 35em">
                         <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQoKa03HKhOJyUEWt3mi4PqJvqy9EFmoj8ZTZX7lfNWTI5FbHFTHl40xrBBsi7k2x2vY8htOPJ1wHN8/pubhtml?widget=true&amp;headers=false" width="100%" height="450"></iframe>
                       </div> 
-                    </div>
+                    </div> --}}
 
-                    <div class="tab-pane" id="requirements" role="tabpanel">
+                    <div class="tab-pane active" id="requirements" role="tabpanel">
                      
                       <div class="card-block">
                         <div class="table-responsive dt-responsive">

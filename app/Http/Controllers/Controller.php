@@ -386,6 +386,9 @@ class Controller extends BaseController {
        $data = DB::select("select a.sname as school_name,a.phone,a.address,a.email,a.website,a.created_at as joined_at,a.photo, z.estimated_students as number_of_students from admin.all_setting a join admin.client_schools c on c.school_id = a.school_id join admin.clients z on z.id = c.client_id");
          return json_encode(['schools' => $data]);
     }
+
+
+  
  
 
 }
