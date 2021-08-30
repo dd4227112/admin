@@ -1586,41 +1586,65 @@ class Customer extends Controller {
             'inventory' => 'all_product_alert_quantity',
             'sattendance' => 'all_sattendances',
             'characters' => 'all_general_character_assessment',
-            'digital' => 'all_assignments'
+            'digital' => 'all_assignments',
+            'parents' => 'all_login_locations',
+            'students' => 'all_login_locations',
+            'login_staffs' => 'all_login_locations',
+            'epayments_nmb' => 'all_payments',
+            'epayments_crdb' => 'all_payments'
         ];
         $data = [];
         foreach ($object as $key => $value) {
             $this->data[$key . '_table'] = $value;
-            $data[$key] = $this->createChurnSql($value, $year);
+
+            switch ($key) {
+                case 'parents':
+                    $sql = ' and "table"=\'parent\' ';
+                    break;
+                case 'login_staffs':
+                    $sql = '  and "table" in (\'user\',\'teacher\' ) ';
+                    break;
+                case 'epayments_nmb':
+                    $sql = " and token like '%E%' ";
+                    break;
+                case 'epayments_crdb':
+                    $sql = "  and token like '%cbb%' ";
+                    break;
+                case 'students':
+                    $sql = ' and "table"=\'student\'  ';
+
+                    break;
+
+                default:
+                    $sql = '';
+                    break;
+            }
+
+            $data[$key] = $this->createChurnSql($value, $year, $sql);
+            $this->data['new_customers_' . $key] = $this->getNewCustomers($value, $year,$sql);
         }
-
-        $data['parents'] = DB::select('select count(distinct schema_name) as count,extract(month from created_at) as months from '
-                        . 'admin.all_login_locations a where extract(year from a.created_at)=' . $year . ' and "table"=\'parent\'  and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\')    group by extract(month from created_at)');
-
-        $data['students'] = DB::select('select count(distinct schema_name) as count,extract(month from created_at) as months from '
-                        . 'admin.all_login_locations a where extract(year from a.created_at)=' . $year . ' and "table"=\'student\'  and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\')   group by extract(month from created_at)');
-
-
-
-        $data['login_staffs'] = DB::select('select count(distinct schema_name) as count,extract(month from created_at) as months  from '
-                        . 'admin.all_login_locations a where extract(year from a.created_at)=' . $year . ' and "table" in (\'user\',\'teacher\' )  and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\')  group by extract(month from created_at)');
-
-
-        $data['epayments_nmb'] = DB::select('select count(distinct schema_name) as count,extract(month from created_at) as months  from admin.all_payments '
-                        . "where extract(year from created_at)=$year  and token like '%E%'  and  schema_name not in ('public','betatwo','jifunze','beta_testing') group by months");
-
-        $data['epayments_crdb'] = DB::select('select count(distinct schema_name) as count,extract(month from created_at) as months  from admin.all_payments '
-                        . "where extract(year from created_at)=$year  and token like '%cbb%'  and  schema_name not in ('public','betatwo','jifunze','beta_testing') group by months");
-
         $this->data['items'] = $data;
         return view('customer.usage.churn_report', $this->data);
     }
 
-    private function createChurnSql($table, $year) {
+    private function createChurnSql($table, $year, $customer_other_sql = '') {
 
-        return DB::select("SELECT count(distinct schema_name) as count,extract(month from created_at) as months from"
+        return DB::select("select case when count is null then 0 else count end as count, extract(month from default_month)  as months  from ( SELECT count(distinct schema_name) as count,extract(month from created_at) as months from"
                         . " admin." . $table . " where extract(year from created_at)=$year   "
-                        . " and  schema_name not in ('public','betatwo','jifunze','beta_testing') group by months");
+                        . " $customer_other_sql and  schema_name not in ('public','betatwo','jifunze','beta_testing') group by months) a right JOIN admin.default_months b on months=extract(month from default_month)");
+    }
+
+    public function getNewCustomers($table, $year,$customer_other_sql = '') {
+        $sql = '';
+        for ($s = 1; $s <= 12; $s++) {
+            $sql .= '  select count(*),x.months from (
+select distinct schema_name,extract(month from created_at) as months from admin.' . $table . ' where extract(year from created_at)=' . $year . ' and extract(month from created_at)=' . $s . '  '.$customer_other_sql.' and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\')  ) x LEFT OUTER JOIN (
+select distinct schema_name,extract(month from created_at) as months from admin.' . $table . ' where extract(year from created_at)=' . $year . ' and extract(month from created_at)<' . $s . '  '.$customer_other_sql.' and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\') ) y using(schema_name) where y.schema_name is null group by x.months
+
+UNION ALL';
+        }
+        $final = rtrim($sql, 'UNION ALL');
+        return DB::select($final);
     }
 
 }
