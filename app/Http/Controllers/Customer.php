@@ -1591,7 +1591,8 @@ class Customer extends Controller {
             'students' => 'all_login_locations',
             'login_staffs' => 'all_login_locations',
             'epayments_nmb' => 'all_payments',
-            'epayments_crdb' => 'all_payments'
+            'epayments_crdb' => 'all_payments',
+            'exams'=>'all_exam_report'
         ];
         $data = [];
         foreach ($object as $key => $value) {
