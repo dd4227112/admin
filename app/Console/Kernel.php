@@ -110,7 +110,7 @@ class Kernel extends ConsoleKernel {
     }
 
      public function whatsappMessage() {
-        $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 12 ');
+        $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 10');
         foreach ($messages as $message) {
             if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
                 $controller = new \App\Http\Controllers\Controller();

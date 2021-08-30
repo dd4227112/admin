@@ -21,3 +21,11 @@ Route::any('/auth/{url?}', function(){
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+
+
+//learning apis
+
+//Route::any('/usersapi', 'HomeController@userapi');
+//Route::any('/schoolsapi', 'HomeController@schoolapi');
