@@ -244,10 +244,7 @@ class Sales extends Controller {
                 if ((int) request('type') == 3) {
                  
               //  $sql = "select * from (select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a where lower(a.ownership) <>'government') a where activities >0";
-                $sql = "select C.*,D.username from (select A.*,B.* from (select x.* from(select s.*, w.name as ward, d.name as district,r.name as region, count(t.*) as activities 
-                from admin.schools as s join admin.tasks as t on s.id=t.school_id join admin.wards as w on s.ward_id=w.id join admin.districts as d on d.id=w.district_id
-                join admin.regions as r on r.id=d.region_id group by s.id, w.id, d.id,r.id) x ) A LEFT JOIN (select school_id,client_id from admin.client_schools) B on A.id = B.school_id
-                ) C  left  join (select id,username from admin.clients) D on C.client_id = D.id"; 
+                $sql = "select C.*,D.username from (select A.*,B.* from (select x.* from(select s.id,s.name,s.ownership,s.type,s.zone,s.nmb_school_name,s.nmb_zone,s.branch_code,s.branch_name,s.account_number,s.schema_name,s.nmb_branch,s.students,s.created_at,s.updated_at,s.ward_id,s.status,s.registered,w.name as ward, d.name as district,r.name as region, count(t.*) as activities from admin.schools as s join admin.tasks as t on s.id=t.school_id join admin.wards as w on s.ward_id=w.id join admin.districts as d on d.id=w.district_id join admin.regions as r on r.id=d.region_id group by s.id, w.id, d.id,r.id) x ) A LEFT JOIN (select school_id,client_id from admin.client_schools) B on A.id = B.school_id) C  left  join (select id,username from admin.clients) D on C.client_id = D.id;"; 
                 } else if ((int) request('type') == 2) {
                     $sql = "select B.id,B.name,B.ownership,B.type,B.registration_number,B.status,B.status,B.students,
                     B.created_at,B.updated_at,B.nmb_branch,B.account_number,B.branch_name,B.branch_code,
@@ -764,7 +761,7 @@ class Sales extends Controller {
                   foreach($users as $value){
                    $data[$value->user_id] = $value->complete;
                }
-              $user_id = array_search(max($data), $data);
+              $user_id = !empty($data) ? array_search(max($data), $data) : DB::table('admin.user_train_items')->where('train_item_id',$section_id)->where('status',1)->first()->user_id;
             } 
             return $user_id;
        }

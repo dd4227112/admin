@@ -884,7 +884,7 @@ class Customer extends Controller {
                         . '<br/><br/><p><b>By:</b> ' . $req->user->name . '</p>';
                 $this->send_email($user->email, 'ShuleSoft New Customer Requirement', $message);
 
-                $sms = 'Hello ' . $user->name . ' There is New School Requirement from ' . $req->school->name . ' Requirement: ' . $req->note . 'By: ' . $req->user->name . '';
+                $sms = 'Hello ' . $user->name . ' There is New School Requirement from ' . $req->school->name . ' Requirement: ' . $req->note . ' By: ' . $req->user->name . '';
                 $this->send_whatsapp_sms($user->phone, $sms);
             }
         }
