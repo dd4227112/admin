@@ -376,16 +376,7 @@ class Controller extends BaseController {
 
 
 
-    public function userapi(){
-         $data = DB::select("select a.firstname ||' '||a.lastname as name,a.email,a.phone,a.next_kin,a.address,b.name as role,d.name as department,case when (f.path IS NULL OR f.path = '') then 'https://admin.shulesoft.com/public/assets/images/user.png' else f.path end as photo from admin.users a join constant.refer_company_designations b on a.designation_id = b.id join admin.departments d on a.department = d.id join admin.roles r on r.id = a.role_id left join admin.company_files f on f.id = a.company_file_id where a.status = '1' and a.role_id not in (7,15)");
-          return json_encode(['staffs' => $data]);
-    }
-
-
-    public function schoolapi(){
-       $data = DB::select("select a.sname as school_name,a.phone,a.address,a.email,a.website,a.created_at as joined_at,a.photo, z.estimated_students as number_of_students from admin.all_setting a join admin.client_schools c on c.school_id = a.school_id join admin.clients z on z.id = c.client_id");
-         return json_encode(['schools' => $data]);
-    }
+  
 
 
   
