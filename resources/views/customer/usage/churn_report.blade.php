@@ -1,4 +1,4 @@
-<table>
+<table cellspacing="3" cellpadding="5" border="1" >
     <thead>
         <tr>
             <th></th>
@@ -79,20 +79,7 @@ select distinct schema_name,extract(month from created_at) as months from admin.
                     <td><a href="<?= $fetch_url . $sql_new ?>"><?= $val_count ?></a></td>
                 <?php } ?>
             </tr>
-            <tr>
-                <td><p align="right"><?= $key ?> Churn</p></td>
-                <?php for ($s = 1; $s <= 12; $s++) { ?>
 
-                    <td></td>
-                <?php } ?>
-            </tr>
-            <tr>
-                <td><p align="right"><?= $key ?> Churn Rate</p></td>
-                <?php for ($s = 1; $s <= 12; $s++) { ?>
-
-                    <td></td>
-                <?php } ?>
-            </tr>
          
         <?php } ?>
     </tbody>
