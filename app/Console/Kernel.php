@@ -121,7 +121,7 @@ class Kernel extends ConsoleKernel {
             } else {
                 //this is invalid number, so update in db to show wrong return
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied','updated_at' => now()]);
-                echo 'wrong phone number supplied  ' . $user->phone . '' . chr(10);
+                echo 'wrong phone number supplied  ' . $message->phone . '' . chr(10);
             }
         }
     }
