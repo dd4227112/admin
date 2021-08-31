@@ -200,7 +200,7 @@
                                                     <th>Error Message</th>
                                                     <th>File</th>
                                                     <th>url</th>
-                                                    <th>Created By</th>
+                                                    <!-- <th>Created By</th> -->
                                                     <th>Action</th> 
                                                 </tr>
                                             </thead>
@@ -317,13 +317,17 @@
                 {"data": "schema_name"},
                 {"data": "error_message"},
                 {"data": "file"},
+<<<<<<< HEAD
                 {"data": "url"},
               //  {"data": "created_by"},
              //   {"data": ""}
+=======
+                {"data": "url"}
+>>>>>>> 2b80ebfcaed17e402ef9e56d3a33ef1566863d53
             ],
             "columnDefs": [
                 {
-                    "targets": 7,
+                    "targets": 6,
                     "data": null,
                     "render": function (data, type, row, meta) {
                          return '<a href="#" id="' + row.id + '" class="label label-danger dlt_log" onmousedown="delete_log(' + row.id + ')" onclick="return false">Delete</a>' + '<a href="#" id="' + row.id + '" class="label label-info dlt_log" onmousedown="View_log(' + row.id + ')" onclick="return false">View</a>';
@@ -400,7 +404,11 @@
                 {"data": "error_message"},
                 {"data": "file"},
                 {"data": "url"},
+<<<<<<< HEAD
                // {"data": "created_by"},
+=======
+              //  {"data": "created_by"},
+>>>>>>> 2b80ebfcaed17e402ef9e56d3a33ef1566863d53
                 {"data": "deleted_at"},
                 {"data": "resolved_by"}
             ],

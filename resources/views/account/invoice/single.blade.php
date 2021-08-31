@@ -317,17 +317,17 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 Quantity
-                                                <input type="text" class="form-control"  name="quantity" value="<?= //$invoice_fee->quantity ?>">
+                                                <input type="text" class="form-control"  name="quantity" value="">
                                             </div>
                                             <div class="col-md-6">
                                                 Price
-                                                <input type="text" class="form-control"  name="price" value="<?= //$invoice_fee->unit_price ?>">
+                                                <input type="text" class="form-control"  name="price" value="">
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="modal-footer">
-                                        <input type="hidden" name="invoice_id" id="invoice_id" value="<?= //$invoice_fee->invoice_id ?>">
+                                        <input type="hidden" name="invoice_id" id="invoice_id" value="">
                                         <button type="button" class="btn btn-default waves-effect " data-dismiss="modal">Close</button>
                                         <button type="submit" class="btn btn-primary waves-effect waves-light ">Edit</button>
                                     </div>
