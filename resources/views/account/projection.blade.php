@@ -1,9 +1,9 @@
 @extends('layouts.app')
 @section('content')
-<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
+
 <?php
 $root = url('/') . '/public/';
-
+  
 function tagEdit($schema_name, $column, $value, $type = null) {
       $type = null ? $type = '"text"' : $type = $type;
     if ((int) request('skip') == 1) {
@@ -14,6 +14,14 @@ function tagEdit($schema_name, $column, $value, $type = null) {
     return $return;
 }
 ?>
+<script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css">
+
+        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2.css">
+
+        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2-bootstrap.css">
+        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css">  
+
 <div class="page-wrapper">
     <div class="page-header">
         <div class="page-header-title">
@@ -49,15 +57,17 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                         <a class="nav-link active" data-toggle="tab" href="#profile7" role="tab"><i class="icofont icofont-ui-user "></i>Create Invoice</a>
                                         <div class="slide"></div>
                                     </li>
+
+                                     <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#other" role="tab"><i class="icofont icofont-list "></i>Other invoices</a>
+                                        <div class="slide"></div>
+                                    </li>
+
                                     <li class="nav-item">
                                         <a class="nav-link" data-toggle="tab" href="#home7" role="tab"><i class="icofont icofont-home"></i>Sent Invoice</a>
                                         <div class="slide"></div>
                                     </li>
-                                     <li class="nav-item">
-                                        <a class="nav-link" data-toggle="tab" href="#reports" role="tab"><i class="icofont icofont-list "></i>Reports</a>
-                                        <div class="slide"></div>
-                                    </li>
-
+                                
                                 </ul>
                               
                                 <div class="tab-content card-block">
@@ -141,8 +151,75 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                 </table>
                                             </div>
                                         </div>
-
                                     </div>
+
+
+
+                                 <div class="tab-pane" id="other" role="tabpanel">
+                                    <div class="card-header">
+                                            <h5>Create other invoices</h5>
+                                        </div>
+                                        <div class="card-block">
+                                            <div class="table-responsive dt-responsive">
+                                               
+                                        <form action="<?= url('account/createinvoices') ?>" method="post">
+                                            
+                                            <div class="form-group">
+                                            <div class="row">
+
+                                                <div class="col-md-6">
+                                                    <strong> Invoice Type</strong>
+                                                     <select type="text" name="type" id="type" style="text-transform:uppercase" required class="form-control select2">
+                                                    <option value="">Select here...</option>
+                                                    <?php
+                                                        $types = \App\Models\InvoiceType::get();
+                                                        foreach($types as $type){
+                                                        echo  '<option value="'.$type->id.'">'.$type->name.'</option>';
+                                                        }
+                                                    ?>
+                                                    </select>
+                                                </div>
+                                            
+                                         
+                                                <div class="col-md-6">
+                                                    <strong> Choose school </strong>
+                                                      <select type="text" name="client_id" required class="form-control select2">
+                                                    <option value="">Select here...</option>
+                                                    <?php
+                                                        $schools = \App\Models\Client::get();
+                                                        foreach($schools as $school){
+                                                        echo  '<option value="'.$school->id.'">'.$school->name.'</option>';
+                                                        }
+                                                    ?>
+                                                    </select>
+                                                </div>
+                                               </div>
+                                             </div>
+
+                                          <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                <strong>  Amount</strong>
+                                                  <input type="text" name="amount"  class="form-control" placeholder="Enter required  Amount.." autofocus required>
+                                               </div>
+
+                                               <div class="col-md-6">
+                                                <strong>  Deadline date</strong>
+                                                 <input type="date"  class="form-control" name="due_date" required>
+                                               </div>
+                                            </div>
+                                         </div>
+                           
+                                            <div class="modal-footer">
+                                            <button type="submit" class="btn btn-primary waves-effect waves-light ">Save changes</button>
+                                            </div>
+                                            <?= csrf_field() ?>
+                                        </form>
+                                            </div>
+                                        </div>
+                                    </div>  
+
+
                                     <div class="tab-pane" id="home7" role="tabpanel">
                                     <div class="card-header">
                                             <h5>Current Sent School Invoices</h5>
@@ -192,7 +269,10 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                 </table>
                                             </div>
                                         </div>
-                                    </div>                                   
+                                    </div>  
+                                    
+                                    
+
                                 </div>
                             </div> 
                         </div>
@@ -218,6 +298,13 @@ function tagEdit($schema_name, $column, $value, $type = null) {
             window.location.href = '<?= url('/account/projection') ?>/null?skip=0';
         }
     })
+
+    $(".select2").select2({
+        theme: "bootstrap",
+        dropdownAutoWidth: false,
+        allowClear: false,
+        debug: true
+    });
 </script>
 @endsection
 
