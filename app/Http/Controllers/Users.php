@@ -194,7 +194,7 @@ class Users extends Controller {
                    $end_date = date('Y-m-d', strtotime(request('end_date')));
                  break;
                }
-            $file_id = $file ? $this->saveFile($file, 'company/employees') : 1;
+            $file_id = $file ? $this->saveFile($file, 'company/employees',TRUE) : 1;
             \App\Models\Absent::create(['date' => request('date'), 'user_id' => request('user_id'), 'absent_reason_id' => request('absent_reason_id'),
             'note' => request('note'), 'company_file_id' => $file_id,'end_date' => $end_date]);
         }
@@ -714,7 +714,7 @@ class Users extends Controller {
       public function legalcontract(){
         if ($_POST) {
             $file = request()->file('file');
-           $file_id = $file ? $this->saveFile($file, 'company/employees') : 1; 
+           $file_id = $file ? $this->saveFile($file, 'company/employees', TRUE) : 1; 
            $arr = ['name' => request('contract_legal'),'start_date'=>request('start_date'),'end_date'=>request('end_date'),
            'user_id' => request('user_id'),'company_file_id' => $file_id ,'description' => request('description')];
              \App\Models\LegalContract::create($arr);
