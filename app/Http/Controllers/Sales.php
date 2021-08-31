@@ -244,10 +244,7 @@ class Sales extends Controller {
                 if ((int) request('type') == 3) {
                  
               //  $sql = "select * from (select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a where lower(a.ownership) <>'government') a where activities >0";
-                $sql = "select C.*,D.username from (select A.*,B.* from (select x.* from(select s.*, w.name as ward, d.name as district,r.name as region, count(t.*) as activities 
-                from admin.schools as s join admin.tasks as t on s.id=t.school_id join admin.wards as w on s.ward_id=w.id join admin.districts as d on d.id=w.district_id
-                join admin.regions as r on r.id=d.region_id group by s.id, w.id, d.id,r.id) x ) A LEFT JOIN (select school_id,client_id from admin.client_schools) B on A.id = B.school_id
-                ) C  left  join (select id,username from admin.clients) D on C.client_id = D.id"; 
+                $sql = "select C.*,D.username from (select A.*,B.* from (select x.* from(select s.id,s.name,s.ownership,s.type,s.zone,s.nmb_school_name,s.nmb_zone,s.branch_code,s.branch_name,s.account_number,s.schema_name,s.nmb_branch,s.students,s.created_at,s.updated_at,s.ward_id,s.status,s.registered,w.name as ward, d.name as district,r.name as region, count(t.*) as activities from admin.schools as s join admin.tasks as t on s.id=t.school_id join admin.wards as w on s.ward_id=w.id join admin.districts as d on d.id=w.district_id join admin.regions as r on r.id=d.region_id group by s.id, w.id, d.id,r.id) x ) A LEFT JOIN (select school_id,client_id from admin.client_schools) B on A.id = B.school_id) C  left  join (select id,username from admin.clients) D on C.client_id = D.id;"; 
                 } else if ((int) request('type') == 2) {
                     $sql = "select B.id,B.name,B.ownership,B.type,B.registration_number,B.status,B.status,B.students,
                     B.created_at,B.updated_at,B.nmb_branch,B.account_number,B.branch_name,B.branch_code,
@@ -259,13 +256,15 @@ class Sales extends Controller {
                     (select D.name as district,W.id,W.name as ward,R.name as region from admin.districts as D join
                     admin.wards as W on D.id = W.district_id join admin.regions R on R.id = D.region_id ) T on B.ward_id = T.id";
                 } else {     
-                 $sql = "select a.* from (select s.*,b.name as ward,d.name as district,r.name as region,c.client_id,e.username, (select count(*) from admin.tasks where school_id=s.id) as activities from admin.schools s join admin.wards b on s.ward_id = b.id join admin.districts as d on d.id=b.district_id join admin.regions r on r.id=d.region_id left join admin.client_schools c on c.school_id = s.id left join admin.clients e on e.id=c.client_id) a where lower(a.ownership) <>'government' ";
+                 $sql = "select a.* from (select s.*,b.name as ward,d.name as district,r.name as region,c.client_id,e.username, (select count(*) from admin.tasks where school_id=s.id) 
+                 as activities from admin.schools s join admin.wards b on s.ward_id = b.id join admin.districts as d on d.id=b.district_id join admin.regions r on r.id=d.region_id
+                  left join admin.client_schools c on c.school_id = s.id left join admin.clients e on e.id=c.client_id) a where lower(a.ownership) <>'government' ";
                  }
                  
-                return $this->ajaxTable('schools', ['a.name', 'a.ward', 'a.district'], $sql);
+                return $this->ajaxTable('schools', ['a.name', 'a.region', 'a.district'], $sql);
                 break;
             case 'prospects':
-                $sql = "select a.id, b.name, a.title||' '||a.name||' <br/> Email: '||a.email||' , phone: '||a.phone_number  as contact_name, c.name as person_in_charge,  b.region||' '||b.district||' '||b.ward as location, e.created_at as last_activity, e.date || ' at '||e.time as action_date, e.action||' : '|| e.activity as last_message from admin.prospects a join admin.schools b on a.school_id=b.id join admin.users c on c.id=a.user_id join admin.tasks e on e.id=a.task_id";
+                $sql = "select a.id, b.name, a.title||' '||a.name||' <br/> Email: '||a.email||' , phone: '||a.phone_number  as contact_name, c.name as person_in_charge,  b.district||' '||b.ward as location, e.created_at as last_activity, e.date || ' at '||e.time as action_date, e.action||' : '|| e.activity as last_message from admin.prospects a join (select s.id,s.name,w.name as ward,d.name as district,r.name as region from admin.schools s join admin.wards w on s.ward_id = w.id join admin.districts as d on d.id=w.district_id join admin.regions r on r.id=d.region_id where lower(s.ownership) <>'government') b  on a.school_id=b.id join admin.users c on c.id=a.user_id join admin.tasks e on e.id=a.task_id";
                 return $this->ajaxTable('schools', ['b.name', 'contact_name', 'person_in_charge', 'location', 'last_activity', 'action_date', 'last_message'], $sql);
                 break;
             case 'customers':
@@ -273,11 +272,11 @@ class Sales extends Controller {
                 return $this->ajaxTable('all_setting', ['sname', 'phone', 'address', 'email', 'payment_integrated', 'created_at']);
                 break;
             case 'errors':
-                $sql = "SELECT id,error_message,error_instance,created_at::date,schema_name,file, url  from (select * from admin.error_logs where deleted_at is null  AND error_instance NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException') order by id desc) y where deleted_at is null";
+                $sql = "SELECT id,error_message,error_instance,created_at::date,schema_name,file, url  from (select * from admin.error_logs where deleted_at is null  AND error_instance NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException','Illuminate\Auth\AuthenticationException') order by id desc) y where deleted_at is null";
                 return $this->ajaxTable('error_logs', ['file', 'error_message', 'route', 'url', 'error_instance', 'created_at::date', 'schema_name'], $sql);
                 break;
             case 'errors_resolved':
-                $sql = "select a.*,b.name as resolved_by from admin.error_logs a left join admin.users b on b.id=a.deleted_by where deleted_at is not null";
+                $sql = "select a.*,b.name as resolved_by from admin.error_logs a left join admin.users b on b.id=a.deleted_by where a.deleted_at is not null";
                 return $this->ajaxTable('error_logs', ['file', 'error_message', 'route', 'url', 'error_instance', 'created_at', 'schema_name'], $sql);
                 break;
             case 'sms_reply_logs':
@@ -762,7 +761,7 @@ class Sales extends Controller {
                   foreach($users as $value){
                    $data[$value->user_id] = $value->complete;
                }
-              $user_id =  !empty($data) ? array_search(max($data), $data) : DB::table('admin.user_train_items')->where('train_item_id',$section_id)->where('status',1)->first()->user_id;
+              $user_id = !empty($data) ? array_search(max($data), $data) : DB::table('admin.user_train_items')->where('train_item_id',$section_id)->where('status',1)->first()->user_id;
             } 
             return $user_id;
        }

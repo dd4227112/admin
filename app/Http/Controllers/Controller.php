@@ -116,24 +116,46 @@ class Controller extends BaseController {
     }
 
     public function saveFile($file, $subfolder = null, $local = null) {
-        // $path = \Storage::disk('s3')->put($subfolder, $file);
-        // $url = \Storage::disk('s3')->url($path);
-
-         $path = \Storage::disk('local')->put($subfolder, $file);
-         $url = \Storage::disk('local')->url($path);
-
-        if (strlen($url) > 10) {
-            return DB::table('company_files')->insertGetId([
-                        'name' => $file->getClientOriginalName(),
-                        'extension' => $file->getClientOriginalExtension(),
-                        'user_id' => Auth::user()->id,
-                        'size' => $file->getSize(),
-                        'caption' => $file->getRealPath(),
-                        'path' => base_url() . $url
+           if ($local == TRUE) { 
+            $url = $this->uploadFileLocal($file);
+            $file_id = DB::table('company_files')->insertGetId([
+                'extension' => $file->getClientOriginalExtension(),
+                'name' => $file->getClientOriginalName(),
+                'user_id' => \Auth::user()->id,
+                'size' => 0,
+                'caption' => $file->getRealPath(),
+                'path' => $url
             ]);
-        } else {
-            return false;
+            return $file_id;
+        } else {  
+            $path = \Storage::disk('s3')->put($subfolder, $file);
+            $url = \Storage::disk('s3')->url($path);
+
+            if (strlen($url) > 10) {
+               $file_id =  DB::table('company_files')->insertGetId([
+                    'name' => $file->getClientOriginalName(),
+                    'display_name' => $file->getClientOriginalExtension(),
+                    'user_id' => session('id'),
+                    'table' => session('table'),
+                    'size' => $file->getSize(),
+                    'caption' => $file->getRealPath(),
+                    'path' => $url
+                ]);
+               return $file_id;
+
+            } else {
+                return false;
+            }
         }
+    }
+
+    public function uploadFileLocal($file) {
+       //Move Uploaded File
+        $destinationPath = 'storage/uploads/images';
+        !is_dir($destinationPath) ? mkdir($destinationPath) : '';
+        $filename = rand(145, 87998) . time() . '.' . $file->getClientOriginalExtension();
+        $file->move($destinationPath, $filename);
+        return url($destinationPath . '/' . $filename);
     }
 
     public function curlPrivate($fields, $url = null) {
@@ -353,7 +375,11 @@ class Controller extends BaseController {
     }
 
 
-    
+
+  
+
+
+  
  
 
 }

@@ -206,8 +206,7 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                url: '<?= url('
-                student / getschools / null ') ?>',
+                url: '<?= url('customer/getschools/null ') ?>',
                 dataType: 'json',
                 type: "GET",
                 quietMillis: 50,
