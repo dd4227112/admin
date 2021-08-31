@@ -76,9 +76,6 @@ Route::get('/fhodhkjkhdfhoidf/software/{q}','Software@tasksSummary');
 
 
 
-
-
-
 Route::get('/epayment/i/{id}/{amount?}','Background@epayment');
 Route::any('/create/epayment/{id}/{amount?}','Background@createEpayment');
 
