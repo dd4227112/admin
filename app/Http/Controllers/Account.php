@@ -46,7 +46,7 @@ class Account extends Controller {
         $this->data['budget'] = [];
         $project_id = $this->data['project_id'] = request()->segment(3);
         $this->data['account_year_id'] = $account_year_id = request()->segment(4);
-        if ((int) $project_id == 1) {
+        if ((int) $project_id > 0) {
             //create shulesoft invoices
             //check in client table if all schools with students and have generated reports are registered
             $clients=\DB::select("select * from admin.clients where id not in (select client_id from admin.invoices where account_year_id=(select id from admin.account_years where name='".date('Y')."')) order by created_at desc");
@@ -56,6 +56,7 @@ class Account extends Controller {
         if ($project_id == 'edit') {
             $id = request()->segment(4);
             $this->data['invoice'] = Invoice::find($id);
+            $this->data['invoicefee'] = InvoiceFee::where('invoice_id',$this->data['invoice']->id)->first();
             return view('account.invoice.edit', $this->data);
         } else {
             switch ($project_id) {
@@ -346,6 +347,33 @@ class Account extends Controller {
         $unit_price = $client->price_per_student;
         $amount = $unit_price * $client->estimated_students;
         \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' => $client->estimated_students, 'unit_price' => $unit_price]);
+        return redirect()->back()->with('success', 'Invoice Created Successfully');
+    }
+
+      public function createinvoices() {
+        $client_id = request('client_id');
+        $due_date = request('due_date');
+        $start_date = date('Y-m-d', strtotime($due_date. ' - 30 days'));
+        $client = \App\Models\Client::find($client_id);
+        $year = \App\Models\AccountYear::where('name', date('Y'))->first();
+        $project_id = request('type');
+
+        $reference = time(); // to be changed for selcom ID
+        $item = \App\Models\InvoiceType::where('id', $project_id)->first();
+
+        $item_name = $item->name;
+        $data = ['reference' => $reference, 
+                 'client_id' => $client_id, 
+                 'date' => $start_date, 
+                 'due_date' => $due_date, 
+                 'year' => date('Y'), 
+                 'user_id' => Auth::user()->id, 
+                 'account_year_id' => $year->id];
+
+        $invoice = Invoice::create($data);
+    
+        $amount = remove_comma(request('amount'));
+        \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => $project_id, 'item_name' => $item_name, 'unit_price' => $amount]);
         return redirect()->back()->with('success', 'Invoice Created Successfully');
     }
 

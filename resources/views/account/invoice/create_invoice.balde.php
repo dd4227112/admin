@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('content')
 <?php $root = url('/') . '/public/' ?>
+<?php $root = url('/') . '/public/' ?>
 
 <script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
   
