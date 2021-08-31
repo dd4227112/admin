@@ -3,7 +3,7 @@
 use Illuminate\Support\Str;
 
 return [
-    'default' => env('DB_CONNECTION', 'pgsql'),
+    'default' => 'pgsql',
     'connections' => [
         'sqlite' => [
             'driver' => 'sqlite',
@@ -31,27 +31,67 @@ return [
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
-        'pgsql' => [
+
+       
+          'pgsql' => [
+            
             'driver' => 'pgsql',
-            // 'url' => env('DATABASE_URL'),
-            'host' => '127.0.0.1',
-            'port' => '5432',
-            'database' => 'Shulesoft',
-            'username' => 'postgres',
-            'password' => '99abo123',
+            'host' => 'localhost',
+            'port' => 10054,
+            'database' =>'shulesoft_2021',
+            'username' => 'pgeshuleadmin',
+            'password' =>'20_pgeshuleadmin_12!',
+            'charset' => 'utf8',
+	    'prefix' => '',
+            'schema' => 'admin',
+	    'sslmode' => 'prefer',
+            'options' => [
+                \PDO::ATTR_EMULATE_PREPARES => true
+            ]
+	],
+
+
+        'karibusms' => [
+            'driver' => 'pgsql',
+            'host'=>'localhost',
+            'port' => 10064,
+            'database' =>'other_app',
+            'username' => 'pgeshuleadmin',
+            'password' =>'20_pgeshuleadmin_12!',
             'charset' => 'utf8',
             'prefix' => '',
-           // 'prefix_indexes' => true,
-            'schema' => 'admin',
+            'prefix_indexes' => true,
+            'schema' => 'new_karibusms',
             'sslmode' => 'prefer',
+            'options' => [
+                \PDO::ATTR_EMULATE_PREPARES => true
+            ]
         ],
+
+    'biotime' => [
+            'driver' => 'pgsql',
+            // 'url' => env('DATABASE_URL'),
+            'host' => 'localhost',
+            'database' => 'biotime',
+            'port' => 10064,
+            'username' => 'pgeshuleadmin',
+            'password' =>'20_pgeshuleadmin_12!',
+            'charset' => 'utf8',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'schema' => 'public',
+            'sslmode' => 'prefer',
+            'options' => [
+                \PDO::ATTR_EMULATE_PREPARES => true
+            ]
+],
         'project' => [
             'driver' => 'mysql',
             'persistent' => false,
             'host' => 'localhost',
-            'username' => 'root',
-            'password' => '',
-            'database' => 'project_',
+            'password' => ')*(08((*&***(___+@FdAd$##___12',
+            'database' => 'shulesoft_projects',
+            'username' => 'user',
             'prefix' => '',
             'encoding' => 'utf8',
         ],
@@ -67,8 +107,10 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
         ],
+
     ],
     'migrations' => 'migrations',
+
     'redis' => [
         'client' => env('REDIS_CLIENT', 'phpredis'),
         'options' => [
@@ -82,6 +124,7 @@ return [
             'port' => env('REDIS_PORT', '6379'),
             'database' => env('REDIS_DB', '0'),
         ],
+
         'cache' => [
             'url' => env('REDIS_URL'),
             'host' => env('REDIS_HOST', '127.0.0.1'),
@@ -89,6 +132,7 @@ return [
             'port' => env('REDIS_PORT', '6379'),
             'database' => env('REDIS_CACHE_DB', '1'),
         ],
-    ],
-];
 
+    ],
+
+]; 

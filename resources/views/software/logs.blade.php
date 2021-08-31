@@ -317,13 +317,9 @@
                 {"data": "schema_name"},
                 {"data": "error_message"},
                 {"data": "file"},
-<<<<<<< HEAD
                 {"data": "url"},
               //  {"data": "created_by"},
              //   {"data": ""}
-=======
-                {"data": "url"}
->>>>>>> 2b80ebfcaed17e402ef9e56d3a33ef1566863d53
             ],
             "columnDefs": [
                 {
@@ -404,11 +400,7 @@
                 {"data": "error_message"},
                 {"data": "file"},
                 {"data": "url"},
-<<<<<<< HEAD
-               // {"data": "created_by"},
-=======
               //  {"data": "created_by"},
->>>>>>> 2b80ebfcaed17e402ef9e56d3a33ef1566863d53
                 {"data": "deleted_at"},
                 {"data": "resolved_by"}
             ],
