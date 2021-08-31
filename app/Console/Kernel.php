@@ -106,7 +106,6 @@ class Kernel extends ConsoleKernel {
         // })->dailyAt('14:50'); // Eq to 17:50 h 
         $schedule->call(function () {
             (new Background())->schoolMonthlyReport();
-            DB::statement("DELETE FROM  api.requests  WHERE created_at < now()-'2 week'::interval;");
         })->monthlyOn(29, '06:36');
     }
 
@@ -122,6 +121,7 @@ class Kernel extends ConsoleKernel {
             } else {
                 //this is invalid number, so update in db to show wrong return
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied','updated_at' => now()]);
+             
             }
         }
     }
