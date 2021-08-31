@@ -802,7 +802,7 @@ class Users extends Controller {
         $learning_id = request()->segment(3);
         if ($_POST) {
             $file = request()->file('certificate');
-            $file_id = $file ? $this->saveFile($file, 'company/employees') : 1; 
+            $file_id = $file ? $this->saveFile($file, 'company/employees',TRUE) : 1; 
              \App\Models\Learning::where('id',$learning_id)->update(['company_file_id' => $file_id]);
        }
        return redirect()->back()->with('success', 'updated successful!');

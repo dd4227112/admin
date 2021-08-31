@@ -12,7 +12,7 @@ class QrCode extends Controller
    public function generate_qr_code(){
             $user_email = request()->segment(3);
             
-            $qr_code = new BarcodeQR();
+            $qr_code = new \App\Http\Controllers\BarcodeQR();
             $targetPath = "public/";
             $user_url = 'https://admin.shulesoft.com/user-details/' . md5($user_email);
             $qr_code->url($user_url);
