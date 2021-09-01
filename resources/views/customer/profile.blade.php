@@ -101,6 +101,7 @@ Message</a>
 <!-- Timeline button end -->
 </div>
 </div>
+
 <!-- Row end -->
 <!-- Row Starts -->
 <div class="row">
