@@ -1598,7 +1598,7 @@ class Customer extends Controller {
         foreach ($object as $key => $value) {
             $this->data[$key . '_table'] = $value;
 
-            switch ($key) {
+            switch ($key) { 
                 case 'parents':
                     $sql = ' and "table"=\'parent\' ';
                     break;

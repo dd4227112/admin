@@ -71,11 +71,11 @@
                                                     <div class="col-lg-6"> <span id="project_id_error"></span></div>
                                                 </div>
 
-                                                     <div class="form-group ">
+                                            <?php if($invoicefee->project_id == 1) { ?>
+                                                <div class="form-group ">
                                                     <label for="number" class="control-label col-lg-3">Students</label>
                                                     <div class="col-lg-6">
                                                         <input type="number" value="<?= $invoice->client->estimated_students ?>" name="estimated_students" id="date" class="form-control"/>
-
                                                     </div>
                                                     <?php echo form_error($errors, 'date'); ?>
                                                     <div class="col-lg-6"> <span id="date_error"></span></div>
@@ -90,7 +90,8 @@
                                                     <?php echo form_error($errors, 'date'); ?>
                                                     <div class="col-lg-6"> <span id="date_error"></span></div>
                                                 </div>
-
+                                            <?php } ?>
+                                            
                                                
 
                                                 <div class="form-group ">
