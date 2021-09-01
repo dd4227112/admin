@@ -290,15 +290,7 @@
               </div>
                 
 
-
-
-
-
-
-
-
-
-              {{-- <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
+              <div class="modal fade" id="large-Modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index: 1050; display: none;">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -337,7 +329,7 @@
                             </div>
                     </div>
                 </div>
-            </div> --}}
+            </div>
 
 
         </div>
