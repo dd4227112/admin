@@ -322,10 +322,9 @@ class Users extends Controller {
             //     $file->move($filePath, $filename2);
             // }
            
-            //  $data =  (array)  request()->except('salary');
-            //  $usedata = array_merge(remove_comma(request('salary')), $data);
-            //  dd($userdata);
-             $user = User::find($id)->update(request()->all());
+             $data = request()->except('salary');
+             $usedata = array_merge(['salary' => remove_comma(request('salary'))], $data);
+             $user = User::find($id)->update($usedata);
          //  $user = User::find($id)->update(request()->except('medical_report', 'academic_certificates','employment_contract'));
          //  User::find($id)->update(['medical_report' => $filename, 'academic_certificates' => $filename1,'employment_contract' => $filename2]);
             return redirect('/users/show/'.$id)->with('success', 'User ' . request('firstname') . ' ' . request('lastname') . ' updated successfully');
@@ -802,8 +801,8 @@ class Users extends Controller {
         $learning_id = request()->segment(3);
         if ($_POST) {
             $file = request()->file('certificate');
-            $file_id = $file ? $this->saveFile($file, 'company/employees',TRUE) : 1; 
-             \App\Models\Learning::where('id',$learning_id)->update(['company_file_id' => $file_id]);
+            $file_id = $this->saveFile($file, 'company/employees',TRUE); 
+           \App\Models\Learning::where('id',$learning_id)->update(['company_file_id' => $file_id]);
        }
        return redirect()->back()->with('success', 'updated successful!');
    }

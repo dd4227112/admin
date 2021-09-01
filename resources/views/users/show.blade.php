@@ -63,7 +63,7 @@ foreach ($user_permission as $permis) {
                                 <div class="card counter-card-2">
                                     <div class="card-block-big">
                                         <div> 
-                                            <h3>Tsh <?= isset($salary->basic_pay) ? money($salary->basic_pay) : '' ?></h3>
+                                            <h3>Tsh <?= isset($user->salary) ? money($user->salary) : '' ?></h3>
                                             <p>Basic Salary 
                                                 <span class="f-right text-success">
                                                     <i class="icofont icofont-arrow-up"></i>

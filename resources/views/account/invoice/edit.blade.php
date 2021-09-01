@@ -64,7 +64,7 @@
                                                  <div class="form-group ">
                                                     <label for="type" class="control-label col-lg-3">Amount</label>
                                                     <div class="col-lg-6">
-                                                        <input type="text" class="form-control"  value="<?= $invoice->invoiceFees()->sum('amount') ?>" disabled=""/>
+                                                        <input type="text" class="form-control transaction_amount"  value="<?= $invoice->invoiceFees()->sum('amount') ?>" disabled=""/>
 
                                                     </div>
                                                     <?php echo form_error($errors, 'amount'); ?>
