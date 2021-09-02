@@ -36,7 +36,7 @@ class HomeController extends Controller
 
     public function schoolapi(){
        $data = DB::select("select a.sname as school_name,a.phone,a.address,a.email,a.website,a.created_at as joined_at,
-            case when (a.photo is null OR a.photo = '') then 'https://admin.shulesoft.com/public/assets/images/default.png' else 'https://admin.shulesoft.com/storage/uploads/images/'||a.photo end as photo, z.estimated_students as number_of_students from admin.all_setting a join admin.client_schools c on c.school_id = a.school_id join admin.clients z on z.id = c.client_id");
+            case when (a.photo is null OR a.photo = '') then 'https://demo.shulesoft.com/public/assets/images/default.png' else 'https://demo.shulesoft.com/storage/uploads/images/'||a.photo end as photo, z.estimated_students as number_of_students from admin.all_setting a join admin.client_schools c on c.school_id = a.school_id join admin.clients z on z.id = c.client_id");
          echo json_encode(['schools' => $data]);
     }
 

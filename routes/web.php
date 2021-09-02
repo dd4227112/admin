@@ -35,7 +35,7 @@ foreach ($bad_url as $value) {
         exit;
     }
 }
-Route::get('/898uuhihdsdskj/live/{id}/{year}','Customer@usageAnalysis');
+Route::get('/898uuhihdsdskj/live/{id}/{year}/{is_customer?}','Customer@usageAnalysis');
 
 //list of schools that use particular bank eg NMB, CRDB etc
 Route::get('/898uuhihdsdskjSB/live/','Customer@schoolBanks');
