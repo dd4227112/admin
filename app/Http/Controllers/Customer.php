@@ -972,9 +972,9 @@ class Customer extends Controller {
     public function customSqlReport() {
         $sql = strlen(request('q')) > 3 ? request('q') : exit;
         // $view = strlen(request('v')) > 3 ? request('v') : exit;
-        if (preg_match('/school_sales_status/i', $sql)) {
+        //if (preg_match('/school_sales_status/i', $sql)) {
           //  DB::statement('select admin.sales_report()');
-        }
+        //}
         // DB::select('Create or replace view ' . $view . ' AS ' . $sql);
         $this->data['contents'] = DB::select($sql);
         $this->data['headers'] = \collect($this->data['contents'])->first();
