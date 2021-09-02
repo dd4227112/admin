@@ -872,7 +872,7 @@ class Customer extends Controller {
             $this->data['next'] = \App\Models\Requirement::whereNotIn('id', [$id])->where('status', 'New')->first()->id;
             return view('customer/view_requirement', $this->data);
         }
-        $this->data['levels'] = [];
+        $this->data['levels'] = [];  
         if ($_POST) {
             $data = array_merge(request()->all(), ['user_id' => Auth::user()->id]);
             $req = \App\Models\Requirement::create($data);
@@ -1598,7 +1598,7 @@ class Customer extends Controller {
         foreach ($object as $key => $value) {
             $this->data[$key . '_table'] = $value;
 
-            switch ($key) {
+            switch ($key) { 
                 case 'parents':
                     $sql = ' and "table"=\'parent\' ';
                     break;

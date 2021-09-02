@@ -106,23 +106,21 @@ class Kernel extends ConsoleKernel {
         // })->dailyAt('14:50'); // Eq to 17:50 h 
         $schedule->call(function () {
             (new Background())->schoolMonthlyReport();
-            DB::statement("DELETE FROM  api.requests  WHERE created_at < now()-'2 week'::interval;");
         })->monthlyOn(29, '06:36');
     }
 
      public function whatsappMessage() {
-        $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 10');
+        $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 5');
+        $controller = new \App\Http\Controllers\Controller();
         foreach ($messages as $message) {
             if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
-                $controller = new \App\Http\Controllers\Controller();
                 $controller->sendMessage($message->phone, $message->message);
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1,'updated_at' => now()]);
                 echo 'message sent to ' . $message->name . '' . chr(10);
-                sleep(4);
             } else {
                 //this is invalid number, so update in db to show wrong return
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied','updated_at' => now()]);
-                echo 'wrong phone number supplied  ' . $user->phone . '' . chr(10);
+             
             }
         }
     }
