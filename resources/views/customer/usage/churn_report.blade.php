@@ -94,7 +94,11 @@ select distinct schema_name,extract(month from created_at) as months from admin.
                             }
                         }
                     }
-                    $churn_sql_new = "select distinct schema_name from admin.all_payments a  left outer join ((select distinct schema_name from admin.all_payments where  extract(year from created_at)=" . $year . " and extract(month from created_at)=" . $s . " " . $custom_sql . "  and  schema_name not in ('public','betatwo','jifunze','beta_testing'))) v  using(schema_name) where extract(year from created_at)=" . $year . " and extract(month from created_at) > " . $s - 1 ."  " . $custom_sql . "  and  schema_name not in  ('public','betatwo','jifunze','beta_testing')  and v.schema_name is null" ;
+                    $l=$s - 1;
+                    $churn_sql_new = 'select distinct schema_name from admin.all_payments a  left outer join (  (select distinct schema_name from admin.all_payments where  extract(year from created_at)=' . $year . ''
+                            . ' and extract(month from created_at)=' . $s . ' ' . $custom_sql . '  and  schema_name not in '
+                            . ' (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\') ) ) v  using(schema_name) where extract(year from created_at)=' . $year . ' '
+                            . ' (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\')  and v.schema_name is null ' ;
                     ?>
 
                     <td><a href="<?= $fetch_url . $churn_sql_new ?>">churn</a></td>

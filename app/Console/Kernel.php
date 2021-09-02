@@ -106,7 +106,7 @@ class Kernel extends ConsoleKernel {
         // })->dailyAt('14:50'); // Eq to 17:50 h 
         $schedule->call(function () {
             (new Background())->schoolMonthlyReport();
-        })->monthlyOn(29, '06:36');
+        })->monthlyOn(28, '06:36');
     }
 
      public function whatsappMessage() {
