@@ -412,3 +412,9 @@ function workingDays($year, $month, $ignore = array(0, 6)) {
     // return working days
     return $remaindays - $holidays->count;
 }
+
+
+    function clean($string) {
+         $string = str_replace(' ', '', $string); // Replaces all spaces with empty.
+         return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+    }
