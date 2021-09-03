@@ -82,13 +82,14 @@
                               if(count($requirements) > 0){ 
                               foreach ($requirements as $req) {  ?>
                               <tr>
-                              <td><?= $i ?></td>
-                              <td><?= ucfirst($req->school->name) ?></td>
-                              <td><?php echo $req->contact; ?></td>
-                              <td><?php echo $req->toUser->name;?> </td>
-                              <td><?= $req->created_at ?></td>
-                              <td><?= $req->status ?></td>
-                              <td ><a href="<?= url('customer/requirements/show/' . $req->id) ?>" class="btn btn-sm btn-success">View</a></td>
+                                  <td><?= $i ?></td>
+                                  <td><?= isset($req->school->name) ? ucfirst($req->school->name) : 'General' ?></td>
+                                  <td><?php echo $req->contact; ?></td>
+                                  <td><?php echo $req->toUser->name;?> </td>
+                                  <td><?= $req->created_at ?></td>
+                                  <td><?= $req->status ?></td>
+                                  <td ><a href="<?= url('customer/requirements/show/' . $req->id) ?>" class="btn btn-sm btn-success">View</a>
+                                  </td>
                               </tr>
                               <?php 
                                 $i++; }
@@ -125,7 +126,7 @@
 
                               <div class="col-md-6">
                                 <strong>  Select School</strong>
-                                <input type="number" class="form-control" id="get_schools" name="school_id" required >
+                                <input type="number" class="form-control" id="get_schools" name="school_id">
                               </div>
                               <div class="col-md-6">
                                 <strong>School Contacts Phone/Email</strong>

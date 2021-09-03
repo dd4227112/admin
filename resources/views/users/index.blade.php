@@ -82,8 +82,15 @@
                                                             <a class="btn btn-primary btn-sm" href="{{ url('users/edit/'.$user->id) }}">Edit</a>
 
 
-                                                            <a class="btn btn-danger btn-sm" href="{{ url('users/destroy/'.$user->id) }}">Delete</a>
+                                                           <a class="btn btn-danger btn-sm" href="{{ url('users/destroy/'.$user->id) }}">Delete</a> 
 
+
+                                                            {{-- <button type="button" class="user_dialog btn btn-primary btn-sm"
+                                                            data-toggle="modal" data-target="#uploaddata"
+                                                            data-id="<?= $user->id ?>">
+                                                              Delete
+                                                            </button> --}}
+ 
                                                         </td>
                                                     </tr>
                                                     <?php $i++; ?>
@@ -100,7 +107,8 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="status-Modal">
+
+<div class="modal fade" id="status-Modal">
 <div class="modal-dialog modal-lg" role="document">
 <form id="add-form" action="{{ url('users/userUpload') }}" method="POST" enctype="multipart/form-data">
 <?= csrf_field() ?>
@@ -130,6 +138,92 @@
         </form>
       </div>
   </div>
+
+
+<!-- Button trigger modal -->
+
+
+
+
+  <div class="modal fade" id="uploaddata" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h4 class="modal-title">Termination reason
+</h4>
+<button type="button" class="close"
+data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
 </div>
+
+   <form action="<?= url('customer/uploadJobCard') ?>" method="post">
+     <div class="modal-body">
+        <div class="form-group">
+          <div class="row">
+            <div class="col-md-6">
+            <strong> Upload Job card</strong>
+            <input type="text" class="form-control" name="job_card_file">
+           </div>
+
+            <div class="col-md-6">
+             <strong>Job card date</strong>
+             <input type=""
+             class="form-control" id="job_date" 
+            name="job_date" value="job_card"  required>
+            </div>
+
+          </div>
+         </div>
+        </div>
+
+        <div class="modal-footer">
+        <button type="button"
+        class="btn btn-default waves-effect "
+        data-dismiss="modal">Close</button>
+        <button type="submit"
+        class="btn btn-primary waves-effect waves-light ">Save
+        changes</button>
+        </div>
+          <?= csrf_field() ?>
+        </form>
+        </div>
+    </div>
+  </div>
+
+
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+  <script type="text/javascript">
+      
+          $(document).on("click", ".user_dialog", function () {
+                var UserName = $(this).data('id');
+                $(".modal-body #job_date").val(UserName);
+            });
+  </script>
 @endsection
 

@@ -330,8 +330,6 @@ class Customer extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function show($id, $page = null) {
-        //
-
         if (method_exists($this, $id) && is_callable(array($this, $id))) {
             return $this->$id();
         } else {
@@ -549,8 +547,11 @@ class Customer extends Controller {
     public function editdetails() {
         $id = request()->segment(3);
         $data = request()->except('_token');
+        $number_of_students = request('estimated_students');
         $update = \App\Models\Client::where('id', $id)->first();
         \App\Models\Client::where('id', $id)->update($data);
+        $data = \App\Models\ClientSchool::where('client_id',$id)->first();
+        \App\Models\School::where('id', \App\Models\ClientSchool::where('client_id',$id)->first()->school_id)->update(['students' => $number_of_students]);
         return redirect('customer/profile/' . $update->username)->with('success', 'successful updated!');
     }
 
@@ -874,7 +875,15 @@ class Customer extends Controller {
         }
         $this->data['levels'] = [];  
         if ($_POST) {
-            $data = array_merge(request()->all(), ['user_id' => Auth::user()->id]);
+            $req = [
+                    'school_id' =>  is_null(request('school_id')) ? '0' : request('school_id'),
+                    'contact' =>  request('contact'),
+                    'to_user_id' =>  request('to_user_id'),
+                    'note' =>  request('note'),
+                   ];
+
+            $data = array_merge($req,['user_id' => Auth::user()->id]);
+            
             $req = \App\Models\Requirement::create($data);
             if ((int) request('to_user_id') > 0) {
                 $user = \App\Models\User::find(request('to_user_id'));
@@ -969,7 +978,7 @@ class Customer extends Controller {
         return view('customer.usage.customer_list', $this->data);
     }
 
-    public function customSqlReport() {
+    public function customSqlReport() {  
         $sql = strlen(request('q')) > 3 ? request('q') : exit;
         // $view = strlen(request('v')) > 3 ? request('v') : exit;
         //if (preg_match('/school_sales_status/i', $sql)) {
