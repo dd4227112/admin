@@ -69,7 +69,9 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <th> Client Name</th>
-                                                                    <th><?= $requirement->school->name ?>(<code><?= $requirement->school->type ?></code>) - <?= $requirement->school->region ?> </th>
+                                                                    <th><?= isset($requirement->school->name) ? $requirement->school->name : 'General requirement' ?>
+                                                                    <code><?= isset($requirement->school->type) ? $requirement->school->type : ''  ?></code>
+                                                                    </th>
                                                                 </tr>
                                                                 <tr>
                                                                     <th> Client Contact</th>

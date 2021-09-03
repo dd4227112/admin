@@ -169,13 +169,11 @@ group by ownership');
      * @return \Illuminate\Http\Response
      */
     public function show($id) {
-        //
         return $id;
         $this->data['type'] = $id;
           $table = $id == 'sms' ? 'all_sms' : 'all_email';
-          $this->data['messages'] = DB::select('select * from admin.' . $table);
-       //   $this->data['messages'] = [];
-
+         // $this->data['messages'] = DB::select('select * from admin.' . $table);
+          $this->data['messages'] = [];
         return view('message.show', $this->data);
     }
 
