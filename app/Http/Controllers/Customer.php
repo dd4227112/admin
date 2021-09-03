@@ -549,8 +549,11 @@ class Customer extends Controller {
     public function editdetails() {
         $id = request()->segment(3);
         $data = request()->except('_token');
+        $number_of_students = request('estimated_students');
         $update = \App\Models\Client::where('id', $id)->first();
         \App\Models\Client::where('id', $id)->update($data);
+        $data = \App\Models\ClientSchool::where('client_id',$id)->first();
+        \App\Models\School::where('id', \App\Models\ClientSchool::where('client_id',$id)->first()->school_id)->update(['students' => $number_of_students]);
         return redirect('customer/profile/' . $update->username)->with('success', 'successful updated!');
     }
 

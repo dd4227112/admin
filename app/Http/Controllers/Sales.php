@@ -457,6 +457,7 @@ class Sales extends Controller {
         $this->data['school'] = $school  =  \App\Models\School::findOrFail($school_id);
 
         $username = preg_replace('/[^a-z]/', null, strtolower($school->name));
+        $username = clean($username);
          
         $this->data['staffs'] = DB::table('users')->where('status', 1)->where('role_id', '<>', 7)->get();
         if ($_POST) {
@@ -486,7 +487,7 @@ class Sales extends Controller {
 
              $schema_name = request('username') != '' ? strtolower(trim(request('username'))) : $username;
         
-            $check_client = DB::table('admin.clients')->where('username', $schema_name)->first();
+             $check_client = DB::table('admin.clients')->where('username', $schema_name)->first();
              
             if (!empty($check_client)) {
                 $client_id = $check_client->id;
@@ -502,8 +503,8 @@ class Sales extends Controller {
                     'code' => $code,
                     'email_verified' => 0,
                     'phone_verified' => 0,
-                    'created_by' => Auth::user()->id,
-                    'username' => $schema_name
+                    'created_by' => \Auth::user()->id,
+                    'username' => clean($schema_name)
                 ]); 
 
                 //client school
@@ -620,6 +621,7 @@ class Sales extends Controller {
         return view('sales.onboarding_school', $this->data);
     }
  
+    
     /**
      * Make this very easy for users to get a specific schedule
      * @param type $client_id
@@ -724,7 +726,7 @@ class Sales extends Controller {
                         . '<li>Start date: ' . date('Y-m-d H:i:s', strtotime($start_date)) . '</li>'
                         . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                         . '</ul>';
-                    $this->send_email($manager->email, $manager_message);
+                    $this->send_email($manager->email,'Task Allocation', $manager_message);
                     $message = "Hello" .$manager->firstname . " " .$manager->lastname .", A task of . $section->content .' been scheduled to " .\App\Models\Client::where('id',$client_id)->first()->name." Start date: " . date('d-m-Y', strtotime($start_date)) . " Up to: " . date('d-m-Y', strtotime($start_date . " + {$section->time} days"))." .Thank you!";
                     $this->send_whatsapp_sms($manager->phone, $message);
                }
