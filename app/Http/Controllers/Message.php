@@ -360,8 +360,10 @@ class Message extends Controller {
 
     public function sendEmail() {
         //loop through schema names and push emails
-       DB::select('REFRESH MATERIALIZED VIEW  admin.all_email');
-        $this->emails = DB::select('select * from admin.all_email limit 8');
+    //   DB::select('REFRESH MATERIALIZED VIEW  admin.all_email');
+     $schemas = DB::select("select * from admin.all_setting");
+        foreach ($schemas as $schema) {
+        $this->emails = DB::select("select * from $schema->schema_name.email where status = '0' and created_at::date > '2020-07-30'");
         if (count($this->emails) > 0) {
             foreach ($this->emails as $message) {
                 if (filter_var($message->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $message->email)) {
@@ -396,6 +398,7 @@ class Message extends Controller {
                 sleep(2);
             }
         }
+      }
     }
 
     public function karibusmsEmails() {

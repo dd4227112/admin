@@ -141,15 +141,15 @@ function getStatus($user, $status = 'New') {
                                                     }
                                                     ?></td>
                                             
-                                                <td>
-                                                    <select name="<?= $school->classlevel_id ?>" data-tag="gender" class="training" data-id="<?= $school->classlevel_id ?>" data-school-id="<?= $school->schema_name ?>">
-                                                        <option value="">Select status</option>
-                                                        <option value="1" <?= (int)$school->gender == 1 ? 'selected' : '' ?> >Boys</option>
-                                                        <option value="2"  <?=(int)$school->gender == 2 ? 'selected' : '' ?>>Girls</option>
-                                                        <option value="3"  <?= (int)$school->gender == 3? 'selected' : '' ?>>Mixture</option>
-                                                    </select>
-                                                    <span id="gender<?= $school->classlevel_id . '_client' . $school->schema_name ?>"></span>
-                                                </td>
+                            <td>
+                                <select name="<?= $school->classlevel_id ?>" data-tag="gender" class="training" data-id="<?= $school->classlevel_id ?>" data-school-id="<?= $school->schema_name ?>">
+                                    <option value="">Select status</option>
+                                    <option value="1" <?= isset($school->gender) && (int)$school->gender == 1 ? 'selected' : '' ?> >Boys</option>
+                                    <option value="2"  <?= isset($school->gender) && (int)$school->gender == 2 ? 'selected' : '' ?>>Girls</option>
+                                    <option value="3"  <?= isset($school->gender) && (int)$school->gender == 3 ? 'selected' : '' ?>>Mixture</option>
+                                </select>
+                                <span id="gender<?= $school->classlevel_id . '_client' . $school->schema_name ?>"></span>
+                            </td>
                                                 
                                                  <td>
                                                     <select name="<?= $school->classlevel_id ?>" data-tag="category" class="training" data-id="<?= $school->classlevel_id ?>" data-school-id="<?= $school->schema_name ?>">
