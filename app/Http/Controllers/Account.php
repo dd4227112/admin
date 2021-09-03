@@ -655,6 +655,7 @@ class Account extends Controller {
         $id = request()->segment(3);
         if ((int) $id > 0) {
             $this->data['invoice'] = Invoice::find($id);
+           // dd($this->data['invoice']);
             return view('account.transaction.receipt_sort', $this->data);
         } else {
             return redirect()->back()->with('error', 'Sorry ! Something is wrong try again!!');
