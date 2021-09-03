@@ -82,8 +82,7 @@
                                                             <a class="btn btn-primary btn-sm" href="{{ url('users/edit/'.$user->id) }}">Edit</a>
 
 
-                                                           <a class="btn btn-danger btn-sm" href="{{ url('users/destroy/'.$user->id) }}">Delete</a> 
-
+                                                           <a class="btn btn-danger btn-sm" onclick="myFunction()" href="{{ url('users/destroy/'.$user->id) }}">Delete</a> 
 
                                                             {{-- <button type="button" class="user_dialog btn btn-primary btn-sm"
                                                             data-toggle="modal" data-target="#uploaddata"
@@ -224,6 +223,16 @@ data-dismiss="modal" aria-label="Close">
                 var UserName = $(this).data('id');
                 $(".modal-body #job_date").val(UserName);
             });
+
+            function myFunction() {
+  var txt=document.getElementById('exampleModal');
+  if (confirm(``)) {
+    txt = "You pressed OK!";
+  } else {
+    txt = "You pressed Cancel!";
+  }
+  document.getElementById("exampleModal").innerHTML = txt;
+}
   </script>
 @endsection
 
