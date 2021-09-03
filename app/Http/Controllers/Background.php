@@ -31,7 +31,6 @@ class Background extends Controller {
                 $this->dispatch((new \App\Jobs\PushEmail()));
     }
 
-
     public function sendSms() {
 //        $messages = DB::select('select * from public.all_sms limit 15');
 //        if (!empty($messages)) {
@@ -51,7 +50,6 @@ class Background extends Controller {
 //            }
 //        }
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -427,6 +425,11 @@ class Background extends Controller {
                 'type' => 0,
                 'sms_keys_id' => $key_id
             ]);
+            DB::statement('insert into admin.whatsapp_messages (message,phone) select ' . $message . ' , admin.whatsapp_phone(' . $user->phone . ')');
+            // DB::table('admin.whatsapp_messages')->insert([
+            //    'message' => $message,
+            //     'phone' => $user->phone,
+            // ]);
             if (filter_var($user->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $user->email) && !in_array($user->email, ['inetscompany@gmail.com'])) {
 
                 $subject = 'ShuleSoft ' . number_to_words(date('m')) . ' Months Report';
@@ -601,8 +604,6 @@ class Background extends Controller {
         }
         // }
     }
-
-  
 
     public function searchDistrict() {
         $region_id = request('region_id');

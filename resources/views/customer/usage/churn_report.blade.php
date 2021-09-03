@@ -83,18 +83,22 @@ select distinct schema_name,extract(month from created_at) as months from admin.
             <tr>
                 <td><p align="right"><?= $key ?> Churn Customers</p></td>
                 <?php
-                for ($s = 1; $s <= 12; $s++) {
+                for ($p = 1; $p <= 12; $p++) {
                     $val_count = 0;
                     if (isset(${'new_customers_' . $key})) {
 
 
                         foreach (${'new_customers_' . $key} as $val) {
-                            if (isset($val->months) && (int) $val->months == (int) $s) {
+                            if (isset($val->months) && (int) $val->months == (int) $p) {
                                 $val_count = $val->count;
                             }
                         }
                     }
-                    $churn_sql_new = "select distinct schema_name from admin.all_payments a  left outer join ((select distinct schema_name from admin.all_payments where  extract(year from created_at)=" . $year . " and extract(month from created_at)=" . $s . " " . $custom_sql . "  and  schema_name not in ('public','betatwo','jifunze','beta_testing'))) v  using(schema_name) where extract(year from created_at)=" . $year . " and extract(month from created_at) > " . $s - 1 ."  " . $custom_sql . "  and  schema_name not in  ('public','betatwo','jifunze','beta_testing')  and v.schema_name is null" ;
+                    $l = (int) $p - 1;
+                    $churn_sql_new = 'select distinct schema_name from admin.all_payments a  left outer join (  (select distinct schema_name from admin.all_payments where  extract(year from created_at)=' . $year . ''
+                            . ' and extract(month from created_at)=' . $p . ' ' . $custom_sql . '  and  schema_name not in '
+                            . ' (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\') ) ) v  using(schema_name) where extract(year from created_at)=' . $year . ' '
+                            . ' (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\')  and v.schema_name is null ';
                     ?>
 
                     <td><a href="<?= $fetch_url . $churn_sql_new ?>">churn</a></td>
