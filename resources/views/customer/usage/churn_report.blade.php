@@ -71,6 +71,7 @@
                             }
                         }
                     }
+                 
                     $sql_new = '  select schema_name from (
 select distinct schema_name,extract(month from created_at) as months from admin.' . $table . ' where extract(year from created_at)=' . $year . ' and extract(month from created_at)=' . $s . ' ' . $custom_sql . ' and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\') ) x LEFT OUTER JOIN (
 select distinct schema_name,extract(month from created_at) as months from admin.' . $table . ' where extract(year from created_at)=' . $year . ' and extract(month from created_at)<' . $s . ' ' . $custom_sql . ' and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\')  ) y using(schema_name) where y.schema_name is null';
@@ -95,10 +96,9 @@ select distinct schema_name,extract(month from created_at) as months from admin.
                         }
                     }
                     $l = (int) $p - 1;
-                    $churn_sql_new = 'select distinct schema_name from admin.all_payments a  left outer join (  (select distinct schema_name from admin.all_payments where  extract(year from created_at)=' . $year . ''
-                            . ' and extract(month from created_at)=' . $p . ' ' . $custom_sql . '  and  schema_name not in '
-                            . ' (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\') ) ) v  using(schema_name) where extract(year from created_at)=' . $year . ' '
-                            . ' (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\')  and v.schema_name is null ';
+                    $churn_sql_new =   "
+select distinct schema_name from admin.$table a  where extract(year from created_at)=$year and extract(month from created_at)=$l $custom_sql and schema_name not in (select distinct schema_name from admin.$table a  where extract(year from created_at)=$year $custom_sql and extract(month from created_at)=$p ) and schema_name not in  ('public','betatwo','jifunze','beta_testing')";
+                   
                     ?>
 
                     <td><a href="<?= $fetch_url . $churn_sql_new ?>">churn</a></td>
