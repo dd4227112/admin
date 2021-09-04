@@ -367,6 +367,7 @@ class Message extends Controller {
         $this->emails = DB::select("select * from " . $schema->schema_name. ".email where status = '0' and created_at::date > '2020-07-30'");
         if (count($this->emails) > 0) {  
             foreach ($this->emails as $message) {
+                  dd($message);
                 if (filter_var($message->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $message->email)) {
                     try {
                         $link = strtoupper($message->schema_name) == 'PUBLIC' ? 'demo.' : $message->schema_name . '.';
@@ -388,7 +389,7 @@ class Message extends Controller {
                     } catch (\Exception $e) {
                         // error occur
                         //DB::table('public.sms')->insert(['body'=>'email error'.$e->getMessage(),'status'=>0,'phone_number'=>'0655406004','type'=>0]);
-                        echo 'something is not write' . $e->getMessage();
+                        echo 'something is not right' . $e->getMessage();
                     }
                 } else {
 //skip all emails with ShuleSoft title
