@@ -71,6 +71,7 @@
                             }
                         }
                     }
+                 
                     $sql_new = '  select schema_name from (
 select distinct schema_name,extract(month from created_at) as months from admin.' . $table . ' where extract(year from created_at)=' . $year . ' and extract(month from created_at)=' . $s . ' ' . $custom_sql . ' and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\') ) x LEFT OUTER JOIN (
 select distinct schema_name,extract(month from created_at) as months from admin.' . $table . ' where extract(year from created_at)=' . $year . ' and extract(month from created_at)<' . $s . ' ' . $custom_sql . ' and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\')  ) y using(schema_name) where y.schema_name is null';
@@ -83,18 +84,21 @@ select distinct schema_name,extract(month from created_at) as months from admin.
             <tr>
                 <td><p align="right"><?= $key ?> Churn Customers</p></td>
                 <?php
-                for ($s = 1; $s <= 12; $s++) {
+                for ($p = 1; $p <= 12; $p++) {
                     $val_count = 0;
                     if (isset(${'new_customers_' . $key})) {
 
 
                         foreach (${'new_customers_' . $key} as $val) {
-                            if (isset($val->months) && (int) $val->months == (int) $s) {
+                            if (isset($val->months) && (int) $val->months == (int) $p) {
                                 $val_count = $val->count;
                             }
                         }
                     }
-                    $churn_sql_new = "select distinct schema_name from admin.all_payments a  left outer join ((select distinct schema_name from admin.all_payments where  extract(year from created_at)=" . $year . " and extract(month from created_at)=" . $s . " " . $custom_sql . "  and  schema_name not in ('public','betatwo','jifunze','beta_testing'))) v  using(schema_name) where extract(year from created_at)=" . $year . " and extract(month from created_at) > " . $s - 1 ."  " . $custom_sql . "  and  schema_name not in  ('public','betatwo','jifunze','beta_testing')  and v.schema_name is null" ;
+                    $l = (int) $p - 1;
+                    $churn_sql_new =   "
+select distinct schema_name from admin.$table a  where extract(year from created_at)=$year and extract(month from created_at)=$l $custom_sql and schema_name not in (select distinct schema_name from admin.$table a  where extract(year from created_at)=$year $custom_sql and extract(month from created_at)=$p ) and schema_name not in  ('public','betatwo','jifunze','beta_testing')";
+                   
                     ?>
 
                     <td><a href="<?= $fetch_url . $churn_sql_new ?>">churn</a></td>
