@@ -358,50 +358,50 @@ class Message extends Controller {
         }
     }
 
-    public function sendEmail() {
-        //loop through schema names and push emails
-    //   DB::select('REFRESH MATERIALIZED VIEW  admin.all_email');
-     $schemas = DB::select("select * from admin.all_setting");
+     public function sendEmail() {
+//         //loop through schema names and push emails
+//     //   DB::select('REFRESH MATERIALIZED VIEW  admin.all_email');
+//      $schemas = DB::select("select * from admin.all_setting");
      
-        foreach ($schemas as $schema) {
-        $this->emails = DB::select("select * from " . $schema->schema_name. ".email where status = '0' and created_at::date > '2020-07-30'");
-        if (count($this->emails) > 0) {  
-            foreach ($this->emails as $message) {
-                  dd($message);
-                if (filter_var($message->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $message->email)) {
-                    try {
-                        $link = strtoupper($message->schema_name) == 'PUBLIC' ? 'demo.' : $message->schema_name . '.';
-                        $data = ['content' => $message->body, 'link' => $link, 'photo' => $message->photo, 'sitename' => $message->sitename, 'name' => ''];
-                        $mail = \Mail::send('email.default', $data, function ($m) use ($message) {
-                                    $m->from('noreply@shulesoft.com', $message->sitename);
-                                    $m->to($message->email)->subject($message->subject);
-                                });
+//         foreach ($schemas as $schema) {
+//         $this->emails = DB::select("select * from " . $schema->schema_name. ".email where status = '0' and created_at::date > '2020-07-30'");
+//         if (count($this->emails) > 0) {  
+//             foreach ($this->emails as $message) {
+//                   dd($message);
+//                 if (filter_var($message->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $message->email)) {
+//                     try {
+//                         $link = strtoupper($message->schema_name) == 'PUBLIC' ? 'demo.' : $message->schema_name . '.';
+//                         $data = ['content' => $message->body, 'link' => $link, 'photo' => $message->photo, 'sitename' => $message->sitename, 'name' => ''];
+//                         $mail = \Mail::send('email.default', $data, function ($m) use ($message) {
+//                                     $m->from('noreply@shulesoft.com', $message->sitename);
+//                                     $m->to($message->email)->subject($message->subject);
+//                                 });
 
-                        if (count(\Mail::failures()) > 0) {
-                            DB::update('update ' . $message->schema_name . '.email set status=0 WHERE email_id=' . $message->email_id);
-                        } else {
-                            if ($message->email == 'inetscompany@gmail.com') {
-                                DB::table($message->schema_name . '.email')->where('email_id', $message->email_id)->delete();
-                            } else {
-                                DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
-                            }
-                        }
-                    } catch (\Exception $e) {
-                        // error occur
-                        //DB::table('public.sms')->insert(['body'=>'email error'.$e->getMessage(),'status'=>0,'phone_number'=>'0655406004','type'=>0]);
-                        echo 'something is not right' . $e->getMessage();
-                    }
-                } else {
-//skip all emails with ShuleSoft title
-//skip all invalid emails
-                    DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
-                }
-//$this->updateEmailConfig();
-                sleep(2);
-            }
-        }
-      }
-    }
+//                         if (count(\Mail::failures()) > 0) {
+//                             DB::update('update ' . $message->schema_name . '.email set status=0 WHERE email_id=' . $message->email_id);
+//                         } else {
+//                             if ($message->email == 'inetscompany@gmail.com') {
+//                                 DB::table($message->schema_name . '.email')->where('email_id', $message->email_id)->delete();
+//                             } else {
+//                                 DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
+//                             }
+//                         }
+//                     } catch (\Exception $e) {
+//                         // error occur
+//                         //DB::table('public.sms')->insert(['body'=>'email error'.$e->getMessage(),'status'=>0,'phone_number'=>'0655406004','type'=>0]);
+//                         echo 'something is not right' . $e->getMessage();
+//                     }
+//                 } else {
+// //skip all emails with ShuleSoft title
+// //skip all invalid emails
+//                     DB::update('update ' . $message->schema_name . '.email set status=1 WHERE email_id=' . $message->email_id);
+//                 }
+// //$this->updateEmailConfig();
+//                 sleep(2);
+//             }
+//         }
+//       }
+   }
 
     public function karibusmsEmails() {
         $this->emails = DB::connection('karibusms')->select('select * from emails where status=0 limit 8');
