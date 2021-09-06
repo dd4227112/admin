@@ -458,7 +458,7 @@ submit_search = function () {
     $('#search_custom').mousedown(function () {
         var start_date = $('#start_date').val();
         var end_date = $('#end_date').val();
-        window.location.href = '<?= url('Sales/salesStatus/') ?>/5?start=' + start_date + '&end=' + end_date;
+        window.location.href = '<?= url('users/hrrequest/') ?>/5?start=' + start_date + '&end=' + end_date;
     });
 }
 $(document).ready(check);

@@ -489,12 +489,6 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                             <li><a href="<?= url('users/template') ?>" data-i18n="nav.extra-components.offline">Forms &
                                                     Templates</a>
                                              </li>
-                                            <?php if(can_access('create_user_group')) { ?>
-                                             <li><a href="<?= url('users/usergroup') ?>"
-                                                data-i18n="nav.extra-components.session-idle-timeout">User groups</a>
-                                            </li>
-                                            <?php } ?>
-    
                                             <?php if(can_access('general_report')) { ?>
                                             <li>
                                              <a href="<?= url('sales/allData') ?>" data-i18n="nav.extra-components.session-timeout"> General report</a>                                    
@@ -523,6 +517,12 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                         <li><a href="<?= url('Partner/index') ?>" data-i18n="nav.extra-components.session-timeout"> Onboard Requests</a></li>
                                         <!--<li><a href="<?= url('Partner/add') ?>" data-i18n="nav.extra-components.offline">Onboard New School</a></li>-->
                                         {{-- <li><a href="#" data-i18n="nav.extra-components.session-timeout">Reports</a></li> --}}
+
+                                     <?php if(can_access('create_user_group')) { ?>
+                                        <li><a href="<?= url('users/usergroup') ?>"
+                                            data-i18n="nav.extra-components.session-idle-timeout">School Groups</a>
+                                        </li>
+                                        <?php } ?>
                                      </ul>
                                    </li>
                              
