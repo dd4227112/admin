@@ -123,8 +123,6 @@
       debug: true
   }); 
 
-
-
 </script>
 
 @endsection

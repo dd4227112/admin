@@ -15,12 +15,13 @@ class Recruitments extends Controller {
     public function register() {
          $phone = request('phone'); 
         if (strpos($phone, '0') === 0) {
-            $phonenumber = preg_replace('/0/', '+255', $phone, 1);
+            $phonenumber = trim(preg_replace('/0/', '+255', $phone, 1));
           }else{
-            $phonenumber = request('phone'); 
+            $phonenumber = trim(request('phone')); 
           }
+        //  dd($phonenumber);
         $file = request()->file('documents');
-        $file_id = $this->saveFile($file, 'company/contracts');
+        $file_id = $this->saveFile($file, 'company/contracts', TRUE);
         // $file_id = 1;
         
        $recruiment = \App\Models\Recruiment::create(array_merge(request()->except('phone'), ['phone' => $phonenumber,'company_file_id' =>$file_id ]));
@@ -34,6 +35,8 @@ class Recruitments extends Controller {
             .'<p><b>Shulesoft Team</b></p>'
             .'<p> Call: +255 655 406 004 </p>';
             $this->send_email(request('email'), 'ShuleSoft Recruiment Application', $message);
+            $this->send_whatsapp_sms($user->phone, $sms);
+
          }
          return redirect('Recruitments/quiz/'. $recruiment->id);
    }
