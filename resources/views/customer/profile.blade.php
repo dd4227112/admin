@@ -1920,8 +1920,8 @@ class="table table-striped table-bordered nowrap dataTable">
             <td><?= date('d/m/Y', strtotime($order->payment_date)) ?? '' ?></td>
             <td><?= $order->schoolcontact->name ?? '' ?></td>
 
-                {{-- <td><a  target="_break" href="<?= url('customer/viewContract/' . $order->id) ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a> --}}
-            <td><a  target="_break" href="<?= url('storage/uploads/files/'.$order->file) ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a>
+               <td><a  target="_break" href="<?= url('customer/viewContract/' . $order->id . '/standing') ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a> 
+            {{-- <td><a  target="_break" href="<?= url('storage/uploads/files/'.$order->file) ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a> --}}
 
                 <?php if (!isset($order->payment_date) || !isset($order->type)) { ?>
                     <a  href="<?= url('account/editStandingOrder/' . $order->id) ?>" class="waves-light waves-effect btn btn-info btn-sm">edit</a>
