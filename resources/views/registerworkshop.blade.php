@@ -64,7 +64,7 @@
             }
         </style>
     </head>
-    <body class="fix-menu"   style=" overflow-y:auto; height: auto;">
+    <body class="fix-menu" style="overflow-y:auto; height: auto;">
         <!-- Container-fluid starts -->
         <div class="container-fluid">
             <div class="page-wrapper">

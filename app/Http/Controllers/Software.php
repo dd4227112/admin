@@ -355,15 +355,13 @@ ORDER BY c.oid, a.attnum";
 
         if(isset($tag->error_message)) {
            DB::table('admin.error_logs')->where('error_message','LIKE','%'.$tag->error_message.'%')->orWhere('file','LIKE','%'.$tag->file.'%')->orWhere('route','LIKE','%'.$tag->route.'%')->update(['deleted_at'=>now(),'deleted_by'=>\Auth::user()->id]);
-         } else {
-           DB::table('admin.error_logs')->where('file','LIKE','%'.$tag->file.'%')->orWhere('route','LIKE','%'.$tag->route.'%')->update(['deleted_at'=>now(),'deleted_by'=>\Auth::user()->id]);
-         }
+         } 
          echo 1;
     }
 
     public function Readlogs() {
         $id = request()->segment(3);
-        $tag = \App\Models\ErrorLog::findOrFail($id);
+        $tag = \App\Models\ErrorLog::find($id);
         $this->data['schema'] = $schema = $tag->schema_name;
         $this->data['school'] =  $schema != 'public' ? \collect(\DB::select("select * from admin.clients where username = '.$schema.' "))->first() : '';
         $this->data['error_message'] = $tag->error_message . '<br>' . $tag->url . '<br>';
@@ -504,7 +502,7 @@ ORDER BY c.oid, a.attnum";
                   
                 $fullname = $manager->firstname . " " . $manager->lastname;
                 $message = "habari " . $fullname ." Hatua za integration katika shule ya " .\App\Models\Client::where('id',$client->id)->first()->name." zimekamilika Tafadhali wasiliana na bank product associate kutoka shulesoft aweze kuwapa taarifa shule husika na kuendelea nao katika hatua zinazofata,ASANTE";
-                $this->send_whatsapp_sms($manager->phone, $message,$fullname);
+                $this->send_whatsapp_sms($manager->phone, $message);
              }
 
          //send sms to Admins/Directors of schools
