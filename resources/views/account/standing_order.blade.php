@@ -73,7 +73,10 @@
                                         <td><?=isset($standing->payment_date) ? date('d M Y', strtotime($standing->payment_date)) : ''?></td>
 
                                         <td>
-                                        <a  target="_break" href="<?= url('storage/uploads/files/'.$standing->file) ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a>
+                                        {{-- <a  target="_break" href="<?= url('storage/uploads/files/'.$standing->file) ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a> --}}
+                              
+                                       <a  target="_break" href="<?= url('customer/viewContract/' . $standing->id .'/standing') ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a> 
+
  
                                         <?php if(isset($standing->payment_date)) {  ?>  
                                             <?php if(isset($standing->client)) {  ?>
@@ -122,8 +125,6 @@
       allowClear: false,
       debug: true
   }); 
-
-
 
 </script>
 

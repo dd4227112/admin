@@ -79,6 +79,12 @@ class Kernel extends ConsoleKernel {
             $this->sendSORemainder();
             $this->updateCompleteItems();
         })->dailyAt('04:40'); // Eq to 07:40 AM
+
+        $schedule->call(function () {
+            $this->HRContractRemainders();
+            $this->HRLeaveRemainders();
+        })->dailyAt('04:40');
+
         // $schedule->call(function () { 
         //     $this->SMSStatusToSchoolsAdmin();
         // })->tuesdays(); // Eq 08:30 AM
@@ -1251,6 +1257,48 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         if (!empty($training)) {
             \App\Models\TrainItemAllocation::where('train_item_id', $item_id)->where('client_id', $client_id)->update(['status' => '1']);
         }
-    }
+       }
+
+
+        public function HRContractRemainders(){
+           $users = DB::select('select * from admin.users where contract_end_date - CURRENT_DATE = 30 and status = 1 and role_id <> 7');
+           $hr_officer = \App\Models\User::where('role_id',16)->first();
+           foreach($users as $user){
+               if($user->contract_end_date < date('Y-m-d')){ 
+                   $message = 'Hello HR,'. $hr_officer->firstname . ' '. $hr_officer->lastname.' employment contract of ' . $user->firstname . ' ' . $user->lastname . ' has arleday expired on ' . date('d-m-Y', strtotime($user->contract_end_date));
+                   $this->send_whatsapp_sms($hr_officer->phone, $message); 
+                   $this->send_email($hr_officer->email, 'Contract End date', $message);
+               } else{ 
+                   $message = 'Hello HR '. $hr_officer->firstname . ' '. $hr_officer->lastname.' employment contract of ' . $user->firstname . ' ' . $user->lastname . ' expected to expire on ' . date('d-m-Y', strtotime($user->contract_end_date));
+                   $this->send_whatsapp_sms($hr_officer->phone, $message); 
+                   $this->send_email($hr_officer->email, 'Contract End date', $message);
+               }
+           }
+       }
+
+
+     public function HRLeaveRemainders(){
+            $annual = DB::select("select user_id, case when (end_date is null) then joining_date + interval '1 year' else end_date + interval '1 year' end AS annual_date from admin.annual_leave");
+            $ids = array();
+                 foreach($annual as $value) {
+                     $ids[] = $value->user_id;
+                  }
+
+              foreach($annual as $value) {
+                if(!is_null($value->annual_date) && date('Y-m-d') == date('Y-m-d', strtotime($value->annual_date.' - 30 days'))){
+                $users = \App\Models\User::whereIn('id',$ids)->where('status',1)->whereNotIn('role_id',array(7,15))->get();
+                  $hr_officer = \App\Models\User::where('role_id',16)->first();
+                   foreach($users as $user){ 
+                        $message = 'Hello HR, ' . $user->firstname . ' ' . $user->lastname . ' is expected to start the annual leave on '. date('d-m-Y', strtotime($value->annual_date.' + 1 days'));
+                        $this->send_whatsapp_sms($hr_officer->phone, $message); 
+                        $this->send_email($hr_officer->email, 'Employee Annual leave', $message);
+                    }
+               }
+            
+            }
+         }
+
+
+    
 
 }

@@ -93,7 +93,7 @@ class Users extends Controller {
             'email' => $request->email,
             'table' => 'setting'
         ]);
-     $this->send_whatsapp_sms($request->phone, $message); 
+       $this->send_whatsapp_sms($request->phone, $message); 
     }
     /**
      * Display the specified resource.
@@ -342,14 +342,18 @@ class Users extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function destroy() {
-         $id = request()->segment(3);
-         DB::table("users")->where('id', $id)->update(['status' => 0,'deleted_at'=>'now()']);
-         $email = \App\Models\User::where('id',$id)->first()->email;
+         $user_id = request('user_id');
+         $reason_id = request('reason_id');
+        
+         DB::table("admin.users")->where('id', $user_id)->update(['status' => 0,'deleted_at'=>'now()']);
+         $email = \App\Models\User::where('id',$user_id)->first()->email;
+         DB::table("admin.user_turnover")->insert(['user_id' => $user_id,'reason_id' => $reason_id ]);
   
         if($email){
            DB::table("public.user")->where('email', $email)->delete();
         }
-        return redirect()->back()->with('success', 'User deleted successfully');
+        return redirect('users/index')->with('success', 'Removed successfully');
+
     }
 
     public function management() {

@@ -557,23 +557,24 @@ class Customer extends Controller {
 
     public function addstandingorder() {
         if ($_POST) {
-            //  $file = request('standing_order_file');
+              $file = request('standing_order_file');
             // $company_file_id = $file ? $this->saveFile($file, 'company/contracts') : 1;
             $total_amount = empty(request('total_amount')) ? request('occurance_amount') * request('number_of_occurrence') : request('total_amount');
 
-            $filename1 = '';
-            if (!empty(request('standing_order_file'))) {
-                $file = request()->file('standing_order_file');
-                $filename1 = time() . rand(11, 8894) . '.' . $file->guessExtension();
-                $filePath = base_path() . '/storage/uploads/files/';
-                $file->move($filePath, $filename1);
-            }
+            // $filename1 = '';
+            // if (!empty(request('standing_order_file'))) {
+            //     $file = request()->file('standing_order_file');
+            //     $filename1 = time() . rand(11, 8894) . '.' . $file->guessExtension();
+            //     $filePath = base_path() . '/storage/uploads/files/';
+            //     $file->move($filePath, $filename1);
+            // }
 
-
+            $company_file_id = $file ? $this->saveFile($file, 'company/contracts', TRUE) : 1;
+            
             $data = [
                 'client_id' => request('client_id'),
                 'branch_id' => request('branch_id'),
-                //  'company_file_id' => $company_file_id,
+                'company_file_id' => $company_file_id,
                 'school_contact_id' => request('school_contact_id'),
                 'created_by' => Auth::user()->id,
                 'occurrence' => request('number_of_occurrence'),
@@ -584,7 +585,7 @@ class Customer extends Controller {
                 // 'refer_bank_id' => request('refer_bank_id'),
                 'note' => request('note'),
                 'contract_type_id' => 8,
-                'file' => $filename1,
+               // 'file' => $filename1,
                 'created_at' => now()
             ];
             $contract_id = DB::table('admin.standing_orders')->insertGetId($data);

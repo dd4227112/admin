@@ -489,12 +489,6 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                             <li><a href="<?= url('users/template') ?>" data-i18n="nav.extra-components.offline">Forms &
                                                     Templates</a>
                                              </li>
-                                            <?php if(can_access('create_user_group')) { ?>
-                                             <li><a href="<?= url('users/usergroup') ?>"
-                                                data-i18n="nav.extra-components.session-idle-timeout">User groups</a>
-                                            </li>
-                                            <?php } ?>
-    
                                             <?php if(can_access('general_report')) { ?>
                                             <li>
                                              <a href="<?= url('sales/allData') ?>" data-i18n="nav.extra-components.session-timeout"> General report</a>                                    
@@ -523,6 +517,12 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                         <li><a href="<?= url('Partner/index') ?>" data-i18n="nav.extra-components.session-timeout"> Onboard Requests</a></li>
                                         <!--<li><a href="<?= url('Partner/add') ?>" data-i18n="nav.extra-components.offline">Onboard New School</a></li>-->
                                         {{-- <li><a href="#" data-i18n="nav.extra-components.session-timeout">Reports</a></li> --}}
+
+                                     <?php if(can_access('create_user_group')) { ?>
+                                        <li><a href="<?= url('users/usergroup') ?>"
+                                            data-i18n="nav.extra-components.session-idle-timeout">School Groups</a>
+                                        </li>
+                                        <?php } ?>
                                      </ul>
                                    </li>
                              
@@ -702,6 +702,8 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                 </a>
                                 <ul class="tree-1">
                                     <li><a href="<?= url('software/template') ?>" data-i18n="nav.basic-components.alert">Templates & Policies</a></li>
+
+                                 <?php if(can_access('manage_database')) { ?>
                                     <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Database</a>
                                         <ul class="tree-2" style="display: none;">
                                             <li><a href="<?= url('software/compareTable') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Tables</a></li>
@@ -713,13 +715,12 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
 
                                         </ul>
                                     </li>
+                                    <?php } ?>
 
                                     <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Payment Integration</a>
                                         <ul class="tree-2" style="display: none;">
                                             <li><a href="<?= url('software/banksetup') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Bank Setup</a></li>
-                                             {{-- <li><a href="<?= url('software/banksetup2') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Bank Setup 2</a></li> --}}
-
-
+                                          
                                             <li><a href="<?= url('software/invoice/live') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Live Invoices</a></li>
                                             <li><a href="<?= url('software/invoice/uat') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Testing Invoices</a></li>
                                             <li><a href="<?= url('software/api') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">API Requests</a></li>

@@ -38,13 +38,13 @@
                                         <a class="btn btn-success" href="<?= url('users/create') ?>"> Create New User</a>
                                     </div>
                                     <div class="col-md-6 text-right">
-                                        <button class="btn btn-primary" data-toggle="modal"  role="button" data-target="#status-Modal"> Upload Users  <i class="ti-user"></i></button>                     
+                                        <button class="btn btn-primary" data-toggle="modal"  role="button" data-target="#status-Modal"> Upload Users  <i class="ti-user"></i></button>                   
                                     </div>
-                                    @if ($message = Session::get('success'))
+                                    {{-- @if ($message = Session::get('success'))
                                     <div class="alert alert-success">
                                         <p>{{ $message }}</p>
                                     </div>
-                                    @endif
+                                    @endif --}}
                                     <hr>
                                     <div class="card-block">
 
@@ -58,7 +58,7 @@
                                                         <th>Phone</th>
                                                         <th>Email</th>
                                                         <th>Joining Date</th>
-                                                        <th width="280px">Action</th>
+                                                        <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 
@@ -76,21 +76,11 @@
                                                         <td>{{ $user->phone }}</td>
                                                         <td>{{ $user->email }}</td>
                                                          <td>{{ date('d M Y',strtotime($user->created_at)) }}</td>
-                                                        <td>
+                                                        <td class="text-center">
                                                             <a class="btn btn-info btn-sm" href="{{ url('users/show/'.$user->id) }}">Show</a>
 
-                                                            <a class="btn btn-primary btn-sm" href="{{ url('users/edit/'.$user->id) }}">Edit</a>
-
-
-                                                            <!-- <a class="btn btn-danger btn-sm" href="{{ url('users/destroy/'.$user->id) }}">Delete</a> -->
-
-
-                                                            <button type="button" class="user_dialog btn btn-primary btn-sm"
-                                                            data-toggle="modal" data-target="#uploaddata"
-                                                            data-id="<?= $user->id ?>">
-                                                              Delete
-                                                            </button>
-                                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Launch demo modal</button>
+                                                            <a class="btn btn-primary btn-sm" href="{{ url('users/edit/'.$user->id) }}">Edit</a> 
+                                                                            
                                                         </td>
                                                     </tr>
                                                     <?php $i++; ?>
@@ -140,81 +130,43 @@
   </div>
 
 
-<!-- Button trigger modal -->
 
 
 
-
-  <div class="modal fade" id="uploaddata" tabindex="-1" role="dialog" aria-hidden="true">
-<div class="modal-dialog modal-lg" role="document">
-<div class="modal-content">
-<div class="modal-header">
-<h4 class="modal-title">Termination reason
-</h4>
-<button type="button" class="close"
-data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">×</span>
-</button>
-</div>
-
-   <form action="<?= url('customer/uploadJobCard') ?>" method="post">
-     <div class="modal-body">
-        <div class="form-group">
-          <div class="row">
-            <div class="col-md-6">
-            <strong> Upload Job card</strong>
-            <input type="text" class="form-control" name="job_card_file">
-           </div>
-
-            <div class="col-md-6">
-             <strong>Job card date</strong>
-             <input type=""
-             class="form-control" id="job_date" 
-            name="job_date" value="job_card"  required>
-            </div>
-
-          </div>
-         </div>
+<div class="modal" id="status-Modal-form">
+ <div class="modal-dialog modal-md"> 
+   <form id="add-form" action="" method="POST">
+    <?= csrf_field() ?>  
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Add New Members</h5>
         </div>
-
-        <div class="modal-footer">
-        <button type="button"
-        class="btn btn-default waves-effect "
-        data-dismiss="modal">Close</button>
-        <button type="submit"
-        class="btn btn-primary waves-effect waves-light ">Save
-        changes</button>
-        </div>
-          <?= csrf_field() ?>
-        </form>
-        </div>
-    </div>
-  </div>
-
-
-</div>
-
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
       <div class="modal-body">
-        ...
+  
+          <div class="form-group">
+            <label>Attach File Name</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <i class="fas fa-file"></i>
+                </div>
+              </div>
+              <input type="file" class="form-control" placeholder="Enter group name..." name="" required>
+            </div>
+          </div>
+        <!-- </div> -->
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+          </div>
+        </form>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
   </div>
-</div>
+
+
+
+
+
 
 
 
