@@ -109,18 +109,17 @@ class Kernel extends ConsoleKernel {
         })->monthlyOn(28, '06:36');
     }
 
-     public function whatsappMessage() {
+    public function whatsappMessage() {
         $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 5');
         $controller = new \App\Http\Controllers\Controller();
         foreach ($messages as $message) {
             if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
                 $controller->sendMessage($message->phone, $message->message);
-                DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1,'updated_at' => now()]);
+                DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'updated_at' => now()]);
                 echo 'message sent to ' . $message->name . '' . chr(10);
             } else {
                 //this is invalid number, so update in db to show wrong return
-                DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied','updated_at' => now()]);
-             
+                DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied', 'updated_at' => now()]);
             }
         }
     }
@@ -255,6 +254,10 @@ class Kernel extends ConsoleKernel {
     }
 
     public function syncInvoice() {
+        DB::statement('refresh materialized view admin.all_invoice_prefix');
+        DB::statement('refresh materialized view admin.all_bank_accounts_integrations');
+        DB::statement('refresh materialized view admin.all_bank_accounts');
+
         $invoices = DB::select("select distinct a.schema_name from admin.all_bank_accounts_integrations  a JOIN admin.all_bank_accounts b on 
                  (a.bank_account_id=b.id  AND a.schema_name=b.schema_name) where b.refer_bank_id=22 
                  and a.schema_name not in ('public') ");
@@ -526,8 +529,7 @@ class Kernel extends ConsoleKernel {
                                 ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
                     }
 
-                   DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
-
+                    DB::table('api.requests')->insert(['return' => json_encode($curl), 'content' => json_encode($fields)]);
                 }
             }
         }
