@@ -42,7 +42,7 @@ class Handler extends ExceptionHandler {
             'error_instance' => get_class($e),
             'request' => json_encode(request()->all()),
             "schema_name" => 'admin',
-           // 'created_by' => \Auth::user()->id,
+            'created_by' => session('id'),
         ];
         if (!preg_match('/ValidatesRequests.php/i', @$e->getTrace()[0]['file']) || !preg_match('/Router.php/i', @$e->getTrace()[0]['file']) || !preg_match('/Pipeline.php/i', @$e->getTrace()[0]['file']) || !preg_match('/RouteCollection.php/i', @$e->getTrace()[0]['file']) ) {
              DB::table('admin.error_logs')->insert($object);
