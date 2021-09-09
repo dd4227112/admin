@@ -359,19 +359,16 @@ class Message extends Controller {
     }
 
      public function sendEmail() {
-//         //loop through schema names and push emails
-//     //   DB::select('REFRESH MATERIALIZED VIEW  admin.all_email');
 //      $schemas = DB::select("select * from admin.all_setting");
-     
-//         foreach ($schemas as $schema) {
+//         foreach ($schemas as $schema) { dd($schema);
 //         $this->emails = DB::select("select * from " . $schema->schema_name. ".email where status = '0' and created_at::date > '2020-07-30'");
 //         if (count($this->emails) > 0) {  
 //             foreach ($this->emails as $message) {
 //                   dd($message);
 //                 if (filter_var($message->email, FILTER_VALIDATE_EMAIL) && !preg_match('/shulesoft/', $message->email)) {
 //                     try {
-//                         $link = strtoupper($message->schema_name) == 'PUBLIC' ? 'demo.' : $message->schema_name . '.';
-//                         $data = ['content' => $message->body, 'link' => $link, 'photo' => $message->photo, 'sitename' => $message->sitename, 'name' => ''];
+//                         $link = strtoupper($schema->schema_name) == 'PUBLIC' ? 'demo.' : $schema->schema_name . '.';
+//                         $data = ['content' => $message->body, 'link' => $link, 'photo' => $schema->photo, 'sitename' => '', 'name' => ''];
 //                         $mail = \Mail::send('email.default', $data, function ($m) use ($message) {
 //                                     $m->from('noreply@shulesoft.com', $message->sitename);
 //                                     $m->to($message->email)->subject($message->subject);
