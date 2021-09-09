@@ -482,7 +482,7 @@ class Kernel extends ConsoleKernel {
         if (isset($result) && !empty($result)) {
             //update invoice no
             DB::table($invoice->schema_name . '.invoices')
-                    ->where('reference', $invoice->reference)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
+                    ->where('id', $invoice->id)->update(['sync' => 1, 'return_message' => $curl, 'push_status' => $push_status, 'updated_at' => 'now()']);
 
             $users = DB::table($invoice->schema_name . '.parent')->whereIn('parentID', DB::table('student_parents')->where('student_id', $invoice->student_id)->get(['parent_id']))->get();
             foreach ($users as $user) {
