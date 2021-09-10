@@ -331,6 +331,10 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                 </div>
                 <!-- Live-chart end -->
                 <!-- Last activity start -->
+
+
+
+                
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-header">
@@ -357,7 +361,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                                             ?>                    
                                             <tr>
                                                 <td class="img-pro">
-    <?= $activity->user_name ?>
+                                              <?= $activity->user_name ?>
                                                 </td>
                                             <!--    <td class="pro-name"><?= $activity->activity ?>
                                                 </td>-->
@@ -367,12 +371,14 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                                                 </td>
 
                                             </tr>
-<?php } ?>
+                                                  <?php } ?>
 
                                     </tbody>
                                 </table>
                             </div>
                         </div>
+
+
                     </div>
                 </div>
                 <!-- Last activity end -->
