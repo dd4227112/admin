@@ -28,12 +28,29 @@ $root = url('/') . '/public/'; ?>
             <div class="row">
 
                 <!-- Facebook card start -->
-                <div class="col-md-6 col-xl-12">
-                    <div class="card social-widget-card">
+            <div class="col-md-6 col-xl-12">
+              <div class="card social-widget-card">
                 
 
                 <!-- NVD3 chart start -->
                 <div class="col-md-6 col-xl-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>School total ratings</h5>
+                        </div>
+                        <div class="card-block">
+                            <div id="linechart" class="nvd-chart">
+                             <?php
+                                $sql_ = "select TO_CHAR(a.created_at::date,'dd-mm-yyyy') as created_at, sum(a.rate::integer) as count from admin.rating a join admin.modules b on a.module_id = b.id group by a.created_at::date";
+                                echo $insight->createChartBySql($sql_, 'created_at', 'Total ratings', 'line', false);
+                              ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                 <div class="col-md-6 col-xl-12">
                     <div class="card">
                         <div class="card-header">
                             <h5>School average ratings</h5>
@@ -73,9 +90,51 @@ $root = url('/') . '/public/'; ?>
                         </div>
                     </div>
                 </div>
-               
-
             </div>
+
+
+                 <div class="col-xl-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>System User ratings and comments</h5>
+                          
+                        </div>
+                        <div class="card-block table-border-style">
+                            <div class="table-responsive analytic-table">
+                                <table id="res-config" class="table table-bordered w-100 dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Usertype</th>
+                                            <th>School</th>
+                                            <th>Date</th>
+                                            <th>Module</th>
+                                            <th>Comment</th>
+                                            <th>Rate</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php $i = 1; if(count($ratings) > 0)
+                                            foreach ($ratings as $rating) { ?>
+                                          <tr>
+                                            <td><?= $i ?></td>
+                                            <td><?= $rating->usertype?></td>
+                                            <td><?= $rating->schema_name?></td>
+                                            <td><?= date('d-m-Y', strtotime($rating->created_at)) ?></td>
+                                            <td><?= $rating->modules->name?></td>
+                                            <td class="text-left"><?= $rating->comment?></td>
+                                            <td class="text-left"><?= $rating->rate?></td>
+                                          </tr>
+                                        <?php $i++; } ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
         </div>
     </div>
 </div>
