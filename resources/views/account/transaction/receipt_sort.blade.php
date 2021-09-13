@@ -47,7 +47,7 @@
                 <?php
                 $all_payments = $invoice->payments()->get();
                 if (isset($all_payments)) {
-                   //  echo print_r($all_payments);exit;   39981021
+                   //  echo print_r($all_payments);exit;  
                     foreach ($all_payments as $payment_view) {?>
                  <a  href="<?= url('account/receipts/' . $invoice->id . '/' . $payment_view->id) ?>">   
                     <div> Payer: <?= $payment_view->client->name ?? '' ?> </div>
