@@ -36,12 +36,12 @@ $root = url('/') . '/public/'; ?>
                 <div class="col-md-6 col-xl-12">
                     <div class="card">
                         <div class="card-header">
-                            <h5>School total ratings</h5>
+                            <h5>School  daily total ratings</h5>
                         </div>
                         <div class="card-block">
                             <div id="linechart" class="nvd-chart">
                              <?php
-                                $sql_ = "select TO_CHAR(a.created_at::date,'dd-mm-yyyy') as created_at, sum(a.rate::integer) as count from admin.rating a join admin.modules b on a.module_id = b.id group by a.created_at::date";
+                                $sql_ = "select TO_CHAR(a.created_at::date,'dd-mm-yyyy') as created_at, count(a.rate::integer) as count from admin.rating a join admin.modules b on a.module_id = b.id group by a.created_at::date";
                                 echo $insight->createChartBySql($sql_, 'created_at', 'Total ratings', 'line', false);
                               ?>
                             </div>
