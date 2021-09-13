@@ -217,9 +217,9 @@
                                                         <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
                                                          <a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoiceView/' . $invoice->id) ?>"  > <span class="point-marker bg-danger"></span>View</a>
                                                          <a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoice/edit/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Edit</a>
-                                                         {{-- <?php if(can_access('delete_invoice')) {  ?>
+                                                         <?php if(can_access('delete_invoice')) {  ?>
                                                          <a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoice/delete/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Delete</a>
-                                                         <?php } ?> --}}
+                                                         <?php } ?> 
                                                         <?php if ((int) $unpaid > 0) { ?>
                                                             <hr/>
                                                             <a class="dropdown-item waves-light waves-effect" href="<?= url('account/payment/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Add Payments</a>
