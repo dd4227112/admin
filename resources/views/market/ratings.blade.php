@@ -121,9 +121,9 @@ $root = url('/') . '/public/'; ?>
                                             <td><?= $rating->usertype?></td>
                                             <td><?= $rating->schema_name?></td>
                                             <td><?= date('d-m-Y', strtotime($rating->created_at)) ?></td>
-                                            <td><?= $rating->modules->name?></td>
-                                            <td class="text-left"><?= $rating->comment?></td>
-                                            <td class="text-left"><?= $rating->rate?></td>
+                                            <td><?= isset($rating->modules->name) ? $rating->modules->name ? '' ?></td>
+                                            <td class="text-left"><?= $rating->comment ?? ''?></td>
+                                            <td class="text-left"><?= $rating->rate ?? '' ?></td>
                                           </tr>
                                         <?php $i++; } ?>
                                     </tbody>
