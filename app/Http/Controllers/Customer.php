@@ -874,6 +874,12 @@ class Customer extends Controller {
             $this->data['next'] = \App\Models\Requirement::whereNotIn('id', [$id])->where('status', 'New')->first()->id;
             return view('customer/view_requirement', $this->data);
         }
+
+         if ($tab == 'edit' && $id > 0) {
+            $this->data['requirement'] = \App\Models\Requirement::where('id', $id)->first();
+            return view('customer/edit_requirement', $this->data);
+        }
+
         $this->data['levels'] = [];  
         if ($_POST) {
             $requirement = [
@@ -891,7 +897,7 @@ class Customer extends Controller {
                 $new_req =  isset($req->school->name) ? ' New School Requirement from ' . $req->school->name : ' New Requirement ';
                 $message = 'Hello ' . $user->name . '<br/>'
                         . 'There is '. $new_req . '</p>'
-                        . '<br/><br/><p><b>Requirement:</b> ' . $req->note . '</p>'
+                        . '<br/><p><b>Requirement:</b> ' . $req->note . '</p>'
                         . '<br/><br/><p><b>By:</b> ' . $req->user->name . '</p>';
                 $this->send_email($user->email, 'ShuleSoft New Customer Requirement', $message);
                 $sms = 'Hello ' . $user->name . ' There is ' . $new_req . '  ' . $req->note . ' By: ' . $req->user->name . '';
@@ -901,6 +907,14 @@ class Customer extends Controller {
         $this->data['requirements'] = \App\Models\Requirement::latest()->get();
 
         return view('customer/analysis', $this->data);
+    }
+
+      public function editReq() {
+        $id = request('req_id');
+        $data = request()->except('_token','req_id');
+        \App\Models\Requirement::where('id', $id)->update($data);
+       // return redirect()->back()->with('success', 'Edited successfully!');
+        return redirect('customer/requirements');
     }
 
     public function updateReq() {

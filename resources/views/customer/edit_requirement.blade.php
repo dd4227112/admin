@@ -31,99 +31,15 @@
               <!-- Row start -->
               <div class="row">
                 <div class="col-lg-12 col-xl-12">
-                  <!-- <h6 class="sub-title">Tab With Icon</h6> -->
-                  <!-- Nav tabs -->
-                  <ul class="nav nav-tabs md-tabs " role="tablist">
-                    {{-- <li class="nav-item">
-                      <a class="nav-link active" data-toggle="tab" href="#home7" role="tab"><i class="icofont icofont-home"></i>Google Sheet</a>
-                      <div class="slide"></div>
-                    </li> --}}
-                    <li class="nav-item">
-                      <a class="nav-link active" data-toggle="tab" href="#requirements" role="tab"><i class="icofont icofont-ui-user "></i>Customer Requirements</a>
-                      <div class="slide"></div>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" data-toggle="tab" href="#addnew" role="tab"><i class="icofont icofont-list "></i>Add New</a>
-                      <div class="slide"></div>
-                    </li>
-
-                  </ul>
-                  <!-- Tab panes -->
                   <div class="tab-content card-block">
-                    {{-- <div class="tab-pane active" id="home7" role="tabpanel">
-                      <div class="card-header">
-                        <h5>Revenue Projections</h5>
-                        <span>This part shows list of customers and expected amount to be collected per each customer. These information are loaded from Google Sheet </span>
 
-                      </div>
-                        <div class="card-block"  style="height: 35em">
-                        <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQoKa03HKhOJyUEWt3mi4PqJvqy9EFmoj8ZTZX7lfNWTI5FbHFTHl40xrBBsi7k2x2vY8htOPJ1wHN8/pubhtml?widget=true&amp;headers=false" width="100%" height="450"></iframe>
-                      </div> 
-                    </div> --}}
-
-                    <div class="tab-pane active" id="requirements" role="tabpanel">
-                     
-                      <div class="card-block">
-                        <div class="table-responsive dt-responsive">
-                          <table id="dt-ajax-array" class="table table-striped table-bordered nowrap dataTable">
-                            <thead>
-                              <tr>
-                                <th>#</th>
-                                <th>School Name</th>
-                                <th>Contact</th>
-                                <th> Allocated </th>
-                                <th>Created Date</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <?php $i = 1;
-                              if(count($requirements) > 0){ 
-                              foreach ($requirements as $req) {  ?>
-                              <tr>
-                                  <td><?= $i ?></td>
-                                  <td><?= isset($req->school->name) ? ucfirst($req->school->name) : 'General' ?></td>
-                                  <td><?php echo $req->contact; ?></td>
-                                  <td><?php echo $req->toUser->name;?> </td>
-                                  <td><?= $req->created_at ?></td>
-                                  <td><?= $req->status ?></td>
-                                  <td ><a href="<?= url('customer/requirements/show/' . $req->id) ?>" class="btn btn-sm btn-success">View</a>
-                                    <?php if($req->status !== 'Completed') {  ?>
-                                   <a href="<?= url('customer/requirements/edit/' . $req->id) ?>" class="btn btn-sm btn-info">Edit</a>
-                                    <?php } ?>
-                                  </td>
-                              </tr>
-                              <?php 
-                                $i++; }
-                               }  
-                               ?>
-                          </tbody>
-                          <tfoot>
-                            <tr>
-                              <th>#</th>
-                              <th>School Name</th>
-                              <th>Contact</th>
-                              <th> Allocated </th>
-                              <th>Issued Date</th>
-                              <th>Status</th>
-                              <th>Action</th>
-                            </tr>
-                          </tfoot>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="tab-pane" id="addnew" role="tabpanel">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h4 class="modal-title">Add New Requirement</h4>
-                        <span>This Part Allow you to add  New Requirement School</span>
+                        <h4 class="modal-title">Edit Requirement</h4>
+                        <span>This Part Allow you to edit requirement </span>
                       </div>
                       <div class="modal-body">
-                      <form action="#" method="post">
-
+                      <form action="<?= url('customer/editReq') ?>" method="post">
                           <div class="form-group">
                             <div class="row">
 
@@ -133,7 +49,7 @@
                               </div>
                               <div class="col-md-6">
                                 <strong>School Contacts Phone/Email</strong>
-                                <input type="text" name="contact" style="text-transform:uppercase" class="form-control" required>
+                                <input type="text" name="contact" style="text-transform:uppercase" class="form-control" value="<?= $requirement->contact ?>">
                               </div>
                             </div>
                           </div>
@@ -152,17 +68,20 @@
 
                           <div class="form-group">
                             <strong> More Details</strong>
-                            <textarea name="note" rows="3" id="content_part" placeholder="Write More details Here .." class="form-control"> </textarea>
+                             <textarea name="note" rows="3" id="content_part" style="text-transform:uppercase"  class="form-control"  value="<?= $requirement->note ?>">
+                               <?= $requirement->note ?>
+                            </textarea> 
                           </div>
 
                         </div>
                         <div class="modal-footer">
+                          <input type="hidden" name="req_id" value="<?= $requirement->id ?>">
                           <button type="submit" class="btn btn-primary waves-effect waves-light ">Submit Here</button>
                         </div>
                         <?= csrf_field() ?>
                       </form>
                     </div>
-                  </div>
+                
                 </div>
               </div>
             </div>
