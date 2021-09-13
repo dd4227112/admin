@@ -103,7 +103,7 @@ AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
     }
 
     public function loadSchema() {
-        return DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant','admin','api','app','skysat','dodoso','forum','academy','carryshop')");
+        return DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant','admin','api','app','skysat','jifunze','forum','academy','carryshop') and table_schema  in (select username from admin.clients where id  in (select client_id from admin.payments) or table_schema in (select username from admin.standing_orders s join admin.clients b on b.id=s.client_id))");
     }
 
     /**
