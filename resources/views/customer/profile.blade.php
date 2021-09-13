@@ -1002,33 +1002,32 @@ in this part
 </thead>
 <tbody>
 <?php
-$client_contracts = DB::table('admin.client_contracts')->where('client_id', $client_id)->get();
+$client_contracts = DB::select("select a.*,b.start_date,b.end_date,b.name,b.type,c.name as username from admin.client_contracts a join admin.contracts b on a.contract_id = b.id join admin.users c on c.id = b.user_id  where a.client_id= '{$client_id}' ");
 $i = 1;
 if (!empty($client_contracts)) {
-foreach ($client_contracts as $client_contract) {
-//  $contract = \App\Models\Contract::where('id', $client_contracts->contract_id)->get();
-//  if(!empty($contract)){
+foreach ($client_contracts as $client_contract) { 
 ?>
 <tr>
 <th scope="row"><?= $i ?></th>
-<td><?= isset($client_contract->contract->name) ? $client_contract->contract->name : '' ?>
+<td><?= isset($client_contract->name) ? $client_contract->name : '' ?>
 </td>
-<td><?= isset($client_contract->contract->contract_type_id) ? $client_contract->contract->contractType->name : 'Not Defined' ?>
+<td><?= isset($client_contract->type) ? $client_contract->type : 'Not Defined' ?>
 </td>
-<td><?= isset($client_contract->contract->start_date) ? $client_contract->contract->start_date : '' ?>
+<td><?= isset($client_contract->start_date) ? $client_contract->start_date : '' ?>
 </td>
-<td><?= isset($client_contract->contract->end_date) ? $client_contract->contract->end_date : '' ?>
+<td><?= isset($client_contract->end_date) ? $client_contract->end_date : '' ?>
 </td>
-<td><?= isset($client_contract->contract->user->name) ? $client_contract->contract->user->name : '' ?>
+<td><?= isset($client_contract->username) ? $client_contract->username : '' ?>
 </td>
 <td>
     <a type="button"
         class="btn btn-primary btn-sm waves-effect"
         target="_blank"
-        href="<?= isset($client_contract->contract->id) ? url('customer/viewContract/' . $client_contract->contract->id) : '' ?>">View</a>
-    <a type="button"
-        class="btn btn-warning btn-sm waves-effect"
-        href="<?= isset($client_contract->contract->id) ? url('customer/deleteContract/' . $client_contract->contract->id) : '' ?>">Delete</a>
+        href="<?= isset($client_contract->contract_id) ? url('customer/viewContract/' . $client_contract->contract_id) : '' ?>">View</a>
+<?php if(can_access('delete_contract')) { ?>
+ <a type="button" class="btn btn-danger btn-sm waves-effect"
+        href="<?= isset($client_contract->contract_id) ? url('customer/deleteContract/' . $client_contract->contract_id) : '' ?>">Delete</a>
+<?php }  ?>
 </td>
 </tr>
 
@@ -1036,6 +1035,7 @@ foreach ($client_contracts as $client_contract) {
 $i++;
 }
 }
+
 ?>
 </tbody>
 </table>
@@ -2163,7 +2163,7 @@ enctype="multipart/form-data">
 </div>
 </div>
 <div class="form-group row">
-<label class="col-sm-2 col-form-label">Contract Start Date</label>
+<label class="col-sm-2 col-form-label">Contract End Date</label>
 <div class="col-sm-10">
     <input type="date" class="form-control" name="end_date" required="">
 </div>

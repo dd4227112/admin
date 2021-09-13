@@ -1387,7 +1387,7 @@ class Customer extends Controller {
     public function contract() {
         $client_id = request()->segment(3);
         $file = request()->file('file');
-        $file_id = $this->saveFile($file, 'company/contracts');
+        $file_id = $this->saveFile($file, 'company/contracts',TRUE);
         //save contract
 
         $contract_id = DB::table('admin.contracts')->insertGetId([
