@@ -204,6 +204,7 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                                         <th>No.</th>
                                         <th>Task type</th>
                                         <th>School</th>
+                                        <th>Activity</th>
                                         <th>Added On</th>
                                         <th>Action</th>
                                     </tr>
@@ -217,6 +218,7 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                                             <tr>
                                                 <td><?= $i++ ?></td>
                                                 <td><?= $act->type ?></td>
+                                                <td><?= $act->school ?></td>
                                                 <td><?= $act->activity ?>..</td>
                                                 <td><?= $act->end_date ?></td>
                                                 <td> <a href="<?= url('customer/activity/show/' . $act->id) ?>">View</a> </td>
