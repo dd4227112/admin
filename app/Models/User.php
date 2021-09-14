@@ -93,7 +93,7 @@ class User extends Model {
     }
 
     public function companyFile() {
-        return $this->belongsTo(\App\Models\CompanyFile::class, 'company_file_id', 'id');
+        return $this->belongsTo(\App\Models\CompanyFile::class, 'company_file_id', 'id')->withDefault(['name' => 'unknown']);
     }
 
     public function uattendance() { 
