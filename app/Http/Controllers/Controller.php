@@ -121,9 +121,7 @@ class Controller extends BaseController {
             $file_id = DB::table('company_files')->insertGetId([
                 'extension' => $file->getClientOriginalExtension(),
                 'name' => $file->getClientOriginalName(),
-              //  'display_name' => $file->getClientOriginalExtension(),
                 'user_id' => \Auth::user()->id,
-               // 'table' => session('table'),
                 'size' => 0,
                 'caption' => $file->getRealPath(),
                 'path' => $url
@@ -152,8 +150,7 @@ class Controller extends BaseController {
     }
 
     public function uploadFileLocal($file) {
-//Move Uploaded File
-      //  $schema = str_replace('.', null, set_schema_name());
+       //Move Uploaded File
         $destinationPath = 'storage/uploads/images';
         !is_dir($destinationPath) ? mkdir($destinationPath) : '';
         $filename = rand(145, 87998) . time() . '.' . $file->getClientOriginalExtension();
@@ -379,16 +376,10 @@ class Controller extends BaseController {
 
 
 
-    public function userapi(){
-         $data = DB::select("select a.firstname ||' '||a.lastname as name,a.email,a.phone,a.photo,a.next_kin,a.address,b.name as role,d.name as department from admin.users a join constant.refer_company_designations b on a.designation_id = b.id join admin.departments d on a.department = d.id join admin.roles r on r.id = a.role_id where a.status = '1' and a.role_id not in (7,15)");
-          return json_encode(['staffs' => $data]);
-    }
+  
 
 
-    public function schoolapi(){
-       $data = DB::select("select a.sname as school_name,a.phone,a.address,a.email,a.website,a.created_at as joined_at,a.photo, z.estimated_students as number_of_students from admin.all_setting a join admin.client_schools c on c.school_id = a.school_id join admin.clients z on z.id = c.client_id");
-         return json_encode(['schools' => $data]);
-    }
+  
  
 
 }

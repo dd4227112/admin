@@ -48,14 +48,14 @@
                             <div class="form-group row col-lg-offset-6">
                                 <label class="col-sm-4 col-form-label">Select Project</label>
                                 <div class="col-sm-4">
-                                    <select name="select" class="form-control" id="schema_select">
+                                    <select name="select" class="form-control" id="schema_project">
                                         <option value="0">Select</option>
                                         <?php
-                                       // $projects = \App\Models\Project::all();
-                                      //  foreach ($projects as $project) {
+                                       $projects = \App\Models\InvoiceType::all();
+                                       foreach ($projects as $project) {
                                             ?>
-                                            <option value="1" selected>ShuleSoft</option>
-                                        <?php // }
+                                            <option value="<?= $project->id ?>" selected><?= $project->name ?></option>
+                                        <?php  }
                                         ?>
                                     </select>
                                 </div>
@@ -182,7 +182,8 @@
                                         </thead>
                                         
                                         <tbody>
-                                            <?php  
+                                            <?php 
+                                            
                                             $total_amount = 0;
                                             $total_paid = 0;
                                             $total_unpaid = 0;
@@ -202,7 +203,8 @@
                                                     <td><?= money($amount) ?></td>
                                                     <td><?= money($paid) ?></td>
                                                     <td><?= money($unpaid) ?></td>
-                                                    <td><?php 
+                                                    <td>
+                                                        <?php 
                                                           $previous_amount = \collect(DB::SELECT("select  sum(coalesce(balance,0))  as last_balance from admin.client_invoice_balances where extract(year from created_at) < '$accountyear->name' and client_id = '$invoice->client_id' "))->first();
                                                           echo money($previous_amount->last_balance)
                                                          ?>
@@ -215,9 +217,9 @@
                                                         <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
                                                          <a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoiceView/' . $invoice->id) ?>"  > <span class="point-marker bg-danger"></span>View</a>
                                                          <a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoice/edit/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Edit</a>
-                                                         {{-- <?php if(can_access('delete_invoice')) {  ?>
+                                                         <?php if(can_access('delete_invoice')) {  ?>
                                                          <a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoice/delete/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Delete</a>
-                                                         <?php } ?> --}}
+                                                         <?php } ?> 
                                                         <?php if ((int) $unpaid > 0) { ?>
                                                             <hr/>
                                                             <a class="dropdown-item waves-light waves-effect" href="<?= url('account/payment/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Add Payments</a>
@@ -233,14 +235,15 @@
                                                     
                                             </td>
                                         </tr>
+                                   
                                     <?php $i++; } ?>
                                         </tbody>
                                         <tfoot>
                                             <tr>
                                                 <td colspan="2">Total</td>
-                                                <td><?= money($total_amount) ?></td>
-                                                <td><?= money($total_paid) ?></td>
-                                                <td><?= money($total_unpaid) ?></td>
+                                                <td><?= isset($total_amount) ? money($total_amount) : '' ?></td>
+                                                <td><?= isset($total_paid) ? money($total_paid) : '' ?></td>
+                                                <td><?= isset($total_unpaid) ? money($total_unpaid) : '' ?></td>
                                                 <td colspan="2"></td>
                                             </tr>
                                         </tfoot>
@@ -366,18 +369,18 @@
 </div>
 
 <script type="text/javascript">
-    $('#schema_select').change(function () {
+    $('#schema_project').change(function () {
         var schema = $(this).val();
-        if (schema == 0 || schema == 1) {
+        if (schema > 0) {
             $('#year_id').show();
             return false;
         } else {
-            window.location.href = "<?= url('account/invoice') ?>/" + schema;
+          //  window.location.href = "<?= url('account/invoice') ?>/" + schema;
         }
     });
     $('#year_select').change(function () {
         var year = $(this).val();
-        var project = $('#schema_select').val();
+        var project = $('#schema_project').val();
         if (year == 0) {
             return false;
         } else {

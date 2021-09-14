@@ -74,7 +74,7 @@ function check_implementation($activity, $schema_name) {
         } else {
             $status = ' Not Implemented';
         }
-    } else if (preg_match('/operations/i', strtolower($activity))) {
+    } else if (preg_match('/transport/i', strtolower($activity))) {
         //check transport and hostel
         $tmembers = DB::table($schema_name . '.tmembers')->whereYear('created_at', date('Y'))->count();
         $hmembers = DB::table($schema_name . '.hmembers')->whereYear('created_at', date('Y'))->count();
@@ -84,13 +84,14 @@ function check_implementation($activity, $schema_name) {
             $status = 'Transport/Hostel  Not Implemented';
         }
          
-
+    } else if (preg_match('/attendance/i', strtolower($activity))) {
+      
         $students = DB::table($schema_name . '.student')->whereYear('created_at', date('Y'))->count();
         $sattendances = DB::table($schema_name . '.sattendances')->whereYear('created_at', date('Y'))->count();
-
         $teachers = DB::table($schema_name . '.teacher')->whereYear('created_at', date('Y'))->count();
-        $tattendance = DB::table($schema_name . '.tattendance')->whereYear('created_at', date('Y'))->count();
-        if ($students >= $sattendances || $teachers >= $tattendance ) {
+        $tattendances = DB::table($schema_name . '.tattendance')->whereYear('created_at', date('Y'))->count();
+
+        if ($students >= $sattendances || $teachers >= $tattendances ) {
             $status = 'Attendance Implemented';
         } else {
             $status = 'Attendance  Not Implemented';
@@ -411,3 +412,9 @@ function workingDays($year, $month, $ignore = array(0, 6)) {
     // return working days
     return $remaindays - $holidays->count;
 }
+
+
+    function clean($string) {
+         $string = str_replace(' ', '', $string); // Replaces all spaces with empty.
+         return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+    }

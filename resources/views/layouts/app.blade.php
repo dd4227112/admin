@@ -19,9 +19,9 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <!-- Google font-->
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
         <!-- Required Fremwork -->
-        {{-- <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/bootstrap/dist/css/bootstrap.min.css"> --}}
-       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" 
-       integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+       <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/bootstrap/dist/css/bootstrap.min.css"> 
+       {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" 
+       integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"> --}}
       
         <!-- themify icon -->
         <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/icon/themify-icons/themify-icons.css">
@@ -48,10 +48,10 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2-bootstrap.css">
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css">       
         <link href="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.css" rel="stylesheet">
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        {{-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> --}}
 
-        {{-- <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
-        <script type="text/javascript" src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script> --}}
+        <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
+        <script type="text/javascript" src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script> 
    
 
         <script type="text/javascript">
@@ -218,8 +218,9 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                 <?php } ?>
 
                                 <li class="user-profile header-notification">
-                                    <a href="#!">
-                                        <img src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image">
+                                    <a href="#!"> <?php $id = Auth::user()->id;
+                                                $path = \collect(DB::select("select f.path from admin.users a join admin.company_files f on a.company_file_id = f.id where a.id = '$id'"))->first(); ?>
+                                        <img class="user-img img-circle" src="<?= isset($path->path) && ($path->path !== '')  ? $path->path : $root . 'assets/images/user.png' ?>" alt="User-Profile-Image">
                                         <span>{{ Auth::user()->name() }}</span>
                                         <i class="ti-angle-down"></i>
                                     </a>
@@ -421,6 +422,9 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                     <?php //if (can_access('digital_marketing')) { ?>
                                     <li><a href="<?= url('Marketing/socialMedia') ?>" data-i18n="nav.extra-components.session-timeout">Digital Marketing</a></li>
                                      <?php // }  ?>
+
+                                     <li><a href="<?= url('Analyse/ratings') ?>" data-i18n="nav.navigate.navbar">Schools Ratings</a></li>
+
                                     <li><a href="<?= url('Marketing/school') ?>" data-i18n="nav.navigate.navbar">Schools Status</a></li>
                                    
                                     <li><a href="<?= url('Marketing/Events') ?>" data-i18n="nav.extra-components.session-idle-timeout">Events and seminars</a></li>
@@ -475,8 +479,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                         <ul class="tree-2">
                                             <li><a href="<?= url('users/index') ?>"
                                                     data-i18n="nav.extra-components.session-timeout">Users</a></li>
-                                            {{-- <li><a href="<?= url('users/kpi_list') ?>"
-                                                data-i18n="nav.extra-components.session-timeout">KPI</a></li> --}}
+                                         
                                                 
                                         
                                             <li><a href="<?= url('attendance/index') ?>"
@@ -489,12 +492,6 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                             <li><a href="<?= url('users/template') ?>" data-i18n="nav.extra-components.offline">Forms &
                                                     Templates</a>
                                              </li>
-                                            <?php if(can_access('create_user_group')) { ?>
-                                             <li><a href="<?= url('users/usergroup') ?>"
-                                                data-i18n="nav.extra-components.session-idle-timeout">User groups</a>
-                                            </li>
-                                            <?php } ?>
-    
                                             <?php if(can_access('general_report')) { ?>
                                             <li>
                                              <a href="<?= url('sales/allData') ?>" data-i18n="nav.extra-components.session-timeout"> General report</a>                                    
@@ -523,6 +520,12 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                         <li><a href="<?= url('Partner/index') ?>" data-i18n="nav.extra-components.session-timeout"> Onboard Requests</a></li>
                                         <!--<li><a href="<?= url('Partner/add') ?>" data-i18n="nav.extra-components.offline">Onboard New School</a></li>-->
                                         {{-- <li><a href="#" data-i18n="nav.extra-components.session-timeout">Reports</a></li> --}}
+
+                                     <?php if(can_access('create_user_group')) { ?>
+                                        <li><a href="<?= url('users/usergroup') ?>"
+                                            data-i18n="nav.extra-components.session-idle-timeout">School Groups</a>
+                                        </li>
+                                        <?php } ?>
                                      </ul>
                                    </li>
                              
@@ -702,6 +705,8 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                 </a>
                                 <ul class="tree-1">
                                     <li><a href="<?= url('software/template') ?>" data-i18n="nav.basic-components.alert">Templates & Policies</a></li>
+
+                                 <?php if(can_access('manage_database')) { ?>
                                     <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Database</a>
                                         <ul class="tree-2" style="display: none;">
                                             <li><a href="<?= url('software/compareTable') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Tables</a></li>
@@ -713,13 +718,12 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
 
                                         </ul>
                                     </li>
+                                    <?php } ?>
 
                                     <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Payment Integration</a>
                                         <ul class="tree-2" style="display: none;">
                                             <li><a href="<?= url('software/banksetup') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Bank Setup</a></li>
-                                             {{-- <li><a href="<?= url('software/banksetup2') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Bank Setup 2</a></li> --}}
-
-
+                                          
                                             <li><a href="<?= url('software/invoice/live') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Live Invoices</a></li>
                                             <li><a href="<?= url('software/invoice/uat') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Testing Invoices</a></li>
                                             <li><a href="<?= url('software/api') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">API Requests</a></li>
@@ -915,10 +919,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <!-- Main-body start-->
         <div class="main-body">
             @include('layouts.notifications')
-            
-            
             @yield('content')
-            
         </div>
       
 
@@ -926,8 +927,8 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <script type="text/javascript" src="<?= $root ?>bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
       
         <!-- jquery slimscroll js -->
-        {{-- <script type="text/javascript" src="<?= $root ?>bower_components/jquery-slimscroll/jquery.slimscroll.js"></script> --}}
-        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-slimscroll@1.3.8/jquery.slimscroll.min.js"></script>
+        <script type="text/javascript" src="<?= $root ?>bower_components/jquery-slimscroll/jquery.slimscroll.js"></script>
+        {{-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-slimscroll@1.3.8/jquery.slimscroll.min.js"></script> --}}
 
         <!-- modernizr js -->
         {{-- <script type="text/javascript" src="<?= $root ?>bower_components/modernizr/modernizr.js"></script> --}}
@@ -935,8 +936,8 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <script type="text/javascript" src="<?= $root ?>bower_components/modernizr/feature-detects/css-scrollbars.js"></script>
 
         <!-- classie js -->
-        {{-- <script type="text/javascript" src="<?= $root ?>bower_components/classie/classie.js"></script> --}}
-         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/classie/1.0.1/classie.min.js"></script>
+        <script type="text/javascript" src="<?= $root ?>bower_components/classie/classie.js"></script> 
+      
         <!-- Rickshow Chart js -->
         <script src="<?= $root ?>bower_components/d3/d3.js"></script>
         <!-- Morris Chart js -->

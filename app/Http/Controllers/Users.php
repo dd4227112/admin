@@ -93,7 +93,7 @@ class Users extends Controller {
             'email' => $request->email,
             'table' => 'setting'
         ]);
-     $this->send_whatsapp_sms($request->phone, $message); 
+       $this->send_whatsapp_sms($request->phone, $message); 
     }
     /**
      * Display the specified resource.
@@ -194,7 +194,7 @@ class Users extends Controller {
                    $end_date = date('Y-m-d', strtotime(request('end_date')));
                  break;
                }
-            $file_id = $file ? $this->saveFile($file, 'company/employees') : 1;
+            $file_id = $file ? $this->saveFile($file, 'company/employees',TRUE) : 1;
             \App\Models\Absent::create(['date' => request('date'), 'user_id' => request('user_id'), 'absent_reason_id' => request('absent_reason_id'),
             'note' => request('note'), 'company_file_id' => $file_id,'end_date' => $end_date]);
         }
@@ -322,10 +322,9 @@ class Users extends Controller {
             //     $file->move($filePath, $filename2);
             // }
            
-            //  $data =  (array)  request()->except('salary');
-            //  $usedata = array_merge(remove_comma(request('salary')), $data);
-            //  dd($userdata);
-             $user = User::find($id)->update(request()->all());
+             $data = request()->except('salary');
+             $usedata = array_merge(['salary' => remove_comma(request('salary'))], $data);
+             $user = User::find($id)->update($usedata);
          //  $user = User::find($id)->update(request()->except('medical_report', 'academic_certificates','employment_contract'));
          //  User::find($id)->update(['medical_report' => $filename, 'academic_certificates' => $filename1,'employment_contract' => $filename2]);
             return redirect('/users/show/'.$id)->with('success', 'User ' . request('firstname') . ' ' . request('lastname') . ' updated successfully');
@@ -343,14 +342,18 @@ class Users extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function destroy() {
-         $id = request()->segment(3);
-         DB::table("users")->where('id', $id)->update(['status' => 0,'deleted_at'=>'now()']);
-         $email = \App\Models\User::where('id',$id)->first()->email;
+         $user_id = request('user_id');
+         $reason_id = request('reason_id');
+        
+         DB::table("admin.users")->where('id', $user_id)->update(['status' => 0,'deleted_at'=>'now()']);
+         $email = \App\Models\User::where('id',$user_id)->first()->email;
+         DB::table("admin.user_turnover")->insert(['user_id' => $user_id,'reason_id' => $reason_id ]);
   
         if($email){
            DB::table("public.user")->where('email', $email)->delete();
         }
-        return redirect()->back()->with('success', 'User deleted successfully');
+        return redirect('users/index')->with('success', 'Removed successfully');
+
     }
 
     public function management() {
@@ -378,6 +381,8 @@ class Users extends Controller {
     //Changing user profile image
     public function changePhoto() {
           $file = request()->file('photo');
+          $filesize = filesize($file);
+          if($filesize > 2000048 ){ return redirect()->back()->with('warning','your image file is too big'); }
           $user_file_id = $this->saveFile($file, 'company/contracts',true);
           $data = [
             'company_file_id' => $user_file_id
@@ -712,7 +717,7 @@ class Users extends Controller {
       public function legalcontract(){
         if ($_POST) {
             $file = request()->file('file');
-           $file_id = $file ? $this->saveFile($file, 'company/employees') : 1; 
+           $file_id = $file ? $this->saveFile($file, 'company/employees', TRUE) : 1; 
            $arr = ['name' => request('contract_legal'),'start_date'=>request('start_date'),'end_date'=>request('end_date'),
            'user_id' => request('user_id'),'company_file_id' => $file_id ,'description' => request('description')];
              \App\Models\LegalContract::create($arr);
@@ -800,8 +805,8 @@ class Users extends Controller {
         $learning_id = request()->segment(3);
         if ($_POST) {
             $file = request()->file('certificate');
-            $file_id = $file ? $this->saveFile($file, 'company/employees') : 1; 
-             \App\Models\Learning::where('id',$learning_id)->update(['company_file_id' => $file_id]);
+            $file_id = $this->saveFile($file, 'company/employees',TRUE); 
+           \App\Models\Learning::where('id',$learning_id)->update(['company_file_id' => $file_id]);
        }
        return redirect()->back()->with('success', 'updated successful!');
    }

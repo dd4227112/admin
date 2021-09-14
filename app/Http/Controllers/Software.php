@@ -333,9 +333,8 @@ ORDER BY c.oid, a.attnum";
     }
 
     public function logs() { 
-
         $this->data['schema_name'] = $schema = request()->segment(3);
-        $this->data['error_log_count'] = strlen($schema) > 3 ? \collect(DB::select("select distinct error_message,created_at::date,schema_name,file from admin.error_logs where schema_name = '$schema' and deleted_at is null group by error_message,created_at::date,schema_name,file order by created_at::date"))->count() :  \collect(DB::select("SELECT distinct error_message,error_instance,created_at::date,schema_name,file,url,id  from (select * from admin.error_logs where deleted_at is null AND error_instance  NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException') order by id desc) y where deleted_at is null"))->count();
+        $this->data['error_log_count'] =  \collect(DB::select("SELECT distinct error_message,error_instance,created_at::date,schema_name,file,url,id  from (select * from admin.error_logs where deleted_at is null AND error_instance  NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException','Illuminate\Auth\AuthenticationException','Symfony\Component\ErrorHandler\Error\FatalError','ErrorException') order by id desc) y where deleted_at is null"))->count();
         $this->data['schema_errors']  =  strlen($schema) > 3 ? DB::select("select distinct error_message,created_at::date,schema_name,file,url from admin.error_logs where schema_name = '$schema' and deleted_at is null group by error_message,created_at::date,schema_name,file,url order by created_at::date") : []; // DB::select("SELECT distinct error_message,error_instance,created_at::date,schema_name,file,url,id  from (select * from admin.error_logs where deleted_at is null AND error_instance NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException') order by id desc) y where deleted_at is null") ;
         $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1 '))->first();
         return view('software.logs', $this->data);
@@ -353,15 +352,16 @@ ORDER BY c.oid, a.attnum";
     public function logsDelete() {
         $id = request('id');
         $tag = \App\Models\ErrorLog::find($id);
-        $errors = DB::table('admin.error_logs')->where('error_message','LIKE','%'.$tag->error_message.'%')
-        ->orWhere('file','LIKE','%'.$tag->file.'%')->orWhere('route','LIKE','%'.$tag->route.'%')->update(['deleted_at'=>now(),'deleted_by'=>\Auth::user()->id]);
-        echo 1;
-     
+
+        if(isset($tag->error_message)) {
+           DB::table('admin.error_logs')->where('error_message','LIKE','%'.$tag->error_message.'%')->orWhere('file','LIKE','%'.$tag->file.'%')->orWhere('route','LIKE','%'.$tag->route.'%')->update(['deleted_at'=>now(),'deleted_by'=>\Auth::user()->id]);
+         } 
+         echo 1;
     }
 
     public function Readlogs() {
         $id = request()->segment(3);
-        $tag = \App\Models\ErrorLog::findOrFail($id);
+        $tag = \App\Models\ErrorLog::find($id);
         $this->data['schema'] = $schema = $tag->schema_name;
         $this->data['school'] =  $schema != 'public' ? \collect(\DB::select("select * from admin.clients where username = '.$schema.' "))->first() : '';
         $this->data['error_message'] = $tag->error_message . '<br>' . $tag->url . '<br>';
@@ -502,7 +502,7 @@ ORDER BY c.oid, a.attnum";
                   
                 $fullname = $manager->firstname . " " . $manager->lastname;
                 $message = "habari " . $fullname ." Hatua za integration katika shule ya " .\App\Models\Client::where('id',$client->id)->first()->name." zimekamilika Tafadhali wasiliana na bank product associate kutoka shulesoft aweze kuwapa taarifa shule husika na kuendelea nao katika hatua zinazofata,ASANTE";
-                $this->send_whatsapp_sms($manager->phone, $message,$fullname);
+                $this->send_whatsapp_sms($manager->phone, $message);
              }
 
          //send sms to Admins/Directors of schools
@@ -632,7 +632,7 @@ ORDER BY c.oid, a.attnum";
             $schema = request('schema_name');
 
             //echo 3535335;
-            $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where "schema_name"=\'' . $schema . '\'');
+            $invoices = DB::select('select "schema_name", invoice_prefix as prefix from admin.all_bank_accounts_integrations where api_username is not null and api_password is not null and "schema_name"=\'' . $schema . '\'');
             $returns = [];
             $background = new \App\Http\Controllers\Background();
 

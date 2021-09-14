@@ -358,6 +358,13 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
     }
 
 
+       public function ratings(){
+         $this->data['ratings'] = \App\Models\Rating::latest()->get();
+        return view('market.ratings', $this->data);
+
+      }
+
+
     public function myzoneschools(){
         if (request()->segment(3) != '') {
             $id = request()->segment(3);

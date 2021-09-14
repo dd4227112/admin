@@ -85,8 +85,7 @@ $bn_number = 888999;
                                 Being Payment for
                                 <span style="padding-left:76px;padding-right: 50px; font-weight:bold; text-transform:uppercase">
                                     <?php
-                                    echo!empty($revenue->invoiceFees()->first()) ?
-                                            $revenue->invoiceFees()->first()->item_name : 'Service Fee';
+                                    echo !empty($revenue->invoiceFees()->first()) ? $revenue->invoiceFees()->first()->item_name : 'Service Fee';
                                     ?>
                                 </span> <hr />
                             </div>

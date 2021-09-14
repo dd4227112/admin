@@ -244,10 +244,7 @@ class Sales extends Controller {
                 if ((int) request('type') == 3) {
                  
               //  $sql = "select * from (select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a where lower(a.ownership) <>'government') a where activities >0";
-                $sql = "select C.*,D.username from (select A.*,B.* from (select x.* from(select s.*, w.name as ward, d.name as district,r.name as region, count(t.*) as activities 
-                from admin.schools as s join admin.tasks as t on s.id=t.school_id join admin.wards as w on s.ward_id=w.id join admin.districts as d on d.id=w.district_id
-                join admin.regions as r on r.id=d.region_id group by s.id, w.id, d.id,r.id) x ) A LEFT JOIN (select school_id,client_id from admin.client_schools) B on A.id = B.school_id
-                ) C  left  join (select id,username from admin.clients) D on C.client_id = D.id"; 
+                $sql = "select C.*,D.username from (select A.*,B.* from (select x.* from(select s.id,s.name,s.ownership,s.type,s.zone,s.nmb_school_name,s.nmb_zone,s.branch_code,s.branch_name,s.account_number,s.schema_name,s.nmb_branch,s.students,s.created_at,s.updated_at,s.ward_id,s.status,s.registered,w.name as ward, d.name as district,r.name as region, count(t.*) as activities from admin.schools as s join admin.tasks as t on s.id=t.school_id join admin.wards as w on s.ward_id=w.id join admin.districts as d on d.id=w.district_id join admin.regions as r on r.id=d.region_id group by s.id, w.id, d.id,r.id) x ) A LEFT JOIN (select school_id,client_id from admin.client_schools) B on A.id = B.school_id) C  left  join (select id,username from admin.clients) D on C.client_id = D.id;"; 
                 } else if ((int) request('type') == 2) {
                     $sql = "select B.id,B.name,B.ownership,B.type,B.registration_number,B.status,B.status,B.students,
                     B.created_at,B.updated_at,B.nmb_branch,B.account_number,B.branch_name,B.branch_code,
@@ -275,11 +272,11 @@ class Sales extends Controller {
                 return $this->ajaxTable('all_setting', ['sname', 'phone', 'address', 'email', 'payment_integrated', 'created_at']);
                 break;
             case 'errors':
-                $sql = "SELECT id,error_message,error_instance,created_at::date,schema_name,file, url  from (select * from admin.error_logs where deleted_at is null  AND error_instance NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException') order by id desc) y where deleted_at is null";
+                $sql = "SELECT id,error_message,error_instance,created_at::date,schema_name,file, url  from (select * from admin.error_logs where deleted_at is null  AND error_instance NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException','Illuminate\Auth\AuthenticationException','Symfony\Component\ErrorHandler\Error\FatalError','ErrorException') order by id desc) y where deleted_at is null";
                 return $this->ajaxTable('error_logs', ['file', 'error_message', 'route', 'url', 'error_instance', 'created_at::date', 'schema_name'], $sql);
                 break;
             case 'errors_resolved':
-                $sql = "select a.*,b.name as resolved_by from admin.error_logs a left join admin.users b on b.id=a.deleted_by where deleted_at is not null";
+                $sql = "select a.*,b.name as resolved_by from admin.error_logs a left join admin.users b on b.id=a.deleted_by where a.deleted_at is not null";
                 return $this->ajaxTable('error_logs', ['file', 'error_message', 'route', 'url', 'error_instance', 'created_at', 'schema_name'], $sql);
                 break;
             case 'sms_reply_logs':
@@ -460,6 +457,7 @@ class Sales extends Controller {
         $this->data['school'] = $school  =  \App\Models\School::findOrFail($school_id);
 
         $username = preg_replace('/[^a-z]/', null, strtolower($school->name));
+        $username = clean($username);
          
         $this->data['staffs'] = DB::table('users')->where('status', 1)->where('role_id', '<>', 7)->get();
         if ($_POST) {
@@ -489,7 +487,7 @@ class Sales extends Controller {
 
              $schema_name = request('username') != '' ? strtolower(trim(request('username'))) : $username;
         
-            $check_client = DB::table('admin.clients')->where('username', $schema_name)->first();
+             $check_client = DB::table('admin.clients')->where('username', $schema_name)->first();
              
             if (!empty($check_client)) {
                 $client_id = $check_client->id;
@@ -505,8 +503,8 @@ class Sales extends Controller {
                     'code' => $code,
                     'email_verified' => 0,
                     'phone_verified' => 0,
-                    'created_by' => Auth::user()->id,
-                    'username' => $schema_name
+                    'created_by' => \Auth::user()->id,
+                    'username' => clean($schema_name)
                 ]); 
 
                 //client school
@@ -623,6 +621,7 @@ class Sales extends Controller {
         return view('sales.onboarding_school', $this->data);
     }
  
+    
     /**
      * Make this very easy for users to get a specific schedule
      * @param type $client_id
@@ -727,7 +726,7 @@ class Sales extends Controller {
                         . '<li>Start date: ' . date('Y-m-d H:i:s', strtotime($start_date)) . '</li>'
                         . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                         . '</ul>';
-                    $this->send_email($manager->email, $manager_message);
+                    $this->send_email($manager->email,'Task Allocation', $manager_message);
                     $message = "Hello" .$manager->firstname . " " .$manager->lastname .", A task of . $section->content .' been scheduled to " .\App\Models\Client::where('id',$client_id)->first()->name." Start date: " . date('d-m-Y', strtotime($start_date)) . " Up to: " . date('d-m-Y', strtotime($start_date . " + {$section->time} days"))." .Thank you!";
                     $this->send_whatsapp_sms($manager->phone, $message);
                }
@@ -764,7 +763,7 @@ class Sales extends Controller {
                   foreach($users as $value){
                    $data[$value->user_id] = $value->complete;
                }
-              $user_id =  !empty($data) ? array_search(max($data), $data) : DB::table('admin.user_train_items')->where('train_item_id',$section_id)->where('status',1)->first()->user_id;
+              $user_id = !empty($data) ? array_search(max($data), $data) : DB::table('admin.user_train_items')->where('train_item_id',$section_id)->where('status',1)->first()->user_id;
             } 
             return $user_id;
        }

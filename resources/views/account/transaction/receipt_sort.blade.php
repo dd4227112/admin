@@ -45,10 +45,10 @@
                 <h2> Payment Dates</h2>
                 <hr/>
                 <?php
-                $payment_view = $invoice->payments()->first();
-                if (isset($payment_view)) {
-                    //echo print_r($all_payments);exit;
-                //  foreach ($all_payments as $payment_view) {?>
+                $all_payments = $invoice->payments()->get();
+                if (isset($all_payments)) {
+                   //  echo print_r($all_payments);exit;  
+                    foreach ($all_payments as $payment_view) {?>
                  <a  href="<?= url('account/receipts/' . $invoice->id . '/' . $payment_view->id) ?>">   
                     <div> Payer: <?= $payment_view->client->name ?? '' ?> </div>
                     <div class="right">
@@ -58,7 +58,7 @@
                   </a>
                      <hr/>
                 <?php } 
-                // }
+                 }
                 ?>
             </div>
             <!-- /MAIL LIST -->

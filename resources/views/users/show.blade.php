@@ -63,7 +63,7 @@ foreach ($user_permission as $permis) {
                                 <div class="card counter-card-2">
                                     <div class="card-block-big">
                                         <div> 
-                                            <h3>Tsh <?= isset($salary->basic_pay) ? money($salary->basic_pay) : '' ?></h3>
+                                            <h3>Tsh <?= isset($user->salary) ? money($user->salary) : '' ?></h3>
                                             <p>Basic Salary 
                                                 <span class="f-right text-success">
                                                     <i class="icofont icofont-arrow-up"></i>
@@ -310,9 +310,20 @@ foreach ($user_permission as $permis) {
                                                                          </button>
                                                                         </td>
                                                                       <?php } ?>
+                                                     
+                                                                       <?php if(can_access('remove_user')) { ?>
+                                                                        <td> 
+                                                                          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModaldelete">
+                                                                            Delete user
+                                                                         </button>
+                                                                        </td>
+                                                                      <?php } ?>
                                                                     </tr>
                                                                     
-                                                                <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                                              
+                                                              
+                                                              
+                                                             <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                                                                  <div class="modal-dialog" role="document">
                                                                     <div class="modal-content">
                                                                     <div class="modal-header">
@@ -324,7 +335,7 @@ foreach ($user_permission as $permis) {
                                                                     <div class="modal-body">
                                                                        <form method="post" action="<?= url('users/updateDesignation') ?>"> 
                                                                         <div class="form-group">
-                                                                            <label  class="control-label col-lg-6">Company designation</label>
+                                                                            <label  class="control-label col-lg-6">Choose company designation</label>
                                                                             <div class="col-lg-12">
                                                                                 <select name="designation_id"  class="form-control">
                                                                                     <option>choose </option>
@@ -355,7 +366,49 @@ foreach ($user_permission as $permis) {
                                                                     </form>
                                                                     </div>
                                                                  </div>
-                                                              </div>
+                                                                </div>
+                                                             </div>
+
+
+                                                            <div class="modal fade" id="exampleModaldelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                                                                 <div class="modal-dialog" role="document">
+                                                                    <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title" id="exampleModalLongTitle">Remove user</h5>
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                       <form method="post" action="<?= url('users/destroy') ?>"> 
+                                                                        <div class="form-group">
+                                                                            <label  class="control-label col-lg-6">Provide reason</label>
+                                                                            <div class="col-lg-12">
+                                                                                <select name="reason_id"  class="form-control">
+                                                                                    <option>choose </option>
+                                                                                    <?php
+                                                                                    $reasons = DB::table('admin.leave_reasons')->get();
+                                                                                    foreach ($reasons as $reason) {
+                                                                                        ?>
+                                                                                        <option value="<?= $reason->id ?>"><?= $reason->reason_name ?></option>
+                                                                                    <?php }
+                                                                                    ?>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+
+        
+                                                                      <div class="modal-footer">
+                                                                        <input type="hidden" value="<?=$user->id?>" name="user_id">
+                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                                                      </div>
+                                                                      <?= csrf_field() ?>
+                                                                    </form>
+                                                                    </div>
+                                                                 </div>
+                                                                </div>
+                                                             </div>
                       
 
 
@@ -516,7 +569,7 @@ foreach ($user_permission as $permis) {
                                       <div class="col-md-5">
                                         <a href="<?= url('users/resetPassword/' . $user->id) ?>" class="btn btn-warning btn-sm">Reset Password</a>
                                       </div>
-                                    </div>
+                                    </div> 
                                 </div>
                                 <!-- end of card-block -->
                             </div>

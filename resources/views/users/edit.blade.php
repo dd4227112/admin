@@ -173,7 +173,7 @@
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong>Basic Salary:</strong>
-                                            <input id="location" placeholder="basic salary" type="text" class="form-control" name="salary" value="<?=$user->salary?>">
+                                            <input id="location" placeholder="basic salary" type="text" class="form-control  transaction_amount" name="salary" value="<?=$user->salary?>">
                                         </div>
                                     </div>
                                     <div class="col-xs-12 col-sm-12 col-md-12">

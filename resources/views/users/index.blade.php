@@ -38,13 +38,13 @@
                                         <a class="btn btn-success" href="<?= url('users/create') ?>"> Create New User</a>
                                     </div>
                                     <div class="col-md-6 text-right">
-                                        <button class="btn btn-primary" data-toggle="modal"  role="button" data-target="#status-Modal"> Upload Users  <i class="ti-user"></i></button>                     
+                                        <button class="btn btn-primary" data-toggle="modal"  role="button" data-target="#status-Modal"> Upload Users  <i class="ti-user"></i></button>                   
                                     </div>
-                                    @if ($message = Session::get('success'))
+                                    {{-- @if ($message = Session::get('success'))
                                     <div class="alert alert-success">
                                         <p>{{ $message }}</p>
                                     </div>
-                                    @endif
+                                    @endif --}}
                                     <hr>
                                     <div class="card-block">
 
@@ -58,7 +58,7 @@
                                                         <th>Phone</th>
                                                         <th>Email</th>
                                                         <th>Joining Date</th>
-                                                        <th width="280px">Action</th>
+                                                        <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 
@@ -76,14 +76,11 @@
                                                         <td>{{ $user->phone }}</td>
                                                         <td>{{ $user->email }}</td>
                                                          <td>{{ date('d M Y',strtotime($user->created_at)) }}</td>
-                                                        <td>
+                                                        <td class="text-center">
                                                             <a class="btn btn-info btn-sm" href="{{ url('users/show/'.$user->id) }}">Show</a>
 
-                                                            <a class="btn btn-primary btn-sm" href="{{ url('users/edit/'.$user->id) }}">Edit</a>
-
-
-                                                            <a class="btn btn-danger btn-sm" href="{{ url('users/destroy/'.$user->id) }}">Delete</a>
-
+                                                            <a class="btn btn-primary btn-sm" href="{{ url('users/edit/'.$user->id) }}">Edit</a> 
+                                                                            
                                                         </td>
                                                     </tr>
                                                     <?php $i++; ?>
@@ -100,7 +97,8 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="status-Modal">
+
+<div class="modal fade" id="status-Modal">
 <div class="modal-dialog modal-lg" role="document">
 <form id="add-form" action="{{ url('users/userUpload') }}" method="POST" enctype="multipart/form-data">
 <?= csrf_field() ?>
@@ -130,6 +128,54 @@
         </form>
       </div>
   </div>
-</div>
+
+
+
+
+
+<div class="modal" id="status-Modal-form">
+ <div class="modal-dialog modal-md"> 
+   <form id="add-form" action="" method="POST">
+    <?= csrf_field() ?>  
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Add New Members</h5>
+        </div>
+      <div class="modal-body">
+  
+          <div class="form-group">
+            <label>Attach File Name</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <i class="fas fa-file"></i>
+                </div>
+              </div>
+              <input type="file" class="form-control" placeholder="Enter group name..." name="" required>
+            </div>
+          </div>
+        <!-- </div> -->
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="button" class="btn btn-warning" data-dismiss="modal">Close</button>
+          </div>
+        </form>
+      </div>
+  </div>
+
+
+
+
+
+
+
+
+  <script type="text/javascript">
+      
+          $(document).on("click", ".user_dialog", function () {
+                var UserName = $(this).data('id');
+                $(".modal-body #job_date").val(UserName);
+            });
+  </script>
 @endsection
 
