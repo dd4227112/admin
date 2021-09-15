@@ -444,6 +444,21 @@ Not yet (Schedule)
 </div>
 </div>
 </div>
+
+
+
+<div class="form-group">
+ <div class="row">
+   <div class="col-md-4">
+    <label>Set remainder</label>
+   </div>
+   <div class="col-md-4">
+    <input type="checkbox" name="remainder" class="form-control">
+   </div>
+  </div>
+</div>
+
+
 </div>
 
 <div class="modal-footer">

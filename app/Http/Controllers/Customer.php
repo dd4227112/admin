@@ -493,7 +493,6 @@ class Customer extends Controller {
         }
         // $this->data['profile'] = \App\Models\ClientSchool::where('client_id', $client->id)->first();
         $this->data['profile'] = \App\Models\Client::where('id', $client->id)->first();
-
         $this->data['is_client'] = $is_client;
 
         $year = \App\Models\AccountYear::where('name', date('Y'))->first();
@@ -502,7 +501,14 @@ class Customer extends Controller {
 
         if ($_POST) {
             $data = array_merge(request()->except(['start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date')))]);
+
             $task = \App\Models\Task::create($data);
+
+             DB::table('tasks_clients')->insert([
+                'task_id' => $task->id,
+                'client_id' => (int) request('client_id')
+            ]);
+
             if ((int) request('to_user_id') > 0) {
                 DB::table('tasks_users')->insert([
                     'task_id' => $task->id,
@@ -518,11 +524,13 @@ class Customer extends Controller {
                         . '</ul>';
                 $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
             }
-
-            DB::table('tasks_clients')->insert([
-                'task_id' => $task->id,
-                'client_id' => (int) request('client_id')
-            ]);
+             
+            // set remainder
+             if(request('remainder')){
+                $sms = 'A REMAINDER: Hello  ' . $user->firstname .' this is the remainder of : ' . $task->activity .' which start at: '. date('d-m-Y', strtotime($task->start_date)) .'';
+                $this->send_whatsapp_sms($user->phone, $sms);
+             }
+           
             if (!empty($task->id) && request('module_id')) {
                 $modules = request('module_id');
                 foreach ($modules as $key => $value) {
@@ -604,6 +612,7 @@ class Customer extends Controller {
             $this->data['types'] = DB::table('task_types')->where('department', Auth::user()->department)->get();
             $this->data['departments'] = DB::table('departments')->get();
             if ($_POST) {
+            
                 // $random = time();
 
                 $data = array_merge(request()->except(['to_user_id', 'start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))),
