@@ -445,16 +445,16 @@ Not yet (Schedule)
 </div>
 </div>
 
-
-
+<hr>
 <div class="form-group">
  <div class="row">
    <div class="col-md-4">
-    <label>Set remainder</label>
+      <strong> Set Remainder</strong>: <input type="checkbox" name="remainder" class="">
    </div>
-   <div class="col-md-4">
-    <input type="checkbox" name="remainder" class="form-control">
-   </div>
+    
+    <div class="form-group col-md-4">
+        <strong>Remainder date</strong> : <input type="date"  name="remainder_date" class="form-control">
+    </div>
   </div>
 </div>
 

@@ -183,14 +183,14 @@
                                                     ?>
                                                     <tr>
                                                  <td><?= $fees->item_name ?>
-                                                    <?php if($invoicefee->project_id == 1) { ?>
+                                                    
                                                     <li>Training and Support</li>
                                                     <li>Unlimited Cloud hosting for School Information</li>
                                                     <li>Unlimited bandwidth for users to access</li>
 
                                                     <li>Customization of features based on school requests</li>
                                                     <li>Free Technical support for all ShuleSoft users<br/> ( parents, teachers, students and staff)</li>
-                                                <?php } ?>
+                                            
 
                                                 </td>
                                                     <td class="text-center"><?= $fees->quantity ?></td>
