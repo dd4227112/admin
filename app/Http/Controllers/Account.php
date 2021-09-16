@@ -116,6 +116,8 @@ class Account extends Controller {
                 return redirect()->back()->with('success', 'success');
             }
             $this->data['invoice'] = Invoice::find($invoice_id);
+            $this->data['invoicefee'] = InvoiceFee::where('invoice_id',$invoice_id)->first();
+        
             $this->data['usage_start_date'] = $this->data['invoice']->client->start_usage_date;
            
             $start_usage_date = !empty($this->data['usage_start_date']) ? date('Y-m-d',strtotime($this->data['usage_start_date'])) : date('Y-m-d', strtotime('Jan 01'));
