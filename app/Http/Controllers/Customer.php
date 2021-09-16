@@ -493,7 +493,6 @@ class Customer extends Controller {
         }
         // $this->data['profile'] = \App\Models\ClientSchool::where('client_id', $client->id)->first();
         $this->data['profile'] = \App\Models\Client::where('id', $client->id)->first();
-
         $this->data['is_client'] = $is_client;
 
         $year = \App\Models\AccountYear::where('name', date('Y'))->first();
@@ -502,7 +501,14 @@ class Customer extends Controller {
 
         if ($_POST) {
             $data = array_merge(request()->except(['start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date')))]);
+
             $task = \App\Models\Task::create($data);
+
+             DB::table('tasks_clients')->insert([
+                'task_id' => $task->id,
+                'client_id' => (int) request('client_id')
+            ]);
+
             if ((int) request('to_user_id') > 0) {
                 DB::table('tasks_users')->insert([
                     'task_id' => $task->id,
@@ -518,11 +524,13 @@ class Customer extends Controller {
                         . '</ul>';
                 $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
             }
-
-            DB::table('tasks_clients')->insert([
-                'task_id' => $task->id,
-                'client_id' => (int) request('client_id')
-            ]);
+             
+            // set remainder
+             if(request('remainder')){
+                $sms = 'A REMAINDER: Hello  ' . $user->firstname .' this is the remainder of : ' . $task->activity .' which start at: '. date('d-m-Y', strtotime($task->start_date)) .'';
+                $this->send_whatsapp_sms($user->phone, $sms);
+             }
+           
             if (!empty($task->id) && request('module_id')) {
                 $modules = request('module_id');
                 foreach ($modules as $key => $value) {
@@ -604,6 +612,7 @@ class Customer extends Controller {
             $this->data['types'] = DB::table('task_types')->where('department', Auth::user()->department)->get();
             $this->data['departments'] = DB::table('departments')->get();
             if ($_POST) {
+            
                 // $random = time();
 
                 $data = array_merge(request()->except(['to_user_id', 'start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))),
@@ -887,7 +896,7 @@ class Customer extends Controller {
                     'contact' =>  request('contact'),
                     'to_user_id' =>  request('to_user_id'),
                     'note' =>  request('note'),
-                   ];
+             ];
 
             $data = array_merge($requirement,['user_id' => Auth::user()->id]);
             
@@ -900,7 +909,7 @@ class Customer extends Controller {
                         . '<br/><p><b>Requirement:</b> ' . $req->note . '</p>'
                         . '<br/><br/><p><b>By:</b> ' . $req->user->name . '</p>';
                 $this->send_email($user->email, 'ShuleSoft New Customer Requirement', $message);
-                $sms = 'Hello ' . $user->name . ' There is ' . $new_req . '  ' . $req->note . ' By: ' . $req->user->name . '';
+                $sms = 'Hello ' . $user->name . ' There is ' . $new_req . '  ' . strip_tags($req->note) . ' By: ' . $req->user->name . '';
                 $this->send_whatsapp_sms($user->phone, $sms);
             }
         }
@@ -921,6 +930,20 @@ class Customer extends Controller {
         $id = request('id');
         $action = request('action');
         \App\Models\Requirement::where('id', $id)->update(['status' => $action]);
+        $data = \App\Models\Requirement::where('id', $id)->first();
+        $user = \App\Models\User::where('id', $data->user_id)->first();
+         
+        if($action == 'On Progres'){
+           $status =  'On progress, You will be notified as soon as its Completed';
+        } elseif($action == 'Completed'){
+           $status =  'Completed, You will be notified as soon as its Completed';
+        } elseif($action == 'Resolved'){
+           $status =  'Resolved, You can proceed';
+        }
+        $message = 'Hello ' . $user->name .' a task of: ' . strip_tags($data->note) . ' is ' . $status;
+    
+        $this->send_whatsapp_sms($user->phone, $message);
+
         return redirect()->back()->with('success', 'success');
     }
 
