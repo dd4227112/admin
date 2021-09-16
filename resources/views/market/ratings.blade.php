@@ -21,8 +21,6 @@ $root = url('/') . '/public/'; ?>
             </div>
         </div>
        
-     
-
         <br/>
         <div class="page-body">
             <div class="row">
@@ -35,8 +33,8 @@ $root = url('/') . '/public/'; ?>
                 <!-- NVD3 chart start -->
                 <div class="col-md-6 col-xl-12">
                     <div class="card">
-                        <div class="card-header">
-                            <h5>School  daily total ratings</h5>
+                        <div class="card-header row">
+                            <h5>School  daily total ratings </h5>  <h5 class="pull-right"> NPS : <?= isset($nps->nps) ? round($nps->nps,2) : '' ?></h5>
                         </div>
                         <div class="card-block">
                             <div id="linechart" class="nvd-chart">
@@ -122,7 +120,7 @@ $root = url('/') . '/public/'; ?>
                                             <td><?= $rating->schema_name?></td>
                                             <td><?= date('d-m-Y', strtotime($rating->created_at)) ?></td>
                                             <td><?= isset($rating->modules->name) ? $rating->modules->name : '' ?></td>
-                                            <td class="text-left"><?= $rating->comment?></td>
+                                            <td class="text-left"><?= warp($rating->comment) ?></td>
                                             <td class="text-left"><?= $rating->rate?></td>
                                           </tr>
                                         <?php $i++; } ?>

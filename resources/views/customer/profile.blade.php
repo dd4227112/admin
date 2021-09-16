@@ -444,6 +444,21 @@ Not yet (Schedule)
 </div>
 </div>
 </div>
+
+
+
+<div class="form-group">
+ <div class="row">
+   <div class="col-md-4">
+    <label>Set remainder</label>
+   </div>
+   <div class="col-md-4">
+    <input type="checkbox" name="remainder" class="form-control">
+   </div>
+  </div>
+</div>
+
+
 </div>
 
 <div class="modal-footer">
@@ -493,10 +508,10 @@ onmousedown="removeTag(<?= $task->id ?>)">Remove
 tag</a>
 <a class="dropdown-item" href="#">Report
 Photo</a>
-<a class="dropdown-item" href="#">Hide From
-Timeline</a>
-<a class="dropdown-item" href="#">Blog
-User</a>
+<button type="button" class="btn btn-primary waves-effect"
+data-toggle="modal" data-target="#edit-Modal-task">edit
+Task</button>
+
 </div> 
 
 <div class="card-block">
@@ -1236,6 +1251,52 @@ name="client_id" />
 </div>
 </div>
 
+
+
+<div class="modal fade" id="edit-Modal-task" tabindex="-1"
+role="dialog">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h4 class="modal-title">Edit this task
+</h4>
+<button type="button" class="close"
+data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+</div>
+
+<form action="" method="post">
+<div class="modal-body">
+<div class="form-group">
+<div class="row">
+<div class="col-md-6">
+<strong> Upload Job card</strong>
+<input type="file"
+class="form-control"
+name="job_card_file">
+</div>
+
+
+</div>
+</div>
+</div>
+
+<div class="modal-footer">
+<button type="button"
+class="btn btn-default waves-effect "
+data-dismiss="modal">Close</button>
+<button type="submit"
+class="btn btn-primary waves-effect waves-light ">Save
+changes</button>
+</div>
+<input type="hidden" value=""
+name="client_id" />
+<?= csrf_field() ?>
+</form>
+</div>
+</div>
+</div>
 
 <div class="card">
 <div class="card-header">
