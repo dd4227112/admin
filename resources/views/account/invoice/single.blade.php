@@ -183,16 +183,19 @@
                                                     ?>
                                                     <tr>
                                                  <td><?= $fees->item_name ?>
-                                                <li>Training and Support</li>
-                                                <li>Unlimited Cloud hosting for School Information</li>
-                                                <li>Unlimited bandwidth for users to access</li>
+                                                    <?php if($invoicefee->project_id == 1) { ?>
+                                                    <li>Training and Support</li>
+                                                    <li>Unlimited Cloud hosting for School Information</li>
+                                                    <li>Unlimited bandwidth for users to access</li>
 
-                                                <li>Customization of features based on school requests</li>
-                                                <li>Free Technical support for all ShuleSoft users<br/> ( parents, teachers, students and staff)</li>
+                                                    <li>Customization of features based on school requests</li>
+                                                    <li>Free Technical support for all ShuleSoft users<br/> ( parents, teachers, students and staff)</li>
+                                                <?php } ?>
+
                                                 </td>
-                                                <td class="text-center"><?= $fees->quantity ?></td>
-                                                <td class="text-center"><?= $fees->unit_price ?></td>
-                                                <td class="text-center"><?= money($fees->amount) ?></td>
+                                                    <td class="text-center"><?= $fees->quantity ?></td>
+                                                    <td class="text-center"><?= $fees->unit_price ?></td>
+                                                    <td class="text-center"><?= money($fees->amount) ?></td>
                                                 </tr>
                                             <?php } ?>
 
@@ -243,16 +246,16 @@
                                         <?php if($diff_in_months <= 12) { ?>
                                         <p class="text-muted well well-sm no-shadow">
                                             {{--  --}}
-                                            Thank you for your business. we're glad to serve you
+                                            We're always delighted to serve your school
                                         </p>
                                         <?php } else { ?>
                                             <p class="text-muted well well-sm no-shadow">
-                                              Thank you for your business. we're glad to serve you
+                                              We're always delighted to serve your school
                                             </p>
                                           <?php } ?>
                                         <?php } else { ?>
                                             <p class="text-muted well well-sm no-shadow">
-                                                Thank you for your business. we're glad to serve you
+                                                We're always delighted to serve your school
                                             </p>
                                         <?php } ?>
                                         </td>
