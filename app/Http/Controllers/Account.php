@@ -53,6 +53,19 @@ class Account extends Controller {
             $this->getInvoices($project_id, $account_year_id);
         }
 
+        if ($project_id == 'delete') {
+            $invoice_id = request()->segment(4);
+            \App\Models\Invoice::find($invoice_id)->delete();
+            $invoice_fee = \App\Models\InvoiceFee::where('invoice_id',$invoice_id)->first();
+            $payments = \App\Models\Payment::where('invoice_id', $invoice_id)->first();
+            if (!empty($payments)) {
+                \App\Models\Payment::where('invoice_id', $invoice_id)->delete();
+                \App\Models\InvoiceFeesPayment::where('invoice_fee_id', $invoice_fee->id)->delete();
+                 $invoice_fee->delete();
+            }
+            return redirect()->back()->with('success', 'deleted successfully');
+          }
+
         if ($project_id == 'edit') {
             $id = request()->segment(4);
             $this->data['invoice'] = Invoice::find($id);
