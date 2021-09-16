@@ -896,7 +896,7 @@ class Customer extends Controller {
                     'contact' =>  request('contact'),
                     'to_user_id' =>  request('to_user_id'),
                     'note' =>  request('note'),
-                   ];
+             ];
 
             $data = array_merge($requirement,['user_id' => Auth::user()->id]);
             
@@ -909,7 +909,7 @@ class Customer extends Controller {
                         . '<br/><p><b>Requirement:</b> ' . $req->note . '</p>'
                         . '<br/><br/><p><b>By:</b> ' . $req->user->name . '</p>';
                 $this->send_email($user->email, 'ShuleSoft New Customer Requirement', $message);
-                $sms = 'Hello ' . $user->name . ' There is ' . $new_req . '  ' . $req->note . ' By: ' . $req->user->name . '';
+                $sms = 'Hello ' . $user->name . ' There is ' . $new_req . '  ' . strip_tags($req->note) . ' By: ' . $req->user->name . '';
                 $this->send_whatsapp_sms($user->phone, $sms);
             }
         }
@@ -930,6 +930,20 @@ class Customer extends Controller {
         $id = request('id');
         $action = request('action');
         \App\Models\Requirement::where('id', $id)->update(['status' => $action]);
+        $data = \App\Models\Requirement::where('id', $id)->first();
+        $user = \App\Models\User::where('id', $data->user_id)->first();
+         
+        if($action == 'On Progres'){
+           $status =  'On progress, You will be notified as soon as its Completed';
+        } elseif($action == 'Completed'){
+           $status =  'Completed, You will be notified as soon as its Completed';
+        } elseif($action == 'Resolved'){
+           $status =  'Resolved, You can proceed';
+        }
+        $message = 'Hello ' . $user->name .' a task of: ' . strip_tags($data->note) . ' is ' . $status;
+    
+        $this->send_whatsapp_sms($user->phone, $message);
+
         return redirect()->back()->with('success', 'success');
     }
 

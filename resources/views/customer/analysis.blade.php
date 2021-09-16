@@ -18,7 +18,7 @@
           </li>
           <li class="breadcrumb-item"><a href="#!">Dashboard</a>
           </li>
-          <li class="breadcrumb-item"><a href="#!">Error Logs</a>
+          <li class="breadcrumb-item"><a href="#!">customer requirement</a>
           </li>
         </ul>
       </div>
@@ -34,10 +34,7 @@
                   <!-- <h6 class="sub-title">Tab With Icon</h6> -->
                   <!-- Nav tabs -->
                   <ul class="nav nav-tabs md-tabs " role="tablist">
-                    {{-- <li class="nav-item">
-                      <a class="nav-link active" data-toggle="tab" href="#home7" role="tab"><i class="icofont icofont-home"></i>Google Sheet</a>
-                      <div class="slide"></div>
-                    </li> --}}
+                   
                     <li class="nav-item">
                       <a class="nav-link active" data-toggle="tab" href="#requirements" role="tab"><i class="icofont icofont-ui-user "></i>Customer Requirements</a>
                       <div class="slide"></div>
@@ -83,7 +80,7 @@
                               foreach ($requirements as $req) {  ?>
                               <tr>
                                   <td><?= $i ?></td>
-                                  <td><?= isset($req->school->name) ? ucfirst($req->school->name) : 'General' ?></td>
+                                  <td><?= isset($req->school->name) ? ucfirst($req->school->name) : 'General Requirement' ?></td>
                                   <td><?php echo $req->contact; ?></td>
                                   <td><?php echo $req->toUser->name;?> </td>
                                   <td><?= $req->created_at ?></td>
@@ -132,7 +129,7 @@
                                 <input type="number" class="form-control" id="get_schools" name="school_id">
                               </div>
                               <div class="col-md-6">
-                                <strong>School Contacts Phone/Email</strong>
+                                <strong>Client Contacts Phone</strong>
                                 <input type="text" name="contact" style="text-transform:uppercase" class="form-control" required>
                               </div>
                             </div>
