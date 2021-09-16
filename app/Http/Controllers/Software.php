@@ -781,7 +781,10 @@ ORDER BY c.oid, a.attnum";
         return view('customer.usage.custom_report', $this->data);
     }
 
+    public function myLogs() {
+        $this->data['logs'] = DB::SELECT("select * from admin.error_logs a WHERE a.deleted_at is null AND (a.route like '%mark%' OR a.route like '%exam%' OR a.route like '%classes%' OR a.route like '%subject%' OR a.route like '%routine%' OR a.route like '%semester%' OR a.route like '%student%' OR a.route like '%parent%' OR a.route like '%user%') order by id asc limit 200");
+        return view('software.mylogs', $this->data);
+    }
 
-    
-
+ //   id	error_message	file	route	url	error_instance	request	schema_name	created_by	created_by_table	created_at
 }
