@@ -1069,16 +1069,23 @@ $i++;
 
 <div class="card">
 <div class="card-header">
-<h5>Job Card</h5>
-{{-- <p align="right">
-<a href="<?= url('customer/Jobcard/' . $client_id) ?>" class="btn btn-warning btn-sx"> School Job card </a>
-</p> --}}
-<p align="right">
+<h5 class="mb-5">Job Card</h5>
+
+<div class="row justify-content-between">
+<p class="float-left">
+<button type="button" class="user_dialog btn btn-primary waves-effect"
+data-toggle="modal" data-target="#uploadjobcard-Modal">
+Upload Job card
+</button>
+</p>
+
+<p class="float-right">
 <button type="button" class="btn btn-primary waves-effect"
 data-toggle="modal" data-target="#jobcard-Modal">Create
 Job card
 </button>
 </p>
+</div>
 
 <div class="modal fade" id="jobcard-Modal" tabindex="-1"
 role="dialog" aria-hidden="true"
@@ -1155,37 +1162,23 @@ name="client_id" />
 <tr>
 <th>#</th>
 <th>Date</th>
-<th>Download</th>
-<th>Upload</th>
+<th>Created by</th> 
+<th>View</th>
 </tr>
 </thead>
 <tbody>
 <?php
 $x = 1;
-$jobcards = DB::table('job_cards')->distinct('date')->orderBy('date', 'desc')->get();
+$jobcards = \DB::select("select a.*,b.name from admin.client_job_cards a join admin.users b on a.created_by = b.id where client_id = '{$client_id}' order by a.id desc");
 foreach ($jobcards as $jobcard) {
 ?>
 <tr>
 <th scope="row"><?= $x ?></th>
 <td><?= date('d-m-Y', strtotime($jobcard->date)) ?></td>
-<td> <a href="<?= url('customer/Jobcard/' . $client_id . '/' . $jobcard->date) ?>"
-class="btn btn-warning btn-sx"> Download form </a></td>
-<td>
-<?php $card = DB::table('client_job_cards')->where(['date' => $jobcard->date, 'client_id' => $client_id])->first(); ?>
-<?php if(empty($card->file)) { ?>
-<button type="button" class="user_dialog btn btn-primary waves-effect"
-data-toggle="modal" data-target="#uploadjobcard-Modal"
-data-id="<?= $jobcard->date ?>">
-Upload Job card
-</button>
-<?php } else { ?>
-{{-- <a  target="_break" href="<?= url('customer/viewFile/' . $jobcard->date . '/jobcard') ?>" class="btn btn-sm btn-success">View job card</a> --}}
-
-<a  target="_break" href="<?= url('storage/uploads/files/'.$card->file) ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a>
-
-<?php } ?>
+<td><?= $jobcard->name ?? '' ?></td>
+<td class="text-center">
+ <a  target="_break" href="<?= url('customer/viewContract/' . $jobcard->id . '/jobcard') ?>" class="btn btn-sm btn-success">View </a> 
 </td>
-
 </tr>
 <?php
 $x++;
