@@ -58,7 +58,6 @@ class Account extends Controller {
             \App\Models\Invoice::find($invoice_id)->delete();
             $invoice_fee = \App\Models\InvoiceFee::where('invoice_id',$invoice_id)->first();
             $payments = \App\Models\Payment::where('invoice_id', $invoice_id)->first();
-             dd($payments);
             if (!empty($payments)) {
                 \App\Models\Payment::where('invoice_id', $invoice_id)->delete();
                 \App\Models\InvoiceFeesPayment::where('invoice_fee_id', $invoice_fee->id)->delete();
