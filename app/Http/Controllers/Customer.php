@@ -1349,6 +1349,9 @@ class Customer extends Controller {
         } else if ($type == 'absent') {
             $document = \App\Models\Absent::find($contract_id);
             $this->data['path'] = $document->companyFile->path;
+        }  else if ($type == 'jobcard') {
+            $contract = \App\Models\ClientJobCard::find($contract_id);
+            $this->data['path'] = $contract->companyFile->path;
         } else {
             $contract = \App\Models\Contract::find($contract_id);
             $this->data['path'] = $contract->companyFile->path;
@@ -1525,51 +1528,37 @@ class Customer extends Controller {
         foreach ($module_ids as $module_id) {
             \App\Models\JobCard::create(['module_id' => $module_id, 'client_id' => $client_id, 'user_id' => $user_id, 'date' => $date]);
         }
-        return redirect()->back()->with('success', 'Job card modules uploaded succesfully!');
+     // return redirect()->back()->with('success', 'Job card modules uploaded succesfully!');
+       return redirect('customer/Jobcard/' . $client_id . '/' . $date);
+
     }
 
     public function uploadJobCard() {
-
-        if ($_POST) { // dd(request()->all());
-            // $file = request()->file('job_card_file');
-            $filename1 = '';
-            if (!empty(request('job_card_file'))) {
-                $file = request()->file('job_card_file');
-                $filename1 = time() . rand(11, 8894) . '.' . $file->guessExtension();
-                $filePath = base_path() . '/storage/uploads/files/';
-                $file->move($filePath, $filename1);
-            }
+        if ($_POST) { 
+            $file = request()->file('job_card_file');
+            $company_file_id = $file ? $this->saveFile($file, 'company/contracts', TRUE) : 1;
+            
             $where = ['date' => request('job_date'), 'client_id' => request('client_id')];
-
             $card = DB::table('client_job_cards')->where($where)->first();
 
             $data = [
-                'file' => $filename1,
+                'company_file_id' => $company_file_id,
                 'client_id' => request('client_id'),
                 'created_by' => \Auth::user()->id,
                 'date' => request('job_date')
             ];
-
-
-            //  \App\Models\ClientJobCard::updateOrCreate($data);
-
             if (empty($card)) {
                 \App\Models\ClientJobCard::create($data);
             } else {
                 \App\Models\ClientJobCard::where($where)->update($data);
             }
         }
-        return redirect()->back()->with('success', 'uploaded succesfully!');
+        return redirect()->back()->with('success', 'Uploaded succesfully!');
     }
 
     public function viewFile() {
         $value = request()->segment(3);
         $type = request()->segment(4);
-        if ($type == 'jobcard') {
-            $contract = \App\Models\ClientJobCard::where('date', $value)->first();
-            $this->data['path'] = $contract->companyFile->path;
-        }
-
         if ($type == 'course_certificate') {
             $certificate = \App\Models\Learning::where('id', $value)->first();
             $this->data['path'] = $certificate->companyFile->path;
