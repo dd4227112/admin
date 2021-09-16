@@ -566,7 +566,7 @@ class Customer extends Controller {
     public function addstandingorder() {
         if ($_POST) {
               $file = request('standing_order_file');
-            // $company_file_id = $file ? $this->saveFile($file, 'company/contracts') : 1;
+          
             $total_amount = empty(request('total_amount')) ? request('occurance_amount') * request('number_of_occurrence') : request('total_amount');
 
             // $filename1 = '';
@@ -934,16 +934,20 @@ class Customer extends Controller {
         $user = \App\Models\User::where('id', $data->user_id)->first();
          
         if($action == 'On Progres'){
-           $status =  'On progress, You will be notified as soon as its Completed';
+           $message = 'Hello ' . $user->name .'  your requirement of ' . strip_tags($data->note) . ' requested on ' . date('d-m-Y', strtotime($data->created_at)) .' is now on progress. You will be notified as soon as its Completed.Thank you for using shulesoft services';
         } elseif($action == 'Completed'){
-           $status =  'Completed, You will be notified as soon as its Completed';
+           $message = 'Hello ' . $user->name .'  your requirement of ' . strip_tags($data->note) . ' requested on ' . date('d-m-Y', strtotime($data->created_at)) .' is now complete. Login into your shulesoft account .Thank you for using shulesoft services';
         } elseif($action == 'Resolved'){
-           $status =  'Resolved, You can proceed';
+           $message = 'Hello ' . $user->name .'  your requirement of ' . strip_tags($data->note) . ' requested on ' . date('d-m-Y', strtotime($data->created_at)) .' is resolved. Login into your shulesoft account .Thank you for using shulesoft services';
         }
-        $message = 'Hello ' . $user->name .' a task of: ' . strip_tags($data->note) . ' is ' . $status;
-    
         $this->send_whatsapp_sms($user->phone, $message);
+         $valid = validate_phone_number($data->contact);
+         $phonenumber = (new \App\Http\Controllers\Sales())->extractPhoneNumber($data->contact);
 
+        if($phonenumber){
+           $this->send_whatsapp_sms($phonenumber, $message);   
+        }
+        $this->send_sms($user->phone, 'ShuleSoft requirement Task', $message);
         return redirect()->back()->with('success', 'success');
     }
 
@@ -1685,14 +1689,13 @@ class Customer extends Controller {
     public function getNewCustomers($table, $year,$customer_other_sql = '') {
         $sql = '';
         for ($s = 1; $s <= 12; $s++) {
-            $sql .= '  select count(*),x.months from (
-select distinct schema_name,extract(month from created_at) as months from admin.' . $table . ' where extract(year from created_at)=' . $year . ' and extract(month from created_at)=' . $s . '  '.$customer_other_sql.' and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\')  ) x LEFT OUTER JOIN (
-select distinct schema_name,extract(month from created_at) as months from admin.' . $table . ' where extract(year from created_at)=' . $year . ' and extract(month from created_at)<' . $s . '  '.$customer_other_sql.' and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\') ) y using(schema_name) where y.schema_name is null group by x.months
-
-UNION ALL';
+            $sql .= '  select count(*),x.months from (select distinct schema_name,extract(month from created_at) as months from admin.' . $table . ' where extract(year from created_at)=' . $year . ' and extract(month from created_at)=' . $s . '  '.$customer_other_sql.' and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\')  ) x LEFT OUTER JOIN (select distinct schema_name,extract(month from created_at) as months from admin.' . $table . ' where extract(year from created_at)=' . $year . ' and extract(month from created_at)<' . $s . '  '.$customer_other_sql.' and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\') ) y using(schema_name) where y.schema_name is null group by x.months UNION ALL';
         }
         $final = rtrim($sql, 'UNION ALL');
         return DB::select($final);
     }
+
+
+ 
 
 }
