@@ -63,7 +63,6 @@ class Kernel extends ConsoleKernel {
         })->dailyAt('03:30'); // Eq to 06:30 AM 
 
         $schedule->call(function () {
-
             $this->sendNotice();
             $this->sendBirthdayWish();
             $this->sendTaskReminder();
@@ -85,9 +84,10 @@ class Kernel extends ConsoleKernel {
             $this->HRLeaveRemainders();
         })->dailyAt('04:40');
 
-        // $schedule->call(function () { 
-        //     $this->SMSStatusToSchoolsAdmin();
-        // })->tuesdays(); // Eq 08:30 AM
+        $schedule->call(function () { 
+            $this->setTaskRemainder();
+        })->everyMinute(); 
+        
 //        $schedule->call(function() {
 //            //send login reminder to parents in all schema
 //            $this->sendLoginReminder();
@@ -1107,6 +1107,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     //     AND state in ('idle', 'idle in transaction', 'idle in transaction (aborted)', 'disabled') AND current_timestamp - state_change > interval '3 minutes') SELECT pg_terminate_backend(pid) FROM inactive_connections WHERE rank > 1");
     //     return DB::select("SELECT pg_terminate_backend(pid) from pg_stat_activity where state='idle' and query like '%DEALLOCATE%'");
     // }
+
     // F(x) to send text remainder to keep phone active to school admins
     public function SMSStatusToSchoolsAdmin() {
         // select all schools not keep their app active for the past 24 hours
@@ -1129,10 +1130,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         }
     }
 
-    public function setTaskRemainder() {
-        $schemas = DB::select("select * from admin.all_setting");
-     
-    }
+ 
 
     public function updateCompleteItems() {
         $materialized_views = DB::select("SELECT relname FROM pg_catalog.pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace WHERE c.relkind = 'm' and nspname='admin'");
@@ -1281,6 +1279,17 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
             
             }
          }
+
+
+       //  public function 
+        public function setTaskRemainder() {
+        $tasks = \App\Models\Task::where('remainder',1)->where('remainder_date','<>',NULL)->where('remainder_date','=',date('Y-m-d'))->get();
+        foreach($tasks as $task){
+            $message = 'Hello '.$task->user->name . ' this is the remainder of task: ' .$task->activity . ' on school: ' .$task->client->name .'  created at : ' . date('d-m-Y', strtotime($task->created_at));
+            $this->send_whatsapp_sms($task->user->phone, $message); 
+            $this->send_email($task->user->email, 'A taks remainder', $message);
+        }
+      }
 
 
     

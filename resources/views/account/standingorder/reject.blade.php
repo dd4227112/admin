@@ -52,7 +52,7 @@
 
                                     <tr>
                                        <th scope=""> Standing order file</th>
-                                       <td> <a  target="_break" href="<?= url('customer/viewContract/'.$standing->id) ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a> </td>
+                                       <td> <a  target="_break" href="<?= url('customer/viewContract/'.$standing->id.'/standing') ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a> </td>
                                     </tr>
                                 </tbody>
                             </table>
