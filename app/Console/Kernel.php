@@ -1291,7 +1291,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
 
        //  public function 
      public function setTaskRemainder() {
-          $tasks = \App\Models\Task::where('remainder',1)->where('remainder_date','<>',NULL)->where('remainder_date','=',date('Y-m-d'))->get();
+          $tasks = \App\Models\Task::where('remainder',0)->where('remainder_date','=',date('Y-m-d'))->get();
           foreach($tasks as $task){
                 $message = 'Hello '.$task->user->name . ' this is the remainder of task: ' .$task->activity . ' on school: ' .$task->client->name .'  created at : ' . date('d-m-Y', strtotime($task->created_at));
                 $controller = new \App\Http\Controllers\Controller();
@@ -1301,6 +1301,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                 'body' => $message,
                 'email' => $task->user->email
             ]);
+            \App\Models\Task::where('id',$task->id)->update(['remainder' => 1]);
          }
       }
 
