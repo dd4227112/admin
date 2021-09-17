@@ -499,11 +499,11 @@ class Customer extends Controller {
         $this->data['invoices'] = \App\Models\Invoice::where('client_id', $client->id)->where('account_year_id', $year->id)->get();
         $this->data['standingorders'] = \App\Models\StandingOrder::where('client_id', $client->id)->get();
 
-        if ($_POST) {
-            $data = array_merge(request()->except(['start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date')))]);
+        if ($_POST) {  
+            $remainder = request('remainder') ? 1 : 0; 
+            $data = array_merge(request()->except(['start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date'))),'remainder' => $remainder,'remainder_date'=> date('Y-m-d',strtotime(request('remainder_date')))]);
 
             $task = \App\Models\Task::create($data);
-
              DB::table('tasks_clients')->insert([
                 'task_id' => $task->id,
                 'client_id' => (int) request('client_id')
@@ -525,12 +525,7 @@ class Customer extends Controller {
                 $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
             }
              
-            // set remainder
-             if(request('remainder')){
-                $sms = 'A REMAINDER: Hello  ' . $user->firstname .' this is the remainder of : ' . $task->activity .' which start at: '. date('d-m-Y', strtotime($task->start_date)) .'';
-                $this->send_whatsapp_sms($user->phone, $sms);
-             }
-           
+         
             if (!empty($task->id) && request('module_id')) {
                 $modules = request('module_id');
                 foreach ($modules as $key => $value) {
@@ -552,6 +547,8 @@ class Customer extends Controller {
         }
     }
 
+
+
     public function editdetails() {
         $id = request()->segment(3);
         $data = request()->except('_token');
@@ -565,42 +562,29 @@ class Customer extends Controller {
 
     public function addstandingorder() {
         if ($_POST) {
-              $file = request('standing_order_file');
-          
+            $file = request('standing_order_file');
             $total_amount = empty(request('total_amount')) ? request('occurance_amount') * request('number_of_occurrence') : request('total_amount');
-
-            // $filename1 = '';
-            // if (!empty(request('standing_order_file'))) {
-            //     $file = request()->file('standing_order_file');
-            //     $filename1 = time() . rand(11, 8894) . '.' . $file->guessExtension();
-            //     $filePath = base_path() . '/storage/uploads/files/';
-            //     $file->move($filePath, $filename1);
-            // }
-
             $company_file_id = $file ? $this->saveFile($file, 'company/contracts', TRUE) : 1;
             
             $data = [
                 'client_id' => request('client_id'),
-                'branch_id' => request('branch_id'),
+               // 'branch_id' => request('branch_id'),
                 'company_file_id' => $company_file_id,
                 'school_contact_id' => request('school_contact_id'),
-                'created_by' => Auth::user()->id,
+                'created_by' => \Auth::user()->id,
                 'occurrence' => request('number_of_occurrence'),
                 'type' => request('which_basis'),
                 'occurance_amount' => remove_comma(request('occurance_amount')),
                 'total_amount' => remove_comma($total_amount),
                 'payment_date' => request('maturity_date'),
-                // 'refer_bank_id' => request('refer_bank_id'),
+                'contact_person' => request('contact_person'),
                 'note' => request('note'),
                 'contract_type_id' => 8,
-               // 'file' => $filename1,
-                'created_at' => now()
+                'branch_name' => request('branch_name')
             ];
             $contract_id = DB::table('admin.standing_orders')->insertGetId($data);
-
             //client contracts
             DB::table('admin.client_contracts')->insert(['contract_id' => $contract_id, 'client_id' => request('client_id')]);
-
             return redirect('account/standingOrders')->with('success', 'Standing order added successfully!');
         }
     }

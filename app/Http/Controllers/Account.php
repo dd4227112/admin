@@ -1357,17 +1357,9 @@ class Account extends Controller {
     }
 
     public function getExpenseRevenueByMonth() {
-        return DB::select("with tempa as (
-    select a.date,a.revenue, b.expense from 
-    (
-select  sum(amount) as revenue,date_trunc('month', date) as date from admin.revenues group by date_trunc('month', date) order by date_trunc('month', date) asc
-    )
-    as a left join 
-    (
-  select  sum(amount::numeric) as expense,date_trunc('month', date) as date from admin.expenses group by date_trunc('month', date) order by date_trunc('month', date) asc
-    ) as b on date_trunc('month', b.date)= date_trunc('month', a.date) ),
-tempb as ( select * from tempa ) 
-select * from tempb");
+        return DB::select("with tempa as (select a.date,a.revenue, b.expense from (select  sum(amount) as revenue,date_trunc('month', date) as date from admin.revenues group by date_trunc('month', date) order by date_trunc('month', date) asc)as a left join 
+    (select  sum(amount::numeric) as expense,date_trunc('month', date) as date from admin.expenses group by date_trunc('month', date) order by date_trunc('month', date) asc
+    ) as b on date_trunc('month', b.date)= date_trunc('month', a.date) ),tempb as ( select * from tempa ) select * from tempb");
     }
 
     public function customSummary() {
@@ -1419,14 +1411,14 @@ select * from tempb");
     public function standingOrders() {              
          $this->data['standingorders'] = \App\Models\StandingOrder::latest()->get();
          $this->data['schools'] = \App\Models\Client::get();
-        return view('account.standing_order', $this->data);
+        return view('account.standing', $this->data);
     }
 
     // Approve standing orders
     public function approveStandingOrder() { 
         $this->data['so_id'] = $so_id = request()->segment(3);
         if(!empty($so_id)){
-            \App\Models\StandingOrder::where('id', $so_id)->update(['is_approved' => 1,'approved_by' => Auth::user()->id]);
+            \App\Models\StandingOrder::where('id', $so_id)->update(['is_approved' => 1,'approved_by' => \Auth::user()->id]);
         }
         return redirect()->back()->with('success', 'Standing order approved!');
     } 

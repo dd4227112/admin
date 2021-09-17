@@ -449,12 +449,14 @@ Not yet (Schedule)
 <div class="form-group">
  <div class="row">
    <div class="col-md-4">
-      <strong> Set Remainder</strong>: <input type="checkbox" name="remainder" class="">
+      <strong> Set Remainder</strong>: <input type="checkbox"  id="supplied" name="remainder" checked>
    </div>
     
-    <div class="form-group col-md-4">
+    
+     <div id="idate" class="form-group col-md-4">
         <strong>Remainder date</strong> : <input type="date"  name="remainder_date" class="form-control">
     </div>
+
   </div>
 </div>
 
@@ -1777,7 +1779,7 @@ style="z-index: 1050; display: none;">
 <div class="modal-content">
 
 <div class="modal-header">
-<h4 class="modal-title">Add Standing Order</h4>
+<h4 class="modal-title">ADD STANDING ORDER</h4>
 <button type="button" class="close"
 data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
@@ -1789,34 +1791,12 @@ data-dismiss="modal" aria-label="Close">
 <div class="form-group">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
 <div class="row">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 <div class="col-md-6">                                                                                                                                                                                                                                                                                                                                      
- <strong> Branch name </strong>
-<select name="branch_id" class="form-control select2" required>
-<?php
-$branches = \App\Models\PartnerBranch::orderBy('id', 'asc')->get();
-foreach ($branches as $branch) { ?>
-    <option value="<?= $branch->id ?>"> <?= $branch->name ?> </option>
-  <?php
-}
-?>
-</select>
+   <strong> Branch name </strong>
+   <input type="text" placeholder="Bank branch name"  class="form-control"  name="branch_name" required>
 </div>
 <div class="col-md-6">
 <strong> Contact person </strong>
-<select name="school_contact_id"  class="form-control select2"  >
-<?php
-$contact_staffs = DB::table('school_contacts')->get();
-if (count($contact_staffs)) {
-foreach ($contact_staffs as $contact_staff) {
-?>
-<option
-    value="<?= $contact_staff->id ?>">
-        <?= $contact_staff->name ?>
-</option>
-<?php
-}
-}
-?>
-</select>
+   <input type="text" placeholder="Contact person"  class="form-control"  name="contact_person" required>
 </div>
 </div>
 </div>
@@ -1852,7 +1832,7 @@ class="form-control"  name="occurance_amount" id="box2" required>
 
 <div class="col-md-6">
 <strong> Total amount</strong>
-<input type="text" class="form-control" name="total_amount"  id="result" required>
+<input type="text" class="form-control" name="total_amount"  required>
 </div>
 </div>
 </div>
@@ -2345,7 +2325,11 @@ aria-hidden="true">
             dropdownAutoWidth: false,
             allowClear: false,
             debug: true
-        }); 
+        });
+        
+        $('#supplied').click(function() {
+             $('#idate')[this.checked ? "show" : "hide"]();
+         });
 
         function calculate() {
             var myBox1 = document.getElementById('box1').value;
