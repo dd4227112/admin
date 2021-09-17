@@ -51,6 +51,11 @@ class Kernel extends ConsoleKernel {
             $this->whatsappMessage();
         })->everyMinute();
 
+          $schedule->call(function () {
+            //sync new messages 
+            $this->setTaskRemainder();
+        })->everyMinute();
+
         $schedule->call(function () {
             (new Message())->sendEmail();
         })->everyMinute();
@@ -84,10 +89,8 @@ class Kernel extends ConsoleKernel {
             $this->HRLeaveRemainders();
         })->dailyAt('04:40');
 
-        $schedule->call(function () { 
-            $this->setTaskRemainder();
-        })->everyMinute(); 
-        
+       
+
 //        $schedule->call(function() {
 //            //send login reminder to parents in all schema
 //            $this->sendLoginReminder();
@@ -1272,8 +1275,13 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                   $hr_officer = \App\Models\User::where('role_id',16)->first();
                    foreach($users as $user){ 
                         $message = 'Hello HR, ' . $user->firstname . ' ' . $user->lastname . ' is expected to start the annual leave on '. date('d-m-Y', strtotime($value->annual_date.' + 1 days'));
-                        $this->send_whatsapp_sms($hr_officer->phone, $message); 
-                        $this->send_email($hr_officer->email, 'Employee Annual leave', $message);
+                        $controller = new \App\Http\Controllers\Controller();
+                        $controller->send_whatsapp_sms($user->phone, $message); 
+                            DB::table('public.email')->insert([
+                            'subject' => 'Employee Annual leave',
+                            'body' => $message,
+                            'email' => $hr_officer->email
+                        ]);
                     }
                }
             
@@ -1282,13 +1290,18 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
 
 
        //  public function 
-        public function setTaskRemainder() {
-        $tasks = \App\Models\Task::where('remainder',1)->where('remainder_date','<>',NULL)->where('remainder_date','=',date('Y-m-d'))->get();
-        foreach($tasks as $task){
-            $message = 'Hello '.$task->user->name . ' this is the remainder of task: ' .$task->activity . ' on school: ' .$task->client->name .'  created at : ' . date('d-m-Y', strtotime($task->created_at));
-            $this->send_whatsapp_sms($task->user->phone, $message); 
-            $this->send_email($task->user->email, 'A taks remainder', $message);
-        }
+     public function setTaskRemainder() {
+          $tasks = \App\Models\Task::where('remainder',1)->where('remainder_date','<>',NULL)->where('remainder_date','=',date('Y-m-d'))->get();
+          foreach($tasks as $task){
+                $message = 'Hello '.$task->user->name . ' this is the remainder of task: ' .$task->activity . ' on school: ' .$task->client->name .'  created at : ' . date('d-m-Y', strtotime($task->created_at));
+                $controller = new \App\Http\Controllers\Controller();
+                $controller->send_whatsapp_sms($task->user->phone, $message); 
+                DB::table('public.email')->insert([
+                'subject' =>' A taks remainder',
+                'body' => $message,
+                'email' => $task->user->email
+            ]);
+         }
       }
 
 

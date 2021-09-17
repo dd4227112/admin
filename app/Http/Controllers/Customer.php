@@ -547,7 +547,7 @@ class Customer extends Controller {
         }
     }
 
-
+     
 
     public function editdetails() {
         $id = request()->segment(3);
