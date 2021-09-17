@@ -256,9 +256,10 @@ class Sales extends Controller {
                     (select D.name as district,W.id,W.name as ward,R.name as region from admin.districts as D join
                     admin.wards as W on D.id = W.district_id join admin.regions R on R.id = D.region_id ) T on B.ward_id = T.id";
                 } else {     
-                 $sql = "select a.* from (select s.*,b.name as ward,d.name as district,r.name as region,c.client_id,e.username, (select count(*) from admin.tasks where school_id=s.id) 
+                 $sql = "select a.* from (select s.region,s.district,s.ward,s.registered,s.status,s.created_at,s.students,s.nmb_branch,
+s.schema_name,s.account_number,s.branch_name,s.branch_code,s.nmb_zone,s.nmb_school_name,s.zone,s.type,s.ownership,s.name,b.name as ward,d.name as district,r.name as region,c.client_id,e.username, (select count(*) from admin.tasks where school_id=s.id) 
                  as activities from admin.schools s join admin.wards b on s.ward_id = b.id join admin.districts as d on d.id=b.district_id join admin.regions r on r.id=d.region_id
-                  left join admin.client_schools c on c.school_id = s.id left join admin.clients e on e.id=c.client_id) a where lower(a.ownership) <>'government' ";
+                  left join admin.client_schools c on c.school_id = s.id left join admin.clients e on e.id=c.client_id) a where lower(a.ownership) <>'government'";
                  }
                  
                 return $this->ajaxTable('schools', ['a.name', 'a.region', 'a.district'], $sql);

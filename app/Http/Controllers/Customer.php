@@ -500,7 +500,7 @@ class Customer extends Controller {
         $this->data['standingorders'] = \App\Models\StandingOrder::where('client_id', $client->id)->get();
 
         if ($_POST) {  
-            $remainder = request('remainder') ? 1 : 0; 
+            $remainder = request('remainder') ? 0 : 1; 
             $data = array_merge(request()->except(['start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date'))),'remainder' => $remainder,'remainder_date'=> date('Y-m-d',strtotime(request('remainder_date')))]);
 
             $task = \App\Models\Task::create($data);

@@ -451,8 +451,6 @@ Not yet (Schedule)
    <div class="col-md-4">
       <strong> Set Remainder</strong>: <input type="checkbox"  id="supplied" name="remainder" checked>
    </div>
-    
-    
      <div id="idate" class="form-group col-md-4">
         <strong>Remainder date</strong> : <input type="date"  name="remainder_date" class="form-control">
     </div>
@@ -1779,7 +1777,7 @@ style="z-index: 1050; display: none;">
 <div class="modal-content">
 
 <div class="modal-header">
-<h4 class="modal-title">ADD STANDING ORDER</h4>
+<h6 class="modal-title">ADD STANDING ORDER</h6>
 <button type="button" class="close"
 data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
