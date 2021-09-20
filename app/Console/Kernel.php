@@ -889,7 +889,6 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
             $users = $to_roll_ids == 0 ? DB::select("select *,(select id as sms_keys_id from " . $notice->table_schema . ".sms_keys limit 1 ) as sms_keys_id from admin.all_users where 'table' not in ('student', 'setting') AND schema_name::text='" . $notice->schema_name . "'") : DB::select('select *,(select id as sms_keys_id from ' . $notice->schema_name . '.sms_keys limit 1 ) as sms_keys_id from admin.all_users where role_id IN (' . $to_roll_ids . ' ) and schema_name::text=\'' . $notice->schema_name . '\'  ');
             if (count($users) > 0) {
                 foreach ($users as $user) {
-
                     $message = 'Kalenda ya Shule:'
                             . 'Siku ya tukio : ' . $notice->date . ' ,'
                             . 'Jina la Tukio:  ' . $notice->notice . ','
@@ -1139,7 +1138,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         $materialized_views = DB::select("SELECT relname FROM pg_catalog.pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace WHERE c.relkind = 'm' and nspname='admin'");
         foreach ($materialized_views as $view) {
             DB::statement('REFRESH MATERIALIZED VIEW admin.' . $view->relname);
-        }
+          }
         $checks = DB::select('select * from admin.train_items where status=1');
         foreach ($checks as $check) {
             if (preg_match('/exam/i', strtolower($check->content))) {
