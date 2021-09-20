@@ -242,25 +242,16 @@ class Sales extends Controller {
                 break;
             case 'schools':
                 if ((int) request('type') == 3) {
-                 
               //  $sql = "select * from (select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a where lower(a.ownership) <>'government') a where activities >0";
                 $sql = "select C.*,D.username from (select A.*,B.* from (select x.* from(select s.id,s.name,s.ownership,s.type,s.zone,s.nmb_school_name,s.nmb_zone,s.branch_code,s.branch_name,s.account_number,s.schema_name,s.nmb_branch,s.students,s.created_at,s.updated_at,s.ward_id,s.status,s.registered,w.name as ward, d.name as district,r.name as region, count(t.*) as activities from admin.schools as s join admin.tasks as t on s.id=t.school_id join admin.wards as w on s.ward_id=w.id join admin.districts as d on d.id=w.district_id join admin.regions as r on r.id=d.region_id group by s.id, w.id, d.id,r.id) x ) A LEFT JOIN (select school_id,client_id from admin.client_schools) B on A.id = B.school_id) C  left  join (select id,username from admin.clients) D on C.client_id = D.id;"; 
                 } else if ((int) request('type') == 2) {
-                    $sql = "select B.id,B.name,B.ownership,B.type,B.registration_number,B.status,B.status,B.students,
-                    B.created_at,B.updated_at,B.nmb_branch,B.account_number,B.branch_name,B.branch_code,
-                    B.nmb_zone,B.registered,B.zone,B.schema_name,B.activities,B.ward_id,T.region,T.ward,T.district
-                    from (select a.*, (select count(*) from admin.tasks where client_id in 
-                    (select id from admin.clients where username in (select schema_name from admin.all_setting where school_id=a.id)))
-                    as activities from admin.schools a   where lower(a.ownership) <>'government' and a.id in 
-                    (select school_id from admin.all_setting)) B join 
-                    (select D.name as district,W.id,W.name as ward,R.name as region from admin.districts as D join
+                    $sql = "select B.id,B.name,B.ownership,B.type,B.registration_number,B.status,B.status,B.students,B.created_at,B.updated_at,B.nmb_branch,B.account_number,B.branch_name,B.branch_code,B.nmb_zone,B.registered,B.zone,B.schema_name,B.activities,B.ward_id,T.region,T.ward,T.district
+                    from (select a.*, (select count(*) from admin.tasks where client_id in (select id from admin.clients where username in (select schema_name from admin.all_setting where school_id=a.id)))
+                    as activities from admin.schools a   where lower(a.ownership) <>'government' and a.id in (select school_id from admin.all_setting)) B join (select D.name as district,W.id,W.name as ward,R.name as region from admin.districts as D join
                     admin.wards as W on D.id = W.district_id join admin.regions R on R.id = D.region_id ) T on B.ward_id = T.id";
                 } else {     
-                 $sql = "select a.* from (select s.id,s.region,s.district,s.ward,s.registered,s.status,s.created_at,s.students,s.nmb_branch,s.schema_name,s.account_number,s.branch_name,s.branch_code,s.nmb_zone,s.nmb_school_name,s.zone,s.type,s.ownership,s.name,b.name as ward,d.name as district,r.name as region,c.client_id,e.username, (select count(*) from admin.tasks where school_id=s.id) 
-                 as activities from admin.schools s join admin.wards b on s.ward_id = b.id join admin.districts as d on d.id=b.district_id join admin.regions r on r.id=d.region_id
-                  left join admin.client_schools c on c.school_id = s.id left join admin.clients e on e.id=c.client_id) a where lower(a.ownership) <>'government'";
+                 $sql = "select a.* from (select s.id,s.registered,s.status,s.created_at,s.students,s.nmb_branch,s.schema_name,s.account_number,s.branch_name,s.branch_code,s.nmb_zone,s.nmb_school_name,s.zone,s.type,s.ownership,s.name,b.name as ward,d.name as district,r.name as region,c.client_id,e.username, (select count(*) from admin.tasks where school_id=s.id) as activities from admin.schools s join admin.wards b on s.ward_id = b.id join admin.districts as d on d.id=b.district_id join admin.regions r on r.id=d.region_id left join admin.client_schools c on c.school_id = s.id left join admin.clients e on e.id=c.client_id) a where lower(a.ownership) <>'government'";
                  }
-                 
                 return $this->ajaxTable('schools', ['a.name', 'a.region', 'a.district'], $sql);
                 break;
             case 'prospects':
@@ -474,8 +465,6 @@ class Sales extends Controller {
                 ]);
             $code = rand(343, 32323) . time();
 
-          //  dd(request()->all());
-
             $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
             if (empty($school_contact)) {
                 DB::table('admin.school_contacts')->insert([
@@ -486,7 +475,6 @@ class Sales extends Controller {
                DB::table('admin.schools')->where('id', $school_id)->update(['students' => request('students')]);
 
              $schema_name = request('username') != '' ? strtolower(trim(request('username'))) : $username;
-        
              $check_client = DB::table('admin.clients')->where('username', $schema_name)->first();
              
             if (!empty($check_client)) {
@@ -504,7 +492,8 @@ class Sales extends Controller {
                     'email_verified' => 0,
                     'phone_verified' => 0,
                     'created_by' => \Auth::user()->id,
-                    'username' => clean($schema_name)
+                    'username' => clean($schema_name),
+                    'payment_option' => request('payment_option'),
                 ]); 
 
                 //client school
@@ -529,43 +518,44 @@ class Sales extends Controller {
                 ]);
             }
   
-           
-        
-            $filename = '';
             if (!empty(request('file'))) {
                 $file = request()->file('file');
-                $filename = time() . rand(11, 8894) . '.' . $file->guessExtension();
-                $filePath = base_path() . '/storage/uploads/files/';
-                $file->move($filePath, $filename);
+                $company_file_id = $file ? $this->saveFile($file,'company/contracts', TRUE) : 1;
 
-               $contract_id = DB::table('admin.contracts')->insertGetId([
-                'name' => 'Shulesoft', 'file' => $filename, 'company_file_id' => '2', 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'contract_type_id' => request('contract_type_id'), 'user_id' => Auth::user()->id
+                $contract_id = DB::table('admin.contracts')->insertGetId([
+                'name' => 'Shulesoft', 'company_file_id' => $company_file_id, 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'contract_type_id' => request('contract_type_id'), 'user_id' => \Auth::user()->id
                 ]);
                 //client contracts
                 DB::table('admin.client_contracts')->insert([
                     'contract_id' => $contract_id, 'client_id' => $client_id
                 ]);
             }
-
-             $filename1 = '';
-             if (!empty(request('standing_order'))) {
-                $file = request()->file('standing_order');
-                $filename1 = time() . rand(11, 8894) . '.' . $file->guessExtension();
-                $filePath = base_path() . '/storage/uploads/file/';
-                $file->move($filePath, $filename1);
-
-               $contract_id = DB::table('admin.standing_orders')->insertGetId([
+ 
+                // if document is standing order,Upload standing order files
+             if ( !empty(request('agree_document')) && request('payment_option') == 'standing order') {
+                $file = request()->file('agree_document');
+                $company_file_id = $file ? $this->saveFile($file,'company/contracts', TRUE) : 1;
+                $contract_id = DB::table('admin.standing_orders')->insertGetId(array(
                     'type' => 'Yearly','created_by' => \Auth::user()->id, 
                     'client_id' => $client_id,'contract_type_id' => 8,
-                    'is_approved' => '0','file' => $filename1
+                    'is_approved' => '0','company_file_id' => $company_file_id
+                ));
+                //client contracts
+                DB::table('admin.client_contracts')->insert([
+                    'contract_id' => $contract_id, 'client_id' => $client_id
+                ]);
+            } else {
+                $file = request()->file('agree_document');
+                $company_file_id = $file ? $this->saveFile($file,'company/contracts', TRUE) : 1;
+
+                $contract_id = DB::table('admin.contracts')->insertGetId([
+                'name' => 'Shulesoft', 'company_file_id' => $company_file_id, 'start_date' => date('Y-m-d'), 'contract_type_id' => 2, 'user_id' => \Auth::user()->id
                 ]);
                 //client contracts
                 DB::table('admin.client_contracts')->insert([
                     'contract_id' => $contract_id, 'client_id' => $client_id
                 ]);
-            }
-
-        
+             }
 
             //once a school has been installed, now create an invoice for this school or create a promo code
             if (request('payment_status') == 1) {
