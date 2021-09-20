@@ -887,14 +887,29 @@ class Customer extends Controller {
             $req = \App\Models\Requirement::create($data);
             if ((int) request('to_user_id') > 0) {
                 $user = \App\Models\User::find(request('to_user_id'));
-                $new_req =  isset($req->school->name) ? ' New School Requirement from ' . $req->school->name : ' New Requirement ';
+                $new_req =  isset($req->school->name) ? ' new school requirement from ' . $req->school->name : ' new requirement ';
                 $message = 'Hello ' . $user->name . '<br/>'
                         . 'There is '. $new_req . '</p>'
                         . '<br/><p><b>Requirement:</b> ' . $req->note . '</p>'
                         . '<br/><br/><p><b>By:</b> ' . $req->user->name . '</p>';
                 $this->send_email($user->email, 'ShuleSoft New Customer Requirement', $message);
-                $sms = 'Hello ' . $user->name . ' There is ' . $new_req . '  ' . strip_tags($req->note) . ' By: ' . $req->user->name . '';
-                $this->send_whatsapp_sms($user->phone, $sms);
+
+                  $sms   = 'Hello ' .$user->name .'.'
+                    . chr(10) . 'There is ' . $new_req . '.'
+                    . chr(10) .  strip_tags($req->note) 
+                    . chr(10) . 'By: ' . $req->user->name . '.'
+                    . chr(10) . 'Thanks and regards,';
+
+                   $this->send_whatsapp_sms($user->phone, $sms);
+
+                    DB::table('public.sms')->insert([
+                        'body'=>$sms,
+                        'user_id'=>1,
+                        'type'=>0,
+                        'priority' => 1,
+                        'sent_from' => 'whatsapp',
+                        'phone_number'=> $user->phone
+                     ]);
             }
         }
         $this->data['requirements'] = \App\Models\Requirement::latest()->get();
@@ -913,26 +928,54 @@ class Customer extends Controller {
     public function updateReq() {
         $id = request('id');
         $action = request('action');
+
         \App\Models\Requirement::where('id', $id)->update(['status' => $action]);
         $data = \App\Models\Requirement::where('id', $id)->first();
-        $user = \App\Models\User::where('id', $data->user_id)->first();
+        $user = \App\Models\User::where('id', $data->user_id)->first();  
          
         if($action == 'On Progres'){
-           $message = 'Hello ' . $user->name .'  your requirement of ' . strip_tags($data->note) . ' requested on ' . date('d-m-Y', strtotime($data->created_at)) .' is now on progress. You will be notified as soon as its Completed.Thank you for using shulesoft services';
+           $status = ' is now on progress. You will be notified as soon as its Completed.';
         } elseif($action == 'Completed'){
-           $message = 'Hello ' . $user->name .'  your requirement of ' . strip_tags($data->note) . ' requested on ' . date('d-m-Y', strtotime($data->created_at)) .' is now complete. Login into your shulesoft account .Thank you for using shulesoft services';
+           $status = ' is now complete. Login into your shulesoft account.';
         } elseif($action == 'Resolved'){
-           $message = 'Hello ' . $user->name .'  your requirement of ' . strip_tags($data->note) . ' requested on ' . date('d-m-Y', strtotime($data->created_at)) .' is resolved. Login into your shulesoft account .Thank you for using shulesoft services';
-        }
-        $this->send_whatsapp_sms($user->phone, $message);
-         $valid = validate_phone_number($data->contact);
-         $phonenumber = (new \App\Http\Controllers\Sales())->extractPhoneNumber($data->contact);
+           $status = ' is resolved. Login into your shulesoft account.';
+        }  
+        $message   = 'Hello ' .$user->name .'.'
+                    . chr(10) . 'The requirement of : '.strip_tags($data->note) . '.'
+                    . chr(10) . 'You requested on ' . date('d-m-Y', strtotime($data->created_at)) .' '.$status . ''
+                    . chr(10) . 'Thanks and regards,'
+                    . chr(10) . 'Technical Team.';
+       $this->send_whatsapp_sms($user->phone, $message);
 
-        if($phonenumber){
-           $this->send_whatsapp_sms($phonenumber, $message);   
+       DB::table('public.sms')->insert([
+                'body'=>$message,
+                'user_id'=>1,
+                'type'=>0,
+                'priority' => 1,
+                'sent_from' => 'whatsapp',
+                'phone_number'=> $user->phone
+            ]);
+
+        if(preg_match('/[0-9]/', $data->contact)  && $action == 'Completed') {
+            $message1 = 'Hello '
+            . chr(10) . 'Thanks for using Shulesoft Services'
+            . chr(10) . 'The requirement of : ' . strip_tags($data->note) . '.'
+            . chr(10) . 'Requested on ' . date('d-m-Y', strtotime($data->created_at)) .' is now complete. Login into your shulesoft account'
+            . chr(10) . 'Thanks and regards,'
+            . chr(10) . 'Shulesoft Team'
+            . chr(10) . 'Call: +255 655 406 004';
+
+            DB::table('public.sms')->insert([
+                'body'=>$message1,
+                'user_id'=>1,
+                'type'=>0,
+                'priority' => 1,
+                'sent_from' => 'whatsapp',
+                'phone_number'=> $data->contact
+            ]);
+            $this->send_whatsapp_sms($data->contact, $message1);
         }
-        $this->send_sms($user->phone, 'ShuleSoft requirement Task', $message);
-        return redirect()->back()->with('success', 'success');
+       return redirect()->back()->with('success', 'success');
     }
 
     public function usageAnalysis() {
