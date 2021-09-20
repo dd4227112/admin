@@ -99,7 +99,6 @@ if (request()->ajax() == FALSE) {
                         <option value="1">Excel With Parent Phone Numbers</option>
                         <option value="2">Physical Files Format</option>
                         <option value="3">Softcopy but without parents phone numbers</option>
-
                     </select>
                 </div>
             </div>
@@ -179,29 +178,23 @@ if (request()->ajax() == FALSE) {
                                                 <input type="text" class="form-control" value="" name="train_item<?= $training->id ?>" required="">
                                             </td>
                                             <td>
-
                                                 <select class="task_group" name="slot_date<?= $training->id ?>" id="slot_for<?= $training->id ?>" data-task-id="<?= $training->id ?>"><?= $customer->getDate($staff->id) ?></select>
                                                 <select type="text" data-attr="start_date" class="slot" id="start_slot<?= $training->id ?>"  name="slot_id<?= $training->id ?>"></select>
                                             </td>
                                             <td>
-
                                                 <b data-attr="end_date" id="task_end_date_id<?= $training->id ?>"> </b>
-
                                             </td>
                                         </tr>
                                         <?php
                                         $x++;
                                     }
                                     ?>
-
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
-
-
 
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Agreement Type</label>
@@ -229,19 +222,35 @@ if (request()->ajax() == FALSE) {
                     <input type="date" class="form-control" name="end_date" required="">
                 </div>
             </div>
+
+
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Upload Agreement Form</label>
                 <div class="col-sm-10">
                     <input type="file" class="form-control" accept=".pdf" name="file" required="">
                 </div>
             </div>
-            <div class="row">
-                <label class="col-sm-2 col-form-label">Standing Order Form</label>
+
+            
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Payment Option</label>
                 <div class="col-sm-10">
-                    <input type="file" class="form-control" accept=".pdf" name="standing_order" required="">
+                    <select name="payment_option" class="form-control">
+                        <option value="cash">Cash</option>
+                        <option value="standing order">Standing order</option>
+                        <option value="bank transfer">Bank transfer </option>
+                    </select>
+                </div>
+            </div>  
+
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Upload document Form</label>
+                <div class="col-sm-10">
+                    <input type="file" class="form-control" accept=".pdf" name="agree_document" required="">
                     <span class="messages">Client MUST sign a standing order to specify which date he/she will start to pay. <a href="#">Click Here to download </a> Standing Order Template</span>
                 </div>
             </div>
+
             <br/><br/>
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Areas much interested</label>
