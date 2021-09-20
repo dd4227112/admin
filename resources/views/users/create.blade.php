@@ -135,7 +135,7 @@
                                 <div class="col-xs-12 col-sm-12 col-md-12">
                                     <div class="form-group">
                                         <strong>National ID:</strong>
-                                        <input id="location" placeholder="basic salary" type="text" class="form-control" name="national_id" value="" required>
+                                        <input id="location" placeholder="Put user national ID" type="text" class="form-control" name="national_id" value="">
                                     </div>
                                 </div>
                                 <div class="col-xs-12 col-sm-12 col-md-12">
