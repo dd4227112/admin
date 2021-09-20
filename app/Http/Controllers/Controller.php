@@ -103,7 +103,6 @@ class Controller extends BaseController {
         $obj = array('body' => $message, 'subject' => $subject, 'email' => $email);
         DB::table('public.email')->insert($obj);
         // }
-
         return $this;
     }
 
@@ -115,8 +114,11 @@ class Controller extends BaseController {
         return $this;
     }
 
+
+  
+ //Altenative function to store files on localstorage
     public function saveFile($file, $subfolder = null, $local = null) {
-           if ($local == TRUE) { 
+        if ($local == TRUE) { 
             $url = $this->uploadFileLocal($file);
             $file_id = DB::table('company_files')->insertGetId([
                 'extension' => $file->getClientOriginalExtension(),
@@ -127,26 +129,7 @@ class Controller extends BaseController {
                 'path' => $url
             ]);
             return $file_id;
-        } else {  
-            $path = \Storage::disk('s3')->put($subfolder, $file);
-            $url = \Storage::disk('s3')->url($path);
-
-            if (strlen($url) > 10) {
-               $file_id =  DB::table('company_files')->insertGetId([
-                    'name' => $file->getClientOriginalName(),
-                    'display_name' => $file->getClientOriginalExtension(),
-                    'user_id' => session('id'),
-                    'table' => session('table'),
-                    'size' => $file->getSize(),
-                    'caption' => $file->getRealPath(),
-                    'path' => $url
-                ]);
-               return $file_id;
-
-            } else {
-                return false;
-            }
-        }
+        } 
     }
 
     public function uploadFileLocal($file) {
@@ -368,7 +351,7 @@ class Controller extends BaseController {
 
       public function send_whatsapp_sms($phone, $message) {
         if ((strlen($phone) > 6 && strlen($phone) < 20) && $message != '') {
-            $message = preg_replace('/[^a-zA-Z0-9_ %\[\]\.\(\)%&-]/s', '', $message);
+            $message = str_replace("'", "", $message);
             DB::statement("insert into admin.whatsapp_messages(message, status, phone) select '{$message}','0',admin.whatsapp_phone('{$phone}') from admin.users where status=1 and phone ='{$phone}'");
         }
         return $this;

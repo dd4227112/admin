@@ -104,6 +104,7 @@ $root = url('/') . '/public/'; ?>
                                         <tr>
                                             <th>#</th>
                                             <th>Usertype</th>
+                                            {{-- <th>Phone Number</th> --}}
                                             <th>School</th>
                                             <th>Date</th>
                                             <th>Module</th>
@@ -117,6 +118,7 @@ $root = url('/') . '/public/'; ?>
                                           <tr>
                                             <td><?= $i ?></td>
                                             <td><?= $rating->usertype?></td>
+                                            {{-- <td><?= $rating->phone?></td> --}}
                                             <td><?= $rating->schema_name?></td>
                                             <td><?= date('d-m-Y', strtotime($rating->created_at)) ?></td>
                                             <td><?= isset($rating->modules->name) ? $rating->modules->name : '' ?></td>

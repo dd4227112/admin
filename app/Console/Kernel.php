@@ -51,6 +51,11 @@ class Kernel extends ConsoleKernel {
             $this->whatsappMessage();
         })->everyMinute();
 
+          $schedule->call(function () {
+            //sync new messages 
+            $this->setTaskRemainder();
+        })->everyMinute();
+
         $schedule->call(function () {
             (new Message())->sendEmail();
         })->everyMinute();
@@ -63,7 +68,6 @@ class Kernel extends ConsoleKernel {
         })->dailyAt('03:30'); // Eq to 06:30 AM 
 
         $schedule->call(function () {
-
             $this->sendNotice();
             $this->sendBirthdayWish();
             $this->sendTaskReminder();
@@ -85,9 +89,8 @@ class Kernel extends ConsoleKernel {
             $this->HRLeaveRemainders();
         })->dailyAt('04:40');
 
-        // $schedule->call(function () { 
-        //     $this->SMSStatusToSchoolsAdmin();
-        // })->tuesdays(); // Eq 08:30 AM
+       
+
 //        $schedule->call(function() {
 //            //send login reminder to parents in all schema
 //            $this->sendLoginReminder();
@@ -229,17 +232,17 @@ class Kernel extends ConsoleKernel {
         }
     }
 
-    function notifyUsersDailyReports() {
-        $users = DB::select('select * from admin.users');
-        foreach ($users as $user) {
-            $message = 'Hello ' . $user->firstname . ' ' . $user->lastname . '. Kindly remember to submit your daily marketing/sales report in your hubspot account. Thank you';
-            DB::table('public.sms')->insert([
-                'body' => $message,
-                'phone_number' => $user->phone,
-                'type' => 0
-            ]);
-        }
-    }
+    // function notifyUsersDailyReports() {
+    //     $users = DB::select('select * from admin.users');
+    //     foreach ($users as $user) {
+    //         $message = 'Hello ' . $user->firstname . ' ' . $user->lastname . '. Kindly remember to submit your daily marketing/sales report in your hubspot account. Thank you';
+    //         DB::table('public.sms')->insert([
+    //             'body' => $message,
+    //             'phone_number' => $user->phone,
+    //             'type' => 0
+    //         ]);
+    //     }
+    // }
 
     function getFeeNames($invoice_id, $schema_name) {
         $fees = DB::table($schema_name . '.invoices')
@@ -1102,6 +1105,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     //     AND state in ('idle', 'idle in transaction', 'idle in transaction (aborted)', 'disabled') AND current_timestamp - state_change > interval '3 minutes') SELECT pg_terminate_backend(pid) FROM inactive_connections WHERE rank > 1");
     //     return DB::select("SELECT pg_terminate_backend(pid) from pg_stat_activity where state='idle' and query like '%DEALLOCATE%'");
     // }
+
     // F(x) to send text remainder to keep phone active to school admins
     public function SMSStatusToSchoolsAdmin() {
         // select all schools not keep their app active for the past 24 hours
@@ -1124,10 +1128,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         }
     }
 
-    public function setTaskRemainder() {
-        $schemas = DB::select("select * from admin.all_setting");
-     
-    }
+ 
 
     public function updateCompleteItems() {
         $materialized_views = DB::select("SELECT relname FROM pg_catalog.pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace WHERE c.relkind = 'm' and nspname='admin'");
@@ -1235,7 +1236,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         $training = \App\Models\TrainItemAllocation::where('train_item_id', $item_id)->where('client_id', $client_id)->first();
         if (!empty($training)) {
             \App\Models\TrainItemAllocation::where('train_item_id', $item_id)->where('client_id', $client_id)->update(['status' => '1']);
-        }
+          }
        }
 
 
@@ -1268,16 +1269,59 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
                 $users = \App\Models\User::whereIn('id',$ids)->where('status',1)->whereNotIn('role_id',array(7,15))->get();
                   $hr_officer = \App\Models\User::where('role_id',16)->first();
                    foreach($users as $user){ 
-                        $message = 'Hello HR, ' . $user->firstname . ' ' . $user->lastname . ' is expected to start the annual leave on '. date('d-m-Y', strtotime($value->annual_date.' + 1 days'));
-                        $this->send_whatsapp_sms($hr_officer->phone, $message); 
-                        $this->send_email($hr_officer->email, 'Employee Annual leave', $message);
-                    }
-               }
+                                $message = 'Hello '
+                                . chr(10) . 'This is the remainder of : ' . $user->firstname . ' ' . $user->lastname . ' is expected to start the annual leave on' 
+                                . chr(10) . date('d-m-Y', strtotime($value->annual_date.' + 1 days'))
+                                . chr(10) . 'Thanks.';
+                                
+                                $controller = new \App\Http\Controllers\Controller();
+                                $controller->send_whatsapp_sms($hr_officer->phone, $message); 
+                                DB::table('public.email')->insert([
+                                    'subject' =>'Employee Annual leave',
+                                    'body' => $message,
+                                    'email' => $hr_officer->email
+                               ]);
+                                DB::table('public.sms')->insert([
+                                    'body' => $message,
+                                    'phone_number' => $hr_officer->phone,
+                                    'type' => 0,
+                                    'status' => 0,
+                                    'sent_from' => 'phonesms'
+                                ]);
+                        }
+                   }
             
-            }
+              }
          }
 
 
-    
+       // function to remaind school tasks created by users
+     public function setTaskRemainder() {
+          $tasks = \App\Models\Task::where('remainder',0)->where('remainder_date','=',date('Y-m-d'))->get();
+          foreach($tasks as $task){
+                $message = 'Hello ' . $task->user->name .'.'
+                . chr(10) . 'This is the remainder of : '.strip_tags($task->activity) . '.'
+                . chr(10) . 'From ' . $task->client->name .''
+                . chr(10) . 'You created at : ' . date('d-m-Y', strtotime($task->created_at))
+                . chr(10) . 'Thanks.';
+                
+                $controller = new \App\Http\Controllers\Controller();
+                $controller->send_whatsapp_sms($task->user->phone, $message); 
+                DB::table('public.email')->insert([
+                    'subject' =>' A taks remainder',
+                    'body' => $message,
+                    'email' => $task->user->email
+              ]);
+
+             DB::table('public.sms')->insert([
+                    'body' => $message,
+                    'phone_number' => $task->user->phone,
+                    'type' => 0,
+                    'status' => 0,
+                    'sent_from' => 'phonesms'
+              ]);
+            \App\Models\Task::where('id',$task->id)->update(['remainder' => 1]);
+         }
+      }
 
 }

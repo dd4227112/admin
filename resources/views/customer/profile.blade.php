@@ -445,16 +445,16 @@ Not yet (Schedule)
 </div>
 </div>
 
-
-
+<hr>
 <div class="form-group">
  <div class="row">
    <div class="col-md-4">
-    <label>Set remainder</label>
+      <strong> Set Remainder</strong>: <input type="checkbox"  id="supplied" name="remainder" checked>
    </div>
-   <div class="col-md-4">
-    <input type="checkbox" name="remainder" class="form-control">
-   </div>
+     <div id="idate" class="form-group col-md-4">
+        <strong>Remainder date</strong> : <input type="date"  name="remainder_date" class="form-control">
+    </div>
+
   </div>
 </div>
 
@@ -1069,16 +1069,23 @@ $i++;
 
 <div class="card">
 <div class="card-header">
-<h5>Job Card</h5>
-{{-- <p align="right">
-<a href="<?= url('customer/Jobcard/' . $client_id) ?>" class="btn btn-warning btn-sx"> School Job card </a>
-</p> --}}
-<p align="right">
+<h5 class="mb-5">Job Card</h5>
+
+<div class="row justify-content-between">
+<p class="float-left">
+<button type="button" class="user_dialog btn btn-primary waves-effect"
+data-toggle="modal" data-target="#uploadjobcard-Modal">
+Upload Job card
+</button>
+</p>
+
+<p class="float-right">
 <button type="button" class="btn btn-primary waves-effect"
 data-toggle="modal" data-target="#jobcard-Modal">Create
 Job card
 </button>
 </p>
+</div>
 
 <div class="modal fade" id="jobcard-Modal" tabindex="-1"
 role="dialog" aria-hidden="true"
@@ -1155,37 +1162,23 @@ name="client_id" />
 <tr>
 <th>#</th>
 <th>Date</th>
-<th>Download</th>
-<th>Upload</th>
+<th>Created by</th> 
+<th>View</th>
 </tr>
 </thead>
 <tbody>
 <?php
 $x = 1;
-$jobcards = DB::table('job_cards')->distinct('date')->orderBy('date', 'desc')->get();
+$jobcards = \DB::select("select a.*,b.name from admin.client_job_cards a join admin.users b on a.created_by = b.id where client_id = '{$client_id}' order by a.id desc");
 foreach ($jobcards as $jobcard) {
 ?>
 <tr>
 <th scope="row"><?= $x ?></th>
 <td><?= date('d-m-Y', strtotime($jobcard->date)) ?></td>
-<td> <a href="<?= url('customer/Jobcard/' . $client_id . '/' . $jobcard->date) ?>"
-class="btn btn-warning btn-sx"> Download form </a></td>
-<td>
-<?php $card = DB::table('client_job_cards')->where(['date' => $jobcard->date, 'client_id' => $client_id])->first(); ?>
-<?php if(empty($card->file)) { ?>
-<button type="button" class="user_dialog btn btn-primary waves-effect"
-data-toggle="modal" data-target="#uploadjobcard-Modal"
-data-id="<?= $jobcard->date ?>">
-Upload Job card
-</button>
-<?php } else { ?>
-{{-- <a  target="_break" href="<?= url('customer/viewFile/' . $jobcard->date . '/jobcard') ?>" class="btn btn-sm btn-success">View job card</a> --}}
-
-<a  target="_break" href="<?= url('storage/uploads/files/'.$card->file) ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a>
-
-<?php } ?>
+<td><?= $jobcard->name ?? '' ?></td>
+<td class="text-center">
+ <a  target="_break" href="<?= url('customer/viewContract/' . $jobcard->id . '/jobcard') ?>" class="btn btn-sm btn-success">View </a> 
 </td>
-
 </tr>
 <?php
 $x++;
@@ -1784,7 +1777,7 @@ style="z-index: 1050; display: none;">
 <div class="modal-content">
 
 <div class="modal-header">
-<h4 class="modal-title">Add Standing Order</h4>
+<h6 class="modal-title">ADD STANDING ORDER</h6>
 <button type="button" class="close"
 data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
@@ -1796,34 +1789,12 @@ data-dismiss="modal" aria-label="Close">
 <div class="form-group">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
 <div class="row">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 <div class="col-md-6">                                                                                                                                                                                                                                                                                                                                      
- <strong> Branch name </strong>
-<select name="branch_id" class="form-control select2" required>
-<?php
-$branches = \App\Models\PartnerBranch::orderBy('id', 'asc')->get();
-foreach ($branches as $branch) { ?>
-    <option value="<?= $branch->id ?>"> <?= $branch->name ?> </option>
-  <?php
-}
-?>
-</select>
+   <strong> Branch name </strong>
+   <input type="text" placeholder="Bank branch name"  class="form-control"  name="branch_name" required>
 </div>
 <div class="col-md-6">
 <strong> Contact person </strong>
-<select name="school_contact_id"  class="form-control select2"  >
-<?php
-$contact_staffs = DB::table('school_contacts')->get();
-if (count($contact_staffs)) {
-foreach ($contact_staffs as $contact_staff) {
-?>
-<option
-    value="<?= $contact_staff->id ?>">
-        <?= $contact_staff->name ?>
-</option>
-<?php
-}
-}
-?>
-</select>
+   <input type="text" placeholder="Contact person"  class="form-control"  name="contact_person" required>
 </div>
 </div>
 </div>
@@ -1859,7 +1830,7 @@ class="form-control"  name="occurance_amount" id="box2" required>
 
 <div class="col-md-6">
 <strong> Total amount</strong>
-<input type="text" class="form-control" name="total_amount"  id="result" required>
+<input type="text" class="form-control" name="total_amount"  required>
 </div>
 </div>
 </div>
@@ -2352,7 +2323,11 @@ aria-hidden="true">
             dropdownAutoWidth: false,
             allowClear: false,
             debug: true
-        }); 
+        });
+        
+        $('#supplied').click(function() {
+             $('#idate')[this.checked ? "show" : "hide"]();
+         });
 
         function calculate() {
             var myBox1 = document.getElementById('box1').value;

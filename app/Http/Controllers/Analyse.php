@@ -357,6 +357,7 @@ select a.*,b.total,c.female from class_males a join classes b on a."classesID"=b
 
        public function ratings(){
          $this->data['nps'] = \collect(\DB::select('select  (a.promoter/c.total::float)*100 - (b.detractor/c.total::float)*100 as NPS from (select sum(rate) as promoter from admin.rating where rate > 8) a,(select sum(rate) as detractor from admin.rating where rate < 7 ) b,(select sum(rate) as total from admin.rating) c'))->first();
+        // $this->data['ratings'] = DB::select('select a.*,b.phone from admin.rating a join admin.all_users b on a.user_id = b.id');
          $this->data['ratings'] = \App\Models\Rating::latest()->get();
          return view('market.ratings', $this->data);
       }
