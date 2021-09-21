@@ -175,10 +175,9 @@
                                                     <td><?= $i ?></td>                                                
                                                     <td><?= date('d-m-Y', strtotime($error->created_at)) ?></td>
                                                     <td><?= $error->schema_name ?></td>
-                                                    <td><?= ($error->error_message) ?></td>
-                                                    <td><?= warp($error->file) ?></td> 
-                                                   <td><?= warp($error->url) ?></td>
-                                                    
+                                                    <td><?= warp($error->error_message,100) ?></td>
+                                                    <td><?= warp($error->file,20) ?></td> 
+                                                    <td><?= warp($error->url,20) ?></td>
                                                 </tr>
                                                <?php $i++; } ?>
                                             </tbody>

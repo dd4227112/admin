@@ -446,7 +446,7 @@ function select($value, $schema, $sources) {
                                                                 $active = 0;
                                                                 $not_active = 0;
                                                                 foreach ($schools->get() as $school) {
-                                                                    echo warp($school->school->schema_name) . ',';
+                                                                    echo warp($school->school->schema_name,20) . ',';
                                                                     $active = getActiveStatus($school->school->schema_name) == 1 ? $active + 1 : $active;
                                                                     $not_active = getActiveStatus($school->school->schema_name) == 0 ? $not_active + 1 : $not_active;
                                                                 }

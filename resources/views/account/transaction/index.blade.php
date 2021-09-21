@@ -136,7 +136,7 @@
                                                                 <?php echo date("d M Y", strtotime($revenue->date)); ?>
                                                             </td>                               
                                                             <td data-title="<?= ('expense_note') ?>">
-                                                                <?php echo warp($revenue->note); ?>
+                                                                <?php echo warp($revenue->note,20); ?>
                                                             </td>
                                                             <?php if (can_access('edit_revenue') || can_access('delete_revenue')) { ?>
                                                                 <td data-title="<?= ('action') ?>">

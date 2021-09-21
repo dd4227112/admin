@@ -37,7 +37,7 @@ foreach ($clients as $client) {
                      <td> 
                          <?php
                         if (isset($branch->name)) {
-                            echo warp($branch->name);
+                            echo warp($branch->name,20);
                         } else {
                             echo 'Not Specified';
                         }
@@ -46,7 +46,7 @@ foreach ($clients as $client) {
                      <td>
                         <?php
                         if (isset($branch->region)) {
-                            echo warp($branch->region);
+                            echo warp($branch->region,20);
                         } else {
                             echo 'Not Specified';
                         }
@@ -56,7 +56,7 @@ foreach ($clients as $client) {
                      <td>
                         <?php
                         if (isset($branch->district)) {
-                            echo warp($branch->district);
+                            echo warp($branch->district,20);
                         } else {
                             echo 'Not Specified';
                         }
@@ -66,7 +66,7 @@ foreach ($clients as $client) {
                     <td>
                           <?php
                         if (isset($branch->code)) {
-                            echo warp($branch->code);
+                            echo warp($branch->code,20);
                         } else {
                             echo 'Undefined';
                         }
@@ -76,7 +76,7 @@ foreach ($clients as $client) {
                     <td>
                           <?php
                         if (isset($branch->uname)) {
-                            echo warp($branch->uname);
+                            echo warp($branch->uname,20);
                         } else {
                             echo 'Not Specified';
                         }

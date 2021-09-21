@@ -218,7 +218,7 @@
                                                 <td><?= $i++ ?></td>
                                                 <td><?= $act->type ?></td>
                                                 <td><?= $act->school ?></td>
-                                                <td><?= warp($act->activity) ?> </td>
+                                                <td><?= warp($act->activity,80) ?> </td>
                                                 <td><?= date('d-m-Y',strtotime($act->end_date)) ?></td>
                                                 <td> <a href="<?= url('customer/activity/show/' . $act->id) ?>">View</a> </td>
                                             </tr>

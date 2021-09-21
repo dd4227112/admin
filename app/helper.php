@@ -351,7 +351,7 @@ function school_full_name($schema_name = null) {
     return \App\Models\Client::where('username', $schema_name)->first()->name;
 }
 
-function warp($word, $size = 80) {
+function warp($word, $size) {
     return wordwrap($word, $size, "<br />\n");
 }
 
