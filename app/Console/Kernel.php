@@ -889,7 +889,6 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
             $users = $to_roll_ids == 0 ? DB::select("select *,(select id as sms_keys_id from " . $notice->table_schema . ".sms_keys limit 1 ) as sms_keys_id from admin.all_users where 'table' not in ('student', 'setting') AND schema_name::text='" . $notice->schema_name . "'") : DB::select('select *,(select id as sms_keys_id from ' . $notice->schema_name . '.sms_keys limit 1 ) as sms_keys_id from admin.all_users where role_id IN (' . $to_roll_ids . ' ) and schema_name::text=\'' . $notice->schema_name . '\'  ');
             if (count($users) > 0) {
                 foreach ($users as $user) {
-
                     $message = 'Kalenda ya Shule:'
                             . 'Siku ya tukio : ' . $notice->date . ' ,'
                             . 'Jina la Tukio:  ' . $notice->notice . ','
@@ -1115,14 +1114,18 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
             $contacts = DB::table($school->schema_name . '.user')->where('usertype', 'Admin')->get();
             if (count($contacts) > 0) {
                 foreach ($contacts as $contact) {
-                    $sms = 'Ndugu ' . $contact->name . ' Ili kuepusha kufeli au kutokufika kwa SMS kwa wazazi, hakikisha Simu inayotumika kutuma SMS kutoka shule kwa kutumia App ya SMS, inakuwa hewani na internet muda wote.Asante';
-                    DB::table('public.sms')->insert([
-                        'body' => $sms,
+                     $message ='Ndugu ' . $contact->name .'.'
+                    . chr(10) .'Ili kuepusha kufeli au kutokufika kwa SMS kwa wazazi, hakikisha Simu inayotumika kutuma SMS kutoka shule kwa kutumia App ya SMS, inakuwa hewani na internet muda wote.Asante '
+                    . chr(10) . 'Asante';
+                     $controller = new \App\Http\Controllers\Controller();
+                     $controller->send_whatsapp_sms($contact->phone, $message); 
+                     DB::table('public.sms')->insert([
+                        'body' => $message,
                         'phone_number' => $contact->phone,
                         'type' => 0,
                         'status' => 0,
                         'sent_from' => 'phonesms'
-                    ]);
+                     ]);
                 }
             }
         }
@@ -1134,7 +1137,7 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
         $materialized_views = DB::select("SELECT relname FROM pg_catalog.pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace WHERE c.relkind = 'm' and nspname='admin'");
         foreach ($materialized_views as $view) {
             DB::statement('REFRESH MATERIALIZED VIEW admin.' . $view->relname);
-        }
+          }
         $checks = DB::select('select * from admin.train_items where status=1');
         foreach ($checks as $check) {
             if (preg_match('/exam/i', strtolower($check->content))) {
@@ -1239,24 +1242,56 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
           }
        }
 
-
+       
+       // function to remaind HR on contracts belongs to employees
         public function HRContractRemainders(){
            $users = DB::select('select * from admin.users where contract_end_date - CURRENT_DATE = 30 and status = 1 and role_id <> 7');
            $hr_officer = \App\Models\User::where('role_id',16)->first();
            foreach($users as $user){
                if($user->contract_end_date < date('Y-m-d')){ 
-                   $message = 'Hello HR,'. $hr_officer->firstname . ' '. $hr_officer->lastname.' employment contract of ' . $user->firstname . ' ' . $user->lastname . ' has arleday expired on ' . date('d-m-Y', strtotime($user->contract_end_date));
-                   $this->send_whatsapp_sms($hr_officer->phone, $message); 
-                   $this->send_email($hr_officer->email, 'Contract End date', $message);
+                    $message = 'Hello '. $hr_officer->firstname . ' '. $hr_officer->lastname. '.'
+                    . chr(10) .'Employment contract of ' . $user->firstname . ' ' . $user->lastname . ' has arleday expired on ' . date('d-m-Y', strtotime($user->contract_end_date)) . '.'
+                    . chr(10) .'Thanks.';
+                    
+                    $controller = new \App\Http\Controllers\Controller();
+                    $controller->send_whatsapp_sms($hr_officer->phone, $message); 
+                    DB::table('public.email')->insert([
+                        'subject' =>'Employee Contract',
+                        'body' => $message,
+                        'email' => $hr_officer->email
+                   ]);
+                    DB::table('public.sms')->insert([
+                        'body' => $message,
+                        'phone_number' => $hr_officer->phone,
+                        'type' => 0,
+                        'status' => 0,
+                        'sent_from' => 'whatsapp'
+                    ]);
                } else{ 
-                   $message = 'Hello HR '. $hr_officer->firstname . ' '. $hr_officer->lastname.' employment contract of ' . $user->firstname . ' ' . $user->lastname . ' expected to expire on ' . date('d-m-Y', strtotime($user->contract_end_date));
-                   $this->send_whatsapp_sms($hr_officer->phone, $message); 
-                   $this->send_email($hr_officer->email, 'Contract End date', $message);
+                    $message ='Hello HR,'. $hr_officer->firstname . ' '. $hr_officer->lastname. '.'
+                    . chr(10) .'Employment contract of ' . $user->firstname . ' ' . $user->lastname . ' expected to expire on  ' . date('d-m-Y', strtotime($user->contract_end_date)) . '.'
+                    . chr(10) . 'Thanks.';
+                    $controller = new \App\Http\Controllers\Controller();
+                    $controller->send_whatsapp_sms($hr_officer->phone, $message); 
+                    DB::table('public.email')->insert([
+                        'subject' =>'Employee Contract',
+                        'body' => $message,
+                        'email' => $hr_officer->email
+                   ]);
+                    DB::table('public.sms')->insert([
+                        'body' => $message,
+                        'phone_number' => $hr_officer->phone,
+                        'type' => 0,
+                        'status' => 0,
+                        'sent_from' => 'whatsapp'
+                    ]);
                }
            }
        }
 
 
+       // function to remainder HR about annual leave of employees
+       // To do more improvement to include employemet status ie intern,probation etc
      public function HRLeaveRemainders(){
             $annual = DB::select("select user_id, case when (end_date is null) then joining_date + interval '1 year' else end_date + interval '1 year' end AS annual_date from admin.annual_leave");
             $ids = array();

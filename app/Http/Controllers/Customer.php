@@ -236,14 +236,18 @@ class Customer extends Controller {
                     . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                     . '</ul>';
             $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
-            $message = "Hello " . $user->firstname . " a task of " . $train->trainItem->content . " at " . $train->client->name . " has been allocated to you.The project is expected to start at " . date('d-m-Y', strtotime($start_date)) . " to  " . date('d-m-Y', strtotime($start_date . " + {$section->time} days")) . " .Thank You";
-            $this->send_whatsapp_sms($user->phone, $message);
-
+         
+            $message = 'Hello ' . $user->firstname . ' '. $user->lastname . '.'
+            . chr(10) . 'A task of '. $train->trainItem->content .'at ' . $train->client->name
+            . chr(10) . 'Has been allocated to you'
+            . chr(10) . 'The project is expected to start at ' . date('d-m-Y', strtotime($start_date)) . ' to  ' . date('d-m-Y', strtotime($start_date . " + {$section->time} days")) .'.'
+            . chr(10) . 'Thanks You.';
+            $this->send_whatsapp_sms($user->phone, $message); 
 
             //email to zone manager
             // findOrFail zone manager based on school location
             $user_manager = $this->zonemanager($train->client->id);
-            if (isset($user_manager) && !empty((int) $user_manager->user_id)) {
+            if (isset($user_manager->user_id) && !empty((int) $user_manager->user_id)) {
                 $manager = \App\Models\User::where('id', $user_manager->user_id)->first();
                 $manager_message = 'Hello ' . $manager->firstname . '<br/>'
                         . 'A task ' . $train->trainItem->content . ' been scheduled to'
@@ -252,8 +256,14 @@ class Customer extends Controller {
                         . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                         . '</ul>';
                 $this->send_email($manager->email, 'ShuleSoft Task Allocation', $manager_message);
-                $wmessage = "Hello " . $manager->firstname . " a task of " . $train->trainItem->content . " at " . $train->client->name . " has been allocated to " . $user->firstname . " " . $user->lastname . " The project is expected to start at " . date('d-m-Y', strtotime($start_date)) . " to  " . date('d-m-Y', strtotime($start_date . " + {$section->time} days")) . " .Thank You";
-                $this->send_whatsapp_sms($manager->phone, $wmessage);
+
+                $wmessage = 'Hello ' . $manager->firstname . ' '. $manager->lastname . '.'
+                . chr(10) . 'A task of '. $train->trainItem->content .'at ' . $train->client->name
+                . chr(10) . 'Has been allocated to ' . $user->firstname . ' ' . $user->lastname 
+                . chr(10) . 'The project is expected to start at ' . date('d-m-Y', strtotime($start_date)) . ' to  ' . date('d-m-Y', strtotime($start_date . " + {$section->time} days")) .'.'
+                . chr(10) . 'Thanks You.';
+                $this->send_whatsapp_sms($manager->phone, $wmessage); 
+
             }
 
 
@@ -510,20 +520,19 @@ class Customer extends Controller {
             ]);
 
             if ((int) request('to_user_id') > 0) {
-                DB::table('tasks_users')->insert([
+                  DB::table('tasks_users')->insert([
                     'task_id' => $task->id,
                     'user_id' => request('to_user_id')
-                ]);
-                $user = \App\Models\User::find(request('to_user_id'));
-                $message = 'Hello ' . $user->firstname . '<br/>'
-                        . 'A task has been allocated to you'
-                        . '<ul>'
-                        . '<li>Task: ' . $task->activity . '</li>'
-                        . '<li>Type: ' . $task->taskType->name . '</li>'
-                        . '<li>Deadline: ' . $task->start_date . '</li>'
-                        . '</ul>';
-                $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
-            }
+                  ]);
+                   $user = \App\Models\User::find(request('to_user_id'));
+                  $message =  'Hello ' . $user->firstname . ' '. $user->lastname . '.'
+                    . chr(10) . 'A task has been allocated to you'
+                    . chr(10) . 'Task: ' . $task->activity . '.'
+                    . chr(10) . 'Type: ' . $task->taskType->name . '.'
+                    . chr(10) . 'Deadline: ' . $task->start_date . '.'
+                    . chr(10) . 'Thanks.';
+                   $this->send_email($user->email, 'ShuleSoft Task Allocation', $message); 
+               }
              
          
             if (!empty($task->id) && request('module_id')) {
@@ -598,7 +607,6 @@ class Customer extends Controller {
             if ($_POST) {
             
                 // $random = time();
-
                 $data = array_merge(request()->except(['to_user_id', 'start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))),
                     'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date')))]);
 
@@ -737,20 +745,29 @@ class Customer extends Controller {
 
             $task = \App\Models\Task::find(request('id'));
             foreach ($users as $user_task) {
-
                 $user = \App\Models\User::find($user_task->user_id);
                 $message = 'Hello ' . $user->firstname . '<br/>'
                         . 'Task Status has been updated to :' . request('status')
                         . '<ul>'
                         . '<li>Task: ' . $task->activity . '</li>'
                         . '<li>Type: ' . $task->taskType->name . '</li>'
-                        . '<li>Deadline: ' . $task->date . '</li>'
+                        . '<li>Deadline: ' . date('d-m-Y', strtotime($task->date)) . '</li>'
                         . '</ul>';
                 $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+
+                    $sms  = 'Hello ' .$user->firstname .' ' . $user->lastname
+                . chr(10) . 'Task Status has been updated to :' . request('status')
+                . chr(10) . 'Task of : ' . $task->activity 
+                . chr(10) . 'Type : ' . $task->taskType->name  . '.'
+                . chr(10) . 'Deadline : ' . date('d-m-Y', strtotime($task->date))  . '.'
+                . chr(10) . 'Thanks and regards,';
+                 $this->send_whatsapp_sms($user->phone, $sms);
             }
         }
         echo request('status');
     }
+
+  
 
     public function changepriority() {
         if (request('priority') == 1) {
@@ -774,11 +791,21 @@ class Customer extends Controller {
                         . '<li>Type: ' . $task->taskType->name . '</li>'
                         . '<li>Deadline: ' . $task->date . '</li>'
                         . '</ul>';
-                $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+                  $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+
+                        $sms  = 'Hello ' .$user->firstname .' ' . $user->lastname
+                    . chr(10) . 'Task Priority has been updated to :' . $priority
+                    . chr(10) . 'Task of : ' . $task->activity 
+                    . chr(10) . 'Type : ' . $task->taskType->name  . '.'
+                    . chr(10) . 'Deadline : ' . date('d-m-Y', strtotime($task->date))  . '.'
+                    . chr(10) . 'Thanks and regards,';
+                     $this->send_whatsapp_sms($user->phone, $sms);
             }
         }
         echo $priority;
     }
+
+
 
     public function getTaskByDepartment() {
         $dep_id = request('dep_id');
@@ -892,15 +919,14 @@ class Customer extends Controller {
                         . 'There is '. $new_req . '</p>'
                         . '<br/><p><b>Requirement:</b> ' . $req->note . '</p>'
                         . '<br/><br/><p><b>By:</b> ' . $req->user->name . '</p>';
-                $this->send_email($user->email, 'ShuleSoft New Customer Requirement', $message);
+                     $this->send_email($user->email, 'ShuleSoft New Customer Requirement', $message);
 
-                  $sms   = 'Hello ' .$user->name .'.'
+                      $sms  = 'Hello ' .$user->name .'.'
                     . chr(10) . 'There is ' . $new_req . '.'
                     . chr(10) .  strip_tags($req->note) 
                     . chr(10) . 'By: ' . $req->user->name . '.'
                     . chr(10) . 'Thanks and regards,';
-
-                   $this->send_whatsapp_sms($user->phone, $sms);
+                     $this->send_whatsapp_sms($user->phone, $sms);
 
                     DB::table('public.sms')->insert([
                         'body'=>$sms,
