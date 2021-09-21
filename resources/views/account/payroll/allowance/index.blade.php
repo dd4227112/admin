@@ -116,7 +116,7 @@
                                             <?php echo (bool) $allowance->is_percentage == false ? 'NONE' : $allowance->percent; ?>
                                         </td>
                                         <td data-title="<?= __('description') ?>">
-                                            <?php echo warp($allowance->description); ?>
+                                            <?php echo warp($allowance->description,20); ?>
                                         </td>
                                         <td data-title="<?= __('action') ?>">
                                             <?php echo '<a  href="' . url("allowance/edit/$allowance->id") . ' " class="btn btn-info btn-sm"><i class="fa fa-pencil"></i> ' . __('edit') . ' </a>'; ?>

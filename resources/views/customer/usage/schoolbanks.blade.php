@@ -87,7 +87,7 @@ function select($value, $schema, $sources) {
                      <td>
                          <?php
                         if (isset($banks[$school->schema_name])) {
-                            echo warp($banks[$school->schema_name]);
+                            echo warp($banks[$school->schema_name],20);
                         } else {
 
                             echo 'Not Specified';

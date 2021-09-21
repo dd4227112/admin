@@ -198,7 +198,7 @@
                                                 ?>
                                                 <tr>
                                                     <td><?= $i?></td>
-                                                    <td><?= warp(strtoupper($invoice->client->name)) ?></td>
+                                                    <td><?= warp(strtoupper($invoice->client->name),20) ?></td>
                                                     <td><?= $invoice->reference ?></td>
                                                     <td><?= money($amount) ?></td>
                                                     <td><?= money($paid) ?></td>

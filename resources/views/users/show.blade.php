@@ -842,7 +842,7 @@ foreach ($user_permission as $permis) {
                                                         <tr>
                                                             <td><?= date('d M Y', strtotime($absent->date)) ?></td>
                                                             <td><?= $absent->absentReason->name ?></td>
-                                                            <td><?= warp($absent->note) ?></td>
+                                                            <td><?= warp($absent->note,20) ?></td>
                                                             <td class="text-center"><a type="button" class="btn btn-primary btn-sm waves-effect" target="_blank" href="<?= url('customer/viewContract/' . $absent->id .'/absent') ?>">View</a></td>
                                                             <td><?= $absent->approvedBy->name ?></td>
                                                             <td><?= isset($absent->end_date) ? date('d M Y', strtotime($absent->end_date)) : '' ?></td>
