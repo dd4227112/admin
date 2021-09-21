@@ -525,22 +525,13 @@ class Customer extends Controller {
                     'user_id' => request('to_user_id')
                   ]);
                    $user = \App\Models\User::find(request('to_user_id'));
-                   $message = 'Hello ' . $user->firstname . '<br/>'
-                        . 'A task has been allocated to you'
-                        . '<ul>'
-                        . '<li>Task: ' . $task->activity . '</li>'
-                        . '<li>Type: ' . $task->taskType->name . '</li>'
-                        . '<li>Deadline: ' . $task->start_date . '</li>'
-                        . '</ul>';
-                   $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
-
-                    $sms =  'Hello ' . $user->firstname . ' '. $user->lastname . '.'
+                  $message =  'Hello ' . $user->firstname . ' '. $user->lastname . '.'
                     . chr(10) . 'A task has been allocated to you'
                     . chr(10) . 'Task: ' . $task->activity . '.'
                     . chr(10) . 'Type: ' . $task->taskType->name . '.'
                     . chr(10) . 'Deadline: ' . $task->start_date . '.'
                     . chr(10) . 'Thanks.';
-                //    $this->send_whatsapp_sms($user->phone, $sms); 
+                   $this->send_email($user->email, 'ShuleSoft Task Allocation', $message); 
                }
              
          
