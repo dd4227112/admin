@@ -701,8 +701,12 @@ class Sales extends Controller {
                         . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                         . '</ul>';
             $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
-            $message = "Hello " . $user->firstname . " " . $user->lastname ." A task of " . $section->content ." at " . \App\Models\Client::where('id',$client_id)->first()->name ." has been allocated to you.A task is expected to start at " .date('d-m-Y', strtotime($start_date))." and end ". date('d-m-Y', strtotime($start_date . " + {$section->time} days")) ." .Thank you";
-            $this->send_whatsapp_sms($user->phone, $message);
+           
+                $sms  = 'Hello ' .$user->firstname .' ' . $user->lastname
+                . chr(10) . 'A task of  :' . $section->content . ' at ' . \App\Models\Client::where('id',$client_id)->first()->name .' has been allocated to you'
+                . chr(10) . 'A task is expected to start at ' .date('d-m-Y', strtotime($start_date)).' and end '. date('d-m-Y', strtotime($start_date . " + {$section->time} days"))
+                . chr(10) . 'Thank you';
+             $this->send_whatsapp_sms($user->phone, $sms);
 
 
             //email to zonal manager
@@ -717,15 +721,24 @@ class Sales extends Controller {
                         . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                         . '</ul>';
                     $this->send_email($manager->email,'Task Allocation', $manager_message);
-                    $message = "Hello" .$manager->firstname . " " .$manager->lastname .", A task of . $section->content .' been scheduled to " .\App\Models\Client::where('id',$client_id)->first()->name." Start date: " . date('d-m-Y', strtotime($start_date)) . " Up to: " . date('d-m-Y', strtotime($start_date . " + {$section->time} days"))." .Thank you!";
+                    $message = "Hello" .$manager->firstname . " " .$manager->lastname .", A task of . $section->content .' been scheduled to " .\App\Models\Client::where('id',$client_id)->first()->name.
+                    " Start date: " . date('d-m-Y', strtotime($start_date)) . " Up to: " . date('d-m-Y', strtotime($start_date . " + {$section->time} days"))." .Thank you!";
+                    $this->send_whatsapp_sms($manager->phone, $message);
+
+                    $message  = 'Hello ' .$manager->firstname .' ' . $manager->lastname
+                    . chr(10) . 'A task of  :' . $section->content . ' been scheduled to ' . \App\Models\Client::where('id',$client_id)->first()->name .' has been allocated to you'
+                    . chr(10) . 'A task is expected to start at ' .date('d-m-Y', strtotime($start_date)).' up to '. date('d-m-Y', strtotime($start_date . " + {$section->time} days"))
+                    . chr(10) . 'Thank you';
                     $this->send_whatsapp_sms($manager->phone, $message);
                }
             //sms to school personel
               if(request("train_item{$section->id}") != ''){
                     $phonenumber = $this->extractPhoneNumber(request("train_item{$section->id}"));
                     $phonenumber = validate_phone_number($phonenumber[0],255);
-                    $sms = 'Hello '. request("train_item{$section->id}") . ' a task of '  . $section->content . ' been allocated to your school, It is expected to start at ' . date('F,d Y', strtotime($start_date)) . ' and end at  '. date('F,d Y', strtotime($start_date . " + {$section->time} days")) .'';
-                 //   $this->send_sms($phonenumber, $sms);
+                    $sms  = 'Hello '
+                    . chr(10) . 'A task of  :' . $section->content . ' has been allocated to your school'
+                    . chr(10) . 'A task is expected to start at ' .date('F,d Y', strtotime($start_date)).' up to '. date('F,d Y', strtotime($start_date . " + {$section->time} days"))
+                    . chr(10) . 'Thank you';
                     $this->send_whatsapp_sms($phonenumber, $sms);
               }
         }  
