@@ -276,7 +276,8 @@
                                                               $total_invoice_sent = isset($accountyear->name) ? \DB::table('admin.invoices_sent')->whereYear('date','=',$accountyear->name)->count() : DB::table('admin.invoices_sent')->count();
                                                          
                                                               $total_clients = \DB::table('admin.clients')->count();
-                                                              
+                                                             
+$i=0; 
                                                               ?>
                                                         <tr>
                                                             <td class="text-center"><?=$total_clients?></td>
