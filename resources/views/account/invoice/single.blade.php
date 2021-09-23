@@ -216,7 +216,7 @@
                                                         $setting = DB::table('admin.all_setting')->where('schema_name', $invoice->client->username)->first();
                                                         if(!empty($setting)) {
                                                            $a = DB::table($invoice->client->username. '.bank_accounts')->where('refer_bank_id', 22)->first();
-                                                        } 
+                                                        }
                                                  if(!empty($a)){ ?>
                                                    <p>
                                                     <b>Account Details :</b><br/>
@@ -236,6 +236,7 @@
                                                         <small>Please notify us after a deposit</small>
                                                     </p>
                                                   <?php  }  ?>
+
 
                                                 <?php if (strlen($invoice->token) > 4) { ?>
                                                 <p>Or Pay Electronically here <a href="<?= url('epayment/i/' . $invoice->id) ?>" target="_blank"><?= url('epayment/i/' . ($invoice->id)) ?></a></p>

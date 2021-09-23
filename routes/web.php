@@ -27,6 +27,8 @@ use Illuminate\Support\Facades\Route;
  */
 
 
+
+
 $bad_url = ['acme-challenge', 'rss', 'index.php', 'errors', 'phpR', 'apple-touch', 'assetlinks', '.php', 'public', '.tff', '.jpg'];
 foreach ($bad_url as $value) {
     if (preg_match('/' . $value . '/', url()->current())) {
@@ -100,15 +102,15 @@ if (createRoute() != NULL) {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-// Route::get('/workshop', 'Workshop@index')->name('workshop');
-// Route::post('/addregister', 'Workshop@addregister');
- Route::get('/register', 'Workshop@register')->name('register');
-// Route::get('/user-details/{param1?}', 'Workshop@profile')->name('profile');
+Route::get('/workshop', 'Workshop@index')->name('workshop');
+Route::post('/addregister', 'Workshop@addregister');
+Route::get('/register', 'Workshop@register')->name('register');
+Route::get('/user-details/{param1?}', 'Workshop@profile')->name('profile');
 
 
-// // 
- Route::get('/application', 'Recruitments@index');
- Route::post('/addrecruiment', 'Recruitments@register'); 
+// 
+Route::get('/application', 'Recruitments@index');
+Route::post('/addrecruiment', 'Recruitments@register'); 
 
-// Route::get('/nda_form/{id}', 'Recruitments@nda');
-// Route::post('/sendndaform','Recruitments@uploadnda');
+Route::get('/nda_form/{id}', 'Recruitments@nda');
+Route::post('/sendndaform','Recruitments@uploadnda');

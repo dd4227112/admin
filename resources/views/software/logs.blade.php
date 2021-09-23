@@ -316,7 +316,9 @@
                 {"data": "schema_name"},
                 {"data": "error_message"},
                 {"data": "file"},
-                {"data": "url"}
+                {"data": "url"},
+              //  {"data": "created_by"},
+             //   {"data": ""}
             ],
             "columnDefs": [
                 {

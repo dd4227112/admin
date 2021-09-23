@@ -248,8 +248,8 @@ function createRoute() {
     $url = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
     $url_param = explode('/', $url);
 
-    $controller = isset($url_param[2]) && !empty($url_param[2]) ? $url_param[2] . '' : 'analyse';
-    $method = isset($url_param[3]) && !empty($url_param[3]) ? $url_param[3] : 'index';
+    $controller = isset($url_param[1]) && !empty($url_param[1]) ? $url_param[1] . '' : 'analyse';
+    $method = isset($url_param[2]) && !empty($url_param[2]) ? $url_param[2] : 'index';
     $view = $method == 'view' ? 'show' : $method;
 
     return in_array($controller, array('public', 'storage')) ? NULL : ucfirst($controller) . '@' . $view;
@@ -331,25 +331,31 @@ function validate_phone_number($number,$country_code=NULL) {
 
 function btn_attendance($id, $method, $class, $name) {
     return "<input type='checkbox' class='" . $class . "' $method id='" . $id . "' data-placement='top' data-toggle='tooltip' data-original-title='" . $name . "' > ";
+
 }
 
-function timeZones($value) {
-    $date = DateTime::createFromFormat('Y-m-d H:i:s', $value);
-    $date->setTimeZone(new DateTimeZone('Africa/Dar_es_Salaam'));
-    return $date->format('Y-m-d H:i:s');
-}
 
-function cdate($date) {
-    return date('d-m-Y H:i:s');
-}
+ function timeZones($value)
+    {
+        $date = DateTime::createFromFormat('Y-m-d H:i:s', $value);
+        $date->setTimeZone(new DateTimeZone('Africa/Dar_es_Salaam'));
+        return $date->format('Y-m-d H:i:s');
+    }
 
-function remove_comma($string_number) {
-    return trim(str_replace(',', '', $string_number));
-}
+    
+   function cdate($date){
+        return date('d-m-Y H:i:s');
+    }
 
-function school_full_name($schema_name = null) {
-    return \App\Models\Client::where('username', $schema_name)->first()->name;
-}
+
+    function remove_comma($string_number) {
+        return trim(str_replace(',', '', $string_number));
+    }
+
+
+    function school_full_name($schema_name = null){
+        return \App\Models\Client::where('username',$schema_name)->first()->name;
+    }
 
 function warp($word, $size) {
     return wordwrap($word, $size, "<br />\n");

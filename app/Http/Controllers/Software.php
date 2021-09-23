@@ -662,6 +662,8 @@ ORDER BY c.oid, a.attnum";
                     } //else { return redirect()->back()->with('success', 'invalid token'); }
                 }
             }
+
+       
             $this->data['returns'] = $returns;
         }
         return view('software.api.reconciliation', $this->data);
@@ -674,6 +676,14 @@ ORDER BY c.oid, a.attnum";
         $curl = $background->curlServer($fields, $url, 'row');
         return $curl;
         // return redirect()->back()->with('success',$curl);
+    }
+
+    public function syncPayments($data) {
+        $background = new \App\Http\Controllers\Background();
+        $url = 'http://51.91.251.252:8081/api/init';
+        $fields = $data;
+        $curl = $background->curlServer($fields, $url, 'row');
+        return $curl;
     }
 
     public function template() {
