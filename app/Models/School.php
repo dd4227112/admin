@@ -7,8 +7,9 @@ class School extends Model {
     /**
      * Generated
      */
-    protected $table = 'schools';
-    protected $fillable = ['id', 'region', 'district','ward','ownership','type','students','nmb_branch','ward_id'];
+    protected $table = 'admin.schools';
+    protected $fillable = ['id','name','ownership','type','students','ward_id','zone','nmb_school_name','nmb_zone',
+    'branch_code','branch_name','account_number','schema_name','nmb_branch','country_id','status','registered'];
 
     public function users() {
         return $this->hasManyThrough(\App\Models\UsersSchool::class,\App\Models\User::class);

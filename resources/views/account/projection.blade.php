@@ -157,7 +157,8 @@ function tagEdit($schema_name, $column, $value, $type = null) {
 
                                  <div class="tab-pane" id="other" role="tabpanel">
                                     <div class="card-header">
-                                            <h5>Create other invoices</h5>
+                                                       
+                                            <h5>  Create other invoices  </h5>
                                         </div>
                                         <div class="card-block">
                                             <div class="table-responsive dt-responsive">
@@ -169,30 +170,29 @@ function tagEdit($schema_name, $column, $value, $type = null) {
 
                                                 <div class="col-md-6">
                                                     <strong> Invoice Type</strong>
-                                                     <select type="text" name="type" id="type" style="text-transform:uppercase" required class="form-control select2">
+                                                     <select type="text" name="type" style="text-transform:uppercase" class="form-control select2" required>
                                                     <option value="">Select here...</option>
                                                     <?php
                                                         $types = \App\Models\InvoiceType::get();
                                                         foreach($types as $type){
-                                                        echo  '<option value="'.$type->id.'">'.$type->name.'</option>';
+                                                           echo  '<option value="'.$type->id.'">'.$type->name.'</option>';
                                                         }
                                                     ?>
                                                     </select>
                                                 </div>
-                                            
-                                         
-                                                <div class="col-md-6">
+
+                                                 
+                                                 <div class="col-md-6">
                                                     <strong> Choose school </strong>
-                                                      <select type="text" name="client_id" required class="form-control select2">
-                                                    <option value="">Select here...</option>
-                                                    <?php
-                                                        $schools = \App\Models\Client::get();
-                                                        foreach($schools as $school){
-                                                        echo  '<option value="'.$school->id.'">'.$school->name.'</option>';
-                                                        }
-                                                    ?>
+                                                    <select type="text"  name="school_id" class="form-control select2" required>
+                                                       <?php \App\Models\School::chunk(50, function ($schools) {  ?>
+                                                        <?php  foreach($schools as $value) { ?>
+                                                           <option value="<?= $value->id ?>"><?= $value->name ?></option>
+                                                        <?php   }  ?>
+                                                       <?php  }); ?>
                                                     </select>
-                                                </div>
+                                                </div> 
+
                                                </div>
                                              </div>
 
@@ -206,6 +206,20 @@ function tagEdit($schema_name, $column, $value, $type = null) {
                                                <div class="col-md-6">
                                                 <strong>  Deadline date</strong>
                                                  <input type="date"  class="form-control" name="due_date" required>
+                                               </div>
+                                            </div>
+                                         </div>
+
+                                            <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                <strong>  Email</strong>
+                                                  <input type="text" name="email"  class="form-control">
+                                               </div>
+
+                                               <div class="col-md-6">
+                                                <strong>  Phone </strong>
+                                                 <input type="text"  class="form-control" name="phone">
                                                </div>
                                             </div>
                                          </div>
@@ -302,6 +316,12 @@ function tagEdit($schema_name, $column, $value, $type = null) {
     $(".select2").select2({
         theme: "bootstrap",
         dropdownAutoWidth: false,
+        allowClear: false,
+        debug: true
+    });
+
+     $(".select22").select2({
+        theme: "bootstrap",
         allowClear: false,
         debug: true
     });

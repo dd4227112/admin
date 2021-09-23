@@ -69,8 +69,7 @@
                                 <strong> Contact person </strong>
                                 <select name="school_contact_id"  class="form-control select2"  >
                                     <?php
-                                    
-                                    
+                            
                                     $contact_staffs = DB::table('school_contacts')->get();
                                     if (count($contact_staffs)) {
                                         foreach ($contact_staffs as $contact_staff) {?>

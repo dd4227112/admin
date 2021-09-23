@@ -198,7 +198,7 @@
                                                 ?>
                                                 <tr>
                                                     <td><?= $i?></td>
-                                                    <td><?= warp(strtoupper($invoice->client->name),20) ?></td>
+                                                    <td><?= warp(strtoupper($invoice->client->name),17) ?></td>
                                                     <td><?= $invoice->reference ?></td>
                                                     <td><?= money($amount) ?></td>
                                                     <td><?= money($paid) ?></td>
@@ -274,13 +274,11 @@
                                                     <tbody>
                                                         <?php $clients=\DB::table('admin.all_setting')->count();
                                                               $total_invoice_sent = isset($accountyear->name) ? \DB::table('admin.invoices_sent')->whereYear('date','=',$accountyear->name)->count() : DB::table('admin.invoices_sent')->count();
-                                                         
                                                               $total_clients = \DB::table('admin.clients')->count();
-                                                              
                                                               ?>
                                                         <tr>
                                                             <td class="text-center"><?=$total_clients?></td>
-                                                            <td class="text-center"><?=$i- 1?></td>
+                                                            <td class="text-center"><?=$i - 1?></td>
                                                             <td class="text-center"><?=$total_clients - ($i - 1)?></td>
                                                             
                                                             <td class="text-center">Tsh <?= money($total_amount) ?></td>

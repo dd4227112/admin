@@ -508,9 +508,9 @@ onmousedown="removeTag(<?= $task->id ?>)">Remove
 tag</a>
 <a class="dropdown-item" href="#">Report
 Photo</a>
-<button type="button" class="btn btn-primary waves-effect"
+{{-- <button type="button" class="btn btn-primary waves-effect"
 data-toggle="modal" data-target="#edit-Modal-task">edit
-Task</button>
+Task</button> --}}
 
 </div> 
 
@@ -744,13 +744,6 @@ class="social-user-name b-none text-muted">
 <?= isset($manager->email) ? $manager->email : '' ?></td>
 </tr>
 
-<tr>
-<th class="social-label b-none">
-Address</th>
-<td
-class="social-user-name b-none text-muted">
-<?= isset($manager->address) ? $manager->address : '' ?></td>
-</tr>
 
 
 
@@ -1689,7 +1682,8 @@ Teacher on Duty:
 <tr>
 <th scope="row">4</th>
 <td>General Character assessment</td>
-<td> <?php $value = check_status('general_character_assessment'); echo date('Y', strtotime($value)) == '1970' ? 'Not defined' : $value ; ?> </td>
+     <td> <?=  check_status('general_character_assessment');  ?> 
+     </td>
 <td></td>
 </tr>
 <tr>
