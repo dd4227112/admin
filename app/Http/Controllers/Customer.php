@@ -175,7 +175,6 @@ class Customer extends Controller {
     }
 
     function types() {
-
         if (request('type')) {
             echo json_encode(array('data' =>
                 array(
@@ -925,7 +924,7 @@ class Customer extends Controller {
                     . chr(10) . 'There is ' . $new_req . '.'
                     . chr(10) .  strip_tags($req->note) 
                     . chr(10) . 'By: ' . $req->user->name . '.'
-                    . chr(10) . 'Thanks and regards,';
+                    . chr(10) . 'Thanks and regards.';
                      $this->send_whatsapp_sms($user->phone, $sms);
 
                     DB::table('public.sms')->insert([

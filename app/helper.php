@@ -248,8 +248,8 @@ function createRoute() {
     $url = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
     $url_param = explode('/', $url);
 
-    $controller = isset($url_param[1]) && !empty($url_param[1]) ? $url_param[1] . '' : 'analyse';
-    $method = isset($url_param[2]) && !empty($url_param[2]) ? $url_param[2] : 'index';
+    $controller = isset($url_param[2]) && !empty($url_param[2]) ? $url_param[2] . '' : 'analyse';
+    $method = isset($url_param[3]) && !empty($url_param[3]) ? $url_param[3] : 'index';
     $view = $method == 'view' ? 'show' : $method;
 
     return in_array($controller, array('public', 'storage')) ? NULL : ucfirst($controller) . '@' . $view;
@@ -270,7 +270,6 @@ function timeAgo($datetime, $full = false) {
  * @return  string
  */
 if (!function_exists('form_dropdown')) {
-
     function form_dropdown($name = '', $options = array(), $selected = array(), $extra = '') {
         if (!is_array($selected)) {
             $selected = array($selected);
@@ -372,7 +371,6 @@ if (!function_exists('img')) {
         if (!is_array($src)) {
             $src = array('src' => $src);
         }
-
         // If there is no alt attribute defined, set it to an empty string
         if (!isset($src['alt'])) {
             $src['alt'] = '';

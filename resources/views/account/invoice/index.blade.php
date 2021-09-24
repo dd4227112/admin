@@ -77,10 +77,6 @@
                             </div>
                         </div>
 
-
-
-                        
-
                   <div class="card tab-card">
                         <ul class="nav nav-tabs md-tabs" role="tablist">
                             <li class="nav-item complete">
@@ -93,6 +89,9 @@
                                 <a class="nav-link" data-toggle="tab" href="#profile3" role="tab" aria-expanded="false">Summary</a>
                                 <div class="slide"></div>
                             </li>
+
+                           
+
                             @if(isset($project_id) && isset($account_year_id)) 
                             <li class="nav-item complete">
                                 <a class="nav-link" style="color: blue;" href="{{ url('account/invoiceReport/'.$project_id.'/'.$account_year_id) }}"> <b>View Report</b> </a>
@@ -176,6 +175,7 @@
                                                 <th>Paid Amount</th>
                                                 <th>Remained Amount</th>
                                                 <th>Previous Amount</th>
+                                                <th>Advance Amount</th>
                                                 <th>Due Date</th>
                                                 <th>Action</th>
                                             </tr>
@@ -191,23 +191,30 @@
                                             foreach ($invoices as $invoice) {
                                                 $amount = $invoice->invoiceFees()->sum('amount');
                                                 $paid = $invoice->payments()->sum('amount');
+                    
                                                 $unpaid = $amount - $paid;
                                                 $total_paid += $paid;
                                                 $total_amount += $amount;
                                                 $total_unpaid += $unpaid;
                                                 ?>
                                                 <tr>
-                                                    <td><?= $i?></td>
-                                                    <td><?= warp(strtoupper($invoice->client->name),17) ?></td>
+                                                    <td><?= $i ?></td>
+                                                    <td><?= warp(strtoupper($invoice->client->name),15) ?></td>
                                                     <td><?= $invoice->reference ?></td>
                                                     <td><?= money($amount) ?></td>
                                                     <td><?= money($paid) ?></td>
                                                     <td><?= money($unpaid) ?></td>
                                                     <td>
-                                                        <?php 
-                                                          $previous_amount = \collect(DB::SELECT("select  sum(coalesce(balance,0))  as last_balance from admin.client_invoice_balances where extract(year from created_at) < '$accountyear->name' and client_id = '$invoice->client_id' "))->first();
-                                                          echo money($previous_amount->last_balance)
-                                                         ?>
+                                                    <?php 
+                                                    $previous_amount = \collect(DB::SELECT("select  sum(coalesce(balance,0))  as last_balance from admin.client_invoice_balances where extract(year from created_at) < '$accountyear->name' and client_id = '$invoice->client_id' "))->first();
+                                                        echo money($previous_amount->last_balance)
+                                                    ?>
+                                                    </td>
+                                                    <td>
+                                                    <?php 
+                                                    $adva_amount = \collect(DB::SELECT("select sum(coalesce(amount,0)) as amount from admin.advance_payments where payment_id in (select id from admin.payments where invoice_id = '$invoice->id' )"))->first();
+                                                    echo money($adva_amount->amount)
+                                                    ?>
                                                     </td>
                                                     <td><?= date('d M Y', strtotime($invoice->due_date)) ?></td>
                                                     <td>
@@ -299,6 +306,10 @@
                                         </div>
                                     </div>
                                 </div>
+
+
+                        
+
 
                             </div> 
                         </div>

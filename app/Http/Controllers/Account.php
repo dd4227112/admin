@@ -339,7 +339,6 @@ class Account extends Controller {
         $client = \App\Models\Client::find($client_id);
         $year = \App\Models\AccountYear::where('name', date('Y'))->first();
         $reference = time(); // to be changed for selcom ID
-       
         if (empty($client->start_usage_date)) {
             //If start usage date 
             return redirect()->back()->with('error', 'You must specify '.$client->username.' start usage date !');
@@ -358,7 +357,6 @@ class Account extends Controller {
             //both price per students and Estimated students cannot be 0
             return redirect()->back()->with('error', 'Both price per students and Estimated students cannot be 0, please set them first');
         }
-    
         $unit_price = $client->price_per_student;
         $amount = $unit_price * $client->estimated_students;
         \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' => $client->estimated_students, 'unit_price' => $unit_price]);
@@ -378,7 +376,7 @@ class Account extends Controller {
         $school = \App\Models\School::find($school_id);
         $year = \App\Models\AccountYear::where('name', date('Y'))->first();
 
-        // If school is not client pro forma invoice
+        // If school is not client, create pro forma invoice
          if (is_null($client)) {
             DB::table('admin.temp_clients')->insert([
                 'name' => $school->name, 'email' => request('email'), 'phone' => request('phone'), 'school_id' => $school->id, 'user_id' => \Auth::user()->id,
@@ -406,6 +404,8 @@ class Account extends Controller {
         }
         return redirect()->back()->with('success', 'Invoice Created Successfully');
     }
+
+
 
     public function createInvoice() {
         $this->data['projects'] = Project::all();
