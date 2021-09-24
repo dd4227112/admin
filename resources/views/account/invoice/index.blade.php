@@ -81,20 +81,24 @@
                         <ul class="nav nav-tabs md-tabs" role="tablist">
                             <li class="nav-item complete">
                                 <a class="nav-link active" data-toggle="tab" href="#home3" role="tab" aria-expanded="true">
-                                    <strong>Invoice List</strong>
+                                    <strong>INVOICE LIST</strong>
                                 </a>
                                 <div class="slide"></div>
                             </li>
-                            <li class="nav-item complete">
-                                <a class="nav-link" data-toggle="tab" href="#profile3" role="tab" aria-expanded="false">Summary</a>
+
+                             <li class="nav-item complete">
+                                <a class="nav-link" data-toggle="tab" href="#profile2" role="tab" aria-expanded="false">  <strong> PRO FORMA INVOICE</strong> </a>
                                 <div class="slide"></div>
                             </li>
 
-                           
+                            <li class="nav-item complete">
+                                <a class="nav-link" data-toggle="tab" href="#profile3" role="tab" aria-expanded="false">SUMMARY</a>
+                                <div class="slide"></div>
+                            </li>
 
                             @if(isset($project_id) && isset($account_year_id)) 
                             <li class="nav-item complete">
-                                <a class="nav-link" style="color: blue;" href="{{ url('account/invoiceReport/'.$project_id.'/'.$account_year_id) }}"> <b>View Report</b> </a>
+                                <a class="nav-link" style="color: blue;" href="{{ url('account/invoiceReport/'.$project_id.'/'.$account_year_id) }}"> <b>VIEW REPORT</b> </a>
                                 <div class="slide"></div>
                             </li>
                             @endif
@@ -235,12 +239,12 @@
                                                                 <a class="dropdown-item waves-light waves-effect" href="#" data-toggle="modal" data-target="#large-Modal" onclick="$('#invoice_id').val('<?=$invoice->id?>')"><span class="point-marker bg-warning"></span>Send Invoice</a>
                                                                 <?php }  ?>
                                                                 <?php if((int) $paid >0){ ?>
-                                                        <a class="dropdown-item waves-light waves-effect" href="<?= url('account/receipts/' . $invoice->id) ?>" target="_blank"><span class="point-marker bg-warning"></span>Receipt</a>
-                                                    <?php } ?>
-                                                </div>
-                                            </div>
-                                                    
-                                            </td>
+                                                                    <a class="dropdown-item waves-light waves-effect" href="<?= url('account/receipts/' . $invoice->id) ?>" target="_blank"><span class="point-marker bg-warning"></span>Receipt</a>
+                                                                <?php } ?>
+                                                            </div>
+                                                        </div>
+                                        
+                                                      </td>
                                         </tr>
                                    
                                     <?php $i++; } ?>
@@ -259,6 +263,64 @@
                             </div>
                                 </div>
                             </div>
+
+                                <div class="tab-pane" id="profile2" role="tabpanel" aria-expanded="false">
+                                <div class="card-block">
+                                        <div class="card-header">
+                                           <div class="table-responsive dt-responsive">
+                                                
+                                    <table id="invoice_table" class="table table-striped table-bordered nowrap dataTable">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>School Name</th>
+                                                <th>Reference #</th>
+                                                <th>Amount</th>
+                                                <th>Due Date</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        
+                                        <tbody>
+                                            <?php 
+                                              $f = 1; $total_amount = 0;
+                                             $temp_clients = \App\Models\TempClients::latest()->get();
+                                            foreach ($temp_clients as $value) {
+                                                ?>
+                                                <tr>
+                                                    <td><?= $f ?></td>
+                                                    <td><?= warp(strtoupper($value->school->name),15) ?></td>
+                                                    <td><?= $value->reference ?></td>
+                                                    <td><?php $total_amount+= $value->amount; echo money($value->amount) ?></td>
+                                                    <td><?= date('d M Y', strtotime($value->due_date)) ?></td>
+                                                    <td>
+                                                     
+                                                     <div class="dropdown-secondary dropdown f-right">
+                                                        <button class="btn btn-success btn-mini dropdown-toggle waves-effect waves-light" type="button" id="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Options</button>
+                                                        <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                                                         <a class="dropdown-item waves-light waves-effect" href="<?= url('account/proinvoiceView/' . $value->id) ?>"  > <span class="point-marker bg-danger"></span>View</a>
+                                                         {{-- <a class="dropdown-item waves-light waves-effect" href="<?= url('account/proinvoiceView/edit/' . $value->id) ?>"><span class="point-marker bg-warning"></span>Edit</a> --}}
+                                                        </div>
+                                                    </div>
+                                                  
+                                                  </td>
+                                              </tr>
+                                   
+                                         <?php $f++; } ?>
+                                        </tbody>
+                                         <tfoot>
+                                            <tr>
+                                                <td colspan="3"><strong> Total Amount</strong></td>
+                                                <td><strong><?= isset($total_amount) ? money($total_amount) : '' ?></strong></td>
+                                                <td colspan="1"></td>
+                                            </tr>
+                                        </tfoot> 
+                                    </table>
+                                            
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
 
                             <div class="tab-pane" id="profile3" role="tabpanel" aria-expanded="false">
@@ -282,7 +344,6 @@
                                                         <?php $clients=\DB::table('admin.all_setting')->count();
                                                               $total_invoice_sent = isset($accountyear->name) ? \DB::table('admin.invoices_sent')->whereYear('date','=',$accountyear->name)->count() : DB::table('admin.invoices_sent')->count();
                                                               $total_clients = \DB::table('admin.clients')->count();
-                                                             
                                                             $i=0; 
                                                               ?>
                                                         <tr>

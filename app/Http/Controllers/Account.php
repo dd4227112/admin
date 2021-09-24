@@ -1498,7 +1498,17 @@ class Account extends Controller {
               return redirect()->back();
            }
         return view('account.holidays', $this->data);
+    }
 
+
+    public function proinvoiceView(){
+            $id = request()->segment(3);
+            $this->data['invoice'] = \App\Models\TempClients::find($id);
+            return view('account.invoice.pro_forma', $this->data);
+
+            if($id == 'edit'){
+               return view('account.invoice.pro_forma', $this->data);
+            }
     }
 
 }
