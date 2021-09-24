@@ -137,7 +137,7 @@
                                     <div class="col-sm-12 col-lg-12">
                                         <table  class="table">
                                             <tr>
-                                                <td>Control #</td>
+                                                <td>Invoice #</td>
                                                 <td><?= strlen($invoice->token) < 4 ? $invoice->reference : $invoice->token ?></td>
                                                 <td colspan="2"> </td>
                                             </tr>
