@@ -270,7 +270,6 @@ function timeAgo($datetime, $full = false) {
  * @return  string
  */
 if (!function_exists('form_dropdown')) {
-
     function form_dropdown($name = '', $options = array(), $selected = array(), $extra = '') {
         if (!is_array($selected)) {
             $selected = array($selected);
@@ -372,7 +371,6 @@ if (!function_exists('img')) {
         if (!is_array($src)) {
             $src = array('src' => $src);
         }
-
         // If there is no alt attribute defined, set it to an empty string
         if (!isset($src['alt'])) {
             $src['alt'] = '';

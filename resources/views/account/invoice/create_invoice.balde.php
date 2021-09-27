@@ -132,17 +132,17 @@ $(".select2").select2({
 });
 
 $('#region').change(function () {
-            var val = $(this).val();
-            $.ajax({
-                method: 'get',
-                url: '<?= url('Marketing/getDistrict/null') ?>',
-                data: {region: val},
-                dataType: 'html',
-                success: function (data) {
-                    $('#district').html(data);
-                }
-            });
+        var val = $(this).val();
+        $.ajax({
+            method: 'get',
+            url: '<?= url('Marketing/getDistrict/null') ?>',
+            data: {region: val},
+            dataType: 'html',
+            success: function (data) {
+                $('#district').html(data);
+            }
         });
+    });
 $('#district').change(function () {
             var val = $(this).val();
             $.ajax({

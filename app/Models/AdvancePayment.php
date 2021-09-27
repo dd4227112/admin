@@ -9,9 +9,9 @@ class AdvancePayment extends Model
 {
      use HasFactory;
 
-     private $table = 'advance_payments';
+     protected $table = 'advance_payments';
 
-      protected $fillable = ['id', 'client_id', 'payment_id', 'amount'];
+      protected $fillable = ['id', 'client_id', 'payment_id', 'amount','created_at'];
 
       public function client() {
         return $this->belongsTo(\App\Models\Client::class, 'client_id', 'id');

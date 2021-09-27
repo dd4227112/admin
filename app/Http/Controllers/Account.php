@@ -339,7 +339,6 @@ class Account extends Controller {
         $client = \App\Models\Client::find($client_id);
         $year = \App\Models\AccountYear::where('name', date('Y'))->first();
         $reference = time(); // to be changed for selcom ID
-       
         if (empty($client->start_usage_date)) {
             //If start usage date 
             return redirect()->back()->with('error', 'You must specify '.$client->username.' start usage date !');
@@ -358,39 +357,55 @@ class Account extends Controller {
             //both price per students and Estimated students cannot be 0
             return redirect()->back()->with('error', 'Both price per students and Estimated students cannot be 0, please set them first');
         }
-    
         $unit_price = $client->price_per_student;
         $amount = $unit_price * $client->estimated_students;
         \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' => $client->estimated_students, 'unit_price' => $unit_price]);
         return redirect()->back()->with('success', 'Invoice Created Successfully');
     }
 
+
       public function createinvoices() {
-        $client_id = request('client_id');
+        $school_id =  (int) request('school_id');
+        
         $due_date = request('due_date');
-        $start_date = date('Y-m-d', strtotime($due_date. ' - 30 days'));
-        $client = \App\Models\Client::find($client_id);
-        $year = \App\Models\AccountYear::where('name', date('Y'))->first();
-        $project_id = request('type');
-
         $reference = time(); // to be changed for selcom ID
-        $item = \App\Models\InvoiceType::where('id', $project_id)->first();
+        $start_date = date('Y-m-d', strtotime($due_date. ' - 30 days'));
+        $client = \App\Models\ClientSchool::where('school_id',(int) $school_id)->first();
+        
+      //  dd($client);
+        $school = \App\Models\School::find($school_id);
+        $year = \App\Models\AccountYear::where('name', date('Y'))->first();
 
+        // If school is not client, create pro forma invoice
+         if (is_null($client)) {
+            DB::table('admin.temp_clients')->insert([
+                'name' => $school->name, 'email' => request('email'), 'phone' => request('phone'), 'school_id' => $school->id, 'user_id' => \Auth::user()->id,
+                'reference' => $reference, 'date' => $start_date, 'due_date' => $due_date, 'account_year_id' => $year->id,
+                'amount' => remove_comma(request('amount')), 'project_id' => request('type')
+            ]);
+         } else { 
+        $client = \App\Models\Client::find($client->client_id);
+        $project_id = request('type');
+        $item = \App\Models\InvoiceType::where('id', (int) $project_id)->first();
+        
         $item_name = $item->name;
-        $data = ['reference' => $reference, 
-                 'client_id' => $client_id, 
-                 'date' => $start_date, 
-                 'due_date' => $due_date, 
-                 'year' => date('Y'), 
-                 'user_id' => Auth::user()->id, 
-                 'account_year_id' => $year->id];
+        $data = array('reference' => $reference, 
+                        'client_id' => $client->id, 
+                        'date' => $start_date, 
+                        'due_date' => $due_date, 
+                        'year' => date('Y'), 
+                        'user_id' => \Auth::user()->id, 
+                        'account_year_id' => $year->id
+                    );
 
         $invoice = Invoice::create($data);
-    
         $amount = remove_comma(request('amount'));
-        \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => $project_id, 'item_name' => $item_name, 'unit_price' => $amount]);
+         \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => $project_id, 'item_name' => $item_name, 'unit_price' => $amount]);
+        }
         return redirect()->back()->with('success', 'Invoice Created Successfully');
     }
+
+
 
     public function createInvoice() {
         $this->data['projects'] = Project::all();
@@ -1483,7 +1498,17 @@ class Account extends Controller {
               return redirect()->back();
            }
         return view('account.holidays', $this->data);
+    }
 
+
+    public function proinvoiceView(){
+            $id = request()->segment(3);
+            $this->data['invoice'] = \App\Models\TempClients::find($id);
+            return view('account.invoice.pro_forma', $this->data);
+
+            if($id == 'edit'){
+               return view('account.invoice.pro_forma', $this->data);
+            }
     }
 
 }

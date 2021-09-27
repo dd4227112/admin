@@ -119,10 +119,10 @@
                                                     <td>
                                                         <ul style="border-left: 1px solid #cccc; padding-left: 3em;">
                                                             <li style="font-size: 1.5rem; font-weght: bold;">To</li>
-                                                            <li><strong><?= $invoice->client->name ?></strong></li>
+                                                            <li><strong><?= $invoice->school->name ?></strong></li>
 
-                                                            <li>Phone: <?= $invoice->client->phone ?></li>
-                                                            <li>Email: <?= $invoice->client->email ?></li>
+                                                            <li>Phone: <?= $invoice->phone ?></li>
+                                                            <li>Email: <?= $invoice->email ?></li>
                                                         </ul>
                                                     </td>
                                                     <td>
@@ -138,7 +138,7 @@
                                         <table  class="table">
                                             <tr>
                                                 <td>Invoice #</td>
-                                                <td><?= strlen($invoice->token) < 4 ? $invoice->reference : $invoice->token ?></td>
+                                                <td><?= $invoice->reference ?></td>
                                                 <td colspan="2"> </td>
                                             </tr>
 
@@ -152,8 +152,8 @@
                                             <tr>
                                                 <td>TOTAL DUE</td>
                                                 <td>  <?php
-                                                    $am = $invoice->invoiceFees()->sum('amount');
-                                                    $paid = $invoice->payments()->sum('amount');
+                                                    $am = $invoice->amount;
+                                                    $paid = 0;
                                                     $unpaid = $am - $paid;
                                                     ?><b class="amnt-value">Tsh <?= number_format($unpaid) ?></b>
                                                 </td>
@@ -163,7 +163,7 @@
                                     </div>
 
                                     <?php
-                                    $invoice_fee = $invoice->invoiceFees()->get();
+                                //    $invoice_fee = $invoice->invoiceFees()->get();
                                     ?>
                                     <br/>
                                     <div class="col-xs-12 col-sm-12 col-lg-12">
@@ -177,31 +177,23 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php
-                                                $i = 1;
-                                                foreach ($invoice_fee as $fees) {
-                                                    ?>
-                                                    <tr>
-                                                 <td><?= $fees->item_name ?>
-                                                    
+                                              
+                                                <tr>
+                                                   <td> ShuleSoft Service Fee
                                                     <li>Training and Support</li>
                                                     <li>Unlimited Cloud hosting for School Information</li>
                                                     <li>Unlimited bandwidth for users to access</li>
-
                                                     <li>Customization of features based on school requests</li>
                                                     <li>Free Technical support for all ShuleSoft users<br/> ( parents, teachers, students and staff)</li>
-                                            
-
-                                                </td>
-                                                    <td class="text-center"><?= $fees->quantity ?></td>
-                                                    <td class="text-center"><?= $fees->unit_price ?></td>
-                                                    <td class="text-center"><?= money($fees->amount) ?></td>
+                                        
+                                                  </td>
+                                                    <td class="text-center"><?= isset($invoice->school->students) ? $invoice->school->students : ''  ?></td>
+                                                    <td class="text-center"><?= isset($invoice->unit_price) ? $invoice->unit_price : ''  ?></td>
+                                                    <td class="text-center"><?= money($invoice->amount) ?></td>
                                                 </tr>
-                                            <?php } ?>
-
                                             </tbody>
                                         </table>
-                                        <p class="well-sm "><b>Amount in words:</b> <?= number_to_words($unpaid) ?>    </p>
+                                        <p class="well-sm "><b>Amount in words:</b> <?= number_to_words($invoice->amount) ?>    </p>
                                     </div>
                                     <!-- /.col -->
                                     <div class="col-sm-12 col-lg-12">
@@ -210,55 +202,23 @@
 
                                     <table class="table">
                                         <tr>
-                                            <td>
-                                                <?php 
-                                                $a  = [];
-                                                        $setting = DB::table('admin.all_setting')->where('schema_name', $invoice->client->username)->first();
-                                                        if(!empty($setting)) {
-                                                           $a = DB::table($invoice->client->username. '.bank_accounts')->where('refer_bank_id', 22)->first();
-                                                        }
-                                                 if(!empty($a)){ ?>
-                                                   <p>
-                                                    <b>Account Details :</b><br/>
-                                                    <b>Account Name:</b> INETS COMPANY LIMITED <br/> 
-                                                    <b>Bank Name:</b> NMB BANK PLC <br/> 
-                                                     <b>Account Number:</b> 22510028669
-                                                    <br/>
-                                                    <small>Please notify us after a deposit</small>
-                                                  </p>
-                                                  <?php }else { ?>
-                                                    <p>
-                                                        <b>Account Details :</b><br/>
-                                                        <b>Account Name:</b> INETS COMPANY LIMITED <br/> 
-                                                        <b>Bank Name:</b> NMB BANK PLC <br/> 
-                                                         <b>Account Number:</b> 22510028669
-                                                        <br/>
-                                                        <small>Please notify us after a deposit</small>
-                                                    </p>
-                                                  <?php  }  ?>
-
-
-                                                <?php if (strlen($invoice->token) > 4) { ?>
-                                                <p>Or Pay Electronically here <a href="<?= url('epayment/i/' . $invoice->id) ?>" target="_blank"><?= url('epayment/i/' . ($invoice->id)) ?></a></p>
-                                              <?php } ?>
+                                         <td>
+                                                
+                                            <p>
+                                                <b>Account Details :</b><br/>
+                                                <b>Account Name:</b> INETS COMPANY LIMITED <br/> 
+                                                <b>Bank Name:</b> NMB BANK PLC <br/> 
+                                                <b>Account Number:</b> 22510028669
+                                                <br/>
+                                                <small>Please notify us after a deposit</small>
+                                            </p>
+                                                
                                         <!-- <br/>
                                         <b>If you make a bank deposit, you will have to notify us to activate your account</b> -->
-                                        <?php if(isset($diff_in_months)) { ?>
-                                        <?php if($diff_in_months <= 12) { ?>
                                         <p class="text-muted well well-sm no-shadow">
-                                            {{--  --}}
                                             We're always delighted to serve your school
                                         </p>
-                                        <?php } else { ?>
-                                            <p class="text-muted well well-sm no-shadow">
-                                              We're always delighted to serve your school
-                                            </p>
-                                          <?php } ?>
-                                        <?php } else { ?>
-                                            <p class="text-muted well well-sm no-shadow">
-                                                We're always delighted to serve your school
-                                            </p>
-                                        <?php } ?>
+                                    
                                         </td>
                                         <td>
                                             <b>Summary</b>
@@ -266,15 +226,15 @@
                                                 <tbody>
                                                     <tr>
                                                         <th>Sub - Total amount :</th>
-                                                        <th>Tsh <?= number_format($am) ?></th>
+                                                        <th>Tsh <?= number_format($invoice->amount) ?></th>
                                                     </tr>
                                                     <tr>
                                                         <th>Paid Amount :</th>
-                                                        <th>Tsh <?= $paid > 0 ? number_format($paid) : 0 ?> </th>
+                                                        <th>Tsh <?=  0 ?> </th>
                                                     </tr>
                                                     <tr>
                                                         <th>Grand Total :</th>
-                                                        <th>Tsh <?= number_format($unpaid) ?></th>
+                                                        <th>Tsh <?= number_format($invoice->amount) ?></th>
                                                     </tr>
 
                                                 </tbody>

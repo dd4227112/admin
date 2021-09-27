@@ -471,9 +471,10 @@ class Sales extends Controller {
                 ]);
                 $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
             }
-               DB::table('admin.schools')->where('id', $school_id)->update(['students' => request('students')]);
 
              $schema_name = request('username') != '' ? strtolower(trim(request('username'))) : $username;
+             DB::table('admin.schools')->where('id', $school_id)->update(['students' => request('students'),'schema_name' => $schema_name]);
+
              $check_client = DB::table('admin.clients')->where('username', $schema_name)->first();
              
             if (!empty($check_client)) {
@@ -493,6 +494,7 @@ class Sales extends Controller {
                     'created_by' => \Auth::user()->id,
                     'username' => clean($schema_name),
                     'payment_option' => request('payment_option'),
+                  
                 ]); 
 
                 //client school
@@ -530,7 +532,7 @@ class Sales extends Controller {
               }
  
                 // if document is standing order,Upload standing order files
-             if ( !empty(request('agree_document')) && request('payment_option') == 'standing order') {
+             if (!empty(request('agree_document')) && request('payment_option') == 'standing order') {
                 $file = request()->file('agree_document');
                 $company_file_id = $file ? $this->saveFile($file,'company/contracts', TRUE) : 1;
                 $contract_id = DB::table('admin.standing_orders')->insertGetId(array(
@@ -545,7 +547,6 @@ class Sales extends Controller {
             } else {
                 $file = request()->file('agree_document');
                 $company_file_id = $file ? $this->saveFile($file,'company/contracts', TRUE) : 1;
-
                 $contract_id = DB::table('admin.contracts')->insertGetId([
                 'name' => 'Shulesoft', 'company_file_id' => $company_file_id, 'start_date' => date('Y-m-d'), 'contract_type_id' => 2, 'user_id' => \Auth::user()->id
                 ]);
@@ -556,35 +557,33 @@ class Sales extends Controller {
              }
 
             //once a school has been installed, now create an invoice for this school or create a promo code
-            if (request('payment_status') == 1) {
-                // create an invoice for this school
-                $check_booking = DB::table('admin.invoices')->where('client_id', $client_id)->first();
+            // if (request('payment_status') == 1) {
+            //     // create an invoice for this school
+            //     $check_booking = DB::table('admin.invoices')->where('client_id', $client_id)->first();
               
-                if (!empty($check_booking)) {
-                    $booking = $check_booking;
-                } else {
-                    // $order_id = time() . $client_id;
-                    // $client = DB::table('admin.clients')->where('id', $client_id)->first();
-                    // $total_price = (int) request('students') < 100 ? 100000 : $client->estimated_students * 1000;
-                    // $order = array("order_id" => $order_id, "amount" => $total_price,
-                    //     'buyer_name' => $client->name, 'buyer_phone' => $client->phone, 'end_point' => '/checkout/create-order', 'action' => 'createOrder', 'client_id' => $client->id, 'source' => $client->id);
-                    // $this->curlPrivate($order);
+            //     if (!empty($check_booking)) {
+            //         $booking = $check_booking;
+            //     } else {
+                $client = \App\Models\Client::findOrFail($client_id);
+                $year = \App\Models\AccountYear::where('name', date('Y'))->first();
+                $reference = time(); // to be changed for selcom ID
+                $invoice = \App\Models\Invoice::create(['reference' => $reference, 'client_id' => $client_id, 'date' => date('d M Y'), 'due_date' => date('d M Y', strtotime(' +30 day')), 'year' => date('Y'), 'user_id' => Auth::user()->id, 'account_year_id' => $year->id]);
+                //once we introduce packages (module pricing), we will just loop here for modules selected by specific user
 
-                    $client = \App\Models\Client::findOrFail($client_id);
-                    $year = \App\Models\AccountYear::where('name', date('Y'))->first();
-                    $reference = time(); // to be changed for selcom ID
-                    $invoice = \App\Models\Invoice::create(['reference' => $reference, 'client_id' => $client_id, 'date' => date('d M Y'), 'due_date' => date('d M Y', strtotime(' +30 day')), 'year' => date('Y'), 'user_id' => Auth::user()->id, 'account_year_id' => $year->id]);
-                    //once we introduce packages (module pricing), we will just loop here for modules selected by specific user
+                // $months_remains = 12 - (int) date('m', strtotime($client->created_at)) + 1;
+                // $unit_price = $months_remains * $client->price_per_student / 12;
+                // $amount = $unit_price * $client->estimated_students;
 
-                    $months_remains = 12 - (int) date('m', strtotime($client->created_at)) + 1;
-                    $unit_price = $months_remains * $client->price_per_student / 12;
-                    $amount = $unit_price * $client->estimated_students;
+                 $unit_price = request('price');
+                 $estimated_students = request('students');
+                 $amount = $unit_price * $estimated_students;
 
-                    \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee', 'quantity' => $client->estimated_students, 'unit_price' => $unit_price]);
-                }
-                $this->scheduleActivities($client_id);
-                return redirect('sales/customerSuccess/1/' . $client_id);
-            } else {   
+                \App\Models\InvoiceFee::create(['invoice_id' => $invoice->id, 'amount' => $amount, 'project_id' => 1, 'item_name' => 'ShuleSoft Service Fee', 
+                'quantity' => $estimated_students, 'unit_price' => $unit_price]);
+            //     }
+            //     $this->scheduleActivities($client_id);
+            //     return redirect('sales/customerSuccess/1/' . $client_id);
+            // } else {   
                 //create a trial code for this school
                 $trial_code = $client_id . time();
                 $client = DB::table('admin.clients')->where('id', $client_id); 
@@ -598,18 +597,21 @@ class Sales extends Controller {
     
                 $message = 'Hello '.$user->firstname .' '. $user->lastname 
                 . chr(10) .'School :' . $school->name . ' has been onboarded succesfully'
+                . chr(10) .'And invoice for this school has been created'
+                . chr(10) .'Kindly verify INVOICE  created and STANDING ORDER documents before proceeding'
                 . chr(10) .'Thanks you.';
                 $this->send_whatsapp_sms($user->phone, $message); 
 
                 $finance = \App\Models\User::where('designation_id',2)->first();
                 $sms = 'Hello '.$finance->firstname .' '. $finance->lastname 
                 . chr(10) .'New school :' . $school->name . ' has been onboarded in the shulesoft system'
+                . chr(10) .'You are remainded to verify the invoice document'
                 . chr(10) .'Thanks you.';
                 $this->send_whatsapp_sms($finance->phone, $sms); 
 
                 $this->scheduleActivities($client_id);  
                 return redirect('sales/customerSuccess/2/' . $client_id);
-            }
+            //}
             //send onboarding message to customer directly
             $this->onboardMessage($client);
             return redirect('https://' . $username . '.shulesoft.com');
@@ -708,8 +710,9 @@ class Sales extends Controller {
                         . '</ul>';
             $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
            
+                //  message to assign messages
                 $sms  = 'Hello ' .$user->firstname .' ' . $user->lastname
-                . chr(10) . 'A task of  :' . $section->content . ' at ' . \App\Models\Client::where('id',$client_id)->first()->name .' has been allocated to you'
+                . chr(10) . 'A task of : ' . $section->content . ' at ' . \App\Models\Client::where('id',$client_id)->first()->name .' has been allocated to you'
                 . chr(10) . 'A task is expected to start at ' .date('d-m-Y', strtotime($start_date)).' and end '. date('d-m-Y', strtotime($start_date . " + {$section->time} days"))
                 . chr(10) . 'Thank you';
              $this->send_whatsapp_sms($user->phone, $sms);
@@ -729,7 +732,7 @@ class Sales extends Controller {
                     $this->send_email($manager->email,'Task Allocation', $manager_message);
                  
                     $message  = 'Hello ' .$manager->firstname .' ' . $manager->lastname
-                    . chr(10) . 'A task of  :' . $section->content . ' been scheduled to ' . \App\Models\Client::where('id',$client_id)->first()->name .' has been allocated to you'
+                    . chr(10) . 'A task of : ' . $section->content . ' been scheduled to ' . \App\Models\Client::where('id',$client_id)->first()->name .' has been allocated to you'
                     . chr(10) . 'A task is expected to start at ' .date('d-m-Y', strtotime($start_date)).' up to '. date('d-m-Y', strtotime($start_date . " + {$section->time} days"))
                     . chr(10) . 'Thank you';
                     $this->send_whatsapp_sms($manager->phone, $message);
@@ -739,13 +742,14 @@ class Sales extends Controller {
                     $phonenumber = $this->extractPhoneNumber(request("train_item{$section->id}"));
                     $phonenumber = validate_phone_number($phonenumber[0],255);
                     $sms  = 'Hello '
-                    . chr(10) . 'A task of  :' . $section->content . ' has been allocated to your school'
+                    . chr(10) . 'A task of : ' . $section->content . ' has been allocated to your school'
                     . chr(10) . 'A task is expected to start at ' .date('F,d Y', strtotime($start_date)).' up to '. date('F,d Y', strtotime($start_date . " + {$section->time} days"))
                     . chr(10) . 'Thank you';
                     $this->send_whatsapp_sms($phonenumber, $sms);
               }
         }  
     }
+
 
     public function extractPhoneNumber($text){
          $matches = array();
