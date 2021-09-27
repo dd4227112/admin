@@ -69,7 +69,7 @@
                                         @foreach($clients as $client)
                                         <tr>
                                             <td><?= $i ?></td>
-                                            <td><?= warp($client->name) ?></td>
+                                            <td><?= warp($client->name,20) ?></td>
                                             <td>{{$client->email}}</td>
                                             <td>{{$client->phone}}</td>
                                             <td><?= date('d-m-Y H:i:s', strtotime($client->created_at)) ?></td>

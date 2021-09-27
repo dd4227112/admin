@@ -444,6 +444,21 @@ Not yet (Schedule)
 </div>
 </div>
 </div>
+
+<hr>
+<div class="form-group">
+ <div class="row">
+   <div class="col-md-4">
+      <strong> Set Remainder</strong>: <input type="checkbox"  id="supplied" name="remainder" checked>
+   </div>
+     <div id="idate" class="form-group col-md-4">
+        <strong>Remainder date</strong> : <input type="date"  name="remainder_date" class="form-control">
+    </div>
+
+  </div>
+</div>
+
+
 </div>
 
 <div class="modal-footer">
@@ -493,10 +508,10 @@ onmousedown="removeTag(<?= $task->id ?>)">Remove
 tag</a>
 <a class="dropdown-item" href="#">Report
 Photo</a>
-<a class="dropdown-item" href="#">Hide From
-Timeline</a>
-<a class="dropdown-item" href="#">Blog
-User</a>
+<button type="button" class="btn btn-primary waves-effect"
+data-toggle="modal" data-target="#edit-Modal-task">edit
+Task</button>
+
 </div> 
 
 <div class="card-block">
@@ -1002,33 +1017,32 @@ in this part
 </thead>
 <tbody>
 <?php
-$client_contracts = DB::table('admin.client_contracts')->where('client_id', $client_id)->get();
+$client_contracts = DB::select("select a.*,b.start_date,b.end_date,b.name,b.type,c.name as username from admin.client_contracts a join admin.contracts b on a.contract_id = b.id join admin.users c on c.id = b.user_id  where a.client_id= '{$client_id}' ");
 $i = 1;
 if (!empty($client_contracts)) {
-foreach ($client_contracts as $client_contract) {
-//  $contract = \App\Models\Contract::where('id', $client_contracts->contract_id)->get();
-//  if(!empty($contract)){
+foreach ($client_contracts as $client_contract) { 
 ?>
 <tr>
 <th scope="row"><?= $i ?></th>
-<td><?= isset($client_contract->contract->name) ? $client_contract->contract->name : '' ?>
+<td><?= isset($client_contract->name) ? $client_contract->name : '' ?>
 </td>
-<td><?= isset($client_contract->contract->contract_type_id) ? $client_contract->contract->contractType->name : 'Not Defined' ?>
+<td><?= isset($client_contract->type) ? $client_contract->type : 'Not Defined' ?>
 </td>
-<td><?= isset($client_contract->contract->start_date) ? $client_contract->contract->start_date : '' ?>
+<td><?= isset($client_contract->start_date) ? $client_contract->start_date : '' ?>
 </td>
-<td><?= isset($client_contract->contract->end_date) ? $client_contract->contract->end_date : '' ?>
+<td><?= isset($client_contract->end_date) ? $client_contract->end_date : '' ?>
 </td>
-<td><?= isset($client_contract->contract->user->name) ? $client_contract->contract->user->name : '' ?>
+<td><?= isset($client_contract->username) ? $client_contract->username : '' ?>
 </td>
 <td>
     <a type="button"
         class="btn btn-primary btn-sm waves-effect"
         target="_blank"
-        href="<?= isset($client_contract->contract->id) ? url('customer/viewContract/' . $client_contract->contract->id) : '' ?>">View</a>
-    <a type="button"
-        class="btn btn-warning btn-sm waves-effect"
-        href="<?= isset($client_contract->contract->id) ? url('customer/deleteContract/' . $client_contract->contract->id) : '' ?>">Delete</a>
+        href="<?= isset($client_contract->contract_id) ? url('customer/viewContract/' . $client_contract->contract_id) : '' ?>">View</a>
+<?php if(can_access('delete_contract')) { ?>
+ <a type="button" class="btn btn-danger btn-sm waves-effect"
+        href="<?= isset($client_contract->contract_id) ? url('customer/deleteContract/' . $client_contract->contract_id) : '' ?>">Delete</a>
+<?php }  ?>
 </td>
 </tr>
 
@@ -1036,6 +1050,7 @@ foreach ($client_contracts as $client_contract) {
 $i++;
 }
 }
+
 ?>
 </tbody>
 </table>
@@ -1054,16 +1069,23 @@ $i++;
 
 <div class="card">
 <div class="card-header">
-<h5>Job Card</h5>
-{{-- <p align="right">
-<a href="<?= url('customer/Jobcard/' . $client_id) ?>" class="btn btn-warning btn-sx"> School Job card </a>
-</p> --}}
-<p align="right">
+<h5 class="mb-5">Job Card</h5>
+
+<div class="row justify-content-between">
+<p class="float-left">
+<button type="button" class="user_dialog btn btn-primary waves-effect"
+data-toggle="modal" data-target="#uploadjobcard-Modal">
+Upload Job card
+</button>
+</p>
+
+<p class="float-right">
 <button type="button" class="btn btn-primary waves-effect"
 data-toggle="modal" data-target="#jobcard-Modal">Create
 Job card
 </button>
 </p>
+</div>
 
 <div class="modal fade" id="jobcard-Modal" tabindex="-1"
 role="dialog" aria-hidden="true"
@@ -1140,37 +1162,23 @@ name="client_id" />
 <tr>
 <th>#</th>
 <th>Date</th>
-<th>Download</th>
-<th>Upload</th>
+<th>Created by</th> 
+<th>View</th>
 </tr>
 </thead>
 <tbody>
 <?php
 $x = 1;
-$jobcards = DB::table('job_cards')->distinct('date')->orderBy('date', 'desc')->get();
+$jobcards = \DB::select("select a.*,b.name from admin.client_job_cards a join admin.users b on a.created_by = b.id where client_id = '{$client_id}' order by a.id desc");
 foreach ($jobcards as $jobcard) {
 ?>
 <tr>
 <th scope="row"><?= $x ?></th>
 <td><?= date('d-m-Y', strtotime($jobcard->date)) ?></td>
-<td> <a href="<?= url('customer/Jobcard/' . $client_id . '/' . $jobcard->date) ?>"
-class="btn btn-warning btn-sx"> Download form </a></td>
-<td>
-<?php $card = DB::table('client_job_cards')->where(['date' => $jobcard->date, 'client_id' => $client_id])->first(); ?>
-<?php if(empty($card->file)) { ?>
-<button type="button" class="user_dialog btn btn-primary waves-effect"
-data-toggle="modal" data-target="#uploadjobcard-Modal"
-data-id="<?= $jobcard->date ?>">
-Upload Job card
-</button>
-<?php } else { ?>
-{{-- <a  target="_break" href="<?= url('customer/viewFile/' . $jobcard->date . '/jobcard') ?>" class="btn btn-sm btn-success">View job card</a> --}}
-
-<a  target="_break" href="<?= url('storage/uploads/files/'.$card->file) ?>" class="waves-light waves-effect btn btn-primary btn-sm">View</a>
-
-<?php } ?>
+<td><?= $jobcard->name ?? '' ?></td>
+<td class="text-center">
+ <a  target="_break" href="<?= url('customer/viewContract/' . $jobcard->id . '/jobcard') ?>" class="btn btn-sm btn-success">View </a> 
 </td>
-
 </tr>
 <?php
 $x++;
@@ -1236,6 +1244,52 @@ name="client_id" />
 </div>
 </div>
 
+
+
+<div class="modal fade" id="edit-Modal-task" tabindex="-1"
+role="dialog">
+<div class="modal-dialog modal-lg" role="document">
+<div class="modal-content">
+<div class="modal-header">
+<h4 class="modal-title">Edit this task
+</h4>
+<button type="button" class="close"
+data-dismiss="modal" aria-label="Close">
+<span aria-hidden="true">×</span>
+</button>
+</div>
+
+<form action="" method="post">
+<div class="modal-body">
+<div class="form-group">
+<div class="row">
+<div class="col-md-6">
+<strong> Upload Job card</strong>
+<input type="file"
+class="form-control"
+name="job_card_file">
+</div>
+
+
+</div>
+</div>
+</div>
+
+<div class="modal-footer">
+<button type="button"
+class="btn btn-default waves-effect "
+data-dismiss="modal">Close</button>
+<button type="submit"
+class="btn btn-primary waves-effect waves-light ">Save
+changes</button>
+</div>
+<input type="hidden" value=""
+name="client_id" />
+<?= csrf_field() ?>
+</form>
+</div>
+</div>
+</div>
 
 <div class="card">
 <div class="card-header">
@@ -1723,7 +1777,7 @@ style="z-index: 1050; display: none;">
 <div class="modal-content">
 
 <div class="modal-header">
-<h4 class="modal-title">Add Standing Order</h4>
+<h6 class="modal-title">ADD STANDING ORDER</h6>
 <button type="button" class="close"
 data-dismiss="modal" aria-label="Close">
 <span aria-hidden="true">×</span>
@@ -1735,34 +1789,12 @@ data-dismiss="modal" aria-label="Close">
 <div class="form-group">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
 <div class="row">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 <div class="col-md-6">                                                                                                                                                                                                                                                                                                                                      
- <strong> Branch name </strong>
-<select name="branch_id" class="form-control select2" required>
-<?php
-$branches = \App\Models\PartnerBranch::orderBy('id', 'asc')->get();
-foreach ($branches as $branch) { ?>
-    <option value="<?= $branch->id ?>"> <?= $branch->name ?> </option>
-  <?php
-}
-?>
-</select>
+   <strong> Branch name </strong>
+   <input type="text" placeholder="Bank branch name"  class="form-control"  name="branch_name" required>
 </div>
 <div class="col-md-6">
 <strong> Contact person </strong>
-<select name="school_contact_id"  class="form-control select2"  >
-<?php
-$contact_staffs = DB::table('school_contacts')->get();
-if (count($contact_staffs)) {
-foreach ($contact_staffs as $contact_staff) {
-?>
-<option
-    value="<?= $contact_staff->id ?>">
-        <?= $contact_staff->name ?>
-</option>
-<?php
-}
-}
-?>
-</select>
+   <input type="text" placeholder="Contact person"  class="form-control"  name="contact_person" required>
 </div>
 </div>
 </div>
@@ -1798,7 +1830,7 @@ class="form-control"  name="occurance_amount" id="box2" required>
 
 <div class="col-md-6">
 <strong> Total amount</strong>
-<input type="text" class="form-control" name="total_amount"  id="result" required>
+<input type="text" class="form-control" name="total_amount"  required>
 </div>
 </div>
 </div>
@@ -2163,7 +2195,7 @@ enctype="multipart/form-data">
 </div>
 </div>
 <div class="form-group row">
-<label class="col-sm-2 col-form-label">Contract Start Date</label>
+<label class="col-sm-2 col-form-label">Contract End Date</label>
 <div class="col-sm-10">
     <input type="date" class="form-control" name="end_date" required="">
 </div>
@@ -2291,7 +2323,11 @@ aria-hidden="true">
             dropdownAutoWidth: false,
             allowClear: false,
             debug: true
-        }); 
+        });
+        
+        $('#supplied').click(function() {
+             $('#idate')[this.checked ? "show" : "hide"]();
+         });
 
         function calculate() {
             var myBox1 = document.getElementById('box1').value;

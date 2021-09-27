@@ -53,6 +53,19 @@ class Account extends Controller {
             $this->getInvoices($project_id, $account_year_id);
         }
 
+        if ($project_id == 'delete') {
+            $invoice_id = request()->segment(4);
+            \App\Models\Invoice::find($invoice_id)->delete();
+            $invoice_fee = \App\Models\InvoiceFee::where('invoice_id',$invoice_id)->first();
+            $payments = \App\Models\Payment::where('invoice_id', $invoice_id)->first();
+            if (!empty($payments)) {
+                \App\Models\Payment::where('invoice_id', $invoice_id)->delete();
+                \App\Models\InvoiceFeesPayment::where('invoice_fee_id', $invoice_fee->id)->delete();
+                 $invoice_fee->delete();
+            }
+            return redirect()->back()->with('success', 'deleted successfully');
+          }
+
         if ($project_id == 'edit') {
             $id = request()->segment(4);
             $this->data['invoice'] = Invoice::find($id);
@@ -103,6 +116,8 @@ class Account extends Controller {
                 return redirect()->back()->with('success', 'success');
             }
             $this->data['invoice'] = Invoice::find($invoice_id);
+            $this->data['invoicefee'] = InvoiceFee::where('invoice_id',$invoice_id)->first();
+        
             $this->data['usage_start_date'] = $this->data['invoice']->client->start_usage_date;
            
             $start_usage_date = !empty($this->data['usage_start_date']) ? date('Y-m-d',strtotime($this->data['usage_start_date'])) : date('Y-m-d', strtotime('Jan 01'));
@@ -1342,17 +1357,9 @@ class Account extends Controller {
     }
 
     public function getExpenseRevenueByMonth() {
-        return DB::select("with tempa as (
-    select a.date,a.revenue, b.expense from 
-    (
-select  sum(amount) as revenue,date_trunc('month', date) as date from admin.revenues group by date_trunc('month', date) order by date_trunc('month', date) asc
-    )
-    as a left join 
-    (
-  select  sum(amount::numeric) as expense,date_trunc('month', date) as date from admin.expenses group by date_trunc('month', date) order by date_trunc('month', date) asc
-    ) as b on date_trunc('month', b.date)= date_trunc('month', a.date) ),
-tempb as ( select * from tempa ) 
-select * from tempb");
+        return DB::select("with tempa as (select a.date,a.revenue, b.expense from (select  sum(amount) as revenue,date_trunc('month', date) as date from admin.revenues group by date_trunc('month', date) order by date_trunc('month', date) asc)as a left join 
+    (select  sum(amount::numeric) as expense,date_trunc('month', date) as date from admin.expenses group by date_trunc('month', date) order by date_trunc('month', date) asc
+    ) as b on date_trunc('month', b.date)= date_trunc('month', a.date) ),tempb as ( select * from tempa ) select * from tempb");
     }
 
     public function customSummary() {
@@ -1404,14 +1411,14 @@ select * from tempb");
     public function standingOrders() {              
          $this->data['standingorders'] = \App\Models\StandingOrder::latest()->get();
          $this->data['schools'] = \App\Models\Client::get();
-        return view('account.standing_order', $this->data);
+        return view('account.standing', $this->data);
     }
 
     // Approve standing orders
     public function approveStandingOrder() { 
         $this->data['so_id'] = $so_id = request()->segment(3);
         if(!empty($so_id)){
-            \App\Models\StandingOrder::where('id', $so_id)->update(['is_approved' => 1,'approved_by' => Auth::user()->id]);
+            \App\Models\StandingOrder::where('id', $so_id)->update(['is_approved' => 1,'approved_by' => \Auth::user()->id]);
         }
         return redirect()->back()->with('success', 'Standing order approved!');
     } 
@@ -1480,3 +1487,4 @@ select * from tempb");
     }
 
 }
+

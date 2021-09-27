@@ -176,6 +176,8 @@
                                             <input id="location" placeholder="basic salary" type="text" class="form-control  transaction_amount" name="salary" value="<?=$user->salary?>">
                                         </div>
                                     </div>
+
+                                  <?php if(can_access('edit_user_info')) { ?>
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong>Joining Date:*</strong>
@@ -188,6 +190,7 @@
                                             <input id="location" placeholder="Contract End date" type="date" class="form-control" name="contract_end_date" value="<?=$user->contract_end_date?>" >
                                         </div>
                                     </div>
+
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong>Scanned Academic Certificates:</strong>
@@ -210,6 +213,8 @@
                                             <span class="hinge">Please Scan employment contract upload them in company Google drive account, and paste a shared link here</span>
                                         </div>
                                     </div>
+                                  <?php } ?>
+
 
                                      <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
@@ -269,12 +274,14 @@
                                         </div>
                                     </div>
 
+                                  <?php if(can_access('edit_user_info')) { ?>
                                     <div class="col-xs-12 col-sm-12 col-md-12">
                                         <div class="form-group">
                                             <strong>Next Kin Information:</strong>
                                              <input name="next_kin" class="form-control" value="<?=$user->next_kin ?>">
                                         </div>
                                     </div>
+                                  <?php }  ?>
                                     <div class="col-xs-12 col-sm-12 col-md-12 text-center">
                                         <button type="submit" class="btn btn-primary">Update User</button>
                                     </div>

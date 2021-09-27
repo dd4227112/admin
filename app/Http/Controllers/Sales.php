@@ -242,25 +242,16 @@ class Sales extends Controller {
                 break;
             case 'schools':
                 if ((int) request('type') == 3) {
-                 
               //  $sql = "select * from (select a.*, (select count(*) from admin.tasks where school_id=a.id) as activities from admin.schools a where lower(a.ownership) <>'government') a where activities >0";
                 $sql = "select C.*,D.username from (select A.*,B.* from (select x.* from(select s.id,s.name,s.ownership,s.type,s.zone,s.nmb_school_name,s.nmb_zone,s.branch_code,s.branch_name,s.account_number,s.schema_name,s.nmb_branch,s.students,s.created_at,s.updated_at,s.ward_id,s.status,s.registered,w.name as ward, d.name as district,r.name as region, count(t.*) as activities from admin.schools as s join admin.tasks as t on s.id=t.school_id join admin.wards as w on s.ward_id=w.id join admin.districts as d on d.id=w.district_id join admin.regions as r on r.id=d.region_id group by s.id, w.id, d.id,r.id) x ) A LEFT JOIN (select school_id,client_id from admin.client_schools) B on A.id = B.school_id) C  left  join (select id,username from admin.clients) D on C.client_id = D.id;"; 
                 } else if ((int) request('type') == 2) {
-                    $sql = "select B.id,B.name,B.ownership,B.type,B.registration_number,B.status,B.status,B.students,
-                    B.created_at,B.updated_at,B.nmb_branch,B.account_number,B.branch_name,B.branch_code,
-                    B.nmb_zone,B.registered,B.zone,B.schema_name,B.activities,B.ward_id,T.region,T.ward,T.district
-                    from (select a.*, (select count(*) from admin.tasks where client_id in 
-                    (select id from admin.clients where username in (select schema_name from admin.all_setting where school_id=a.id)))
-                    as activities from admin.schools a   where lower(a.ownership) <>'government' and a.id in 
-                    (select school_id from admin.all_setting)) B join 
-                    (select D.name as district,W.id,W.name as ward,R.name as region from admin.districts as D join
+                    $sql = "select B.id,B.name,B.ownership,B.type,B.registration_number,B.status,B.status,B.students,B.created_at,B.updated_at,B.nmb_branch,B.account_number,B.branch_name,B.branch_code,B.nmb_zone,B.registered,B.zone,B.schema_name,B.activities,B.ward_id,T.region,T.ward,T.district
+                    from (select a.*, (select count(*) from admin.tasks where client_id in (select id from admin.clients where username in (select schema_name from admin.all_setting where school_id=a.id)))
+                    as activities from admin.schools a   where lower(a.ownership) <>'government' and a.id in (select school_id from admin.all_setting)) B join (select D.name as district,W.id,W.name as ward,R.name as region from admin.districts as D join
                     admin.wards as W on D.id = W.district_id join admin.regions R on R.id = D.region_id ) T on B.ward_id = T.id";
                 } else {     
-                 $sql = "select a.* from (select s.*,b.name as ward,d.name as district,r.name as region,c.client_id,e.username, (select count(*) from admin.tasks where school_id=s.id) 
-                 as activities from admin.schools s join admin.wards b on s.ward_id = b.id join admin.districts as d on d.id=b.district_id join admin.regions r on r.id=d.region_id
-                  left join admin.client_schools c on c.school_id = s.id left join admin.clients e on e.id=c.client_id) a where lower(a.ownership) <>'government' ";
+                 $sql = "select a.* from (select s.id,s.registered,s.status,s.created_at,s.students,s.nmb_branch,s.schema_name,s.account_number,s.branch_name,s.branch_code,s.nmb_zone,s.nmb_school_name,s.zone,s.type,s.ownership,s.name,b.name as ward,d.name as district,r.name as region,c.client_id,e.username, (select count(*) from admin.tasks where school_id=s.id) as activities from admin.schools s join admin.wards b on s.ward_id = b.id join admin.districts as d on d.id=b.district_id join admin.regions r on r.id=d.region_id left join admin.client_schools c on c.school_id = s.id left join admin.clients e on e.id=c.client_id) a where lower(a.ownership) <>'government'";
                  }
-                 
                 return $this->ajaxTable('schools', ['a.name', 'a.region', 'a.district'], $sql);
                 break;
             case 'prospects':
@@ -452,7 +443,6 @@ class Sales extends Controller {
         if(Auth::user()->department == 9 || Auth::user()->department == 10){
             return redirect('Partner/add/'.$school_id);
         }
-       //   dd(request()->all());
        // $this->data['school'] = $school = DB::table('admin.schools')->where('id', $school_id)->first();
         $this->data['school'] = $school  =  \App\Models\School::findOrFail($school_id);
 
@@ -474,8 +464,6 @@ class Sales extends Controller {
                 ]);
             $code = rand(343, 32323) . time();
 
-          //  dd(request()->all());
-
             $school_contact = DB::table('admin.school_contacts')->where('school_id', $school_id)->first();
             if (empty($school_contact)) {
                 DB::table('admin.school_contacts')->insert([
@@ -486,7 +474,6 @@ class Sales extends Controller {
                DB::table('admin.schools')->where('id', $school_id)->update(['students' => request('students')]);
 
              $schema_name = request('username') != '' ? strtolower(trim(request('username'))) : $username;
-        
              $check_client = DB::table('admin.clients')->where('username', $schema_name)->first();
              
             if (!empty($check_client)) {
@@ -504,7 +491,8 @@ class Sales extends Controller {
                     'email_verified' => 0,
                     'phone_verified' => 0,
                     'created_by' => \Auth::user()->id,
-                    'username' => clean($schema_name)
+                    'username' => clean($schema_name),
+                    'payment_option' => request('payment_option'),
                 ]); 
 
                 //client school
@@ -529,43 +517,43 @@ class Sales extends Controller {
                 ]);
             }
   
-           
-        
-            $filename = '';
             if (!empty(request('file'))) {
                 $file = request()->file('file');
-                $filename = time() . rand(11, 8894) . '.' . $file->guessExtension();
-                $filePath = base_path() . '/storage/uploads/files/';
-                $file->move($filePath, $filename);
-
-               $contract_id = DB::table('admin.contracts')->insertGetId([
-                'name' => 'Shulesoft', 'file' => $filename, 'company_file_id' => '2', 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'contract_type_id' => request('contract_type_id'), 'user_id' => Auth::user()->id
+                $company_file_id = $file ? $this->saveFile($file,'company/contracts', TRUE) : 1;
+                $contract_id = DB::table('admin.contracts')->insertGetId([
+                'name' => 'Shulesoft', 'company_file_id' => $company_file_id, 'start_date' => request('start_date'), 'end_date' => request('end_date'), 'contract_type_id' => request('contract_type_id'), 'user_id' => \Auth::user()->id
                 ]);
                 //client contracts
                 DB::table('admin.client_contracts')->insert([
                     'contract_id' => $contract_id, 'client_id' => $client_id
                 ]);
-            }
-
-             $filename1 = '';
-             if (!empty(request('standing_order'))) {
-                $file = request()->file('standing_order');
-                $filename1 = time() . rand(11, 8894) . '.' . $file->guessExtension();
-                $filePath = base_path() . '/storage/uploads/file/';
-                $file->move($filePath, $filename1);
-
-               $contract_id = DB::table('admin.standing_orders')->insertGetId([
+              }
+ 
+                // if document is standing order,Upload standing order files
+             if ( !empty(request('agree_document')) && request('payment_option') == 'standing order') {
+                $file = request()->file('agree_document');
+                $company_file_id = $file ? $this->saveFile($file,'company/contracts', TRUE) : 1;
+                $contract_id = DB::table('admin.standing_orders')->insertGetId(array(
                     'type' => 'Yearly','created_by' => \Auth::user()->id, 
                     'client_id' => $client_id,'contract_type_id' => 8,
-                    'is_approved' => '0','file' => $filename1
+                    'is_approved' => '0','company_file_id' => $company_file_id
+                ));
+                //client contracts
+                DB::table('admin.client_contracts')->insert([
+                    'contract_id' => $contract_id, 'client_id' => $client_id
+                ]);
+            } else {
+                $file = request()->file('agree_document');
+                $company_file_id = $file ? $this->saveFile($file,'company/contracts', TRUE) : 1;
+
+                $contract_id = DB::table('admin.contracts')->insertGetId([
+                'name' => 'Shulesoft', 'company_file_id' => $company_file_id, 'start_date' => date('Y-m-d'), 'contract_type_id' => 2, 'user_id' => \Auth::user()->id
                 ]);
                 //client contracts
                 DB::table('admin.client_contracts')->insert([
                     'contract_id' => $contract_id, 'client_id' => $client_id
                 ]);
-            }
-
-        
+             }
 
             //once a school has been installed, now create an invoice for this school or create a promo code
             if (request('payment_status') == 1) {
@@ -607,10 +595,18 @@ class Sales extends Controller {
                 //$this->send_email($user->email, 'Success: School Onboarded Successfully', $message);
 
                 $user = \App\Models\User::find(request('sales_user_id'));
-                $message = "Hello " . $user->firstname . " " . $user->lastname ." The process of onboarding " . $school->name ." has been succesfully.Thank you";
-                $phonenumber = validate_phone_number($user->phone,255);
-                $this->send_whatsapp_sms($phonenumber, $message); 
-              
+    
+                $message = 'Hello '.$user->firstname .' '. $user->lastname 
+                . chr(10) .'School :' . $school->name . ' has been onboarded succesfully'
+                . chr(10) .'Thanks you.';
+                $this->send_whatsapp_sms($user->phone, $message); 
+
+                $finance = \App\Models\User::where('designation_id',2)->first();
+                $sms = 'Hello '.$finance->firstname .' '. $finance->lastname 
+                . chr(10) .'New school :' . $school->name . ' has been onboarded in the shulesoft system'
+                . chr(10) .'Thanks you.';
+                $this->send_whatsapp_sms($finance->phone, $sms); 
+
                 $this->scheduleActivities($client_id);  
                 return redirect('sales/customerSuccess/2/' . $client_id);
             }
@@ -711,14 +707,18 @@ class Sales extends Controller {
                         . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                         . '</ul>';
             $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
-            $message = "Hello " . $user->firstname . " " . $user->lastname ." A task of " . $section->content ." at " . \App\Models\Client::where('id',$client_id)->first()->name ." has been allocated to you.A task is expected to start at " .date('d-m-Y', strtotime($start_date))." and end ". date('d-m-Y', strtotime($start_date . " + {$section->time} days")) ." .Thank you";
-            $this->send_whatsapp_sms($user->phone, $message);
+           
+                $sms  = 'Hello ' .$user->firstname .' ' . $user->lastname
+                . chr(10) . 'A task of  :' . $section->content . ' at ' . \App\Models\Client::where('id',$client_id)->first()->name .' has been allocated to you'
+                . chr(10) . 'A task is expected to start at ' .date('d-m-Y', strtotime($start_date)).' and end '. date('d-m-Y', strtotime($start_date . " + {$section->time} days"))
+                . chr(10) . 'Thank you';
+             $this->send_whatsapp_sms($user->phone, $sms);
 
 
             //email to zonal manager
              $sales = new \App\Http\Controllers\Customer();
              $zm = $sales->zonemanager($client_id);
-             if(isset($zm) && !empty((int) $zm->user_id)){
+             if(isset($zm->user_id) && !empty((int) $zm->user_id)){
                       $manager = \App\Models\User::where('id',$zm->user_id)->first();
                         $manager_message = 'Hello ' . $manager->firstname . '<br/>'
                         . 'A task ' . $section->content .' been scheduled to'
@@ -727,15 +727,21 @@ class Sales extends Controller {
                         . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                         . '</ul>';
                     $this->send_email($manager->email,'Task Allocation', $manager_message);
-                    $message = "Hello" .$manager->firstname . " " .$manager->lastname .", A task of . $section->content .' been scheduled to " .\App\Models\Client::where('id',$client_id)->first()->name." Start date: " . date('d-m-Y', strtotime($start_date)) . " Up to: " . date('d-m-Y', strtotime($start_date . " + {$section->time} days"))." .Thank you!";
+                 
+                    $message  = 'Hello ' .$manager->firstname .' ' . $manager->lastname
+                    . chr(10) . 'A task of  :' . $section->content . ' been scheduled to ' . \App\Models\Client::where('id',$client_id)->first()->name .' has been allocated to you'
+                    . chr(10) . 'A task is expected to start at ' .date('d-m-Y', strtotime($start_date)).' up to '. date('d-m-Y', strtotime($start_date . " + {$section->time} days"))
+                    . chr(10) . 'Thank you';
                     $this->send_whatsapp_sms($manager->phone, $message);
                }
             //sms to school personel
               if(request("train_item{$section->id}") != ''){
                     $phonenumber = $this->extractPhoneNumber(request("train_item{$section->id}"));
                     $phonenumber = validate_phone_number($phonenumber[0],255);
-                    $sms = 'Hello '. request("train_item{$section->id}") . ' a task of '  . $section->content . ' been allocated to your school, It is expected to start at ' . date('F,d Y', strtotime($start_date)) . ' and end at  '. date('F,d Y', strtotime($start_date . " + {$section->time} days")) .'';
-                 //   $this->send_sms($phonenumber, $sms);
+                    $sms  = 'Hello '
+                    . chr(10) . 'A task of  :' . $section->content . ' has been allocated to your school'
+                    . chr(10) . 'A task is expected to start at ' .date('F,d Y', strtotime($start_date)).' up to '. date('F,d Y', strtotime($start_date . " + {$section->time} days"))
+                    . chr(10) . 'Thank you';
                     $this->send_whatsapp_sms($phonenumber, $sms);
               }
         }  
@@ -1135,86 +1141,6 @@ class Sales extends Controller {
     }
 
 
-    // public function addperfomance() {
-    //     $this->data['id']  = $id = request()->segment(3);
-    //     $this->data['school'] =  \App\Models\School::where('id', $id)->where(DB::raw('lower(ownership)'),'<>','government')->first();
-    //     return view('sales.add_perfomance',$this->data);
-    // }
-
-
-    // public function storeperfomance(){
-    //     $school_id = request('school_id');
-    //     $module_type = request('perf');
-    //     $number_of_students = \App\Models\Client::where('id',\App\Models\ClientSchool::where('school_id',$school_id)->first()->client_id)->first()->estimated_students;
-    
-    //     $data = [
-    //         'module' => request('perf'),
-    //         'school_id' => request('school_id'),
-    //         'user_id' => Auth::user()->id,
-    //         'date' => date('Y-m-d')
-    //     ];
-    //      \App\Models\PerfomanceMeasures::create($data);
-        
-    //    if($number_of_students < 300){
-    //         $module_id = \App\Models\Module::where('name',$module_type)->first()->id;
-    //         $module_amount = \App\Models\CustomerSupportModule::where('module_id',$module_id)->first()->low;
-    //         $bonus_data = [
-    //         'user_id' => Auth::user()->id,
-    //         'bonus_amount' => $module_amount,
-    //         'name' => $module_type,
-    //         'role_id' => \App\Models\RoleUser::where('user_id',Auth::user()->id)->first()->role_id,
-    //         'date' => date('Y-m-d'),
-    //         'school_id' => $school_id
-    //       ];
-    //       \App\Models\MonthlyBonus::create($bonus_data);
-    //    } else if($number_of_students >= 300 && $number_of_students < 600){
-    //          $module_id = \App\Models\ModuleBonus::where('name',$module_type)->first()->id;
-    //          $module_amount = \App\Models\CustomerSupportModule::where('module_id',$module_id)->first()->medium;
-    //          $bonus_data = [
-    //         'user_id' => Auth::user()->id,
-    //         'bonus_amount' => $module_amount,
-    //         'name' => $module_type,
-    //         'role_id' => \App\Models\RoleUser::where('user_id',Auth::user()->id)->first()->role_id,
-    //         'date' => date('Y-m-d'),
-    //         'school_id' => $school_id
-    //         ];
-    //         \App\Models\MonthlyBonus::create($bonus_data);
-    //    } else if($number_of_students >= 600 && $number_of_students < 1000){
-    //          $module_id = \App\Models\ModuleBonus::where('name',$module_type)->first()->id;
-    //          $module_amount = \App\Models\CustomerSupportModule::where('module_id',$module_id)->first()->high;
-    //          $bonus_data = [
-    //         'user_id' => Auth::user()->id,
-    //         'bonus_amount' => $module_amount,
-    //         'name' => $module_type,
-    //         'role_id' => \App\Models\RoleUser::where('user_id',Auth::user()->id)->first()->role_id,
-    //         'date' => date('Y-m-d'),
-    //         'school_id' => $school_id
-    //         ];
-    //         \App\Models\MonthlyBonus::create($bonus_data);
-    //    } else{
-    //          $module_id = \App\Models\ModuleBonus::where('name',$module_type)->first()->id;
-    //          $module_amount = \App\Models\CustomerSupportModule::where('module_id',$module_id)->first()->higher;
-    //          $bonus_data = [
-    //         'user_id' => Auth::user()->id,
-    //         'bonus_amount' => $module_amount,
-    //         'name' => $module_type,
-    //         'role_id' => \App\Models\RoleUser::where('user_id',Auth::user()->id)->first()->role_id,
-    //         'date' => date('Y-m-d'),
-    //         'school_id' => $school_id
-    //       ];
-    //     \App\Models\MonthlyBonus::create($bonus_data);
-    //    }
-    // }
-
-    // public function removeperfomance(){
-    //     $module = request('perf');
-    //     $school_id = request('school_id');
-       
-    //     $check = \App\Models\PerfomanceMeasures::whereMonth('date', Carbon::now()->month)->whereYear('date', date('Y'))->where('school_id',$school_id)->where(['module' => $module, 'user_id'=>Auth::user()->id])->first(); 
-    //     $check->delete();
-    //     $bonus = \App\Models\MonthlyBonus::whereMonth('date', Carbon::now()->month)->whereYear('date', date('Y'))->where(['school_id' => $school_id,'name'=>$module,'user_id' =>Auth::user()->id])->first(); 
-    //     $bonus->delete();
-    // }
 
 
     public function hrReport(){

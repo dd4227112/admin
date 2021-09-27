@@ -203,7 +203,7 @@ foreach ($all_invoices as $all_inv) {
                      <td> 
                          <?php
                         if (isset($customer->schema_name)) {
-                            echo warp($customer->schema_name);
+                            echo warp($customer->schema_name,20);
                         } else {
                             echo 'Not Specified';
                         }

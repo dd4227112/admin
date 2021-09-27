@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'env' => 'local', //env('APP_ENV', 'production'),
+    'env' =>'production',// 'local', //env('APP_ENV', 'production'),
 
     /*
     |--------------------------------------------------------------------------
@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'debug' =>TRUE, // (bool) env('APP_DEBUG', false),
+    'debug' =>false, // (bool) env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -94,20 +94,6 @@ return [
     */
 
     'fallback_locale' => 'en',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Faker Locale
-    |--------------------------------------------------------------------------
-    |
-    | This locale will be used by the Faker PHP library when generating fake
-    | data for your database seeds. For example, this will be used to get
-    | localized telephone numbers, street address information and more.
-    |
-    */
-
-    'faker_locale' => 'en_US',
-
     /*
     |--------------------------------------------------------------------------
     | Encryption Key
@@ -119,7 +105,7 @@ return [
     |
     */
 
-    'key' => env('APP_KEY'),
+    'key' => env('APP_KEY','base64:2yCQng1WzNFHhq28MJYwtxcyBo2VOue1YR+4oXJD5Ek=]'),
 
     'cipher' => 'AES-256-CBC',
 

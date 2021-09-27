@@ -149,11 +149,11 @@
                                             ?>
                                             <tr>
                                                 <td><?= $i++ ?></td>
-                                                <td><?= warp($school->client->name) ?></td>
-                                                <td><?= warp($school->client->address) ?></td>
+                                                <td><?= warp($school->client->name,20) ?></td>
+                                                <td><?= warp($school->client->address,20) ?></td>
                                                 <td><?= $school->client->phone ?></td>
                                                 <td>
-                                                    <a href="https://<?=$school->client->username?>.shulesoft.com/" target="_blank" rel="noopener noreferrer"><?=warp($school->client->name)?></a>
+                                                    <a href="https://<?=$school->client->username?>.shulesoft.com/" target="_blank" rel="noopener noreferrer"><?=warp($school->client->name,20)?></a>
                                                 </td>
                                                
                                                 <?php

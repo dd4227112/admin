@@ -103,7 +103,9 @@ AND TABLE_NAME = '$table_name' and table_schema='$schema_name'");
     }
 
     public function loadSchema() {
-        return DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant','admin','api','app','skysat','jifunze','forum','academy','carryshop') and table_schema  in (select username from admin.clients where id  in (select client_id from admin.payments) or table_schema in (select username from admin.standing_orders s join admin.clients b on b.id=s.client_id))");
+
+        return DB::select("SELECT distinct table_schema FROM INFORMATION_SCHEMA.TABLES WHERE table_schema NOT IN ('pg_catalog','information_schema','constant', 'admin','api','app','skysat','dodoso','forum','academy','carryshop')");
+
     }
 
     /**
@@ -334,7 +336,7 @@ ORDER BY c.oid, a.attnum";
 
     public function logs() { 
         $this->data['schema_name'] = $schema = request()->segment(3);
-        $this->data['error_log_count'] = strlen($schema) > 3 ? \collect(DB::select("select distinct error_message,created_at::date,schema_name,file from admin.error_logs where schema_name = '$schema' and deleted_at is null group by error_message,created_at::date,schema_name,file order by created_at::date"))->count() :  \collect(DB::select("SELECT distinct error_message,error_instance,created_at::date,schema_name,file,url,id  from (select * from admin.error_logs where deleted_at is null AND error_instance  NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException') order by id desc) y where deleted_at is null"))->count();
+        $this->data['error_log_count'] =  \collect(DB::select("SELECT distinct error_message,error_instance,created_at::date,schema_name,file,url,id  from (select * from admin.error_logs where deleted_at is null AND error_instance  NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException','Illuminate\Auth\AuthenticationException','Symfony\Component\ErrorHandler\Error\FatalError','ErrorException') order by id desc) y where deleted_at is null"))->count();
         $this->data['schema_errors']  =  strlen($schema) > 3 ? DB::select("select distinct error_message,created_at::date,schema_name,file,url from admin.error_logs where schema_name = '$schema' and deleted_at is null group by error_message,created_at::date,schema_name,file,url order by created_at::date") : []; // DB::select("SELECT distinct error_message,error_instance,created_at::date,schema_name,file,url,id  from (select * from admin.error_logs where deleted_at is null AND error_instance NOT IN ('Symfony\Component\HttpKernel\Exception\NotFoundHttpException', 'Illuminate\Session\TokenMismatchException') order by id desc) y where deleted_at is null") ;
         $this->data['danger_schema'] = \collect(DB::select('select count(*), "schema_name" from admin.error_logs  group by "schema_name" order by count desc limit 1 '))->first();
         return view('software.logs', $this->data);
@@ -662,6 +664,8 @@ ORDER BY c.oid, a.attnum";
                     } //else { return redirect()->back()->with('success', 'invalid token'); }
                 }
             }
+
+       
             $this->data['returns'] = $returns;
         }
         return view('software.api.reconciliation', $this->data);
@@ -674,6 +678,14 @@ ORDER BY c.oid, a.attnum";
         $curl = $background->curlServer($fields, $url, 'row');
         return $curl;
         // return redirect()->back()->with('success',$curl);
+    }
+
+    public function syncPayments($data) {
+        $background = new \App\Http\Controllers\Background();
+        $url = 'http://51.91.251.252:8081/api/init';
+        $fields = $data;
+        $curl = $background->curlServer($fields, $url, 'row');
+        return $curl;
     }
 
     public function template() {
@@ -781,7 +793,10 @@ ORDER BY c.oid, a.attnum";
         return view('customer.usage.custom_report', $this->data);
     }
 
+    public function myLogs() {
+        $this->data['logs'] = DB::SELECT("select * from admin.error_logs a WHERE a.deleted_at is null AND (a.route like '%mark%' OR a.route like '%exam%' OR a.route like '%classes%' OR a.route like '%subject%' OR a.route like '%routine%' OR a.route like '%semester%' OR a.route like '%student%' OR a.route like '%parent%' OR a.route like '%user%') order by id asc limit 200");
+        return view('software.mylogs', $this->data);
+    }
 
-    
-
+ //   id	error_message	file	route	url	error_instance	request	schema_name	created_by	created_by_table	created_at
 }

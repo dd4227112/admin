@@ -180,8 +180,7 @@
                         </div>
                         <div class="card-block">
                             <?php
-                            $new_schools = 'select count(*),extract(month from created_at) as month from admin.all_setting a
-where extract(year from a.created_at)=' . $year . '  group by month order by month';
+                            $new_schools = 'select count(*),extract(month from created_at) as month from admin.all_setting a where extract(year from a.created_at)=' . $year . '  group by month order by month';
                             echo $insight->createChartBySql($new_schools, 'month', 'Onboarded Schools', 'line', false);
                             ?>
                         </div>
@@ -204,6 +203,7 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                                         <th>No.</th>
                                         <th>Task type</th>
                                         <th>School</th>
+                                        <th>Activity</th>
                                         <th>Added On</th>
                                         <th>Action</th>
                                     </tr>
@@ -217,8 +217,9 @@ where extract(year from a.created_at)=' . $year . '  group by month order by mon
                                             <tr>
                                                 <td><?= $i++ ?></td>
                                                 <td><?= $act->type ?></td>
-                                                <td><?= $act->activity ?>..</td>
-                                                <td><?= $act->end_date ?></td>
+                                                <td><?= $act->school ?></td>
+                                                <td><?= warp($act->activity,80) ?> </td>
+                                                <td><?= date('d-m-Y',strtotime($act->end_date)) ?></td>
                                                 <td> <a href="<?= url('customer/activity/show/' . $act->id) ?>">View</a> </td>
                                             </tr>
                                         <?php } ?>
@@ -312,8 +313,7 @@ where extract(year from created_at)=' . date('Y') . ' group by month order by mo
     </thead>
     <tbody>
         <?php
-        $new_schools = DB::select('select count(*),extract(month from created_at) as month from admin.all_setting
-where extract(year from created_at)=' . date('Y') . ' group by month order by month');
+        $new_schools = DB::select('select count(*),extract(month from created_at) as month from admin.all_setting where extract(year from created_at)=' . date('Y') . ' group by month order by month');
         foreach ($new_schools as $new_school) {
             $monthNum = $new_school->month;
             $dateObj = DateTime::createFromFormat('!m', $monthNum);
@@ -382,7 +382,7 @@ where extract(year from created_at)=' . date('Y') . ' group by month order by mo
     $(document).ready(function () {
         $('#all_users').html('<?=$summary['users']?>');
         $('#all_students').html('<?=$summary['students']?>');
-        $('#all_parents').html('<?=$summary['parents']?>');
+        $('#all_parents').html('<?=$summary['parents'] ?>');
         $('#all_teachers').html('<?=$summary['teachers']?>');
         $('#schools_with_shulesoft').html('<?=$summary['total_schools']?>');
         $('#schools_with_students').html('<?=$summary['total_schools']?>' - '<?=$summary['schools_with_students']?>');

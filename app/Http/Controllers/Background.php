@@ -169,7 +169,7 @@ class Background extends Controller {
             //live invoice
             // $setting = DB::table($invoice->schema_name . '.setting')->first();
             $url = 'https://api.mpayafrica.co.tz/v2/auth';
-            $credentials = DB::table($invoice->schema_name . '.bank_accounts_integrations')->where('invoice_prefix', $invoice->prefix)->where('schema_name', $invoice->schema_name)->first();
+            $credentials = DB::table($invoice->schema_name . '.bank_accounts_integrations')->where('invoice_prefix', $invoice->prefix)->first();
             if (!empty($credentials)) {
                 $user = trim($credentials->api_username);
                 $pass = trim($credentials->api_password);
@@ -410,7 +410,7 @@ class Background extends Controller {
 
     //Notify all admin about monthly reports
     public function schoolMonthlyReport() {
-        DB::select('REFRESH MATERIALIZED VIEW CONCURRENTLY public.all_users');
+        //DB::select('REFRESH MATERIALIZED VIEW CONCURRENTLY public.all_users');
         $users = DB::select("select * from admin.all_users where lower(usertype)='admin' and status=1");
         $key_id = DB::table('public.sms_keys')->first()->id;
         foreach ($users as $user) {

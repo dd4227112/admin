@@ -183,16 +183,19 @@
                                                     ?>
                                                     <tr>
                                                  <td><?= $fees->item_name ?>
-                                                <li>Training and Support</li>
-                                                <li>Unlimited Cloud hosting for School Information</li>
-                                                <li>Unlimited bandwidth for users to access</li>
+                                                    
+                                                    <li>Training and Support</li>
+                                                    <li>Unlimited Cloud hosting for School Information</li>
+                                                    <li>Unlimited bandwidth for users to access</li>
 
-                                                <li>Customization of features based on school requests</li>
-                                                <li>Free Technical support for all ShuleSoft users<br/> ( parents, teachers, students and staff)</li>
+                                                    <li>Customization of features based on school requests</li>
+                                                    <li>Free Technical support for all ShuleSoft users<br/> ( parents, teachers, students and staff)</li>
+                                            
+
                                                 </td>
-                                                <td class="text-center"><?= $fees->quantity ?></td>
-                                                <td class="text-center"><?= $fees->unit_price ?></td>
-                                                <td class="text-center"><?= money($fees->amount) ?></td>
+                                                    <td class="text-center"><?= $fees->quantity ?></td>
+                                                    <td class="text-center"><?= $fees->unit_price ?></td>
+                                                    <td class="text-center"><?= money($fees->amount) ?></td>
                                                 </tr>
                                             <?php } ?>
 
@@ -213,7 +216,7 @@
                                                         $setting = DB::table('admin.all_setting')->where('schema_name', $invoice->client->username)->first();
                                                         if(!empty($setting)) {
                                                            $a = DB::table($invoice->client->username. '.bank_accounts')->where('refer_bank_id', 22)->first();
-                                                        } 
+                                                        }
                                                  if(!empty($a)){ ?>
                                                    <p>
                                                     <b>Account Details :</b><br/>
@@ -234,6 +237,7 @@
                                                     </p>
                                                   <?php  }  ?>
 
+
                                                 <?php if (strlen($invoice->token) > 4) { ?>
                                                 <p>Or Pay Electronically here <a href="<?= url('epayment/i/' . $invoice->id) ?>" target="_blank"><?= url('epayment/i/' . ($invoice->id)) ?></a></p>
                                               <?php } ?>
@@ -243,16 +247,16 @@
                                         <?php if($diff_in_months <= 12) { ?>
                                         <p class="text-muted well well-sm no-shadow">
                                             {{--  --}}
-                                            Thank you for your business. we're glad to serve you
+                                            We're always delighted to serve your school
                                         </p>
                                         <?php } else { ?>
                                             <p class="text-muted well well-sm no-shadow">
-                                              Thank you for your business. we're glad to serve you
+                                              We're always delighted to serve your school
                                             </p>
                                           <?php } ?>
                                         <?php } else { ?>
                                             <p class="text-muted well well-sm no-shadow">
-                                                Thank you for your business. we're glad to serve you
+                                                We're always delighted to serve your school
                                             </p>
                                         <?php } ?>
                                         </td>

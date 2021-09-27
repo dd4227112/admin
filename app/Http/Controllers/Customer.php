@@ -236,14 +236,18 @@ class Customer extends Controller {
                     . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                     . '</ul>';
             $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
-            $message = "Hello " . $user->firstname . " a task of " . $train->trainItem->content . " at " . $train->client->name . " has been allocated to you.The project is expected to start at " . date('d-m-Y', strtotime($start_date)) . " to  " . date('d-m-Y', strtotime($start_date . " + {$section->time} days")) . " .Thank You";
-            $this->send_whatsapp_sms($user->phone, $message);
-
+         
+            $message = 'Hello ' . $user->firstname . ' '. $user->lastname . '.'
+            . chr(10) . 'A task of '. $train->trainItem->content .'at ' . $train->client->name
+            . chr(10) . 'Has been allocated to you'
+            . chr(10) . 'The project is expected to start at ' . date('d-m-Y', strtotime($start_date)) . ' to  ' . date('d-m-Y', strtotime($start_date . " + {$section->time} days")) .'.'
+            . chr(10) . 'Thanks You.';
+            $this->send_whatsapp_sms($user->phone, $message); 
 
             //email to zone manager
             // findOrFail zone manager based on school location
             $user_manager = $this->zonemanager($train->client->id);
-            if (isset($user_manager) && !empty((int) $user_manager->user_id)) {
+            if (isset($user_manager->user_id) && !empty((int) $user_manager->user_id)) {
                 $manager = \App\Models\User::where('id', $user_manager->user_id)->first();
                 $manager_message = 'Hello ' . $manager->firstname . '<br/>'
                         . 'A task ' . $train->trainItem->content . ' been scheduled to'
@@ -252,8 +256,14 @@ class Customer extends Controller {
                         . '<li>Deadline: ' . date('Y-m-d H:i:s', strtotime($start_date . " + {$section->time} days")) . '</li>'
                         . '</ul>';
                 $this->send_email($manager->email, 'ShuleSoft Task Allocation', $manager_message);
-                $wmessage = "Hello " . $manager->firstname . " a task of " . $train->trainItem->content . " at " . $train->client->name . " has been allocated to " . $user->firstname . " " . $user->lastname . " The project is expected to start at " . date('d-m-Y', strtotime($start_date)) . " to  " . date('d-m-Y', strtotime($start_date . " + {$section->time} days")) . " .Thank You";
-                $this->send_whatsapp_sms($manager->phone, $wmessage);
+
+                $wmessage = 'Hello ' . $manager->firstname . ' '. $manager->lastname . '.'
+                . chr(10) . 'A task of '. $train->trainItem->content .'at ' . $train->client->name
+                . chr(10) . 'Has been allocated to ' . $user->firstname . ' ' . $user->lastname 
+                . chr(10) . 'The project is expected to start at ' . date('d-m-Y', strtotime($start_date)) . ' to  ' . date('d-m-Y', strtotime($start_date . " + {$section->time} days")) .'.'
+                . chr(10) . 'Thanks You.';
+                $this->send_whatsapp_sms($manager->phone, $wmessage); 
+
             }
 
 
@@ -493,36 +503,38 @@ class Customer extends Controller {
         }
         // $this->data['profile'] = \App\Models\ClientSchool::where('client_id', $client->id)->first();
         $this->data['profile'] = \App\Models\Client::where('id', $client->id)->first();
-
         $this->data['is_client'] = $is_client;
 
         $year = \App\Models\AccountYear::where('name', date('Y'))->first();
         $this->data['invoices'] = \App\Models\Invoice::where('client_id', $client->id)->where('account_year_id', $year->id)->get();
         $this->data['standingorders'] = \App\Models\StandingOrder::where('client_id', $client->id)->get();
 
-        if ($_POST) {
-            $data = array_merge(request()->except(['start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date')))]);
-            $task = \App\Models\Task::create($data);
-            if ((int) request('to_user_id') > 0) {
-                DB::table('tasks_users')->insert([
-                    'task_id' => $task->id,
-                    'user_id' => request('to_user_id')
-                ]);
-                $user = \App\Models\User::find(request('to_user_id'));
-                $message = 'Hello ' . $user->firstname . '<br/>'
-                        . 'A task has been allocated to you'
-                        . '<ul>'
-                        . '<li>Task: ' . $task->activity . '</li>'
-                        . '<li>Type: ' . $task->taskType->name . '</li>'
-                        . '<li>Deadline: ' . $task->start_date . '</li>'
-                        . '</ul>';
-                $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
-            }
+        if ($_POST) {  
+            $remainder = request('remainder') ? 0 : 1; 
+            $data = array_merge(request()->except(['start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))), 'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date'))),'remainder' => $remainder,'remainder_date'=> date('Y-m-d',strtotime(request('remainder_date')))]);
 
-            DB::table('tasks_clients')->insert([
+            $task = \App\Models\Task::create($data);
+             DB::table('tasks_clients')->insert([
                 'task_id' => $task->id,
                 'client_id' => (int) request('client_id')
             ]);
+
+            if ((int) request('to_user_id') > 0) {
+                  DB::table('tasks_users')->insert([
+                    'task_id' => $task->id,
+                    'user_id' => request('to_user_id')
+                  ]);
+                   $user = \App\Models\User::find(request('to_user_id'));
+                  $message =  'Hello ' . $user->firstname . ' '. $user->lastname . '.'
+                    . chr(10) . 'A task has been allocated to you'
+                    . chr(10) . 'Task: ' . $task->activity . '.'
+                    . chr(10) . 'Type: ' . $task->taskType->name . '.'
+                    . chr(10) . 'Deadline: ' . $task->start_date . '.'
+                    . chr(10) . 'Thanks.';
+                   $this->send_email($user->email, 'ShuleSoft Task Allocation', $message); 
+               }
+             
+         
             if (!empty($task->id) && request('module_id')) {
                 $modules = request('module_id');
                 foreach ($modules as $key => $value) {
@@ -544,6 +556,8 @@ class Customer extends Controller {
         }
     }
 
+     
+
     public function editdetails() {
         $id = request()->segment(3);
         $data = request()->except('_token');
@@ -557,42 +571,29 @@ class Customer extends Controller {
 
     public function addstandingorder() {
         if ($_POST) {
-              $file = request('standing_order_file');
-            // $company_file_id = $file ? $this->saveFile($file, 'company/contracts') : 1;
+            $file = request('standing_order_file');
             $total_amount = empty(request('total_amount')) ? request('occurance_amount') * request('number_of_occurrence') : request('total_amount');
-
-            // $filename1 = '';
-            // if (!empty(request('standing_order_file'))) {
-            //     $file = request()->file('standing_order_file');
-            //     $filename1 = time() . rand(11, 8894) . '.' . $file->guessExtension();
-            //     $filePath = base_path() . '/storage/uploads/files/';
-            //     $file->move($filePath, $filename1);
-            // }
-
             $company_file_id = $file ? $this->saveFile($file, 'company/contracts', TRUE) : 1;
             
             $data = [
                 'client_id' => request('client_id'),
-                'branch_id' => request('branch_id'),
+               // 'branch_id' => request('branch_id'),
                 'company_file_id' => $company_file_id,
                 'school_contact_id' => request('school_contact_id'),
-                'created_by' => Auth::user()->id,
+                'created_by' => \Auth::user()->id,
                 'occurrence' => request('number_of_occurrence'),
                 'type' => request('which_basis'),
                 'occurance_amount' => remove_comma(request('occurance_amount')),
                 'total_amount' => remove_comma($total_amount),
                 'payment_date' => request('maturity_date'),
-                // 'refer_bank_id' => request('refer_bank_id'),
+                'contact_person' => request('contact_person'),
                 'note' => request('note'),
                 'contract_type_id' => 8,
-               // 'file' => $filename1,
-                'created_at' => now()
+                'branch_name' => request('branch_name')
             ];
             $contract_id = DB::table('admin.standing_orders')->insertGetId($data);
-
             //client contracts
             DB::table('admin.client_contracts')->insert(['contract_id' => $contract_id, 'client_id' => request('client_id')]);
-
             return redirect('account/standingOrders')->with('success', 'Standing order added successfully!');
         }
     }
@@ -604,8 +605,8 @@ class Customer extends Controller {
             $this->data['types'] = DB::table('task_types')->where('department', Auth::user()->department)->get();
             $this->data['departments'] = DB::table('departments')->get();
             if ($_POST) {
+            
                 // $random = time();
-
                 $data = array_merge(request()->except(['to_user_id', 'start_date', 'end_date']), ['user_id' => Auth::user()->id, 'start_date' => date("Y-m-d H:i:s", strtotime(request('start_date'))),
                     'end_date' => date("Y-m-d H:i:s", strtotime(request('end_date')))]);
 
@@ -744,20 +745,29 @@ class Customer extends Controller {
 
             $task = \App\Models\Task::find(request('id'));
             foreach ($users as $user_task) {
-
                 $user = \App\Models\User::find($user_task->user_id);
                 $message = 'Hello ' . $user->firstname . '<br/>'
                         . 'Task Status has been updated to :' . request('status')
                         . '<ul>'
                         . '<li>Task: ' . $task->activity . '</li>'
                         . '<li>Type: ' . $task->taskType->name . '</li>'
-                        . '<li>Deadline: ' . $task->date . '</li>'
+                        . '<li>Deadline: ' . date('d-m-Y', strtotime($task->date)) . '</li>'
                         . '</ul>';
                 $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+
+                    $sms  = 'Hello ' .$user->firstname .' ' . $user->lastname
+                . chr(10) . 'Task Status has been updated to :' . request('status')
+                . chr(10) . 'Task of : ' . $task->activity 
+                . chr(10) . 'Type : ' . $task->taskType->name  . '.'
+                . chr(10) . 'Deadline : ' . date('d-m-Y', strtotime($task->date))  . '.'
+                . chr(10) . 'Thanks and regards,';
+                 $this->send_whatsapp_sms($user->phone, $sms);
             }
         }
         echo request('status');
     }
+
+  
 
     public function changepriority() {
         if (request('priority') == 1) {
@@ -781,11 +791,21 @@ class Customer extends Controller {
                         . '<li>Type: ' . $task->taskType->name . '</li>'
                         . '<li>Deadline: ' . $task->date . '</li>'
                         . '</ul>';
-                $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+                  $this->send_email($user->email, 'ShuleSoft Task Allocation', $message);
+
+                        $sms  = 'Hello ' .$user->firstname .' ' . $user->lastname
+                    . chr(10) . 'Task Priority has been updated to :' . $priority
+                    . chr(10) . 'Task of : ' . $task->activity 
+                    . chr(10) . 'Type : ' . $task->taskType->name  . '.'
+                    . chr(10) . 'Deadline : ' . date('d-m-Y', strtotime($task->date))  . '.'
+                    . chr(10) . 'Thanks and regards,';
+                     $this->send_whatsapp_sms($user->phone, $sms);
             }
         }
         echo $priority;
     }
+
+
 
     public function getTaskByDepartment() {
         $dep_id = request('dep_id');
@@ -874,6 +894,12 @@ class Customer extends Controller {
             $this->data['next'] = \App\Models\Requirement::whereNotIn('id', [$id])->where('status', 'New')->first()->id;
             return view('customer/view_requirement', $this->data);
         }
+
+         if ($tab == 'edit' && $id > 0) {
+            $this->data['requirement'] = \App\Models\Requirement::where('id', $id)->first();
+            return view('customer/edit_requirement', $this->data);
+        }
+
         $this->data['levels'] = [];  
         if ($_POST) {
             $requirement = [
@@ -881,21 +907,35 @@ class Customer extends Controller {
                     'contact' =>  request('contact'),
                     'to_user_id' =>  request('to_user_id'),
                     'note' =>  request('note'),
-                   ];
+             ];
 
             $data = array_merge($requirement,['user_id' => Auth::user()->id]);
             
             $req = \App\Models\Requirement::create($data);
             if ((int) request('to_user_id') > 0) {
                 $user = \App\Models\User::find(request('to_user_id'));
-                $new_req =  isset($req->school->name) ? ' New School Requirement from ' . $req->school->name : ' New Requirement ';
+                $new_req =  isset($req->school->name) ? ' new school requirement from ' . $req->school->name : ' new requirement ';
                 $message = 'Hello ' . $user->name . '<br/>'
                         . 'There is '. $new_req . '</p>'
-                        . '<br/><br/><p><b>Requirement:</b> ' . $req->note . '</p>'
+                        . '<br/><p><b>Requirement:</b> ' . $req->note . '</p>'
                         . '<br/><br/><p><b>By:</b> ' . $req->user->name . '</p>';
-                $this->send_email($user->email, 'ShuleSoft New Customer Requirement', $message);
-                $sms = 'Hello ' . $user->name . ' There is ' . $new_req . '  ' . $req->note . ' By: ' . $req->user->name . '';
-                $this->send_whatsapp_sms($user->phone, $sms);
+                     $this->send_email($user->email, 'ShuleSoft New Customer Requirement', $message);
+
+                      $sms  = 'Hello ' .$user->name .'.'
+                    . chr(10) . 'There is ' . $new_req . '.'
+                    . chr(10) .  strip_tags($req->note) 
+                    . chr(10) . 'By: ' . $req->user->name . '.'
+                    . chr(10) . 'Thanks and regards,';
+                     $this->send_whatsapp_sms($user->phone, $sms);
+
+                    DB::table('public.sms')->insert([
+                        'body'=>$sms,
+                        'user_id'=>1,
+                        'type'=>0,
+                        'priority' => 1,
+                        'sent_from' => 'whatsapp',
+                        'phone_number'=> $user->phone
+                     ]);
             }
         }
         $this->data['requirements'] = \App\Models\Requirement::latest()->get();
@@ -903,11 +943,65 @@ class Customer extends Controller {
         return view('customer/analysis', $this->data);
     }
 
+      public function editReq() {
+        $id = request('req_id');
+        $data = request()->except('_token','req_id');
+        \App\Models\Requirement::where('id', $id)->update($data);
+       // return redirect()->back()->with('success', 'Edited successfully!');
+        return redirect('customer/requirements');
+    }
+
     public function updateReq() {
         $id = request('id');
         $action = request('action');
+
         \App\Models\Requirement::where('id', $id)->update(['status' => $action]);
-        return redirect()->back()->with('success', 'success');
+        $data = \App\Models\Requirement::where('id', $id)->first();
+        $user = \App\Models\User::where('id', $data->user_id)->first();  
+         
+        if($action == 'On Progres'){
+           $status = ' is now on progress. You will be notified as soon as its Completed.';
+        } elseif($action == 'Completed'){
+           $status = ' is now complete. Login into your shulesoft account.';
+        } elseif($action == 'Resolved'){
+           $status = ' is resolved. Login into your shulesoft account.';
+        }  
+        $message   = 'Hello ' .$user->name .'.'
+                    . chr(10) . 'The requirement of : '.strip_tags($data->note) . '.'
+                    . chr(10) . 'You requested on ' . date('d-m-Y', strtotime($data->created_at)) .' '.$status . ''
+                    . chr(10) . 'Thanks and regards,'
+                    . chr(10) . 'Technical Team.';
+       $this->send_whatsapp_sms($user->phone, $message);
+
+       DB::table('public.sms')->insert([
+                'body'=>$message,
+                'user_id'=>1,
+                'type'=>0,
+                'priority' => 1,
+                'sent_from' => 'whatsapp',
+                'phone_number'=> $user->phone
+            ]);
+
+        if(preg_match('/[0-9]/', $data->contact)  && $action == 'Completed') {
+            $message1 = 'Hello '
+            . chr(10) . 'Thanks for using Shulesoft Services'
+            . chr(10) . 'The requirement of : ' . strip_tags($data->note) . '.'
+            . chr(10) . 'Requested on ' . date('d-m-Y', strtotime($data->created_at)) .' is now complete. Login into your shulesoft account'
+            . chr(10) . 'Thanks and regards,'
+            . chr(10) . 'Shulesoft Team'
+            . chr(10) . 'Call: +255 655 406 004';
+
+            DB::table('public.sms')->insert([
+                'body'=>$message1,
+                'user_id'=>1,
+                'type'=>0,
+                'priority' => 1,
+                'sent_from' => 'whatsapp',
+                'phone_number'=> $data->contact
+            ]);
+            $this->send_whatsapp_sms($data->contact, $message1);
+        }
+       return redirect()->back()->with('success', 'success');
     }
 
     public function usageAnalysis() {
@@ -1308,6 +1402,9 @@ class Customer extends Controller {
         } else if ($type == 'absent') {
             $document = \App\Models\Absent::find($contract_id);
             $this->data['path'] = $document->companyFile->path;
+        }  else if ($type == 'jobcard') {
+            $contract = \App\Models\ClientJobCard::find($contract_id);
+            $this->data['path'] = $contract->companyFile->path;
         } else {
             $contract = \App\Models\Contract::find($contract_id);
             $this->data['path'] = $contract->companyFile->path;
@@ -1387,7 +1484,7 @@ class Customer extends Controller {
     public function contract() {
         $client_id = request()->segment(3);
         $file = request()->file('file');
-        $file_id = $this->saveFile($file, 'company/contracts');
+        $file_id = $this->saveFile($file, 'company/contracts',TRUE);
         //save contract
 
         $contract_id = DB::table('admin.contracts')->insertGetId([
@@ -1484,51 +1581,37 @@ class Customer extends Controller {
         foreach ($module_ids as $module_id) {
             \App\Models\JobCard::create(['module_id' => $module_id, 'client_id' => $client_id, 'user_id' => $user_id, 'date' => $date]);
         }
-        return redirect()->back()->with('success', 'Job card modules uploaded succesfully!');
+     // return redirect()->back()->with('success', 'Job card modules uploaded succesfully!');
+       return redirect('customer/Jobcard/' . $client_id . '/' . $date);
+
     }
 
     public function uploadJobCard() {
-
-        if ($_POST) { // dd(request()->all());
-            // $file = request()->file('job_card_file');
-            $filename1 = '';
-            if (!empty(request('job_card_file'))) {
-                $file = request()->file('job_card_file');
-                $filename1 = time() . rand(11, 8894) . '.' . $file->guessExtension();
-                $filePath = base_path() . '/storage/uploads/files/';
-                $file->move($filePath, $filename1);
-            }
+        if ($_POST) { 
+            $file = request()->file('job_card_file');
+            $company_file_id = $file ? $this->saveFile($file, 'company/contracts', TRUE) : 1;
+            
             $where = ['date' => request('job_date'), 'client_id' => request('client_id')];
-
             $card = DB::table('client_job_cards')->where($where)->first();
 
             $data = [
-                'file' => $filename1,
+                'company_file_id' => $company_file_id,
                 'client_id' => request('client_id'),
                 'created_by' => \Auth::user()->id,
                 'date' => request('job_date')
             ];
-
-
-            //  \App\Models\ClientJobCard::updateOrCreate($data);
-
             if (empty($card)) {
                 \App\Models\ClientJobCard::create($data);
             } else {
                 \App\Models\ClientJobCard::where($where)->update($data);
             }
         }
-        return redirect()->back()->with('success', 'uploaded succesfully!');
+        return redirect()->back()->with('success', 'Uploaded succesfully!');
     }
 
     public function viewFile() {
         $value = request()->segment(3);
         $type = request()->segment(4);
-        if ($type == 'jobcard') {
-            $contract = \App\Models\ClientJobCard::where('date', $value)->first();
-            $this->data['path'] = $contract->companyFile->path;
-        }
-
         if ($type == 'course_certificate') {
             $certificate = \App\Models\Learning::where('id', $value)->first();
             $this->data['path'] = $certificate->companyFile->path;
@@ -1648,14 +1731,13 @@ class Customer extends Controller {
     public function getNewCustomers($table, $year,$customer_other_sql = '') {
         $sql = '';
         for ($s = 1; $s <= 12; $s++) {
-            $sql .= '  select count(*),x.months from (
-select distinct schema_name,extract(month from created_at) as months from admin.' . $table . ' where extract(year from created_at)=' . $year . ' and extract(month from created_at)=' . $s . '  '.$customer_other_sql.' and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\')  ) x LEFT OUTER JOIN (
-select distinct schema_name,extract(month from created_at) as months from admin.' . $table . ' where extract(year from created_at)=' . $year . ' and extract(month from created_at)<' . $s . '  '.$customer_other_sql.' and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\') ) y using(schema_name) where y.schema_name is null group by x.months
-
-UNION ALL';
+            $sql .= '  select count(*),x.months from (select distinct schema_name,extract(month from created_at) as months from admin.' . $table . ' where extract(year from created_at)=' . $year . ' and extract(month from created_at)=' . $s . '  '.$customer_other_sql.' and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\')  ) x LEFT OUTER JOIN (select distinct schema_name,extract(month from created_at) as months from admin.' . $table . ' where extract(year from created_at)=' . $year . ' and extract(month from created_at)<' . $s . '  '.$customer_other_sql.' and  schema_name not in (\'public\',\'betatwo\',\'jifunze\',\'beta_testing\') ) y using(schema_name) where y.schema_name is null group by x.months UNION ALL';
         }
         $final = rtrim($sql, 'UNION ALL');
         return DB::select($final);
     }
+
+
+ 
 
 }

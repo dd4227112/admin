@@ -56,7 +56,7 @@ foreach ($school_locations as $school_location) {
                     <td>
                          <?php
                         if (isset($school->schema_name)) {
-                            echo warp($school->schema_name);
+                            echo warp($school->schema_name,20);
                         } else {
                             echo 'Not Specified';
                         }

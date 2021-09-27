@@ -198,7 +198,7 @@
                                                 ?>
                                                 <tr>
                                                     <td><?= $i?></td>
-                                                    <td><?= warp(strtoupper($invoice->client->name)) ?></td>
+                                                    <td><?= warp(strtoupper($invoice->client->name),20) ?></td>
                                                     <td><?= $invoice->reference ?></td>
                                                     <td><?= money($amount) ?></td>
                                                     <td><?= money($paid) ?></td>
@@ -217,9 +217,9 @@
                                                         <div class="dropdown-menu" aria-labelledby="dropdown6" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
                                                          <a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoiceView/' . $invoice->id) ?>"  > <span class="point-marker bg-danger"></span>View</a>
                                                          <a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoice/edit/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Edit</a>
-                                                         {{-- <?php if(can_access('delete_invoice')) {  ?>
+                                                         <?php if(can_access('delete_invoice')) {  ?>
                                                          <a class="dropdown-item waves-light waves-effect" href="<?= url('account/invoice/delete/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Delete</a>
-                                                         <?php } ?> --}}
+                                                         <?php } ?> 
                                                         <?php if ((int) $unpaid > 0) { ?>
                                                             <hr/>
                                                             <a class="dropdown-item waves-light waves-effect" href="<?= url('account/payment/' . $invoice->id) ?>"><span class="point-marker bg-warning"></span>Add Payments</a>
@@ -276,7 +276,8 @@
                                                               $total_invoice_sent = isset($accountyear->name) ? \DB::table('admin.invoices_sent')->whereYear('date','=',$accountyear->name)->count() : DB::table('admin.invoices_sent')->count();
                                                          
                                                               $total_clients = \DB::table('admin.clients')->count();
-                                                              
+                                                             
+$i=0; 
                                                               ?>
                                                         <tr>
                                                             <td class="text-center"><?=$total_clients?></td>

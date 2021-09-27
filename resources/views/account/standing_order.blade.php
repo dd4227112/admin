@@ -63,7 +63,7 @@
                                         foreach ($standingorders as $standing) { ?>
                                         <tr>
                                         <td><?=$i ?></td>
-                                        <td><?= isset($standing->client) ? $standing->client->name: ''?></td>
+                                        <td><?= isset($standing->client->) ? $standing->client->name: ''?></td>
 
                                         <td><?= isset($standing->schoolcontact) ? $standing->schoolcontact->name: ''?></td>
                                        

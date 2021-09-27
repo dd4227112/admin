@@ -115,7 +115,7 @@
                                                     <?php echo $deduction->is_percentage == null ? 'NONE' : $deduction->percent; ?>
                                                 </td>
                                                 <td data-title="<?= __('description') ?>">
-                                                    <?php echo warp($deduction->description); ?>
+                                                    <?php echo warp($deduction->description,20); ?>
                                                 </td>
                                                  <td data-title="<?= __('description') ?>">
                                                     <?php echo $deduction->bankAccount->account_name ?? ''?>

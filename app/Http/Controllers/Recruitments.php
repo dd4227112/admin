@@ -7,6 +7,7 @@ use DB;
 use App\Jobs\PushSMS;
 
 class Recruitments extends Controller {
+    
     public function index() {
         $this->data['title'] = 'Shulesoft Application Form';
         return view('registerrecruiment',$this->data);
@@ -71,63 +72,15 @@ class Recruitments extends Controller {
     }
 
 
-    public function nda($id){
-        $this->data['id'] = $id;
+    public function nda(){
         $this->data['title'] = 'Shulesoft NDA Form';
         return view('nda_form',$this->data);
     }
 
     public function uploadnda(){
         $file = request()->file('nda_form');
-        $applicant_id = request('applicant_id');
-      
-        $applicant = \App\Models\Recruiment::findOrFail($applicant_id);
-       
-       // $nda_file_id = $this->saveFile($file, 'company/contracts');
-
-        $data = [
-            'name' => $applicant->fullname,
-            'dob'  => $applicant->dob,
-            'email'  => $applicant->email,
-            'phone'  => $applicant->phone,
-            'sex'  => $applicant->sex,
-            'status'  => $applicant->status,
-            'password'  => bcrypt($applicant->email),
-            'jod'  => date('Y-m-d'),
-            'town'  => $applicant->location,
-            'qualification'  => $applicant->skills,
-            'country_id'  => $applicant->country,
-            'username' => $applicant->phone,
-            'usertype' => 'Admin'
-        ];
-
-        \DB::table('public.user')->insert($data);
-
-        $this->sendEmailAndSms($data);
-        // Thank you message
-    }
-
-
-    public function sendEmailAndSms($requests, $content = null) {
-        $request = (object) $requests;
-        $message = $content == null ? 'Hello ' . $request->name . ' You have been added in ShuleSoft demo account. 
-        You can login  with username ' . $request->email . ' and password ' . $request->email . ' use this credentials to login on https://demo.shulesoft.com
-        and	https://academy.shulesoft.com': $content;
-        \DB::table('public.sms')->insert([
-            'body' => $message,
-            'user_id' => 1,
-            'phone_number' => $request->phone,
-            'table' => 'setting'
-        ]);
-        \DB::table('public.email')->insert([
-            'body' => $message,
-            'subject' => 'ShuleSoft Administration Credentials',
-            'user_id' => 1,
-            'email' => $request->email,
-            'table' => 'setting'
-        ]);
+        dd($file);
+        $nda_file_id = $this->saveFile($file, 'company/contracts');
     }
 
 }
-
-
