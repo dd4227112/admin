@@ -76,17 +76,17 @@ class Kernel extends ConsoleKernel {
 
 
         $schedule->call(function () {
-            $this->addAttendance();
+          //0  $this->addAttendance();
         })->everyThreeMinutes();
 
         $schedule->call(function () {
-            $this->sendSORemainder();
-            $this->updateCompleteItems();
+         //0   $this->sendSORemainder();
+         //0   $this->updateCompleteItems();
         })->dailyAt('04:40'); // Eq to 07:40 AM
 
         $schedule->call(function () {
-            $this->HRContractRemainders();
-            $this->HRLeaveRemainders();
+          //0  $this->HRContractRemainders();
+          //0  $this->HRLeaveRemainders();
         })->dailyAt('04:40');
 
        
@@ -125,7 +125,7 @@ class Kernel extends ConsoleKernel {
             if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
                 $controller->sendMessage($message->phone, $message->message);
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'updated_at' => now()]);
-                echo 'message sent to ' . $message->name . '' . chr(10);
+             //   echo 'message sent to ' . $message->phone . '' . chr(10);
             } else {
                 //this is invalid number, so update in db to show wrong return
                 DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied', 'updated_at' => now()]);
@@ -280,7 +280,6 @@ class Kernel extends ConsoleKernel {
      * Temporarily only allows digital invoice but must support both
      */
     public function syncInvoicePerSchool($schema = '') {
-
         $invoices = DB::select("select b.id, b.student_id, b.status, b.reference, b.prefix,b.date,b.sync,b.return_message,b.push_status,b.academic_year_id, "
                         . " b.created_at, b.updated_at, a.amount, c.name as student_name, '" . $schema . "' as schema_name, (select sub_invoice from "
                         . "  " . $schema . ".setting limit 1) as sub_invoice   from  " . $schema . ".invoices b join " . $schema . ".student c on "
