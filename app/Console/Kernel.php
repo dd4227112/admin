@@ -1068,35 +1068,35 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
     }
 
 //Send email remainder to accountant, ie role_id 13 = Financial accountant
-    public function sendSORemainder() {
-        $users = \App\Models\User::where('role_id', 13)->get();
-        foreach ($users as $user) {
-            $standingorders = DB::select('select * from admin.standing_orders WHERE payment_date-CURRENT_DATE = 1 AND is_approved =1');
+    // public function sendSORemainder() {
+    //     $users = \App\Models\User::where('role_id', 13)->get();
+    //     foreach ($users as $user) {
+    //         $standingorders = DB::select('select * from admin.standing_orders WHERE payment_date-CURRENT_DATE = 1 AND is_approved =1');
 
-            $msg = '';
-            foreach ($standingorders as $standing) {
-                $msg .= '<tr><td>' . $this->client($standing->client_id) . '</td><td>' . $standing->occurance_amount . '</td></tr>';
-            }
-            $message = ''
-                    . '<h2>Standing orders</h2>'
-                    . '<p>This is the list of matured standing orders </p>'
-                    . '<table><thead><tr><th>Client name</th><th> Amount </th></tr></thead><tbody>' . $msg . '</tbody></table>';
-            DB::table('public.email')->insert([
-                'subject' => date('Y M d') . ' Standing order remainder',
-                'body' => $message,
-                'email' => $user->email
-            ]);
+    //         $msg = '';
+    //         foreach ($standingorders as $standing) {
+    //             $msg .= '<tr><td>' . $this->client($standing->client_id) . '</td><td>' . $standing->occurance_amount . '</td></tr>';
+    //         }
+    //         $message = ''
+    //                 . '<h2>Standing orders</h2>'
+    //                 . '<p>This is the list of matured standing orders </p>'
+    //                 . '<table><thead><tr><th>Client name</th><th> Amount </th></tr></thead><tbody>' . $msg . '</tbody></table>';
+    //         DB::table('public.email')->insert([
+    //             'subject' => date('Y M d') . ' Standing order remainder',
+    //             'body' => $message,
+    //             'email' => $user->email
+    //         ]);
 
-            $sms = 'Hello kindly remember to check matured standing orders in the admin panel. Thank you';
-            DB::table('public.sms')->insert([
-                'body' => $sms,
-                'phone_number' => $user->phone,
-                'type' => 0,
-                'status' => 0,
-                'sent_from' => 'phonesms'
-            ]);
-        }
-    }
+    //         $sms = 'Hello kindly remember to check matured standing orders in the admin panel. Thank you';
+    //         DB::table('public.sms')->insert([
+    //             'body' => $sms,
+    //             'phone_number' => $user->phone,
+    //             'type' => 0,
+    //             'status' => 0,
+    //             'sent_from' => 'phonesms'
+    //         ]);
+    //     }
+    // }
 
     // public function endDeadlock() {
     //     DB::SELECT("WITH inactive_connections AS (SELECT pid, rank() over (partition by client_addr order by backend_start ASC) as rank
