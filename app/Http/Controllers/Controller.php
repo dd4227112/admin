@@ -357,46 +357,31 @@ class Controller extends BaseController {
         return $this;
     }
 
-    //    public function whatsappMessage() {
-    //     $messages = DB::select('select * from admin.whatsapp_messages where status=0 order by id asc limit 5');
-    //     $controller = new \App\Http\Controllers\Controller();
-    //     foreach ($messages as $message) {
-    //         if (preg_match('/@c.us/i', $message->phone) && strlen($message->phone) < 19) {
-    //             $controller->sendMessage($message->phone, $message->message);
-    //             DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'updated_at' => now()]);
-    //             echo 'message sent to ' . $message->name . '' . chr(10);
-    //         } else {
-    //             //this is invalid number, so update in db to show wrong return
-    //             DB::table('admin.whatsapp_messages')->where('id', $message->id)->update(['status' => 1, 'return_message' => 'Wrong phone number supplied', 'updated_at' => now()]);
+    // public function AccountsReports(){
+    //     $schemas = (new \App\Http\Controllers\Software())->loadSchema();
+    //     foreach ($schemas as $schema) {
+    //         if (!in_array($schema->table_schema, array('public', 'api', 'admin'))) {
+    //             $directors =DB::select("select * from admin.all_users where usertype ilike '%director%' and schema_name = '{$schema->table_schema}'");
+    //             $revenue = \collect(DB::select("select coalesce(sum(amount),0) as amount from " . $schema->table_schema . ".total_revenues WHERE extract(week from created_at::date) = extract(week from current_date) AND extract(year from created_at::date) = extract(year from current_date)"))->first();
+    //             $expenses = \collect(DB::select("select coalesce(sum(amount),0) as amount from " . $schema->table_schema . ".total_revenues WHERE extract(week from created_at::date) = extract(week from current_date) AND extract(year from created_at::date) = extract(year from current_date)"))->first();
+    //             $fees = \collect(DB::select("select coalesce(sum(amount),0) as amount from " . $schema->table_schema . ".total_revenues WHERE extract(week from created_at::date) = extract(week from current_date) AND extract(year from created_at::date) = extract(year from current_date)"))->first();
+
+    //             if(!empty($directors)){
+    //                   foreach ($directors as $director) {
+    //                           $message = 'Hello ' . $schema->table_schema .'.'
+    //                             . chr(10) . 'The following is account report for your school this week starts at ' .date( 'F, d Y', strtotime( 'monday this week' ))
+    //                             . chr(10) . 'Total revenues Tsh ' . money($revenue->amount) .''
+    //                             . chr(10) . 'Total expenses Tsh ' . money($expenses->amount) .''
+    //                             . chr(10) . 'Balance Tsh ' . money($fees->amount) .''
+    //                             . chr(10) . 'Fees collected Tsh ' . money($fees->amount) .''
+    //                             . chr(10) . 'Thanks.';
+    //                           $controller = new \App\Http\Controllers\Controller();
+    //                           $controller->send_whatsapp_sms($director->phone, $message);
+    //                   }
+    //             }
     //         }
     //     }
-    // }
-
-    public function AccountsReports(){
-        $schemas = (new \App\Http\Controllers\Software())->loadSchema();
-        foreach ($schemas as $schema) {
-            if (!in_array($schema->table_schema, array('public', 'api', 'admin'))) {
-                $directors =DB::select("select * from admin.all_users where usertype ilike '%director%' and schema_name = '{$schema->table_schema}'");
-                $revenue = \collect(DB::select("select coalesce(sum(amount),0) as amount from " . $schema->table_schema . ".total_revenues WHERE extract(week from created_at::date) = extract(week from current_date) AND extract(year from created_at::date) = extract(year from current_date)"))->first();
-                $expenses = \collect(DB::select("select coalesce(sum(amount),0) as amount from " . $schema->table_schema . ".total_revenues WHERE extract(week from created_at::date) = extract(week from current_date) AND extract(year from created_at::date) = extract(year from current_date)"))->first();
-                $fees = \collect(DB::select("select coalesce(sum(amount),0) as amount from " . $schema->table_schema . ".total_revenues WHERE extract(week from created_at::date) = extract(week from current_date) AND extract(year from created_at::date) = extract(year from current_date)"))->first();
-
-                if(!empty($directors)){
-                      foreach ($directors as $director) {
-                              $message = 'Hello ' . $schema->table_schema .'.'
-                                . chr(10) . 'The following is account report for your school this week starts at ' .date( 'F, d Y', strtotime( 'monday this week' ))
-                                . chr(10) . 'Total revenues Tsh ' . money($revenue->amount) .''
-                                . chr(10) . 'Total expenses Tsh ' . money($expenses->amount) .''
-                                . chr(10) . 'Balance Tsh ' . money($fees->amount) .''
-                                . chr(10) . 'Fees collected Tsh ' . money($fees->amount) .''
-                                . chr(10) . 'Thanks.';
-                              $controller = new \App\Http\Controllers\Controller();
-                              $controller->send_whatsapp_sms($director->phone, $message);
-                      }
-                }
-            }
-        }
-     }
+    //  }
 
 }
 
