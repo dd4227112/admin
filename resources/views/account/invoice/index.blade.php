@@ -289,7 +289,7 @@
                                                 ?>
                                                 <tr>
                                                     <td><?= $f ?></td>
-                                                    <td><?= warp(strtoupper($value->school->name),15) ?></td>
+                                                    <td><?= isset($value->school->name) ? warp(strtoupper($value->school->name),15) : '' ?></td>
                                                     <td><?= $value->reference ?></td>
                                                     <td><?php $total_amount+= $value->amount; echo money($value->amount) ?></td>
                                                     <td><?= date('d M Y', strtotime($value->due_date)) ?></td>
