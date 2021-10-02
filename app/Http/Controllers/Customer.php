@@ -239,8 +239,9 @@ class Customer extends Controller {
             $message = 'Hello ' . $user->firstname . ' '. $user->lastname . '.'
             . chr(10) . 'A task of '. $train->trainItem->content .'at ' . $train->client->name
             . chr(10) . 'Has been allocated to you'
-            . chr(10) . 'The project is expected to start at ' . date('d-m-Y', strtotime($start_date)) . ' to  ' . date('d-m-Y', strtotime($start_date . " + {$section->time} days")) .'.'
-            . chr(10) . 'Thanks You.';
+            . chr(10) . 'The taks is expected to start at ' . date('d-m-Y', strtotime($start_date)) . ' to  ' . date('d-m-Y', strtotime($start_date . " + {$section->time} days")) .'.'
+            . chr(10) . 'By :'. \Auth::user()->name
+            . chr(10) . 'Thank You.';
             $this->send_whatsapp_sms($user->phone, $message); 
 
             //email to zone manager

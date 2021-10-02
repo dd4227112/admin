@@ -714,6 +714,7 @@ class Sales extends Controller {
                 $sms  = 'Hello ' .$user->firstname .' ' . $user->lastname
                 . chr(10) . 'A task of : ' . $section->content . ' at ' . \App\Models\Client::where('id',$client_id)->first()->name .' has been allocated to you'
                 . chr(10) . 'A task is expected to start at ' .date('d-m-Y', strtotime($start_date)).' and end '. date('d-m-Y', strtotime($start_date . " + {$section->time} days"))
+                . chr(10) . 'By :'. \Auth::user()->name
                 . chr(10) . 'Thank you';
              $this->send_whatsapp_sms($user->phone, $sms);
 
