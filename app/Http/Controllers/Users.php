@@ -105,6 +105,9 @@ class Users extends Controller {
 
     public function show() {
         $id = (int) request()->segment(3) == 0 ? Auth::user()->id : request()->segment(3);
+
+        $this->data['breadcrumb'] = array('title' => \Auth::user()->name.' profile','subtitle'=>'profile','head'=>'user');
+
         $this->data['user'] = User::findOrFail($id);
         $this->data['user_permission'] = \App\Models\Permission::whereIn('id', \App\Models\PermissionRole::where('role_id', $this->data['user']->role_id)->get(['permission_id']))->get(['id']);
         $this->data['attendances'] = DB::table('attendances')->where('user_id', $id)->orderBy('created_at','desc')->get();

@@ -12,16 +12,16 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
         <meta name="description" content="ShuleSoft Admin">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <meta name="keywords" content="ShuleSoft, Admin , Admin Panel">
+        <meta name="keywords" content="ShuleSoft, Admin, Admin Panel">
         <meta name="author" content="ShuleSoft">
         <!-- Favicon icon -->
         <link rel="icon" href="<?= $root ?>assets/images/favicon.ico" type="image/x-icon">
         <!-- Google font-->
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
         <!-- Required Fremwork -->
-       <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/bootstrap/dist/css/bootstrap.min.css"> 
-       {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" 
-       integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"> --}}
+       {{-- <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/bootstrap/dist/css/bootstrap.min.css">  --}}
+        {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" 
+       integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"> 
       
         <!-- themify icon -->
         <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/icon/themify-icons/themify-icons.css">
@@ -41,897 +41,389 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
         <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/data-table/css/buttons.dataTables.min.css">
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css">
-
-        <!-- Style.css -->
         <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css">
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2.css">
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2-bootstrap.css">
         <link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css">       
         <link href="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.css" rel="stylesheet">
-        {{-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> --}}
-
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
-        <script type="text/javascript" src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script> 
+        <script type="text/javascript" src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script>  --}}
+
+
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/icon/feather/css/feather.css">
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/css/style.css">
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/css/jquery.mCustomScrollbar.css">
+
+        <!-- Data Table Css -->
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/pages/data-table/css/buttons.dataTables.min.css">
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css">
    
+        <!-- select 2 -->
+        <link rel="stylesheet" href="<?= $root ?>/files/bower_components/select2/css/select2.min.css">
+       
+     
+                  
+     </head>
 
-        <script type="text/javascript">
-            ajax_setup = function () {
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    async: true,
-                    cache: false,
-                    beforeSend: function (xhr) {
-                        // jQuery('.theme-loader').show();
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        // jQuery('.theme-loader').hide();
-                    },
-                    complete: function (xhr, status) {
-                        // jQuery('.theme-loader').hide();
-                    }
-                });
-            }
-            $(document).ready(ajax_setup);
-            function toast(message) {
-                new PNotify({
-                    title: 'Feedback',
-                    text: message,
-                    type: 'success',
-                    hide: 'false',
-                    icon: 'icofont icofont-info-circle'
-                });
-            }
-                    </script>
-                    <style>
-                        #valid-msg {
-                            color: #00C900;
-                        }
-                        #error-msg {
-                            color: red;
-                        }
-                    </style>
-                </head>
-
-        <body class="<?= strlen(request('token')) > 5 ? 'menu-collapsed menu-static' : 'fix-menu' ?>">
+    <body>
             <!-- Pre-loader start -->
-            <div class="theme-loader">
-                <div class="ball-scale">
-                    <div></div>
+
+       <div class="theme-loader">
+        <div class="ball-scale">
+            <div class='contain'>
+                <div class="ring">
+                    <div class="frame"></div>
                 </div>
-            </div>
-        <!-- Pre-loader end -->
-        <!-- Menu header start -->
-        <nav class="navbar header-navbar">
-            <div class="navbar-wrapper">
-                <div class="navbar-logo">
-                    <a class="mobile-menu" id="mobile-collapse" href="#!">
-                        <i class="ti-menu"></i>
-                    </a>
-                    <a class="mobile-search morphsearch-search" href="#">
-                        <i class="ti-search"></i>
-                    </a>
-                    <?php
-                    $width = strlen(request('token')) > 5 ? '80' : '50';
-                    ?>
-                    <a href="<?= url('/') ?>">
-                        <img class="img-fluid" src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="ShuleSoft" height="<?= $width ?>" width="<?= $width ?>" />
-                    </a>
-                    <a class="mobile-options">
-                        <i class="ti-more"></i>
-                    </a>
+                <div class="ring">
+                    <div class="frame"></div>
                 </div>
-
-                <div class="navbar-container container-fluid">
-                    <div>
-                         <ul class="nav-left">
-                            <li>
-                                <a id="collapse-menu" href="#">
-                                    <i class="ti-menu"></i>
-                                </a>
-                            </li>
-                            <?php
-                            if (strlen(request('token')) < 4) {
-                                ?>
-                                <li>
-
-                                    <a class="main-search morphsearch-search" href="#">
-                                        <!-- themify icon -->
-                                        <i class="ti-search"></i>
-                                    </a>
-                                </li>
-                            <?php } ?>
-                            <li>
-                                <a href="#!" onclick="javascript:toggleFullScreen()">
-                                    <i class="ti-fullscreen"></i>
-                                </a>
-                            </li>
-                      
-                                                    </ul>
-                                                    <?php
-                                                    if (strlen(request('token')) < 4) {
-                                                        ?>
-                                                     <ul class="nav-right">
-                                                    <li class="header-notification lng-dropdown">
-                                                        <a href="#" id="dropdown-active-item">
-                                                            <i class="flag-icon flag-icon-gb m-r-5"></i> English
-                                                        </a>
-                                                        <ul class="show-notification">
-                                                            <li>
-                                                                <a href="#" data-lng="en">
-                                                                    <i class="flag-icon  flag-icon-es m-r-5"></i> English
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#" data-lng="es">
-                                                                    <i class="flag-icon flag-icon-tz m-r-5"></i> Swahili
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-                                                    <?php
-                                                    if (true) {
-                                                        $tasks = \App\Models\Task::where('to_user_id', Auth::user()->id)->where('date', '>=', date('Y-m-d'))->get();
-                                                        ?>
-                                                        <li class="header-notification">
-                                                            <a href="#!">
-                                                                <i class="ti-bell"></i>
-                                                                <span class="badge"><?= sizeof($tasks) ?></span>
-                                                            </a>
-                                                            <ul class="show-notification">
-                                                                <li>
-                                                                    <h6>Notifications</h6>
-                                                                    <label class="label label-danger">New</label>
-                                                                </li>
-                                                                <?php
-                                                                foreach ($tasks as $task) {
-                                                                    ?>
-                                                                    <li onMouseOver="this.style.backgroundColor = '#cccccc'">
-                                                                        <a href="<?= url('customer/activity/show/' . $task->id) ?>" >
-                                                                            <div class="media">
-                                                                                <img class="d-flex align-self-center" src="<?= $root ?>assets/images/user.png" alt="Image">
-                                                                                <div class="media-body">
-                                                                                    <h5 class="notification-user">Client: <?= $task->client->name ?></h5>
-                                                                                    <p class="notification-msg"><?= $task->activity ?></p>
-                                                                                    <span class="notification-time"><?= date('d M Y', strtotime($task->date)) ?></span>
-                                                                                </div>
-                                                                            </div>
-                                                                        </a>
-                                                                    </li>
-                                                                <?php } ?>
-                                                                <li>
-                    
-                                                                    <a href="<?= url('users/notification') ?>"><label class="label label-warning">View All</label></a>
-                                                                </li>
-                                                            </ul>
-                                                        </li>
-                                             <!--      <li class="header-notification">
-                                                        <a href="#!" class="displayChatbox">
-                                                        <i class="ti-comments"></i>
-                                                        <span class="badge"><?php
-                                    $users = \App\Models\User::where('status', 1)->where('department', '<>', 10)->get();
-                                    echo sizeof($users);
-                                    ?></span>
-                                        </a>
-                                    </li>-->
-                                <?php } ?>
-
-                                <li class="user-profile header-notification">
-                                    <a href="#!"> <?php $id = Auth::user()->id;
-                                                $path = \collect(DB::select("select f.path from admin.users a join admin.company_files f on a.company_file_id = f.id where a.id = '$id'"))->first(); ?>
-                                        <img class="user-img img-circle" src="<?= isset($path->path) && ($path->path !== '')  ? $path->path : $root . 'assets/images/user.png' ?>" alt="User-Profile-Image">
-                                        <span>{{ Auth::user()->name() }}</span>
-                                        <i class="ti-angle-down"></i>
-                                    </a>
-
-                                    <ul class="show-notification profile-notification">
-                                        <li>
-                                            <a href="<?= url('users/show/' . Auth::user()->id) ?>">
-                                                <i class="ti-user"></i> Profile
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="<?= url('users/password/') ?>">
-                                                <i class="ti-settings"></i> Change Password
-                                            </a>
-                                        </li>
-                                        <?php if (false) { ?>
-                                            <li>
-                                                <a href="#!">
-                                                    <i class="ti-settings"></i> Settings
-                                                </a>
-                                            </li>
-
-                                            <li>
-                                                <a href="email-inbox.html">
-                                                    <i class="ti-email"></i> My Messages
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="auth-lock-screen.html">
-                                                    <i class="ti-lock"></i> Lock Screen
-                                                </a>
-                                            </li>
-                                        <?php } ?>
-                                        <li><a href="{{ route('logout') }}"
-                                               onclick="event.preventDefault();
-                                                           document.getElementById('logout-form').submit();"><i class="ti-layout-sidebar-left"></i> Logout</a></li>
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                            {{ csrf_field() }}
-                                        </form>
-
-                                    </ul>
-
-                                </li>
-                            </ul>
-                            <!-- search -->
-                        <?php } ?>
-
-
-                        <script>
-                            search_inputs = function () {
-                                $('#search_inputs').keyup(function () {
-                                    var val = $(this).val();
-//                                    if(val.lenght >1){
-                                    $.ajax({
-                                        type: "post",
-                                        url: "<?= url('analyse/search') ?>",
-                                        data: "q=" + val,
-                                        dataType: 'JSON',
-                                        success: function (data) {
-                                            console.log(data);
-                                            $('#search_people').html(data.people);
-                                            $('#search_schools').html(data.schools);
-                                            $('#search_activities').html(data.activities);
-                                        }
-                                    });
-//                                    }else{
-//                                     $('#search_people').html('');
-//                                     $('#search_schools').html('');
-//                                     $('#search_activities').html('');
-//                                    }
-                                })
-                            }
-                            $(document).ready(search_inputs);
-                        </script>
-                        <div id="morphsearch" class="morphsearch">
-                            <form class="morphsearch-form">
-                                <input class="morphsearch-input" id="search_inputs" type="search" placeholder="Search..." />
-                                <button class="morphsearch-submit" type="submit">Search</button>
-                            </form>
-                            <div class="morphsearch-content">
-                                <div class="dummy-column">
-                                    <h2>Invoices</h2>
-                                    <span id="search_people"></span>
-
-
-                                </div>
-                                <div class="dummy-column" style="overflow-y: scroll;">
-                                    <h2>Schools</h2>
-                                    <span id="search_schools"></span>
-
-
-                                </div>
-                                <div class="dummy-column">
-                                    <h2>Activity</h2>
-                                    <span id="search_activities"></span>
-
-                                </div>
-                            </div>
-                            <!-- /morphsearch-content -->
-                            <span class="morphsearch-close"><i class="icofont icofont-search-alt-1"></i></span>
-                        </div>
-                        <!-- search end -->
-                    </div>
+                <div class="ring">
+                    <div class="frame"></div>
                 </div>
-            </div>
-        </nav>
-        <!-- Menu header end -->
-
-
-       <?php
-        if (strlen(request('token')) < 3) {
-            ?>
-            <!-- Menu aside start -->
-            <div class="main-menu" style="height: 900px;">
-                {{-- <div class="main-menu-header">
-                    <img class="img-40" src="<?= $root ?>assets/images/user.png" alt="User-Profile-Image">
-                    <div class="user-details">
-                        <span>{{ Auth::user()->name() }}</span>
-                        <span id="more-details"> <?php // Auth::user()->role->display_name?></span>
-                    </div>
-                </div> --}}
-                <div class="main-menu-content" >
-                    <ul class="main-navigation">
-
-                        <hr style="background:white"/>
-
-                        <li class="nav-item">
-                            <?php if (Auth::user()->role_id <> 7) { ?>
-                                <a href="#!">
-                                    <i class="ti-home"></i>
-                                    <span data-i18n="nav.dash.main">Dashboard</span>
-                                </a>
-                            <?php } else { ?>
-                                <a href="<?= url('/') ?>">
-                                    <span data-i18n="nav.dash.main">Dashboard</span>
-                                </a> 
-                            <?php } ?>
-                            <ul class="tree-1 has-class">
-                                <?php if (can_access('view_home_dashboard')) { ?>
-                                  <li><a href="<?= url('analyse/index') ?>" data-i18n="nav.dash.default"> Home </a></li>
-                                <?php } if ((can_access('view_marketing_dashboard') || Auth::user()->department == 2) && Auth::user()->role_id <> 3) { ?>
-                                    <li><a href="<?= url('analyse/marketing') ?>" data-i18n="nav.dash.ecommerce"> Marketing </a></li>
-                                <?php } if (can_access('view_sales_dashboard') || Auth::user()->department == 2) { ?>
-                                    <li><a href="<?= url('analyse/sales') ?>" data-i18n="nav.dash.ecommerce"> Sales</a></li>
-                                <?php } if (can_access('view_accounts_dashboard') || Auth::user()->department == 4) { ?>
-                                    <li><a href="<?= url('analyse/accounts') ?>" data-i18n="nav.dash.crm">Accounts</a></li>
-                                <?php } if (can_access('view_customer_dashboard') || Auth::user()->department == 1) { ?>
-                                    <li><a href="<?= url('analyse/customers') ?>" data-i18n="nav.dash.analytics">Customers</a>
-                                        <label class="label label-info menu-caption">NEW</label>
-                                    </li>
-                                <?php } if (can_access('view_engineering_dashboard') || Auth::user()->department == 3) { ?>
-                                    <li><a href="<?= url('analyse/software') ?>" data-i18n="nav.dash.project">Engineering</a></li>
-                                <?php } ?>
-                            </ul>
-                        </li>
-
-
-
-                        <?php if (can_access('manage_marketing')) { ?>
-                            <li class="nav-item">
-                                <a href="#!">
-                                    <i class="ti-layout-cta-right"></i>
-                                    <span data-i18n="nav.extra-components.main">Marketing</span>
-                                </a>
-                                <ul class="tree-1">
-
-                                    <?php if (can_access('manage_sales')) { ?>
-
-                                        <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main">
-                                            <i class="icon-arrow-right"></i>Sales</a>
-                                            <ul class="tree-2">
-                                              <li>
-                                                 <a href="<?= url('sales/index') ?>" data-i18n="nav.navigate.navbar">Sales Materials</a>
-                                              </li>
-                                       
-                                              <?php
-                                              if (!preg_match('/crdb/i', Auth::user()->email)) {
-                                                  ?>
-                                                <!--   <li>
-                                                      <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">Schools</a>
-                                                  </li>-->
-                                                  <?php
-                                                  if (can_access('onboard_school')) {
-                                                      ?>
-                                                      <li>
-                                                          <a href="<?= url('sales/school') ?>" data-i18n="nav.navigate.navbar">List of Schools</a>
-                                                      </li>
-                                                  <?php } ?>
-                                              <?php } ?>
-                                      
-                                            <li><a href="<?= url('sales/salesStatus') ?>" data-i18n="nav.navigate.navbar">Sales Status</a> </li>
-            
-                                            {{-- <li><a href="<?= url('sales/analysis') ?>" data-i18n="nav.navigate.navbar">Sales Analysis</a></li> --}}
-                                           </ul>
-                                        </li>
-                                  <?php  } ?>
-
-
-                                    <?php //if (can_access('digital_marketing')) { ?>
-                                    <li><a href="<?= url('Marketing/socialMedia') ?>" data-i18n="nav.extra-components.session-timeout">Digital Marketing</a></li>
-                                     <?php // }  ?>
-
-                                     <li><a href="<?= url('Analyse/ratings') ?>" data-i18n="nav.navigate.navbar">Schools Ratings</a></li>
-
-                                    <li><a href="<?= url('Marketing/school') ?>" data-i18n="nav.navigate.navbar">Schools Status</a></li>
-                                   
-                                    <li><a href="<?= url('Marketing/Events') ?>" data-i18n="nav.extra-components.session-idle-timeout">Events and seminars</a></li>
-
-                                
-                                  <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main">
-                                      <i class="icon-arrow-right"></i>Usage and analysis</a>
-                                      <ul class="tree-2">
-                                      <li><a href="<?= url('Marketing/moduleUsage') ?>" data-i18n="nav.extra-components.session-idle-timeout">Usage nalysis</a></li>
-                                      <li><a href="<?= url('customer/modules') ?>" data-i18n="nav.page_layout.vertical.static-layout"> Modules </a></li>
-                                      <li><a href="<?= url('customer/logs') ?>" data-i18n="nav.page_layout.vertical.header-fixed">
-                                            Task Logs</a>
-                                      </li>
-                                      <li><a href="<?= url('customer/karibu') ?>" data-i18n="nav.page_layout.vertical.compact"> karibuSMS </a>
-                                      </li>
-                                      <li><a href="<?= url('customer/epayments') ?>" data-i18n="nav.page_layout.vertical.compact"> e-payments </a>
-                                     </li>
-                                     </ul>
-                                  </li>
-                                
-                                    <li><a href="<?= url('Marketing/systemUser') ?>" data-i18n="nav.extra-components.session-idle-timeout">System Users</a></li>
-                                    <?php if (can_access('communications')) { ?>
-                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Communications</a>
-                                        <ul class="tree-2">
-                                            <li><a href="<?= url('Marketing/Communication') ?>" data-i18n="nav.extra-components.session-idle-timeout">Communication</a></li>
-                                            <li><a href="<?= url('customer/calls') ?>"  data-i18n="nav.page_layout.horizontal.static-layout"> Call Logs</a></li>
-                                            <li><a href="<?= url('customer/emailsms') ?>" data-i18n="nav.page_layout.horizontal.static-layout"> SMS & Email Logs</a></li>
-                                            <li><a href="<?= url('customer/feedbacks/null') ?>"  data-i18n="nav.page_layout.horizontal.fixed-layout">Customer Feedbacks </a></li>
-                                            <li><a href="<?= url('customer/update') ?>" data-i18n="nav.page_layout.horizontal.static-with-icon">ShuleSoft Updates </a></li>
-                                        </ul>
-                                    </li>
-                                    <?php } ?>
-
-                                    <li><a href="<?= url('customer/requirements') ?>" data-i18n="nav.page_layout.bottom-menu">Customer Requirements</a></li>
-                                   
-                                </ul>
-                            </li>
-                        <?php } ?>
-
-
-                        <?php if (can_access('manage_operations')) { ?>
-                            <li class="nav-item">
-                                <a href="#!">
-                                    <i class="ti-bell "></i>
-                                    <span data-i18n="nav.extra-components.main">Operations</span>
-                                </a>
-
-                                <ul class="tree-1">
-                                    <?php if (can_access('manage_users') )  { ?>
-                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
-                                        class="icon-arrow-right"></i>Human Resources</a>
-                                        <ul class="tree-2">
-                                            <li><a href="<?= url('users/index') ?>"
-                                                    data-i18n="nav.extra-components.session-timeout">Users</a></li>
-                                         
-                                                
-                                        
-                                            <li><a href="<?= url('attendance/index') ?>"
-                                                    data-i18n="nav.extra-components.session-timeout">Attendance</a></li>
-                                            <li><a href="<?= url('Partner/partners') ?>"
-                                                    data-i18n="nav.extra-components.session-idle-timeout">Partners</a></li>
-                                            <li><a href="<?= url('users/applicant') ?>"
-                                                    data-i18n="nav.extra-components.session-idle-timeout">Applicants</a>
-                                            </li>
-                                            <li><a href="<?= url('users/template') ?>" data-i18n="nav.extra-components.offline">Forms &
-                                                    Templates</a>
-                                             </li>
-                                            <?php if(can_access('general_report')) { ?>
-                                            <li>
-                                             <a href="<?= url('sales/allData') ?>" data-i18n="nav.extra-components.session-timeout"> General report</a>                                    
-                                            </li>
-                                            <?php } ?>
-                                        </ul>
-                                   </li>
-                                   <?php } ?>
-
-                                    <?php if (can_access('meeting_minutes')) { ?>
-                                            <li><a href="<?= url('users/minutes') ?>" data-i18n="nav.extra-components.offline">
-                                                Meetings</a>
-                                            </li>
-                                     <?php } ?>
-  
-                                    <?php if (can_access('meeting_minutes')) { ?>
-                                            <li><a href="<?= url('users/hrrequest') ?>" data-i18n="nav.extra-components.offline">
-                                                HR Requests</a>
-                                            </li>
-                                     <?php } ?>
-                                  
-                                    <li class="nav-sub-item">
-                                       <a href="#" data-i18n="nav.page_layout.vertical.main"><i
-                                       class="icon-arrow-right"></i>Partnership </a>
-                                       <ul class="tree-2">
-                                        <li><a href="<?= url('Partner/index') ?>" data-i18n="nav.extra-components.session-timeout"> Onboard Requests</a></li>
-                                        <!--<li><a href="<?= url('Partner/add') ?>" data-i18n="nav.extra-components.offline">Onboard New School</a></li>-->
-                                        {{-- <li><a href="#" data-i18n="nav.extra-components.session-timeout">Reports</a></li> --}}
-
-                                     <?php if(can_access('create_user_group')) { ?>
-                                        <li><a href="<?= url('users/usergroup') ?>"
-                                            data-i18n="nav.extra-components.session-idle-timeout">School Groups</a>
-                                        </li>
-                                        <?php } ?>
-                                     </ul>
-                                   </li>
-                             
-
-
-
-                                 <?php if (can_access('manage_customers'))  { ?>
-                                    <li class="nav-sub-item">
-                                       <a href="#" data-i18n="nav.page_layout.vertical.main"><i
-                                       class="icon-arrow-right"></i>Customer Service </a>
-                                       <ul class="tree-2">
-                                        <li><a href="<?= url('general/show/whatsapp_integrations') ?>" data-i18n="nav.page_layout.bottom-menu">WhatsApp Integration</a></li>
-                                        <li><a href="<?= url('customer/setup') ?>" data-i18n="nav.page_layout.bottom-menu">System Setup</a></li>
-                                        <li>
-                                            <a href="<?= url('Phone_call/index') ?>" data-i18n="nav.navigate.navbar"> Phone Calls</a>
-                                        </li>
-    
-                                        {{-- <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
-                                                    class="icon-arrow-right"></i>Usage Analysis</a>
-                                            <ul class="tree-2">
-                                                <li><a href="<?= url('customer/modules') ?>" data-i18n="nav.page_layout.vertical.static-layout"> Modules </a></li>
-                                                <li><a href="<?= url('customer/logs') ?>" data-i18n="nav.page_layout.vertical.header-fixed">
-                                                        User Logs</a></li>
-                                                <li><a href="<?= url('customer/karibu') ?>" data-i18n="nav.page_layout.vertical.compact"> karibuSMS </a>
-                                                </li>
-                                                <li><a href="<?= url('customer/epayments') ?>" data-i18n="nav.page_layout.vertical.compact"> e-payments </a>
-                                                </li>
-    
-                                            </ul>
-                                        </li> --}}
-                                    </ul>
-                                   </li>
-                                 <?php } ?>
-
-                                 <?php  if (can_access('training') ){ ?>
-                                 <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.vertical.main"><i
-                                    class="icon-arrow-right"></i>Training</a>
-                                 <ul class="tree-2">
-                                 <li><a href="<?= url('customer/guide') ?>" data-i18n="nav.page_layout.vertical.header-fixed">User Guide</a></li>
-                                  <li><a href="<?= url('customer/faq') ?>" data-i18n="nav.page_layout.vertical.compact"> FAQ </a>
-                                  </li>
-                                 <li><a href="<?= url('customer/report') ?>" data-i18n="nav.page_layout.vertical.static-layout">Report </a></li>
-                                  <li><a href="<?= url('customer/sequence') ?>" data-i18n="nav.page_layout.vertical.static-layout">Sequence </a></li>
-                                </ul>
-                               </li>
-                               <?php } ?>
-
-                                <?php if (Auth::user()->role_id != 7 ) { ?>
-                                    <li>
-                                        <a href="<?= url('customer/activity') ?>" data-i18n="nav.extra-components.offline">
-                                            Tasks Allocation
-                                        </a>
-                                    </li>
-        
-                                <?php } if (can_access('customer_module')) { ?>
-                                    <li>
-                                        <a href="<?= url('customer/modules') ?>" data-i18n="nav.extra-components.offline">
-                                             Customer Modules
-                                        </a>
-                                    </li>
-                                    <li><a href="<?= url('customer/requirements') ?>" data-i18n="nav.page_layout.bottom-menu">Customer Requirements</a></li>
-                                <?php } ?>
-
-
-                                <?php if (Auth::user()->role_id == 1) { ?>
-                                    <li>
-                                       <a href="<?= url('role/userpermission') ?>"
-                                             data-i18n="nav.extra-components.session-timeout">Permissions
-                                        </a>
-                                    </li>
-                                <?php } ?>
-
-
-                              <?php  if (can_access('my_schools') && !in_array(Auth::user()->department, [9, 10]) || in_array(Auth::user()->role_id, array(14, 8, 2, 3, 9))) { ?>
-                                <li class="nav-sub-item">
-                                   <a href="#" data-i18n="nav.page_layout.vertical.main"><i
-                                   class="icon-arrow-right"></i>My Schools </a>
-                                   <ul class="tree-2">
-
-                                    
-                                    <li><a href="<?= url('Analyse/myschools') ?>" data-i18n="nav.extra-components.session-timeout"> List of Schools</a></li>
-                                   
-
-                                    <li><a href="<?= url('Analyse/myreport') ?>" data-i18n="nav.extra-components.offline">Task Report</a></li>
-                                    <li><a href="<?= url('sales/schoolVisit/1') ?>" data-i18n="nav.extra-components.session-timeout">School Visitation</a></li>
-
-                                     {{-- <li><a href="<?= url('Sales/generalreport') ?>" data-i18n="nav.extra-components.session-timeout">Perfomance report</a></li> --}}
-                                     <?php if (can_access('manage_jobcards')) { ?>
-                                     <li><a href="<?= url('Sales/jobcards') ?>" data-i18n="nav.extra-components.session-timeout"> School Job cards</a></li>
-                                     <?php } ?>
-                                 </ul>
-                               </li>
-                             <?php } ?>
-
-                             
-                              <?php  if (can_access('generalreport'))  { ?>
-                                <li class="nav-sub-item">
-                                   <a href="#" data-i18n="nav.page_layout.vertical.main"><i
-                                   class="icon-arrow-right"></i>General report </a>
-                                   <ul class="tree-2">
-                                     <?php if (can_access('generalreport')) { ?>
-                                     <li><a href="<?= url('Sales/generalreport') ?>" data-i18n="nav.extra-components.session-timeout"> general report</a></li>
-                                     <?php } ?>
-                                 </ul>
-                               </li>
-                             <?php } ?>
-
-                             <?php if(!can_access('settings')) { ?>
-                                  <li class="nav-sub-item">
-                                        <a>Settings<span class="fa fa-chevron-down"></span></a>
-                                        
-                                        <ul class="tree-2">
-                                            <li><a href="<?= url('account/client') ?>"><i class="fa icon-account"></i>  Clients</a></li>
-                                            <li><a href="<?= url('account/bank') ?>"><i class="fa icon-account"></i> Banking</a></li>
-                                            <li><a href="<?= url('account/groups') ?>"><i class="fa icon-account"></i> Account Groups</a></li>
-                                            <li><a href="<?= url('account/chart') ?>"><i class="fa icon-account"></i> Charts of Accounts</a></li>
-                                            <li><a href="<?= url('account/project') ?>"><i class="fa icon-account"></i> Company Projects</a></li>
-
-                                            <li><a href="<?= url('account/holidays') ?>"><i class="fa icon-account"></i> Holidays</a></li>
-
-                                        </ul>
-                                    </li>
-                             <?php }  ?>
-                                 
-                              <?php if (Auth::user()->department == 9 || Auth::user()->department == 10) { ?>
-                                    <li><a href="<?= url('Partner/index') ?>" >  Onboarded Schools</a></li>
-                             <?php }
-                        
-                                if (false) {
-                                    $has_class = preg_match('/exam/', url()->current()) ? 'has-class open' : '';
-                                    ?>
-                                    <li class="nav-item <?= $has_class ?>">
-                                        <a href="#!">
-                                            <i class="ti-crown"></i>
-                                            <span data-i18n="nav.advance-components.main">Schools</span>
-                                        </a>
-                                        <ul class="tree-1 ">
-                                            <!--<li><a href="<?= url('exam/dashboard') ?>" data-i18n="nav.advance-components.draggable">Dashboard</a></li>-->
-        
-                                            <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Exams</a>
-                                                <ul class="tree-2 <?= $has_class ?>">
-                                                    <a href="<?= url('exam/listing') ?>"><i class="fa icon-account"></i> Listing</a>
-                                                    <a href="<?= url('exam/allocate') ?>"><i class="fa icon-account"></i> Definition</a>
-                                                    <!--<a href="<?= url('exam/schedule') ?>"><i class="fa icon-expense"></i> Schedule</a>-->
-                                                    <a href="<?= url('exam/grade') ?>"><i class="fa icon-account"></i> Grades</a>
-        
-                                                    <a href="<?= url('exam/subject') ?>"><i class="fa icon-account"></i> Subjects</a>
-        
-                                                    <li class="nav-sub-item-3">
-                                                        <a href="#" data-i18n="nav.menu-levels.menu-level-22.menu-level-32.main">&nbsp; Reports</a>
-                                                        <ul class="tree-3">
-                                                            <li><a href="<?= url('exam/report/single') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-32.menu-level-41">Single</a> </li>
-                                                            <!--<li><a href="<?= url('exam/report/accumulative') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-32.menu-level-41">Combined</a> </li>-->
-        
-                                                        </ul>
-                                                    </li>
-                                                    <li><a href="<?= url('exam/marking') ?>" data-i18n="nav.advance-components.draggable">Marking</a></li>
-        
-                                                </ul>
-                                            </li>
-                                          <!--  <li class="nav-sub-item"><a href="<?= url('report/index') ?>"> System Reports</a></li> -->
-        
-                                        </ul>
-                                    </li>
-                                <?php } ?>
-                                </ul>
-                            </li>
-                        <?php } ?>
-
-
-
-                        <?php if(can_access('manage_software')) { ?>
-                            <li class="nav-item">
-                                <a href="#!">
-                                    <i class="ti-layout-grid2-alt"></i>
-                                    <span data-i18n="nav.basic-components.main">Engineering</span>
-                                </a>
-                                <ul class="tree-1">
-                                    <li><a href="<?= url('software/template') ?>" data-i18n="nav.basic-components.alert">Templates & Policies</a></li>
-
-                                 <?php if(can_access('manage_database')) { ?>
-                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Database</a>
-                                        <ul class="tree-2" style="display: none;">
-                                            <li><a href="<?= url('software/compareTable') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Tables</a></li>
-                                            <li><a href="<?= url('software/compareColumn') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Columns</a></li>
-                                            <li><a href="<?= url('software/constrains') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Constrains</a></li>
-                                            <li><a href="<?= url('software/backup') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Backup</a></li>
-                                            <li><a href="<?= url('software/analysis') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Reports</a></li>
-                                            <li><a href="<?= url('software/upgrade') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Create Script</a></li>
-
-                                        </ul>
-                                    </li>
-                                    <?php } ?>
-
-                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.menu-levels.menu-level-22.main">Payment Integration</a>
-                                        <ul class="tree-2" style="display: none;">
-                                            <li><a href="<?= url('software/banksetup') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Bank Setup</a></li>
-                                          
-                                            <li><a href="<?= url('software/invoice/live') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Live Invoices</a></li>
-                                            <li><a href="<?= url('software/invoice/uat') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Testing Invoices</a></li>
-                                            <li><a href="<?= url('software/api') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">API Requests</a></li>
-
-                                            <li><a href="<?= url('software/reconciliation') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-31">Reconciliation</a></li>
-                                        </ul>
-                                    </li>
-
-                                    {{-- <li><a href="<?= url('software/server') ?>" data-i18n="nav.basic-components.button">Server Administration</a></li> --}}
-                                    <li><a href="<?= url('software/logs') ?>" data-i18n="nav.basic-components.box-shadow">Error Logs</a></li>
-
-                                     <?php if(can_access('view_sms_status')) { ?>
-                                       <li><a href="<?= url('software/smsStatus') ?>" data-i18n="nav.basic-components.box-shadow">SMS Status</a></li>
-                                    <?php } ?>
-                                </ul>
-                            </li>
-                        <?php } ?>
-
-                      
-                     <?php  if (Auth::user()->department == 9 || Auth::user()->department == 10) {
-                            ?>
-                            <li class="nav-item"><a href="<?= url('Partner/index') ?>" > <i class="ti-layers "> </i> Onboarded Schools</a></li>
-                            <?php
-                        }
-                
-                        if (false) {
-                            $has_class = preg_match('/exam/', url()->current()) ? 'has-class open' : '';
-                            ?>
-                            <li class="nav-item <?= $has_class ?>">
-                                <a href="#!">
-                                    <i class="ti-crown"></i>
-                                    <span data-i18n="nav.advance-components.main">Schools</span>
-                                </a>
-                                <ul class="tree-1 ">
-                                    <!--<li><a href="<?= url('exam/dashboard') ?>" data-i18n="nav.advance-components.draggable">Dashboard</a></li>-->
-
-                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Exams</a>
-                                        <ul class="tree-2 <?= $has_class ?>">
-                                            <a href="<?= url('exam/listing') ?>"><i class="fa icon-account"></i> Listing</a>
-                                            <a href="<?= url('exam/allocate') ?>"><i class="fa icon-account"></i> Definition</a>
-                                            <!--<a href="<?= url('exam/schedule') ?>"><i class="fa icon-expense"></i> Schedule</a>-->
-                                            <a href="<?= url('exam/grade') ?>"><i class="fa icon-account"></i> Grades</a>
-
-                                            <a href="<?= url('exam/subject') ?>"><i class="fa icon-account"></i> Subjects</a>
-
-                                            <li class="nav-sub-item-3">
-                                                <a href="#" data-i18n="nav.menu-levels.menu-level-22.menu-level-32.main">&nbsp; Reports</a>
-                                                <ul class="tree-3">
-                                                    <li><a href="<?= url('exam/report/single') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-32.menu-level-41">Single</a> </li>
-                                                    <!--<li><a href="<?= url('exam/report/accumulative') ?>" data-i18n="nav.menu-levels.menu-level-22.menu-level-32.menu-level-41">Combined</a> </li>-->
-
-                                                </ul>
-                                            </li>
-                                            <li><a href="<?= url('exam/marking') ?>" data-i18n="nav.advance-components.draggable">Marking</a></li>
-
-                                        </ul>
-                                    </li>
-                                  
-
-                                </ul>
-                            </li>
-                        <?php } ?>
-
-
-                        <?php if (can_access('manage_finance')) { ?>
-                            <li class="nav-item">
-                                <a href="#!">
-                                    <i class="ti-crown"></i>
-                                    <span data-i18n="nav.advance-components.main">Accounting </span>
-                                </a>
-                                <ul class="tree-1">
-                                   
-                                    <li><a href="<?= url('account/invoice') ?>" data-i18n="nav.advance-components.grid-stack">Invoice</a></li>
-                                    <li><a href="<?= url('account/standingOrders') ?>" data-i18n="nav.advance-components.grid-stack">Standing orders</a></li>
-                                    <li class="nav-sub-item"><a href="#" data-i18n="nav.page_layout.horizontal.main"> Transactions</a>
-                                        <ul class="tree-2">
-                                            <a href="<?= url('revenue/index') ?>"><i class="fa icon-account"></i> Revenue</a>
-                                            <a href="<?= url('expense/index/4') ?>"><i class="fa icon-expense"></i> Expense</a>
-                                            <a href="<?= url('account/transaction/1') ?>"><i class="fa icon-account"></i> Fixed assets</a>
-                                            <a href="<?= url('account/transaction/5') ?>"><i class="fa icon-account"></i> Current assets</a>
-                                            <a href="<?= url('account/transaction/2') ?>"><i class="fa icon-account"></i> liabilities</a>
-                                            <a href="<?= url('account/transaction/3') ?>"><i class="fa icon-account"></i> capital</a>
-                                            <a href="<?= url('account/reconciliation') ?>"><i class="fa icon-account"></i> Reconciliation</a>
-                                        </ul>
-                                    </li>
-
-
-                        <?php if (can_access('manage_payroll')) { ?>
-                        <li class="nav-sub-item">
-                            <a href="#" data-i18n="nav.page_layout.horizontal.main">
-                                Payroll
-                                <span class="fa fa-chevron-down"></span></a>
-                            <ul class="tree-2">
-                                <a href="<?= url('payroll/taxes') ?>">  <i class="fa fa-clipboard"></i>  <span>TAX</span></a>
-                                <a href="<?= url('payroll/pension') ?>"><i class="fa fa-clipboard"></i><span>Pension Fund</span></a>
-                                <a href="<?= url('allowance/index') ?>"><i class="fa fa-clipboard"></i><span>Allowances</span></a>
-                                <a href="<?= url('deduction/index') ?>"><i class="fa fa-clipboard"></i><span>Deductions</span></a>
-
-                                <a href="<?= url('Payroll/index') ?>"><i class="fa fa-clipboard"></i> <span>Salaries</span> </a>
-
-                                   <li class="nav-sub-item-3">
-                                       <a>
-                                        Loans
-                                        <span class="fa fa-chevron-down"></span></a>
-                                           <ul class="tree-3">
-                                            <a href="<?= url('loan/type') ?>"><i class="fa fa-clipboard"></i><span
-                                                style="color: white; line-height: 25px;"> Loan Types</span></a>
-                                            <a href="<?= url('loan/index') ?>"><i class="fa fa-clipboard"></i><span
-                                                style="color: white; line-height: 25px;"> Borrowers </span></a>
-                                        </ul>
-                                    </li>
-                                    <li><a href="<?= url('account/report') ?>" data-i18n="nav.advance-components.light-box">Reports</a></li>
-                                </ul>
-                            </li>
-                            <?php } ?>
-                        <?php } ?>
-
-                    
-
-
-                        <?php if (can_access('manage_expenses')) { ?>
-                             {{-- <li class="nav-item single-item has-class">
-                                    <a href="<?= url('account/transaction/4') ?>">
-                                        <i class="ti-view-grid"></i>
-                                        <span data-i18n="nav.widget.main"> Expenses</span>
-                                        <label class="label label-danger menu-caption">+</label>
-                                            </a>
-                                        </li> --}}
-                            <?php } ?>
-                    <?php } ?>
-
-         
-
-                    <?php /* if (preg_match('/localhost/', url()->current()) && can_access('manage_software')) { ?>
-                      <li class="nav-item">
-                      <a href="#">
-                      <i class="ti-menu"></i>
-                      <span data-i18n="nav.basic-components.main"> Customer Requirement </span>
-                      </a>
-                      <ul class="tree-1 ">
-                      <li><a href="<?=url('software/requirements')?>" data-i18n="nav.extra-components.session-timeout">Requirement</a></li>
-                      <li><a href="<?= url('software/todo') ?>" data-i18n="nav.extra-components.session-timeout">Todo List</a></li>
-                      <li><a href="<?= url('software/statistics') ?>" data-i18n="nav.extra-components.session-timeout">Reports</a></li>
-                      </ul>
-                      </li>
-                      <?php } */ ?>
-                </ul>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
+                <div class="ring">
+                    <div class="frame"></div>
+                </div>
             </div>
         </div>
-        <!-- Menu aside end -->
-        <!-- Sidebar chat start -->
-        <div id="sidebar" class="users p-chat-user showChat">
-            <div class="had-container">
-                <div class="card card_main p-fixed users-main">
-                    <div class="user-box">
-                        <div class="card-block">
-                            <div class="right-icon-control">
-                                <input type="text" class="form-control  search-text" placeholder="Search Friend" id="search-friends">
-                                <div class="form-icon">
-                                    <i class="icofont icofont-search"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="main-friend-list">
-                            <?php
-                            foreach ($users as $user) {
-                                ?>
-                                <div class="media userlist-box" onclick="get_user(<?= $user->id ?>)" data-id="1" data-status="online" data-username="<?= $user->firstname . ' ' . $user->lastname ?>" data-toggle="tooltip" data-placement="left" title="<?= $user->firstname . ' ' . $user->lastname ?>">
-                                    <input id="to_user_id<?= $user->id ?>" value="<?= $user->id ?>" type="hidden">
-                                    <a class="media-left" href="#!">
-                                        <img class="media-object img-circle" src="<?= $root ?>assets/images/avatar-1.png" alt="<?= $user->firstname . ' ' . $user->lastname ?>">
-                                        <div class="live-status bg-success"></div>
-                                    </a>
-                                    <div class="media-body">
-                                        <div class="f-13 chat-header"><?= $user->firstname . ' ' . $user->lastname ?></div>
+    </div>  
+          
+  
+    {{-- <div class="theme-loader">
+        <div class="ball-scale center">
+            <div class='contain'>
+                <img width="200" height="200" src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="ShuleSoft">
+            </div>
+        </div>
+    </div>  --}}
+    <!-- Pre-loader end -->
+    <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+
+            <nav class="navbar header-navbar pcoded-header" style="background-color: #2C3E50;">
+                <div class="navbar-wrapper">
+                    <div class="navbar-logo" style="background-color: #2C3E50;">
+                        <a class="mobile-menu" id="mobile-collapse" href="#!">
+                            <i class="feather icon-menu"></i>
+                        </a>
+                        <a href="index-1.htm">
+                            <img width="50" height="50" src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="ShuleSoft">
+                        </a>
+                        <a class="mobile-options">
+                            <i class="feather icon-more-horizontal"></i>
+                        </a>
+                    </div>
+
+                    <div class="navbar-container container-fluid">
+                        <ul class="nav-left">
+                            <li class="header-search">
+                                <div class="main-search morphsearch-search">
+                                    <div class="input-group">
+                                        <span class="input-group-addon search-close"><i class="feather icon-x text-light"></i></span>
+                                        <input type="text" class="form-control">
+                                        <span class="input-group-addon search-btn"><i class="feather icon-search text-light"></i></span>
                                     </div>
                                 </div>
-                            <?php } ?>
-                         
+                            </li>
+                            <li>
+                                <a href="#!" onclick="javascript:toggleFullScreen()">
+                                    <i class="feather icon-maximize full-screen text-light"></i>
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="nav-right">
+                            <li class="header-notification">
+                                <div class="dropdown-primary dropdown">
+                                    <div class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="feather icon-bell text-light"></i>
+                                        <span class="badge bg-c-pink">5</span>
+                                    </div>
+                                    <ul class="show-notification notification-view dropdown-menu" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                                        <li>
+                                            <h6>Notifications</h6>
+                                            <label class="label label-danger">New</label>
+                                        </li>
+                                        <li>
+                                            <div class="media">
+                                                <img class="d-flex align-self-center img-radius" src="..\files\assets\images\avatar-4.jpg" alt="Generic placeholder image">
+                                                <div class="media-body">
+                                                    <h5 class="notification-user">John Doe</h5>
+                                                    <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
+                                                    <span class="notification-time">30 minutes ago</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    
+                                    </ul>
+                                </div>
+                            </li>
+                          
+                            <li class="user-profile header-notification">
+                                <div class="dropdown-primary dropdown">
+                                    <div class="dropdown-toggle" data-toggle="dropdown">
+                                        <?php $id = Auth::user()->id;
+                                        $path = \collect(DB::select("select f.path from admin.users a join admin.company_files f on a.company_file_id = f.id where a.id = '$id'"))->first(); 
+                                        $local = $root . 'assets/images/user.png';
+                                        ?>
+                                        <img class="img-40" src="<?= isset($path->path) && ($path->path != '')  ? $path->path : $local ?>" alt="User-Profile-Image"> 
+                                        <span class="text-light"><?= \Auth::user()->name ?></span>
+                                        <i class="feather icon-chevron-down text-light"></i>
+                                    </div>
+                                    <ul class="show-notification profile-notification dropdown-menu" data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                                        <li>
+                                            <a href="#!">
+                                                <i class="feather icon-settings"></i> Settings
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="<?= url('users/show/' . Auth::user()->id) ?>">
+                                                <i class="feather icon-user"></i> Profile
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="email-inbox.htm">
+                                                <i class="feather icon-mail"></i> My Messages
+                                            </a>
+                                        </li>
+                                     
+                                        <li>
+                                            <a href="{{ route('logout') }}"
+                                               onclick="event.preventDefault();
+                                               document.getElementById('logout-form').submit();"><i class="feather icon-log-out"></i> Logout</a>
+                                              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                                   {{ csrf_field() }}
+                                              </form>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="pcoded-main-container">
+                <div class="pcoded-wrapper">
+                    <nav class="pcoded-navbar" >
+                        <div class="pcoded-inner-navbar main-menu" style="background-color: #2C3E50;">
+                            <div class="pcoded-navigatio-lavel">menu</div>
+                            <ul class="pcoded-item pcoded-left-item">
+                                <li class="pcoded-hasmenu">
+                                    <a href="javascript:void(0)">
+                                        <span class="pcoded-micon"><i class="feather icon-home"></i></span>
+                                        <span class="pcoded-mtext">DASHBOARD</span>
+                                    </a>
+                                    <ul class="pcoded-submenu">
+                                        <?php if (can_access('view_home_dashboard')) { ?>
+                                        <li class="active">
+                                            <a href="<?= url('analyse/index') ?>">
+                                                <span class="pcoded-mtext">Home</span>
+                                            </a>
+                                        </li>
+                                        <?php } if ((can_access('view_marketing_dashboard') || Auth::user()->department == 2) && Auth::user()->role_id <> 3) { ?>
+                                        <li class="">
+                                            <a href="<?= url('analyse/marketing') ?>">
+                                                <span class="pcoded-mtext">Marketing</span>
+                                            </a>
+                                        </li>
+                                         <?php } if (can_access('view_sales_dashboard') || Auth::user()->department == 2) { ?>
+                                        <li class=" ">
+                                            <a  href="<?= url('analyse/sales') ?>">
+                                                <span class="pcoded-mtext">Sales</span>
+                                            </a>
+                                        </li>
+                                        <?php } if (can_access('view_accounts_dashboard') || Auth::user()->department == 4) { ?>
+                                         <li class=" ">
+                                            <a href="<?= url('analyse/accounts') ?>">
+                                                <span class="pcoded-mtext">Accounts</span>
+                                            </a>
+                                        </li>
+                                         <?php } if (can_access('view_customer_dashboard') || Auth::user()->department == 1) { ?>
+                                        <li class=" ">
+                                            <a href="<?= url('analyse/customers') ?>">
+                                                <span class="pcoded-mtext">Customers</span>
+                                            </a>
+                                        </li>
+                                         <?php } if (can_access('view_engineering_dashboard') || Auth::user()->department == 3) { ?>
+                                          <li class=" ">
+                                            <a href="<?= url('analyse/software') ?>">
+                                                <span class="pcoded-mtext">Engineering</span>
+                                            </a>
+                                        </li>
+                                        <?php } ?>
+                                    </ul>
+                                </li>
+                                <li class="pcoded-hasmenu">
+                                    <a href="javascript:void(0)">
+                                        <span class="pcoded-micon"><i class="feather icon-sidebar"></i></span>
+                                        <span class="pcoded-mtext">MARKETING</span>
+                                    </a>
+                                    <ul class="pcoded-submenu">
+                                        <li class=" pcoded-hasmenu">
+                                            <a href="javascript:void(0)">
+                                                <span class="pcoded-mtext">Vertical</span>
+                                            </a>
+                                            <ul class="pcoded-submenu">
+                                                <li class=" ">
+                                                    <a href="menu-static.htm">
+                                                        <span class="pcoded-mtext">Static Layout</span>
+                                                    </a>
+                                                </li>
+                                             
+                                                <li class=" ">
+                                                    <a href="menu-sidebar.htm">
+                                                        <span class="pcoded-mtext">Sidebar Fixed</span>
+                                                    </a>
+                                                </li>
+
+                                            </ul>
+                                        </li>
+                                        <li class=" pcoded-hasmenu">
+                                            <a href="javascript:void(0)">
+                                                <span class="pcoded-mtext">Horizontal</span>
+                                            </a>
+                                            <ul class="pcoded-submenu">
+                                                <li class=" ">
+                                                    <a href="menu-horizontal-static.htm" target="_blank">
+                                                        <span class="pcoded-mtext">Static Layout</span>
+                                                    </a>
+                                                </li>
+                                             
+                                                <li class=" ">
+                                                    <a href="menu-horizontal-icon-fixed.htm" target="_blank">
+                                                        <span class="pcoded-mtext">Fixed With Icon</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class=" ">
+                                            <a href="menu-bottom.htm">
+                                                <span class="pcoded-mtext">Bottom Menu</span>
+                                            </a>
+                                        </li>
+                                        <li class=" ">
+                                            <a href="box-layout.htm" target="_blank">
+                                                <span class="pcoded-mtext">Box Layout</span>
+                                            </a>
+                                        </li>
+                                      
+                                    </ul>
+                                </li>
+                                <li class="">
+                                    <a href="navbar-light.htm">
+                                        <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
+                                        <span class="pcoded-mtext">OPERATIONS</span>
+                                    </a>
+                                </li>
+
+                                  <li class="pcoded-hasmenu">
+                                    <a href="javascript:void(0)">
+                                        <span class="pcoded-micon"><i class="feather icon-settings"></i></span>
+                                        <span class="pcoded-mtext">ENGINEERING</span>
+                                    </a>
+                                    <ul class="pcoded-submenu">
+                                        <li class=" ">
+                                            <a href="widget-statistic.htm">
+                                                <span class="pcoded-mtext">Statistic</span>
+                                            </a>
+                                        </li>
+                                        <li class=" ">
+                                            <a href="widget-data.htm">
+                                                <span class="pcoded-mtext">Data</span>
+                                            </a>
+                                        </li>
+                                        <li class=" ">
+                                            <a href="widget-chart.htm">
+                                                <span class="pcoded-mtext">Chart Widget</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li class="pcoded-hasmenu">
+                                    <a href="javascript:void(0)">
+                                        <span class="pcoded-micon"><i class="feather icon-book"></i></span>
+                                        <span class="pcoded-mtext">ACCOUNTING</span>
+                                    </a>
+                                    <ul class="pcoded-submenu">
+                                        <li class=" ">
+                                            <a href="widget-statistic.htm">
+                                                <span class="pcoded-mtext">Statistic</span>
+                                            </a>
+                                        </li>
+                                        <li class=" ">
+                                            <a href="widget-data.htm">
+                                                <span class="pcoded-mtext">Data</span>
+                                            </a>
+                                        </li>
+                                        <li class=" ">
+                                            <a href="widget-chart.htm">
+                                                <span class="pcoded-mtext">Chart Widget</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </nav>
+
+                      <div class="pcoded-content">
+                        <div class="pcoded-inner-content">
+
+                          <div class="main-body">
+                              {{-- @include('layouts.notifications') --}}
+                              @yield('content')
+                          </div>
 
                         </div>
+                      </div>
+
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- Sidebar inner chat start-->
-        <div class="showChat_inner">
-            <div id="usermessage"  style="overflow-y: auto; height: 100%;">
+             
+        </div>   
 
+
+
+
+
+        <!-- Sidebar inner chat start-->
+        {{-- <div class="showChat_inner">
+            <div id="usermessage"  style="overflow-y: auto; height: 100%;">
             </div>
-        </div>
+        </div> --}}
         <!-- Sidebar inner chat end-->
         <!-- Main-body start-->
-        <div class="main-body">
-            @include('layouts.notifications')
-            @yield('content')
-        </div>
-      
-
+       
+{{-- 
         <script type="text/javascript" src="<?= $root ?>bower_components/tether/dist/js/tether.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
       
         <!-- jquery slimscroll js -->
         <script type="text/javascript" src="<?= $root ?>bower_components/jquery-slimscroll/jquery.slimscroll.js"></script>
-        {{-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-slimscroll@1.3.8/jquery.slimscroll.min.js"></script> --}}
-
-        <!-- modernizr js -->
-        {{-- <script type="text/javascript" src="<?= $root ?>bower_components/modernizr/modernizr.js"></script> --}}
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
         <script type="text/javascript" src="<?= $root ?>bower_components/modernizr/feature-detects/css-scrollbars.js"></script>
 
@@ -976,7 +468,53 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <script src="<?= $root ?>bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
         <script src="<?= $root ?>bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
         <script src="<?= $root ?>bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
-        @yield('footer')
+        @yield('footer') --}}
+
+
+    <script data-cfasync="false" src="..\..\..\cdn-cgi\scripts\5c5dd728\cloudflare-static\email-decode.min.js">
+
+    </script><script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery/js/jquery.min.js"></script>
+    <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery-ui/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="<?= $root ?>/files/bower_components/popper.js/js/popper.min.js"></script>
+    <script type="text/javascript" src="<?= $root ?>/files/bower_components/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery-slimscroll/js/jquery.slimscroll.js"></script>
+    <script type="text/javascript" src="<?= $root ?>/files/bower_components/modernizr/js/modernizr.js"></script>
+    <!-- Chart js -->
+    <script type="text/javascript" src="<?= $root ?>/files/bower_components/chart.js/js/Chart.js"></script>
+    <script src="<?= $root ?>/files/assets/pages/widget/amchart/amcharts.js"></script>
+    <script src="<?= $root ?>/files/assets/pages/widget/amchart/serial.js"></script>
+    <script src="<?= $root ?>/files/assets/pages/widget/amchart/light.js"></script>
+    <script src="<?= $root ?>/files/assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script type="text/javascript" src="<?= $root ?>/files/assets/js/SmoothScroll.js"></script>
+    <script src="<?= $root ?>/files/assets/js/pcoded.min.js"></script>
+    <script src="<?= $root ?>/files/assets/js/vartical-layout.min.js"></script>
+    <script type="text/javascript" src="<?= $root ?>/files/assets/pages/dashboard/custom-dashboard.js"></script>
+    <script type="text/javascript" src="<?= $root ?>/files/assets/js/script.min.js"></script>
+
+     {{-- Datatables --}}
+    <script src="<?= $root ?>/files/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="<?= $root ?>/files/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+
+
+    <script src="<?= $root ?>/files/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="<?= $root ?>/files/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="<?= $root ?>/files/assets/pages/data-table/js/jszip.min.js"></script>
+    <script src="<?= $root ?>/files/assets/pages/data-table/js/pdfmake.min.js"></script>
+    <script src="<?= $root ?>/files/assets/pages/data-table/js/vfs_fonts.js"></script>
+    <script src="<?= $root ?>/files/assets/pages/thousandth/thousands.js"></script>
+    <script src="<?= $root ?>/files/bower_components/datatables.net-buttons/js/buttons.print.min.js"></script>
+    <script src="<?= $root ?>/files/bower_components/datatables.net-buttons/js/buttons.html5.min.js"></script>
+    <script src="<?= $root ?>/files/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="<?= $root ?>/files/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="<?= $root ?>/files/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+
+    <script type="text/javascript" src="<?= $root ?>/files/bower_components/select2/js/select2.full.min.js'); ?>"></script>
+
+
+    {{-- Highcharts --}}
+
+
+    <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
 
     </body>
     <?php
@@ -986,20 +524,20 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
 
 
                    
-                                    send_message = function (id) {
-                                        var to_user_id = $('#to_user_id' + id).val();
-                                        var body = $('#body').val();
-                                        $.ajax({
-                                            type: 'POST',
-                                            url: '<?= url('Users/storeChat/null') ?>',
-                                            data: {to_user_id: to_user_id, body: body},
-                                            dataType: "html",
-                                            success: function (data) {
-                                                $('input[type="text"],textarea').val('');
-                                                $('#usermessage').html(data);
-                                            }
-                                        });
-                                    }
+                        send_message = function (id) {
+                            var to_user_id = $('#to_user_id' + id).val();
+                            var body = $('#body').val();
+                            $.ajax({
+                                type: 'POST',
+                                url: '<?= url('Users/storeChat/null') ?>',
+                                data: {to_user_id: to_user_id, body: body},
+                                dataType: "html",
+                                success: function (data) {
+                                    $('input[type="text"],textarea').val('');
+                                    $('#usermessage').html(data);
+                                }
+                            });
+                        }
 
                                     get_user = function (id) {
                                         var to_user_id = $('#to_user_id' + id).val();

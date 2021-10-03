@@ -25,6 +25,8 @@ class Analyse extends Controller {
 
     public function index() {
         $this->data['users'] = [];
+        $year = date('Y');
+        $this->data['breadcrumb'] = array('title' => 'Dashboard','subtitle'=>'dashboard','head'=>'summary');
         if (Auth::user()->role_id == 7) {
             return redirect('sales/school');
             exit;
@@ -57,6 +59,8 @@ class Analyse extends Controller {
             $sql = "select a.id, a.end_date,f.name as school,a.activity as activity,a.created_at::date, a.date,d.name as user ,e.name as type  from admin.tasks a join admin.tasks_clients c on a.id=c.task_id join admin.users d on d.id=a.user_id join admin.task_types e on a.task_type_id=e.id join admin.clients f on f.id = c.client_id WHERE a.user_id = $user order by a.created_at::date desc";
             $this->data['activities'] = \DB::select($sql);
             $this->data['summary'] = $this->summary();
+            $this->data['new_schools'] = \DB::select("select count(*) as schools,date_trunc('month', created_at) AS month from admin.all_setting a where extract(year from a.created_at)=' . $year . '  group by month order by month");
+
         
             return view('analyse.index', $this->data);
         }

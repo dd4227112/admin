@@ -11,28 +11,9 @@ foreach ($user_permission as $permis) {
 ?>
 <div class="main-body">
     <div class="page-wrapper">
-        <!-- Page-header start -->
-        <div class="page-header">
-            <div class="page-header-title">
-                <h4 class="box-title"><?= $user->name ?> Profile </h4>
-                <span></span>
-            </div>
-            <div class="page-header-breadcrumb">
-                <ul class="breadcrumb-title">
-                    <li class="breadcrumb-item">
-                        <a href="<?= url('/') ?>">
-                            <i class="icofont icofont-home"></i>
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">User</a>
-                    </li>
-                    <li class="breadcrumb-item"><a href="#!">Profile</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- Page-header end -->
-        <!-- Page-body start -->
+   
+      <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
+
         <div class="page-body">
             <!--profile cover start-->
             <div class="row">
