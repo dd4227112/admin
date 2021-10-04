@@ -19,37 +19,6 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <!-- Google font-->
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
         <!-- Required Fremwork -->
-       {{-- <link rel="stylesheet" type="text/css" href="<?= $root ?>bower_components/bootstrap/dist/css/bootstrap.min.css">  --}}
-        {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" 
-       integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous"> 
-      
-        <!-- themify icon -->
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/icon/themify-icons/themify-icons.css">
-        <!-- ico font -->
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/icon/icofont/css/icofont.css">
-        <!-- flag icon framework css -->
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/flag-icon/flag-icon.min.css">
-        <!-- Menu-Search css -->
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/menu-search/css/component.css">
-        <!-- Horizontal-Timeline css -->
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/dashboard/horizontal-timeline/css/style.css">
-        <!-- amchart css -->
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/dashboard/amchart/css/amchart.css">
-        <!-- flag icon framework css -->
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/flag-icon/flag-icon.min.css">
-        <!-- Data Table Css -->
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/pages/data-table/css/buttons.dataTables.min.css">
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css">
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>assets/css/style.css">
-        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2.css">
-        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/select2-bootstrap.css">
-        <link rel="stylesheet" href="<?= $root ?>assets/select2/css/gh-pages.css">       
-        <link href="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.css" rel="stylesheet">
-        <script type="text/javascript" src="<?= $root ?>bower_components/jquery/dist/jquery.min.js"></script>
-        <script type="text/javascript" src="<?= $root ?>bower_components/jquery-ui/jquery-ui.min.js"></script>  --}}
-
-
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/bootstrap/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/icon/feather/css/feather.css">
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/css/style.css">
@@ -62,13 +31,21 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
    
         <!-- select 2 -->
         <link rel="stylesheet" href="<?= $root ?>/files/bower_components/select2/css/select2.min.css">
-       
-     
-                  
-     </head>
 
+        {{-- date picker --}}
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/pages/advance-elements/css/bootstrap-datetimepicker.css">
+        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/bootstrap-daterangepicker/css/daterangepicker.css">
+
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/modules/series-label.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com/modules/export-data.js"></script>
+        <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+        <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+            
+     </head>
     <body>
-            <!-- Pre-loader start -->
+      <!-- Pre-loader start -->
 
        <div class="theme-loader">
         <div class="ball-scale">
@@ -105,16 +82,16 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                 </div>
             </div>
         </div>
-    </div>  
+    </div>    
           
-  
-    {{-- <div class="theme-loader">
-        <div class="ball-scale center">
+     {{-- <div class="theme-loader itext-center">
+        <div class="ball-scale justify-content-center">
             <div class='contain'>
                 <img width="200" height="200" src="<?= $root ?>assets/images/auth/shulesoft_logo.png" alt="ShuleSoft">
             </div>
         </div>
-    </div>  --}}
+    </div>    --}}
+
     <!-- Pre-loader end -->
     <div id="pcoded" class="pcoded">
         <div class="pcoded-overlay-box"></div>
@@ -230,10 +207,12 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                             <div class="pcoded-navigatio-lavel">menu</div>
                             <ul class="pcoded-item pcoded-left-item">
                                 <li class="pcoded-hasmenu">
+                                  <?php if (can_access('view_home_dashboard')) { ?>
                                     <a href="javascript:void(0)">
                                         <span class="pcoded-micon"><i class="feather icon-home"></i></span>
                                         <span class="pcoded-mtext">DASHBOARD</span>
                                     </a>
+                                   <?php } ?>
                                     <ul class="pcoded-submenu">
                                         <?php if (can_access('view_home_dashboard')) { ?>
                                         <li class="active">
@@ -265,7 +244,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                 <span class="pcoded-mtext">Customers</span>
                                             </a>
                                         </li>
-                                         <?php } if (can_access('view_engineering_dashboard') || Auth::user()->department == 3) { ?>
+                                         <?php } if (!can_access('view_engineering_dashboard'))  { ?>
                                           <li class=" ">
                                             <a href="<?= url('analyse/software') ?>">
                                                 <span class="pcoded-mtext">Engineering</span>
@@ -274,6 +253,9 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                         <?php } ?>
                                     </ul>
                                 </li>
+
+                            
+                              <?php if (can_access('manage_marketing')) { ?>
                                 <li class="pcoded-hasmenu">
                                     <a href="javascript:void(0)">
                                         <span class="pcoded-micon"><i class="feather icon-sidebar"></i></span>
@@ -282,54 +264,145 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                     <ul class="pcoded-submenu">
                                         <li class=" pcoded-hasmenu">
                                             <a href="javascript:void(0)">
-                                                <span class="pcoded-mtext">Vertical</span>
+                                                <span class="pcoded-mtext text-bold">Sales</span>
                                             </a>
                                             <ul class="pcoded-submenu">
-                                                <li class=" ">
-                                                    <a href="menu-static.htm">
-                                                        <span class="pcoded-mtext">Static Layout</span>
+                                                <li class="">
+                                                    <a href="<?= url('sales/index') ?>">
+                                                       <span class="pcoded-mtext">Sales materials</span>
                                                     </a>
-                                                </li>
+                                                 </li>
                                              
-                                                <li class=" ">
-                                                    <a href="menu-sidebar.htm">
-                                                        <span class="pcoded-mtext">Sidebar Fixed</span>
+                                                <?php if (can_access('onboard_school')) { ?>
+                                                 <li class="">
+                                                    <a href="<?= url('sales/school') ?>">
+                                                        <span class="pcoded-mtext">List of Schools</span>
                                                     </a>
-                                                </li>
+                                                  </li>
+                                                <?php } ?>
 
+                                                <li class="">
+                                                    <a href="<?= url('sales/salesStatus') ?>">
+                                                       <span class="pcoded-mtext">Sales Status</span>
+                                                    </a>
+                                                 </li>
                                             </ul>
                                         </li>
                                         <li class=" pcoded-hasmenu">
                                             <a href="javascript:void(0)">
-                                                <span class="pcoded-mtext">Horizontal</span>
+                                                <span class="pcoded-mtext">Usage and analysis</span>
                                             </a>
                                             <ul class="pcoded-submenu">
                                                 <li class=" ">
-                                                    <a href="menu-horizontal-static.htm" target="_blank">
-                                                        <span class="pcoded-mtext">Static Layout</span>
+                                                    <a href="<?= url('marketing/moduleusage') ?>">
+                                                        <span class="pcoded-mtext">Usage analysis</span>
                                                     </a>
                                                 </li>
                                              
                                                 <li class=" ">
-                                                    <a href="menu-horizontal-icon-fixed.htm" target="_blank">
-                                                        <span class="pcoded-mtext">Fixed With Icon</span>
+                                                    <a href="<?= url('customer/modules') ?>">
+                                                        <span class="pcoded-mtext">Modules</span>
+                                                    </a>
+                                                </li>
+
+                                                 <li class=" ">
+                                                    <a href="<?= url('customer/logs') ?>">
+                                                        <span class="pcoded-mtext">Task logs</span>
+                                                    </a>
+                                                </li>
+
+                                                <li class=" ">
+                                                    <a href="<?= url('customer/karibu') ?>">
+                                                        <span class="pcoded-mtext">karibuSMS</span>
+                                                    </a>
+                                                </li>
+
+                                                <li class=" ">
+                                                    <a href="<?= url('customer/epayments') ?>">
+                                                        <span class="pcoded-mtext">e-payments</span>
                                                     </a>
                                                 </li>
                                             </ul>
                                         </li>
+
+                                       <?php if (can_access('manage_communications')) { ?>
+                                        <li class=" pcoded-hasmenu">
+                                            <a href="javascript:void(0)">
+                                                <span class="pcoded-mtext">Communications</span>
+                                            </a>
+                                            <ul class="pcoded-submenu">
+                                                <li class="">
+                                                    <a href="<?= url('marketing/communication') ?>">
+                                                        <span class="pcoded-mtext">Communication</span>
+                                                    </a>
+                                                </li>
+                                             
+                                                <li class="">
+                                                    <a href="<?= url('customer/calls') ?>">
+                                                        <span class="pcoded-mtext">Call logs</span>
+                                                    </a>
+                                                </li>
+
+                                                 <li class="">
+                                                    <a href="<?= url('customer/emailsms') ?>">
+                                                        <span class="pcoded-mtext">SMS & Email logs</span>
+                                                    </a>
+                                                </li>
+
+                                                 <li class="">
+                                                    <a href="<?= url('customer/feedbacks/null') ?>">
+                                                        <span class="pcoded-mtext">Customer feedbacks</span>
+                                                    </a>
+                                                </li>
+
+                                                  <li class="">
+                                                    <a href="<?= url('customer/update') ?>">
+                                                        <span class="pcoded-mtext">Updates</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                     <?php } ?>
+
                                         <li class=" ">
-                                            <a href="menu-bottom.htm">
-                                                <span class="pcoded-mtext">Bottom Menu</span>
+                                            <a href="<?= url('marketing/socialmedia') ?>">
+                                                <span class="pcoded-mtext">Digital marketing</span>
                                             </a>
                                         </li>
-                                        <li class=" ">
-                                            <a href="box-layout.htm" target="_blank">
-                                                <span class="pcoded-mtext">Box Layout</span>
+                                        <li class="">
+                                            <a href="<?= url('analyse/ratings') ?>">
+                                                <span class="pcoded-mtext">Ratings</span>
                                             </a>
+                                        </li>
+
+                                          <li class="">
+                                            <a href="#">
+                                                <span class="pcoded-mtext">Parental experience</span>
+                                            </a>
+                                        </li>
+
+                                        <li class="">
+                                           <a href="<?= url('sales/salesstatus') ?>">
+                                                <span class="pcoded-mtext">Sales status</span>
+                                           </a>
+                                        </li>
+
+                                        <li class="">
+                                           <a href="<?= url('customer/requirements') ?>">
+                                                <span class="pcoded-mtext">Customer Requirements</span>
+                                           </a>
+                                        </li>
+
+                                       <li class="">
+                                           <a href="<?= url('marketing/events') ?>">
+                                                <span class="pcoded-mtext">Events and seminars</span>
+                                           </a>
                                         </li>
                                       
                                     </ul>
                                 </li>
+                                <?php }  ?>
+
                                 <li class="">
                                     <a href="navbar-light.htm">
                                         <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
@@ -406,74 +479,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
              
         </div>   
 
-
-
-
-
-        <!-- Sidebar inner chat start-->
-        {{-- <div class="showChat_inner">
-            <div id="usermessage"  style="overflow-y: auto; height: 100%;">
-            </div>
-        </div> --}}
-        <!-- Sidebar inner chat end-->
-        <!-- Main-body start-->
-       
-{{-- 
-        <script type="text/javascript" src="<?= $root ?>bower_components/tether/dist/js/tether.min.js"></script>
-        <script type="text/javascript" src="<?= $root ?>bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-      
-        <!-- jquery slimscroll js -->
-        <script type="text/javascript" src="<?= $root ?>bower_components/jquery-slimscroll/jquery.slimscroll.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
-        <script type="text/javascript" src="<?= $root ?>bower_components/modernizr/feature-detects/css-scrollbars.js"></script>
-
-        <!-- classie js -->
-        <script type="text/javascript" src="<?= $root ?>bower_components/classie/classie.js"></script> 
-      
-        <!-- Rickshow Chart js -->
-        <script src="<?= $root ?>bower_components/d3/d3.js"></script>
-        <!-- Morris Chart js -->
-        <script src="<?= $root ?>bower_components/raphael/raphael.min.js"></script>
-        <script src="<?= $root ?>bower_components/morris.js/morris.js"></script>
-        <!-- Horizontal-Timeline js -->
-        <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/horizontal-timeline/js/main.js"></script>
-        <!-- amchart js -->
-        <script type="text/javascript" src="<?= $root ?>assets/select2/select2.js'); ?>"></script>
-        <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/amchart/js/amcharts.js"></script>
-        <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/amchart/js/serial.js"></script>
-        <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/amchart/js/light.js"></script>
-        <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/amchart/js/custom-amchart.js"></script>
-
-
-
-        <!-- i18next.min.js -->
-        <script type="text/javascript" src="<?= $root ?>bower_components/i18next/i18next.min.js"></script>
-        <script type="text/javascript" src="<?= $root ?>bower_components/i18next-xhr-backend/i18nextXHRBackend.min.js"></script>
-        <script type="text/javascript" src="<?= $root ?>bower_components/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js"></script>
-        <script type="text/javascript" src="<?= $root ?>bower_components/jquery-i18next/jquery-i18next.min.js"></script>
-
-        <!-- Custom js -->
-        <script src="<?= url('public') ?>/bower_components/clockpicker/dist/jquery-clockpicker.min.js"></script>  
-        <script type="text/javascript" src="<?= $root ?>assets/pages/dashboard/custom-dashboard.js?v=3"></script>
-        <script type="text/javascript" src="<?= $root ?>assets/js/script.js?v=3"></script>
-
-        <script src="<?= $root ?>bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-        <script src="<?= $root ?>bower_components/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-        <script src="<?= $root ?>assets/pages/data-table/js/jszip.min.js"></script>
-        <script src="<?= $root ?>assets/pages/data-table/js/pdfmake.min.js"></script>
-        <script src="<?= $root ?>assets/pages/data-table/js/vfs_fonts.js"></script>
-        <script src="<?= $root ?>assets/pages/thousandth/thousands.js"></script>
-        <script src="<?= $root ?>bower_components/datatables.net-buttons/js/buttons.print.min.js"></script>
-        <script src="<?= $root ?>bower_components/datatables.net-buttons/js/buttons.html5.min.js"></script>
-        <script src="<?= $root ?>bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
-        <script src="<?= $root ?>bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-        <script src="<?= $root ?>bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
-        @yield('footer') --}}
-
-
-    <script data-cfasync="false" src="..\..\..\cdn-cgi\scripts\5c5dd728\cloudflare-static\email-decode.min.js">
-
-    </script><script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery/js/jquery.min.js"></script>
+    <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery/js/jquery.min.js"></script>
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/jquery-ui/js/jquery-ui.min.js"></script>
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/popper.js/js/popper.min.js"></script>
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/bootstrap/js/bootstrap.min.js"></script>
@@ -510,11 +516,12 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
 
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/select2/js/select2.full.min.js'); ?>"></script>
 
-
     {{-- Highcharts --}}
 
-
-    <script async="" src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
+    <script type="text/javascript" src="<?= $root ?>/files/assets/pages/advance-elements/moment-with-locales.min.js"></script>
+    <script type="text/javascript" src="<?= $root ?>/files/bower_components/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript" src="<?= $root ?>/files/assets/pages/advance-elements/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="<?= $root ?>/files/bower_components/bootstrap-daterangepicker/js/daterangepicker.js"></script>
 
     </body>
     <?php

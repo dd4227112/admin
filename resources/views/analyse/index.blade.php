@@ -1,162 +1,115 @@
 @extends('layouts.app')
 @section('content')
 
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/series-label.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script>
 <?php $root = url('/') . '/public/';  ?>
 
 <div class="page-wrapper">
-  
-    <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
-
+  <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
     <div class="page-body">
         <div class="row">
             <?php if (can_access('manage_users')) { ?>
-                <div class="col-xl-3 col-md-6">
-                        <div class="card bg-c-yellow text-white">
-                                <div class="card-block">
-                                    <div class="row align-items-center">
-                                        <div class="col">
-                                            <p class="m-b-5">Users</p>
-                                            <h4 class="m-b-0" id=""> <?= number_format($summary['users'])?></h4>
-                                        </div>
-                                        <div class="col col-auto text-right">
-                                            <i class="feather icon-users f-50 text-c-yellow"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card bg-c-green text-white">
-                                <div class="card-block">
-                                    <div class="row align-items-center">
-                                        <div class="col">
-                                            <p class="m-b-5">Parents</p>
-                                            <h4 class="m-b-0" id=""><?= number_format($summary['parents']) ?></h4>
-                                        </div>
-                                        <div class="col col-auto text-right">
-                                            <i class="feather icon-users f-50 text-c-green"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card bg-c-blue text-white">
-                                <div class="card-block">
-                                    <div class="row align-items-center">
-                                        <div class="col">
-                                            <p class="m-b-5">Students</p>
-                                            <h4 class="m-b-0" id=""><?= number_format($summary['students']) ?></h4>
-                                        </div>
-                                        <div class="col col-auto text-right">
-                                            <i class="feather icon-users f-50 text-c-pink"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card bg-c-blue text-white">
-                                <div class="card-block">
-                                    <div class="row align-items-center">
-                                        <div class="col">
-                                            <p class="m-b-5">Teachers</p>
-                                            <h4 class="m-b-0" id=""> <?= number_format($summary['teachers']) ?></h4>
-                                        </div>
-                                        <div class="col col-auto text-right">
-                                            <i class="feather icon-users f-50 text-c-blue"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    
+                  <div class="col-xl-3 col-md-6">
+                        <x-smallCard title="Users"
+                                :value="$summary['users']"
+                                icon="feather icon-users f-50 text-c-red"
+                                cardcolor="bg-c-yellow text-white"
+                                >
+                        </x-smallCard>
+                    </div>
+
+                
+                    <div class="col-xl-3 col-md-6">
+                        <x-smallCard title="Parents"
+                                     :value="$summary['parents']"
+                                     icon="feather icon-users f-50 text-c-red"
+                                     cardcolor="bg-c-green text-white"
+                                     >
+                        </x-smallCard>
+                    </div>
 
                     <div class="col-xl-3 col-md-6">
-                        <div class="card bg-c-yellow text-white">
-                                <div class="card-block">
-                                    <div class="row align-items-center">
-                                        <div class="col">
-                                            <p class="m-b-5">Active Users</p>
-                                            <h4 class="m-b-0" id=""> <?= number_format($summary['active_users']) ?> </h4>
-                                        </div>
-                                        <div class="col col-auto text-right">
-                                            <i class="feather icon-users f-50 text-c-yellow"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card bg-c-green text-white">
-                                <div class="card-block">
-                                    <div class="row align-items-center">
-                                        <div class="col">
-                                            <p class="m-b-5">Active Parents</p>
-                                            <h4 class="m-b-0" id=""> <?= number_format($summary['active_parents']) ?> </h4>
-                                        </div>
-                                        <div class="col col-auto text-right">
-                                            <i class="feather icon-users f-50 text-c-green"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card bg-c-pink text-white">
-                                <div class="card-block">
-                                    <div class="row align-items-center">
-                                        <div class="col">
-                                            <p class="m-b-5">Active Students</p>
-                                            <h4 class="m-b-0"><?= number_format($summary['active_students']) ?> </h4>
-                                        </div>
-                                        <div class="col col-auto text-right">
-                                            <i class="feather icon-users f-50 text-c-pink"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card bg-c-blue text-white">
-                                <div class="card-block">
-                                    <div class="row align-items-center">
-                                        <div class="col">
-                                            <p class="m-b-5">Active teachers</p>
-                                            <h4 class="m-b-0" id=""> <?= number_format($summary['active_teachers']) ?></h4>
-                                        </div>
-                                        <div class="col col-auto text-right">
-                                            <i class="feather icon-users f-50 text-c-blue"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                <div class="col-lg-12">
-                    <div class="card">
-                        <figure class="highcharts-figure">
-                            <div id="container" style="height: 300px;"></div>
-                        </figure>
+                        <x-smallCard title="Students"
+                                    :value="$summary['students']"
+                                    icon="feather icon-users f-50 text-c-red"
+                                    cardcolor="bg-c-blue text-white"
+                                    >
+                        </x-smallCard>
                     </div>
-                </div>
-            <?php } ?>
 
-            <div class="col-lg-12">
-                <div class="card card-border-primary">
+                   <div class="col-xl-3 col-md-6">
+                        <x-smallCard title="Teachers"
+                                    :value="$summary['teachers']"
+                                    icon="feather icon-users f-50 text-c-blue"
+                                    cardcolor="bg-c-blue text-white"
+                                    >
+                        </x-smallCard>
+                   </div>
+
+                    <div class="col-xl-3 col-md-6">
+                          <x-smallCard title="Active Users" :value="$summary['active_users']" icon="feather icon-users f-50 text-c-blue" cardcolor="bg-c-yellow text-white">
+                        </x-smallCard>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6">
+                         <x-smallCard title="Active Parents" :value="$summary['active_parents']" icon="feather icon-users f-50 text-c-blue" cardcolor="bg-c-green text-white">
+                        </x-smallCard>
+                     </div>
+
+                    <div class="col-xl-3 col-md-6">
+                        <x-smallCard title="Active Students" :value="$summary['active_students']" icon="feather icon-users f-50 text-c-blue" cardcolor="bg-c-pink text-white">
+                        </x-smallCard>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6">
+                            <x-smallCard title="Active teachers" :value="$summary['active_teachers']" icon="feather icon-users f-50 text-c-blue" cardcolor="bg-c-blue text-white">
+                            </x-smallCard>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-block">
+                                <div id="containa" style="height:300px"></div>
+                            </div>
+                        </div>
+                     </div>
+                    </div>
+        
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <div class="card shadow mb-2">
+                                <div class="card-body">
+                                    <figure class="highcharts-figure">
+                                        <div id="onboardPie" style="height: 300px; width:350px;"></div>
+                                    </figure>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-6">
+                            <div class="card shadow mb-2">
+                                <div class="card-body">
+                                    <figure class="highcharts-figure">
+                                        <div id="onboardBar" style="height: 300px; width:350px;"></div>
+                                    </figure>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                       
+              <?php } ?>
+
+              <div class="row">
+                  <div class="col-sm-12">
+                   <div class="card">
                     <div class="card-header">
                         <h5>My User Activities</h5>
-
                     </div>
                     <div class="card-block">
-
                         <div class="table-responsive">
-                            <table class="table dataTable">
+                            <table class="table dataTable table-striped table-bordered nowrap">
                                 <thead>
                                     <tr>
                                         <th>No.</th>
@@ -188,64 +141,15 @@
                             </table>
                         </div>
                     </div>
+                  </div>
                 </div>
-            </div>
+            </div> 
 
         </div>
     </div>
-</div>
-</div>
-{{-- 
-<table id="users_table" style="display:none">
-    <thead>
-        <tr>
-            <th></th>
-            <th>User Feedback</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php
-        $logs = DB::select('select count(*),extract(month from created_at) as month from constant.feedback where extract(year from created_at)=' . date('Y') . ' group by month order by month');
-        foreach ($logs as $log) {
-            $monthNum = $log->month;
-            $dateObj = DateTime::createFromFormat('!m', $monthNum);
-            $monthName = $dateObj->format('F'); // March
-            ?>
-            <tr>
-                <th><?= $monthName ?></th>
-                <td><?= $log->count ?></td>
-            </tr>
-        <?php }
-        ?>
-    </tbody>
-</table>
-<table id="users_sales" style="display:none">
-    <thead>
-        <tr>
-            <th></th>
-            <th>User Feedback</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php
-        $new_schools = DB::select('select count(*),extract(month from created_at) as month from admin.all_setting where extract(year from created_at)=' . date('Y') . ' group by month order by month');
-        foreach ($new_schools as $new_school) {
-            $monthNum = $new_school->month;
-            $dateObj = DateTime::createFromFormat('!m', $monthNum);
-            $monthName = $dateObj->format('F'); // March
-            ?>
-            <tr>
-                <th><?= $monthName ?></th>
-                <td><?= $new_school->count ?></td>
-            </tr>
-        <?php }
-        ?>
-    </tbody>
-</table> --}}
 
 <script>
-Highcharts.chart('container', {
-
+Highcharts.chart('containa', {
     title: {
         text: 'Schools onboarding Trend'
     },
@@ -294,6 +198,93 @@ Highcharts.chart('container', {
             }
         }]
     }
+});
+
+
+
+Highcharts.chart('onboardPie', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {
+        text: 'Onboarded schools distribution'
+    },
+    subtitle: {
+        text: 'Total Schools - <?=count($new_schools)?>'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.y:.1f}</b>'
+    },
+    accessibility: {
+        point: {
+          //  valueSuffix: '%'
+        }
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.y:.1f}'
+            }
+        }
+    },
+    series: [{
+        name: 'Schools',
+        colorByPoint: true,
+        data: [
+            <?php foreach($new_schools as $value){  ?> {
+                name: '<?=date("M", strtotime($value->month))?>',
+                y: <?=$value->schools ?>
+            },
+            <?php } ?>
+        ]
+    }]
+});
+
+
+Highcharts.chart('onboardBar', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: 'Schools Vs Months'
+    },
+    subtitle: {
+        text: 'Overall schools onboarded'
+    },
+    xAxis: {
+        type: 'Months',
+       
+        categories: [
+        <?php foreach($new_schools as $value){  ?> '<?=date("M", strtotime($value->month))?>',
+        <?php } ?>
+      ]
+    },
+    yAxis: {
+        title: {
+            text: 'Schools'
+        }
+    },
+    credits: {
+        enabled: false
+    },
+    series: [{
+        name: 'Months',
+        colorByPoint: true,
+        data: [
+            <?php foreach($new_schools as $value){ ?> {
+                name: '<?=date("M", strtotime($value->month))?>',
+                y: <?=$value->schools?>,
+                drilldown: <?=$value->schools ?>
+            },
+            <?php } ?>
+        ]
+    }]
 });
 </script>
 
