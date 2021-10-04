@@ -346,25 +346,25 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
             
 
             <div class="row">
-                        <div class="col-xl-6">
-                            <div class="card shadow mb-2">
-                                <div class="card-body">
-                                    <figure class="highcharts-figure">
-                                        <div id="onboardPie" style="height: 300px; width:350px;"></div>
-                                    </figure>
-                                </div>
-                            </div>
-                        </div>
+            <div class="col-xl-6">
+                <div class="card shadow mb-2">
+                    <div class="card-body">
+                        <figure class="highcharts-figure">
+                            <div id="onboardPie" style="height: 300px; width:350px;"></div>
+                        </figure>
+                    </div>
+                </div>
+            </div>
 
-                        <div class="col-xl-6">
-                            <div class="card shadow mb-2">
-                                <div class="card-body">
-                                    <figure class="highcharts-figure">
-                                        <div id="onboardBar" style="height: 300px; width:350px;"></div>
-                                    </figure>
-                                </div>
-                            </div>
-                        </div>
+            <div class="col-xl-6">
+                <div class="card shadow mb-2">
+                    <div class="card-body">
+                        <figure class="highcharts-figure">
+                            <div id="onboardBar" style="height: 300px; width:350px;"></div>
+                        </figure>
+                    </div>
+                </div>
+            </div>
              </div>
 
         </div>
@@ -461,7 +461,6 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
 });
 
     check = function () {
-
         $('#check_custom_date').change(function () {
             var val = $(this).val();
             if (val == 'today') {

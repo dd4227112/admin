@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('content')
-
 <?php
 $root = url('/') . '/public/'; ?>
 <div class="main-body">
@@ -9,18 +8,18 @@ $root = url('/') . '/public/'; ?>
           <div class="page-body">
 
             <div class="row">
-             <div class="col-xl-3 col-md-6">
-                <x-analyticCard :value="$nps->nps" name="NPS"  icon="feather icon-trending-up text-white f-16" color="bg-c-yellow" topicon="feather icon-bar-chart f-40" subtitle="trending"></x-analyticCard>
-            </div>
+                <div class="col-xl-3 col-md-6">
+                    <x-analyticCard :value="$nps->nps" name="NPS"  icon="feather icon-trending-up text-white f-16" color="bg-c-yellow" topicon="feather icon-bar-chart f-40" subtitle="trending"></x-analyticCard>
+                </div>
 
-            <div class="col-xl-3 col-md-6">
-                <x-analyticCard :value="$commentators" name="Total Rators" icon="feather icon-users text-white f-16"  color="bg-c-green"  topicon="feather icon-users f-40" subtitle="system users"></x-analyticCard>
-            </div>
+                <div class="col-xl-3 col-md-6">
+                    <x-analyticCard :value="$commentators" name="Total Rators" icon="feather icon-users text-white f-16"  color="bg-c-green"  topicon="feather icon-users f-40" subtitle="system users"></x-analyticCard>
+                </div>
 
-              <div class="col-xl-3 col-md-6">
-                <x-analyticCard :value="$comments" name="Comments" icon="feather icon-message-circle text-white f-16"  color="bg-c-blue"  topicon="feather icon-message-square f-40" subtitle="user comments"></x-analyticCard>
+                <div class="col-xl-3 col-md-6">
+                    <x-analyticCard :value="$comments" name="Comments" icon="feather icon-message-circle text-white f-16"  color="bg-c-blue"  topicon="feather icon-message-square f-40" subtitle="user comments"></x-analyticCard>
+                </div>
             </div>
-         </div>
   
             <div class="row">
                 <div class="col-lg-12">
