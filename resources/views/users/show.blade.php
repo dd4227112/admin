@@ -1215,27 +1215,27 @@ foreach ($user_permission as $permis) {
                     </div>
 
                     <div class="form-group row">
-                       {{-- <div class="col-sm-4">
+                       <div class="col-sm-4">
                          <label class="control-label">Start </label>
                           <div class="col-lg-12">
-                            <input class="form-control"  name="date"   value="<?= date('Y-m-d') ?>"  type="datetime-local" 
-                            min="2018-06-07T00:00" max="2018-06-14T00:00" required>
+                            <input class="form-control"  name="date"   value="<?= date('Y-m-d') ?>"  type="date" 
+                              required>
                           </div>
                        </div>
                       
                        <div class="col-sm-4">
                         <label class="control-label"> End</label>
                         <div class="col-lg-12">
-                            <input class="form-control" name="end_date"  type="time">
+                            <input class="form-control" name="end_date"  type="date">
                         </div>
-                       </div> --}}
+                       </div>
 
-                       <div class="col-sm-6">
+                       {{-- <div class="col-sm-6">
                         <label class="control-label"> Start and End date</label>
                           <div class="col-lg-12">
                              <input type="text" class="form-control" name="datetimes" />
                           </div>
-                        </div>
+                        </div> --}}
                     </div>
 
                     <div class="form-group">

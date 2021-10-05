@@ -179,9 +179,9 @@ class Users extends Controller {
 
     public function absent() {
         if ($_POST) {
-            $dates = request('datetimes');
-            $dates = str_replace('-','',$dates);
-            dd($dates);
+            // $dates = request('datetimes');
+            // $dates = str_replace('-','',$dates);
+            // dd($dates);
             $file = request()->file('file');
             $absent_reason_id = request('absent_reason_id'); 
             switch ($absent_reason_id) {
@@ -201,8 +201,8 @@ class Users extends Controller {
                    $end_date = date('Y-m-d', strtotime(request('end_date')));
                  break;
                } 
-               dd($end_date);
-            $file_id = $file ? $this->saveFile($file, 'company/employees',TRUE) : '';
+             //  dd($end_date);
+            $file_id = $file ? $this->saveFile($file, 'company/employees',TRUE) : 1;
             \App\Models\Absent::create(['date' => request('date'), 'user_id' => request('user_id'), 'absent_reason_id' => request('absent_reason_id'),
             'note' => request('note'), 'company_file_id' => $file_id,'end_date' => $end_date]);
         }
