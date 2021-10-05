@@ -31,23 +31,22 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
             $total_activity = \collect(DB::select('select count(*) from admin.tasks a where  a.user_id in (select id from admin.users where department=1) and ' . $where . ' and a.status not in(\'Pending\',\'New\')'))->first()->count;
             ?>
         </div>
-        {{-- <div class="page-header-breadcrumb"> 
-            <ul class="breadcrumb-title">
-                <li class="breadcrumb-item">
-                    <a href="index-2.html">
-                        <i class="icofont icofont-home"></i>
-                    </a>
-                </li>
-                <li class="breadcrumb-item"><a href="#!">Summary</a>
-                </li>
-                <li class="breadcrumb-item"><a href="#!">Dashboard</a>
-                </li>
-            </ul>
-        </div> --}}
+     
 
         <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
 
-            <div class="row">
+           <div class="row">
+             <div class="col-sm-12 col-lg-3 m-b-20">
+                <h6>Pick date </h6>
+                <input type="text" name="dates" id="rangeDate" class="form-control">
+            </div>
+            <div class="col-sm-12 col-lg-3 m-b-20">
+                <h6> &nbsp; </h6>
+                <input type="submit" id="search_custom" class="input-sm btn btn-sm btn-success">
+            </div>
+          </div>
+
+            {{-- <div class="row">
                 <div class="col-lg-6 text-left">
                     <?php
                     if (Auth::user()->role_id == 1) {
@@ -66,7 +65,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
                  <div class="col-lg-6 text-left">
                     <input type="text" name="daterange" class="form-control">
                  </div>
-            </div>
+            </div> --}}
             <br>
        
 
@@ -461,33 +460,40 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
 });
 
     check = function () {
-        $('#check_custom_date').change(function () {
-            var val = $(this).val();
-            if (val == 'today') {
-                window.location.href = '<?= url('analyse/customers/') ?>/1';
-            } else {
-                $('#show_date').show();
-            }
-        });
-
-        $('#taskdate').change(function (event) {
+         $('#taskdate').change(function (event) {
             var taskdate = $(this).val();
             if (taskdate === '') {
             } else {
                 window.location.href = '<?= url('analyse/customers/user/') ?>/' + taskdate;
             }
         });
-
     }
-    submit_search = function () {
+
+
+   submit_search = function () {
         $('#search_custom').mousedown(function () {
-            var start_date = $('#start_date').val();
-            var end_date = $('#end_date').val();
+            var alldates = $('#rangeDate').val();
+            alldates = alldates.trim();
+            alldates = alldates.split("-");
+            start_date = formatDate(alldates[0]);
+            end_date = formatDate(alldates[1]);
             window.location.href = '<?= url('analyse/customers/') ?>/5?start=' + start_date + '&end=' + end_date;
         });
     }
+    $(document).ready(submit_search);
+    $('input[name="dates"]').daterangepicker();
 
     $(document).ready(check);
     $(document).ready(submit_search);
+
+
+        formatDate = function (date) {
+            date = new Date(date);
+            var day = ('0' + date.getDate()).slice(-2);
+            var month = ('0' + (date.getMonth() + 1)).slice(-2);
+            var year = date.getFullYear();
+            return year + '-' + month + '-' + day;
+        }
+
 </script>
 @endsection

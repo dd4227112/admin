@@ -33,10 +33,11 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         <link rel="stylesheet" href="<?= $root ?>/files/bower_components/select2/css/select2.min.css">
 
         {{-- date picker --}}
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/pages/advance-elements/css/bootstrap-datetimepicker.css">
-        <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/bootstrap-daterangepicker/css/daterangepicker.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
        
-        {{-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" /> --}}
         <script src="https://code.highcharts.com/highcharts.js"></script>
         <script src="https://code.highcharts.com/modules/series-label.js"></script>
         <script src="https://code.highcharts.com/modules/exporting.js"></script>
@@ -289,6 +290,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                                  </li>
                                             </ul>
                                         </li>
+
                                         <li class=" pcoded-hasmenu">
                                             <a href="javascript:void(0)">
                                                 <span class="pcoded-mtext">Usage and analysis</span>
@@ -435,6 +437,8 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                     </ul>
                                 </li>
 
+                                 
+                              <?php if (can_access('manage_finance')) { ?>
                                 <li class="pcoded-hasmenu">
                                     <a href="javascript:void(0)">
                                         <span class="pcoded-micon"><i class="feather icon-book"></i></span>
@@ -442,22 +446,143 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
                                     </a>
                                     <ul class="pcoded-submenu">
                                         <li class=" ">
-                                            <a href="widget-statistic.htm">
-                                                <span class="pcoded-mtext">Statistic</span>
+                                            <a href="<?= url('account/invoice') ?>">
+                                                <span class="pcoded-mtext">Invoice</span>
                                             </a>
                                         </li>
-                                        <li class=" ">
-                                            <a href="widget-data.htm">
-                                                <span class="pcoded-mtext">Data</span>
+                                          
+                                          <li class=" ">
+                                            <a href="<?= url('account/standingOrders') ?>">
+                                                <span class="pcoded-mtext">Standing order</span>
                                             </a>
                                         </li>
-                                        <li class=" ">
-                                            <a href="widget-chart.htm">
-                                                <span class="pcoded-mtext">Chart Widget</span>
+
+                                        
+                                       <?php if (!can_access('manage_transactions')) { ?>
+                                        <li class=" pcoded-hasmenu">
+                                            <a href="javascript:void(0)">
+                                                <span class="pcoded-mtext">Transactions</span>
                                             </a>
+                                            <ul class="pcoded-submenu">
+                                                <li class="">
+                                                    <a href="<?= url('revenue/index') ?>">
+                                                        <span class="pcoded-mtext">Revenue</span>
+                                                    </a>
+                                                </li>
+                                             
+                                                <li class="">
+                                                    <a href="<?= url('expense/index/4') ?>">
+                                                        <span class="pcoded-mtext">  Expense</span>
+                                                    </a>
+                                                </li>
+
+                                                 <li class="">
+                                                    <a href="<?= url('account/transaction/1') ?>">
+                                                        <span class="pcoded-mtext">  Fixed assets</span>
+                                                    </a>
+                                                </li>
+
+                                                 <li class="">
+                                                    <a href="<?= url('account/transaction/5') ?>">
+                                                        <span class="pcoded-mtext"> Current assets</span>
+                                                    </a>
+                                                </li>
+
+                                                  <li class="">
+                                                    <a href="<?= url('account/transaction/2') ?>">
+                                                        <span class="pcoded-mtext">Liabilities</span>
+                                                    </a>
+                                                </li>
+
+                                                    <li class="">
+                                                    <a href="<?= url('account/transaction/3') ?>">
+                                                        <span class="pcoded-mtext"> Capital</span>
+                                                    </a>
+                                                </li>
+
+                                                  <li class="">
+                                                    <a href="<?= url('account/reconciliation') ?>">
+                                                        <span class="pcoded-mtext">Reconciliation</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
                                         </li>
+                                     <?php } ?>
+
+                                              
+                                       <?php if (can_access('manage_payroll')) { ?>
+                                        <li class=" pcoded-hasmenu">
+                                            <a href="javascript:void(0)">
+                                                <span class="pcoded-mtext">Payroll</span>
+                                            </a>
+                                            <ul class="pcoded-submenu">
+                                                <li class="">
+                                                    <a href="<?= url('payroll/taxes') ?>">
+                                                        <span class="pcoded-mtext">TAX</span>
+                                                    </a>
+                                                </li>
+                                             
+                                                <li class="">
+                                                    <a href="<?= url('payroll/pension') ?>">
+                                                        <span class="pcoded-mtext">  Pension Fund </span>
+                                                    </a>
+                                                </li>
+
+                                                 <li class="">
+                                                    <a href="<?= url('allowance/index') ?>">
+                                                        <span class="pcoded-mtext">  Allowances </span>
+                                                    </a>
+                                                </li>
+
+                                                 <li class="">
+                                                    <a href="<?= url('deduction/index') ?>">
+                                                        <span class="pcoded-mtext"> Deductions </span>
+                                                    </a>
+                                                </li>
+
+                                                  <li class="">
+                                                    <a href="<?= url('Payroll/index') ?>">
+                                                        <span class="pcoded-mtext">Salaries</span>
+                                                    </a>
+                                                </li>
+
+                                             <li class=" pcoded-hasmenu">
+                                               <a href="javascript:void(0)">
+                                                 <span class="pcoded-mtext text-bold">Loans</span>
+                                               </a>
+                                            <ul class="pcoded-submenu">
+                                                <li class="">
+                                                    <a href="<?= url('sales/index') ?>">
+                                                       <span class="pcoded-mtext">Sales materials</span>
+                                                    </a>
+                                                 </li>
+                                             
+                                                <?php if (can_access('onboard_school')) { ?>
+                                                 <li class="">
+                                                    <a href="<?= url('sales/school') ?>">
+                                                        <span class="pcoded-mtext">List of Schools</span>
+                                                    </a>
+                                                  </li>
+                                                <?php } ?>
+
+                                                <li class="">
+                                                    <a href="<?= url('sales/salesStatus') ?>">
+                                                       <span class="pcoded-mtext">Sales Status</span>
+                                                    </a>
+                                                 </li>
+                                            </ul>
+                                        </li>
+
+                                               
+
+                                            </ul>
+                                        </li>
+                                     <?php } ?>
+
+                                      
                                     </ul>
                                 </li>
+                               <?php } ?>
 
                             </ul>
                         </div>
@@ -514,15 +639,8 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
 
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/select2/js/select2.full.min.js'); ?>"></script>
 
-    {{-- Highcharts --}}
-{{-- 
-    <script type="text/javascript" src="<?= $root ?>/files/assets/pages/advance-elements/moment-with-locales.min.js"></script>
-    <script type="text/javascript" src="<?= $root ?>/files/bower_components/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
-    <script type="text/javascript" src="<?= $root ?>/files/assets/pages/advance-elements/bootstrap-datetimepicker.min.js"></script>
-    <script type="text/javascript" src="<?= $root ?>/files/bower_components/bootstrap-daterangepicker/js/daterangepicker.js"></script> --}}
 
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    
 
     </body>
     <?php

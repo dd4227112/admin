@@ -24,12 +24,16 @@ $total_activity = \collect(DB::select('select count(*) from admin.tasks a where 
     <div class="page-wrapper">
         <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
 
-         <div class="row">
-             <div class="col-sm-12 col-xl-4 m-b-30">
+           <div class="row">
+             <div class="col-sm-12 col-lg-3 m-b-20">
                 <h6>Pick date </h6>
-                <input type="text" name="daterange" class="form-control">
+                <input type="text" name="dates" id="rangeDate" class="form-control">
             </div>
-           </div>
+            <div class="col-sm-12 col-lg-3 m-b-20">
+                <h6> &nbsp; </h6>
+                <input type="submit" id="search_custom" class="input-sm btn btn-sm btn-success">
+            </div>
+        </div>
 
         <?php $on = 'Today'; ?>
 
@@ -264,27 +268,31 @@ Highcharts.chart('Errors', {
     }]
 });
 
-check = function () {
-    $('#check_custom_date').change(function () {
-        var val = $(this).val();
-        if (val == 'today') {
-            window.location.href = '<?= url('analyse/software/') ?>/1';
-        } else {
-            $('#show_date').show();
-        }
-    });
-}
+
 submit_search = function () {
     $('#search_custom').mousedown(function () {
-        var start_date = $('#start_date').val();
-        var end_date = $('#end_date').val();
+        var alldates = $('#rangeDate').val();
+            alldates = alldates.trim();
+            alldates = alldates.split("-");
+            start_date = formatDate(alldates[0]);
+            end_date = formatDate(alldates[1]);
         window.location.href = '<?= url('analyse/software/') ?>/5?start=' + start_date + '&end=' + end_date;
     });
 }
-$(document).ready(check);
+
+   formatDate = function (date) {
+            date = new Date(date);
+            var day = ('0' + date.getDate()).slice(-2);
+            var month = ('0' + (date.getMonth() + 1)).slice(-2);
+            var year = date.getFullYear();
+            return year + '-' + month + '-' + day;
+    }
+
 $(document).ready(submit_search);
-    </script>
+$(document).ready(formatDate);
 
+$('input[name="dates"]').daterangepicker();
 
+</script>
 
-    @endsection
+@endsection

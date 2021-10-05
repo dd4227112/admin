@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('content')
-
 <?php
 $root = url('/') . '/public/';
 $page = request()->segment(3);
@@ -43,32 +42,16 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
         <x-breadcrumb :breadcrumb="$breadcrumb"> </x-breadcrumb>
        
         <div class="row">
-             <div class="col-sm-12 col-xl-4 m-b-30">
+             <div class="col-sm-12 col-lg-3 m-b-20">
                 <h6>Pick date </h6>
-                <input type="text" name="dates" class="form-control">
+                <input type="text" name="dates" id="rangeDate" class="form-control">
+            </div>
+            <div class="col-sm-12 col-lg-3 m-b-20">
+                <h6> &nbsp; </h6>
+                <input type="submit" id="search_custom" class="input-sm btn btn-sm btn-success">
             </div>
         </div>
-        {{-- <div class="row">
-            <div class="col-lg-8"></div>
-            <div class="col-lg-4 text-right">
-                <select class="form-control" id="check_custom_date">
-                    <option value="today" <?= $today == 1 ? 'selected' : '' ?>>Today</option>
-                    <option value="custom"  <?= $today == 0 ? 'selected' : '' ?>>Custom</option>
-                </select>
-            </div>
-        </div>
-         <div class="row" style="display: none" id="show_date">
-            <div class="col-lg-4"></div>
-             <div class="col-lg-8 text-right">
-                <h4 class="sub-title">Date Time Picker</h4>
-                <div class="input-daterange input-group" id="datepicker">
-                    <input type="date" class="input-sm form-control calendar" name="start" id="start_date">
-                    <span class="input-group-addon">to</span>
-                    <input type="date" class="input-sm form-control" name="end" id="end_date">
-                    <input type="submit" class="input-sm btn btn-sm btn-success" id="search_custom"/>
-                </div>
-            </div>
-         </div> --}}
+  
 
         <div class="page-body">
             <div class="row">
@@ -219,7 +202,6 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
 
 <script type="text/javascript">
 
-$('input[name="dates"]').daterangepicker();
 
 <?php 
  $sql1 = "select count(*),created_at::date from (select distinct platform,user_agent,created_at::date from admin.website_logs a where " . $where . "  ) x  group by created_at::date ";
@@ -230,6 +212,7 @@ $('input[name="dates"]').daterangepicker();
  $logins = \DB::select($sql_);
  $modules = \DB::select($sql2);
  ?>
+
 Highcharts.chart('websitevisitors', {
     title: {
         text: 'Daily website visitors'
@@ -348,25 +331,32 @@ Highcharts.chart('moduleusage', {
  });
 
 
-  check = function () {
-        $('#check_custom_date').change(function () {
-            var val = $(this).val();
-            if (val == 'today') {
-                window.location.href = '<?= url('analyse/marketing/') ?>/1';
-            } else {
-                $('#show_date').show();
-            }
-        });
-    }
+
     submit_search = function () {
         $('#search_custom').mousedown(function () {
-            var start_date = $('#start_date').val();
-            var end_date = $('#end_date').val();
+            var alldates = $('#rangeDate').val();
+            alldates = alldates.trim();
+            alldates = alldates.split("-");
+            start_date = formatDate(alldates[0]);
+            end_date = formatDate(alldates[1]);
             window.location.href = '<?= url('analyse/marketing/') ?>/5?start=' + start_date + '&end=' + end_date;
         });
     }
-    $(document).ready(check);
+
+     $('input[name="dates"]').daterangepicker();
+
+    formatDate = function (date) {
+        date = new Date(date);
+        var day = ('0' + date.getDate()).slice(-2);
+        var month = ('0' + (date.getMonth() + 1)).slice(-2);
+        var year = date.getFullYear();
+        return year + '-' + month + '-' + day;
+    }
+
     $(document).ready(submit_search);
+    $(document).ready(formatDate);
+
+
 </script>
 
 @endsection
