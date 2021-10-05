@@ -35,7 +35,8 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
         {{-- date picker --}}
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/assets/pages/advance-elements/css/bootstrap-datetimepicker.css">
         <link rel="stylesheet" type="text/css" href="<?= $root ?>/files/bower_components/bootstrap-daterangepicker/css/daterangepicker.css">
-
+       
+        {{-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" /> --}}
         <script src="https://code.highcharts.com/highcharts.js"></script>
         <script src="https://code.highcharts.com/modules/series-label.js"></script>
         <script src="https://code.highcharts.com/modules/exporting.js"></script>
@@ -498,10 +499,7 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
     <script type="text/javascript" src="<?= $root ?>/files/assets/js/script.min.js"></script>
 
      {{-- Datatables --}}
-    <script src="<?= $root ?>/files/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-    <script src="<?= $root ?>/files/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-
-
+   
     <script src="<?= $root ?>/files/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="<?= $root ?>/files/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
     <script src="<?= $root ?>/files/assets/pages/data-table/js/jszip.min.js"></script>
@@ -517,11 +515,14 @@ $value = \App\Models\UsersSchool::where('user_id',Auth::user()->id)->get();
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/select2/js/select2.full.min.js'); ?>"></script>
 
     {{-- Highcharts --}}
-
+{{-- 
     <script type="text/javascript" src="<?= $root ?>/files/assets/pages/advance-elements/moment-with-locales.min.js"></script>
     <script type="text/javascript" src="<?= $root ?>/files/bower_components/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
     <script type="text/javascript" src="<?= $root ?>/files/assets/pages/advance-elements/bootstrap-datetimepicker.min.js"></script>
-    <script type="text/javascript" src="<?= $root ?>/files/bower_components/bootstrap-daterangepicker/js/daterangepicker.js"></script>
+    <script type="text/javascript" src="<?= $root ?>/files/bower_components/bootstrap-daterangepicker/js/daterangepicker.js"></script> --}}
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
     </body>
     <?php

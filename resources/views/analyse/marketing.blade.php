@@ -45,7 +45,7 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
         <div class="row">
              <div class="col-sm-12 col-xl-4 m-b-30">
                 <h6>Pick date </h6>
-                <input type="text" name="daterange" class="form-control">
+                <input type="text" name="dates" class="form-control">
             </div>
         </div>
         {{-- <div class="row">
@@ -218,6 +218,9 @@ if ((int) $page == 1 || $page == 'null' || (int) $page == 0) {
     </div>
 
 <script type="text/javascript">
+
+$('input[name="dates"]').daterangepicker();
+
 <?php 
  $sql1 = "select count(*),created_at::date from (select distinct platform,user_agent,created_at::date from admin.website_logs a where " . $where . "  ) x  group by created_at::date ";
  $sql_ = "select count(distinct (user_id,\"table\")) as count, created_at::date as date from admin.all_login_locations a where " . $where . " group by created_at::date ";
