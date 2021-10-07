@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @section('content')
 <script type="text/javascript" src="<?php echo url('public/assets/select2/select2.js'); ?>"></script>
+
+
 <?php $root = url('/') . '/public/' ?>
 
 <?php
@@ -1104,8 +1106,6 @@ foreach ($user_permission as $permis) {
                             </div>
                         </div>
                       </div>
-
-
             </div>
         </div>
     </div>
@@ -1215,19 +1215,27 @@ foreach ($user_permission as $permis) {
                     </div>
 
                     <div class="form-group row">
-                       <div class="col-sm-6">
-                         <label class="control-label">Start date</label>
+                       <div class="col-sm-4">
+                         <label class="control-label">Start </label>
                           <div class="col-lg-12">
-                            <input class="form-control"  name="date"   value="<?= date('Y-m-d') ?>"  type="date" required>
+                            <input class="form-control"  name="date"   value="<?= date('Y-m-d') ?>"  type="date" 
+                              required>
                           </div>
                        </div>
                       
-                       <div class="col-sm-6">
-                        <label class="control-label">End date</label>
+                       <div class="col-sm-4">
+                        <label class="control-label"> End</label>
                         <div class="col-lg-12">
                             <input class="form-control" name="end_date"  type="date">
                         </div>
                        </div>
+
+                       {{-- <div class="col-sm-6">
+                        <label class="control-label"> Start and End date</label>
+                          <div class="col-lg-12">
+                             <input type="text" class="form-control" name="datetimes" />
+                          </div>
+                        </div> --}}
                     </div>
 
                     <div class="form-group">
@@ -1249,7 +1257,7 @@ foreach ($user_permission as $permis) {
                           <div class="col-sm-6">
                             <label class="control-label">Upload Document</label>
                              <div class="col-lg-12">
-                                <input type="file" class="form-control" accept=".pdf" name="file" required>
+                                <input type="file" class="form-control" accept=".pdf" name="file">
                              </div>
                           </div>
                      </div>
@@ -1419,6 +1427,10 @@ foreach ($user_permission as $permis) {
 </div>
 
 
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <script type="text/javascript">
                         
 $(".select2").select2({
@@ -1427,6 +1439,19 @@ $(".select2").select2({
     allowClear: false,
     debug: true
   });
+
+
+$(function() {
+  $('input[name="datetimes"]').daterangepicker({
+    timePicker: true,
+    startDate: moment().startOf('hour'),
+    endDate: moment().startOf('hour').add(32, 'hour'),
+    locale: {
+      format: 'Y/m/d hh:mm:ss'
+    }
+  });
+});
+
 
     permission = function () {
         $('.permission').click(function () {
