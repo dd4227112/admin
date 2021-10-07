@@ -76,18 +76,24 @@ class Kernel extends ConsoleKernel {
 
 
         $schedule->call(function () {
-          //0  $this->addAttendance();
+            $this->addAttendance();
         })->everyThreeMinutes();
 
         $schedule->call(function () {
-         //0   $this->sendSORemainder();
-         //0   $this->updateCompleteItems();
-        })->dailyAt('04:40'); // Eq to 07:40 AM
+           $this->sendSORemainder();
+           $this->updateCompleteItems();
+        })->dailyAt('04:40'); // Eq to 07:40 AM   
 
         $schedule->call(function () {
-          //0  $this->HRContractRemainders();
-          //0  $this->HRLeaveRemainders();
+            $this->HRContractRemainders();
+            $this->HRLeaveRemainders();
         })->dailyAt('04:40');
+
+
+         $schedule->call(function () {
+            $this->RefreshMaterializedView();
+        })->everyTenMinutes();
+        
 
        
 
@@ -1356,6 +1362,11 @@ select 'Hello '|| p.name|| ', kwa sasa, wastani wa kila mtihani uliosahihisha, m
               ]);
             \App\Models\Task::where('id',$task->id)->update(['remainder' => 1]);
          }
+      }
+
+
+      public function RefreshMaterializedView(){
+          DB::statement("REFRESH MATERIALIZED VIEW admin.all_users");
       }
 
 }
