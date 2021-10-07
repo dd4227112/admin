@@ -341,7 +341,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <?php $clients=\DB::table('admin.all_setting')->count();
+                                                        <?php $i=0; $clients=\DB::table('admin.all_setting')->count();
                                                               $total_invoice_sent = isset($accountyear->name) ? \DB::table('admin.invoices_sent')->whereYear('date','=',$accountyear->name)->count() : DB::table('admin.invoices_sent')->count();
                                                               $total_clients = \DB::table('admin.clients')->count();
                                                             $i=0; 

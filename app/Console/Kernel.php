@@ -908,6 +908,9 @@ b where  (a.created_at::date + INTERVAL '" . $sequence->interval . " day')::date
         }
     }
 
+    /**
+     * Only paid users
+     */
     public function sendBirthdayWish() {
         $schemas = (new \App\Http\Controllers\Software())->loadSchema();
         foreach ($schemas as $schema) {
