@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Guide extends Model
 {
-    protected $table = 'constant.guides';
+    protected $table = 'constant.user_guides';
     public $timestamps=false;
     protected $fillable = [
         'permission_id', 'content', 'created_by','language'
